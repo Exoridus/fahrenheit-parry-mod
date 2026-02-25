@@ -1,0 +1,150 @@
+<Project DefaultTargets="Help">
+    <PropertyGroup>
+        <RepoRoot>$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)'))</RepoRoot>
+        <FahrenheitRepo Condition="'$(FahrenheitRepo)' == ''">https://github.com/peppy-enterprises/fahrenheit.git</FahrenheitRepo>
+        <FahrenheitDir Condition="'$(FahrenheitDir)' == ''">$([MSBuild]::NormalizeDirectory('$(RepoRoot)', '.workspace', 'fahrenheit'))</FahrenheitDir>
+        <FahrenheitDirPath>$([System.Text.RegularExpressions.Regex]::Replace('$([MSBuild]::NormalizePath('$(FahrenheitDir)'))', '[\\/]+$$', ''))</FahrenheitDirPath>
+        <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
+        <ModId Condition="'$(ModId)' == ''">fhparry</ModId>
+
+        <ModProjectPath Condition="'$(ModProjectPath)' == ''">$([MSBuild]::NormalizePath('$(RepoRoot)', 'Fahrenheit.Mods.Parry.csproj'))</ModProjectPath>
+        <ManagedCoreProject>$([MSBuild]::NormalizePath('$(FahrenheitDir)', 'core', 'fh', 'Fahrenheit.csproj'))</ManagedCoreProject>
+        <ManagedRuntimeProject>$([MSBuild]::NormalizePath('$(FahrenheitDir)', 'core', 'runtime', 'Fahrenheit.Runtime.csproj'))</ManagedRuntimeProject>
+        <Stage0Project>$([MSBuild]::NormalizePath('$(FahrenheitDir)', 'core', 'stage0', 'Fahrenheit.Loader.Stage0.vcxproj'))</Stage0Project>
+        <Stage1Project>$([MSBuild]::NormalizePath('$(FahrenheitDir)', 'core', 'stage1', 'Fahrenheit.Loader.Stage1.vcxproj'))</Stage1Project>
+
+        <DeployConfigFolder Condition="'$(Configuration)' == 'Debug'">dbg</DeployConfigFolder>
+        <DeployConfigFolder Condition="'$(DeployConfigFolder)' == ''">rel</DeployConfigFolder>
+        <DeployDir>$([MSBuild]::NormalizePath('$(FahrenheitDir)', 'artifacts', 'deploy', '$(DeployConfigFolder)'))</DeployDir>
+        <DeployModsDir>$([MSBuild]::NormalizePath('$(DeployDir)', 'mods'))</DeployModsDir>
+        <DeployModDir>$([MSBuild]::NormalizePath('$(DeployModsDir)', '$(ModId)'))/</DeployModDir>
+        <LoadOrderPath>$([MSBuild]::NormalizePath('$(DeployModsDir)', 'loadorder'))</LoadOrderPath>
+
+        <ModBaseOutputPath>$([MSBuild]::NormalizePath('$(FahrenheitDir)', 'artifacts', 'build', 'Fahrenheit.Mods.Parry'))/</ModBaseOutputPath>
+        <ModBaseIntermediateOutputPath>$([MSBuild]::NormalizePath('$(FahrenheitDir)', 'artifacts', 'obj', 'Fahrenheit.Mods.Parry'))/</ModBaseIntermediateOutputPath>
+        <SolutionDirForBuild>$(FahrenheitDirPath)/</SolutionDirForBuild>
+
+        <FahrenheitGitDir>$([MSBuild]::NormalizePath('$(FahrenheitDirPath)', '.git'))</FahrenheitGitDir>
+        <FahrenheitParentDir>$([MSBuild]::NormalizeDirectory('$(FahrenheitDirPath)', '..'))</FahrenheitParentDir>
+        <ProgramFilesX86>$([System.Environment]::GetEnvironmentVariable('ProgramFiles(x86)'))</ProgramFilesX86>
+        <VsWhereExe>$([MSBuild]::NormalizePath('$(ProgramFilesX86)', 'Microsoft Visual Studio', 'Installer', 'vswhere.exe'))</VsWhereExe>
+
+        <NativeMSBuildExe Condition="'$(NativeMSBuildExe)' == '' and '$(OS)' == 'Windows_NT'">msbuild</NativeMSBuildExe>
+    </PropertyGroup>
+
+    <Target Name="Help">
+        <Message Importance="high" Text="Targets:" />
+        <Message Importance="high" Text="  dotnet msbuild build.proj -t:Setup [-p:FahrenheitDir=...] [-p:FahrenheitRepo=...]" />
+        <Message Importance="high" Text="  dotnet msbuild build.proj -t:BuildModOnly [-p:Configuration=Release|Debug]" />
+        <Message Importance="high" Text="  dotnet msbuild build.proj -t:Build [-p:Configuration=Release|Debug] [-p:NativeMSBuildExe=...]" />
+        <Message Importance="high" Text="  dotnet msbuild build.proj -t:Deploy (alias of Build)" />
+    </Target>
+
+    <Target Name="ValidateInputs">
+        <Error Condition="!Exists('$(ModProjectPath)')" Text="Mod project not found: $(ModProjectPath)" />
+    </Target>
+
+    <Target Name="RequireGit" DependsOnTargets="ValidateInputs">
+        <Exec Command="git --version" />
+    </Target>
+
+    <Target Name="EnsureFahrenheitCheckout" DependsOnTargets="RequireGit">
+        <MakeDir Directories="$(FahrenheitParentDir)" />
+
+        <Exec Condition="!Exists('$(FahrenheitGitDir)')"
+              Command="git clone --recurse-submodules &quot;$(FahrenheitRepo)&quot; &quot;$(FahrenheitDirPath)&quot;" />
+
+        <Exec Condition="Exists('$(FahrenheitGitDir)')"
+              Command="git -C &quot;$(FahrenheitDirPath)&quot; fetch --all --tags" />
+        <Exec Condition="Exists('$(FahrenheitGitDir)')"
+              Command="git -C &quot;$(FahrenheitDirPath)&quot; submodule sync --recursive" />
+        <Exec Condition="Exists('$(FahrenheitGitDir)')"
+              Command="git -C &quot;$(FahrenheitDirPath)&quot; submodule update --init --recursive" />
+    </Target>
+
+    <Target Name="RestoreManagedProjects" DependsOnTargets="EnsureFahrenheitCheckout">
+        <Error Condition="!Exists('$(ManagedCoreProject)')" Text="Missing Fahrenheit core project: $(ManagedCoreProject)" />
+        <Error Condition="!Exists('$(ManagedRuntimeProject)')" Text="Missing Fahrenheit runtime project: $(ManagedRuntimeProject)" />
+
+        <MSBuild Projects="$(ManagedCoreProject);$(ManagedRuntimeProject);$(ModProjectPath)"
+                 Targets="Restore"
+                 Properties="Configuration=$(Configuration);SolutionDir=$(SolutionDirForBuild)" />
+    </Target>
+
+    <Target Name="Setup" DependsOnTargets="RestoreManagedProjects">
+        <Message Importance="high" Text="Setup complete. Workspace: $(FahrenheitDirPath)" />
+    </Target>
+
+    <Target Name="ResolveNativeMSBuild" Condition="'$(OS)' == 'Windows_NT'">
+        <Exec Condition="'$(NativeMSBuildExe)' == 'msbuild' and Exists('$(VsWhereExe)')"
+              Command="&quot;$(VsWhereExe)&quot; -latest -products * -requires Microsoft.Component.MSBuild -property installationPath"
+              ConsoleToMSBuild="true"
+              StandardOutputImportance="low">
+            <Output TaskParameter="ConsoleOutput" ItemName="_VsWhereInstallPath" />
+        </Exec>
+
+        <PropertyGroup Condition="'$(NativeMSBuildExe)' == 'msbuild' and '@(_VsWhereInstallPath)' != ''">
+            <NativeMSBuildExe>@(_VsWhereInstallPath->'%(Identity)\MSBuild\Current\Bin\MSBuild.exe')</NativeMSBuildExe>
+        </PropertyGroup>
+
+        <Exec Command="&quot;$(NativeMSBuildExe)&quot; -version -nologo"
+              IgnoreExitCode="true"
+              StandardOutputImportance="low">
+            <Output TaskParameter="ExitCode" PropertyName="_NativeMsbuildFinalProbeExitCode" />
+        </Exec>
+
+        <Error Condition="'$(_NativeMsbuildFinalProbeExitCode)' != '0'"
+               Text="Could not find a usable MSBuild.exe. Install Visual Studio Build Tools with C++ workload, or pass -p:NativeMSBuildExe=&lt;path-to-MSBuild.exe&gt;." />
+    </Target>
+
+    <Target Name="BuildNativeLoaders" DependsOnTargets="ResolveNativeMSBuild">
+        <Error Condition="'$(OS)' != 'Windows_NT'" Text="Full build is only supported on Windows (stage0/stage1 are native VC++ projects)." />
+        <Error Condition="!Exists('$(Stage0Project)')" Text="Missing Stage0 project: $(Stage0Project)" />
+        <Error Condition="!Exists('$(Stage1Project)')" Text="Missing Stage1 project: $(Stage1Project)" />
+
+        <Exec Command="&quot;$(NativeMSBuildExe)&quot; &quot;$(Stage0Project)&quot; /p:Configuration=$(Configuration) /p:Platform=Win32" />
+        <Exec Command="&quot;$(NativeMSBuildExe)&quot; &quot;$(Stage1Project)&quot; /p:Configuration=$(Configuration) /p:Platform=Win32" />
+    </Target>
+
+    <Target Name="PublishManagedComponents">
+        <MSBuild Projects="$(ManagedCoreProject);$(ManagedRuntimeProject)"
+                 Targets="Publish"
+                 Properties="Configuration=$(Configuration);SolutionDir=$(SolutionDirForBuild)" />
+        <MSBuild Projects="$(ModProjectPath)"
+                 Targets="Publish"
+                 Properties="Configuration=$(Configuration);SolutionDir=$(SolutionDirForBuild);PublishDir=$(DeployModDir);BaseOutputPath=$(ModBaseOutputPath);BaseIntermediateOutputPath=$(ModBaseIntermediateOutputPath)" />
+    </Target>
+
+    <Target Name="WriteLoadOrder">
+        <MakeDir Directories="$(DeployModsDir)" />
+        <ReadLinesFromFile File="$(LoadOrderPath)" Condition="Exists('$(LoadOrderPath)')">
+            <Output TaskParameter="Lines" ItemName="_LoadOrderExisting" />
+        </ReadLinesFromFile>
+
+        <ItemGroup>
+            <_LoadOrderFiltered Include="@(_LoadOrderExisting)"
+                                Condition="'%(Identity)' != '' and '%(Identity)' != 'fhruntime' and '%(Identity)' != '$(ModId)'" />
+            <_LoadOrderFiltered Include="$(ModId)" />
+        </ItemGroup>
+
+        <RemoveDuplicates Inputs="@(_LoadOrderFiltered)">
+            <Output TaskParameter="Filtered" ItemName="_LoadOrderFinal" />
+        </RemoveDuplicates>
+
+        <WriteLinesToFile File="$(LoadOrderPath)"
+                          Lines="@(_LoadOrderFinal)"
+                          Overwrite="true"
+                          Encoding="UTF-8" />
+    </Target>
+
+    <Target Name="BuildModOnly" DependsOnTargets="Setup;PublishManagedComponents;WriteLoadOrder">
+        <Message Importance="high" Text="BuildModOnly complete. Deploy output: $(DeployDir)" />
+    </Target>
+
+    <Target Name="Build" DependsOnTargets="Setup;BuildNativeLoaders;PublishManagedComponents;WriteLoadOrder">
+        <Message Importance="high" Text="Build complete. Deploy output: $(DeployDir)" />
+    </Target>
+
+    <Target Name="Deploy" DependsOnTargets="Build" />
+</Project>
+

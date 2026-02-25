@@ -1,0 +1,39 @@
+# Local workspace / build outputs
+.workspace/
+artifacts/
+bin/
+obj/
+release/
+TestResults/
+.tmp-game/
+
+# IDE / editor
+.vs/
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.rsuser
+
+# Logs / temporary files
+*.log
+*.tmp
+*.temp
+*.cache
+
+# Python leftovers
+__pycache__/
+*.pyc
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Local secrets / env files
+.env
+.env.*
+*.secrets.json
+
+# Local downloaded / packaged archives
+fahrenheit_windows_x86_release_*.zip

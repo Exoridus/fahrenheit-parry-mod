@@ -1,0 +1,11 @@
+{
+    "Id": "fhparry",
+    "Name": "Parry Prototype",
+    "Desc": "Watches battle cues and lets you parry physical attacks by pressing R1 (or P on keyboard).",
+    "Authors": "Thomas",
+    "Version": "0.1.0",
+    "Link": "https://github.com/peppy-enterprises/fahrenheit/tree/main/mods/parry",
+    "Dependencies": [],
+    "LoadAfter": [],
+    "Flags": "NONE"
+}
