@@ -4,12 +4,16 @@
 
 # Fahrenheit Parry Mod
 
-[![Latest](https://img.shields.io/github/v/release/Exoridus/fahrenheit-parry-mod?style=for-the-badge&label=Latest&logo=github&color=44cc11)](https://github.com/Exoridus/fahrenheit-parry-mod/releases/latest)
-[![Downloads](https://img.shields.io/github/downloads/Exoridus/fahrenheit-parry-mod/total?style=for-the-badge&label=Downloads&logo=github)](https://github.com/Exoridus/fahrenheit-parry-mod/releases/latest)
 [![CI](https://img.shields.io/github/actions/workflow/status/Exoridus/fahrenheit-parry-mod/ci.yml?branch=main&style=for-the-badge&label=CI&logo=githubactions)](https://github.com/Exoridus/fahrenheit-parry-mod/actions/workflows/ci.yml)
-[![Release](https://img.shields.io/github/actions/workflow/status/Exoridus/fahrenheit-parry-mod/release.yml?style=for-the-badge&label=Release&logo=githubactions)](https://github.com/Exoridus/fahrenheit-parry-mod/actions/workflows/release.yml)
 [![License](https://img.shields.io/github/license/Exoridus/fahrenheit-parry-mod?style=for-the-badge&label=License)](LICENSE)
 [![Sponsor](https://img.shields.io/badge/Sponsor-1a1e23?style=for-the-badge&logo=githubsponsors)](https://github.com/sponsors/Exoridus)
+<!-- Re-enable when first release exists:
+[![Latest](https://img.shields.io/github/v/release/Exoridus/fahrenheit-parry-mod?style=for-the-badge&label=Latest&logo=github&color=44cc11)](https://github.com/Exoridus/fahrenheit-parry-mod/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/Exoridus/fahrenheit-parry-mod/total?style=for-the-badge&label=Downloads&logo=github)](https://github.com/Exoridus/fahrenheit-parry-mod/releases/latest)
+-->
+<!-- Optional: re-enable once release workflow cadence is established:
+[![Release](https://img.shields.io/github/actions/workflow/status/Exoridus/fahrenheit-parry-mod/release.yml?style=for-the-badge&label=Release&logo=githubactions)](https://github.com/Exoridus/fahrenheit-parry-mod/actions/workflows/release.yml)
+-->
 
 ![Banner](resources/Banner.png)
 
