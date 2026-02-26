@@ -1,9 +1,9 @@
 # Local workspace / build outputs
 .workspace/
+.release/
 artifacts/
 bin/
 obj/
-release/
 TestResults/
 .tmp-game/
 

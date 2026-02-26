@@ -1,0 +1,2 @@
+#!/bin/sh
+cmd //c scripts\\validate-commit-msg.cmd "$1"

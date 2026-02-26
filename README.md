@@ -1,156 +1,196 @@
-<p align="center">
-  <img src="resources/Banner.png" alt="Fahrenheit Parry Mod banner" />
-</p>
+<div align="center">
+
+<!----><a name="top"></a>
 
 # Fahrenheit Parry Mod
 
-A standalone mod project for the Fahrenheit framework that adds a parry-focused gameplay module for **Final Fantasy X / X-2 HD Remaster**.
+[![Latest](https://img.shields.io/github/v/release/Exoridus/fahrenheit-parry-mod?style=for-the-badge&label=Latest&logo=github&color=44cc11)](https://github.com/Exoridus/fahrenheit-parry-mod/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/Exoridus/fahrenheit-parry-mod/total?style=for-the-badge&label=Downloads&logo=github)](https://github.com/Exoridus/fahrenheit-parry-mod/releases/latest)
+[![CI](https://img.shields.io/github/actions/workflow/status/Exoridus/fahrenheit-parry-mod/ci.yml?branch=main&style=for-the-badge&label=CI&logo=githubactions)](https://github.com/Exoridus/fahrenheit-parry-mod/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/actions/workflow/status/Exoridus/fahrenheit-parry-mod/release.yml?style=for-the-badge&label=Release&logo=githubactions)](https://github.com/Exoridus/fahrenheit-parry-mod/actions/workflows/release.yml)
+[![License](https://img.shields.io/github/license/Exoridus/fahrenheit-parry-mod?style=for-the-badge&label=License)](LICENSE)
+[![Sponsor](https://img.shields.io/badge/Sponsor-1a1e23?style=for-the-badge&logo=githubsponsors)](https://github.com/sponsors/Exoridus)
+
+![Banner](resources/Banner.png)
+
+</div>
+
+## Description
+
+`fahrenheit-parry-mod` is a standalone mod project for the Fahrenheit framework that adds timing-based parry gameplay to **Final Fantasy X / X-2 HD Remaster**.
+
+Goals:
+
+- detect enemy attack cues in live battle state
+- open/resolve a configurable parry window
+- process player parry input (`R1`)
+- trigger optional feedback/effects on success
 
 ## Features
 
 ### Implemented
 
-- [x] Standalone mod repository (not tied to in-tree Fahrenheit mod source layout)
-- [x] Automated Fahrenheit dependency checkout/setup (`make setup` / `dotnet msbuild -t:Setup`)
-- [x] Debug-first local build workflow (`make build`)
-- [x] Full Fahrenheit build workflow (`make build-full` / `make build-release`)
-- [x] Separate deploy workflows:
-  - [x] Mod-only deploy (`make deploy-mod`)
-  - [x] Full deploy (`make deploy`, `make deploy-clean`)
-- [x] Local game path configuration with path probing + manual override (`make setup-game-dir`)
-- [x] GitHub Actions CI/CD workflow for PR/push validation and tagged release packaging
+- [x] Standalone repo workflow (not requiring in-tree Fahrenheit mod sources)
+- [x] Setup/bootstrap via `make setup`
+- [x] Canonical argument-based build/deploy commands
+- [x] Local version bump + changelog generation (`make release-version`)
+- [x] Split CI/release workflows (`ci.yml`, `release.yml`)
+- [x] Automated tag release notes generation
 
-### Planned / Possible Improvements
+### Planned
 
-- [ ] Optional non-interactive first-run setup preset profile (for new contributors)
-- [ ] Automated smoke tests once testable harnesses are available
-- [ ] Checksums/signature metadata in release assets
-- [ ] Optional changelog generation per tagged release
+- [ ] Optional conventional-commit lint gate in CI
+- [ ] Optional smoke tests when a stable harness is available
+- [ ] Release checksum/signature metadata
 
-## End-User Installation (Release Assets)
+## End-User Install
 
-Download assets from a tagged GitHub release.
+Download release assets from the latest GitHub release:
 
-### Option A: Full package (recommended for fresh installs)
+- Full package: `fahrenheit-full-<tag>.zip` (recommended)
+- Mod-only package: `fhparry-mod-<tag>.zip` (for existing Fahrenheit installs)
+- SHA256 files: `*.zip.sha256` (integrity verification)
 
-Asset: `fahrenheit-full-<tag>.zip`
+### Full Package (recommended)
 
-1. Open your game install directory (the folder containing `FFX.exe`).
-2. Extract the ZIP so that a `fahrenheit/` folder is created in that game directory.
-3. Launch using your normal Fahrenheit loader flow.
+1. Open your game install directory (contains `FFX.exe`).
+2. Extract `fahrenheit-full-<tag>.zip` there.
+3. Launch through your normal Fahrenheit loader flow.
 
-### Option B: Mod-only package (for existing Fahrenheit installs)
+### Mod-Only Package
 
-Asset: `fhparry-mod-<tag>.zip`
+1. Ensure Fahrenheit is already installed.
+2. Extract `fhparry-mod-<tag>.zip` into `GAME_DIR/fahrenheit/mods/`.
+3. Ensure `GAME_DIR/fahrenheit/mods/loadorder` contains `fhparry`.
 
-1. Ensure Fahrenheit is already installed in your game directory.
-2. Extract the ZIP into `GAME_DIR/fahrenheit/mods/` so it creates/updates `GAME_DIR/fahrenheit/mods/fhparry`.
-3. Ensure `GAME_DIR/fahrenheit/mods/loadorder` contains `fhparry` on its own line.
-
-## Contributor Setup / Build / Deploy
+## Contributor Setup
 
 ### Prerequisites
-
-#### Required to run setup/mod-build flow
 
 - Windows
 - Git
 - .NET SDK `10.x`
-- GNU Make (if using `make` commands)
+- GNU Make
 
-#### Required for full native build (`make build-full` / `make build-release`)
+For full native builds (`BUILD_TARGET=full`):
 
-- Visual Studio 2026 (or Build Tools) with workloads:
+- Visual Studio Build Tools (or Visual Studio) with:
   - `.NET desktop development`
   - `Desktop development with C++`
-- `vcpkg integrate install` from a Developer PowerShell prompt
+- `vcpkg integrate install`
 
 ### Quick Start
+
+Install `make` first (required):
+
+```cmd
+:: This should print a GNU Make version at the end.
+(where make >NUL 2>&1 || winget install --id "ezwinports.make" -e --source winget --accept-source-agreements --accept-package-agreements) && make --version
+```
+
+After that:
 
 ```bash
 make install
 make setup
-make build
-make deploy-mod
+make verify
+make deploy GAME_DIR="C:\Path\To\Game"
 ```
 
-`make setup` will:
+`make setup` also installs local git hooks (`core.hooksPath=.githooks`) so non-conventional commit messages are blocked before commit creation.
 
-1. Run Fahrenheit setup/restore.
-2. Offer game path configuration (`GAME_DIR`).
-3. Offer an initial full build (recommended for first-time local environment setup).
-
-### Common Commands
+## Build / Deploy Commands
 
 ```bash
-# Install/check full prerequisite set
-make install
-
-# Configure/save game path
-make setup-game-dir GAME_DIR="C:\Path\To\Game"
-
-# Mod-only debug build
+# Build mod (default)
 make build
+make build BUILD_TARGET=mod CONFIGURATION=Debug
 
-# Full debug build (stage loaders + managed projects)
-make build-full
+# Verify scripts + build + tests (if present)
+make verify CONFIGURATION=Debug
 
-# Full release build (used for production/release assets)
-make build-release
+# Create a conventional commit (default type: chore, no scope)
+make commit COMMIT_MSG="update docs"
+make commit COMMIT_TYPE=feat COMMIT_SCOPE=ui COMMIT_MSG="add timing mode toggle"
 
-# Deploy full build without deleting extra files
-make deploy
+# Full build (native + managed)
+make build BUILD_TARGET=full CONFIGURATION=Debug
 
-# Deploy full build as clean mirror (removes stale files)
-make deploy-clean
+# Full release build
+make build BUILD_TARGET=full CONFIGURATION=Release
 
-# Deploy only this mod
-make deploy-mod
+# Deploy mod output (default)
+make deploy GAME_DIR="C:\Path\To\Game"
 
-# Convenience shortcuts
-make build-and-deploy
-make build-full-and-deploy
+# Deploy full output (merge mode)
+make deploy DEPLOY_TARGET=full DEPLOY_MODE=merge GAME_DIR="C:\Path\To\Game"
+
+# Deploy full output (replace/mirror mode)
+make deploy DEPLOY_TARGET=full DEPLOY_MODE=replace GAME_DIR="C:\Path\To\Game"
 ```
 
-### Build Output Paths
+Important overrides:
 
-- Debug output: `.workspace/fahrenheit/artifacts/deploy/dbg`
-- Release output: `.workspace/fahrenheit/artifacts/deploy/rel`
+- `CONFIGURATION=Debug|Release`
+- `GAME_DIR=<path to folder containing FFX.exe>`
+- `BUILD_TARGET=mod|full`
+- `DEPLOY_TARGET=mod|full`
+- `DEPLOY_MODE=merge|replace`
 
-### Configuration Variables
+## Release Flow (Maintainers)
 
-- `CONFIGURATION=Debug|Release` (default: `Debug`)
-- `FAHRENHEIT_REPO=<git-url>`
-- `FAHRENHEIT_DIR=<path>` (default: `.workspace/fahrenheit`)
-- `NATIVE_MSBUILD_EXE=<path-to-MSBuild.exe>` (optional override)
-- `GAME_DIR=<path-to-game-root-containing-FFX.exe>`
-- `MOD_ID=<manifest-id>` (default: `fhparry`)
-- `CI=true|false` (set `true` to disable interactive `make setup` prompts)
-- `DRY_RUN=true|false` (preview prerequisite installs without changing system)
+```bash
+# 1) bump version, regenerate changelog, create release commit + annotated tag
+make release-version BUMP=patch
 
-### Bootstrapping Without Make
-
-On a fresh Windows install where `make` is not available yet:
-
-```cmd
-scripts\install-prerequisites.cmd full
+# 2) push commit and tag
+git push origin main --follow-tags
 ```
 
-Optional dry-run:
-
-```cmd
-scripts\install-prerequisites.cmd full --dry-run
-```
+`BUMP` supports: `patch`, `minor`, `major`.
 
 ## CI/CD
 
-Workflow file: `.github/workflows/ci-cd.yml`
+- `push`/`pull_request` to `main`: `.github/workflows/ci.yml`
+  - validates commit message format on pull requests
+  - runs `make verify`
+- tag push `v*`: `.github/workflows/release.yml`
+  - builds full release output
+  - packages release assets
+  - emits SHA256 checksum files for both ZIP assets
+  - generates release notes via `scripts/generate-release-notes.cmd`
+  - publishes GitHub release assets
 
-- Push/PR to `main`: runs verification (`tests if present` + `make build`)
-- Tag push `v*`: runs `make build-release` and publishes:
-  - `fahrenheit-full-<tag>.zip`
-  - `fhparry-mod-<tag>.zip`
+## GUI Settings
 
-## License
+Open Fahrenheit mod config (`F7`) and configure `Parry Prototype`.
 
-This project is licensed under the MIT License. See [LICENSE](LICENSE).
+- Enable Parry
+- Timing Mode (`Legacy window` / `Clamp on hit`)
+- Parry Window (seconds)
+- Resolve Window Cap (seconds)
+- Show Visual Indicator
+- Play Audio Feedback
+- Boost Overdrive Gauge
+- Debug Logging
+- Negate Damage
+- Physical Lead Delay
+- Magic Lead Delay
+- Future Features (placeholder)
+
+## Limitations
+
+- Enemy/attacker classification still has heuristic fallback logic.
+- Damage negation currently relies on observed runtime damage registers.
+- FFX-2-specific tuning is not finished yet.
+
+## Assets
+
+Project image assets are stored in `resources/`.
+
+- `resources/Banner.png`
+- `resources/Logo.png`
+
+---
+
+**[Back to Top](#top)**
