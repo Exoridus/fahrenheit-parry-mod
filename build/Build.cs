@@ -762,8 +762,8 @@ internal sealed partial class BuildScript : NukeBuild
             Fail($"Manifest file not found: {ManifestPath}");
         }
 
-        using var stream = File.OpenRead(ManifestPath);
-        var json = JsonSerializer.Deserialize<Dictionary<string, object>>(stream) ?? new Dictionary<string, object>();
+        var jsonText = File.ReadAllText(ManifestPath);
+        var json = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonText) ?? new Dictionary<string, object>();
         json["Version"] = version.ToString();
         if (!string.IsNullOrWhiteSpace(repoSlug))
         {
