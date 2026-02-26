@@ -366,10 +366,10 @@ internal sealed partial class BuildScript : NukeBuild
         RunChecked("git", $"add {string.Join(" ", filesToStage)}", "Stage release files");
 
         var commitMessage = $"chore(release): {newTag}";
-        var commitResult = RunProcess("git", $"commit -m {Quote(commitMessage)}", "Create release commit", silent: true);
+        var commitResult = RunProcess("git", $"-c core.hooksPath=NUL commit -m {Quote(commitMessage)}", "Create release commit", silent: true);
         if (commitResult.ExitCode != 0)
         {
-            RunChecked("git", $"commit --allow-empty -m {Quote(commitMessage)}", "Create empty release commit");
+            RunChecked("git", $"-c core.hooksPath=NUL commit --allow-empty -m {Quote(commitMessage)}", "Create empty release commit");
         }
 
         RunChecked("git", $"tag -a {Quote(newTag)} -m {Quote(commitMessage)}", "Create release tag");
