@@ -4,7 +4,7 @@
 # Fahrenheit Parry Mod
 [![Latest](https://img.shields.io/github/v/release/Exoridus/fahrenheit-parry-mod?style=for-the-badge&label=Latest&logo=github&color=44cc11)](https://github.com/Exoridus/fahrenheit-parry-mod/releases/latest)
 [![Release](https://img.shields.io/github/actions/workflow/status/Exoridus/fahrenheit-parry-mod/release.yml?style=for-the-badge&label=Release&logo=githubactions&color=44cc11)](https://github.com/Exoridus/fahrenheit-parry-mod/actions/workflows/release.yml)
-![Banner](https://github.com/Exoridus/fahrenheit-parry-mod/raw/master/resources/Banner.png)
+![Banner](https://github.com/Exoridus/fahrenheit-parry-mod/blob/main/resources/Banner.png?raw=true)
 <!--[![Sponsor](https://img.shields.io/badge/Sponsor-1a1e23?style=for-the-badge&logo=githubsponsors)](https://github.com/sponsors/Exoridus)-->
 <!--[![Downloads](https://img.shields.io/github/downloads/Exoridus/fahrenheit-parry-mod/total?style=for-the-badge&label=Downloads&logo=github)](https://github.com/Exoridus/fahrenheit-parry-mod/releases/latest)-->
 
