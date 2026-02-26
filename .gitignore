@@ -2,6 +2,8 @@
 .workspace/
 .release/
 .nuke/temp/
+.nuke/build.schema.json
+.nuke/parameters.json
 artifacts/
 bin/
 obj/

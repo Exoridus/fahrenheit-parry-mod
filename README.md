@@ -158,6 +158,10 @@ git push origin main --follow-tags
   - emits SHA256 checksum files for both ZIP assets
   - generates release notes via `build.cmd generatereleasenotes`
   - publishes GitHub release assets
+- Dependabot:
+  - update PRs configured by `.github/dependabot.yml`
+  - patch/minor dependency PRs are auto-set to squash auto-merge by `.github/workflows/dependabot-automerge.yml`
+  - merge happens only when branch protection checks are satisfied
 
 ## GUI Settings
 

@@ -1,0 +1,8 @@
+# Default owner for all files
+* @Exoridus
+
+# CI/CD and automation
+/.github/workflows/ @Exoridus
+/build.cmd @Exoridus
+/build/ @Exoridus
+/build.proj @Exoridus
