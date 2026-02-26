@@ -9,7 +9,7 @@ using Nuke.Common.IO;
 using Serilog;
 using static Nuke.Common.Assert;
 
-internal sealed class BuildScript : NukeBuild
+internal sealed partial class BuildScript : NukeBuild
 {
     [Parameter] readonly string Configuration = IsServerBuild ? "Release" : "Debug";
     [Parameter] readonly string FahrenheitRepo = "https://github.com/peppy-enterprises/fahrenheit.git";
@@ -65,9 +65,10 @@ internal sealed class BuildScript : NukeBuild
             Log.Information("  build.cmd build [--buildtarget mod|full]");
             Log.Information("  build.cmd deploy [--deploytarget mod|full] [--deploymode merge|replace] [--gamedir path]");
             Log.Information("  build.cmd releaseversion [--bump patch|minor|major]");
+            Log.Information("  build.cmd releaseready [--repository owner/repo] [--tag vX.Y.Z]");
             Log.Information("  build.cmd packagerelease --tag vX.Y.Z");
             Log.Information("  build.cmd generatereleasenotes --tag vX.Y.Z --repository owner/repo");
-            Log.Information("  build.cmd commit --committype feat --commitmessage \"message\"");
+            Log.Information("  build.cmd commit [--committype feat] [--commitscope ui] [--commitmessage \"message\"] [--commitbreaking true]");
             Log.Information("  build.cmd validatecommitmessage --commitfile .git/COMMIT_EDITMSG");
             Log.Information("  build.cmd validatecommitrange --range origin/main..HEAD");
         });
@@ -132,8 +133,7 @@ internal sealed class BuildScript : NukeBuild
                 Fail("Commit validator selftest failed.");
             }
 
-            BuildCore("mod", Configuration, useReleaseRef: false);
-            RunTestsIfAny(Configuration);
+            RunVerifyCore(Configuration);
         });
 
     Target Build => _ => _.Executes(() => BuildCore(BuildTarget, Configuration, useReleaseRef: false));
@@ -196,16 +196,37 @@ internal sealed class BuildScript : NukeBuild
         PackageReleaseCore(Tag, ResolvePath(DeployDir), ResolvePath(OutDir), ModId);
     });
 
+    Target ReleaseReady => _ => _.Executes(ReleaseReadyCore);
+
     Target ReleaseVersion => _ => _.Executes(ReleaseVersionCore);
 
     Target Commit => _ => _.Executes(() =>
     {
-        if (string.IsNullOrWhiteSpace(CommitMessage))
+        var requestedMessage = CommitMessage;
+        var requestedType = CommitType;
+        var requestedScope = CommitScope;
+        var requestedBreaking = CommitBreaking;
+
+        if (string.IsNullOrWhiteSpace(requestedMessage))
         {
-            Fail("Missing --commitmessage.");
+            if (!InteractiveSession)
+            {
+                Fail("Missing --commitmessage. In interactive mode, you can run build.cmd commit without arguments.");
+            }
+
+            var wizard = RunCommitWizard();
+            if (!wizard.Confirmed)
+            {
+                Fail("Commit canceled.");
+            }
+
+            requestedType = wizard.Type;
+            requestedScope = wizard.Scope;
+            requestedMessage = wizard.Message;
+            requestedBreaking = wizard.Breaking;
         }
 
-        var subject = BuildCommitSubject(CommitType, CommitScope, CommitMessage, CommitBreaking);
+        var subject = BuildCommitSubject(requestedType, requestedScope, requestedMessage, requestedBreaking);
         if (!IsValidConventionalCommit(subject))
         {
             Fail($"Invalid Conventional Commit subject: {subject}");
@@ -258,19 +279,6 @@ internal sealed class BuildScript : NukeBuild
         }
 
         TryAutoDeployAfterBuild(t, configuration, useReleaseRef);
-    }
-
-    void DeployCore(string target, string mode, string configuration)
-    {
-        var t = target.Trim().ToLowerInvariant();
-        var m = NormalizeManualDeployMode(mode);
-        if (t != "mod" && t != "full")
-        {
-            Fail($"Invalid deploy target '{target}'. Use mod or full.");
-        }
-
-        var gameDir = ResolveGameDir(promptIfMissing: true, persist: false);
-        DeployFromArtifacts(gameDir, configuration, t, m, failOnError: true, reason: "Manual deploy");
     }
 
     void RunBuildProjTarget(string target, string configuration, bool includeNativeMsbuild, string fahrenheitRef)
@@ -957,50 +965,6 @@ internal sealed class BuildScript : NukeBuild
         RunChecked("winget", args.ToString(), $"Install {label}", showSpinner: true, silent: true);
     }
 
-    void SetupAutoDeployCore()
-    {
-        var cfg = LoadLocalConfig();
-        var prefilledAutoDeploy = ParseOptionalBool(AutoDeploy);
-        var shouldConfigure = prefilledAutoDeploy
-            ?? (InteractiveSession && AskYesNo("Would you like to setup automatic build deployment into the game installation path?", defaultYes: true));
-
-        if (!shouldConfigure)
-        {
-            cfg.AutoDeploy = false;
-            SaveLocalConfig(cfg);
-            Log.Warning("Automatic deployment setup skipped for now.");
-            Log.Information("You can configure it later with: build.cmd setupautodeploy");
-            return;
-        }
-
-        var resolvedGameDir = ResolveGameDirForAutoDeploySetup(cfg);
-        if (!IsValidGameDir(resolvedGameDir))
-        {
-            cfg.AutoDeploy = false;
-            SaveLocalConfig(cfg);
-            Log.Warning("No valid game installation path was configured.");
-            Log.Information("Automatic deployment setup was skipped. You can configure it later with: build.cmd setupautodeploy");
-            return;
-        }
-
-        var resolvedMode = ResolveAutoDeployModeForSetup(cfg);
-        if (string.IsNullOrWhiteSpace(resolvedMode))
-        {
-            cfg.AutoDeploy = false;
-            SaveLocalConfig(cfg);
-            Log.Warning("Automatic deployment mode was not selected.");
-            Log.Information("Automatic deployment setup was skipped. You can configure it later with: build.cmd setupautodeploy");
-            return;
-        }
-
-        cfg.GameDir = resolvedGameDir;
-        cfg.DeployMode = resolvedMode;
-        cfg.AutoDeploy = true;
-        SaveLocalConfig(cfg);
-
-        Log.Information($"Configured automatic deployment: AUTO_DEPLOY=true, GAME_DIR={cfg.GameDir}, DEPLOY_MODE={cfg.DeployMode}");
-    }
-
     string ResolveGameDirForAutoDeploySetup(LocalConfig cfg)
     {
         var fromArg = NormalizePathOrEmpty(GameDir);
@@ -1556,42 +1520,6 @@ internal sealed class BuildScript : NukeBuild
         Log.Information($"Commit messages valid for range {range}.");
     }
 
-    bool IsValidConventionalCommit(string subject)
-    {
-        if (string.IsNullOrWhiteSpace(subject)) return false;
-
-        var trimmed = subject.Trim();
-        if (trimmed.StartsWith("Merge ", StringComparison.OrdinalIgnoreCase)) return true;
-        if (trimmed.StartsWith("Revert ", StringComparison.OrdinalIgnoreCase)) return true;
-        if (trimmed.StartsWith("fixup!", StringComparison.OrdinalIgnoreCase)) return true;
-        if (trimmed.StartsWith("squash!", StringComparison.OrdinalIgnoreCase)) return true;
-
-        var idx = trimmed.IndexOf(':');
-        if (idx <= 0 || idx + 1 >= trimmed.Length) return false;
-
-        var head = trimmed[..idx];
-        var body = trimmed[(idx + 1)..].Trim();
-        if (body.Length == 0) return false;
-
-        var typeEnd = head.IndexOf('(');
-        var type = typeEnd >= 0 ? head[..typeEnd] : head.TrimEnd('!');
-        var allowed = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-        {
-            "build", "chore", "ci", "docs", "feat", "fix", "perf", "refactor", "revert", "style", "test"
-        };
-
-        return allowed.Contains(type.Trim('!', ' '));
-    }
-
-    string BuildCommitSubject(string type, string scope, string message, bool breaking)
-    {
-        var sb = new StringBuilder(type.Trim());
-        if (!string.IsNullOrWhiteSpace(scope)) sb.Append('(').Append(scope.Trim()).Append(')');
-        if (breaking) sb.Append('!');
-        sb.Append(": ").Append(message.Trim());
-        return sb.ToString();
-    }
-
     bool DotNetSdkMajorInstalled(int major)
     {
         var result = RunProcess("dotnet", "--list-sdks", "Check SDKs", showSpinner: false, silent: true);
@@ -1776,6 +1704,8 @@ internal sealed class BuildScript : NukeBuild
     {
         public override string ToString() => $"{Major}.{Minor}.{Patch}";
     }
+
+    readonly record struct CommitWizardResult(string Type, string Scope, string Message, bool Breaking, bool Confirmed);
 
     readonly record struct ProcessResult(int ExitCode, string StdOut, string StdErr);
 }

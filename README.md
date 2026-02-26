@@ -70,6 +70,7 @@ Download release assets from the latest GitHub release:
 - Windows
 - Git
 - .NET SDK `10.x`
+- SDK pinning via `global.json` (`10.0.100`, roll-forward within feature band)
 
 For full native builds (`--buildtarget full`):
 
@@ -122,8 +123,11 @@ build.cmd verify --configuration Debug
 # Configure automatic local deployment
 build.cmd setupautodeploy
 
+# Release preflight checks
+build.cmd releaseready --repository "Exoridus/fahrenheit-parry-mod"
+
 # Create a conventional commit (default type: chore, no scope)
-build.cmd commit --commitmessage "update docs"
+build.cmd commit
 build.cmd commit --committype feat --commitscope ui --commitmessage "add timing mode toggle"
 
 # Full build (native + managed)
@@ -168,6 +172,12 @@ git push origin main --follow-tags
 `build.cmd releaseversion` also pins the exact Fahrenheit commit used for release builds into `fahrenheit.release.ref`.  
 `build.cmd buildrelease` consumes that pinned ref for deterministic release artifacts.
 
+Recommended before `releaseversion`:
+
+```bash
+build.cmd releaseready --repository "Exoridus/fahrenheit-parry-mod"
+```
+
 ## CI/CD
 
 - `push`/`pull_request` to `main`: `.github/workflows/ci.yml`
@@ -183,6 +193,11 @@ git push origin main --follow-tags
   - update PRs configured by `.github/dependabot.yml`
   - patch/minor dependency PRs are auto-set to squash auto-merge by `.github/workflows/dependabot-automerge.yml`
   - merge happens only when branch protection checks are satisfied
+
+## Automation Docs
+
+- Target and workflow map: `docs/automation.md`
+- Local config schema: `docs/dev-local.schema.json`
 
 ## GUI Settings
 

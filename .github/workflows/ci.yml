@@ -30,6 +30,7 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
+          cache: true
 
       - name: Validate commit messages (PR)
         if: github.event_name == 'pull_request'
@@ -39,3 +40,11 @@ jobs:
       - name: Verify
         shell: cmd
         run: build.cmd verify --configuration Debug --repository "${{ github.repository }}"
+
+      - name: Upload debug deploy output (PR)
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: deploy-dbg-${{ github.event.pull_request.number }}
+          path: .workspace/fahrenheit/artifacts/deploy/dbg
+          if-no-files-found: warn

@@ -52,7 +52,7 @@ build.cmd setupautodeploy
 Optional helper for creating conventional commit messages:
 
 ```cmd
-build.cmd commit --commitmessage "update docs"
+build.cmd commit
 build.cmd commit --committype feat --commitscope ui --commitmessage "add toggle"
 ```
 
@@ -62,6 +62,7 @@ build.cmd commit --committype feat --commitscope ui --commitmessage "add toggle"
 2. Run:
 
 ```cmd
+build.cmd releaseready --repository "Exoridus/fahrenheit-parry-mod"
 build.cmd releaseversion --bump patch
 ```
 
