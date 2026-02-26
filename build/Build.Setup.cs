@@ -5,44 +5,100 @@ internal sealed partial class BuildScript
     void SetupAutoDeployCore()
     {
         var cfg = LoadLocalConfig();
-        var prefilledAutoDeploy = ParseOptionalBool(AutoDeploy);
-        var shouldConfigure = prefilledAutoDeploy
-            ?? (InteractiveSession && AskYesNo("Would you like to setup automatic build deployment into the game installation path?", defaultYes: true));
+        var modeOverride = NormalizeAutoDeployModeOrEmpty(AutoDeployMode);
+        var hasModeOverride = !string.IsNullOrWhiteSpace(modeOverride);
+        var hasPathOverride = !string.IsNullOrWhiteSpace(GameDir);
 
-        if (!shouldConfigure)
+        if (hasModeOverride)
         {
-            cfg.AutoDeploy = false;
+            cfg.DeployMode = modeOverride;
+        }
+
+        if (hasModeOverride && modeOverride == "none" && !hasPathOverride)
+        {
+            cfg.DeployMode = "none";
             SaveLocalConfig(cfg);
-            Log.Warning("Automatic deployment setup skipped for now.");
-            Log.Information("You can configure it later with: build.cmd setupautodeploy");
+            Log.Warning("Automatic deployment mode is set to 'none'.");
+            Log.Information("You can enable it later with: build.cmd setupautodeploy --autodeploymode update");
             return;
         }
 
-        var resolvedGameDir = ResolveGameDirForAutoDeploySetup(cfg);
-        if (!IsValidGameDir(resolvedGameDir))
+        if (hasPathOverride)
         {
-            cfg.AutoDeploy = false;
+            var normalizedPath = NormalizePathOrEmpty(GameDir);
+            if (!IsValidGameDir(normalizedPath))
+            {
+                Log.Warning($"Provided --gamedir is invalid: {GameDir}");
+                cfg.GameDir = string.Empty;
+            }
+            else
+            {
+                cfg.GameDir = normalizedPath;
+            }
+        }
+
+        if (!IsValidGameDir(cfg.GameDir))
+        {
+            cfg.GameDir = string.Empty;
+        }
+
+        var normalizedMode = NormalizeAutoDeployModeOrEmpty(cfg.DeployMode);
+        cfg.DeployMode = string.IsNullOrWhiteSpace(normalizedMode) ? "none" : normalizedMode;
+
+        var alreadyConfigured = IsValidGameDir(cfg.GameDir) && cfg.DeployMode != "none";
+        if (alreadyConfigured && !hasModeOverride && !hasPathOverride)
+        {
+            SaveLocalConfig(cfg);
+            Log.Information($"Auto deploy already configured: GAME_DIR={cfg.GameDir}, DEPLOY_MODE={cfg.DeployMode}");
+            return;
+        }
+
+        if (InteractiveSession && !alreadyConfigured && !hasModeOverride)
+        {
+            if (!AskYesNo("Would you like to setup automatic build deployment into the game installation path?", defaultYes: true))
+            {
+                cfg.DeployMode = "none";
+                SaveLocalConfig(cfg);
+                Log.Warning("Automatic deployment setup skipped for now.");
+                Log.Information("You can configure it later with: build.cmd setupautodeploy");
+                return;
+            }
+        }
+
+        if (!IsValidGameDir(cfg.GameDir))
+        {
+            var resolvedGameDir = ResolveGameDirForAutoDeploySetup(cfg);
+            if (IsValidGameDir(resolvedGameDir))
+            {
+                cfg.GameDir = resolvedGameDir;
+            }
+        }
+
+        if (!IsValidGameDir(cfg.GameDir))
+        {
+            cfg.GameDir = string.Empty;
+            cfg.DeployMode = "none";
             SaveLocalConfig(cfg);
             Log.Warning("No valid game installation path was configured.");
             Log.Information("Automatic deployment setup was skipped. You can configure it later with: build.cmd setupautodeploy");
             return;
         }
 
-        var resolvedMode = ResolveAutoDeployModeForSetup(cfg);
-        if (string.IsNullOrWhiteSpace(resolvedMode))
+        if (!hasModeOverride && cfg.DeployMode == "none")
         {
-            cfg.AutoDeploy = false;
+            var resolvedMode = ResolveAutoDeployModeForSetup(cfg);
+            cfg.DeployMode = string.IsNullOrWhiteSpace(resolvedMode) ? "none" : resolvedMode;
+        }
+
+        if (cfg.DeployMode == "none")
+        {
             SaveLocalConfig(cfg);
-            Log.Warning("Automatic deployment mode was not selected.");
-            Log.Information("Automatic deployment setup was skipped. You can configure it later with: build.cmd setupautodeploy");
+            Log.Warning("Automatic deployment mode is set to 'none'.");
+            Log.Information("You can enable it later with: build.cmd setupautodeploy --autodeploymode update");
             return;
         }
 
-        cfg.GameDir = resolvedGameDir;
-        cfg.DeployMode = resolvedMode;
-        cfg.AutoDeploy = true;
         SaveLocalConfig(cfg);
-
-        Log.Information($"Configured automatic deployment: AUTO_DEPLOY=true, GAME_DIR={cfg.GameDir}, DEPLOY_MODE={cfg.DeployMode}");
+        Log.Information($"Configured automatic deployment: GAME_DIR={cfg.GameDir}, DEPLOY_MODE={cfg.DeployMode}");
     }
 }

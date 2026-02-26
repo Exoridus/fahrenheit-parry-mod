@@ -102,13 +102,12 @@ build.cmd setupautodeploy
 Prefill options for no-prompt setup:
 
 ```bash
-build.cmd setupautodeploy --autodeploy true --gamedir "C:\Path\To\Game" --autodeploymode update
+build.cmd setupautodeploy --gamedir "C:\Path\To\Game" --autodeploymode update
 ```
 
 Config is stored in `.workspace/dev.local.json` using:
-- `AUTO_DEPLOY`
 - `GAME_DIR`
-- `DEPLOY_MODE` (`update`, `replace`, `mod-only`)
+- `DEPLOY_MODE` (`none`, `update`, `replace`, `mod-only`)
 
 ## Build / Deploy Commands
 
@@ -154,8 +153,7 @@ Important overrides:
 - `--deploytarget mod|full`
 - `--deploymode merge|replace`
 - `--fahrenheitref <git ref>` (optional override; default local builds track `origin/main`)
-- `--autodeploy true|false` (setup/build override)
-- `--autodeploymode update|replace|mod-only` (setup/build override)
+- `--autodeploymode none|update|replace|mod-only` (setup/build override)
 
 ## Release Flow (Maintainers)
 

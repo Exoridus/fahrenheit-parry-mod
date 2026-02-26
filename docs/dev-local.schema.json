@@ -9,21 +9,16 @@
       "type": "string",
       "description": "Absolute path to game install directory containing FFX.exe."
     },
-    "AUTO_DEPLOY": {
-      "type": "boolean",
-      "description": "Enable automatic deployment after local builds."
-    },
     "DEPLOY_MODE": {
       "type": "string",
-      "enum": ["update", "replace", "mod-only"],
-      "description": "Automatic deploy behavior for full builds."
+      "enum": ["none", "update", "replace", "mod-only"],
+      "description": "Automatic deploy behavior for full builds. Use 'none' to disable."
     }
   },
-  "required": ["GAME_DIR", "AUTO_DEPLOY", "DEPLOY_MODE"],
+  "required": ["GAME_DIR", "DEPLOY_MODE"],
   "examples": [
     {
       "GAME_DIR": "C:\\Games\\Final Fantasy X-X2 - HD Remaster",
-      "AUTO_DEPLOY": true,
       "DEPLOY_MODE": "update"
     }
   ]

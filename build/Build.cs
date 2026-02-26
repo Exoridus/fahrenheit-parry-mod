@@ -21,7 +21,6 @@ internal sealed partial class BuildScript : NukeBuild
     [Parameter] readonly string BuildTarget = "mod";
     [Parameter] readonly string DeployTarget = "mod";
     [Parameter] readonly string DeployMode = "merge";
-    [Parameter] readonly string AutoDeploy = string.Empty;
     [Parameter] readonly string AutoDeployMode = string.Empty;
 
     [Parameter] readonly string GameDir = string.Empty;
@@ -60,7 +59,7 @@ internal sealed partial class BuildScript : NukeBuild
             Log.Information("Targets:");
             Log.Information("  build.cmd install [--full] [--dry-run]");
             Log.Information("  build.cmd setup");
-            Log.Information("  build.cmd setupautodeploy [--autodeploy true|false] [--gamedir path] [--autodeploymode update|replace|mod-only]");
+            Log.Information("  build.cmd setupautodeploy [--gamedir path] [--autodeploymode none|update|replace|mod-only]");
             Log.Information("  build.cmd verify");
             Log.Information("  build.cmd build [--buildtarget mod|full]");
             Log.Information("  build.cmd deploy [--deploytarget mod|full] [--deploymode merge|replace] [--gamedir path]");
@@ -1019,27 +1018,33 @@ internal sealed partial class BuildScript : NukeBuild
     string ResolveAutoDeployModeForSetup(LocalConfig cfg)
     {
         var prefilled = NormalizeAutoDeployModeOrEmpty(AutoDeployMode);
+        if (!string.IsNullOrWhiteSpace(AutoDeployMode) && string.IsNullOrWhiteSpace(prefilled))
+        {
+            Fail($"Invalid --autodeploymode '{AutoDeployMode}'. Use none, update, replace, or mod-only.");
+        }
+
         if (!string.IsNullOrWhiteSpace(prefilled))
         {
             return prefilled;
         }
 
         var fromConfig = NormalizeAutoDeployModeOrEmpty(cfg.DeployMode);
-        if (!InteractiveSession && !string.IsNullOrWhiteSpace(fromConfig))
+        if (!string.IsNullOrWhiteSpace(fromConfig) && fromConfig != "none")
         {
             return fromConfig;
         }
 
         if (!InteractiveSession)
         {
-            return "update";
+            return "none";
         }
 
         Log.Information("How should full local builds be auto-deployed?");
         Log.Information("  1) update (default) - copy and overwrite, no deletions");
         Log.Information("  2) replace - replace full deployed directory");
         Log.Information("  3) mod-only - only deploy mod payload, even for full builds");
-        Console.Write("Select deploy mode [1/2/3] (default 1): ");
+        Log.Information("  4) none - disable automatic deployment");
+        Console.Write("Select deploy mode [1/2/3/4] (default 1): ");
         var input = (Console.ReadLine() ?? string.Empty).Trim().ToLowerInvariant();
 
         return input switch
@@ -1047,7 +1052,8 @@ internal sealed partial class BuildScript : NukeBuild
             "" or "1" or "update" or "merge" => "update",
             "2" or "replace" => "replace",
             "3" or "mod-only" or "modonly" or "mod" => "mod-only",
-            _ => "update"
+            "4" or "none" or "off" or "disable" => "none",
+            _ => "none"
         };
     }
 
@@ -1059,26 +1065,12 @@ internal sealed partial class BuildScript : NukeBuild
         }
 
         var cfg = LoadLocalConfig();
-        var autoDeploy = ParseOptionalBool(AutoDeploy) ?? cfg.AutoDeploy;
-        if (!autoDeploy)
-        {
-            return;
-        }
-
-        var gameDir = NormalizePathOrEmpty(GameDir);
-        if (!IsValidGameDir(gameDir))
-        {
-            gameDir = NormalizePathOrEmpty(cfg.GameDir);
-        }
-
-        if (!IsValidGameDir(gameDir))
-        {
-            Log.Warning("AUTO_DEPLOY is enabled but GAME_DIR is missing/invalid. Skipping automatic deploy.");
-            Log.Information("Run: build.cmd setupautodeploy");
-            return;
-        }
-
         var configuredMode = NormalizeAutoDeployModeOrEmpty(AutoDeployMode);
+        if (!string.IsNullOrWhiteSpace(AutoDeployMode) && string.IsNullOrWhiteSpace(configuredMode))
+        {
+            Fail($"Invalid --autodeploymode '{AutoDeployMode}'. Use none, update, replace, or mod-only.");
+        }
+
         if (string.IsNullOrWhiteSpace(configuredMode))
         {
             configuredMode = NormalizeAutoDeployModeOrEmpty(cfg.DeployMode);
@@ -1086,7 +1078,31 @@ internal sealed partial class BuildScript : NukeBuild
 
         if (string.IsNullOrWhiteSpace(configuredMode))
         {
-            configuredMode = "update";
+            configuredMode = "none";
+        }
+
+        if (configuredMode == "none")
+        {
+            return;
+        }
+
+        var gameDir = NormalizePathOrEmpty(GameDir);
+        if (!string.IsNullOrWhiteSpace(GameDir) && !IsValidGameDir(gameDir))
+        {
+            Log.Warning($"Invalid --gamedir value '{GameDir}' (FFX.exe not found). Skipping automatic deploy.");
+            return;
+        }
+
+        if (!IsValidGameDir(gameDir))
+        {
+            gameDir = NormalizePathOrEmpty(cfg.GameDir);
+        }
+
+        if (!IsValidGameDir(gameDir))
+        {
+            Log.Warning("Automatic deploy mode is set but GAME_DIR is missing/invalid. Skipping automatic deploy.");
+            Log.Information("Run: build.cmd setupautodeploy");
+            return;
         }
 
         var deployTarget = "mod";
@@ -1135,6 +1151,7 @@ internal sealed partial class BuildScript : NukeBuild
         return m switch
         {
             "" => string.Empty,
+            "none" or "off" or "disable" => "none",
             "update" or "merge" => "update",
             "replace" => "replace",
             "mod-only" or "modonly" or "mod" => "mod-only",
@@ -1191,6 +1208,7 @@ internal sealed partial class BuildScript : NukeBuild
             CopyDirectoryRecursive(sourcePath, destinationPath);
             EnsureLoadOrderEntry(Path.Combine(targetRoot, "mods", "loadorder"), ModId);
             Log.Information($"{reason}: deployed {normalizedTarget} ({normalizedMode}) to {destinationPath}");
+            CleanupReleaseDirAfterDeploy();
             return true;
         }
         catch (Exception ex)
@@ -1287,6 +1305,25 @@ internal sealed partial class BuildScript : NukeBuild
         return string.Empty;
     }
 
+    void CleanupReleaseDirAfterDeploy()
+    {
+        var releaseDir = ResolvePath(".release");
+        if (!Directory.Exists(releaseDir))
+        {
+            return;
+        }
+
+        try
+        {
+            Directory.Delete(releaseDir, recursive: true);
+            Log.Information($"Cleaned up release directory: {releaseDir}");
+        }
+        catch (Exception ex)
+        {
+            Log.Warning($"Could not clean release directory '{releaseDir}': {ex.Message}");
+        }
+    }
+
     string DetectGameDir()
     {
         foreach (var candidate in GameDirCandidates())
@@ -1339,13 +1376,14 @@ internal sealed partial class BuildScript : NukeBuild
             var cfg = new LocalConfig
             {
                 GameDir = ReadJsonString(root, "GAME_DIR", "GameDir"),
-                DeployMode = NormalizeAutoDeployModeOrEmpty(ReadJsonString(root, "DEPLOY_MODE", "DeployMode")),
-                AutoDeploy = ReadJsonBool(root, "AUTO_DEPLOY", "AutoDeploy")
+                DeployMode = NormalizeAutoDeployModeOrEmpty(ReadJsonString(root, "DEPLOY_MODE", "DeployMode"))
             };
 
             if (string.IsNullOrWhiteSpace(cfg.DeployMode))
             {
-                cfg.DeployMode = "update";
+                // Backward compatibility with deprecated AUTO_DEPLOY toggle.
+                var legacyToggle = ReadJsonBool(root, "AUTO_DEPLOY", "AutoDeploy");
+                cfg.DeployMode = legacyToggle == true ? "update" : "none";
             }
 
             return cfg;
@@ -1363,13 +1401,12 @@ internal sealed partial class BuildScript : NukeBuild
         var normalizedMode = NormalizeAutoDeployModeOrEmpty(cfg.DeployMode);
         if (string.IsNullOrWhiteSpace(normalizedMode))
         {
-            normalizedMode = "update";
+            normalizedMode = "none";
         }
 
         var payload = new Dictionary<string, object>
         {
             ["GAME_DIR"] = normalizedGameDir,
-            ["AUTO_DEPLOY"] = cfg.AutoDeploy && IsValidGameDir(normalizedGameDir),
             ["DEPLOY_MODE"] = normalizedMode
         };
 
@@ -1390,7 +1427,7 @@ internal sealed partial class BuildScript : NukeBuild
         return string.Empty;
     }
 
-    static bool ReadJsonBool(JsonElement root, params string[] keys)
+    static bool? ReadJsonBool(JsonElement root, params string[] keys)
     {
         foreach (var key in keys)
         {
@@ -1402,23 +1439,7 @@ internal sealed partial class BuildScript : NukeBuild
             }
         }
 
-        return false;
-    }
-
-    static bool? ParseOptionalBool(string value)
-    {
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            return null;
-        }
-
-        var normalized = value.Trim().ToLowerInvariant();
-        return normalized switch
-        {
-            "true" or "1" or "yes" or "y" or "on" => true,
-            "false" or "0" or "no" or "n" or "off" => false,
-            _ => null
-        };
+        return null;
     }
 
     static T FailWithReturn<T>(string message)
@@ -1696,8 +1717,7 @@ internal sealed partial class BuildScript : NukeBuild
     sealed class LocalConfig
     {
         public string GameDir { get; set; } = string.Empty;
-        public bool AutoDeploy { get; set; }
-        public string DeployMode { get; set; } = "update";
+        public string DeployMode { get; set; } = "none";
     }
 
     readonly record struct SemVersion(int Major, int Minor, int Patch)

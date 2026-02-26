@@ -38,12 +38,16 @@ This repository uses `build.cmd` as the single local entrypoint.
 
 ### Auto Deploy Modes
 
+- `none` (default)
+  - Automatic post-build deployment is disabled.
 - `update`
   - Full builds deploy full payload with non-destructive merge copy.
 - `replace`
   - Full builds replace destination before copying full payload.
 - `mod-only`
   - Even full builds only deploy mod payload.
+
+After a successful deployment, `.release/` is cleaned automatically.
 
 ## Release Targets
 
