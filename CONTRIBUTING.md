@@ -3,7 +3,7 @@
 ## Scope
 
 - This repository is Windows-first for build/deploy workflows.
-- Keep automation changes in `build.cmd`, `build/`, `scripts/`, and `.github/workflows/`.
+- Keep automation changes in `build.cmd`, `build/`, and `.github/workflows/`.
 
 ## Prerequisites
 
@@ -29,6 +29,12 @@ Run setup once per clone to install local git hooks:
 
 ```cmd
 build.cmd setup
+```
+
+Configure or update automatic local deployment:
+
+```cmd
+build.cmd setupautodeploy
 ```
 
 ## Commit Style

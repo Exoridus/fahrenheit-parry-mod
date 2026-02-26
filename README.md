@@ -91,7 +91,23 @@ build.cmd verify
 build.cmd deploy --gamedir "C:\Path\To\Game"
 ```
 
-`build.cmd setup` also installs local git hooks (`core.hooksPath=.githooks`) so non-conventional commit messages are blocked before commit creation.
+`build.cmd setup` installs local git hooks and then configures automatic local build deployment.
+You can configure or reconfigure deployment later with:
+
+```bash
+build.cmd setupautodeploy
+```
+
+Prefill options for no-prompt setup:
+
+```bash
+build.cmd setupautodeploy --autodeploy true --gamedir "C:\Path\To\Game" --autodeploymode update
+```
+
+Config is stored in `.workspace/dev.local.json` using:
+- `AUTO_DEPLOY`
+- `GAME_DIR`
+- `DEPLOY_MODE` (`update`, `replace`, `mod-only`)
 
 ## Build / Deploy Commands
 
@@ -102,6 +118,9 @@ build.cmd build --buildtarget mod --configuration Debug
 
 # Verify scripts + build + tests (if present)
 build.cmd verify --configuration Debug
+
+# Configure automatic local deployment
+build.cmd setupautodeploy
 
 # Create a conventional commit (default type: chore, no scope)
 build.cmd commit --commitmessage "update docs"
@@ -131,6 +150,8 @@ Important overrides:
 - `--deploytarget mod|full`
 - `--deploymode merge|replace`
 - `--fahrenheitref <git ref>` (optional override; default local builds track `origin/main`)
+- `--autodeploy true|false` (setup/build override)
+- `--autodeploymode update|replace|mod-only` (setup/build override)
 
 ## Release Flow (Maintainers)
 
