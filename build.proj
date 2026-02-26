@@ -31,13 +31,15 @@
         <VsWhereExe>$([MSBuild]::NormalizePath('$(ProgramFilesX86)', 'Microsoft Visual Studio', 'Installer', 'vswhere.exe'))</VsWhereExe>
 
         <NativeMSBuildExe Condition="'$(NativeMSBuildExe)' == '' and '$(OS)' == 'Windows_NT'">msbuild</NativeMSBuildExe>
+        <NativePlatformToolset Condition="'$(NativePlatformToolset)' == ''"></NativePlatformToolset>
+        <NativePlatformToolsetArg Condition="'$(NativePlatformToolset)' != ''"> /p:PlatformToolset=$(NativePlatformToolset)</NativePlatformToolsetArg>
     </PropertyGroup>
 
     <Target Name="Help">
         <Message Importance="high" Text="Targets:" />
         <Message Importance="high" Text="  dotnet msbuild build.proj -t:Setup [-p:FahrenheitDir=...] [-p:FahrenheitRepo=...]" />
         <Message Importance="high" Text="  dotnet msbuild build.proj -t:BuildModOnly [-p:Configuration=Release|Debug]" />
-        <Message Importance="high" Text="  dotnet msbuild build.proj -t:Build [-p:Configuration=Release|Debug] [-p:NativeMSBuildExe=...]" />
+        <Message Importance="high" Text="  dotnet msbuild build.proj -t:Build [-p:Configuration=Release|Debug] [-p:NativeMSBuildExe=...] [-p:NativePlatformToolset=v143]" />
         <Message Importance="high" Text="  dotnet msbuild build.proj -t:Deploy (alias of Build)" />
     </Target>
 
@@ -110,8 +112,9 @@
         <Error Condition="!Exists('$(Stage0Project)')" Text="Missing Stage0 project: $(Stage0Project)" />
         <Error Condition="!Exists('$(Stage1Project)')" Text="Missing Stage1 project: $(Stage1Project)" />
 
-        <Exec Command="&quot;$(NativeMSBuildExe)&quot; &quot;$(Stage0Project)&quot; /p:Configuration=$(Configuration) /p:Platform=Win32" />
-        <Exec Command="&quot;$(NativeMSBuildExe)&quot; &quot;$(Stage1Project)&quot; /p:Configuration=$(Configuration) /p:Platform=Win32" />
+        <Message Importance="high" Condition="'$(NativePlatformToolset)' != ''" Text="Using native platform toolset override: $(NativePlatformToolset)" />
+        <Exec Command="&quot;$(NativeMSBuildExe)&quot; &quot;$(Stage0Project)&quot; /p:Configuration=$(Configuration) /p:Platform=Win32$(NativePlatformToolsetArg)" />
+        <Exec Command="&quot;$(NativeMSBuildExe)&quot; &quot;$(Stage1Project)&quot; /p:Configuration=$(Configuration) /p:Platform=Win32$(NativePlatformToolsetArg)" />
     </Target>
 
     <Target Name="PublishManagedComponents">

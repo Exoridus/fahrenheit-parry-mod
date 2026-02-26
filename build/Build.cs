@@ -16,6 +16,7 @@ internal sealed partial class BuildScript : NukeBuild
     [Parameter] readonly string FahrenheitDir = ".workspace/fahrenheit";
     [Parameter] readonly string FahrenheitRef = string.Empty;
     [Parameter] readonly string NativeMSBuildExe = string.Empty;
+    [Parameter] readonly string NativePlatformToolset = string.Empty;
     [Parameter] readonly string ModId = "fhparry";
 
     [Parameter] readonly string BuildTarget = "mod";
@@ -61,7 +62,7 @@ internal sealed partial class BuildScript : NukeBuild
             Log.Information("  build.cmd setup");
             Log.Information("  build.cmd setupautodeploy [--gamedir path] [--autodeploymode none|update|replace|mod-only]");
             Log.Information("  build.cmd verify");
-            Log.Information("  build.cmd build [--buildtarget mod|full]");
+            Log.Information("  build.cmd build [--buildtarget mod|full] [--nativeplatformtoolset v143]");
             Log.Information("  build.cmd deploy [--deploytarget mod|full] [--deploymode merge|replace] [--gamedir path]");
             Log.Information("  build.cmd releaseversion [--bump patch|minor|major]");
             Log.Information("  build.cmd releaseready [--repository owner/repo] [--tag vX.Y.Z]");
@@ -297,7 +298,100 @@ internal sealed partial class BuildScript : NukeBuild
             args.Append($" -p:NativeMSBuildExe={Quote(NativeMSBuildExe)}");
         }
 
+        if (includeNativeMsbuild)
+        {
+            var resolvedToolset = ResolveNativePlatformToolset();
+            if (!string.IsNullOrWhiteSpace(resolvedToolset))
+            {
+                args.Append($" -p:NativePlatformToolset={Quote(resolvedToolset)}");
+            }
+        }
+
         RunChecked("dotnet", args.ToString(), $"MSBuild target {target}");
+    }
+
+    string ResolveNativePlatformToolset()
+    {
+        if (!OperatingSystem.IsWindows())
+        {
+            return string.Empty;
+        }
+
+        if (!string.IsNullOrWhiteSpace(NativePlatformToolset))
+        {
+            return NativePlatformToolset.Trim();
+        }
+
+        var vswhere = ResolveVsWherePath();
+        if (string.IsNullOrWhiteSpace(vswhere) || !File.Exists(vswhere))
+        {
+            return string.Empty;
+        }
+
+        var probe = RunProcess(
+            vswhere,
+            "-latest -products * -requires Microsoft.Component.MSBuild -property installationPath",
+            "Resolve Visual Studio installation path",
+            showSpinner: false,
+            silent: true);
+
+        if (probe.ExitCode != 0)
+        {
+            return string.Empty;
+        }
+
+        var installPath = probe.StdOut
+            .Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)
+            .Select(x => x.Trim())
+            .FirstOrDefault();
+
+        if (string.IsNullOrWhiteSpace(installPath) || !Directory.Exists(installPath))
+        {
+            return string.Empty;
+        }
+
+        var vcRoot = Path.Combine(installPath, "MSBuild", "Microsoft", "VC");
+        if (!Directory.Exists(vcRoot))
+        {
+            return string.Empty;
+        }
+
+        var candidates = new[] { "v145", "v144", "v143", "v142" };
+        var vcVersions = Directory.EnumerateDirectories(vcRoot, "v*")
+            .OrderByDescending(Path.GetFileName, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        foreach (var vcVersion in vcVersions)
+        {
+            var platformToolsetsRoot = Path.Combine(vcVersion, "Platforms", "Win32", "PlatformToolsets");
+            if (!Directory.Exists(platformToolsetsRoot))
+            {
+                continue;
+            }
+
+            foreach (var candidate in candidates)
+            {
+                var propsPath = Path.Combine(platformToolsetsRoot, candidate, "Toolset.props");
+                if (File.Exists(propsPath))
+                {
+                    Log.Information($"Using native platform toolset override: {candidate}");
+                    return candidate;
+                }
+            }
+        }
+
+        return string.Empty;
+    }
+
+    static string ResolveVsWherePath()
+    {
+        var programFilesX86 = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
+        if (string.IsNullOrWhiteSpace(programFilesX86))
+        {
+            return string.Empty;
+        }
+
+        return Path.Combine(programFilesX86, "Microsoft Visual Studio", "Installer", "vswhere.exe");
     }
 
     string ResolveFahrenheitRef(bool useReleaseRef)

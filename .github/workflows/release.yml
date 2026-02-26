@@ -13,6 +13,7 @@ concurrency:
 
 env:
   DOTNET_VERSION: "10.0.x"
+  NATIVE_PLATFORM_TOOLSET: "v143"
 
 jobs:
   release:
@@ -57,7 +58,7 @@ jobs:
 
       - name: Full release build
         shell: cmd
-        run: build.cmd buildrelease --repository "${{ github.repository }}"
+        run: build.cmd buildrelease --repository "${{ github.repository }}" --nativeplatformtoolset "${{ env.NATIVE_PLATFORM_TOOLSET }}"
 
       - name: Package release archives
         shell: cmd
@@ -79,3 +80,4 @@ jobs:
             .release/fhparry-mod-${{ github.ref_name }}.zip.sha256
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
