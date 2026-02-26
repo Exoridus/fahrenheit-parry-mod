@@ -31,9 +31,9 @@ Goals:
 ### Implemented
 
 - [x] Standalone repo workflow (not requiring in-tree Fahrenheit mod sources)
-- [x] Setup/bootstrap via `make setup`
+- [x] Setup/bootstrap via `build.cmd setup`
 - [x] Canonical argument-based build/deploy commands
-- [x] Local version bump + changelog generation (`make release-version`)
+- [x] Local version bump + changelog generation (`build.cmd releaseversion`)
 - [x] Split CI/release workflows (`ci.yml`, `release.yml`)
 - [x] Automated tag release notes generation
 
@@ -70,9 +70,8 @@ Download release assets from the latest GitHub release:
 - Windows
 - Git
 - .NET SDK `10.x`
-- GNU Make
 
-For full native builds (`BUILD_TARGET=full`):
+For full native builds (`--buildtarget full`):
 
 - Visual Studio Build Tools (or Visual Studio) with:
   - `.NET desktop development`
@@ -81,67 +80,63 @@ For full native builds (`BUILD_TARGET=full`):
 
 ### Quick Start
 
-Install `make` first (required):
-
-```cmd
-:: This should print a GNU Make version at the end.
-(where make >NUL 2>&1 || winget install --id "ezwinports.make" -e --source winget --accept-source-agreements --accept-package-agreements) && make --version
-```
+`build.cmd` is the single entrypoint. It checks `.NET SDK 10.x` and prompts to install it with `winget` when missing.
 
 After that:
 
 ```bash
-make install
-make setup
-make verify
-make deploy GAME_DIR="C:\Path\To\Game"
+build.cmd install --full
+build.cmd setup
+build.cmd verify
+build.cmd deploy --gamedir "C:\Path\To\Game"
 ```
 
-`make setup` also installs local git hooks (`core.hooksPath=.githooks`) so non-conventional commit messages are blocked before commit creation.
+`build.cmd setup` also installs local git hooks (`core.hooksPath=.githooks`) so non-conventional commit messages are blocked before commit creation.
 
 ## Build / Deploy Commands
 
 ```bash
 # Build mod (default)
-make build
-make build BUILD_TARGET=mod CONFIGURATION=Debug
+build.cmd build
+build.cmd build --buildtarget mod --configuration Debug
 
 # Verify scripts + build + tests (if present)
-make verify CONFIGURATION=Debug
+build.cmd verify --configuration Debug
 
 # Create a conventional commit (default type: chore, no scope)
-make commit COMMIT_MSG="update docs"
-make commit COMMIT_TYPE=feat COMMIT_SCOPE=ui COMMIT_MSG="add timing mode toggle"
+build.cmd commit --commitmessage "update docs"
+build.cmd commit --committype feat --commitscope ui --commitmessage "add timing mode toggle"
 
 # Full build (native + managed)
-make build BUILD_TARGET=full CONFIGURATION=Debug
+build.cmd build --buildtarget full --configuration Debug
 
 # Full release build
-make build BUILD_TARGET=full CONFIGURATION=Release
+build.cmd buildrelease
 
 # Deploy mod output (default)
-make deploy GAME_DIR="C:\Path\To\Game"
+build.cmd deploy --gamedir "C:\Path\To\Game"
 
 # Deploy full output (merge mode)
-make deploy DEPLOY_TARGET=full DEPLOY_MODE=merge GAME_DIR="C:\Path\To\Game"
+build.cmd deploy --deploytarget full --deploymode merge --gamedir "C:\Path\To\Game"
 
 # Deploy full output (replace/mirror mode)
-make deploy DEPLOY_TARGET=full DEPLOY_MODE=replace GAME_DIR="C:\Path\To\Game"
+build.cmd deploy --deploytarget full --deploymode replace --gamedir "C:\Path\To\Game"
 ```
 
 Important overrides:
 
-- `CONFIGURATION=Debug|Release`
-- `GAME_DIR=<path to folder containing FFX.exe>`
-- `BUILD_TARGET=mod|full`
-- `DEPLOY_TARGET=mod|full`
-- `DEPLOY_MODE=merge|replace`
+- `--configuration Debug|Release`
+- `--gamedir <path to folder containing FFX.exe>`
+- `--buildtarget mod|full`
+- `--deploytarget mod|full`
+- `--deploymode merge|replace`
+- `--fahrenheitref <git ref>` (optional override; default local builds track `origin/main`)
 
 ## Release Flow (Maintainers)
 
 ```bash
 # 1) bump version, regenerate changelog, create release commit + annotated tag
-make release-version BUMP=patch
+build.cmd releaseversion --bump patch
 
 # 2) push commit and tag
 git push origin main --follow-tags
@@ -149,16 +144,19 @@ git push origin main --follow-tags
 
 `BUMP` supports: `patch`, `minor`, `major`.
 
+`build.cmd releaseversion` also pins the exact Fahrenheit commit used for release builds into `fahrenheit.release.ref`.  
+`build.cmd buildrelease` consumes that pinned ref for deterministic release artifacts.
+
 ## CI/CD
 
 - `push`/`pull_request` to `main`: `.github/workflows/ci.yml`
   - validates commit message format on pull requests
-  - runs `make verify`
+  - runs `build.cmd verify`
 - tag push `v*`: `.github/workflows/release.yml`
   - builds full release output
   - packages release assets
   - emits SHA256 checksum files for both ZIP assets
-  - generates release notes via `scripts/generate-release-notes.cmd`
+  - generates release notes via `build.cmd generatereleasenotes`
   - publishes GitHub release assets
 
 ## GUI Settings

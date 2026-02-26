@@ -1,2 +1,2 @@
 #!/bin/sh
-cmd //c scripts\\validate-commit-msg.cmd "$1"
+cmd //c build.cmd validatecommitmessage --commitfile "$1"

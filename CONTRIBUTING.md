@@ -3,19 +3,18 @@
 ## Scope
 
 - This repository is Windows-first for build/deploy workflows.
-- Keep automation changes in `Makefile`, `scripts/`, and `.github/workflows/`.
+- Keep automation changes in `build.cmd`, `build/`, `scripts/`, and `.github/workflows/`.
 
 ## Prerequisites
 
 - Git
 - .NET SDK 10.x
-- GNU Make
 - For full builds: Visual Studio Build Tools + `vcpkg integrate install`
 
 Install prerequisites:
 
 ```cmd
-make install
+build.cmd install --full
 ```
 
 ## Local Verification
@@ -23,13 +22,13 @@ make install
 Run the standard local verification gate before pushing:
 
 ```cmd
-make verify CONFIGURATION=Debug
+build.cmd verify --configuration Debug
 ```
 
 Run setup once per clone to install local git hooks:
 
 ```cmd
-make setup
+build.cmd setup
 ```
 
 ## Commit Style
@@ -47,8 +46,8 @@ make setup
 Optional helper for creating conventional commit messages:
 
 ```cmd
-make commit COMMIT_MSG="update docs"
-make commit COMMIT_TYPE=feat COMMIT_SCOPE=ui COMMIT_MSG="add toggle"
+build.cmd commit --commitmessage "update docs"
+build.cmd commit --committype feat --commitscope ui --commitmessage "add toggle"
 ```
 
 ## Release Flow
@@ -57,8 +56,10 @@ make commit COMMIT_TYPE=feat COMMIT_SCOPE=ui COMMIT_MSG="add toggle"
 2. Run:
 
 ```cmd
-make release-version BUMP=patch
+build.cmd releaseversion --bump patch
 ```
+
+This command updates version/changelog and writes `fahrenheit.release.ref` with the exact Fahrenheit commit hash that release builds must use.
 
 3. Push commit and tag:
 

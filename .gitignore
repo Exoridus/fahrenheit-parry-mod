@@ -1,6 +1,7 @@
 # Local workspace / build outputs
 .workspace/
 .release/
+.nuke/temp/
 artifacts/
 bin/
 obj/

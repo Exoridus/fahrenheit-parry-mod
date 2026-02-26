@@ -21,7 +21,7 @@ if not defined MOD_ID set "MOD_ID=fhparry"
 if not defined GAME_DIR call :read_config_game_dir
 if not defined GAME_DIR (
     echo ERROR: GAME_DIR is not configured.
-    echo Run "make setup-game-dir" first or pass GAME_DIR explicitly.
+    echo Run "build.cmd setupgamedir" first or pass GAME_DIR explicitly.
     exit /B 2
 )
 
@@ -41,7 +41,7 @@ if /I "%CONFIGURATION%"=="Release" (
 set "SOURCE_ROOT=%REPO_ROOT%\%FAHRENHEIT_DIR%\artifacts\deploy\%DEPLOY_CFG%"
 if not exist "%SOURCE_ROOT%" (
     echo ERROR: Build output not found: "%SOURCE_ROOT%"
-    echo Run make build or make build-full first.
+    echo Run "build.cmd build" or "build.cmd buildfull" first.
     exit /B 3
 )
 

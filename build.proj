@@ -3,6 +3,7 @@
         <RepoRoot>$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)'))</RepoRoot>
         <FahrenheitRepo Condition="'$(FahrenheitRepo)' == ''">https://github.com/peppy-enterprises/fahrenheit.git</FahrenheitRepo>
         <FahrenheitDir Condition="'$(FahrenheitDir)' == ''">$([MSBuild]::NormalizeDirectory('$(RepoRoot)', '.workspace', 'fahrenheit'))</FahrenheitDir>
+        <FahrenheitRef Condition="'$(FahrenheitRef)' == ''">origin/main</FahrenheitRef>
         <FahrenheitDirPath>$([System.Text.RegularExpressions.Regex]::Replace('$([MSBuild]::NormalizePath('$(FahrenheitDir)'))', '[\\/]+$$', ''))</FahrenheitDirPath>
         <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
         <ModId Condition="'$(ModId)' == ''">fhparry</ModId>
@@ -57,9 +58,13 @@
         <Exec Condition="Exists('$(FahrenheitGitDir)')"
               Command="git -C &quot;$(FahrenheitDirPath)&quot; fetch --all --tags" />
         <Exec Condition="Exists('$(FahrenheitGitDir)')"
+              Command="git -C &quot;$(FahrenheitDirPath)&quot; -c advice.detachedHead=false checkout --force &quot;$(FahrenheitRef)&quot;" />
+        <Exec Condition="Exists('$(FahrenheitGitDir)')"
               Command="git -C &quot;$(FahrenheitDirPath)&quot; submodule sync --recursive" />
         <Exec Condition="Exists('$(FahrenheitGitDir)')"
               Command="git -C &quot;$(FahrenheitDirPath)&quot; submodule update --init --recursive" />
+
+        <Message Importance="high" Text="Fahrenheit ref: $(FahrenheitRef)" />
     </Target>
 
     <Target Name="RestoreManagedProjects" DependsOnTargets="EnsureFahrenheitCheckout">

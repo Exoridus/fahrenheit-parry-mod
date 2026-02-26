@@ -85,6 +85,12 @@
         </ProjectReference>
     </ItemGroup>
 
+    <!-- REPO TOOLING EXCLUDES -->
+    <ItemGroup>
+        <Compile Remove=".workspace/**" />
+        <Compile Remove="build/**" />
+    </ItemGroup>
+
     <!-- ASSETS: MANIFEST -->
     <ItemGroup>
         <None Include="$(AssemblyName).manifest.json" CopyToOutputDirectory="Always" />
