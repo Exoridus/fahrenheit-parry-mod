@@ -71,9 +71,12 @@
         <Error Condition="!Exists('$(ManagedCoreProject)')" Text="Missing Fahrenheit core project: $(ManagedCoreProject)" />
         <Error Condition="!Exists('$(ManagedRuntimeProject)')" Text="Missing Fahrenheit runtime project: $(ManagedRuntimeProject)" />
 
-        <MSBuild Projects="$(ManagedCoreProject);$(ManagedRuntimeProject);$(ModProjectPath)"
+        <MSBuild Projects="$(ManagedCoreProject);$(ManagedRuntimeProject)"
                  Targets="Restore"
                  Properties="Configuration=$(Configuration);SolutionDir=$(SolutionDirForBuild)" />
+        <MSBuild Projects="$(ModProjectPath)"
+                 Targets="Restore"
+                 Properties="Configuration=$(Configuration);SolutionDir=$(SolutionDirForBuild);BaseOutputPath=$(ModBaseOutputPath);BaseIntermediateOutputPath=$(ModBaseIntermediateOutputPath)" />
     </Target>
 
     <Target Name="Setup" DependsOnTargets="RestoreManagedProjects">
