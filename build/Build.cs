@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.ComponentModel;
 using System.Globalization;
 using System.IO.Compression;
 using System.Security.Cryptography;
@@ -31,6 +32,7 @@ internal sealed partial class BuildScript : NukeBuild
     [Parameter] readonly bool Full;
     [Parameter] readonly bool DryRun;
     [Parameter] readonly bool NonInteractive;
+    [Parameter] readonly bool Elevated;
 
     [Parameter] readonly string CommitType = "chore";
     [Parameter] readonly string CommitScope = string.Empty;
@@ -64,6 +66,7 @@ internal sealed partial class BuildScript : NukeBuild
             Log.Information("  build.cmd verify");
             Log.Information("  build.cmd build [--buildtarget mod|full] [--nativeplatformtoolset v143]");
             Log.Information("  build.cmd deploy [--deploytarget mod|full] [--deploymode merge|replace] [--gamedir path]");
+            Log.Information("  build.cmd start [--gamedir path] [--elevated]");
             Log.Information("  build.cmd releaseversion [--bump patch|minor|major]");
             Log.Information("  build.cmd releaseready [--repository owner/repo] [--tag vX.Y.Z]");
             Log.Information("  build.cmd packagerelease --tag vX.Y.Z");
@@ -144,6 +147,7 @@ internal sealed partial class BuildScript : NukeBuild
     Target Deploy => _ => _.Executes(() => DeployCore(DeployTarget, DeployMode, Configuration));
     Target DeployMod => _ => _.Executes(() => DeployCore("mod", "merge", Configuration));
     Target DeployFull => _ => _.Executes(() => DeployCore("full", "merge", Configuration));
+    Target Start => _ => _.Executes(StartCore);
 
     Target BuildAndDeploy => _ => _.Executes(() =>
     {
@@ -279,6 +283,45 @@ internal sealed partial class BuildScript : NukeBuild
         }
 
         TryAutoDeployAfterBuild(t, configuration, useReleaseRef);
+    }
+
+    void StartCore()
+    {
+        var gameDir = ResolveGameDir(promptIfMissing: true, persist: false);
+        var binDir = Path.Combine(gameDir, "fahrenheit", "bin");
+        var stage0Exe = Path.Combine(binDir, "fhstage0.exe");
+        if (!File.Exists(stage0Exe))
+        {
+            Fail($"Missing stage0 loader: {stage0Exe}{Environment.NewLine}Run build+deploy first.");
+        }
+
+        Log.Information($"Launching Fahrenheit loader from: {binDir}{(Elevated ? " (elevated)" : string.Empty)}");
+
+        try
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = stage0Exe,
+                Arguments = "..\\..\\FFX.exe",
+                WorkingDirectory = binDir,
+                UseShellExecute = true,
+                Verb = Elevated ? "runas" : "open"
+            };
+
+            var process = Process.Start(psi);
+            if (process == null)
+            {
+                Fail("Failed to start fhstage0.exe.");
+            }
+        }
+        catch (Win32Exception ex) when (ex.NativeErrorCode == 1223)
+        {
+            Fail("Start canceled by user (UAC prompt declined).");
+        }
+        catch (Exception ex)
+        {
+            Fail($"Failed to start fhstage0.exe: {ex.Message}");
+        }
     }
 
     void RunBuildProjTarget(string target, string configuration, bool includeNativeMsbuild, string fahrenheitRef)
@@ -1134,18 +1177,18 @@ internal sealed partial class BuildScript : NukeBuild
         }
 
         Log.Information("How should full local builds be auto-deployed?");
-        Log.Information("  1) update (default) - copy and overwrite, no deletions");
-        Log.Information("  2) replace - replace full deployed directory");
-        Log.Information("  3) mod-only - only deploy mod payload, even for full builds");
+        Log.Information("  1) mod-only (default) - always deploy mod payload (merge)");
+        Log.Information("  2) update - copy and overwrite full payload, no deletions");
+        Log.Information("  3) replace - replace full deployed directory");
         Log.Information("  4) none - disable automatic deployment");
         Console.Write("Select deploy mode [1/2/3/4] (default 1): ");
         var input = (Console.ReadLine() ?? string.Empty).Trim().ToLowerInvariant();
 
         return input switch
         {
-            "" or "1" or "update" or "merge" => "update",
-            "2" or "replace" => "replace",
-            "3" or "mod-only" or "modonly" or "mod" => "mod-only",
+            "" or "1" or "mod-only" or "modonly" or "mod" => "mod-only",
+            "2" or "update" or "merge" => "update",
+            "3" or "replace" => "replace",
             "4" or "none" or "off" or "disable" => "none",
             _ => "none"
         };

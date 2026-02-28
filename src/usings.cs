@@ -4,6 +4,8 @@
 
 global using System;
 global using System.Collections.Generic;
+global using System.Diagnostics;
+global using System.Globalization;
 global using System.IO;
 global using System.Numerics;
 global using System.Runtime.InteropServices;
@@ -15,3 +17,5 @@ global using Hexa.NET.ImGui;
 global using System.Text.Json;
 global using System.Text.Json.Serialization;
 
+global using Fahrenheit.Mods.Parry.Logic;
+global using System.Linq;

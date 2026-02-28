@@ -33,6 +33,10 @@ This repository uses `build.cmd` as the single local entrypoint.
 
 - `build.cmd deploy --deploytarget mod|full --deploymode merge|replace --gamedir <path>`
   - Manual deployment into `GAME_DIR\fahrenheit\...`.
+  - Default behavior without flags: `deploytarget=mod`, `deploymode=merge`.
+- `build.cmd start [--gamedir <path>] [--elevated]`
+  - Launches `GAME_DIR\fahrenheit\bin\fhstage0.exe ..\..\FFX.exe`.
+  - With `--elevated`, requests admin rights via UAC (`runas`).
 - `build.cmd setupautodeploy`
   - Interactive (or prefilled) setup for automatic local post-build deployment.
 
@@ -46,6 +50,7 @@ This repository uses `build.cmd` as the single local entrypoint.
   - Full builds replace destination before copying full payload.
 - `mod-only`
   - Even full builds only deploy mod payload.
+  - This is the default selection in interactive `setupautodeploy`.
 
 After a successful deployment, `.release/` is cleaned automatically.
 

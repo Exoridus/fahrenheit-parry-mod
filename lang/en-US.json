@@ -13,6 +13,8 @@
     "fhparry.negate.desc": "Attempt to nullify the next incoming damage when a parry succeeds.",
     "fhparry.logging.name": "Debug Logging",
     "fhparry.logging.desc": "Write additional parry state changes to the log when enabled.",
+    "fhparry.debug_overlay.name": "Debug Overlay",
+    "fhparry.debug_overlay.desc": "Display a live event feed and mapped runtime state panel in-game.",
     "fhparry.window_seconds.name": "Parry Window (seconds)",
     "fhparry.window_seconds.desc": "Applies only to the legacy timer. Sets how long the parry input remains active after opening.",
     "fhparry.lead_physical.name": "Physical Lead Delay",

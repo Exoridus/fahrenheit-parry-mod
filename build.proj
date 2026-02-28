@@ -78,7 +78,7 @@
                  Properties="Configuration=$(Configuration);SolutionDir=$(SolutionDirForBuild)" />
         <MSBuild Projects="$(ModProjectPath)"
                  Targets="Restore"
-                 Properties="Configuration=$(Configuration);SolutionDir=$(SolutionDirForBuild);BaseOutputPath=$(ModBaseOutputPath);BaseIntermediateOutputPath=$(ModBaseIntermediateOutputPath)" />
+                 Properties="Configuration=$(Configuration);SolutionDir=$(SolutionDirForBuild)" />
     </Target>
 
     <Target Name="Setup" DependsOnTargets="RestoreManagedProjects">
@@ -123,7 +123,7 @@
                  Properties="Configuration=$(Configuration);SolutionDir=$(SolutionDirForBuild)" />
         <MSBuild Projects="$(ModProjectPath)"
                  Targets="Publish"
-                 Properties="Configuration=$(Configuration);SolutionDir=$(SolutionDirForBuild);PublishDir=$(DeployModDir);BaseOutputPath=$(ModBaseOutputPath);BaseIntermediateOutputPath=$(ModBaseIntermediateOutputPath)" />
+                 Properties="Configuration=$(Configuration);SolutionDir=$(SolutionDirForBuild);PublishDir=$(DeployModDir);BuildProjectReferences=false" />
     </Target>
 
     <Target Name="WriteLoadOrder">

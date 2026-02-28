@@ -13,6 +13,8 @@
     "fhparry.negate.desc": "Versucht den naechsten eingehenden Schaden nach erfolgreicher Parade aufzuheben.",
     "fhparry.logging.name": "Debug-Protokollierung",
     "fhparry.logging.desc": "Schreibt bei Aktivierung zusaetzliche Parier-Zustandsaenderungen ins Log.",
+    "fhparry.debug_overlay.name": "Debug-Overlay",
+    "fhparry.debug_overlay.desc": "Zeigt einen Live-Ereignisfeed und ein zugeordnetes Laufzeit-Zustandspanel im Spiel an.",
     "fhparry.window_seconds.name": "Parierfenster (Sekunden)",
     "fhparry.window_seconds.desc": "Gilt nur fuer den klassischen Timer. Legt fest, wie lange die Parade-Eingabe aktiv bleibt.",
     "fhparry.lead_physical.name": "Physische Vorlaufverzoegerung",

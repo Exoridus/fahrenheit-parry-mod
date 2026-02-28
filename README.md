@@ -97,7 +97,7 @@ build.cmd setupautodeploy
 Prefill options for no-prompt setup:
 
 ```bash
-build.cmd setupautodeploy --gamedir "C:\Path\To\Game" --autodeploymode update
+build.cmd setupautodeploy --gamedir "C:\Path\To\Game" --autodeploymode mod-only
 ```
 
 Config is stored in `.workspace/dev.local.json` using:
@@ -132,6 +132,10 @@ build.cmd buildrelease
 
 # Deploy mod output (default)
 build.cmd deploy --gamedir "C:\Path\To\Game"
+
+# Start the game through deployed Fahrenheit loader
+build.cmd start --gamedir "C:\Path\To\Game"
+build.cmd start --gamedir "C:\Path\To\Game" --elevated
 
 # Deploy full output (merge mode)
 build.cmd deploy --deploytarget full --deploymode merge --gamedir "C:\Path\To\Game"

@@ -82,6 +82,7 @@
         <ProjectReference Include="$(FahrenheitRootDir)core\fh\Fahrenheit.csproj">
             <Private>false</Private>
             <ExcludeAssets>runtime;native</ExcludeAssets>
+            <GlobalPropertiesToRemove>BaseOutputPath;BaseIntermediateOutputPath</GlobalPropertiesToRemove>
         </ProjectReference>
     </ItemGroup>
 
@@ -89,6 +90,7 @@
     <ItemGroup>
         <Compile Remove=".workspace/**" />
         <Compile Remove="build/**" />
+        <Compile Remove="tests/**" />
     </ItemGroup>
 
     <!-- ASSETS: MANIFEST -->
