@@ -13,11 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\src\combat\parry_decision_planner.cs" Link="combat\parry_decision_planner.cs" />
-    <Compile Include="..\..\src\combat\parry_difficulty_model.cs" Link="combat\parry_difficulty_model.cs" />
-    <Compile Include="..\..\src\combat\parry_spam_controller.cs" Link="combat\parry_spam_controller.cs" />
-    <Compile Include="..\..\src\combat\parry_time_source.cs" Link="combat\parry_time_source.cs" />
-    <Compile Include="..\..\src\combat\parry_turn_state_machine.cs" Link="combat\parry_turn_state_machine.cs" />
-    <Compile Include="..\..\src\debug\parry_turn_timeline_tracker.cs" Link="debug\parry_turn_timeline_tracker.cs" />
+    <Compile Include="..\..\src\combat\ParryDecisionPlanner.cs" Link="combat\ParryDecisionPlanner.cs" />
+    <Compile Include="..\..\src\combat\ParryDifficultyModel.cs" Link="combat\ParryDifficultyModel.cs" />
+    <Compile Include="..\..\src\combat\ParrySpamController.cs" Link="combat\ParrySpamController.cs" />
+    <Compile Include="..\..\src\combat\ParryTimeSource.cs" Link="combat\ParryTimeSource.cs" />
+    <Compile Include="..\..\src\combat\ParryTurnStateMachine.cs" Link="combat\ParryTurnStateMachine.cs" />
+    <Compile Include="..\..\src\debug\ParryTurnTimelineTracker.cs" Link="debug\ParryTurnTimelineTracker.cs" />
   </ItemGroup>
 </Project>

@@ -119,7 +119,7 @@ Cons:
 
 ## B) Read via manual offset arithmetic (fallback)
 
-Example from this mod (`src/module.data_mapping.cs`):
+Example from this mod (`src/ParryModule.DataMapping.cs`):
 
 ```csharp
 private static ushort read_attack_command_id_candidate_from_btl_offset(Btl* battle, byte queueIndex) {
@@ -301,9 +301,9 @@ This exact layering is the practical pattern used throughout this mod:
 
 ## 12) Suggested Learning Path for a Web Developer
 
-1. Start with `src/module.cs` and hook setup only.
-2. Read `src/module.hooks.cs` to understand pre/orig/post hook flow.
-3. Read `src/module.data_mapping.cs` for pointer/offset fallback logic.
+1. Start with `src/ParryModule.cs` and hook setup only.
+2. Read `src/ParryModule.Hooks.cs` to understand pre/orig/post hook flow.
+3. Read `src/ParryModule.DataMapping.cs` for pointer/offset fallback logic.
 4. Read `src/combat/*.cs` for event-driven state machine design.
 5. Run `dotnet test tests/Parry.Tests/Parry.Tests.csproj -c Debug` and map test behavior back to runtime logic.
 

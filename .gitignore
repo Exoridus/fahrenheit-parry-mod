@@ -40,6 +40,3 @@ Thumbs.db
 
 # Local downloaded / packaged archives
 fahrenheit_windows_x86_release_*.zip
-
-# Research mining outputs
-mappings/research/*
