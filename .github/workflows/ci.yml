@@ -18,12 +18,8 @@ env:
 
 jobs:
   verify:
-    name: Verify (${{ matrix.config }})
+    name: Verify
     runs-on: windows-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        config: [Debug, Release]
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -36,18 +32,36 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Validate commit messages (PR)
-        if: github.event_name == 'pull_request' && matrix.config == 'Debug'
+        if: github.event_name == 'pull_request'
         shell: cmd
         run: build.cmd commitrange --range "${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}"
 
       - name: Verify
         shell: cmd
-        run: build.cmd verify --config ${{ matrix.config }} --repo "${{ github.repository }}"
+        run: build.cmd verify --config Debug --repo "${{ github.repository }}"
 
       - name: Upload debug deploy output (PR)
-        if: github.event_name == 'pull_request' && matrix.config == 'Debug'
+        if: github.event_name == 'pull_request'
         uses: actions/upload-artifact@v6
         with:
           name: deploy-dbg-${{ github.event.pull_request.number }}
           path: .workspace/fahrenheit/artifacts/deploy/dbg
           if-no-files-found: warn
+
+  verify_release:
+    name: Verify (Release)
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Verify
+        shell: cmd
+        run: build.cmd verify --config Release --repo "${{ github.repository }}"
