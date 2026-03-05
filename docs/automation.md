@@ -1,86 +1,113 @@
 # Automation Overview
 
-This repository uses `build.cmd` as the single local entrypoint.  
-`build.cmd` runs NUKE targets implemented in `build/Build.cs`.
+`build.cmd` is the single local entrypoint.
 
-## Core Targets
+Quick command discovery:
+- `.\build.cmd help`
+- `.\build.cmd -h <workflow>`
 
-- `build.cmd install`
+## Core Workflows
+
+- `.\build.cmd install [--full] [--dryrun]`
   - Installs/checks prerequisites (`git`, `.NET SDK 10.x`).
-  - With `--full`, also ensures `MSBuild` and `vcpkg`.
-- `build.cmd setup`
-  - Configures git hooks (`.githooks/commit-msg`).
-  - Runs Fahrenheit setup restore.
-  - Runs interactive auto-deploy setup flow.
-- `build.cmd verify`
-  - Validates commit parser self-test.
-  - Builds mod (`Debug` by default).
-  - Runs tests if matching `*test*.csproj` exist (excluding `.workspace`).
+  - `--full` also ensures native prerequisites (`MSBuild`, `vcpkg`).
 
-## Build Targets
+- `.\build.cmd setup`
+  - Configures local git hooks.
+  - Runs Fahrenheit setup.
+  - Runs interactive auto-deploy setup.
 
-- `build.cmd build`
-  - Default local build target (`mod` by default).
-- `build.cmd build --buildtarget mod`
-  - Builds managed mod payload only.
-- `build.cmd build --buildtarget full`
-  - Builds full Fahrenheit payload (native + managed).
-- `build.cmd buildrelease`
-  - Full `Release` build.
-  - Uses release pin (`fahrenheit.release.ref`) unless overridden with `--fahrenheitref`.
+- `.\build.cmd doctor [--full]`
+  - Prints environment diagnostics.
+  - Fails when required prerequisites are missing.
 
-## Deploy Targets
+- `.\build.cmd auto-deploy [--gamedir <path>] [--mode none|update|mod-only]`
+  - Configures automatic post-build deployment.
 
-- `build.cmd deploy --deploytarget mod|full --deploymode merge|replace --gamedir <path>`
-  - Manual deployment into `GAME_DIR\fahrenheit\...`.
-  - Default behavior without flags: `deploytarget=mod`, `deploymode=merge`.
-- `build.cmd start [--gamedir <path>] [--elevated]`
+- `.\build.cmd lint [--config Debug|Release]`
+  - Runs fast lint compile checks for build, mod, and tests projects.
+
+- `.\build.cmd smoke [--payload mod|full] [--config Debug|Release]`
+  - Runs quick build sanity checks and verifies required artifacts.
+
+- `.\build.cmd verify [--config Debug|Release] [--repo owner/repo]`
+  - Runs local verification (build + tests + commit parser selftest).
+
+- `.\build.cmd build [--payload mod|full] [--config Debug|Release]`
+  - `mod` = managed mod build.
+  - `full` = full Fahrenheit build (native + managed).
+
+- `.\build.cmd deploy [--payload mod|full] [--mode merge] [--config Debug|Release] [--gamedir <path>]`
+  - Deploys artifacts to `GAME_DIR\fahrenheit\...`.
+
+- `.\build.cmd start [--gamedir <path>] [--elevated]`
   - Launches `GAME_DIR\fahrenheit\bin\fhstage0.exe ..\..\FFX.exe`.
-  - With `--elevated`, requests admin rights via UAC (`runas`).
-- `build.cmd setupautodeploy`
-  - Interactive (or prefilled) setup for automatic local post-build deployment.
 
-### Auto Deploy Modes
+## Data + Mappings
 
-- `none` (default)
-  - Automatic post-build deployment is disabled.
-- `update`
-  - Full builds deploy full payload with non-destructive merge copy.
-- `replace`
-  - Full builds replace destination before copying full payload.
-- `mod-only`
-  - Even full builds only deploy mod payload.
-  - This is the default selection in interactive `setupautodeploy`.
+- `.\build.cmd data-setup`
+  - Installs/updates `VBFTool` + `FFXDataParser`.
 
-After a successful deployment, `.release/` is cleaned automatically.
+- `.\build.cmd ghidra-setup [--ghidraapi <url>] [--ghidradir <path>]`
+  - Installs/updates repo-local `Ghidra` in `.workspace/tools/ghidra`.
 
-## Release Targets
+- `.\build.cmd ghidra-start [--ghidradir <path>]`
+  - Starts `ghidraRun.bat` from the repo-local install.
 
-- `build.cmd releaseversion --bump patch|minor|major`
+- `.\build.cmd data-extract [--vbfgamedatadir <path>] [--extractout <path>] [--extractmetamenu true|false]`
+  - Extracts `FFX_Data.vbf` and `FFX2_Data.vbf`.
+
+- `.\build.cmd data-parse [--datamode <MODE>] [--dataargs "..."] [--dataroot <path>] [--dataout <path>]`
+  - Runs one parser mode and writes captured `.txt` output.
+
+- `.\build.cmd data-parse-all [--databatch "..."] [--dataroot <path>] [--dataout <path>]`
+  - Runs a parser mode batch.
+
+- `.\build.cmd map-import [--mapsource mappings/source] [--locales us,de,...] [--dataout <path>]`
+  - Builds canonical mapping source files:
+  - `mappings/source/{locale}/{domain}.json`
+
+- `.\build.cmd map-build [--mapsource mappings/source] [--mapout mappings/runtime] [--mappublish mappings/runtime] [--locales us,de,...]`
+  - Builds runtime mapping bundles:
+  - `mappings/runtime/ffx-mappings.{locale}.json`
+  - `mappings/runtime/ffx-mappings.json` (US alias)
+
+- `.\build.cmd data-inventory [--datarootdir .workspace/data] [--folders "ffx_ps2;ffx-2_data"]`
+  - Generates `DATA_TREE.txt` inventories.
+
+- `.\build.cmd data-offload --nasdir "\\NAS\Share\ffx-data" [--offloadmode move|copy] [--keepdatajunction true]`
+  - Offloads selected `.workspace/data` folders to NAS.
+
+## Release Workflows
+
+- `.\build.cmd release-bump [--bump patch|minor|major] [--repo owner/repo]`
   - Bumps manifest version.
   - Regenerates `CHANGELOG.md`.
-  - Pins Fahrenheit ref for release (`fahrenheit.release.ref`).
+  - Pins Fahrenheit release ref.
   - Creates release commit + annotated tag.
-- `build.cmd releaseready`
-  - Release preflight:
-    - clean working tree check
-    - commit format check for range
-    - local verify
-    - full release build
-    - package dry-run artifacts
-    - generate preview release notes
-- `build.cmd packagerelease --tag vX.Y.Z`
-  - Creates full + mod ZIP packages and SHA256 files.
-- `build.cmd generatereleasenotes --tag vX.Y.Z --repository owner/repo`
+
+- `.\build.cmd release-ready [--range BASE..HEAD] [--repo owner/repo] [--tag vX.Y.Z]`
+  - Preflight:
+  - clean working tree check
+  - commit range validation
+  - verify
+  - full release build
+  - package dry-run
+  - release notes dry-run
+
+- `.\build.cmd release-pack --tag vX.Y.Z [--deploydir <path>] [--outdir <path>]`
+  - Creates release ZIPs + SHA256 files.
+
+- `.\build.cmd release-notes --tag vX.Y.Z --repo owner/repo [--out <path>]`
   - Generates release notes markdown.
 
-## Commit Targets
+## Commit Workflows
 
-- `build.cmd commit`
-  - Interactive Conventional Commit wizard.
-- `build.cmd commit --committype feat --commitscope ui --commitmessage "add setting"`
-  - Non-interactive commit creation.
-- `build.cmd validatecommitmessage`
-  - Validates single commit subject.
-- `build.cmd validatecommitrange --range BASE..HEAD`
-  - Validates all non-merge commit subjects in a range.
+- `.\build.cmd commit [--type feat|fix|...] [--scope <scope>] [--subject "..."] [--breaking true|false]`
+  - Interactive if `--subject` is omitted.
+
+- `.\build.cmd commit-check --commitfile <path>` or `.\build.cmd commit-check --message "..."`
+  - Validates one commit subject.
+
+- `.\build.cmd commit-range --range BASE..HEAD`
+  - Validates commit subjects in a range.

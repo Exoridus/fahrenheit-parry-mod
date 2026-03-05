@@ -1,6 +1,6 @@
 {
     "fhparry.name": "Parry Prototype",
-    "fhparry.desc": "Timing-based inputs during enemy attacks. Toggle or tweak the window here.",
+    "fhparry.desc": "Timing-based inputs during enemy attacks. Toggle parry and choose a difficulty preset.",
     "fhparry.enabled.name": "Enable Parry",
     "fhparry.enabled.desc": "Master switch for the parry helper.",
     "fhparry.indicator.name": "Show Visual Indicator",
@@ -15,18 +15,8 @@
     "fhparry.logging.desc": "Write additional parry state changes to the log when enabled.",
     "fhparry.debug_overlay.name": "Debug Overlay",
     "fhparry.debug_overlay.desc": "Display a live event feed and mapped runtime state panel in-game.",
-    "fhparry.window_seconds.name": "Parry Window (seconds)",
-    "fhparry.window_seconds.desc": "Applies only to the legacy timer. Sets how long the parry input remains active after opening.",
-    "fhparry.lead_physical.name": "Physical Lead Delay",
-    "fhparry.lead_physical.desc": "Delay, in seconds, before opening the window for melee attacks.",
-    "fhparry.lead_magic.name": "Magic Lead Delay",
-    "fhparry.lead_magic.desc": "Delay, in seconds, applied before spells or abilities can be parried.",
+    "fhparry.difficulty.name": "Parry Difficulty",
+    "fhparry.difficulty.desc": "Select preset parry timing windows and anti-spam behavior (Easy, Normal, Expert).",
     "fhparry.future.name": "Future Features",
-    "fhparry.future.desc": "Reserved for upcoming auto-counter options.",
-    "fhparry.timing_mode.name": "Timing Mode",
-    "fhparry.timing_mode.desc": "Switch between the legacy fixed window and the new on-hit clamp.",
-    "fhparry.timing_mode.legacy": "Legacy window",
-    "fhparry.timing_mode.resolve": "Clamp on hit",
-    "fhparry.resolve_window.name": "Resolve Window Cap (seconds)",
-    "fhparry.resolve_window.desc": "Maximum time the ApplyDamage window stays open if no damage event arrives."
+    "fhparry.future.desc": "Reserved for upcoming auto-counter options."
 }
