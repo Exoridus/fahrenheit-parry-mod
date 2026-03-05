@@ -46,7 +46,7 @@ jobs:
 
       - name: Upload debug deploy output (PR)
         if: github.event_name == 'pull_request' && matrix.config == 'Debug'
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: deploy-dbg-${{ github.event.pull_request.number }}
           path: .workspace/fahrenheit/artifacts/deploy/dbg
