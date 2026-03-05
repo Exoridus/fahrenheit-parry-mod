@@ -12,41 +12,65 @@ using static Nuke.Common.Assert;
 
 internal sealed partial class BuildScript : NukeBuild
 {
-    [Parameter] readonly string Configuration = IsServerBuild ? "Release" : "Debug";
+    [Parameter] readonly string Config = IsServerBuild ? "Release" : "Debug";
     [Parameter] readonly string FahrenheitRepo = "https://github.com/peppy-enterprises/fahrenheit.git";
     [Parameter] readonly string FahrenheitDir = ".workspace/fahrenheit";
     [Parameter] readonly string FahrenheitRef = string.Empty;
     [Parameter] readonly string NativeMSBuildExe = string.Empty;
-    [Parameter] readonly string NativePlatformToolset = string.Empty;
+    [Parameter] readonly string Toolset = string.Empty;
     [Parameter] readonly string ModId = "fhparry";
 
-    [Parameter] readonly string BuildTarget = "mod";
-    [Parameter] readonly string DeployTarget = "mod";
-    [Parameter] readonly string DeployMode = "merge";
-    [Parameter] readonly string AutoDeployMode = string.Empty;
+    [Parameter] readonly string Payload = "mod";
+    [Parameter] readonly string Mode = "merge";
+    [Parameter] readonly string AutoMode = string.Empty;
 
     [Parameter] readonly string GameDir = string.Empty;
-    [Parameter] readonly string Repository = string.Empty;
+    [Parameter] readonly string Repo = string.Empty;
     [Parameter] readonly string Bump = "patch";
+    [Parameter] readonly string Workflow = string.Empty;
 
     [Parameter] readonly bool Full;
     [Parameter] readonly bool DryRun;
     [Parameter] readonly bool NonInteractive;
     [Parameter] readonly bool Elevated;
 
-    [Parameter] readonly string CommitType = "chore";
-    [Parameter] readonly string CommitScope = string.Empty;
-    [Parameter] readonly string CommitMessage = string.Empty;
-    [Parameter] readonly bool CommitBreaking;
+    [Parameter] readonly string Type = "chore";
+    [Parameter] readonly string Scope = string.Empty;
+    [Parameter] readonly string Subject = string.Empty;
+    [Parameter] readonly bool Breaking;
 
     [Parameter] readonly string Range = string.Empty;
     [Parameter] readonly string CommitFile = string.Empty;
     [Parameter] readonly string Message = string.Empty;
 
     [Parameter] readonly string Tag = string.Empty;
-    [Parameter] readonly string Output = ".release/release-notes.txt";
+    [Parameter] readonly string Out = ".release/release-notes.txt";
     [Parameter] readonly string DeployDir = ".workspace/fahrenheit/artifacts/deploy/rel";
     [Parameter] readonly string OutDir = ".release";
+    [Parameter] readonly string ParserRepo = "https://github.com/Karifean/FFXDataParser.git";
+    [Parameter] readonly string ParserDir = ".workspace/tools/FFXDataParser";
+    [Parameter] readonly string ParserRef = string.Empty;
+    [Parameter] readonly string DataRoot = string.Empty;
+    [Parameter] readonly string DataMode = "READ_ALL_COMMANDS";
+    [Parameter] readonly string DataArgs = string.Empty;
+    [Parameter] readonly string DataBatch = "READ_ALL_COMMANDS;READ_GEAR_ABILITIES;READ_KEY_ITEMS;READ_MONSTER_LOCALIZATIONS us;READ_MONSTER_LOCALIZATIONS de";
+    [Parameter] readonly string DataOut = ".workspace/data/ffx-dataparser";
+    [Parameter] readonly string MapSource = "mappings/source";
+    [Parameter] readonly string[] Locales = ["us", "de"];
+    [Parameter] readonly string MapOut = "mappings/runtime";
+    [Parameter] readonly string MapPublish = "mappings/runtime";
+    [Parameter] readonly string VbfApi = "https://api.github.com/repos/topher-au/VBFTool/releases/latest";
+    [Parameter] readonly string VbfDir = ".workspace/tools/VBFTool";
+    [Parameter] readonly string GhidraApi = "https://api.github.com/repos/NationalSecurityAgency/ghidra/releases/latest";
+    [Parameter] readonly string GhidraDir = ".workspace/tools/ghidra";
+    [Parameter] readonly string VbfGameDir = string.Empty;
+    [Parameter] readonly string ExtractOut = ".workspace/data";
+    [Parameter] readonly bool ExtractMetaMenu = true;
+    [Parameter] readonly string DataRootDir = ".workspace/data";
+    [Parameter] readonly string Folders = string.Empty;
+    [Parameter] readonly string NasDir = string.Empty;
+    [Parameter] readonly string OffloadMode = "move";
+    [Parameter] readonly bool KeepDataJunction;
 
     public static int Main() => Execute<BuildScript>(x => x.Help);
 
@@ -59,21 +83,14 @@ internal sealed partial class BuildScript : NukeBuild
     Target Help => _ => _
         .Executes(() =>
         {
-            Log.Information("Targets:");
-            Log.Information("  build.cmd install [--full] [--dry-run]");
-            Log.Information("  build.cmd setup");
-            Log.Information("  build.cmd setupautodeploy [--gamedir path] [--autodeploymode none|update|replace|mod-only]");
-            Log.Information("  build.cmd verify");
-            Log.Information("  build.cmd build [--buildtarget mod|full] [--nativeplatformtoolset v143]");
-            Log.Information("  build.cmd deploy [--deploytarget mod|full] [--deploymode merge|replace] [--gamedir path]");
-            Log.Information("  build.cmd start [--gamedir path] [--elevated]");
-            Log.Information("  build.cmd releaseversion [--bump patch|minor|major]");
-            Log.Information("  build.cmd releaseready [--repository owner/repo] [--tag vX.Y.Z]");
-            Log.Information("  build.cmd packagerelease --tag vX.Y.Z");
-            Log.Information("  build.cmd generatereleasenotes --tag vX.Y.Z --repository owner/repo");
-            Log.Information("  build.cmd commit [--committype feat] [--commitscope ui] [--commitmessage \"message\"] [--commitbreaking true]");
-            Log.Information("  build.cmd validatecommitmessage --commitfile .git/COMMIT_EDITMSG");
-            Log.Information("  build.cmd validatecommitrange --range origin/main..HEAD");
+            if (string.IsNullOrWhiteSpace(Workflow))
+            {
+                ShowHelpSummary();
+            }
+            else
+            {
+                ShowHelpWorkflow(Workflow);
+            }
         });
 
     Target Install => _ => _
@@ -92,41 +109,72 @@ internal sealed partial class BuildScript : NukeBuild
             Log.Information("Prerequisite check/install finished.");
         });
 
-    Target SetupHooks => _ => _
-        .Executes(() =>
-        {
-            RequireGitRepository();
-            if (!File.Exists(RootDirectory / ".githooks" / "commit-msg"))
-            {
-                Fail("Missing .githooks/commit-msg.");
-            }
-
-            RunChecked("git", "config --local core.hooksPath .githooks", "Setup hooks");
-        });
-
-    Target SetupGameDir => _ => _
-        .Executes(() =>
-        {
-            var resolved = ResolveGameDir(promptIfMissing: true, persist: true);
-            Log.Information($"GAME_DIR={resolved}");
-        });
-
-    Target SetupAutoDeploy => _ => _
+    Target AutoDeploy => _ => _
         .Executes(SetupAutoDeployCore);
 
-    Target Setup => _ => _
-        .DependsOn(SetupHooks)
+    Target DataSetup => _ => _
         .Executes(() =>
         {
-            RunBuildProjTarget("Setup", Configuration, includeNativeMsbuild: false, fahrenheitRef: ResolveFahrenheitRef(useReleaseRef: false));
+            SetupVbfExtractorCore();
+            SetupDataParserCore();
+        });
+
+    Target GhidraSetup => _ => _
+        .Executes(SetupGhidraCore);
+
+    Target GhidraStart => _ => _
+        .Executes(StartGhidraCore);
+
+    Target DataExtract => _ => _
+        .DependsOn(DataSetup)
+        .Executes(ExtractGameDataCore);
+
+    Target DataParse => _ => _
+        .DependsOn(DataSetup)
+        .Executes(ParseDataCore);
+
+    Target DataParseAll => _ => _
+        .DependsOn(DataSetup)
+        .Executes(ParseDataAllCore);
+
+    Target MapImport => _ => _
+        .DependsOn(DataSetup)
+        .Executes(ImportLocalizedMappingsCore);
+
+    Target MapBuild => _ => _
+        .Executes(BuildLocalizedBundlesCore);
+
+    Target DataInventory => _ => _
+        .Executes(DataInventoryCore);
+
+    Target DataOffload => _ => _
+        .DependsOn(DataInventory)
+        .Executes(OffloadDataCore);
+
+    Target Setup => _ => _
+        .Executes(() =>
+        {
+            SetupHooksCore();
+            RunBuildProjTarget("Setup", Config, includeNativeMsbuild: false, fahrenheitRef: ResolveFahrenheitRef(useReleaseRef: false));
 
             SetupAutoDeployCore();
 
             if (InteractiveSession && AskYesNo("Run first full build now? (Recommended)", defaultYes: true))
             {
-                RunBuildProjTarget("Build", Configuration, includeNativeMsbuild: true, fahrenheitRef: ResolveFahrenheitRef(useReleaseRef: false));
+                RunBuildProjTarget("Build", Config, includeNativeMsbuild: true, fahrenheitRef: ResolveFahrenheitRef(useReleaseRef: false));
             }
         });
+
+    void SetupHooksCore()
+    {
+        RequireGitRepository();
+        if (!File.Exists(RootDirectory / ".githooks" / "commit-msg"))
+        {
+            Fail("Missing .githooks/commit-msg.");
+        }
+
+        RunChecked("git", "config --local core.hooksPath .githooks", "Setup hooks");
+    }
 
     Target Verify => _ => _
         .Executes(() =>
@@ -136,61 +184,34 @@ internal sealed partial class BuildScript : NukeBuild
                 Fail("Commit validator selftest failed.");
             }
 
-            RunVerifyCore(Configuration);
+            RunVerifyCore(Config);
         });
 
-    Target Build => _ => _.Executes(() => BuildCore(BuildTarget, Configuration, useReleaseRef: false));
-    Target BuildMod => _ => _.Executes(() => BuildCore("mod", Configuration, useReleaseRef: false));
-    Target BuildFull => _ => _.Executes(() => BuildCore("full", Configuration, useReleaseRef: false));
-    Target BuildRelease => _ => _.Executes(() => BuildCore("full", "Release", useReleaseRef: true));
+    Target Build => _ => _.Executes(() => BuildCore(Payload, Config, useReleaseRef: false));
 
-    Target Deploy => _ => _.Executes(() => DeployCore(DeployTarget, DeployMode, Configuration));
-    Target DeployMod => _ => _.Executes(() => DeployCore("mod", "merge", Configuration));
-    Target DeployFull => _ => _.Executes(() => DeployCore("full", "merge", Configuration));
+    Target Deploy => _ => _.Executes(() => DeployCore(Payload, Mode, Config));
     Target Start => _ => _.Executes(StartCore);
 
-    Target BuildAndDeploy => _ => _.Executes(() =>
-    {
-        BuildCore("mod", Configuration, useReleaseRef: false);
-        DeployCore("mod", "merge", Configuration);
-    });
-
-    Target BuildAndDeployMod => _ => _.DependsOn(BuildAndDeploy);
-
-    Target BuildAndDeployFull => _ => _.Executes(() =>
-    {
-        BuildCore("full", Configuration, useReleaseRef: false);
-        DeployCore("full", "merge", Configuration);
-    });
-
-    Target Changelog => _ => _.Executes(() =>
-    {
-        GenerateChangelogCore(
-            tagOverride: string.IsNullOrWhiteSpace(Tag) ? null : Tag,
-            outputPath: RootDirectory / "CHANGELOG.md",
-            repositorySlug: ResolveRepositorySlug(Repository));
-    });
-
-    Target GenerateReleaseNotes => _ => _.Executes(() =>
+    Target ReleaseNotes => _ => _.Executes(() =>
     {
         if (string.IsNullOrWhiteSpace(Tag))
         {
             Fail("Missing --tag.");
         }
 
-        var repoSlug = ResolveRepositorySlug(Repository);
+        var repoSlug = ResolveRepositorySlug(Repo);
         if (string.IsNullOrWhiteSpace(repoSlug))
         {
-            Fail("Missing --repository owner/repo.");
+            Fail("Missing --repo owner/repo.");
         }
 
         GenerateReleaseNotesCore(
             tag: Tag,
             repositorySlug: repoSlug,
-            outputPath: ResolvePath(Output));
+            outputPath: ResolvePath(Out));
     });
 
-    Target PackageRelease => _ => _.Executes(() =>
+    Target ReleasePack => _ => _.Executes(() =>
     {
         if (string.IsNullOrWhiteSpace(Tag))
         {
@@ -202,20 +223,20 @@ internal sealed partial class BuildScript : NukeBuild
 
     Target ReleaseReady => _ => _.Executes(ReleaseReadyCore);
 
-    Target ReleaseVersion => _ => _.Executes(ReleaseVersionCore);
+    Target ReleaseBump => _ => _.Executes(ReleaseVersionCore);
 
     Target Commit => _ => _.Executes(() =>
     {
-        var requestedMessage = CommitMessage;
-        var requestedType = CommitType;
-        var requestedScope = CommitScope;
-        var requestedBreaking = CommitBreaking;
+        var requestedMessage = Subject;
+        var requestedType = Type;
+        var requestedScope = Scope;
+        var requestedBreaking = Breaking;
 
         if (string.IsNullOrWhiteSpace(requestedMessage))
         {
             if (!InteractiveSession)
             {
-                Fail("Missing --commitmessage. In interactive mode, you can run build.cmd commit without arguments.");
+                Fail("Missing --subject. In interactive mode, you can run build.cmd commit without arguments.");
             }
 
             var wizard = RunCommitWizard();
@@ -239,7 +260,7 @@ internal sealed partial class BuildScript : NukeBuild
         RunChecked("git", $"commit -m {Quote(subject)}", "Create commit");
     });
 
-    Target ValidateCommitMessage => _ => _.Executes(() =>
+    Target CommitCheck => _ => _.Executes(() =>
     {
         if (!string.IsNullOrWhiteSpace(CommitFile))
         {
@@ -255,7 +276,7 @@ internal sealed partial class BuildScript : NukeBuild
         ValidateCommitMessageString(Message);
     });
 
-    Target ValidateCommitRange => _ => _.Executes(() =>
+    Target CommitRange => _ => _.Executes(() =>
     {
         if (string.IsNullOrWhiteSpace(Range))
         {
@@ -265,7 +286,466 @@ internal sealed partial class BuildScript : NukeBuild
         ValidateCommitRangeCore(Range);
     });
 
-    void BuildCore(string target, string configuration, bool useReleaseRef)
+    void ShowHelpSummary()
+    {
+        Log.Information("Usage: build.cmd <workflow> [options]");
+        Log.Information("Detailed help: build.cmd -h <workflow>");
+        Log.Information(string.Empty);
+        Log.Information("Core:");
+        Log.Information("  install      Install/check prerequisites");
+        Log.Information("  setup        Configure repo hooks + Fahrenheit setup + optional auto-deploy setup");
+        Log.Information("  auto-deploy  Configure automatic post-build deploy");
+        Log.Information("  doctor       Diagnose local toolchain/environment state");
+        Log.Information("  lint         Run fast lint/compile checks");
+        Log.Information("  smoke        Run quick end-to-end sanity checks");
+        Log.Information("  verify       Build mod (Debug by default) + run tests");
+        Log.Information("  build        Build mod/full payload");
+        Log.Information("  deploy       Deploy artifacts to game directory");
+        Log.Information("  start        Launch fhstage0.exe");
+        Log.Information(string.Empty);
+        Log.Information("Data:");
+        Log.Information("  data-setup    Setup parser + VBF extractor tools");
+        Log.Information("  ghidra-setup  Setup Ghidra reverse-engineering tool");
+        Log.Information("  ghidra-start  Start Ghidra from repo-local tooling directory");
+        Log.Information("  data-extract  Extract FFX/FFX-2 game data");
+        Log.Information("  data-parse    Run one parser mode");
+        Log.Information("  data-parse-all Run parser mode batch");
+        Log.Information("  map-import    Import parser outputs into canonical mapping JSON");
+        Log.Information("  map-build     Build runtime mapping bundles");
+        Log.Information("  data-inventory Generate DATA_TREE.txt reports");
+        Log.Information("  data-offload  Move/copy exported data to NAS");
+        Log.Information(string.Empty);
+        Log.Information("Release:");
+        Log.Information("  release-bump  Bump version + changelog + tag");
+        Log.Information("  release-ready Preflight checks/build/package/notes");
+        Log.Information("  release-pack  Create release ZIP assets");
+        Log.Information("  release-notes Generate release notes markdown");
+        Log.Information(string.Empty);
+        Log.Information("Commit:");
+        Log.Information("  commit       Interactive/non-interactive Conventional Commit");
+        Log.Information("  commit-check Validate one commit message");
+        Log.Information("  commit-range Validate commit subjects in a range");
+    }
+
+    void ShowHelpWorkflow(string workflowRaw)
+    {
+        var workflow = (workflowRaw ?? string.Empty).Trim().ToLowerInvariant();
+
+        switch (workflow)
+        {
+            case "install":
+                PrintHelpBlock(
+                    "install",
+                    "Install/check local prerequisites.",
+                    [
+                        "--full (optional, default false) -> also install native build deps (MSBuild + vcpkg).",
+                        "--dryrun (optional, default false) -> only print intended actions."
+                    ],
+                    [
+                        "build.cmd install",
+                        "build.cmd install --full"
+                    ]);
+                return;
+
+            case "setup":
+                PrintHelpBlock(
+                    "setup",
+                    "Prepare repository for local development.",
+                    [
+                        "No required parameters."
+                    ],
+                    [
+                        "build.cmd setup"
+                    ]);
+                return;
+
+            case "auto-deploy":
+                PrintHelpBlock(
+                    "auto-deploy",
+                    "Configure automatic post-build deployment.",
+                    [
+                        "--gamedir <path> (optional) -> game install directory (must contain FFX.exe).",
+                        "--mode none|update|mod-only (optional, default interactive/autodetected)."
+                    ],
+                    [
+                        "build.cmd auto-deploy",
+                        "build.cmd auto-deploy --gamedir \"C:\\Games\\Final Fantasy X-X2 - HD Remaster\" --mode mod-only"
+                    ]);
+                return;
+
+            case "build":
+                PrintHelpBlock(
+                    "build",
+                    "Build mod-only or full Fahrenheit payload.",
+                    [
+                        "--payload mod|full (optional, default mod).",
+                        "--config Debug|Release (optional, default Debug local / Release CI)."
+                    ],
+                    [
+                        "build.cmd build",
+                        "build.cmd build --payload full --config Release"
+                    ]);
+                return;
+
+            case "deploy":
+                PrintHelpBlock(
+                    "deploy",
+                    "Deploy build artifacts into GAME_DIR.",
+                    [
+                        "--payload mod|full (optional, default mod).",
+                        "--mode merge (optional, default merge).",
+                        "--gamedir <path> (optional if configured in dev.local.json).",
+                        "--config Debug|Release (optional, default Debug)."
+                    ],
+                    [
+                        "build.cmd deploy",
+                        "build.cmd deploy --payload full --gamedir \"C:\\Games\\Final Fantasy X-X2 - HD Remaster\""
+                    ]);
+                return;
+
+            case "start":
+                PrintHelpBlock(
+                    "start",
+                    "Launch the game via deployed Fahrenheit stage0 loader.",
+                    [
+                        "--gamedir <path> (optional if configured).",
+                        "--elevated true|false (optional, default false)."
+                    ],
+                    [
+                        "build.cmd start --gamedir \"C:\\Games\\Final Fantasy X-X2 - HD Remaster\"",
+                        "build.cmd start --gamedir \"C:\\Games\\Final Fantasy X-X2 - HD Remaster\" --elevated"
+                    ]);
+                return;
+
+            case "verify":
+                PrintHelpBlock(
+                    "verify",
+                    "Run local validation (build + tests + commit parser selftest) without deployment side effects.",
+                    [
+                        "--config Debug|Release (optional, default Debug).",
+                        "--repo owner/repo (optional, used in generated links)."
+                    ],
+                    [
+                        "build.cmd verify",
+                        "build.cmd verify --config Release --repo Exoridus/fahrenheit-parry-mod"
+                    ]);
+                return;
+
+            case "doctor":
+                PrintHelpBlock(
+                    "doctor",
+                    "Diagnose local toolchain and environment state.",
+                    [
+                        "--full (optional, default false) -> include native/full-build tool checks."
+                    ],
+                    [
+                        "build.cmd doctor",
+                        "build.cmd doctor --full"
+                    ]);
+                return;
+
+            case "lint":
+                PrintHelpBlock(
+                    "lint",
+                    "Run fast lint/compile checks for build, mod, and tests projects.",
+                    [
+                        "--config Debug|Release (optional, default Debug)."
+                    ],
+                    [
+                        "build.cmd lint",
+                        "build.cmd lint --config Release"
+                    ]);
+                return;
+
+            case "smoke":
+                PrintHelpBlock(
+                    "smoke",
+                    "Run quick sanity checks (build + required artifact assertions).",
+                    [
+                        "--config Debug|Release (optional, default Debug).",
+                        "--payload mod|full (optional, default mod)."
+                    ],
+                    [
+                        "build.cmd smoke",
+                        "build.cmd smoke --config Release --payload mod"
+                    ]);
+                return;
+
+            case "data-setup":
+                PrintHelpBlock(
+                    "data-setup",
+                    "Install/update data tooling (VBFTool + FFXDataParser).",
+                    [
+                        "--parserrepo <url> (optional).",
+                        "--parserdir <path> (optional).",
+                        "--parserref <git-ref> (optional).",
+                        "--vbfapi <url> (optional).",
+                        "--vbfdir <path> (optional)."
+                    ],
+                    [
+                        "build.cmd data-setup",
+                        "build.cmd data-setup --parserref main"
+                    ]);
+                return;
+
+            case "ghidra-setup":
+                PrintHelpBlock(
+                    "ghidra-setup",
+                    "Install/update Ghidra into a repo-local tools directory.",
+                    [
+                        "--ghidraapi <url> (optional, default latest NSA release API).",
+                        "--ghidradir <path> (optional, default .workspace/tools/ghidra)."
+                    ],
+                    [
+                        "build.cmd ghidra-setup",
+                        "build.cmd ghidra-setup --ghidradir .workspace/tools/ghidra"
+                    ]);
+                return;
+
+            case "ghidra-start":
+                PrintHelpBlock(
+                    "ghidra-start",
+                    "Start the repo-local Ghidra launcher.",
+                    [
+                        "--ghidradir <path> (optional, default .workspace/tools/ghidra)."
+                    ],
+                    [
+                        "build.cmd ghidra-start",
+                        "build.cmd ghidra-start --ghidradir .workspace/tools/ghidra"
+                    ]);
+                return;
+
+            case "data-extract":
+                PrintHelpBlock(
+                    "data-extract",
+                    "Extract FFX/FFX-2 data archives with VBFTool.",
+                    [
+                        "--vbfgamedir <path> (optional, defaults to detected GAME_DIR\\\\data).",
+                        "--extractout <path> (optional, default .workspace/data).",
+                        "--extractmetamenu true|false (optional, default true)."
+                    ],
+                    [
+                        "build.cmd data-extract --vbfgamedir \"C:\\Games\\Final Fantasy X-X2 - HD Remaster\\data\"",
+                        "build.cmd data-extract --extractout .workspace/data"
+                    ]);
+                return;
+
+            case "data-parse":
+                PrintHelpBlock(
+                    "data-parse",
+                    "Run one parser mode and capture output as txt.",
+                    [
+                        "--datamode <MODE> (optional, default READ_ALL_COMMANDS).",
+                        "--dataargs \"<arg1> <arg2>\" (optional).",
+                        "--dataroot <path> (optional, must contain ffx_ps2).",
+                        "--dataout <path> (optional, default .workspace/data/ffx-dataparser)."
+                    ],
+                    [
+                        "build.cmd data-parse --datamode READ_MONSTER_LOCALIZATIONS --dataargs \"de\"",
+                        "build.cmd data-parse --datamode PARSE_ALL_BATTLES"
+                    ]);
+                return;
+
+            case "data-parse-all":
+                PrintHelpBlock(
+                    "data-parse-all",
+                    "Run the configured parser mode batch and capture all outputs.",
+                    [
+                        "--databatch \"MODE1;MODE2 arg\" (optional, default built-in batch).",
+                        "--dataroot <path> (optional, must contain ffx_ps2).",
+                        "--dataout <path> (optional, default .workspace/data/ffx-dataparser)."
+                    ],
+                    [
+                        "build.cmd data-parse-all --dataroot .workspace/data",
+                        "build.cmd data-parse-all --databatch \"READ_ALL_COMMANDS;READ_MONSTER_LOCALIZATIONS de\""
+                    ]);
+                return;
+
+            case "map-import":
+                PrintHelpBlock(
+                    "map-import",
+                    "Generate canonical locale/domain mapping JSON from parser outputs.",
+                    [
+                        "--mapsource <path> (optional, default mappings/source).",
+                        "--locales us,de,... (optional, default us,de).",
+                        "--dataout <path> (optional parser output root)."
+                    ],
+                    [
+                        "build.cmd map-import --locales us,de,fr,it,sp,jp,ch,kr",
+                        "build.cmd map-import --mapsource mappings/source"
+                    ]);
+                return;
+
+            case "map-build":
+                PrintHelpBlock(
+                    "map-build",
+                    "Build runtime mapping bundles from canonical mapping JSON.",
+                    [
+                        "--mapsource <path> (optional, default mappings/source).",
+                        "--mapout <path> (optional, default mappings/runtime).",
+                        "--mappublish <path> (optional, default mappings/runtime).",
+                        "--locales us,de,... (optional, default us,de)."
+                    ],
+                    [
+                        "build.cmd map-build --locales us,de,fr,it,sp,jp,ch,kr",
+                        "build.cmd map-build --mapout mappings/runtime --mappublish mappings/runtime"
+                    ]);
+                return;
+
+            case "data-inventory":
+                PrintHelpBlock(
+                    "data-inventory",
+                    "Generate DATA_TREE.txt summaries for extracted data folders.",
+                    [
+                        "--datarootdir <path> (optional, default .workspace/data).",
+                        "--folders \"name1;name2\" (optional, default auto-detect under data root)."
+                    ],
+                    [
+                        "build.cmd data-inventory",
+                        "build.cmd data-inventory --datarootdir .workspace/data --folders \"ffx_data;ffx-2_data\""
+                    ]);
+                return;
+
+            case "data-offload":
+                PrintHelpBlock(
+                    "data-offload",
+                    "Move or copy large extracted data folders to NAS and optionally keep junctions.",
+                    [
+                        "--nasdir <unc-path> (required).",
+                        "--offloadmode move|copy (optional, default move).",
+                        "--keepdatajunction true|false (optional, default false).",
+                        "--datarootdir <path> (optional, default .workspace/data).",
+                        "--folders \"name1;name2\" (optional)."
+                    ],
+                    [
+                        "build.cmd data-offload --nasdir \"\\\\10.0.10.50\\data\\archive\\final-fantasy-assets\"",
+                        "build.cmd data-offload --nasdir \"\\\\10.0.10.50\\data\\archive\\final-fantasy-assets\" --offloadmode move --keepdatajunction true"
+                    ]);
+                return;
+
+            case "release-bump":
+                PrintHelpBlock(
+                    "release-bump",
+                    "Bump version, regenerate changelog, pin Fahrenheit ref, create release commit + tag.",
+                    [
+                        "--bump patch|minor|major (optional, default patch).",
+                        "--repo owner/repo (optional, improves links in notes/changelog)."
+                    ],
+                    [
+                        "build.cmd release-bump",
+                        "build.cmd release-bump --bump minor --repo Exoridus/fahrenheit-parry-mod"
+                    ]);
+                return;
+
+            case "release-ready":
+                PrintHelpBlock(
+                    "release-ready",
+                    "Run release preflight (clean tree, commit checks, verify, release build, package dry-run, notes).",
+                    [
+                        "--range <BASE..HEAD> (optional, auto-derived if omitted).",
+                        "--repo owner/repo (optional).",
+                        "--tag vX.Y.Z (optional, used for dry-run notes/packages)."
+                    ],
+                    [
+                        "build.cmd release-ready --repo Exoridus/fahrenheit-parry-mod",
+                        "build.cmd release-ready --range v0.0.1..HEAD --tag v0.0.2"
+                    ]);
+                return;
+
+            case "release-pack":
+                PrintHelpBlock(
+                    "release-pack",
+                    "Package built release payloads into ZIP archives + SHA256 files.",
+                    [
+                        "--tag vX.Y.Z (required).",
+                        "--deploydir <path> (optional, default .workspace/fahrenheit/artifacts/deploy/rel).",
+                        "--outdir <path> (optional, default .release)."
+                    ],
+                    [
+                        "build.cmd release-pack --tag v0.0.1",
+                        "build.cmd release-pack --tag v0.0.1 --outdir .release"
+                    ]);
+                return;
+
+            case "release-notes":
+                PrintHelpBlock(
+                    "release-notes",
+                    "Generate release-notes markdown/text for a tag.",
+                    [
+                        "--tag vX.Y.Z (required).",
+                        "--repo owner/repo (required).",
+                        "--out <path> (optional, default .release/release-notes.txt)."
+                    ],
+                    [
+                        "build.cmd release-notes --tag v0.0.1 --repo Exoridus/fahrenheit-parry-mod",
+                        "build.cmd release-notes --tag v0.0.1 --repo Exoridus/fahrenheit-parry-mod --out .release/release-notes.txt"
+                    ]);
+                return;
+
+            case "commit":
+                PrintHelpBlock(
+                    "commit",
+                    "Create a Conventional Commit (wizard or direct flags).",
+                    [
+                        "--type feat|fix|... (optional, default chore).",
+                        "--scope <scope> (optional).",
+                        "--subject \"message\" (required in non-interactive mode).",
+                        "--breaking true|false (optional, default false)."
+                    ],
+                    [
+                        "build.cmd commit",
+                        "build.cmd commit --type feat --scope ui --subject \"add queue table\""
+                    ]);
+                return;
+
+            case "commit-check":
+                PrintHelpBlock(
+                    "commit-check",
+                    "Validate one commit message.",
+                    [
+                        "--commitfile <path> or --message \"...\" (one is required)."
+                    ],
+                    [
+                        "build.cmd commit-check --commitfile .git/COMMIT_EDITMSG",
+                        "build.cmd commit-check --message \"feat: add timeline panel\""
+                    ]);
+                return;
+
+            case "commit-range":
+                PrintHelpBlock(
+                    "commit-range",
+                    "Validate commit subjects in a git range.",
+                    [
+                        "--range <BASE..HEAD> (required)."
+                    ],
+                    [
+                        "build.cmd commit-range --range origin/main..HEAD"
+                    ]);
+                return;
+        }
+
+        Log.Warning($"Unknown workflow: {workflowRaw}");
+        ShowHelpSummary();
+    }
+
+    void PrintHelpBlock(string name, string purpose, IEnumerable<string> parameters, IEnumerable<string> examples)
+    {
+        Log.Information($"Workflow: {name}");
+        Log.Information($"Purpose: {purpose}");
+        Log.Information("Parameters:");
+        foreach (var line in parameters)
+        {
+            Log.Information($"  - {line}");
+        }
+
+        Log.Information("Examples:");
+        foreach (var line in examples)
+        {
+            Log.Information($"  {line}");
+        }
+    }
+
+    void BuildCore(string target, string configuration, bool useReleaseRef, bool allowAutoDeploy = true)
     {
         var effectiveFahrenheitRef = ResolveFahrenheitRef(useReleaseRef);
         var t = target.Trim().ToLowerInvariant();
@@ -282,7 +762,10 @@ internal sealed partial class BuildScript : NukeBuild
             Fail($"Invalid build target '{target}'. Use mod or full.");
         }
 
-        TryAutoDeployAfterBuild(t, configuration, useReleaseRef);
+        if (allowAutoDeploy)
+        {
+            TryAutoDeployAfterBuild(t, configuration, useReleaseRef);
+        }
     }
 
     void StartCore()
@@ -360,9 +843,9 @@ internal sealed partial class BuildScript : NukeBuild
             return string.Empty;
         }
 
-        if (!string.IsNullOrWhiteSpace(NativePlatformToolset))
+        if (!string.IsNullOrWhiteSpace(Toolset))
         {
-            return NativePlatformToolset.Trim();
+            return Toolset.Trim();
         }
 
         var vswhere = ResolveVsWherePath();
@@ -448,7 +931,7 @@ internal sealed partial class BuildScript : NukeBuild
         {
             if (!File.Exists(ReleaseFahrenheitRefPath))
             {
-                Fail($"Missing release ref file: {ReleaseFahrenheitRefPath}. Run build.cmd releaseversion first.");
+                Fail($"Missing release ref file: {ReleaseFahrenheitRefPath}. Run build.cmd release-bump first.");
             }
 
             var pinned = File.ReadAllText(ReleaseFahrenheitRefPath).Trim();
@@ -489,7 +972,7 @@ internal sealed partial class BuildScript : NukeBuild
             Fail($"Tag already exists: {newTag}");
         }
 
-        var repoSlug = ResolveRepositorySlug(Repository);
+        var repoSlug = ResolveRepositorySlug(Repo);
         GenerateChangelogCore(tagOverride: newTag, outputPath: RootDirectory / "CHANGELOG.md", repositorySlug: repoSlug);
         UpdateManifestVersion(nextVersion, repoSlug);
         PinReleaseFahrenheitRef();
@@ -1154,10 +1637,10 @@ internal sealed partial class BuildScript : NukeBuild
 
     string ResolveAutoDeployModeForSetup(LocalConfig cfg)
     {
-        var prefilled = NormalizeAutoDeployModeOrEmpty(AutoDeployMode);
-        if (!string.IsNullOrWhiteSpace(AutoDeployMode) && string.IsNullOrWhiteSpace(prefilled))
+        var prefilled = NormalizeAutoDeployModeOrEmpty(AutoMode);
+        if (!string.IsNullOrWhiteSpace(AutoMode) && string.IsNullOrWhiteSpace(prefilled))
         {
-            Fail($"Invalid --autodeploymode '{AutoDeployMode}'. Use none, update, replace, or mod-only.");
+            Fail($"Invalid --mode '{AutoMode}'. Use none, update, or mod-only.");
         }
 
         if (!string.IsNullOrWhiteSpace(prefilled))
@@ -1179,17 +1662,15 @@ internal sealed partial class BuildScript : NukeBuild
         Log.Information("How should full local builds be auto-deployed?");
         Log.Information("  1) mod-only (default) - always deploy mod payload (merge)");
         Log.Information("  2) update - copy and overwrite full payload, no deletions");
-        Log.Information("  3) replace - replace full deployed directory");
-        Log.Information("  4) none - disable automatic deployment");
-        Console.Write("Select deploy mode [1/2/3/4] (default 1): ");
+        Log.Information("  3) none - disable automatic deployment");
+        Console.Write("Select deploy mode [1/2/3] (default 1): ");
         var input = (Console.ReadLine() ?? string.Empty).Trim().ToLowerInvariant();
 
         return input switch
         {
             "" or "1" or "mod-only" or "modonly" or "mod" => "mod-only",
             "2" or "update" or "merge" => "update",
-            "3" or "replace" => "replace",
-            "4" or "none" or "off" or "disable" => "none",
+            "3" or "none" or "off" or "disable" => "none",
             _ => "none"
         };
     }
@@ -1202,10 +1683,10 @@ internal sealed partial class BuildScript : NukeBuild
         }
 
         var cfg = LoadLocalConfig();
-        var configuredMode = NormalizeAutoDeployModeOrEmpty(AutoDeployMode);
-        if (!string.IsNullOrWhiteSpace(AutoDeployMode) && string.IsNullOrWhiteSpace(configuredMode))
+        var configuredMode = NormalizeAutoDeployModeOrEmpty(AutoMode);
+        if (!string.IsNullOrWhiteSpace(AutoMode) && string.IsNullOrWhiteSpace(configuredMode))
         {
-            Fail($"Invalid --autodeploymode '{AutoDeployMode}'. Use none, update, replace, or mod-only.");
+            Fail($"Invalid --mode '{AutoMode}'. Use none, update, or mod-only.");
         }
 
         if (string.IsNullOrWhiteSpace(configuredMode))
@@ -1238,7 +1719,7 @@ internal sealed partial class BuildScript : NukeBuild
         if (!IsValidGameDir(gameDir))
         {
             Log.Warning("Automatic deploy mode is set but GAME_DIR is missing/invalid. Skipping automatic deploy.");
-            Log.Information("Run: build.cmd setupautodeploy");
+            Log.Information("Run: build.cmd auto-deploy");
             return;
         }
 
@@ -1247,12 +1728,7 @@ internal sealed partial class BuildScript : NukeBuild
 
         if (buildTarget == "full")
         {
-            if (configuredMode == "replace")
-            {
-                deployTarget = "full";
-                deployMode = "replace";
-            }
-            else if (configuredMode == "mod-only")
+            if (configuredMode == "mod-only")
             {
                 deployTarget = "mod";
                 deployMode = "merge";
@@ -1277,8 +1753,7 @@ internal sealed partial class BuildScript : NukeBuild
         return m switch
         {
             "merge" or "update" => "merge",
-            "replace" => "replace",
-            _ => FailWithReturn<string>($"Invalid deploy mode '{mode}'. Use merge or replace.")
+            _ => FailWithReturn<string>($"Invalid deploy mode '{mode}'. Use merge.")
         };
     }
 
@@ -1290,7 +1765,7 @@ internal sealed partial class BuildScript : NukeBuild
             "" => string.Empty,
             "none" or "off" or "disable" => "none",
             "update" or "merge" => "update",
-            "replace" => "replace",
+            "replace" => "update",
             "mod-only" or "modonly" or "mod" => "mod-only",
             _ => string.Empty
         };
@@ -1326,6 +1801,8 @@ internal sealed partial class BuildScript : NukeBuild
         var destinationPath = normalizedTarget == "full"
             ? targetRoot
             : Path.Combine(targetRoot, "mods", ModId);
+        var targetModsDir = Path.Combine(targetRoot, "mods");
+        var targetLoadOrderPath = Path.Combine(targetModsDir, "loadorder");
 
         if (!Directory.Exists(sourcePath))
         {
@@ -1337,13 +1814,18 @@ internal sealed partial class BuildScript : NukeBuild
 
         try
         {
-            if (normalizedMode == "replace" && Directory.Exists(destinationPath))
-            {
-                Directory.Delete(destinationPath, recursive: true);
-            }
+            var preservedLoadOrder = normalizedTarget == "full"
+                ? ReadLoadOrderLines(targetLoadOrderPath)
+                : new List<string>();
 
             CopyDirectoryRecursive(sourcePath, destinationPath);
-            EnsureLoadOrderEntry(Path.Combine(targetRoot, "mods", "loadorder"), ModId);
+
+            if (normalizedTarget == "full")
+            {
+                MergeLoadOrderEntries(targetLoadOrderPath, preservedLoadOrder);
+            }
+
+            EnsureLoadOrderEntry(targetLoadOrderPath, ModId);
             Log.Information($"{reason}: deployed {normalizedTarget} ({normalizedMode}) to {destinationPath}");
             CleanupReleaseDirAfterDeploy();
             return true;
@@ -1360,15 +1842,47 @@ internal sealed partial class BuildScript : NukeBuild
         }
     }
 
+    static void MergeLoadOrderEntries(string loadOrderPath, IEnumerable<string> preservedEntries)
+    {
+        var merged = new List<string>();
+
+        void appendDistinct(IEnumerable<string> source)
+        {
+            foreach (var line in source)
+            {
+                var entry = line.Trim();
+                if (entry.Length == 0) continue;
+                if (!merged.Any(x => x.Equals(entry, StringComparison.OrdinalIgnoreCase)))
+                {
+                    merged.Add(entry);
+                }
+            }
+        }
+
+        appendDistinct(preservedEntries);
+        appendDistinct(ReadLoadOrderLines(loadOrderPath));
+
+        EnsureDir(Path.GetDirectoryName(loadOrderPath) ?? string.Empty);
+        File.WriteAllLines(loadOrderPath, merged);
+    }
+
+    static List<string> ReadLoadOrderLines(string loadOrderPath)
+    {
+        if (!File.Exists(loadOrderPath))
+        {
+            return new List<string>();
+        }
+
+        return File.ReadAllLines(loadOrderPath)
+            .Select(x => x.Trim())
+            .Where(x => x.Length > 0)
+            .ToList();
+    }
+
     void EnsureLoadOrderEntry(string loadOrderPath, string entry)
     {
         EnsureDir(Path.GetDirectoryName(loadOrderPath) ?? string.Empty);
-        var existing = File.Exists(loadOrderPath)
-            ? File.ReadAllLines(loadOrderPath)
-                .Select(x => x.Trim())
-                .Where(x => x.Length > 0)
-                .ToList()
-            : new List<string>();
+        var existing = ReadLoadOrderLines(loadOrderPath);
 
         if (!existing.Any(x => x.Equals(entry, StringComparison.OrdinalIgnoreCase)))
         {
@@ -1438,7 +1952,7 @@ internal sealed partial class BuildScript : NukeBuild
             }
         }
 
-        Fail("Could not resolve GAME_DIR. Pass --gamedir or run SetupGameDir.");
+        Fail("Could not resolve GAME_DIR. Pass --gamedir or run build.cmd auto-deploy.");
         return string.Empty;
     }
 
@@ -1518,9 +2032,7 @@ internal sealed partial class BuildScript : NukeBuild
 
             if (string.IsNullOrWhiteSpace(cfg.DeployMode))
             {
-                // Backward compatibility with deprecated AUTO_DEPLOY toggle.
-                var legacyToggle = ReadJsonBool(root, "AUTO_DEPLOY", "AutoDeploy");
-                cfg.DeployMode = legacyToggle == true ? "update" : "none";
+                cfg.DeployMode = "none";
             }
 
             return cfg;
@@ -1636,9 +2148,19 @@ internal sealed partial class BuildScript : NukeBuild
 
     void RunTestsIfAny(string configuration)
     {
-        var projects = Directory.EnumerateFiles(RootDirectory, "*.csproj", SearchOption.AllDirectories)
+        var projects = new List<string>();
+        var testRoot = Path.Combine(RootDirectory, "tests");
+
+        if (Directory.Exists(testRoot))
+        {
+            projects.AddRange(Directory.EnumerateFiles(testRoot, "*.csproj", SearchOption.AllDirectories));
+        }
+
+        projects.AddRange(Directory.EnumerateFiles(RootDirectory, "*.csproj", SearchOption.TopDirectoryOnly));
+
+        projects = projects
             .Where(path => Path.GetFileName(path).Contains("test", StringComparison.OrdinalIgnoreCase))
-            .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}.workspace{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
             .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
             .ToList();
 
@@ -1866,4 +2388,6 @@ internal sealed partial class BuildScript : NukeBuild
 
     readonly record struct ProcessResult(int ExitCode, string StdOut, string StdErr);
 }
+
+
 

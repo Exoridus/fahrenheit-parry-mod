@@ -94,3 +94,4 @@ internal sealed partial class BuildScript
         return new CommitWizardResult(selectedType, scope, message, breaking, confirmed);
     }
 }
+

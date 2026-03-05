@@ -4,7 +4,7 @@ internal sealed partial class BuildScript
 {
     void RunVerifyCore(string configuration)
     {
-        BuildCore("mod", configuration, useReleaseRef: false);
+        BuildCore("mod", configuration, useReleaseRef: false, allowAutoDeploy: false);
         RunTestsIfAny(configuration);
     }
 
@@ -21,3 +21,4 @@ internal sealed partial class BuildScript
         DeployFromArtifacts(gameDir, configuration, t, m, failOnError: true, reason: "Manual deploy");
     }
 }
+

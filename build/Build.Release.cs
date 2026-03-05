@@ -20,7 +20,7 @@ internal sealed partial class BuildScript
         var preflightTag = !string.IsNullOrWhiteSpace(Tag)
             ? Tag.Trim()
             : $"v0.0.0-preflight-{DateTime.UtcNow:yyyyMMddHHmmss}";
-        var repoSlug = ResolveRepositorySlug(Repository);
+        var repoSlug = ResolveRepositorySlug(Repo);
         if (string.IsNullOrWhiteSpace(repoSlug))
         {
             repoSlug = "owner/repo";
@@ -36,3 +36,4 @@ internal sealed partial class BuildScript
         Log.Information($"Release preflight completed. Artifacts: {preflightOut}");
     }
 }
+

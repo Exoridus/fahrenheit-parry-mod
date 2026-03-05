@@ -58,15 +58,15 @@ jobs:
 
       - name: Full release build
         shell: cmd
-        run: build.cmd buildrelease --repository "${{ github.repository }}" --nativeplatformtoolset "${{ env.NATIVE_PLATFORM_TOOLSET }}"
+        run: build.cmd build --payload full --config Release --repo "${{ github.repository }}" --toolset "${{ env.NATIVE_PLATFORM_TOOLSET }}"
 
       - name: Package release archives
         shell: cmd
-        run: build.cmd packagerelease --tag "${{ github.ref_name }}" --deploydir ".workspace\fahrenheit\artifacts\deploy\rel" --outdir ".release"
+        run: build.cmd releasepack --tag "${{ github.ref_name }}" --deploydir ".workspace\fahrenheit\artifacts\deploy\rel" --outdir ".release"
 
       - name: Generate release notes
         shell: cmd
-        run: build.cmd generatereleasenotes --tag "${{ github.ref_name }}" --repository "${{ github.repository }}" --output ".release\release-notes.txt"
+        run: build.cmd releasenotes --tag "${{ github.ref_name }}" --repo "${{ github.repository }}" --out ".release\release-notes.txt"
 
       - name: Upload release assets
         uses: softprops/action-gh-release@v2

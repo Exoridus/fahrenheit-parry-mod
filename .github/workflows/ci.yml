@@ -18,8 +18,12 @@ env:
 
 jobs:
   verify:
-    name: Verify
+    name: Verify (${{ matrix.config }})
     runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        config: [Debug, Release]
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -32,16 +36,16 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Validate commit messages (PR)
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && matrix.config == 'Debug'
         shell: cmd
-        run: build.cmd validatecommitrange --range "${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}"
+        run: build.cmd commitrange --range "${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}"
 
       - name: Verify
         shell: cmd
-        run: build.cmd verify --configuration Debug --repository "${{ github.repository }}"
+        run: build.cmd verify --config ${{ matrix.config }} --repo "${{ github.repository }}"
 
       - name: Upload debug deploy output (PR)
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && matrix.config == 'Debug'
         uses: actions/upload-artifact@v6
         with:
           name: deploy-dbg-${{ github.event.pull_request.number }}
