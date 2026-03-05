@@ -66,7 +66,7 @@ Detailed docs:
 - Development and workflows: [docs/development.md](docs/development.md)
 - Data extraction and mappings pipeline: [docs/data-pipeline.md](docs/data-pipeline.md)
 - Target/command reference: [docs/automation.md](docs/automation.md)
-- Community guide roundup (Discord export): [docs/community-guides.md](docs/community-guides.md)
+- Pointer/hook primer for Fahrenheit modding: [docs/pointers-hooks-guide.md](docs/pointers-hooks-guide.md)
 - Local config schema: [docs/dev-local.schema.json](docs/dev-local.schema.json)
 
 ## Common Commands

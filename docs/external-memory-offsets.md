@@ -13,6 +13,7 @@ This project keeps a curated map of externally researched FFX memory offsets in:
 - `coderwilson/FFX_TAS_Python` (`memory/main.py`)
 - `HannibalSnekter/FFXSpeedrunMod` (`Resources/MemoryLocations.cs`)
 - curated reverse-engineering notes and local validation runs
+- see `docs/pointers-hooks-guide.md` for the runtime model and examples
 
 ## Scope
 

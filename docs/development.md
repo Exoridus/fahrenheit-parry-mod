@@ -112,4 +112,5 @@ git push origin main --follow-tags
 
 - Workflow map: `docs/automation.md`
 - Data pipeline: `docs/data-pipeline.md`
+- Pointer/hook primer: `docs/pointers-hooks-guide.md`
 - Local config schema: `docs/dev-local.schema.json`
