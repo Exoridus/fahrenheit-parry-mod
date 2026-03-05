@@ -1,0 +1,331 @@
+{
+  "SchemaVersion": 1,
+  "Domain": "keyitems",
+  "Locale": "ch",
+  "GeneratedAtUtc": "2026-03-04T07:27:52.3666303Z",
+  "SourceFiles": [
+    "READ_ALL_COMMANDS_LOCALIZED__ch.txt"
+  ],
+  "Entries": {
+    "A000": {
+      "Name": "\u67AF\u840E\u82B1\u675F",
+      "Description": "\u67D0\u4EBA\u8CBB\u5FC3\u601D\u6E96\u5099\u7684\u82B1\u675F\u3002",
+      "Kind": "KeyItem"
+    },
+    "A001": {
+      "Name": "\u9EDE\u706B\u5668\u5177",
+      "Description": "\u7528\u4F86\u751F\u706B\u7684\u5DE5\u5177\u3002",
+      "Kind": "KeyItem"
+    },
+    "A002": {
+      "Name": "\u9EEF\u6DE1\u93E1",
+      "Description": "\u93E1\u9762\u5DF2\u5931\u53BB\u4E86\u5149\u5F69\u3002",
+      "Kind": "KeyItem"
+    },
+    "A003": {
+      "Name": "\u4E03\u66DC\u93E1",
+      "Description": "\u93E1\u9762\u6563\u653E\u8457\u5149\u5F69\u3002",
+      "Kind": "KeyItem"
+    },
+    "A004": {
+      "Name": "\u963F\u723E\u8C9D\u5FB7\u8A9E\u5B57\u5178\u7B2C\uFF11\u5377",
+      "Description": "\u53EF\u5B78\u6703\u963F\u723E\u8C9D\u5FB7\u8A9E\u4E2D\u7684\u300C\u7684\u300D\u3001\u300C\u5149\u300D\u3001\u300C\u679C\u300D\u7B49\u3002",
+      "Kind": "KeyItem"
+    },
+    "A005": {
+      "Name": "\u963F\u723E\u8C9D\u5FB7\u8A9E\u5B57\u5178\u7B2C\uFF12\u5377",
+      "Description": "\u53EF\u5B78\u6703\u963F\u723E\u8C9D\u5FB7\u8A9E\u4E2D\u7684\u300C\u64CA\u300D\u3001\u300C\u640D\u300D\u3001\u300C\u88AB\u300D\u7B49\u3002",
+      "Kind": "KeyItem"
+    },
+    "A006": {
+      "Name": "\u963F\u723E\u8C9D\u5FB7\u8A9E\u5B57\u5178\u7B2C\uFF13\u5377",
+      "Description": "\u53EF\u5B78\u6703\u963F\u723E\u8C9D\u5FB7\u8A9E\u4E2D\u7684\u300C\u7121\u300D\u3001\u300C\u9B25\u300D\u3001\u300C\u6C34\u300D\u7B49\u3002",
+      "Kind": "KeyItem"
+    },
+    "A007": {
+      "Name": "\u963F\u723E\u8C9D\u5FB7\u8A9E\u5B57\u5178\u7B2C\uFF14\u5377",
+      "Description": "\u53EF\u5B78\u6703\u963F\u723E\u8C9D\u5FB7\u8A9E\u4E2D\u7684\u300C\u6CD5\u300D\u3001\u300C\u529B\u300D\u3001\u300C\u6210\u300D\u7B49\u3002",
+      "Kind": "KeyItem"
+    },
+    "A008": {
+      "Name": "\u963F\u723E\u8C9D\u5FB7\u8A9E\u5B57\u5178\u7B2C\uFF15\u5377",
+      "Description": "\u53EF\u5B78\u6703\u963F\u723E\u8C9D\u5FB7\u8A9E\u4E2D\u7684\u300C\u653B\u300D\u3001\u300C\u6575\u300D\u3001\u300C\u63A2\u300D\u7B49\u3002",
+      "Kind": "KeyItem"
+    },
+    "A009": {
+      "Name": "\u963F\u723E\u8C9D\u5FB7\u8A9E\u5B57\u5178\u7B2C\uFF16\u5377",
+      "Description": "\u53EF\u5B78\u6703\u963F\u723E\u8C9D\u5FB7\u8A9E\u4E2D\u7684\u300C\u4F7F\u300D\u3001\u300C\u723E\u300D\u3001\u300C\u65B9\u300D\u7B49\u3002",
+      "Kind": "KeyItem"
+    },
+    "A00A": {
+      "Name": "\u963F\u723E\u8C9D\u5FB7\u8A9E\u5B57\u5178\u7B2C\uFF17\u5377",
+      "Description": "\u53EF\u5B78\u6703\u963F\u723E\u8C9D\u5FB7\u8A9E\u4E2D\u7684\u300C\u7528\u300D\u3001\u300C\u624B\u300D\u3001\u300C\u76E4\u300D\u7B49\u3002",
+      "Kind": "KeyItem"
+    },
+    "A00B": {
+      "Name": "\u963F\u723E\u8C9D\u5FB7\u8A9E\u5B57\u5178\u7B2C\uFF18\u5377",
+      "Description": "\u53EF\u5B78\u6703\u963F\u723E\u8C9D\u5FB7\u8A9E\u4E2D\u7684\u300C\u6709\u300D\u3001\u300C\u8B77\u300D\u3001\u300C\u6E2C\u300D\u7B49\u3002",
+      "Kind": "KeyItem"
+    },
+    "A00C": {
+      "Name": "\u963F\u723E\u8C9D\u5FB7\u8A9E\u5B57\u5178\u7B2C\uFF19\u5377",
+      "Description": "\u53EF\u5B78\u6703\u963F\u723E\u8C9D\u5FB7\u8A9E\u4E2D\u7684\u300C\u9B54\u300D\u3001\u300C\u79A6\u300D\u3001\u300C\u524D\u300D\u7B49\u3002",
+      "Kind": "KeyItem"
+    },
+    "A00D": {
+      "Name": "\u963F\u723E\u8C9D\u5FB7\u8A9E\u5B57\u5178\u7B2C\uFF11\uFF10\u5377",
+      "Description": "\u53EF\u5B78\u6703\u963F\u723E\u8C9D\u5FB7\u8A9E\u4E2D\u7684\u300C\u6703\u300D\u3001\u300C\u9078\u300D\u3001\u300C\u7ABA\u300D\u7B49\u3002",
+      "Kind": "KeyItem"
+    },
+    "A00E": {
+      "Name": "\u963F\u723E\u8C9D\u5FB7\u8A9E\u5B57\u5178\u7B2C\uFF11\uFF11\u5377",
+      "Description": "\u53EF\u5B78\u6703\u963F\u723E\u8C9D\u5FB7\u8A9E\u4E2D\u7684\u300C\u6027\u300D\u3001\u300C\u7269\u300D\u3001\u300C\u4F3A\u300D\u7B49\u3002",
+      "Kind": "KeyItem"
+    },
+    "A00F": {
+      "Name": "\u963F\u723E\u8C9D\u5FB7\u8A9E\u5B57\u5178\u7B2C\uFF11\uFF12\u5377",
+      "Description": "\u53EF\u5B78\u6703\u963F\u723E\u8C9D\u5FB7\u8A9E\u4E2D\u7684\u300C\u9632\u300D\u3001\u300C\u5FB7\u300D\u3001\u300C\u55AE\u300D\u7B49\u3002",
+      "Kind": "KeyItem"
+    },
+    "A010": {
+      "Name": "\u963F\u723E\u8C9D\u5FB7\u8A9E\u5B57\u5178\u7B2C\uFF11\uFF13\u5377",
+      "Description": "\u53EF\u5B78\u6703\u963F\u723E\u8C9D\u5FB7\u8A9E\u4E2D\u7684\u300C\u5C6C\u300D\u3001\u300C\u4E0D\u300D\u3001\u300C\u614B\u300D\u7B49\u3002",
+      "Kind": "KeyItem"
+    },
+    "A011": {
+      "Name": "\u963F\u723E\u8C9D\u5FB7\u8A9E\u5B57\u5178\u7B2C\uFF11\uFF14\u5377",
+      "Description": "\u53EF\u5B78\u6703\u963F\u723E\u8C9D\u5FB7\u8A9E\u4E2D\u7684\u300C\u4E2D\u300D\u3001\u300C\u96F7\u300D\u3001\u300C\u5165\u300D\u7B49\u3002",
+      "Kind": "KeyItem"
+    },
+    "A012": {
+      "Name": "\u963F\u723E\u8C9D\u5FB7\u8A9E\u5B57\u5178\u7B2C\uFF11\uFF15\u5377",
+      "Description": "\u53EF\u5B78\u6703\u963F\u723E\u8C9D\u5FB7\u8A9E\u4E2D\u7684\u300C\u5B57\u300D\u3001\u300C\u4E88\u300D\u3001\u300C\u540D\u300D\u7B49\u3002",
+      "Kind": "KeyItem"
+    },
+    "A013": {
+      "Name": "\u963F\u723E\u8C9D\u5FB7\u8A9E\u5B57\u5178\u7B2C\uFF11\uFF16\u5377",
+      "Description": "\u53EF\u5B78\u6703\u963F\u723E\u8C9D\u5FB7\u8A9E\u4E2D\u7684\u300C\u4EBA\u300D\u3001\u300C\u8CE6\u300D\u3001\u300C\u6307\u300D\u7B49\u3002",
+      "Kind": "KeyItem"
+    },
+    "A014": {
+      "Name": "\u963F\u723E\u8C9D\u5FB7\u8A9E\u5B57\u5178\u7B2C\uFF11\uFF17\u5377",
+      "Description": "\u53EF\u5B78\u6703\u963F\u723E\u8C9D\u5FB7\u8A9E\u4E2D\u7684\u300C\u4E4B\u300D\u3001\u300C\u5E7B\u300D\u3001\u300C\u9053\u300D\u7B49\u3002",
+      "Kind": "KeyItem"
+    },
+    "A015": {
+      "Name": "\u963F\u723E\u8C9D\u5FB7\u8A9E\u5B57\u5178\u7B2C\uFF11\uFF18\u5377",
+      "Description": "\u53EF\u5B78\u6703\u963F\u723E\u8C9D\u5FB7\u8A9E\u4E2D\u7684\u300C\u6548\u300D\u3001\u300C\u706B\u300D\u3001\u300C\u5361\u300D\u7B49\u3002",
+      "Kind": "KeyItem"
+    },
+    "A016": {
+      "Name": "\u963F\u723E\u8C9D\u5FB7\u8A9E\u5B57\u5178\u7B2C\uFF11\uFF19\u5377",
+      "Description": "\u53EF\u5B78\u6703\u963F\u723E\u8C9D\u5FB7\u8A9E\u4E2D\u7684\u300C\u52D5\u300D\u3001\u300C\u884C\u300D\u3001\u300C\u7279\u300D\u7B49\u3002",
+      "Kind": "KeyItem"
+    },
+    "A017": {
+      "Name": "\u963F\u723E\u8C9D\u5FB7\u8A9E\u5B57\u5178\u7B2C\uFF12\uFF10\u5377",
+      "Description": "\u53EF\u5B78\u6703\u963F\u723E\u8C9D\u5FB7\u8A9E\u4E2D\u7684\u300C\u6280\u300D\u3001\u300C\u6240\u300D\u3001\u300C\u5927\u300D\u7B49\u3002",
+      "Kind": "KeyItem"
+    },
+    "A018": {
+      "Name": "\u963F\u723E\u8C9D\u5FB7\u8A9E\u5B57\u5178\u7B2C\uFF12\uFF11\u5377",
+      "Description": "\u53EF\u5B78\u6703\u963F\u723E\u8C9D\u5FB7\u8A9E\u4E2D\u7684\u300C\u80FD\u300D\u3001\u300C\u5C0D\u300D\u3001\u300C\u5F88\u300D\u7B49\u3002",
+      "Kind": "KeyItem"
+    },
+    "A019": {
+      "Name": "\u963F\u723E\u8C9D\u5FB7\u8A9E\u5B57\u5178\u7B2C\uFF12\uFF12\u5377",
+      "Description": "\u53EF\u5B78\u6703\u963F\u723E\u8C9D\u5FB7\u8A9E\u4E2D\u7684\u300C\u4E32\u300D\u3001\u300C\u5F97\u300D\u3001\u300C\u5F8C\u300D\u7B49\u3002",
+      "Kind": "KeyItem"
+    },
+    "A01A": {
+      "Name": "\u963F\u723E\u8C9D\u5FB7\u8A9E\u5B57\u5178\u7B2C\uFF12\uFF13\u5377",
+      "Description": "\u53EF\u5B78\u6703\u963F\u723E\u8C9D\u5FB7\u8A9E\u4E2D\u7684\u300C\u50B7\u300D\u3001\u300C\u52A0\u300D\u3001\u300C\u7403\u300D\u7B49\u3002",
+      "Kind": "KeyItem"
+    },
+    "A01B": {
+      "Name": "\u963F\u723E\u8C9D\u5FB7\u8A9E\u5B57\u5178\u7B2C\uFF12\uFF14\u5377",
+      "Description": "\u53EF\u5B78\u6703\u963F\u723E\u8C9D\u5FB7\u8A9E\u4E2D\u7684\u300C\u6642\u300D\u3001\u300C\u548C\u300D\u3001\u300C\u5F31\u300D\u7B49\u3002",
+      "Kind": "KeyItem"
+    },
+    "A01C": {
+      "Name": "\u963F\u723E\u8C9D\u5FB7\u8A9E\u5B57\u5178\u7B2C\uFF12\uFF15\u5377",
+      "Description": "\u53EF\u5B78\u6703\u963F\u723E\u8C9D\u5FB7\u8A9E\u4E2D\u7684\u300C\u6230\u300D\u3001\u300C\u5728\u300D\u3001\u300C\u7834\u300D\u7B49\u3002",
+      "Kind": "KeyItem"
+    },
+    "A01D": {
+      "Name": "\u963F\u723E\u8C9D\u5FB7\u8A9E\u5B57\u5178\u7B2C\uFF12\uFF16\u5377",
+      "Description": "\u53EF\u5B78\u6703\u963F\u723E\u8C9D\u5FB7\u8A9E\u4E2D\u7684\u300C\u53EF\u300D\u3001\u300C\u72C0\u300D\u3001\u300C\u81C2\u300D\u7B49\u3002",
+      "Kind": "KeyItem"
+    },
+    "A01E": {
+      "Name": "\u53EC\u559A\u58EB\u4E4B\u5FC3",
+      "Description": "\u53EC\u559A\u7378\u5C07\u8B8A\u5F97\u53EF\u7FD2\u5F97\u80FD\u529B\u3002",
+      "Kind": "KeyItem"
+    },
+    "A01F": {
+      "Name": "\u53EC\u559A\u7378\u4E4B\u5FC3",
+      "Description": "\u53EC\u559A\u7378\u5C07\u8B8A\u5F97\u53EF\u63D0\u5347\u5404\u7A2E\u53C3\u6578\u3002",
+      "Kind": "KeyItem"
+    },
+    "A020": {
+      "Name": "\u5091\u514B\u7279\u7684\u5E7B\u5149\u7403",
+      "Description": "\u9304\u4E0B\u4E86\uFF11\uFF10\u5E74\u524D\u7684\u5091\u514B\u7279\u4E00\u884C\u4EBA\u5F71\u50CF\u7684\u5E7B\u5149\u7403\u3002",
+      "Kind": "KeyItem"
+    },
+    "A021": {
+      "Name": "\u9673\u820A\u7684\u528D",
+      "Description": "\u4E00\u628A\u9673\u820A\u7684\u528D\u3002",
+      "Kind": "KeyItem"
+    },
+    "A022": {
+      "Name": "\u672A\u4F7F\u7528",
+      "Description": "\uFF1F",
+      "Kind": "KeyItem"
+    },
+    "A023": {
+      "Name": "\u65E5\u8F2A\u4E4B\u5370",
+      "Description": "\u4E03\u66DC\u4E4B\u4E00\u300C\u65E5\u8F2A\u300D\u5F62\u72C0\u7684\u5370\u8A18\u3002",
+      "Kind": "KeyItem"
+    },
+    "A024": {
+      "Name": "\u65E5\u8F2A\u8056\u5370",
+      "Description": "\u4E03\u66DC\u4E4B\u4E00\u300C\u65E5\u8F2A\u300D\u5F62\u72C0\u7684\u8056\u5370\u3002",
+      "Kind": "KeyItem"
+    },
+    "A025": {
+      "Name": "\u6708\u8F2A\u4E4B\u5370",
+      "Description": "\u4E03\u66DC\u4E4B\u4E00\u300C\u6708\u8F2A\u300D\u5F62\u72C0\u7684\u5370\u8A18\u3002",
+      "Kind": "KeyItem"
+    },
+    "A026": {
+      "Name": "\u6708\u8F2A\u8056\u5370",
+      "Description": "\u4E03\u66DC\u4E4B\u4E00\u300C\u6708\u8F2A\u300D\u5F62\u72C0\u7684\u8056\u5370\u3002",
+      "Kind": "KeyItem"
+    },
+    "A027": {
+      "Name": "\u571F\u661F\u4E4B\u5370",
+      "Description": "\u4E03\u66DC\u4E4B\u4E00\u300C\u571F\u661F\u300D\u5F62\u72C0\u7684\u5370\u8A18\u3002",
+      "Kind": "KeyItem"
+    },
+    "A028": {
+      "Name": "\u571F\u661F\u8056\u5370",
+      "Description": "\u4E03\u66DC\u4E4B\u4E00\u300C\u571F\u661F\u300D\u5F62\u72C0\u7684\u8056\u5370\u3002",
+      "Kind": "KeyItem"
+    },
+    "A029": {
+      "Name": "\u8D85\u4EBA\u4E4B\u8B49",
+      "Description": "\u6700\u5F37\u7684\u6230\u58EB\u2026\u2026\u4EBA\u5011\u7A31\u4ED6\u70BA\u8D85\u4EBA\uFF01",
+      "Kind": "KeyItem"
+    },
+    "A02A": {
+      "Name": "\u6728\u661F\u4E4B\u5370",
+      "Description": "\u4E03\u66DC\u4E4B\u4E00\u300C\u6728\u661F\u300D\u5F62\u72C0\u7684\u5370\u8A18\u3002",
+      "Kind": "KeyItem"
+    },
+    "A02B": {
+      "Name": "\u6728\u661F\u8056\u5370",
+      "Description": "\u4E03\u66DC\u4E4B\u4E00\u300C\u6728\u661F\u300D\u5F62\u72C0\u7684\u8056\u5370\u3002",
+      "Kind": "KeyItem"
+    },
+    "A02C": {
+      "Name": "\u6C34\u661F\u4E4B\u5370",
+      "Description": "\u4E03\u66DC\u4E4B\u4E00\u300C\u6C34\u661F\u300D\u5F62\u72C0\u7684\u5370\u8A18\u3002",
+      "Kind": "KeyItem"
+    },
+    "A02D": {
+      "Name": "\u6C34\u661F\u8056\u5370",
+      "Description": "\u4E03\u66DC\u4E4B\u4E00\u300C\u6C34\u661F\u300D\u5F62\u72C0\u7684\u8056\u5370\u3002",
+      "Kind": "KeyItem"
+    },
+    "A02E": {
+      "Name": "\u706B\u661F\u4E4B\u5370",
+      "Description": "\u4E03\u66DC\u4E4B\u4E00\u300C\u706B\u661F\u300D\u5F62\u72C0\u7684\u5370\u8A18\u3002",
+      "Kind": "KeyItem"
+    },
+    "A02F": {
+      "Name": "\u706B\u661F\u8056\u5370",
+      "Description": "\u4E03\u66DC\u4E4B\u4E00\u300C\u706B\u661F\u300D\u5F62\u72C0\u7684\u8056\u5370\u3002",
+      "Kind": "KeyItem"
+    },
+    "A030": {
+      "Name": "\u91D1\u661F\u4E4B\u5370",
+      "Description": "\u4E03\u66DC\u4E4B\u4E00\u300C\u91D1\u661F\u300D\u5F62\u72C0\u7684\u5370\u8A18\u3002",
+      "Kind": "KeyItem"
+    },
+    "A031": {
+      "Name": "\u91D1\u661F\u8056\u5370",
+      "Description": "\u4E03\u66DC\u4E4B\u4E00\u300C\u91D1\u661F\u300D\u5F62\u72C0\u7684\u8056\u5370\u3002",
+      "Kind": "KeyItem"
+    },
+    "A032": {
+      "Name": "\u82B1\u82DE\u4E4B\u51A0",
+      "Description": "\u4F3C\u4E4E\u8207\u79D8\u5BC6\u7684\u53EC\u559A\u7378\u6709\u95DC\u3002",
+      "Kind": "KeyItem"
+    },
+    "A033": {
+      "Name": "\u7E41\u82B1\u4E4B\u51A0",
+      "Description": "\u4F3C\u4E4E\u8207\u79D8\u5BC6\u7684\u53EC\u559A\u7378\u6709\u95DC\u3002",
+      "Kind": "KeyItem"
+    },
+    "A034": {
+      "Name": "\u91CD\u8981\u9053\u5177\uFF15\uFF13",
+      "Description": "\uFF1F",
+      "Kind": "KeyItem"
+    },
+    "A035": {
+      "Name": "\u91CD\u8981\u9053\u5177\uFF15\uFF14",
+      "Description": "\uFF1F",
+      "Kind": "KeyItem"
+    },
+    "A036": {
+      "Name": "\u91CD\u8981\u9053\u5177\uFF15\uFF15",
+      "Description": "\uFF1F",
+      "Kind": "KeyItem"
+    },
+    "A037": {
+      "Name": "\u91CD\u8981\u9053\u5177\uFF15\uFF16",
+      "Description": "\uFF1F",
+      "Kind": "KeyItem"
+    },
+    "A038": {
+      "Name": "\u91CD\u8981\u9053\u5177\uFF15\uFF17",
+      "Description": "\uFF1F",
+      "Kind": "KeyItem"
+    },
+    "A039": {
+      "Name": "\u91CD\u8981\u9053\u5177\uFF15\uFF18",
+      "Description": "\uFF1F",
+      "Kind": "KeyItem"
+    },
+    "A03A": {
+      "Name": "\u91CD\u8981\u9053\u5177\uFF15\uFF19",
+      "Description": "\uFF1F",
+      "Kind": "KeyItem"
+    },
+    "A03B": {
+      "Name": "\u91CD\u8981\u9053\u5177\uFF16\uFF10",
+      "Description": "\uFF1F",
+      "Kind": "KeyItem"
+    },
+    "A03C": {
+      "Name": "\u91CD\u8981\u9053\u5177\uFF16\uFF11",
+      "Description": "\uFF1F",
+      "Kind": "KeyItem"
+    },
+    "A03D": {
+      "Name": "\u91CD\u8981\u9053\u5177\uFF16\uFF12",
+      "Description": "\uFF1F",
+      "Kind": "KeyItem"
+    },
+    "A03E": {
+      "Name": "\u91CD\u8981\u9053\u5177\uFF16\uFF13",
+      "Description": "\uFF1F",
+      "Kind": "KeyItem"
+    },
+    "A03F": {
+      "Name": "\u91CD\u8981\u9053\u5177\uFF16\uFF14",
+      "Description": "\uFF1F",
+      "Kind": "KeyItem"
+    }
+  }
+}

@@ -1,0 +1,4906 @@
+{
+  "SchemaVersion": 1,
+  "Domain": "commands",
+  "Locale": "it",
+  "GeneratedAtUtc": "2026-03-04T07:27:52.2855305Z",
+  "SourceFiles": [
+    "READ_ALL_COMMANDS_LOCALIZED__it.txt"
+  ],
+  "Entries": {
+    "3000": {
+      "Name": "Attacca",
+      "Description": "Attacca un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "3001": {
+      "Name": "Oggetti",
+      "Description": "Usa gli oggetti.",
+      "Kind": "PlayerCommand"
+    },
+    "3002": {
+      "Name": "Cambio",
+      "Description": "Effettua un cambio con un altro alleato.",
+      "Kind": "PlayerCommand"
+    },
+    "3003": {
+      "Name": "Fuga",
+      "Description": "Permette di fuggire dalla battaglia.",
+      "Kind": "PlayerCommand"
+    },
+    "3004": {
+      "Name": "Armi",
+      "Description": "Permette di cambiare l\u2019arma equipaggiata.",
+      "Kind": "PlayerCommand"
+    },
+    "3005": {
+      "Name": "Protezioni",
+      "Description": "Permette di cambiare la protezione equipaggiata.",
+      "Kind": "PlayerCommand"
+    },
+    "3006": {
+      "Name": "Moviola",
+      "Description": "Rallenta l\u2019azione di un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "3007": {
+      "Name": "Moviola X",
+      "Description": "Iperrallenta l\u2019azione di un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "3008": {
+      "Name": "Narcoipnosi",
+      "Description": "Infligge status Sonno a un nemico per 3 turni.",
+      "Kind": "PlayerCommand"
+    },
+    "3009": {
+      "Name": "Silenziatore",
+      "Description": "Infligge status Mutismo a un nemico per 3 turni.",
+      "Kind": "PlayerCommand"
+    },
+    "300A": {
+      "Name": "Ambliopya",
+      "Description": "Infligge status Blind a un nemico per 3 turni.",
+      "Kind": "PlayerCommand"
+    },
+    "300B": {
+      "Name": "Aphathia",
+      "Description": "Infligge status Zombie a un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "300C": {
+      "Name": "Narcoipnosi X",
+      "Description": "Status Sonno quasi certo a un nemico per 1 turno.",
+      "Kind": "PlayerCommand"
+    },
+    "300D": {
+      "Name": "Silenziatore X",
+      "Description": "Status Mutismo quasi certo a un nemico per 1 turno.",
+      "Kind": "PlayerCommand"
+    },
+    "300E": {
+      "Name": "Ambliopya X",
+      "Description": "Status Blind quasi certo a un nemico per 1 turno.",
+      "Kind": "PlayerCommand"
+    },
+    "300F": {
+      "Name": "3 Penalit\u00E0",
+      "Description": "Status Sonno, Mutismo e Blind a un nemico per 3 turni.",
+      "Kind": "PlayerCommand"
+    },
+    "3010": {
+      "Name": "Antivis",
+      "Description": "Abbassa POT fisica di un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "3011": {
+      "Name": "Antikelesis",
+      "Description": "Abbassa POT magica di un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "3012": {
+      "Name": "Antiscutum",
+      "Description": "Abbassa DIF fisica e rompe la corazza di un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "3013": {
+      "Name": "Antimajix",
+      "Description": "Abbassa DIF magica di un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "3014": {
+      "Name": "Scippo",
+      "Description": "Ruba oggetti e danneggia il nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "3015": {
+      "Name": "Tokkata",
+      "Description": "Attacca velocemente un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "3016": {
+      "Name": "Ruba",
+      "Description": "Sottrae oggetti al nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "3017": {
+      "Name": "Usa",
+      "Description": "Usa gli oggetti speciali.",
+      "Kind": "PlayerCommand"
+    },
+    "3018": {
+      "Name": "Gambe!",
+      "Description": "Tutta la squadra fugge dalla battaglia.",
+      "Kind": "PlayerCommand"
+    },
+    "3019": {
+      "Name": "Preghiera",
+      "Description": "Recupera HP della squadra.",
+      "Kind": "PlayerCommand"
+    },
+    "301A": {
+      "Name": "Incentivo",
+      "Description": "Aumenta POT e DIF fisica della squadra.",
+      "Kind": "PlayerCommand"
+    },
+    "301B": {
+      "Name": "Autofocus",
+      "Description": "Migliora Mira della squadra.",
+      "Kind": "PlayerCommand"
+    },
+    "301C": {
+      "Name": "Reiki",
+      "Description": "Aumenta POT e DIF magica della squadra.",
+      "Kind": "PlayerCommand"
+    },
+    "301D": {
+      "Name": "Premonizione",
+      "Description": "Aumenta Destrezza della squadra.",
+      "Kind": "PlayerCommand"
+    },
+    "301E": {
+      "Name": "Augurio",
+      "Description": "Aumenta Fortuna della squadra.",
+      "Kind": "PlayerCommand"
+    },
+    "301F": {
+      "Name": "Scalogna",
+      "Description": "Abbassa Fortuna dei nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "3020": {
+      "Name": "Drakoken",
+      "Description": "Assorbe HP e MP da un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "3021": {
+      "Name": "Guardia",
+      "Description": "Riduce i danni di un attacco fisico subito.",
+      "Kind": "PlayerCommand"
+    },
+    "3022": {
+      "Name": "Altruismo",
+      "Description": "Copre un alleato e subisce i danni al suo posto.",
+      "Kind": "PlayerCommand"
+    },
+    "3023": {
+      "Name": "Trincea",
+      "Description": "Esegue Altruismo mentre \u00E8 in guardia.",
+      "Kind": "PlayerCommand"
+    },
+    "3024": {
+      "Name": "Elemosina",
+      "Description": "Causa danni lanciando dei guil.",
+      "Kind": "PlayerCommand"
+    },
+    "3025": {
+      "Name": "Altol\u00E0",
+      "Description": "Blocca i movimenti di un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "3026": {
+      "Name": "Provoca",
+      "Description": "Incita il nemico ad attaccare.",
+      "Kind": "PlayerCommand"
+    },
+    "3027": {
+      "Name": "Transfert",
+      "Description": "Passa la barra Turbo a un alleato.",
+      "Kind": "PlayerCommand"
+    },
+    "3028": {
+      "Name": "Imitazione",
+      "Description": "Imita l\u2019alleato del turno precedente.",
+      "Kind": "PlayerCommand"
+    },
+    "3029": {
+      "Name": "Bimagia",
+      "Description": "Usa consecutivamente 2 magie nere.",
+      "Kind": "PlayerCommand"
+    },
+    "302A": {
+      "Name": "Tangente",
+      "Description": "Con i guil, convince un nemico a disertare.",
+      "Kind": "PlayerCommand"
+    },
+    "302B": {
+      "Name": "Energia",
+      "Description": "Recupera HP di un alleato.",
+      "Kind": "PlayerCommand"
+    },
+    "302C": {
+      "Name": "Energira",
+      "Description": "Recupera HP di un alleato.",
+      "Kind": "PlayerCommand"
+    },
+    "302D": {
+      "Name": "Energiga",
+      "Description": "Recupera HP di un alleato.",
+      "Kind": "PlayerCommand"
+    },
+    "302E": {
+      "Name": "Parabliz",
+      "Description": "Immunizza la squadra da elemento Gelo per 1 turno.",
+      "Kind": "PlayerCommand"
+    },
+    "302F": {
+      "Name": "Parafire",
+      "Description": "Immunizza la squadra da elemento Fuoco per 1 turno.",
+      "Kind": "PlayerCommand"
+    },
+    "3030": {
+      "Name": "Parathund",
+      "Description": "Immunizza la squadra da elemento Tuono per 1 turno.",
+      "Kind": "PlayerCommand"
+    },
+    "3031": {
+      "Name": "Paraidro",
+      "Description": "Immunizza la squadra da elemento Acqua per 1 turno.",
+      "Kind": "PlayerCommand"
+    },
+    "3032": {
+      "Name": "Scan",
+      "Description": "Visualizza la scheda di un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "3033": {
+      "Name": "Esna",
+      "Description": "Cura status alterati a un alleato.",
+      "Kind": "PlayerCommand"
+    },
+    "3034": {
+      "Name": "Reiz",
+      "Description": "Cura K.O. a un alleato.",
+      "Kind": "PlayerCommand"
+    },
+    "3035": {
+      "Name": "Areiz",
+      "Description": "Cura K.O. e ripristina HP di un alleato.",
+      "Kind": "PlayerCommand"
+    },
+    "3036": {
+      "Name": "Haste",
+      "Description": "Velocizza l\u2019azione di un alleato.",
+      "Kind": "PlayerCommand"
+    },
+    "3037": {
+      "Name": "Hastega",
+      "Description": "Velocizza l\u2019azione della squadra.",
+      "Kind": "PlayerCommand"
+    },
+    "3038": {
+      "Name": "Slow",
+      "Description": "Rallenta l\u2019azione di un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "3039": {
+      "Name": "Slowga",
+      "Description": "Rallenta l\u2019azione dei nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "303A": {
+      "Name": "Shell",
+      "Description": "Aumenta DIF magica di un alleato.",
+      "Kind": "PlayerCommand"
+    },
+    "303B": {
+      "Name": "Protect",
+      "Description": "Aumenta DIF fisica di un alleato.",
+      "Kind": "PlayerCommand"
+    },
+    "303C": {
+      "Name": "Reflex",
+      "Description": "Riflette le magie.",
+      "Kind": "PlayerCommand"
+    },
+    "303D": {
+      "Name": "Dispel",
+      "Description": "Annulla l\u2019effetto della magia di un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "303E": {
+      "Name": "Rigene",
+      "Description": "Recupera lentamente HP di un alleato.",
+      "Kind": "PlayerCommand"
+    },
+    "303F": {
+      "Name": "Sancta",
+      "Description": "Attacca un nemico con magia sacra.",
+      "Kind": "PlayerCommand"
+    },
+    "3040": {
+      "Name": "Risveglio",
+      "Description": "Protegge un alleato da K.O. per 1 turno.",
+      "Kind": "PlayerCommand"
+    },
+    "3041": {
+      "Name": "Blizzard",
+      "Description": "Attacca un nemico con elemento Gelo.",
+      "Kind": "PlayerCommand"
+    },
+    "3042": {
+      "Name": "Fire",
+      "Description": "Attacca un nemico con elemento Fuoco.",
+      "Kind": "PlayerCommand"
+    },
+    "3043": {
+      "Name": "Thunder",
+      "Description": "Attacca un nemico con elemento Tuono.",
+      "Kind": "PlayerCommand"
+    },
+    "3044": {
+      "Name": "Idro",
+      "Description": "Attacca un nemico con elemento Acqua.",
+      "Kind": "PlayerCommand"
+    },
+    "3045": {
+      "Name": "Fira",
+      "Description": "Attacca un nemico con elemento Fuoco.",
+      "Kind": "PlayerCommand"
+    },
+    "3046": {
+      "Name": "Blizzara",
+      "Description": "Attacca un nemico con elemento Gelo.",
+      "Kind": "PlayerCommand"
+    },
+    "3047": {
+      "Name": "Thundara",
+      "Description": "Attacca un nemico con elemento Tuono.",
+      "Kind": "PlayerCommand"
+    },
+    "3048": {
+      "Name": "Idrora",
+      "Description": "Attacca un nemico con elemento Acqua.",
+      "Kind": "PlayerCommand"
+    },
+    "3049": {
+      "Name": "Firaga",
+      "Description": "Attacca un nemico con elemento Fuoco.",
+      "Kind": "PlayerCommand"
+    },
+    "304A": {
+      "Name": "Blizzaga",
+      "Description": "Attacca un nemico con elemento Gelo.",
+      "Kind": "PlayerCommand"
+    },
+    "304B": {
+      "Name": "Thundaga",
+      "Description": "Attacca un nemico con elemento Tuono.",
+      "Kind": "PlayerCommand"
+    },
+    "304C": {
+      "Name": "Idroga",
+      "Description": "Attacca un nemico con elemento Acqua.",
+      "Kind": "PlayerCommand"
+    },
+    "304D": {
+      "Name": "Bio",
+      "Description": "Attacca un nemico con magia velenosa.",
+      "Kind": "PlayerCommand"
+    },
+    "304E": {
+      "Name": "Antima",
+      "Description": "Toglie 1/4 di HP ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "304F": {
+      "Name": "Ade",
+      "Description": "Attacca un nemico infliggendo status Morte.",
+      "Kind": "PlayerCommand"
+    },
+    "3050": {
+      "Name": "Drain",
+      "Description": "Assorbe HP da un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "3051": {
+      "Name": "Aspir",
+      "Description": "Assorbe MP da un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "3052": {
+      "Name": "Flare",
+      "Description": "Attacca un nemico con magia non-elementale.",
+      "Kind": "PlayerCommand"
+    },
+    "3053": {
+      "Name": "Ultima",
+      "Description": "Attacca i nemici con magia non-elementale.",
+      "Kind": "PlayerCommand"
+    },
+    "3054": {
+      "Name": "Protegge",
+      "Description": "Subisce meno danni, ma impedisce il Turbo.",
+      "Kind": "PlayerCommand"
+    },
+    "3055": {
+      "Name": "Assimila",
+      "Description": "Subisce pi\u00F9 danni facilitando il Turbo.",
+      "Kind": "PlayerCommand"
+    },
+    "3056": {
+      "Name": "Rientra",
+      "Description": "Fa rientrare l\u2019Eone.",
+      "Kind": "PlayerCommand"
+    },
+    "3057": {
+      "Name": "Rientra",
+      "Description": "Fa rientrare l\u2019Eone.",
+      "Kind": "PlayerCommand"
+    },
+    "3058": {
+      "Name": "Furto",
+      "Description": "Ruba guil al nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "3059": {
+      "Name": "Ganascia",
+      "Description": "Abbassa POT e DIF fisica e magica di un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "305A": {
+      "Name": "Attacco E",
+      "Description": "Fa cadere una Energosfera a un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "305B": {
+      "Name": "Attacco M",
+      "Description": "Fa cadere una Magicosfera a un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "305C": {
+      "Name": "Attacco V",
+      "Description": "Fa cadere una Velocisfera a un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "305D": {
+      "Name": "Attacco A",
+      "Description": "Fa cadere una Abilitosfera a un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "305E": {
+      "Name": "Estorsione",
+      "Description": "Ruba guil e danneggia il nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "305F": {
+      "Name": "Alacrit\u00E0",
+      "Description": "Usa velocemente gli oggetti.",
+      "Kind": "PlayerCommand"
+    },
+    "3060": {
+      "Name": "Colpo Spirale",
+      "Description": "Causa danni a un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "3061": {
+      "Name": "Carica \u0026 Assalto",
+      "Description": "Causa danni ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "3062": {
+      "Name": "Pioggenergetika",
+      "Description": "Causa danni ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "3063": {
+      "Name": "As del blitzball",
+      "Description": "Causa danni a un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "3064": {
+      "Name": "Quasar",
+      "Description": "Causa danni a un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "3065": {
+      "Name": "Autarchia",
+      "Description": "Causa danni ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "3066": {
+      "Name": "Redenzione",
+      "Description": "Causa danni a un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "3067": {
+      "Name": "Huragano",
+      "Description": "Causa danni ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "3068": {
+      "Name": "Salto",
+      "Description": "Causa danni a un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "3069": {
+      "Name": "Pirosbolle",
+      "Description": "Causa danni elemento Fuoco ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "306A": {
+      "Name": "Cerbottana",
+      "Description": "Causa danni a un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "306B": {
+      "Name": "Kamikaze",
+      "Description": "Causa gravi danni a un nemico ed esce di battaglia.",
+      "Kind": "PlayerCommand"
+    },
+    "306C": {
+      "Name": "Mawashigeri",
+      "Description": "Causa danni a un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "306D": {
+      "Name": "Fossilspiro",
+      "Description": "Infligge status Pietra ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "306E": {
+      "Name": "Idrorespiro",
+      "Description": "Causa danni elemento Acqua ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "306F": {
+      "Name": "Sentenza",
+      "Description": "Infligge status Sentenza a un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "3070": {
+      "Name": "Vento bianco",
+      "Description": "Recupera HP della squadra.",
+      "Kind": "PlayerCommand"
+    },
+    "3071": {
+      "Name": "Alito fetido",
+      "Description": "Infligge status alterati ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "3072": {
+      "Name": "Difesa totale",
+      "Description": "Attiva una protezione magica sulla squadra.",
+      "Kind": "PlayerCommand"
+    },
+    "3073": {
+      "Name": "Sunshine",
+      "Description": "Causa danni ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "3074": {
+      "Name": "Slot Elementi",
+      "Description": "Slot machine di attacchi elementali.",
+      "Kind": "PlayerCommand"
+    },
+    "3075": {
+      "Name": "Slot Attacchi",
+      "Description": "Slot machine di attacchi a raffica.",
+      "Kind": "PlayerCommand"
+    },
+    "3076": {
+      "Name": "Slot Status",
+      "Description": "Slot machine di status alterati.",
+      "Kind": "PlayerCommand"
+    },
+    "3077": {
+      "Name": "Slot Aurochs",
+      "Description": "Slot machine speciale dei Besaid Aurochs.",
+      "Kind": "PlayerCommand"
+    },
+    "3078": {
+      "Name": "T Blizzard",
+      "Description": "Raffica di attacchi elemento Gelo.",
+      "Kind": "PlayerCommand"
+    },
+    "3079": {
+      "Name": "T Fire",
+      "Description": "Raffica di attacchi elemento Fuoco.",
+      "Kind": "PlayerCommand"
+    },
+    "307A": {
+      "Name": "T Thunder",
+      "Description": "Raffica di attacchi elemento Tuono.",
+      "Kind": "PlayerCommand"
+    },
+    "307B": {
+      "Name": "T Idro",
+      "Description": "Raffica di attacchi elemento Acqua.",
+      "Kind": "PlayerCommand"
+    },
+    "307C": {
+      "Name": "T Fira",
+      "Description": "Raffica di attacchi elemento Fuoco.",
+      "Kind": "PlayerCommand"
+    },
+    "307D": {
+      "Name": "T Blizzara",
+      "Description": "Raffica di attacchi elemento Gelo.",
+      "Kind": "PlayerCommand"
+    },
+    "307E": {
+      "Name": "T Thundara",
+      "Description": "Raffica di attacchi elemento Tuono.",
+      "Kind": "PlayerCommand"
+    },
+    "307F": {
+      "Name": "T Idrora",
+      "Description": "Raffica di attacchi elemento Acqua.",
+      "Kind": "PlayerCommand"
+    },
+    "3080": {
+      "Name": "T Firaga",
+      "Description": "Raffica di attacchi elemento Fuoco.",
+      "Kind": "PlayerCommand"
+    },
+    "3081": {
+      "Name": "T Blizzaga",
+      "Description": "Raffica di attacchi elemento Gelo.",
+      "Kind": "PlayerCommand"
+    },
+    "3082": {
+      "Name": "T Thundaga",
+      "Description": "Raffica di attacchi elemento Tuono.",
+      "Kind": "PlayerCommand"
+    },
+    "3083": {
+      "Name": "T Idroga",
+      "Description": "Raffica di attacchi elemento Acqua.",
+      "Kind": "PlayerCommand"
+    },
+    "3084": {
+      "Name": "T Bio",
+      "Description": "Raffica di attacchi velenosi.",
+      "Kind": "PlayerCommand"
+    },
+    "3085": {
+      "Name": "T Antima",
+      "Description": "Raffica di attacchi che tolgono 1/8 di HP.",
+      "Kind": "PlayerCommand"
+    },
+    "3086": {
+      "Name": "T Ade",
+      "Description": "Raffica di attacchi con effetto status Morte.",
+      "Kind": "PlayerCommand"
+    },
+    "3087": {
+      "Name": "T Drain",
+      "Description": "Raffica di attacchi che assorbono HP.",
+      "Kind": "PlayerCommand"
+    },
+    "3088": {
+      "Name": "T Aspir",
+      "Description": "Raffica di attacchi che assorbono MP.",
+      "Kind": "PlayerCommand"
+    },
+    "3089": {
+      "Name": "T Flare",
+      "Description": "Raffica di attacchi non-elementali.",
+      "Kind": "PlayerCommand"
+    },
+    "308A": {
+      "Name": "T Ultima",
+      "Description": "Raffica di attacchi non-elementali.",
+      "Kind": "PlayerCommand"
+    },
+    "308B": {
+      "Name": "Granata",
+      "Description": "Causa danni ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "308C": {
+      "Name": "Blindogranata",
+      "Description": "Causa danni ed effetto Antiscutum ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "308D": {
+      "Name": "Ananas",
+      "Description": "Causa danni ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "308E": {
+      "Name": "Dinamite",
+      "Description": "Causa danni ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "308F": {
+      "Name": "Bomba Cluster",
+      "Description": "Causa danni ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "3090": {
+      "Name": "Tall Boy",
+      "Description": "Causa danni ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "3091": {
+      "Name": "Mina Blaster",
+      "Description": "Causa danni e status alterati ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "3092": {
+      "Name": "Hazzard Shell",
+      "Description": "Causa danni e status alterati ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "3093": {
+      "Name": "Bomba Calamity",
+      "Description": "Causa danni e status alterati ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "3094": {
+      "Name": "Granata Chaos",
+      "Description": "Causa danni e status alterati ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "3095": {
+      "Name": "Mina Thermos",
+      "Description": "Causa danni elemento Fuoco ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "3096": {
+      "Name": "Vulcaneggiando",
+      "Description": "Causa danni elemento Fuoco ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "3097": {
+      "Name": "Anima ardente",
+      "Description": "Causa danni elemento Fuoco ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "3098": {
+      "Name": "Fuoco satanico",
+      "Description": "Danni elemento Fuoco e status alterati ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "3099": {
+      "Name": "Fiamme d\u2019Abadon",
+      "Description": "Danni elemento Fuoco e status alterati ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "309A": {
+      "Name": "Biancaneve",
+      "Description": "Causa danni elemento Gelo ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "309B": {
+      "Name": "Rigore glaciale",
+      "Description": "Causa danni elemento Gelo ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "309C": {
+      "Name": "Siberya",
+      "Description": "Causa danni elemento Gelo ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "309D": {
+      "Name": "Glaciatum",
+      "Description": "Danni elemento Gelo e status alterati ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "309E": {
+      "Name": "Cocutos",
+      "Description": "Danni elemento Gelo e status alterati ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "309F": {
+      "Name": "Thunderbolt",
+      "Description": "Causa danni elemento Tuono ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "30A0": {
+      "Name": "Elettrotwister",
+      "Description": "Causa danni elemento Tuono ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "30A1": {
+      "Name": "Raggi fulminanti",
+      "Description": "Causa danni elemento Tuono ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "30A2": {
+      "Name": "Elettroshock",
+      "Description": "Danni elemento Tuono e status alterati ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "30A3": {
+      "Name": "Saettourbillon",
+      "Description": "Danni elemento Tuono e status alterati ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "30A4": {
+      "Name": "Cateratta",
+      "Description": "Causa danni elemento Acqua ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "30A5": {
+      "Name": "Massalluvionale",
+      "Description": "Causa danni elemento Acqua ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "30A6": {
+      "Name": "Marea piumata",
+      "Description": "Causa danni elemento Acqua ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "30A7": {
+      "Name": "Idrotoxina",
+      "Description": "Danni elemento Acqua e status alterati ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "30A8": {
+      "Name": "Pioggia nera",
+      "Description": "Danni elemento Acqua e status alterati ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "30A9": {
+      "Name": "Implosione",
+      "Description": "Toglie 3/4 di HP ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "30AA": {
+      "Name": "Buco nero",
+      "Description": "Toglie 15/16 di HP ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "30AB": {
+      "Name": "Supernova",
+      "Description": "Causa danni ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "30AC": {
+      "Name": "Ultrapozione",
+      "Description": "Ripristina HP della squadra.",
+      "Kind": "PlayerCommand"
+    },
+    "30AD": {
+      "Name": "Curatutto",
+      "Description": "Cura tutti gli status alterati alla squadra.",
+      "Kind": "PlayerCommand"
+    },
+    "30AE": {
+      "Name": "Ultracura",
+      "Description": "Recupera HP e cura status alterati alla squadra.",
+      "Kind": "PlayerCommand"
+    },
+    "30AF": {
+      "Name": "Megafenice",
+      "Description": "Cura K.O. alla squadra.",
+      "Kind": "PlayerCommand"
+    },
+    "30B0": {
+      "Name": "Ultrafenice",
+      "Description": "Cura K.O. e ripristina HP della squadra.",
+      "Kind": "PlayerCommand"
+    },
+    "30B1": {
+      "Name": "Elisir",
+      "Description": "Ripristina HP e MP di un alleato.",
+      "Kind": "PlayerCommand"
+    },
+    "30B2": {
+      "Name": "Megaelisir",
+      "Description": "Ripristina HP e MP della squadra.",
+      "Kind": "PlayerCommand"
+    },
+    "30B3": {
+      "Name": "Superelisir",
+      "Description": "Ripristina HP e MP e cura status alterati alla squadra.",
+      "Kind": "PlayerCommand"
+    },
+    "30B4": {
+      "Name": "Supremelisir",
+      "Description": "Riabilita totalmente tutta la squadra.",
+      "Kind": "PlayerCommand"
+    },
+    "30B5": {
+      "Name": "Paratutto",
+      "Description": "D\u00E0 immunit\u00E0 elementale a un alleato.",
+      "Kind": "PlayerCommand"
+    },
+    "30B6": {
+      "Name": "Megaparatutto",
+      "Description": "D\u00E0 immunit\u00E0 elementale alla squadra.",
+      "Kind": "PlayerCommand"
+    },
+    "30B7": {
+      "Name": "Iperparatutto",
+      "Description": "D\u00E0 immunit\u00E0 elementale, Incentivo e Reiki alla squadra.",
+      "Kind": "PlayerCommand"
+    },
+    "30B8": {
+      "Name": "Ultraparatutto",
+      "Description": "Ottimizza gli status e d\u00E0 immunit\u00E0 elementale a tutti.",
+      "Kind": "PlayerCommand"
+    },
+    "30B9": {
+      "Name": "Difesa blindata",
+      "Description": "Applica Protect e Shell alla squadra.",
+      "Kind": "PlayerCommand"
+    },
+    "30BA": {
+      "Name": "Difesa T",
+      "Description": "Applica Shell, Protect e Haste alla squadra.",
+      "Kind": "PlayerCommand"
+    },
+    "30BB": {
+      "Name": "Superdifesa T",
+      "Description": "Applica Difesa T e Rigene alla squadra.",
+      "Kind": "PlayerCommand"
+    },
+    "30BC": {
+      "Name": "Extradifesa T",
+      "Description": "Applica Difesa T Rigene e Risveglio alla squadra.",
+      "Kind": "PlayerCommand"
+    },
+    "30BD": {
+      "Name": "Vitalit\u00E0 2",
+      "Description": "Raddoppia gli HP massimi di un alleato.",
+      "Kind": "PlayerCommand"
+    },
+    "30BE": {
+      "Name": "Megavitalit\u00E0 2",
+      "Description": "Raddoppia gli HP massimi della squadra.",
+      "Kind": "PlayerCommand"
+    },
+    "30BF": {
+      "Name": "Ipervitalit\u00E0 2",
+      "Description": "Raddoppia gli HP massimi e attiva Incentivo alla squadra.",
+      "Kind": "PlayerCommand"
+    },
+    "30C0": {
+      "Name": "Majix 2",
+      "Description": "Raddoppia gli MP massimi di un alleato.",
+      "Kind": "PlayerCommand"
+    },
+    "30C1": {
+      "Name": "Megamajix 2",
+      "Description": "Raddoppia gli MP massimi della squadra.",
+      "Kind": "PlayerCommand"
+    },
+    "30C2": {
+      "Name": "Ipermajix 2",
+      "Description": "Raddoppia gli MP massimi e applica Reiki alla squadra.",
+      "Kind": "PlayerCommand"
+    },
+    "30C3": {
+      "Name": "Liberty E",
+      "Description": "Un alleato usa le abilit\u00E0 senza consumare MP.",
+      "Kind": "PlayerCommand"
+    },
+    "30C4": {
+      "Name": "Liberty EX",
+      "Description": "La squadra usa le abilit\u00E0 senza consumare MP.",
+      "Kind": "PlayerCommand"
+    },
+    "30C5": {
+      "Name": "Quartetto 9",
+      "Description": "Un alleato causa un danno di 9999 HP.",
+      "Kind": "PlayerCommand"
+    },
+    "30C6": {
+      "Name": "Quartetto 99",
+      "Description": "La squadra causa un danno di 9999 HP.",
+      "Kind": "PlayerCommand"
+    },
+    "30C7": {
+      "Name": "Medicina dell\u2019eroe",
+      "Description": "Un alleato infligge attacchi letali.",
+      "Kind": "PlayerCommand"
+    },
+    "30C8": {
+      "Name": "Medicina del mago",
+      "Description": "La squadra infligge attacchi letali.",
+      "Kind": "PlayerCommand"
+    },
+    "30C9": {
+      "Name": "Eccitante",
+      "Description": "La squadra entra velocemente in Turbo.",
+      "Kind": "PlayerCommand"
+    },
+    "30CA": {
+      "Name": "Eccentriko",
+      "Description": "La squadra entra molto velocemente in Turbo.",
+      "Kind": "PlayerCommand"
+    },
+    "30CB": {
+      "Name": "Attacca",
+      "Description": "Causa danni a un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "30CC": {
+      "Name": "Alata sonica",
+      "Description": "Causa danni e rallenta l\u2019azione di un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "30CD": {
+      "Name": "Scudo raggiante",
+      "Description": "Causa danni non-elementali ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "30CE": {
+      "Name": "Freccia raggiante",
+      "Description": "Causa danni non-elementali ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "30CF": {
+      "Name": "Attacca",
+      "Description": "Causa danni a un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "30D0": {
+      "Name": "Meteostrike",
+      "Description": "Causa danni a un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "30D1": {
+      "Name": "Fiamme infernali",
+      "Description": "Causa danni elemento Fuoco ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "30D2": {
+      "Name": "Attacca",
+      "Description": "Causa danni a un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "30D3": {
+      "Name": "Aeroelektrodo",
+      "Description": "Causa danni a un nemico e neutralizza alcune magie.",
+      "Kind": "PlayerCommand"
+    },
+    "30D4": {
+      "Name": "Elektroflusso",
+      "Description": "Causa danni elemento Tuono ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "30D5": {
+      "Name": "Attacca",
+      "Description": "Causa danni a un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "30D6": {
+      "Name": "Tocco celestiale",
+      "Description": "Causa danni e blocca i movimenti del nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "30D7": {
+      "Name": "Diamanpolvere",
+      "Description": "Causa danni elemento Gelo ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "30D8": {
+      "Name": "Attacca",
+      "Description": "Causa danni a un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "30D9": {
+      "Name": "Istinto",
+      "Description": "Causa danni ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "30DA": {
+      "Name": "Megaflare",
+      "Description": "Causa danni non-elementali ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "30DB": {
+      "Name": "Attacca",
+      "Description": "Causa danni a un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "30DC": {
+      "Name": "Pain",
+      "Description": "Causa danni e status Morte a un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "30DD": {
+      "Name": "Chaos D",
+      "Description": "Causa danni non-elementali ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "30DE": {
+      "Name": "Daigorou",
+      "Description": "Niente",
+      "Kind": "PlayerCommand"
+    },
+    "30DF": {
+      "Name": "Kozuka",
+      "Description": "Niente",
+      "Kind": "PlayerCommand"
+    },
+    "30E0": {
+      "Name": "Wakizashi",
+      "Description": "Niente",
+      "Kind": "PlayerCommand"
+    },
+    "30E1": {
+      "Name": "Wakizashi",
+      "Description": "Niente",
+      "Kind": "PlayerCommand"
+    },
+    "30E2": {
+      "Name": "Zanmato",
+      "Description": "Niente",
+      "Kind": "PlayerCommand"
+    },
+    "30E3": {
+      "Name": "Hosannah",
+      "Description": "Causa danni ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "30E4": {
+      "Name": "Attacca",
+      "Description": "Niente",
+      "Kind": "PlayerCommand"
+    },
+    "30E5": {
+      "Name": "Engloutie",
+      "Description": "Niente",
+      "Kind": "PlayerCommand"
+    },
+    "30E6": {
+      "Name": "Attacca",
+      "Description": "Niente",
+      "Kind": "PlayerCommand"
+    },
+    "30E7": {
+      "Name": "Schmelzend",
+      "Description": "Niente",
+      "Kind": "PlayerCommand"
+    },
+    "30E8": {
+      "Name": "Attacca",
+      "Description": "Niente",
+      "Kind": "PlayerCommand"
+    },
+    "30E9": {
+      "Name": "Ritorner\u00F2",
+      "Description": "Niente",
+      "Kind": "PlayerCommand"
+    },
+    "30EA": {
+      "Name": "Attacco Delta",
+      "Description": "Attacco concertato delle sorelle.",
+      "Kind": "PlayerCommand"
+    },
+    "30EB": {
+      "Name": "Niente",
+      "Description": "Causa danni a un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "30EC": {
+      "Name": "Niente",
+      "Description": "Causa danni ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "30ED": {
+      "Name": "Niente",
+      "Description": "Causa danni ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "30EE": {
+      "Name": "Niente",
+      "Description": "Causa danni a un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "30EF": {
+      "Name": "Tiro Fire",
+      "Description": "Tecnica di Wakka n\u00BA1.",
+      "Kind": "PlayerCommand"
+    },
+    "30F0": {
+      "Name": "Tiro Fire",
+      "Description": "Tecnica di Wakka n\u00BA2.",
+      "Kind": "PlayerCommand"
+    },
+    "30F1": {
+      "Name": "Tiro Ice",
+      "Description": "Tecnica di Wakka n\u00BA3.",
+      "Kind": "PlayerCommand"
+    },
+    "30F2": {
+      "Name": "Tiro Ice",
+      "Description": "Tecnica di Wakka n\u00BA4.",
+      "Kind": "PlayerCommand"
+    },
+    "30F3": {
+      "Name": "Tiro Idro",
+      "Description": "Tecnica di Wakka n\u00BA5.",
+      "Kind": "PlayerCommand"
+    },
+    "30F4": {
+      "Name": "Tiro Idro",
+      "Description": "Tecnica di Wakka n\u00BA6.",
+      "Kind": "PlayerCommand"
+    },
+    "30F5": {
+      "Name": "Tiro Thunder",
+      "Description": "Tecnica di Wakka n\u00BA7.",
+      "Kind": "PlayerCommand"
+    },
+    "30F6": {
+      "Name": "Tiro Thunder",
+      "Description": "Tecnica di Wakka n\u00BA8.",
+      "Kind": "PlayerCommand"
+    },
+    "30F7": {
+      "Name": "Tiro Catastrofe",
+      "Description": "Tecnica di Wakka n\u00BA9.",
+      "Kind": "PlayerCommand"
+    },
+    "30F8": {
+      "Name": "Tiro Catastrofe",
+      "Description": "Tecnica di Wakka n\u00BA10.",
+      "Kind": "PlayerCommand"
+    },
+    "30F9": {
+      "Name": "Tiro Tempo",
+      "Description": "Tecnica di Wakka n\u00BA11.",
+      "Kind": "PlayerCommand"
+    },
+    "30FA": {
+      "Name": "Tiro Tempo",
+      "Description": "Tecnica di Wakka n\u00BA12.",
+      "Kind": "PlayerCommand"
+    },
+    "30FB": {
+      "Name": "Tiro Megalite",
+      "Description": "Tecnica di Wakka n\u00BA13.",
+      "Kind": "PlayerCommand"
+    },
+    "30FC": {
+      "Name": "Tiro Megalite",
+      "Description": "Tecnica di Wakka n\u00BA14.",
+      "Kind": "PlayerCommand"
+    },
+    "30FD": {
+      "Name": "Tiro Aurochs",
+      "Description": "Tecnica di Wakka n\u00BA15.",
+      "Kind": "PlayerCommand"
+    },
+    "30FE": {
+      "Name": "Tiro Bomba",
+      "Description": "Tecnica di Wakka n\u00BA16.",
+      "Kind": "PlayerCommand"
+    },
+    "30FF": {
+      "Name": "Le 3 Magus",
+      "Description": "Invoca le 3 sorelle Magus.",
+      "Kind": "PlayerCommand"
+    },
+    "3100": {
+      "Name": "Invocheoni",
+      "Description": "Invocazione.",
+      "Kind": "PlayerCommand"
+    },
+    "3101": {
+      "Name": "Tenaglia",
+      "Description": "Esegue una manovra a tenaglia.",
+      "Kind": "PlayerCommand"
+    },
+    "3102": {
+      "Name": "Gru",
+      "Description": "Aziona l\u2019interruttore della gru.",
+      "Kind": "PlayerCommand"
+    },
+    "3103": {
+      "Name": "Muove",
+      "Description": "Si sposta in uno spazio libero.",
+      "Kind": "PlayerCommand"
+    },
+    "3104": {
+      "Name": "Chival\u00E0",
+      "Description": "Recupera HP e osserva la situazione.",
+      "Kind": "PlayerCommand"
+    },
+    "3105": {
+      "Name": "Parla",
+      "Description": "Parla al nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "3106": {
+      "Name": "Avvicina",
+      "Description": "Chiede a Cid di avvicinarsi al nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "3107": {
+      "Name": "Allontana",
+      "Description": "Chiede a Cid di allontanarsi dal nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "3108": {
+      "Name": "Annulla",
+      "Description": "Annulla la richiesta fatta a Cid.",
+      "Kind": "PlayerCommand"
+    },
+    "3109": {
+      "Name": "Infuria",
+      "Description": "Attacca il nemico dall\u2019interno.",
+      "Kind": "PlayerCommand"
+    },
+    "310A": {
+      "Name": "Niente",
+      "Description": "Causa danni a un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "310B": {
+      "Name": "Niente",
+      "Description": "Causa danni ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "310C": {
+      "Name": "Niente",
+      "Description": "Causa danni a un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "310D": {
+      "Name": "Niente",
+      "Description": "Causa danni ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "310E": {
+      "Name": "Niente",
+      "Description": "Causa danni a un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "310F": {
+      "Name": "Niente",
+      "Description": "Causa danni ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "3110": {
+      "Name": "Niente",
+      "Description": "Causa danni a un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "3111": {
+      "Name": "Niente",
+      "Description": "Causa danni ai nemici.",
+      "Kind": "PlayerCommand"
+    },
+    "3112": {
+      "Name": "Niente",
+      "Description": "Causa danni a un nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "3113": {
+      "Name": "Tecniche",
+      "Description": "Usa varie tecniche.",
+      "Kind": "PlayerCommand"
+    },
+    "3114": {
+      "Name": "Qualit\u00E0",
+      "Description": "Usa abilit\u00E0 speciali.",
+      "Kind": "PlayerCommand"
+    },
+    "3115": {
+      "Name": "MNera",
+      "Description": "Usa la magia nera.",
+      "Kind": "PlayerCommand"
+    },
+    "3116": {
+      "Name": "MBianca",
+      "Description": "Usa la magia bianca.",
+      "Kind": "PlayerCommand"
+    },
+    "3117": {
+      "Name": "Invoca",
+      "Description": "Invoca gli Eoni.",
+      "Kind": "PlayerCommand"
+    },
+    "3118": {
+      "Name": "Turbinvoca",
+      "Description": "Invoca gli Eoni in Turbo!",
+      "Kind": "PlayerCommand"
+    },
+    "3119": {
+      "Name": "Gladius",
+      "Description": "Colpisci il nemico con un buon tempismo!",
+      "Kind": "PlayerCommand"
+    },
+    "311A": {
+      "Name": "Nemitec",
+      "Description": "Usa le tecniche apprese dai nemici!",
+      "Kind": "PlayerCommand"
+    },
+    "311B": {
+      "Name": "Arcano",
+      "Description": "Inserisci i comandi per eseguire colpi mortali!",
+      "Kind": "PlayerCommand"
+    },
+    "311C": {
+      "Name": "Slot",
+      "Description": "Tutte le slot per il tiro del cuore!",
+      "Kind": "PlayerCommand"
+    },
+    "311D": {
+      "Name": "Tentazione",
+      "Description": "Potenzia le magie e sprigionale contro i nemici!",
+      "Kind": "PlayerCommand"
+    },
+    "311E": {
+      "Name": "Cocktail",
+      "Description": "Tante miscele esplosive di oggetti disparati!",
+      "Kind": "PlayerCommand"
+    },
+    "311F": {
+      "Name": "Risveglio",
+      "Description": "Niente",
+      "Kind": "PlayerCommand"
+    },
+    "3120": {
+      "Name": "Ade",
+      "Description": "Niente",
+      "Kind": "PlayerCommand"
+    },
+    "3121": {
+      "Name": "Soldi",
+      "Description": "Niente",
+      "Kind": "PlayerCommand"
+    },
+    "3122": {
+      "Name": "Soldi",
+      "Description": "Niente",
+      "Kind": "PlayerCommand"
+    },
+    "3123": {
+      "Name": "Mancia",
+      "Description": "Fa un\u2019offerta.",
+      "Kind": "PlayerCommand"
+    },
+    "3124": {
+      "Name": "Pensaci tu!",
+      "Description": "Le lascia carta bianca.",
+      "Kind": "PlayerCommand"
+    },
+    "3125": {
+      "Name": "Continua cos\u00EC!",
+      "Description": "Fa la stessa cosa del turno precedente.",
+      "Kind": "PlayerCommand"
+    },
+    "3126": {
+      "Name": "Attaccalo!",
+      "Description": "Sferra un attacco fisico.",
+      "Kind": "PlayerCommand"
+    },
+    "3127": {
+      "Name": "Coraggio!",
+      "Description": "Attacca con tecniche speciali e magie.",
+      "Kind": "PlayerCommand"
+    },
+    "3128": {
+      "Name": "Abbi piet\u00E0!",
+      "Description": "Usa magie di recupero.",
+      "Kind": "PlayerCommand"
+    },
+    "3129": {
+      "Name": "Tutte x 1",
+      "Description": "Tutte insieme eseguono il loro colpo mortale.",
+      "Kind": "PlayerCommand"
+    },
+    "312A": {
+      "Name": "Proteggile!",
+      "Description": "Usa magie di difesa e di supporto.",
+      "Kind": "PlayerCommand"
+    },
+    "312B": {
+      "Name": "Tutto bene?",
+      "Description": "Assorbe HP e MP dal nemico.",
+      "Kind": "PlayerCommand"
+    },
+    "312C": {
+      "Name": "Non fa nulla",
+      "Description": "Niente",
+      "Kind": "PlayerCommand"
+    },
+    "312D": {
+      "Name": "Paratutto",
+      "Description": "Niente",
+      "Kind": "PlayerCommand"
+    },
+    "312E": {
+      "Name": "Slot Attacchi",
+      "Description": "Tecnica di Wakka n\u00BA16.",
+      "Kind": "PlayerCommand"
+    },
+    "312F": {
+      "Name": "Apre lucchetto",
+      "Description": "Apre il lucchetto del cancello.",
+      "Kind": "PlayerCommand"
+    },
+    "3130": {
+      "Name": "Chiama24",
+      "Description": "Niente",
+      "Kind": "PlayerCommand"
+    },
+    "3131": {
+      "Name": "Chiama25",
+      "Description": "Niente",
+      "Kind": "PlayerCommand"
+    },
+    "3132": {
+      "Name": "Chiama26",
+      "Description": "Niente",
+      "Kind": "PlayerCommand"
+    },
+    "3133": {
+      "Name": "Chiama27",
+      "Description": "Niente",
+      "Kind": "PlayerCommand"
+    },
+    "3134": {
+      "Name": "Chiama28",
+      "Description": "Niente",
+      "Kind": "PlayerCommand"
+    },
+    "3135": {
+      "Name": "Chiama29",
+      "Description": "Niente",
+      "Kind": "PlayerCommand"
+    },
+    "3136": {
+      "Name": "Chiama30",
+      "Description": "Niente",
+      "Kind": "PlayerCommand"
+    },
+    "3137": {
+      "Name": "Chiama31",
+      "Description": "Niente",
+      "Kind": "PlayerCommand"
+    },
+    "3138": {
+      "Name": "Chiama32",
+      "Description": "Niente",
+      "Kind": "PlayerCommand"
+    },
+    "3139": {
+      "Name": "Chiama33",
+      "Description": "Niente",
+      "Kind": "PlayerCommand"
+    },
+    "313A": {
+      "Name": "Chiama34",
+      "Description": "Niente",
+      "Kind": "PlayerCommand"
+    },
+    "313B": {
+      "Name": "Chiama35",
+      "Description": "Niente",
+      "Kind": "PlayerCommand"
+    },
+    "313C": {
+      "Name": "Chiama36",
+      "Description": "Niente",
+      "Kind": "PlayerCommand"
+    },
+    "313D": {
+      "Name": "Chiama37",
+      "Description": "Niente",
+      "Kind": "PlayerCommand"
+    },
+    "313E": {
+      "Name": "Chiama38",
+      "Description": "Niente",
+      "Kind": "PlayerCommand"
+    },
+    "313F": {
+      "Name": "Chiama39",
+      "Description": "Niente",
+      "Kind": "PlayerCommand"
+    },
+    "4000": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4001": {
+      "Name": "Comando 2",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4002": {
+      "Name": "Comando 3",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4003": {
+      "Name": "Cerbottana",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4004": {
+      "Name": "Semetragliatrice",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4005": {
+      "Name": "Risucchio",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4006": {
+      "Name": "Rigurgito",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4007": {
+      "Name": "Preterremoto",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4008": {
+      "Name": "Terremoto",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4009": {
+      "Name": "Kamikaze",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "400A": {
+      "Name": "Sguardo maledetto",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "400B": {
+      "Name": "Ultrasuoni",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "400C": {
+      "Name": "Onda cosmica",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "400D": {
+      "Name": "Attacco venefico",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "400E": {
+      "Name": "Comando",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "400F": {
+      "Name": "Berserk",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4010": {
+      "Name": "Autopozione",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4011": {
+      "Name": "Carabina",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4012": {
+      "Name": "Carabina",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4013": {
+      "Name": "Alito fiammante",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4014": {
+      "Name": "Mawashigeri",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4015": {
+      "Name": "Pistola ad acqua",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4016": {
+      "Name": "Onda cosmica",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4017": {
+      "Name": "Comando",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4018": {
+      "Name": "Preparazione",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4019": {
+      "Name": "Atterraggio",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "401A": {
+      "Name": "Striscio",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "401B": {
+      "Name": "Respiro",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "401C": {
+      "Name": "Respiro",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "401D": {
+      "Name": "Respiro",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "401E": {
+      "Name": "Respiro",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "401F": {
+      "Name": "Singolo",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4020": {
+      "Name": "Totale",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4021": {
+      "Name": "Onde soniche",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4022": {
+      "Name": "Nuclenergia",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4023": {
+      "Name": "Fotonergia",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4024": {
+      "Name": "Incornata",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4025": {
+      "Name": "Respiro",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4026": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4027": {
+      "Name": "Nagiharai",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4028": {
+      "Name": "Salto mozzatesta",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4029": {
+      "Name": "Elettroshock",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "402A": {
+      "Name": "Terremoto",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "402B": {
+      "Name": "Ochu dance",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "402C": {
+      "Name": "Polline",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "402D": {
+      "Name": "Polline",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "402E": {
+      "Name": "Polline",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "402F": {
+      "Name": "El Ni\u00F1o",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4030": {
+      "Name": "Carica",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4031": {
+      "Name": "1.000 aghi",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4032": {
+      "Name": "10.000 aghi",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4033": {
+      "Name": "Fuga",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4034": {
+      "Name": "Gancio esplosivo",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4035": {
+      "Name": "Doppio pugno",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4036": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4037": {
+      "Name": "Apertura",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4038": {
+      "Name": "Sguardo pietrificante",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4039": {
+      "Name": "Codata sonica",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "403A": {
+      "Name": "Emblema della fede",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "403B": {
+      "Name": "Contrattacco",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "403C": {
+      "Name": "Kiai",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "403D": {
+      "Name": "Freccia raggiante",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "403E": {
+      "Name": "Brucia",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "403F": {
+      "Name": "Si gonfia 2",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4040": {
+      "Name": "Si gonfia 3",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4041": {
+      "Name": "Si gonfia 4",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4042": {
+      "Name": "Kamikaze",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4043": {
+      "Name": "Carica",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4044": {
+      "Name": "Anatema del faraone",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4045": {
+      "Name": "Charge",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4046": {
+      "Name": "Meteorite",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4047": {
+      "Name": "Meteorite",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4048": {
+      "Name": "Kamikaze",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4049": {
+      "Name": "Kamikaze",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "404A": {
+      "Name": "Kamikaze",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "404B": {
+      "Name": "Ade",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "404C": {
+      "Name": "Sentenza",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "404D": {
+      "Name": "Idrorespiro",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "404E": {
+      "Name": "Carica sismica",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "404F": {
+      "Name": "Novox",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4050": {
+      "Name": "Lama fendente",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4051": {
+      "Name": "Veleno variabile",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4052": {
+      "Name": "Morso",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4053": {
+      "Name": "Alito fetido",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4054": {
+      "Name": "Liquido gastrico",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4055": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4056": {
+      "Name": "Divora",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4057": {
+      "Name": "Pioggia tentacolare",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4058": {
+      "Name": "Nagiharai simmetrico",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4059": {
+      "Name": "Carica",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "405A": {
+      "Name": "Vento bianco",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "405B": {
+      "Name": "Difesa totale",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "405C": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "405D": {
+      "Name": "Alata sonica",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "405E": {
+      "Name": "Fiamme infernali",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "405F": {
+      "Name": "Megaflare",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4060": {
+      "Name": "Astio generale",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4061": {
+      "Name": "Kokumairi",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4062": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4063": {
+      "Name": "Interrompe il contrattacco",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4064": {
+      "Name": "Aeroelektrodo",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4065": {
+      "Name": "Elektroflusso",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4066": {
+      "Name": "Singhiozzo",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4067": {
+      "Name": "Sunshine",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4068": {
+      "Name": "Terremoto",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4069": {
+      "Name": "Meteo",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "406A": {
+      "Name": "Codata",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "406B": {
+      "Name": "Respiro",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "406C": {
+      "Name": "Schiacciaossa",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "406D": {
+      "Name": "Shuttle viscerale",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "406E": {
+      "Name": "Concentrazione magica",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "406F": {
+      "Name": "Terremoto",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4070": {
+      "Name": "Blaster",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4071": {
+      "Name": "Blaster",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4072": {
+      "Name": "Chele",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4073": {
+      "Name": "Muore",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4074": {
+      "Name": "Muore",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4075": {
+      "Name": "Muore",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4076": {
+      "Name": "Muore",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4077": {
+      "Name": "Muore",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4078": {
+      "Name": "Muore",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4079": {
+      "Name": "Muore",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "407A": {
+      "Name": "Muore",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "407B": {
+      "Name": "Muore",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "407C": {
+      "Name": "Muore",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "407D": {
+      "Name": "Muore",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "407E": {
+      "Name": "Muore",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "407F": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4080": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4081": {
+      "Name": "Avanza",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4082": {
+      "Name": "Kozuka",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4083": {
+      "Name": "Wakizashi",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4084": {
+      "Name": "Wakizashi",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4085": {
+      "Name": "Zanmato",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4086": {
+      "Name": "Daigorou",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4087": {
+      "Name": "Sbagliato!",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4088": {
+      "Name": "Giusto!",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4089": {
+      "Name": "Meteostrike",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "408A": {
+      "Name": "Invoca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "408B": {
+      "Name": "Invoca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "408C": {
+      "Name": "Invoca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "408D": {
+      "Name": "Invoca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "408E": {
+      "Name": "Invoca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "408F": {
+      "Name": "Invoca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4090": {
+      "Name": "Invoca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4091": {
+      "Name": "Invoca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4092": {
+      "Name": "Invoca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4093": {
+      "Name": "Terremoto",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4094": {
+      "Name": "Reazione",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4095": {
+      "Name": "Tocco celestiale",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4096": {
+      "Name": "Diamanpolvere",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4097": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4098": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4099": {
+      "Name": "Sguardo maledetto",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "409A": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "409B": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "409C": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "409D": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "409E": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "409F": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40A0": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40A1": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40A2": {
+      "Name": "Mimik 1",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40A3": {
+      "Name": "Mimik 2",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40A4": {
+      "Name": "Mimik 3",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40A5": {
+      "Name": "Mimik 4",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40A6": {
+      "Name": "Scudo raggiante",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40A7": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40A8": {
+      "Name": "Morso",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40A9": {
+      "Name": "Sguardo pietrificante",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40AA": {
+      "Name": "Charge",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40AB": {
+      "Name": "Charge",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40AC": {
+      "Name": "Tocco celestiale",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40AD": {
+      "Name": "Istinto",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40AE": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40AF": {
+      "Name": "Pain",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40B0": {
+      "Name": "Chaos D",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40B1": {
+      "Name": "Daigorou",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40B2": {
+      "Name": "Trionfo celestiale",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40B3": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40B4": {
+      "Name": "Alito fetido X",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40B5": {
+      "Name": "Liquido gastrico X",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40B6": {
+      "Name": "Buon appetito!",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40B7": {
+      "Name": "Rigetto gastrico",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40B8": {
+      "Name": "Chaos",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40B9": {
+      "Name": "Iper Blaster",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40BA": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40BB": {
+      "Name": "Sguardo imperturbabile",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40BC": {
+      "Name": "10.000 aghi",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40BD": {
+      "Name": "Artigli della Morte",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40BE": {
+      "Name": "Danza di spade",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40BF": {
+      "Name": "Shining",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40C0": {
+      "Name": "Zanna destruente",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40C1": {
+      "Name": "Zanna stordente",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40C2": {
+      "Name": "Zanna demoniaca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40C3": {
+      "Name": "Sguardo oscuro",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40C4": {
+      "Name": "Onda d\u2019urto",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40C5": {
+      "Name": "Tocco Drain",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40C6": {
+      "Name": "Tocco Poison",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40C7": {
+      "Name": "Pugno duro",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40C8": {
+      "Name": "Pugno di ferro",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40C9": {
+      "Name": "Niente",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40CA": {
+      "Name": "Niente",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40CB": {
+      "Name": "Niente",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40CC": {
+      "Name": "Colpo stordente",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40CD": {
+      "Name": "Colpo velenoso",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40CE": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40CF": {
+      "Name": "Incornata frontale",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40D0": {
+      "Name": "Sfere infuocate",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40D1": {
+      "Name": "Beccata",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40D2": {
+      "Name": "Beccata fobica",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40D3": {
+      "Name": "Salto falciante",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40D4": {
+      "Name": "Salto spazzante",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40D5": {
+      "Name": "Salto acrobatico",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40D6": {
+      "Name": "Buonanotte!",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40D7": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40D8": {
+      "Name": "Flusso eterno",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40D9": {
+      "Name": "Ultraelektrodo",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40DA": {
+      "Name": "Schmelzend",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40DB": {
+      "Name": "Engloutie",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40DC": {
+      "Name": "Ritorner\u00F2",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40DD": {
+      "Name": "Attacco Delta",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40DE": {
+      "Name": "Difesa totale",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40DF": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40E0": {
+      "Name": "Respiro",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40E1": {
+      "Name": "Respiro",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40E2": {
+      "Name": "SuperSonic",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40E3": {
+      "Name": "Attacco trifase",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40E4": {
+      "Name": "Attacco 3",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40E5": {
+      "Name": "Muore",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40E6": {
+      "Name": "Fiamme infernali",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40E7": {
+      "Name": "Elektroflusso",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40E8": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40E9": {
+      "Name": "Kamikaze",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40EA": {
+      "Name": "Kokumairi",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40EB": {
+      "Name": "Rigurgito",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40EC": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40ED": {
+      "Name": "Slowga",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40EE": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40EF": {
+      "Name": "Lancio",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40F0": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40F1": {
+      "Name": "Emblema di Cosmos",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40F2": {
+      "Name": "99.999 aghi",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40F3": {
+      "Name": "Ultima",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40F4": {
+      "Name": "Fine del mondo",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40F5": {
+      "Name": "Pugno Megaton",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40F6": {
+      "Name": "Sguardo laser",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40F7": {
+      "Name": "Nube tossica",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40F8": {
+      "Name": "Acido fatale",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40F9": {
+      "Name": "Attacco tentacolare",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40FA": {
+      "Name": "Iris malefico",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40FB": {
+      "Name": "Magicalitosi",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40FC": {
+      "Name": "Condanna",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40FD": {
+      "Name": "Idropressa",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40FE": {
+      "Name": "Fluido infetto",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "40FF": {
+      "Name": "Astio generale",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4100": {
+      "Name": "Schmelzend",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4101": {
+      "Name": "Engloutie",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4102": {
+      "Name": "Ritorner\u00F2",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4103": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4104": {
+      "Name": "Katastrofe",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4105": {
+      "Name": "Megagravit\u00E0",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4106": {
+      "Name": "Attacco Delta",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4107": {
+      "Name": "Kozuka",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4108": {
+      "Name": "Wakizashi",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4109": {
+      "Name": "Wakizashi",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "410A": {
+      "Name": "Zanmato",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "410B": {
+      "Name": "Daigorou",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "410C": {
+      "Name": "Fiamme infernali",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "410D": {
+      "Name": "Fiamme infernali",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "410E": {
+      "Name": "Meteostrike",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "410F": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4110": {
+      "Name": "Aeroelektrodo",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4111": {
+      "Name": "Elektroflusso",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4112": {
+      "Name": "Elektroflusso",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4113": {
+      "Name": "Thundada",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4114": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4115": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4116": {
+      "Name": "Aeroelektrodo",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4117": {
+      "Name": "Tocco celestiale",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4118": {
+      "Name": "Diamanpolvere",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4119": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "411A": {
+      "Name": "Megaflare",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "411B": {
+      "Name": "Istinto",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "411C": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "411D": {
+      "Name": "Pain",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "411E": {
+      "Name": "Chaos D",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "411F": {
+      "Name": "Luce del flagello",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4120": {
+      "Name": "Provvidenza",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4121": {
+      "Name": "Giorno del giudizio",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4122": {
+      "Name": "Scissione inferiore",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4123": {
+      "Name": "In scena",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4124": {
+      "Name": "Morte",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4125": {
+      "Name": "Reincarnazione",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4126": {
+      "Name": "Estinzione",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4127": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4128": {
+      "Name": "Scudo raggiante",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "4129": {
+      "Name": "Megagravit\u00E0",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "412A": {
+      "Name": "Difesa totale",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "412B": {
+      "Name": "Pugno Dispel",
+      "Description": "Attacca",
+      "Kind": "MonsterCommand"
+    },
+    "6000": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6001": {
+      "Name": "Qualit\u00E0 1",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6002": {
+      "Name": "Qualit\u00E0 2",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6003": {
+      "Name": "Appare",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6004": {
+      "Name": "Sbuffata",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6005": {
+      "Name": "Fluido tossico",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6006": {
+      "Name": "Pioggia tentacolare",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6007": {
+      "Name": "Trasformazione",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6008": {
+      "Name": "Morte",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6009": {
+      "Name": "I tentacoli assorbono la magia!",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "600A": {
+      "Name": "Aculei",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "600B": {
+      "Name": "Avvitamento",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "600C": {
+      "Name": "Raffica blitzball",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "600D": {
+      "Name": "Pallonata Morfeo",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "600E": {
+      "Name": "Pallonata Tenebra",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "600F": {
+      "Name": "Pallonata Mutis",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6010": {
+      "Name": "Buchikamashi",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6011": {
+      "Name": "Buchikamashi",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6012": {
+      "Name": "Gru",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6013": {
+      "Name": "Morte",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6014": {
+      "Name": "Morte",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6015": {
+      "Name": "La gru si \u00E8 mossa!",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6016": {
+      "Name": "Tentacoli",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6017": {
+      "Name": "Osareru",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6018": {
+      "Name": "Okiagari",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6019": {
+      "Name": "Charge",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "601A": {
+      "Name": "Il prossimo sei tu!",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "601B": {
+      "Name": "Pugno assassino",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "601C": {
+      "Name": "Morte",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "601D": {
+      "Name": "Morte",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "601E": {
+      "Name": "Onda cosmica",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "601F": {
+      "Name": "Spintone",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6020": {
+      "Name": "Retroguardia",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6021": {
+      "Name": "Fascio magico",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6022": {
+      "Name": "Mitragliatore",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6023": {
+      "Name": "Appoggio",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6024": {
+      "Name": "Idroturbine",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6025": {
+      "Name": "Elettrobombe",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6026": {
+      "Name": "Ascesa",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6027": {
+      "Name": "Discesa",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6028": {
+      "Name": "Conto alla rovescia",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6029": {
+      "Name": "Sin ti sta risucchiando!",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "602A": {
+      "Name": "Morte",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "602B": {
+      "Name": "Muove",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "602C": {
+      "Name": "Morte",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "602D": {
+      "Name": "Morte",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "602E": {
+      "Name": "Risucchio",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "602F": {
+      "Name": "Rigurgito",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6030": {
+      "Name": "Morte",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6031": {
+      "Name": "Fluido tossico",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6032": {
+      "Name": "Pugno pietrificante",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6033": {
+      "Name": "Pugno mortale",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6034": {
+      "Name": "Artigli velenosi",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6035": {
+      "Name": "Ochu smarrito si \u00E8 addormentato!",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6036": {
+      "Name": "Cambia punto debole",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6037": {
+      "Name": "Met\u00E0 HP",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6038": {
+      "Name": "1 HP",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6039": {
+      "Name": "Fire",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "603A": {
+      "Name": "Blizzard",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "603B": {
+      "Name": "Thunder",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "603C": {
+      "Name": "Idro",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "603D": {
+      "Name": "Assalto",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "603E": {
+      "Name": "Granpozione",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "603F": {
+      "Name": "Pressa",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6040": {
+      "Name": "Panacea",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6041": {
+      "Name": "Gran Opzione",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6042": {
+      "Name": "Ali fotoniche",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6043": {
+      "Name": "Respiro magico",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6044": {
+      "Name": "Coda Morfeo",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6045": {
+      "Name": "Coda Berserk",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6046": {
+      "Name": "Contrattacco",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6047": {
+      "Name": "Attacco totale",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6048": {
+      "Name": "Attacco",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6049": {
+      "Name": "Attacco",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "604A": {
+      "Name": "Terremoto",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "604B": {
+      "Name": "Elioshock",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "604C": {
+      "Name": "Sguardo pietrificante",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "604D": {
+      "Name": "Mina magica",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "604E": {
+      "Name": "Attacco",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "604F": {
+      "Name": "Medusa",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6050": {
+      "Name": "Colpo caritatevole",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6051": {
+      "Name": "Seymour ha richiamato Anima!",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6052": {
+      "Name": "Pain",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6053": {
+      "Name": "Comando 93",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6054": {
+      "Name": "Comando 94",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6055": {
+      "Name": "Comando 95",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6056": {
+      "Name": "Comando 96",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6057": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6058": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6059": {
+      "Name": "Attacca",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "605A": {
+      "Name": "Testata di polipo",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "605B": {
+      "Name": "Attacco a corta distanza",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "605C": {
+      "Name": "Tocco Drain",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "605D": {
+      "Name": "Attacco",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "605E": {
+      "Name": "Desperado",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "605F": {
+      "Name": "Reflex",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6060": {
+      "Name": "Test",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6061": {
+      "Name": "Respiro tossico",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6062": {
+      "Name": "Sguardo pietrificante",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6063": {
+      "Name": "Elioshock",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6064": {
+      "Name": "Prende fiato!",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6065": {
+      "Name": "Il respiro non arriva!",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6066": {
+      "Name": "Rampata critica",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6067": {
+      "Name": "Morte",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6068": {
+      "Name": "Recupera magia",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6069": {
+      "Name": "Rigurgito",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "606A": {
+      "Name": "Rigurgito",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "606B": {
+      "Name": "Elioshock",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "606C": {
+      "Name": "Teletrasporto",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "606D": {
+      "Name": "Assorbe",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "606E": {
+      "Name": "Novox",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "606F": {
+      "Name": "Hokou",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6070": {
+      "Name": "Tenebra",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6071": {
+      "Name": "Morfeo",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6072": {
+      "Name": "Bailamme",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6073": {
+      "Name": "Missili",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6074": {
+      "Name": "Forbiciata letale",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6075": {
+      "Name": "Distruzione totale",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6076": {
+      "Name": "Artigli disintegranti",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6077": {
+      "Name": "Biora",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6078": {
+      "Name": "Lancia devastante",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6079": {
+      "Name": "Flare",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "607A": {
+      "Name": "Aspira",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "607B": {
+      "Name": "Flagello",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "607C": {
+      "Name": "Colpo Dispel",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "607D": {
+      "Name": "Comando 135",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "607E": {
+      "Name": "Metamorfosi",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "607F": {
+      "Name": "Metamorfosi",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6080": {
+      "Name": "Morso infernale",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6081": {
+      "Name": "Scarica mentale",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6082": {
+      "Name": "Mega Ade",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6083": {
+      "Name": "Antigrav",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6084": {
+      "Name": "Saetta Jecht",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6085": {
+      "Name": "Dita di Jecht",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6086": {
+      "Name": "Tiro Jecht originale",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6087": {
+      "Name": "Furia di Jecht",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6088": {
+      "Name": "Sfila la spada",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6089": {
+      "Name": "Sferzata totale",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "608A": {
+      "Name": "Saetta Jecht",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "608B": {
+      "Name": "Carica d\u2019energia",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "608C": {
+      "Name": "Comando 150",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "608D": {
+      "Name": "Slowga",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "608E": {
+      "Name": "Sin si allontana",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "608F": {
+      "Name": "Sin si avvicina",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6090": {
+      "Name": "Antigrav",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6091": {
+      "Name": "Aura reset",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6092": {
+      "Name": "Collisione",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6093": {
+      "Name": "Gomitata",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6094": {
+      "Name": "Antigrav",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6095": {
+      "Name": "Comando 159",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6096": {
+      "Name": "Sbuffata",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6097": {
+      "Name": "Fluido tossico",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6098": {
+      "Name": "Scompiglio",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "6099": {
+      "Name": "Dechiocciolamento",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "609A": {
+      "Name": "Acchiocciolamento",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "609B": {
+      "Name": "Assorbe la magia!",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "609C": {
+      "Name": "Gigagravit\u00E0",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "609D": {
+      "Name": "Sguardo maledetto",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "609E": {
+      "Name": "Sguardo maledetto",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "609F": {
+      "Name": "Sguardo maledetto",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60A0": {
+      "Name": "Sguardo maledetto",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60A1": {
+      "Name": "Vento bianco",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60A2": {
+      "Name": "Pirosbolle",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60A3": {
+      "Name": "Idrorespiro",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60A4": {
+      "Name": "Difesa totale",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60A5": {
+      "Name": "Tackle",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60A6": {
+      "Name": "Antigrav",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60A7": {
+      "Name": "Aura reset",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60A8": {
+      "Name": "Accumula energia nel nucleo!",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60A9": {
+      "Name": "Assorbilunio",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60AA": {
+      "Name": "Assalto",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60AB": {
+      "Name": "Bimagia Fira",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60AC": {
+      "Name": "Comando 182",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60AD": {
+      "Name": "Bimagia Blizzara",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60AE": {
+      "Name": "Comando 184",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60AF": {
+      "Name": "Bimagia Thundara",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60B0": {
+      "Name": "Comando 186",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60B1": {
+      "Name": "Bimagia Idrora",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60B2": {
+      "Name": "Comando 188",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60B3": {
+      "Name": "La gru si \u00E8 mossa un po\u2019!",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60B4": {
+      "Name": "Morte",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60B5": {
+      "Name": "Invoca Anima",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60B6": {
+      "Name": "Antigrav",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60B7": {
+      "Name": "Aura reset",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60B8": {
+      "Name": "Antigrav",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60B9": {
+      "Name": "Aura reset",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60BA": {
+      "Name": "Accumula energia nel nucleo!",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60BB": {
+      "Name": "Aura reset",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60BC": {
+      "Name": "Sin non fa niente!",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60BD": {
+      "Name": "Il nucleo non si muove!",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60BE": {
+      "Name": "Mille tonnellate",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60BF": {
+      "Name": "Mucopus",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60C0": {
+      "Name": "Schiocciolamento",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60C1": {
+      "Name": "Acchiocciolamento",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60C2": {
+      "Name": "Dechiocciolamento",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60C3": {
+      "Name": "Morte",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60C4": {
+      "Name": "Accumula energia nel nucleo!",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60C5": {
+      "Name": "Aura reset",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60C6": {
+      "Name": "Colpo della mano sinistra",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60C7": {
+      "Name": "Ricolpo della mano sinistra",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60C8": {
+      "Name": "Furia di Jecht",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60C9": {
+      "Name": "Dita di Jecht",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60CA": {
+      "Name": "Morte",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60CB": {
+      "Name": "Morte",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60CC": {
+      "Name": "Morte",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60CD": {
+      "Name": "Morte",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60CE": {
+      "Name": "Morte",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60CF": {
+      "Name": "Morte",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60D0": {
+      "Name": "Morte",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60D1": {
+      "Name": "Morso infernale",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60D2": {
+      "Name": "Carica d\u2019energia",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60D3": {
+      "Name": "Alata sonica",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60D4": {
+      "Name": "Scudo raggiante",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60D5": {
+      "Name": "Freccia raggiante",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60D6": {
+      "Name": "Meteostrike",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60D7": {
+      "Name": "Fiamme infernali",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60D8": {
+      "Name": "Aeroelektrodo",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60D9": {
+      "Name": "Elektroflusso",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60DA": {
+      "Name": "Tocco celestiale",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60DB": {
+      "Name": "Diamanpolvere",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60DC": {
+      "Name": "Istinto",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60DD": {
+      "Name": "Megaflare",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60DE": {
+      "Name": "Pain",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60DF": {
+      "Name": "Chaos D",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60E0": {
+      "Name": "Kozuka",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60E1": {
+      "Name": "Wakizashi",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60E2": {
+      "Name": "Zanmato",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60E3": {
+      "Name": "Engloutie",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60E4": {
+      "Name": "Schmelzend",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60E5": {
+      "Name": "Ritorner\u00F2",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60E6": {
+      "Name": "Attacco Delta",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60E7": {
+      "Name": "Yu Yevon si unisce all\u2019Eone!",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60E8": {
+      "Name": "Yu Yevon si unisce all\u2019Eone!",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60E9": {
+      "Name": "Yu Yevon si unisce all\u2019Eone!",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60EA": {
+      "Name": "Yu Yevon si unisce all\u2019Eone!",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60EB": {
+      "Name": "Yu Yevon si unisce all\u2019Eone!",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60EC": {
+      "Name": "Yu Yevon si unisce all\u2019Eone!",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60ED": {
+      "Name": "Yu Yevon si unisce all\u2019Eone!",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60EE": {
+      "Name": "Yu Yevon si unisce agli Eoni!",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60EF": {
+      "Name": "Morte",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60F0": {
+      "Name": "Ultima",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60F1": {
+      "Name": "Le ali hanno cominciato a brillare!",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60F2": {
+      "Name": "Morte",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60F3": {
+      "Name": "Aura Dispel",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60F4": {
+      "Name": "Comando 254",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60F5": {
+      "Name": "Areiz",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "60F6": {
+      "Name": "Scarica mentale",
+      "Description": "Attacca",
+      "Kind": "BossCommand"
+    },
+    "2000": {
+      "Name": "Pozione",
+      "Description": "Recupera 200 HP di un alleato.",
+      "Kind": "ItemCommand"
+    },
+    "2001": {
+      "Name": "Granpozione",
+      "Description": "Recupera 1000 HP di un alleato.",
+      "Kind": "ItemCommand"
+    },
+    "2002": {
+      "Name": "Extrapozione",
+      "Description": "Ripristina HP di un alleato.",
+      "Kind": "ItemCommand"
+    },
+    "2003": {
+      "Name": "Megapozione",
+      "Description": "Recupera 2000 HP della squadra.",
+      "Kind": "ItemCommand"
+    },
+    "2004": {
+      "Name": "Etere",
+      "Description": "Recupera 100 MP di un alleato.",
+      "Kind": "ItemCommand"
+    },
+    "2005": {
+      "Name": "Turboetere",
+      "Description": "Recupera 500 MP di un alleato.",
+      "Kind": "ItemCommand"
+    },
+    "2006": {
+      "Name": "Coda di fenice",
+      "Description": "Cura K.O. a un alleato.",
+      "Kind": "ItemCommand"
+    },
+    "2007": {
+      "Name": "Megafenice",
+      "Description": "Cura K.O. alla squadra.",
+      "Kind": "ItemCommand"
+    },
+    "2008": {
+      "Name": "Elisir",
+      "Description": "Ripristina HP e MP di un alleato.",
+      "Kind": "ItemCommand"
+    },
+    "2009": {
+      "Name": "Megaelisir",
+      "Description": "Ripristina HP e MP della squadra.",
+      "Kind": "ItemCommand"
+    },
+    "200A": {
+      "Name": "Antidoto",
+      "Description": "Cura status Veleno.",
+      "Kind": "ItemCommand"
+    },
+    "200B": {
+      "Name": "Ago dorato",
+      "Description": "Cura status Pietra.",
+      "Kind": "ItemCommand"
+    },
+    "200C": {
+      "Name": "Collirio",
+      "Description": "Cura status Blind.",
+      "Kind": "ItemCommand"
+    },
+    "200D": {
+      "Name": "Erba dell\u2019eco",
+      "Description": "Cura status Mutismo.",
+      "Kind": "ItemCommand"
+    },
+    "200E": {
+      "Name": "Acquasanta",
+      "Description": "Cura status Zombie e Maledizione.",
+      "Kind": "ItemCommand"
+    },
+    "200F": {
+      "Name": "Panacea",
+      "Description": "Cura tutti gli status alterati.",
+      "Kind": "ItemCommand"
+    },
+    "2010": {
+      "Name": "Protoenergia",
+      "Description": "Fa cadere una Energosfera a un nemico.",
+      "Kind": "ItemCommand"
+    },
+    "2011": {
+      "Name": "Protomagia",
+      "Description": "Fa cadere una Magicosfera a un nemico.",
+      "Kind": "ItemCommand"
+    },
+    "2012": {
+      "Name": "Protorapidit\u00E0",
+      "Description": "Fa cadere una Velocisfera a un nemico.",
+      "Kind": "ItemCommand"
+    },
+    "2013": {
+      "Name": "Protoabilit\u00E0",
+      "Description": "Fa cadere una Abilitosfera a un nemico.",
+      "Kind": "ItemCommand"
+    },
+    "2014": {
+      "Name": "Albhedina",
+      "Description": "Cura Veleno, Mutismo, Pietra e recupera 1000 HP a tutti.",
+      "Kind": "ItemCommand"
+    },
+    "2015": {
+      "Name": "Acqua curativa",
+      "Description": "Ripristina HP della squadra.",
+      "Kind": "ItemCommand"
+    },
+    "2016": {
+      "Name": "Tetraelementale",
+      "Description": "Ripristina HP e d\u00E0 immunit\u00E0 elementale a un alleato.",
+      "Kind": "ItemCommand"
+    },
+    "2017": {
+      "Name": "Vento artico",
+      "Description": "Causa danni elemento Gelo a un nemico.",
+      "Kind": "ItemCommand"
+    },
+    "2018": {
+      "Name": "Vento antartico",
+      "Description": "Causa danni elemento Gelo a un nemico.",
+      "Kind": "ItemCommand"
+    },
+    "2019": {
+      "Name": "Criomagilite",
+      "Description": "Causa danni elemento Gelo ai nemici.",
+      "Kind": "ItemCommand"
+    },
+    "201A": {
+      "Name": "Scheggia di Piros",
+      "Description": "Causa danni elemento Fuoco a un nemico.",
+      "Kind": "ItemCommand"
+    },
+    "201B": {
+      "Name": "Anima di Piros",
+      "Description": "Causa danni elemento Fuoco a un nemico.",
+      "Kind": "ItemCommand"
+    },
+    "201C": {
+      "Name": "Magmagilite",
+      "Description": "Causa danni elemento Fuoco ai nemici.",
+      "Kind": "ItemCommand"
+    },
+    "201D": {
+      "Name": "Razzo elettrico",
+      "Description": "Causa danni elemento Tuono a un nemico.",
+      "Kind": "ItemCommand"
+    },
+    "201E": {
+      "Name": "Razzo fulminante",
+      "Description": "Causa danni elemento Tuono a un nemico.",
+      "Kind": "ItemCommand"
+    },
+    "201F": {
+      "Name": "Elettromagilite",
+      "Description": "Causa danni elemento Tuono ai nemici.",
+      "Kind": "ItemCommand"
+    },
+    "2020": {
+      "Name": "Squame di pesce",
+      "Description": "Causa danni elemento Acqua a un nemico.",
+      "Kind": "ItemCommand"
+    },
+    "2021": {
+      "Name": "Squame di drago",
+      "Description": "Causa danni elemento Acqua a un nemico.",
+      "Kind": "ItemCommand"
+    },
+    "2022": {
+      "Name": "Idromagilite",
+      "Description": "Causa danni elemento Acqua ai nemici.",
+      "Kind": "ItemCommand"
+    },
+    "2023": {
+      "Name": "Granata",
+      "Description": "Causa danni ai nemici.",
+      "Kind": "ItemCommand"
+    },
+    "2024": {
+      "Name": "Blindogranata",
+      "Description": "Causa danni e Antiscutum ai nemici.",
+      "Kind": "ItemCommand"
+    },
+    "2025": {
+      "Name": "Melatonina",
+      "Description": "Causa danni e status Sonno ai nemici.",
+      "Kind": "ItemCommand"
+    },
+    "2026": {
+      "Name": "Onirolina",
+      "Description": "Causa danni e status Sonno ai nemici.",
+      "Kind": "ItemCommand"
+    },
+    "2027": {
+      "Name": "Mina Tacet",
+      "Description": "Causa danni e status Mutismo ai nemici.",
+      "Kind": "ItemCommand"
+    },
+    "2028": {
+      "Name": "Lacrimogeno",
+      "Description": "Causa danni e status Blind ai nemici.",
+      "Kind": "ItemCommand"
+    },
+    "2029": {
+      "Name": "Neromagilite",
+      "Description": "Dimezza gli HP dei nemici.",
+      "Kind": "ItemCommand"
+    },
+    "202A": {
+      "Name": "Eliomagilite",
+      "Description": "Causa danni a un nemico.",
+      "Kind": "ItemCommand"
+    },
+    "202B": {
+      "Name": "Sacromagilite",
+      "Description": "Causa danni a un nemico.",
+      "Kind": "ItemCommand"
+    },
+    "202C": {
+      "Name": "Examagilite",
+      "Description": "Causa danni ai nemici.",
+      "Kind": "ItemCommand"
+    },
+    "202D": {
+      "Name": "Zanna velenosa",
+      "Description": "Causa danni e status Veleno a un nemico.",
+      "Kind": "ItemCommand"
+    },
+    "202E": {
+      "Name": "Clessidra d\u2019argento",
+      "Description": "Rallenta l\u2019azione dei nemici.",
+      "Kind": "ItemCommand"
+    },
+    "202F": {
+      "Name": "Clessidra d\u2019oro",
+      "Description": "Causa danni e rallenta l\u2019azione dei nemici.",
+      "Kind": "ItemCommand"
+    },
+    "2030": {
+      "Name": "Candela della vita",
+      "Description": "Infligge status Sentenza a un nemico.",
+      "Kind": "ItemCommand"
+    },
+    "2031": {
+      "Name": "Granata fossile",
+      "Description": "Infligge status Pietra ai nemici.",
+      "Kind": "ItemCommand"
+    },
+    "2032": {
+      "Name": "Ombra d\u2019Oltremondo",
+      "Description": "Infligge status Morte a un nemico.",
+      "Kind": "ItemCommand"
+    },
+    "2033": {
+      "Name": "Vento d\u2019Oltremondo",
+      "Description": "Infligge status Morte ai nemici.",
+      "Kind": "ItemCommand"
+    },
+    "2034": {
+      "Name": "Portafoglio gonfio",
+      "Description": "Potrebbe servire!",
+      "Kind": "ItemCommand"
+    },
+    "2035": {
+      "Name": "Materioscura",
+      "Description": "Causa gravi danni ai nemici.",
+      "Kind": "ItemCommand"
+    },
+    "2036": {
+      "Name": "Coda di chocobo",
+      "Description": "Attiva Haste a un alleato.",
+      "Kind": "ItemCommand"
+    },
+    "2037": {
+      "Name": "Piuma di chocobo",
+      "Description": "Attiva Haste alla squadra.",
+      "Kind": "ItemCommand"
+    },
+    "2038": {
+      "Name": "Cortina lunare",
+      "Description": "Attiva Shell a un alleato.",
+      "Kind": "ItemCommand"
+    },
+    "2039": {
+      "Name": "Cortina luminosa",
+      "Description": "Attiva Protect a un alleato.",
+      "Kind": "ItemCommand"
+    },
+    "203A": {
+      "Name": "Cortina stellare",
+      "Description": "Attiva Reflex a un alleato.",
+      "Kind": "ItemCommand"
+    },
+    "203B": {
+      "Name": "Fluido rigenerante",
+      "Description": "Attiva Rigene a un alleato.",
+      "Kind": "ItemCommand"
+    },
+    "203C": {
+      "Name": "Fluido magico",
+      "Description": "Assorbe MP da un nemico.",
+      "Kind": "ItemCommand"
+    },
+    "203D": {
+      "Name": "Fluido energetico",
+      "Description": "Assorbe HP da un nemico.",
+      "Kind": "ItemCommand"
+    },
+    "203E": {
+      "Name": "Fluido vitale",
+      "Description": "Assorbe HP e MP da un nemico.",
+      "Kind": "ItemCommand"
+    },
+    "203F": {
+      "Name": "Sale purificatore",
+      "Description": "Causa danni e annulla l\u2019effetto della magia nemica.",
+      "Kind": "ItemCommand"
+    },
+    "2040": {
+      "Name": "Nettare energetico",
+      "Description": "Raddoppia gli HP massimi di un alleato.",
+      "Kind": "ItemCommand"
+    },
+    "2041": {
+      "Name": "Nettare magico",
+      "Description": "Raddoppia gli MP massimi di un alleato.",
+      "Kind": "ItemCommand"
+    },
+    "2042": {
+      "Name": "Duostella",
+      "Description": "Azzera il consumo di MP di un alleato.",
+      "Kind": "ItemCommand"
+    },
+    "2043": {
+      "Name": "Filtro energetico",
+      "Description": "Raddoppia gli HP massimi della squadra.",
+      "Kind": "ItemCommand"
+    },
+    "2044": {
+      "Name": "Filtro magico",
+      "Description": "Raddoppia gli MP massimi della squadra.",
+      "Kind": "ItemCommand"
+    },
+    "2045": {
+      "Name": "Triostella",
+      "Description": "Azzera il consumo di MP della squadra.",
+      "Kind": "ItemCommand"
+    },
+    "2046": {
+      "Name": "Energosfera",
+      "Description": "Attiva POT fisica, DIF fisica e HP nella sferografia.",
+      "Kind": "ItemCommand"
+    },
+    "2047": {
+      "Name": "Magicosfera",
+      "Description": "Attiva POT magica, DIF magica e MP nella sferografia.",
+      "Kind": "ItemCommand"
+    },
+    "2048": {
+      "Name": "Velocisfera",
+      "Description": "Attiva Rapidit\u00E0, Mira e Destrezza nella sferografia.",
+      "Kind": "ItemCommand"
+    },
+    "2049": {
+      "Name": "Abilitosfera",
+      "Description": "Attiva un\u2019abilit\u00E0 nella sferografia.",
+      "Kind": "ItemCommand"
+    },
+    "204A": {
+      "Name": "Fatosfera",
+      "Description": "Attiva Fortuna nella sferografia.",
+      "Kind": "ItemCommand"
+    },
+    "204B": {
+      "Name": "Parametrosfera",
+      "Description": "Ottiene un parametro attivato da altri nella sferografia.",
+      "Kind": "ItemCommand"
+    },
+    "204C": {
+      "Name": "Qualitosfera",
+      "Description": "Attiva una qualit\u00E0 appresa da altri nella sferografia.",
+      "Kind": "ItemCommand"
+    },
+    "204D": {
+      "Name": "Tecnisfera",
+      "Description": "Attiva una tecnica appresa da altri nella sferografia.",
+      "Kind": "ItemCommand"
+    },
+    "204E": {
+      "Name": "MBiancosfera",
+      "Description": "Attiva una magia bianca appresa da altri nella sferografia.",
+      "Kind": "ItemCommand"
+    },
+    "204F": {
+      "Name": "MNerosfera",
+      "Description": "Attiva una magia nera appresa da altri nella sferografia.",
+      "Kind": "ItemCommand"
+    },
+    "2050": {
+      "Name": "Mastersfera",
+      "Description": "Attiva qualsiasi sfera della sferografia.",
+      "Kind": "ItemCommand"
+    },
+    "2051": {
+      "Name": "Passosfera Lv 1",
+      "Description": "Rimuove un blocco livello 1 nella sferografia.",
+      "Kind": "ItemCommand"
+    },
+    "2052": {
+      "Name": "Passosfera Lv 2",
+      "Description": "Rimuove un blocco livello 2 nella sferografia.",
+      "Kind": "ItemCommand"
+    },
+    "2053": {
+      "Name": "Passosfera Lv 3",
+      "Description": "Rimuove un blocco livello 3 nella sferografia.",
+      "Kind": "ItemCommand"
+    },
+    "2054": {
+      "Name": "Passosfera Lv 4",
+      "Description": "Rimuove un blocco livello 4 nella sferografia.",
+      "Kind": "ItemCommand"
+    },
+    "2055": {
+      "Name": "Accapisfera",
+      "Description": "Attiva HP in uno spazio vuoto nella sferografia.",
+      "Kind": "ItemCommand"
+    },
+    "2056": {
+      "Name": "Emmepisfera",
+      "Description": "Attiva MP in uno spazio vuoto nella sferografia.",
+      "Kind": "ItemCommand"
+    },
+    "2057": {
+      "Name": "Potesfera fis",
+      "Description": "Attiva POT fisica in uno spazio vuoto nella sferografia.",
+      "Kind": "ItemCommand"
+    },
+    "2058": {
+      "Name": "Difesfera fis",
+      "Description": "Attiva DIF fisica in uno spazio vuoto nella sferografia.",
+      "Kind": "ItemCommand"
+    },
+    "2059": {
+      "Name": "Potesfera mag",
+      "Description": "Attiva POT magica in uno spazio vuoto nella sferografia.",
+      "Kind": "ItemCommand"
+    },
+    "205A": {
+      "Name": "Difesfera mag",
+      "Description": "Attiva DIF magica in uno spazio vuoto nella sferografia.",
+      "Kind": "ItemCommand"
+    },
+    "205B": {
+      "Name": "Rapidosfera",
+      "Description": "Attiva Rapidit\u00E0 in uno spazio vuoto nella sferografia.",
+      "Kind": "ItemCommand"
+    },
+    "205C": {
+      "Name": "Destrosfera",
+      "Description": "Attiva Destrezza in uno spazio vuoto nella sferografia.",
+      "Kind": "ItemCommand"
+    },
+    "205D": {
+      "Name": "Mirasfera",
+      "Description": "Attiva Mira in uno spazio vuoto nella sferografia.",
+      "Kind": "ItemCommand"
+    },
+    "205E": {
+      "Name": "Fortunosfera",
+      "Description": "Attiva Fortuna in uno spazio vuoto nella sferografia.",
+      "Kind": "ItemCommand"
+    },
+    "205F": {
+      "Name": "Resettosfera",
+      "Description": "Cancella una somatosfera nella sferografia.",
+      "Kind": "ItemCommand"
+    },
+    "2060": {
+      "Name": "Gamberosfera",
+      "Description": "Trasporta in un punto della sferografia attivato da s\u00E9.",
+      "Kind": "ItemCommand"
+    },
+    "2061": {
+      "Name": "Empatosfera",
+      "Description": "Trasporta nel punto della sferografia dov\u2019\u00E8 un alleato.",
+      "Kind": "ItemCommand"
+    },
+    "2062": {
+      "Name": "Telesfera",
+      "Description": "Trasporta in un punto della sferografia attivato da altri.",
+      "Kind": "ItemCommand"
+    },
+    "2063": {
+      "Name": "Onnisfera",
+      "Description": "Permette di spostarsi dovunque nella sferografia.",
+      "Kind": "ItemCommand"
+    },
+    "2064": {
+      "Name": "Mappa",
+      "Description": "Mostra il mondo.",
+      "Kind": "ItemCommand"
+    },
+    "2065": {
+      "Name": "Carta d\u2019identit\u00E0",
+      "Description": "Cambia il nome a un Eone.",
+      "Kind": "ItemCommand"
+    },
+    "2066": {
+      "Name": "Stricnina",
+      "Description": "Potrebbe servire!",
+      "Kind": "ItemCommand"
+    },
+    "2067": {
+      "Name": "Hypellina",
+      "Description": "Potrebbe servire!",
+      "Kind": "ItemCommand"
+    },
+    "2068": {
+      "Name": "Spina iperica",
+      "Description": "Potrebbe servire!",
+      "Kind": "ItemCommand"
+    },
+    "2069": {
+      "Name": "Pendulum",
+      "Description": "Potrebbe servire!",
+      "Kind": "ItemCommand"
+    },
+    "206A": {
+      "Name": "Amuleto",
+      "Description": "Potrebbe servire!",
+      "Kind": "ItemCommand"
+    },
+    "206B": {
+      "Name": "Porta sul domani",
+      "Description": "Potrebbe servire!",
+      "Kind": "ItemCommand"
+    },
+    "206C": {
+      "Name": "Ali per l\u2019ignoto",
+      "Description": "Potrebbe servire!",
+      "Kind": "ItemCommand"
+    },
+    "206D": {
+      "Name": "Anima del baro",
+      "Description": "Potrebbe servire!",
+      "Kind": "ItemCommand"
+    },
+    "206E": {
+      "Name": "Controchiave",
+      "Description": "Potrebbe servire!",
+      "Kind": "ItemCommand"
+    },
+    "206F": {
+      "Name": "Equazione cubica",
+      "Description": "Potrebbe servire!",
+      "Kind": "ItemCommand"
+    }
+  }
+}

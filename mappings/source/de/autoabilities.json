@@ -1,0 +1,681 @@
+{
+  "SchemaVersion": 1,
+  "Domain": "autoabilities",
+  "Locale": "de",
+  "GeneratedAtUtc": "2026-03-04T10:54:18.8033464Z",
+  "SourceFiles": [
+    "READ_ALL_COMMANDS_LOCALIZED__de.txt"
+  ],
+  "Entries": {
+    "8000": {
+      "Name": "Durchschauen",
+      "Description": "Durchleuchtet die Statuswerte des Feindes.",
+      "Kind": "AutoAbility"
+    },
+    "8001": {
+      "Name": "Pr\u00E4ventivschlag",
+      "Description": "Bei Feindkontakt kann sofort gehandelt werden.",
+      "Kind": "AutoAbility"
+    },
+    "8002": {
+      "Name": "Erstschlag",
+      "Description": "Gelegentlich kann sofort gehandelt werden.",
+      "Kind": "AutoAbility"
+    },
+    "8003": {
+      "Name": "Konter",
+      "Description": "Physische Angriffe werden gekontert.",
+      "Kind": "AutoAbility"
+    },
+    "8004": {
+      "Name": "Ausweichkonter",
+      "Description": "Phys. Angriffe werden abgewendet und gekontert.",
+      "Kind": "AutoAbility"
+    },
+    "8005": {
+      "Name": "Zauberkonter",
+      "Description": "Magische Angriffe werden gekontert.",
+      "Kind": "AutoAbility"
+    },
+    "8006": {
+      "Name": "Zauber-Turbo",
+      "Description": "Zus\u00E4tzliche MP-Zufuhr erh\u00F6ht die Zauberwirkung.",
+      "Kind": "AutoAbility"
+    },
+    "8007": {
+      "Name": "Medizinkunde",
+      "Description": "Die Wirkung von Heilmitteln wird verdoppelt.",
+      "Kind": "AutoAbility"
+    },
+    "8008": {
+      "Name": "Auto-Potion",
+      "Description": "Bei Sch\u00E4den wird automatisch ein Heiltrank benutzt.",
+      "Kind": "AutoAbility"
+    },
+    "8009": {
+      "Name": "Auto-Kur",
+      "Description": "Bei Zustandsver\u00E4nderungen wird ein Kurmittel benutzt.",
+      "Kind": "AutoAbility"
+    },
+    "800A": {
+      "Name": "Auto-Ph\u00F6nix",
+      "Description": "Bei Kampfunf\u00E4higkeit wird eine Ph\u00F6nixfeder benutzt.",
+      "Kind": "AutoAbility"
+    },
+    "800B": {
+      "Name": "Durchschlag",
+      "Description": "F\u00FCgt gepanzerten Gegnern Schaden zu.",
+      "Kind": "AutoAbility"
+    },
+    "800C": {
+      "Name": "MP 50%",
+      "Description": "Der MP-Verbrauch wird halbiert.",
+      "Kind": "AutoAbility"
+    },
+    "800D": {
+      "Name": "MP 1",
+      "Description": "Der MP-Verbrauch betr\u00E4gt immer 1 MP.",
+      "Kind": "AutoAbility"
+    },
+    "800E": {
+      "Name": "Doppel-Ekstase",
+      "Description": "Ekstase-Leiste steigt doppelt so schnell.",
+      "Kind": "AutoAbility"
+    },
+    "800F": {
+      "Name": "Tripel-Ekstase",
+      "Description": "Ekstase-Leiste steigt dreimal so schnell.",
+      "Kind": "AutoAbility"
+    },
+    "8010": {
+      "Name": "Not-Ekstase",
+      "Description": "Ekstase-Leiste steigt in Notf\u00E4llen 2x so schnell.",
+      "Kind": "AutoAbility"
+    },
+    "8011": {
+      "Name": "Ekstasewandler",
+      "Description": "Die Ekstase-Energie wird in AP umgewandelt.",
+      "Kind": "AutoAbility"
+    },
+    "8012": {
+      "Name": "Doppel-AP",
+      "Description": "Der betreffende Charakter erh\u00E4lt doppelt so viel AP.",
+      "Kind": "AutoAbility"
+    },
+    "8013": {
+      "Name": "Tripel-AP",
+      "Description": "Der betreffende Charakter erh\u00E4lt dreimal so viel AP.",
+      "Kind": "AutoAbility"
+    },
+    "8014": {
+      "Name": "Null-AP",
+      "Description": "Der betreffende Charakter erh\u00E4lt keine AP.",
+      "Kind": "AutoAbility"
+    },
+    "8015": {
+      "Name": "Rarit\u00E4tensammler",
+      "Description": "Beim Klauen erh\u00E4lt man leichter eine Rarit\u00E4t.",
+      "Kind": "AutoAbility"
+    },
+    "8016": {
+      "Name": "Rarit\u00E4ten-Freak",
+      "Description": "Beim Klauen erh\u00E4lt man immer eine Rarit\u00E4t.",
+      "Kind": "AutoAbility"
+    },
+    "8017": {
+      "Name": "HP-Expander",
+      "Description": "Der HP-Wert kann das Limit von 9999 \u00FCbersteigen.",
+      "Kind": "AutoAbility"
+    },
+    "8018": {
+      "Name": "MP-Expander",
+      "Description": "Der MP-Wert kann das Limit von 999 \u00FCbersteigen.",
+      "Kind": "AutoAbility"
+    },
+    "8019": {
+      "Name": "Hit-Expander",
+      "Description": "Der Schadenswert kann das Limit von 9999 \u00FCbersteigen.",
+      "Kind": "AutoAbility"
+    },
+    "801A": {
+      "Name": "Doppel-Gil",
+      "Description": "Man erh\u00E4lt doppelt so viel Gil.",
+      "Kind": "AutoAbility"
+    },
+    "801B": {
+      "Name": "HP-Generator",
+      "Description": "Der HP-Wert regeneriert sich mit jedem Schritt.",
+      "Kind": "AutoAbility"
+    },
+    "801C": {
+      "Name": "MP-Generator",
+      "Description": "Der MP-Wert regeneriert sich mit jedem Schritt.",
+      "Kind": "AutoAbility"
+    },
+    "801D": {
+      "Name": "Null-Monster",
+      "Description": "Keine Feindkontakte mehr!",
+      "Kind": "AutoAbility"
+    },
+    "801E": {
+      "Name": "Hitze-Schlag",
+      "Description": "Addiert Hitze-Element zu [Angriff] und [Techs].",
+      "Kind": "AutoAbility"
+    },
+    "801F": {
+      "Name": "Hitze 50%",
+      "Description": "Sch\u00E4den durch das Hitze-Element werden halbiert.",
+      "Kind": "AutoAbility"
+    },
+    "8020": {
+      "Name": "Hitze-Wall",
+      "Description": "Hitze-Angriffe werden komplett abgewehrt.",
+      "Kind": "AutoAbility"
+    },
+    "8021": {
+      "Name": "Hitze-Sog",
+      "Description": "Hitze-Angriffe werden absorbiert und HP geheilt.",
+      "Kind": "AutoAbility"
+    },
+    "8022": {
+      "Name": "K\u00E4lte-Schlag",
+      "Description": "Addiert K\u00E4lte-Element zu [Angriff] und [Techs].",
+      "Kind": "AutoAbility"
+    },
+    "8023": {
+      "Name": "K\u00E4lte 50%",
+      "Description": "Sch\u00E4den durch das K\u00E4lte-Element werden halbiert.",
+      "Kind": "AutoAbility"
+    },
+    "8024": {
+      "Name": "K\u00E4lte-Wall",
+      "Description": "K\u00E4lte-Angriffe werden komplett abgewehrt.",
+      "Kind": "AutoAbility"
+    },
+    "8025": {
+      "Name": "K\u00E4lte-Sog",
+      "Description": "K\u00E4lte-Angriffe werden absorbiert und HP geheilt.",
+      "Kind": "AutoAbility"
+    },
+    "8026": {
+      "Name": "Strom-Schlag",
+      "Description": "Addiert Strom-Element zu [Angriff] und [Techs].",
+      "Kind": "AutoAbility"
+    },
+    "8027": {
+      "Name": "Strom 50%",
+      "Description": "Sch\u00E4den durch das Strom-Element werden halbiert.",
+      "Kind": "AutoAbility"
+    },
+    "8028": {
+      "Name": "Strom-Wall",
+      "Description": "Strom-Angriffe werden komplett abgewehrt.",
+      "Kind": "AutoAbility"
+    },
+    "8029": {
+      "Name": "Strom-Sog",
+      "Description": "Strom-Angriffe werden absorbiert und HP geheilt.",
+      "Kind": "AutoAbility"
+    },
+    "802A": {
+      "Name": "N\u00E4sse-Schlag",
+      "Description": "Addiert N\u00E4sse-Element zu [Angriff] und [Techs].",
+      "Kind": "AutoAbility"
+    },
+    "802B": {
+      "Name": "N\u00E4sse 50%",
+      "Description": "Sch\u00E4den durch das N\u00E4sse-Element werden halbiert.",
+      "Kind": "AutoAbility"
+    },
+    "802C": {
+      "Name": "N\u00E4sse-Wall",
+      "Description": "N\u00E4sse-Angriffe werden komplett abgewehrt.",
+      "Kind": "AutoAbility"
+    },
+    "802D": {
+      "Name": "N\u00E4sse-Sog",
+      "Description": "N\u00E4sse-Angriffe werden absorbiert und HP geheilt.",
+      "Kind": "AutoAbility"
+    },
+    "802E": {
+      "Name": "Todes-Attacke",
+      "Description": "Addiert fast immer [Tod] zu [Angriff] und [Techs].",
+      "Kind": "AutoAbility"
+    },
+    "802F": {
+      "Name": "Todes-Schlag",
+      "Description": "Addiert manchmal [Tod] zu [Angriff] und [Techs].",
+      "Kind": "AutoAbility"
+    },
+    "8030": {
+      "Name": "Todes-Wall",
+      "Description": "Verhindert fast immer den [Tod]-Zustand.",
+      "Kind": "AutoAbility"
+    },
+    "8031": {
+      "Name": "Todes-Schutz",
+      "Description": "Verhindert manchmal den [Tod]-Zustand.",
+      "Kind": "AutoAbility"
+    },
+    "8032": {
+      "Name": "Zombie-Attacke",
+      "Description": "Addiert fast immer [Zombie] zu [Angriff] und [Techs].",
+      "Kind": "AutoAbility"
+    },
+    "8033": {
+      "Name": "Zombie-Schlag",
+      "Description": "Addiert manchmal [Zombie] zu [Angriff] und [Techs].",
+      "Kind": "AutoAbility"
+    },
+    "8034": {
+      "Name": "Zombie-Wall",
+      "Description": "Verhindert fast immer den [Zombie]-Zustand.",
+      "Kind": "AutoAbility"
+    },
+    "8035": {
+      "Name": "Zombie-Schutz",
+      "Description": "Verhindert manchmal den [Zombie]-Zustand.",
+      "Kind": "AutoAbility"
+    },
+    "8036": {
+      "Name": "Stein-Attacke",
+      "Description": "Addiert fast immer [Stein] zu [Angriff] und [Techs].",
+      "Kind": "AutoAbility"
+    },
+    "8037": {
+      "Name": "Stein-Schlag",
+      "Description": "Addiert manchmal [Stein] zu [Angriff] und [Techs].",
+      "Kind": "AutoAbility"
+    },
+    "8038": {
+      "Name": "Stein-Wall",
+      "Description": "Verhindert fast immer den [Stein]-Zustand.",
+      "Kind": "AutoAbility"
+    },
+    "8039": {
+      "Name": "Stein-Schutz",
+      "Description": "Verhindert manchmal den [Stein]-Zustand.",
+      "Kind": "AutoAbility"
+    },
+    "803A": {
+      "Name": "Gift-Attacke",
+      "Description": "Addiert fast immer [Gift] zu [Angriff] und [Techs].",
+      "Kind": "AutoAbility"
+    },
+    "803B": {
+      "Name": "Gift-Schlag",
+      "Description": "Addiert manchmal [Gift] zu [Angriff] und [Techs].",
+      "Kind": "AutoAbility"
+    },
+    "803C": {
+      "Name": "Gift-Wall",
+      "Description": "Verhindert fast immer den [Gift]-Zustand.",
+      "Kind": "AutoAbility"
+    },
+    "803D": {
+      "Name": "Gift-Schutz",
+      "Description": "Verhindert manchmal den [Gift]-Zustand.",
+      "Kind": "AutoAbility"
+    },
+    "803E": {
+      "Name": "Schlaf-Attacke",
+      "Description": "Addiert fast immer [Schlaf] zu [Angriff] und [Techs].",
+      "Kind": "AutoAbility"
+    },
+    "803F": {
+      "Name": "Schlaf-Schlag",
+      "Description": "Addiert manchmal [Schlaf] zu [Angriff] und [Techs].",
+      "Kind": "AutoAbility"
+    },
+    "8040": {
+      "Name": "Schlaf-Wall",
+      "Description": "Verhindert fast immer den [Schlaf]-Zustand.",
+      "Kind": "AutoAbility"
+    },
+    "8041": {
+      "Name": "Schlaf-Schutz",
+      "Description": "Verhindert manchmal den [Schlaf]-Zustand.",
+      "Kind": "AutoAbility"
+    },
+    "8042": {
+      "Name": "Stumm-Attacke",
+      "Description": "Addiert fast immer [Stumm] zu [Angriff] und [Techs].",
+      "Kind": "AutoAbility"
+    },
+    "8043": {
+      "Name": "Stumm-Schlag",
+      "Description": "Addiert manchmal [Stumm] zu [Angriff] und [Techs].",
+      "Kind": "AutoAbility"
+    },
+    "8044": {
+      "Name": "Stumm-Wall",
+      "Description": "Verhindert fast immer den [Stumm]-Zustand.",
+      "Kind": "AutoAbility"
+    },
+    "8045": {
+      "Name": "Stumm-Schutz",
+      "Description": "Verhindert manchmal den [Stumm]-Zustand.",
+      "Kind": "AutoAbility"
+    },
+    "8046": {
+      "Name": "Blind-Attacke",
+      "Description": "Addiert fast immer [Blind] zu [Angriff] und [Techs].",
+      "Kind": "AutoAbility"
+    },
+    "8047": {
+      "Name": "Blind-Schlag",
+      "Description": "Addiert manchmal [Blind] zu [Angriff] und [Techs].",
+      "Kind": "AutoAbility"
+    },
+    "8048": {
+      "Name": "Blind-Wall",
+      "Description": "Verhindert fast immer den [Blind]-Zustand.",
+      "Kind": "AutoAbility"
+    },
+    "8049": {
+      "Name": "Blind-Schutz",
+      "Description": "Verhindert manchmal den [Blind]-Zustand.",
+      "Kind": "AutoAbility"
+    },
+    "804A": {
+      "Name": "Gemach-Attacke",
+      "Description": "Addiert fast immer [Gemach] zu [Angriff] und [Techs].",
+      "Kind": "AutoAbility"
+    },
+    "804B": {
+      "Name": "Gemach-Schlag",
+      "Description": "Addiert manchmal [Gemach] zu [Angriff] und [Techs].",
+      "Kind": "AutoAbility"
+    },
+    "804C": {
+      "Name": "Gemach-Wall",
+      "Description": "Verhindert fast immer den [Gemach]-Zustand.",
+      "Kind": "AutoAbility"
+    },
+    "804D": {
+      "Name": "Gemach-Schutz",
+      "Description": "Verhindert manchmal den [Gemach]-Zustand.",
+      "Kind": "AutoAbility"
+    },
+    "804E": {
+      "Name": "Konfus-Wall",
+      "Description": "Verhindert fast immer den [Konfus]-Zustand.",
+      "Kind": "AutoAbility"
+    },
+    "804F": {
+      "Name": "Konfus-Schutz",
+      "Description": "Verhindert manchmal den [Konfus]-Zustand.",
+      "Kind": "AutoAbility"
+    },
+    "8050": {
+      "Name": "Tobsucht-Wall",
+      "Description": "Verhindert fast immer den [Tobsucht]-Zustand.",
+      "Kind": "AutoAbility"
+    },
+    "8051": {
+      "Name": "Tobsucht-Schutz",
+      "Description": "Verhindert manchmal den [Tobsucht]-Zustand.",
+      "Kind": "AutoAbility"
+    },
+    "8052": {
+      "Name": "Fluch-Wall",
+      "Description": "Verhindert fast immer den [Fluch]-Zustand.",
+      "Kind": "AutoAbility"
+    },
+    "8053": {
+      "Name": "Fluch-Schutz",
+      "Description": "Verhindert manchmal den [Fluch]-Zustand.",
+      "Kind": "AutoAbility"
+    },
+    "8054": {
+      "Name": "Auto-Shell",
+      "Description": "Anhaltender [Shell]-Zustand.",
+      "Kind": "AutoAbility"
+    },
+    "8055": {
+      "Name": "Auto-Protes",
+      "Description": "Anhaltender [Protes]-Zustand.",
+      "Kind": "AutoAbility"
+    },
+    "8056": {
+      "Name": "Auto-Hast",
+      "Description": "Anhaltender [Hast]-Zustand.",
+      "Kind": "AutoAbility"
+    },
+    "8057": {
+      "Name": "Auto-Regena",
+      "Description": "Anhaltender [Regena]-Zustand.",
+      "Kind": "AutoAbility"
+    },
+    "8058": {
+      "Name": "Auto-Reflek",
+      "Description": "Anhaltender [Reflek]-Zustand.",
+      "Kind": "AutoAbility"
+    },
+    "8059": {
+      "Name": "Not-Shell",
+      "Description": "In Notsituationen wird [Shell] ausgel\u00F6st.",
+      "Kind": "AutoAbility"
+    },
+    "805A": {
+      "Name": "Not-Protes",
+      "Description": "In Notsituationen wird [Protes] ausgel\u00F6st.",
+      "Kind": "AutoAbility"
+    },
+    "805B": {
+      "Name": "Not-Hast",
+      "Description": "In Notsituationen wird [Hast] ausgel\u00F6st.",
+      "Kind": "AutoAbility"
+    },
+    "805C": {
+      "Name": "Not-Regena",
+      "Description": "In Notsituationen wird [Regena] ausgel\u00F6st.",
+      "Kind": "AutoAbility"
+    },
+    "805D": {
+      "Name": "Not-Reflek",
+      "Description": "In Notsituationen wird [Reflek] ausgel\u00F6st.",
+      "Kind": "AutoAbility"
+    },
+    "805E": {
+      "Name": "Not-Exwass",
+      "Description": "In Notsituationen wird [Exwass] ausgel\u00F6st.",
+      "Kind": "AutoAbility"
+    },
+    "805F": {
+      "Name": "Not-Exeis",
+      "Description": "In Notsituationen wird [Exeis] ausgel\u00F6st.",
+      "Kind": "AutoAbility"
+    },
+    "8060": {
+      "Name": "Not-Exblitz",
+      "Description": "In Notsituationen wird [Exblitz] ausgel\u00F6st.",
+      "Kind": "AutoAbility"
+    },
+    "8061": {
+      "Name": "Not-Exfeu",
+      "Description": "In Notsituationen wird [Exfeu] ausgel\u00F6st.",
+      "Kind": "AutoAbility"
+    },
+    "8062": {
+      "Name": "Angriff \u002B3%",
+      "Description": "Der physische Angriffswert steigt um 3%.",
+      "Kind": "AutoAbility"
+    },
+    "8063": {
+      "Name": "Angriff \u002B5%",
+      "Description": "Der physische Angriffswert steigt um 5%.",
+      "Kind": "AutoAbility"
+    },
+    "8064": {
+      "Name": "Angriff \u002B10%",
+      "Description": "Der physische Angriffswert steigt um 10%.",
+      "Kind": "AutoAbility"
+    },
+    "8065": {
+      "Name": "Angriff \u002B20%",
+      "Description": "Der physische Angriffswert steigt um 20%.",
+      "Kind": "AutoAbility"
+    },
+    "8066": {
+      "Name": "Z-Angriff \u002B3%",
+      "Description": "Der magische Angriffswert steigt um 3%.",
+      "Kind": "AutoAbility"
+    },
+    "8067": {
+      "Name": "Z-Angriff \u002B5%",
+      "Description": "Der magische Angriffswert steigt um 5%.",
+      "Kind": "AutoAbility"
+    },
+    "8068": {
+      "Name": "Z-Angriff \u002B10%",
+      "Description": "Der magische Angriffswert steigt um 10%.",
+      "Kind": "AutoAbility"
+    },
+    "8069": {
+      "Name": "Z-Angriff \u002B20%",
+      "Description": "Der magische Angriffswert steigt um 20%.",
+      "Kind": "AutoAbility"
+    },
+    "806A": {
+      "Name": "Abwehr \u002B3%",
+      "Description": "Erlittene physische Sch\u00E4den um 3% verringert.",
+      "Kind": "AutoAbility"
+    },
+    "806B": {
+      "Name": "Abwehr \u002B5%",
+      "Description": "Erlittene physische Sch\u00E4den um 5% verringert.",
+      "Kind": "AutoAbility"
+    },
+    "806C": {
+      "Name": "Abwehr \u002B10%",
+      "Description": "Erlittene physische Sch\u00E4den um 10% verringert.",
+      "Kind": "AutoAbility"
+    },
+    "806D": {
+      "Name": "Abwehr \u002B20%",
+      "Description": "Erlittene physische Sch\u00E4den um 20% verringert.",
+      "Kind": "AutoAbility"
+    },
+    "806E": {
+      "Name": "Z-Abwehr \u002B3%",
+      "Description": "Erlittene magische Sch\u00E4den um 3% verringert.",
+      "Kind": "AutoAbility"
+    },
+    "806F": {
+      "Name": "Z-Abwehr \u002B5%",
+      "Description": "Erlittene magische Sch\u00E4den um 5% verringert.",
+      "Kind": "AutoAbility"
+    },
+    "8070": {
+      "Name": "Z-Abwehr \u002B10%",
+      "Description": "Erlittene magische Sch\u00E4den um 10% verringert.",
+      "Kind": "AutoAbility"
+    },
+    "8071": {
+      "Name": "Z-Abwehr \u002B20%",
+      "Description": "Erlittene magische Sch\u00E4den um 20% verringert.",
+      "Kind": "AutoAbility"
+    },
+    "8072": {
+      "Name": "HP \u002B5%",
+      "Description": "Der HP-Wert steigt um 5%.",
+      "Kind": "AutoAbility"
+    },
+    "8073": {
+      "Name": "HP \u002B10%",
+      "Description": "Der HP-Wert steigt um 10%.",
+      "Kind": "AutoAbility"
+    },
+    "8074": {
+      "Name": "HP \u002B20%",
+      "Description": "Der HP-Wert steigt um 20%.",
+      "Kind": "AutoAbility"
+    },
+    "8075": {
+      "Name": "HP \u002B30%",
+      "Description": "Der HP-Wert steigt um 30%.",
+      "Kind": "AutoAbility"
+    },
+    "8076": {
+      "Name": "MP \u002B5%",
+      "Description": "Der MP-Wert steigt um 5%.",
+      "Kind": "AutoAbility"
+    },
+    "8077": {
+      "Name": "MP \u002B10%",
+      "Description": "Der MP-Wert steigt um 10%.",
+      "Kind": "AutoAbility"
+    },
+    "8078": {
+      "Name": "MP \u002B20%",
+      "Description": "Der MP-Wert steigt um 20%.",
+      "Kind": "AutoAbility"
+    },
+    "8079": {
+      "Name": "MP \u002B30%",
+      "Description": "Der MP-Wert steigt um 30%.",
+      "Kind": "AutoAbility"
+    },
+    "807A": {
+      "Name": "K\u00E4fig",
+      "Description": "Nichts.",
+      "Kind": "AutoAbility"
+    },
+    "807B": {
+      "Name": "Nichts",
+      "Description": "Nichts.",
+      "Kind": "AutoAbility"
+    },
+    "807C": {
+      "Name": "Kraftwandler",
+      "Description": "Addiert [Kraftzettel] zu [Angriff] und [Techs].",
+      "Kind": "AutoAbility"
+    },
+    "807D": {
+      "Name": "Wunderwandler",
+      "Description": "Addiert [Wunderzettel] zu [Angriff] und [Techs].",
+      "Kind": "AutoAbility"
+    },
+    "807E": {
+      "Name": "Zeitwandler",
+      "Description": "Addiert [Zeitzettel] zu [Angriff] und [Techs].",
+      "Kind": "AutoAbility"
+    },
+    "807F": {
+      "Name": "Ability-Wandler",
+      "Description": "Addiert [Ability-Zettel] zu [Angriff] und [Techs].",
+      "Kind": "AutoAbility"
+    },
+    "8080": {
+      "Name": "Schleife",
+      "Description": "Verhindert fast immer Zustandsver\u00E4nderungen.",
+      "Kind": "AutoAbility"
+    },
+    "8081": {
+      "Name": "Nichts.",
+      "Description": "Nichts.",
+      "Kind": "AutoAbility"
+    },
+    "8082": {
+      "Name": "Nichts.",
+      "Description": "Nichts.",
+      "Kind": "AutoAbility"
+    },
+    "8083": {
+      "Name": "Nichts.",
+      "Description": "Nichts.",
+      "Kind": "AutoAbility"
+    },
+    "8084": {
+      "Name": "Nichts.",
+      "Description": "Nichts.",
+      "Kind": "AutoAbility"
+    },
+    "8085": {
+      "Name": "Nichts.",
+      "Description": "Nichts.",
+      "Kind": "AutoAbility"
+    }
+  }
+}

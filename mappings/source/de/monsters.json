@@ -1,0 +1,1841 @@
+{
+  "SchemaVersion": 1,
+  "Domain": "monsters",
+  "Locale": "de",
+  "GeneratedAtUtc": "2026-03-04T10:54:18.8045305Z",
+  "SourceFiles": [
+    "READ_MONSTER_LOCALIZATIONS__de.txt"
+  ],
+  "Entries": {
+    "0": {
+      "Name": "Monster 0",
+      "Sensor": "Informationen, die im Info-Fenster erscheinen.",
+      "Scan": "Informationen, die durch Benutzung{\\n}von Analyse erscheinen."
+    },
+    "1": {
+      "Name": "Raldo-Panzer",
+      "Sensor": "Gesch\u00FCtzt durch Panzer. Waffen mit der Ability [Durchschlag] sind effektiv.",
+      "Scan": "Wegen Panzer etwas tr\u00E4ge, daf\u00FCr{\\n}gut gesch\u00FCtzt gegen physische{\\n}und magische Angriffe.{\\n}K\u00E4lte-anf\u00E4llig und au\u00DFerdem mit{\\n}[Durchschlag] leicht zu besiegen.{\\n}Am besten Auron \u00FCberlassen!"
+    },
+    "2": {
+      "Name": "Barnip-Panzer",
+      "Sensor": "Gesch\u00FCtzt durch Panzer. Waffen mit der Ability [Durchschlag] sind effektiv.",
+      "Scan": "Wegen Panzer etwas tr\u00E4ge, daf\u00FCr{\\n}gut gesch\u00FCtzt gegen physische{\\n}und magische Angriffe.{\\n}K\u00E4lte- und N\u00E4sse-anf\u00E4llig.{\\n}Kurzer Prozess mit [Durchschlag]."
+    },
+    "3": {
+      "Name": "Mulfushu-Panzer",
+      "Sensor": "Gesch\u00FCtzt durch Panzer. Waffen mit der Ability [Durchschlag] sind effektiv. Vorsicht vor [Gemach]!",
+      "Scan": "Wegen Panzer etwas tr\u00E4ge, daf\u00FCr{\\n}gut gesch\u00FCtzt gegen physische{\\n}und magische Angriffe. Hitze-{\\n}und Strom-anf\u00E4llig. Vorsicht: {\\n}[Bodycheck] kann den [Gemach]-{\\n}Zustand hervorrufen!"
+    },
+    "4": {
+      "Name": "Mafuto-Panzer",
+      "Sensor": "Gesch\u00FCtzt durch Panzer. Waffen mit der Ability [Durchschlag] sind effektiv. Vorsicht vor [Gemach]!",
+      "Scan": "Wegen Panzer etwas tr\u00E4ge, gut{\\n}gesch\u00FCtzt gegen physische und{\\n}magische Angriffe. Strom- und{\\n}K\u00E4lte-anf\u00E4llig. Vorsicht: [Bodycheck]{\\n}kann [Gemach] verursachen!"
+    },
+    "5": {
+      "Name": "Schrott-Panzer",
+      "Sensor": "Gesch\u00FCtzt durch Panzer. Waffen mit der Ability [Durchschlag] sind effektiv. Vorsicht vor [Gemach]!",
+      "Scan": "Wegen Panzer etwas tr\u00E4ge, gut{\\n}gesch\u00FCtzt gegen physische und{\\n}magische Angriffe. Hitze-anf\u00E4llig.{\\n}Sonstige Elemente werden um die{\\n}H\u00E4lfte abgeschw\u00E4cht. Vorsicht:{\\n}[Bodycheck] kann den [Gemach]-{\\n}Zustand verursachen!"
+    },
+    "6": {
+      "Name": "Gandalva",
+      "Sensor": "Flugmonster. Zauber relativ unwirksam.",
+      "Scan": "Flugmonster, schwer zu treffen.{\\n}Wendet [Blitz] an. Verf\u00FCgt \u00FCber{\\n}hohe Zauberabwehr, ist jedoch{\\n}anf\u00E4llig gegen N\u00E4sse. Mit Wakkas{\\n}Waffe niederstrecken!"
+    },
+    "7": {
+      "Name": "Garkimalva",
+      "Sensor": "Flugmonster. Zauber relativ unwirksam.",
+      "Scan": "Flugmonster, schwer zu treffen.{\\n}Anf\u00E4llig gegen N\u00E4sse. Verf\u00FCgt{\\n}jedoch \u00FCber hohe Zauberabwehr.{\\n}Greift nur mit [Blitzra] an. Mit{\\n}[Stumm] so schnell wie m\u00F6glich{\\n}zum Schweigen bringen!"
+    },
+    "8": {
+      "Name": "Garkimasera",
+      "Sensor": "Flugmonster. Zauber relativ unwirksam.",
+      "Scan": "Flugmonster, schwer zu treffen.{\\n}Anf\u00E4llig gegen N\u00E4sse. Verf\u00FCgt{\\n}jedoch \u00FCber hohe Zauberabwehr.{\\n}Greift nur mit [Blitzga] an. Mit{\\n}[Stumm] so schnell wie m\u00F6glich{\\n}zum Schweigen bringen!"
+    },
+    "9": {
+      "Name": "Dingo",
+      "Sensor": "Flinkes Monster. Zauber relativ unwirksam.",
+      "Scan": "Flink, schwer zu treffen.{\\n}Hohe Zauberabwehr.{\\n}Schnell besiegen, wenn{\\n}m\u00F6glich mit {PC:00:TIDUS}!"
+    },
+    "10": {
+      "Name": "Mi\u2019hen-Dingo",
+      "Sensor": "Flinkes Monster. Zauber relativ unwirksam.",
+      "Scan": "Flink, schwer zu treffen.{\\n}Hohe Zauberabwehr. Hitze- und{\\n}N\u00E4sse-anf\u00E4llig. Mit elementaren{\\n}Waffen m\u00F6glichst vernichtenden{\\n}Schaden erteilen!"
+    },
+    "11": {
+      "Name": "Isegrim",
+      "Sensor": "Flinkes Monster. Zauber relativ unwirksam.",
+      "Scan": "Flink, schwer zu treffen.{\\n}Hohe Zauberabwehr, ist jedoch{\\n}Hitze- und Strom-anf\u00E4llig."
+    },
+    "12": {
+      "Name": "Schneewolf",
+      "Sensor": "Flinkes Monster. Zauber relativ unwirksam.",
+      "Scan": "Flink, schwer zu treffen.{\\n}Hohe Zauberabwehr, ist jedoch{\\n}Hitze-anf\u00E4llig."
+    },
+    "13": {
+      "Name": "Sandwolf",
+      "Sensor": "Flinkes Monster. Zauber relativ unwirksam. Vorsicht vor [Schlaf] und [Stumm].",
+      "Scan": "Flink, schwer zu treffen.{\\n}Hohe Zauberabwehr, ist jedoch{\\n}Hitze- und K\u00E4lte-anf\u00E4llig.{\\n}Angriffe k\u00F6nnen [Schlaf]- und{\\n}[Stumm]-Zustand hervorrufen."
+    },
+    "14": {
+      "Name": "Skoll",
+      "Sensor": "Flinkes Monster. Zauber relativ unwirksam. Vorsicht vor [Schlaf] und [Stumm].",
+      "Scan": "Flink, schwer zu treffen. Hohe{\\n}Zauberabwehr. Hitze- und Strom-{\\n}anf\u00E4llig. Angriffe k\u00F6nnen [Schlaf]-{\\n}und [Stumm]-Zustand hervorrufen."
+    },
+    "15": {
+      "Name": "Bandersnatcher",
+      "Sensor": "Flinkes Monster. Zauber relativ unwirksam. Vorsicht vor [Schlaf] und [Stumm].",
+      "Scan": "Flink, schwer zu treffen.{\\n}Hohe Zauberabwehr, ist aber{\\n}Hitze-anf\u00E4llig. Angriffe k\u00F6nnen{\\n}[Schlaf]- und [Stumm]-Zustand{\\n}hervorrufen."
+    },
+    "16": {
+      "Name": "Wasserpudding",
+      "Sensor": "N\u00E4sse-elementares Monster. Mit gegens\u00E4tzlichem Element leicht besiegbar. Physische Attacken kaum wirksam.",
+      "Scan": "Weich, schwer zu treffen.{\\n}N\u00E4sse-elementares Monster. Strom-{\\n}anf\u00E4llig. Am besten mit Lulus [Blitz]{\\n}angreifen! Vorsicht: Absorbiert{\\n}N\u00E4sse und heilt sich selbst. Niemals{\\n}[Wasser] anwenden!"
+    },
+    "17": {
+      "Name": "Donnerpudding",
+      "Sensor": "Strom-elementares Monster. Mit gegens\u00E4tzlichem Element leicht besiegbar. Physische Attacken kaum wirksam.",
+      "Scan": "Weich, schwer zu treffen. Strom-{\\n}elementares Monster. Wird durch{\\n}Strom geheilt. N\u00E4sse-anf\u00E4llig."
+    },
+    "18": {
+      "Name": "Schneepudding",
+      "Sensor": "K\u00E4lte-elementares Monster. Mit gegens\u00E4tzlichem Element leicht besiegbar. Physische Attacken kaum wirksam.",
+      "Scan": "Weich, schwer zu treffen. K\u00E4lte-{\\n}elementares Monster. Wird durch{\\n}K\u00E4lte-Element geheilt. Hitze-anf\u00E4llig.{\\n}Wendet [Eis] an."
+    },
+    "19": {
+      "Name": "Eispudding",
+      "Sensor": "K\u00E4lte-elementares Monster. Mit gegens\u00E4tzlichem Element leicht besiegbar. Physische Attacken kaum wirksam.",
+      "Scan": "Weich, schwer zu treffen. K\u00E4lte-{\\n}elementares Monster. Wird durch{\\n}K\u00E4lte-Element geheilt. Hitze-anf\u00E4llig."
+    },
+    "20": {
+      "Name": "Flammenpudding",
+      "Sensor": "Hitze-elementares Monster. Mit gegens\u00E4tzlichem Element leicht besiegbar. Physische Attacken  kaum wirksam.",
+      "Scan": "Weich, schwer zu treffen. Hitze-{\\n}elementares Monster. Wird durch{\\n}Hitze geheilt. K\u00E4lte-anf\u00E4llig. Wendet{\\n}[Feuga] an."
+    },
+    "21": {
+      "Name": "Teufelspudding",
+      "Sensor": "Keine elementaren Schwachstellen. Physische Attacken kaum wirksam.",
+      "Scan": "Physische Attacken wirken kaum.{\\n}Element-Angriffe wirken nur zu 50%.{\\n}Greift mit elementneutralen Zaubern{\\n}wie [Gravitas], [Subspirit], [Subvita],{\\n}[Flare] und [Bio] an.{\\n}{CLR:YELLOW}Feind-Tech [Himmelswind] erlernbar!"
+    },
+    "22": {
+      "Name": "Dino-Salamander",
+      "Sensor": "Flinkes Monster. Zauber relativ unwirksam.",
+      "Scan": "Flinkes Monster. Daher schwer zu{\\n}treffen. Hohe Zauberabwehr. K\u00E4lte-{\\n}anf\u00E4llig. Daher mit K\u00E4lte Schaden{\\n}zuf\u00FCgen."
+    },
+    "23": {
+      "Name": "Zuck-Echse",
+      "Sensor": "Flinkes Monster. Zauber relativ unwirksam.",
+      "Scan": "Flink, schwer zu treffen. Hohe{\\n}Zauberabwehr. Halbiert Hitze-{\\n}Angriffe, ist jedoch K\u00E4lte-anf\u00E4llig."
+    },
+    "24": {
+      "Name": "Miniraptor",
+      "Sensor": "Flinkes Monster. Zauber relativ unwirksam.",
+      "Scan": "Flink, schwer zu treffen. Hohe{\\n}Zauberabwehr. Halbiert Hitze-{\\n}und Strom-Angriffe. K\u00E4lte-anf\u00E4llig."
+    },
+    "25": {
+      "Name": "Mergin",
+      "Sensor": "Flinkes Monster. Zauber relativ unwirksam. Vorsicht vor [Stein] und [Stumm].",
+      "Scan": "Flink, schwer zu treffen. Hohe{\\n}Zauberabwehr. Halbiert Strom- und{\\n}Hitze-Schaden. Angriffe verursachen{\\n}manchmal [Stein] und [Stumm]."
+    },
+    "26": {
+      "Name": "Schmelke",
+      "Sensor": "Flinkes Monster. Zauber relativ unwirksam. Vorsicht vor [Stein] und [Stumm].",
+      "Scan": "Flink, schwer zu treffen. Hohe{\\n}Zauberabwehr. Halbiert Hitze- und{\\n}N\u00E4sse-Schaden. Angriffe l\u00F6sen{\\n}manchmal [Stein] und [Stumm] aus."
+    },
+    "27": {
+      "Name": "Schweigechse",
+      "Sensor": "Flinkes Monster. Zauber relativ unwirksam. Vorsicht vor [Stein] und [Stumm].",
+      "Scan": "Flink, schwer zu treffen. Hohe{\\n}Zauberabwehr. Halbiert Strom-,{\\n}N\u00E4sse- und Hitze-Schaden. Ihre{\\n}Angriffe verursachen manchmal{\\n}[Stein] und [Stumm]."
+    },
+    "28": {
+      "Name": "Kondorgeier",
+      "Sensor": "Flugmonster. Schwach gegen Zauber.",
+      "Scan": "Flugmonster. Schwer zu treffen.{\\n}Am besten mit Wakka angreifen!{\\n}Hitze-anf\u00E4llig. Daher kann Lulus{\\n}[Feuer] auch sehr wirksam sein!"
+    },
+    "29": {
+      "Name": "Sturzgeier",
+      "Sensor": "Flugmonster. Schwach gegen Zauber. Vorsicht vor [Blind]!",
+      "Scan": "Flugmonster. Schwer zu treffen.{\\n}Besonders Hitze-anf\u00E4llig. Daher am{\\n}besten mit [Feura] vernichten! Sein{\\n}Angriff kann [Blind] verursachen."
+    },
+    "30": {
+      "Name": "Alkyone",
+      "Sensor": "Flugmonster. Schwach gegen Zauber. Vorsicht vor [Blind]!",
+      "Scan": "Flugmonster. Schwer zu treffen.{\\n}Besonders Hitze-anf\u00E4llig. Am besten{\\n}mit [Feura] vernichten! Sein Angriff{\\n}kann [Blind]-Zustand hervorrufen."
+    },
+    "31": {
+      "Name": "Killerbiene",
+      "Sensor": "Flugmonster. Empfindlich gegen K\u00E4lte. Vorsicht vor [Gift]!",
+      "Scan": "Flugmonster. Schwer zu treffen.{\\n}Am besten mit Wakka angreifen!{\\n}K\u00E4lte-anf\u00E4llig. Daher kann Lulus{\\n}[Eis] auch sehr wirksam sein! Ihr{\\n}Angriff kann [Gift] verursachen."
+    },
+    "32": {
+      "Name": "Bei\u00DFgeschmei\u00DF",
+      "Sensor": "Flugmonster. Empfindlich gegen K\u00E4lte. Vorsicht vor [Gift]!",
+      "Scan": "Flugmonster. Schwer zu treffen.{\\n}Anf\u00E4llig gegen Zauber und K\u00E4lte.{\\n}Am besten mit [Eis] vernichten! Sein{\\n}Angriff kann [Gift] verursachen."
+    },
+    "33": {
+      "Name": "Giftbiene",
+      "Sensor": "Flugmonster. Empfindlich gegen K\u00E4lte. Vorsicht vor [Gift]!",
+      "Scan": "Flugmonster. Schwer zu treffen.{\\n}Anf\u00E4llig gegen Zauber und K\u00E4lte. Am{\\n}besten mit [Eisra] vernichten! Sein{\\n}Angriff kann [Gift] verursachen."
+    },
+    "34": {
+      "Name": "Nebyros",
+      "Sensor": "Flugmonster. Empfindlich gegen K\u00E4lte. Vorsicht vor [Gift]!",
+      "Scan": "Flugmonster. Schwer zu treffen.{\\n}Anf\u00E4llig gegen Zauber und K\u00E4lte.{\\n}Am besten mit [Eisga] vernichten!{\\n}Sein Angriff kann [Gift]-Zustand{\\n}hervorrufen."
+    },
+    "35": {
+      "Name": "Schwebauge",
+      "Sensor": "Flugmonster. Zauber relativ unwirksam.",
+      "Scan": "Flugmonster. Schwer zu treffen.{\\n}Hohe Zauberabwehr. Jedoch Strom-{\\n}anf\u00E4llig. Am besten mit Wakka{\\n}angreifen!"
+    },
+    "36": {
+      "Name": "Flatterauge",
+      "Sensor": "Flugmonster. Zauber relativ unwirksam.",
+      "Scan": "Flugmonster. Schwer zu treffen.{\\n}Hohe Zauberabwehr, jedoch N\u00E4sse-{\\n}anf\u00E4llig. Sein [Anfunkeln] kann{\\n}[Konfus] verursachen."
+    },
+    "37": {
+      "Name": "Funkelauge",
+      "Sensor": "Flugmonster. Zauber relativ unwirksam. Vorsicht vor [Konfus]!",
+      "Scan": "Flugmonster. Schwer zu treffen.{\\n}Hohe Zauberabwehr, jedoch Hitze-{\\n}anf\u00E4llig. Sein [Anfunkeln] kann{\\n}[Konfus] verursachen."
+    },
+    "38": {
+      "Name": "Ahriman",
+      "Sensor": "Flugmonster. Zauber relativ unwirksam. Vorsicht vor [Konfus]!",
+      "Scan": "Flugmonster. Schwer zu treffen.{\\n}Hohe Zauberabwehr und keine{\\n}Anf\u00E4lligkeiten. Sein [Anfunkeln]{\\n}kann [Konfus]-Zustand hervorrufen.{\\n}Wendet [Schallwelle] an."
+    },
+    "39": {
+      "Name": "Spuckkraut",
+      "Sensor": "Empfindlich gegen Hitze.",
+      "Scan": "Vorsicht vor [Kernspucken]!{\\n}Kann sofortige [Kampfunf\u00E4higkeit]{\\n}ausl\u00F6sen. Als Pflanze, Hitze-anf\u00E4llig.{\\n}Daher mit Lulus [Feura] angreifen.{\\n}{CLR:YELLOW}Feind-Tech [Kernspucken] erlernbar!"
+    },
+    "40": {
+      "Name": "Rotzkraut",
+      "Sensor": "Empfindlich gegen Hitze.",
+      "Scan": "Vorsicht vor [Kernspucken]!{\\n}[Kerndauerspucken] ist schw\u00E4cher,{\\n}kann jedoch [Konfus] verursachen.{\\n}Hitze-anf\u00E4llig.{\\n}{CLR:YELLOW}Feind-Tech [Kernspucken] erlernbar!"
+    },
+    "41": {
+      "Name": "Sahagin",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "42": {
+      "Name": "Sahagin",
+      "Sensor": "Empfindlich gegen Strom. Tr\u00E4ge auf dem Land.",
+      "Scan": "Flink, aber wenig HP und schwache{\\n}Angriffskraft. Alleine ein leichter{\\n}Gegner. Schwach gegen Strom.{\\n}[Blind]- und [Schlaf]-anf\u00E4llig."
+    },
+    "43": {
+      "Name": "Sahagin",
+      "Sensor": "Empfindlich gegen Strom. Tr\u00E4ge auf dem Land.",
+      "Scan": "Auf dem Lande tr\u00E4ger als im Wasser.{\\n}Schie\u00DFt mit [Wasserpistole].{\\n}Anf\u00E4llig gegen Strom, au\u00DFerdem noch{\\n}gegen [Blind] und [Schlaf]."
+    },
+    "44": {
+      "Name": "Garuda",
+      "Sensor": "Empfindlich gegen [Blind].",
+      "Scan": "Viele HP und hohe Angriffskraft.{\\n}Wendet [Schockwelle] an. Angriffen{\\n}ist leichter auszuweichen, wenn es{\\n}im [Blind]-Zustand ist."
+    },
+    "45": {
+      "Name": "Montisaurus",
+      "Sensor": "Sobald die Fl\u00FCgel anfangen zu gl\u00FChen, sollte man sich auf eine [Schockwelle] vorbereiten.",
+      "Scan": "Riesiges Flugmonster mit vielen HP.{\\n}Relativ einfach, Treffer zu landen.{\\n}Also, mit voller Kraft angreifen!{\\n}Wenn Fl\u00FCgel anfangen zu gl\u00FChen,{\\n}setzt es in der n\u00E4chsten Runde zur{\\n}[Schockwelle] an. Rechtzeitig in{\\n}Abwehrhaltung gehen oder HP heilen!"
+    },
+    "46": {
+      "Name": "Sandwurm",
+      "Sensor": "Vorsicht vor der Fl\u00E4chenvisierattacke [Erdbeben]. Ist er erblindet, ist sein [Kopfsto\u00DF] kaum gef\u00E4hrlich.",
+      "Scan": "Wendet [Erdbeben] nach einer{\\n}Vorbereitungsrunde an. Eingesaugte{\\n}Mitstreiter k\u00F6nnen erst wieder{\\n}k\u00E4mpfen, wenn sie herausgew\u00FCrgt{\\n}worden sind. Manchmal [Blind]- und{\\n}[Schlaf]-anf\u00E4llig."
+    },
+    "47": {
+      "Name": "Landwurm",
+      "Sensor": "Vorsicht vor der Fl\u00E4chenvisierattacke [Erdbeben]. Die HP der Mitstreiter sollten stets aufgef\u00FCllt sein, da es wohl ein l\u00E4ngerer Kampf wird.",
+      "Scan": "Wendet [Erdbeben] nach einer{\\n}Vorbereitungsrunde an. [Blind]-{\\n}und [Schlaf]-anf\u00E4llig. Hohe{\\n}Abwehrkraft. Daher [Panzerbrecher]{\\n}und [Geistbrecher] anwenden!"
+    },
+    "48": {
+      "Name": "Zerstreuer",
+      "Sensor": "Schwache Zauberabwehr.",
+      "Scan": "Hohe Angriffs- und Abwehrkraft.{\\n}Anwendung von [Doppelattacke]{\\n}mit 50%-iger Wahrscheinlichkeit.{\\n}Daher f\u00FCr gen\u00FCgend Schutz sorgen!{\\n}Anf\u00E4llig gegen Zauber."
+    },
+    "49": {
+      "Name": "Zerstreuer Ver. 0",
+      "Sensor": "Empfindlich gegen [Geistbrecher].",
+      "Scan": "Hohe Angriffs- und Abwehrkraft{\\n}sowie Zauberabwehr.{\\n}Mit 50%-iger Wahrscheinlichkeit{\\n}Anwendung von [Doppelattacke].{\\n}Bei HP-Verlust [Sprengfaust],{\\n}die Mitstreiter verz\u00F6gert.{\\n}[Geistbrecher] wirksam."
+    },
+    "50": {
+      "Name": "Schreckgespenst",
+      "Sensor": "F\u00E4llt am Anfang des Kampfes das [Todesurteil].",
+      "Scan": "Spricht zu Kampfbeginn das{\\n}[Todesurteil], welches nach 5 Runden{\\n}[Kampfunf\u00E4higkeit] hervorruft.{\\n}Vorsicht: Element-Anf\u00E4lligkeit \u00E4ndert{\\n}sich bei jeder Begegnung.{\\n}{CLR:YELLOW}Feind-Tech [Todesurteil] erlernbar!"
+    },
+    "51": {
+      "Name": "Fresius",
+      "Sensor": "Verwendet nach 3 Runden Aufleuchten [Ultraschallwelle].",
+      "Scan": "Leuchtet auf, wenn es Schaden{\\n}erleidet. Wendet nach 3 Runden den{\\n}Fl\u00E4chenangriff [Ultraschallwelle] an.{\\n}Rechtzeitig in [Schlaf] versetzen!{\\n}Reduziert N\u00E4sse um 50%. Anf\u00E4llig{\\n}gegen Strom."
+    },
+    "52": {
+      "Name": "Acheros",
+      "Sensor": "Verwendet nach 3 Runden Aufleuchten [Ultraschallwelle].",
+      "Scan": "Leuchtet auf, wenn es Schaden{\\n}erleidet. Wendet nach 3 Runden den{\\n}Fl\u00E4chenangriff [Ultraschallwelle] an.{\\n}Rechtzeitig in [Schlaf] versetzen!{\\n}Immun gegen N\u00E4sse, Strom-anf\u00E4llig."
+    },
+    "53": {
+      "Name": "Lemora",
+      "Sensor": "Vorsicht vor der Fl\u00E4chenvisierattacke [El Nino].",
+      "Scan": "Je \u00F6fter angegriffen, desto eher{\\n}wendet er [El Nino] an. Daher schnell{\\n}besiegen! N\u00E4sse wirkt nur zu 50%.{\\n}Anf\u00E4llig gegen Strom, [Blind] und{\\n}[Gift]."
+    },
+    "54": {
+      "Name": "Raging Spike",
+      "Sensor": "Vorsicht vor der Fl\u00E4chenvisierattacke [El Nino].",
+      "Scan": "Je \u00F6fter angegriffen, desto eher{\\n}wendet er [El Nino] an. Daher schnell{\\n}besiegen! Immun gegen N\u00E4sse.{\\n}[Gift]-, [Blind]- und Strom-anf\u00E4llig."
+    },
+    "55": {
+      "Name": "Doppelhorn",
+      "Sensor": "Ist es [Blind], landet es nur mit M\u00FChe Treffer.",
+      "Scan": "[Horn] verursacht gro\u00DFen Schaden.{\\n}Mit [Blind] jedoch kein Problem mehr.{\\n}Am besten mit [Schlaf-Hieb]{\\n}in [Schlaf]-Zustand versetzen.{\\n}{CLR:YELLOW}Feind-Tech [Flammen] erlernbar!"
+    },
+    "56": {
+      "Name": "Varlaha",
+      "Sensor": "Ist er [Blind], landet er nur mit M\u00FChe Treffer.",
+      "Scan": "Ist er [Blind], treffen seine Angriffe{\\n}kaum noch. Sein Fl\u00E4chenangriff{\\n}[Feuerball] wird eine Runde vorher{\\n}durch [Anstauen] angek\u00FCndigt.{\\n}{CLR:YELLOW}Feind-Tech [Flammen] erlernbar!"
+    },
+    "57": {
+      "Name": "Grendel",
+      "Sensor": "Ist er [Blind], landet er nur mit M\u00FChe Treffer. Anf\u00E4llig gegen [Durchschlag].",
+      "Scan": "Ist er [Blind], treffen seine Angriffe{\\n}kaum noch. Sein Fl\u00E4chenangriff{\\n}[Feuerball] wird eine Runde vorher{\\n}durch [Anstauen] angek\u00FCndigt.{\\n}Waffen mit [Gift] und [Durchschlag]{\\n}sind sehr wirksam.{\\n}{CLR:YELLOW}Feind-Tech [Flammen] erlernbar!"
+    },
+    "58": {
+      "Name": "Oktopus",
+      "Sensor": "Sein Kopf ist durch eine Panzerung gesch\u00FCtzt.",
+      "Scan": "Gesch\u00FCtzt durch einen Panzer.{\\n}Waffen ohne [Durchschlag] richten{\\n}nur wenig Schaden an. Niedrige{\\n}Zauberabwehr. Strom-anf\u00E4llig.{\\n}Angriff kann [Gemach] verursachen."
+    },
+    "59": {
+      "Name": "Vivel",
+      "Sensor": "Durch Panzer gesch\u00FCtzt. Anf\u00E4llig gegen [Durchschlag].",
+      "Scan": "Wegen schweren Panzers etwas{\\n}tr\u00E4ge, doch gut gesch\u00FCtzt gegen{\\n}physische und magische Angriffe.{\\n}K\u00E4lte-anf\u00E4llig. Mit [Durchschlag]{\\n}sofort besiegbar. Wendet neben{\\n}normalen Angriffen auch{\\n}Fl\u00E4chenangriff [Hauch] an."
+    },
+    "60": {
+      "Name": "Ramastuh",
+      "Sensor": "Durch Panzer gesch\u00FCtzt. Anf\u00E4llig gegen [Durchschlag].",
+      "Scan": "Wegen schweren Panzers etwas{\\n}tr\u00E4ge, doch gut gesch\u00FCtzt gegen{\\n}physische und magische Angriffe.{\\n}Hitze-anf\u00E4llig. Angriffe k\u00F6nnen den{\\n}[Gemach]-Zustand hervorrufen.{\\n}Wendet K\u00E4lte-Angriff [Hauch] an."
+    },
+    "61": {
+      "Name": "Kusahrik",
+      "Sensor": "Durch Panzer gesch\u00FCtzt. Anf\u00E4llig gegen [Durchschlag]. Vorsicht vor [Gemach]!",
+      "Scan": "Wegen schweren Panzers etwas{\\n}tr\u00E4ge, doch gut gesch\u00FCtzt gegen{\\n}physische und magische Angriffe.{\\n}N\u00E4sse-anf\u00E4llig. Angriffe k\u00F6nnen den{\\n}[Gemach]-Zustand hervorrufen.{\\n}Wendet Strom-Angriff [Hauch] an."
+    },
+    "62": {
+      "Name": "Mushu Fushu",
+      "Sensor": "Durch Panzer gesch\u00FCtzt. Anf\u00E4llig gegen [Durchschlag]. Vorsicht vor [Gemach]!",
+      "Scan": "Wegen schweren Panzers etwas{\\n}tr\u00E4ge, doch gut gesch\u00FCtzt gegen{\\n}physische und magische Angriffe.{\\n}Reduziert Hitze um 50%.{\\n}K\u00E4lte-anf\u00E4llig. Angriffe k\u00F6nnen den{\\n}[Gemach]-Zustand hervorrufen.{\\n}Wendet Hitze-Angriff [Hauch] an."
+    },
+    "63": {
+      "Name": "Nidhog",
+      "Sensor": "Durch Panzer gesch\u00FCtzt. Anf\u00E4llig gegen [Durchschlag]. Vorsicht vor [Gemach]!",
+      "Scan": "Wegen schweren Panzers etwas{\\n}tr\u00E4ge, doch gut gesch\u00FCtzt gegen{\\n}physische und magische Angriffe.{\\n}Reduziert Hitze um 50%.{\\n}K\u00E4lte-anf\u00E4llig. Angriffe k\u00F6nnen den{\\n}[Gemach]-Zustand hervorrufen.{\\n}Wendet Hitze-Angriff [Hauch] an."
+    },
+    "64": {
+      "Name": "Morbol",
+      "Sensor": "L\u00F6st mit [Mundgeruch] diverse Zustandsver\u00E4nderungen aus. Am besten, erst gar keine Gelegenheit dazu bieten.",
+      "Scan": "Zustandsver\u00E4ndernder [Mundgeruch]{\\n}ist \u00E4u\u00DFerst gef\u00E4hrlich. [Tobsucht],{\\n}[Konfus] und [Gift] auf einmal{\\n}bedeuten so gut wie den sicheren{\\n}Tod. Mit entsprechendem Schutz{\\n}ausr\u00FCsten und mit Hitze angreifen!{\\n}{CLR:YELLOW}Feind-Tech [Mundgeruch] erlernbar!"
+    },
+    "65": {
+      "Name": "Morbol der Gro\u00DFe",
+      "Sensor": "Verwendet [Mundgeruch] mit einer Wahrscheinlichkeit von 33,3%. Mit entsprechender Ausr\u00FCstung vorsorgen.",
+      "Scan": "Wahrscheinlichkeit, dass er{\\n}[Mundgeruch] anwendet: 33,3%.{\\n}[Hinterhalt] kann den Tod der ganzen{\\n}Gruppe bedeuten. Daher mit{\\n}schutzbietender R\u00FCstung vorsorgen!{\\n}Als Pflanze, Hitze-anf\u00E4llig.{\\n}{CLR:YELLOW}Feind-Tech [Mundgeruch] erlernbar!"
+    },
+    "66": {
+      "Name": "Ogre",
+      "Sensor": "Erhebt er seine Arme, dann...",
+      "Scan": "H\u00E4lt er seine Arme erhoben, reagiert{\\n}er auf physische Angriffe mit einem{\\n}kr\u00E4ftigen Konter. Hitze-anf\u00E4llig."
+    },
+    "67": {
+      "Name": "Ashura",
+      "Sensor": "Erhebt er seine Arme, dann...",
+      "Scan": "H\u00E4lt er seine Arme erhoben, reagiert{\\n}er auf physische Angriffe mit einem{\\n}kr\u00E4ftigen Konter. Am besten mit{\\n}Zauber angreifen oder in den [Gift]-{\\n}Zustand versetzen!"
+    },
+    "68": {
+      "Name": "Piranha",
+      "Sensor": "Wenige HP und geringe Angriffskraft.",
+      "Scan": "Greift mit seinen Z\u00E4hnen an.{\\n}Verf\u00FCgt \u00FCber wenige HP und{\\n}niedrige Angriffskraft, daher{\\n}kein ernstzunehmender Gegner."
+    },
+    "69": {
+      "Name": "Piranha",
+      "Sensor": "2 bilden eine Gruppe.",
+      "Scan": "Greift mit seinen Z\u00E4hnen an. HP{\\n}und Angriffskraft steigen, wenn{\\n}ein Artgenosse dabei ist."
+    },
+    "70": {
+      "Name": "Piranha",
+      "Sensor": "3 bilden eine Gruppe.",
+      "Scan": "Greift mit seinen Z\u00E4hnen an. HP{\\n}und Angriffskraft steigen, wenn{\\n}zwei Artgenossen dabei sind."
+    },
+    "71": {
+      "Name": "Planschfisch",
+      "Sensor": "Vorsicht vor [Explodieren]!",
+      "Scan": "Zieht durch sein [Explodieren]{\\n}manchmal den letzten Angreifer{\\n}mit hinein ins Verderben."
+    },
+    "72": {
+      "Name": "Planschfisch",
+      "Sensor": "Vorsicht vor [Gift]!",
+      "Scan": "2 bilden eine Gruppe.{\\n}Ihre Bisse k\u00F6nnen [Gift]-{\\n}Zustand hervorrufen."
+    },
+    "73": {
+      "Name": "Planschfisch",
+      "Sensor": "Vorsicht vor [Gift]!",
+      "Scan": "3 bilden eine Gruppe.{\\n}Ihre Bisse k\u00F6nnen [Gift]-{\\n}Zustand hervorrufen."
+    },
+    "74": {
+      "Name": "Vepal",
+      "Sensor": "Vorsicht vor [Explodieren]!",
+      "Scan": "Zieht durch sein [Explodieren]{\\n}manchmal den letzten Angreifer{\\n}mit hinein ins Verderben."
+    },
+    "75": {
+      "Name": "Vepal",
+      "Sensor": "Vorsicht vor [Gift]!",
+      "Scan": "2 bilden eine Gruppe.{\\n}Ihre Bisse k\u00F6nnen [Gift]-{\\n}Zustand hervorrufen."
+    },
+    "76": {
+      "Name": "Vepal",
+      "Sensor": "Vorsicht vor [Gift]!",
+      "Scan": "3 bilden eine Gruppe.{\\n}Ihre Bisse k\u00F6nnen [Gift]-{\\n}Zustand hervorrufen."
+    },
+    "77": {
+      "Name": "Teilchen Gelb",
+      "Sensor": "Strom-elementares Monster. L\u00E4sst sich durch gegenelementare Zauber leicht besiegen.",
+      "Scan": "Wendet [Blitz] an. Physische{\\n}Angriffe relativ unwirksam. Saugt{\\n}Strom-elementare Angriffe auf und{\\n}wird dadurch geheilt. N\u00E4sse-anf\u00E4llig.{\\n}Daher mit [Wasser] angreifen!"
+    },
+    "78": {
+      "Name": "Teilchen Wei\u00DF",
+      "Sensor": "K\u00E4lte-elementares Monster. L\u00E4sst sich durch gegenelementare Zauber leicht besiegen.",
+      "Scan": "Wendet [Eis] an. Physische Angriffe{\\n}relativ unwirksam. Saugt K\u00E4lte-{\\n}elementare Angriffe auf und wird{\\n}dadurch geheilt. Hitze-anf\u00E4llig.{\\n}Daher mit [Feuer] angreifen!"
+    },
+    "79": {
+      "Name": "Teilchen Rot",
+      "Sensor": "Hitze-elementares Monster. L\u00E4sst sich durch gegenelementare Zauber leicht besiegen.",
+      "Scan": "Wendet [Feuer] an. Physische{\\n}Angriffe relativ unwirksam. Heilt{\\n}sich durch Hitze-Angriffe. K\u00E4lte-{\\n}anf\u00E4llig. Daher mit [Eis] angreifen!"
+    },
+    "80": {
+      "Name": "Teilchen Gold",
+      "Sensor": "Strom-elementares Monster. L\u00E4sst sich durch gegenelementare Zauber leicht besiegen.",
+      "Scan": "Wendet [Blitz] an. Physische{\\n}Angriffe relativ unwirksam.{\\n}Heilt sich durch Strom-Angriffe.{\\n}N\u00E4sse-anf\u00E4llig. Daher mit [Wassra]{\\n}vernichten!"
+    },
+    "81": {
+      "Name": "Teilchen Blau",
+      "Sensor": "N\u00E4sse-elementares Monster. L\u00E4sst sich durch gegenelementare Zauber leicht besiegen.",
+      "Scan": "Wendet [Wassra] an. Physische{\\n}Angriffe relativ unwirksam. Heilt{\\n}sich durch N\u00E4sse-Angriffe. Strom-{\\n}anf\u00E4llig. Daher mit [Blitzra]{\\n}vernichten!"
+    },
+    "82": {
+      "Name": "Teilchen Duster",
+      "Sensor": "Ist gegen kein Element anf\u00E4llig. Versetzt sich in [Reflek].",
+      "Scan": "Unempfindlich gegen physische{\\n}und elementare Angriffe. Elementare{\\n}Zauber werden mit [Reflek]{\\n}zur\u00FCckgeworfen. Auf [Anti-Z]{\\n}kontert es mit [Bio], [Subspirit] und{\\n}[Subvita]."
+    },
+    "83": {
+      "Name": "Teilchen Schwarz",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "In Vorbereitung."
+    },
+    "84": {
+      "Name": "Epehju",
+      "Sensor": "Vorsicht vor [Gift]!",
+      "Scan": "Flink. Krallen verursachen [Gift].{\\n}Anf\u00E4llig gegen [Drohen] und{\\n}manchmal auch gegen [Blind]."
+    },
+    "85": {
+      "Name": "Behemoth",
+      "Sensor": "Vorsicht vor der Attacke [Aufspie\u00DFen]!",
+      "Scan": "Wendet Krallen, [Blitzra] und das{\\n}todbringende [Aufspie\u00DFen] an.{\\n}{CLR:YELLOW}Feind-Tech [Totalabwehr] erlernbar."
+    },
+    "86": {
+      "Name": "K\u00F6nigs-Behemoth",
+      "Sensor": "Verwendet bei Verendung [Meteo].",
+      "Scan": "Wendet Krallen, [Blitzra], das{\\n}gef\u00E4hrliche [Aufspie\u00DFen], und{\\n}kurz vor seinem Tod [Meteo] an.{\\n}Da dieser ein physischer Angriff ist,{\\n}kann er mit [Protes] oder {CTRL:30:TRIANGLE}{\\n}abgewehrt werden.{\\n}{CLR:YELLOW}Feind-Tech [Totalabwehr] erlernbar!"
+    },
+    "87": {
+      "Name": "Chim\u00E4ra",
+      "Sensor": "Anf\u00E4llig gegen [Blind], [Stumm] und [Drohen].",
+      "Scan": "Angriffsreihenfolge:{\\n}Schlange = [Blitzra], Ochse ={\\n}[St\u00FCrmen], Adler = [Nasshauch],{\\n}L\u00F6we = [Megiddoflamme]. Schwach {\\n}gegen [Drohen], [Blind] und [Stumm].{\\n}{CLR:YELLOW}Feind-Tech [Nasshauch] erlernbar!"
+    },
+    "88": {
+      "Name": "Chim\u00E4ra-Hirn",
+      "Sensor": "Anf\u00E4llig gegen [Blind], [Stumm] und [Drohen].",
+      "Scan": "Angriffsreihenfolge:{\\n}Schlange = Strom-Attacke, Ochse ={\\n}[St\u00FCrmen], Adler = [Nasshauch],{\\n}L\u00F6we = [Megiddoflamme]. Anf\u00E4llig{\\n}gegen [Drohen], [Blind] und [Stumm].{\\n}{CLR:YELLOW}Feind-Tech [Nasshauch] erlernbar!"
+    },
+    "89": {
+      "Name": "Quahl",
+      "Sensor": "Verwendet [Subvita] und [Blaster] bei verminderten HP.",
+      "Scan": "Hohe Magie- und Geisteskraft.{\\n}Wendet [Blitzra], [Eisra], und bei{\\n}verminderten HP auch [Subvita] an.{\\n}Diese Zauber lassen sich durch{\\n}[Stumm-Schock] verhindern, der{\\n}[Stein]-Zustand hervorrufende{\\n}[Blaster] jedoch nicht."
+    },
+    "90": {
+      "Name": "Elite-Quahl",
+      "Sensor": "Verwendet [Subvita], [Konfus] und [Blaster] bei verminderten HP.",
+      "Scan": "Hohe Magie- und Geisteskraft.{\\n}Wendet [Blitzga], [Eisga], und bei{\\n}verminderten HP auch [Subvita]{\\n}und [Konfus] an. Vorsicht:{\\n}[Stumm-Schock] kann todbringenden{\\n}[Blaster] jedoch nicht verhindern."
+    },
+    "91": {
+      "Name": "Schutzeinheit",
+      "Sensor": "Kann mit [Klauen] sofort niedergestreckt werden.",
+      "Scan": "Wie das Al Bhedomobil in Luca, ein{\\n}\u00DCberbleibsel aus der Vergangenheit.{\\n}Mit [Klauen] zerf\u00E4llt sie in ihre{\\n}einzelnen Bestandteile. Am besten{\\n}Rikku \u00FCberlassen! Strom-anf\u00E4llig."
+    },
+    "92": {
+      "Name": "Sp\u00E4hereinheit",
+      "Sensor": "Kann mit [Klauen] sofort niedergestreckt werden.",
+      "Scan": "Im besseren Zustand als{\\n}ihre Artgenossen in Sanubia,{\\n}verf\u00FCgt sie \u00FCber mehr HP{\\n}und h\u00F6here Angriffskraft.{\\n}Mit [Klauen] zerf\u00E4llt sie in{\\n}ihre einzelnen Bestandteile."
+    },
+    "93": {
+      "Name": "Sp\u00E4hereinheit",
+      "Sensor": "Kann mit [Klauen] sofort niedergestreckt werden.",
+      "Scan": "Im besseren Zustand als{\\n}ihre Artgenossen in Sanubia,{\\n}verf\u00FCgt sie \u00FCber mehr HP{\\n}und h\u00F6here Angriffskraft.{\\n}Mit [Klauen] zerf\u00E4llt sie in{\\n}ihre einzelnen Bestandteile."
+    },
+    "94": {
+      "Name": "Befehlseinheit",
+      "Sensor": "Kann mit [Klauen] sofort niedergestreckt werden.",
+      "Scan": "Maschina, vor \u00FCber 1.000 Jahren{\\n}auf Gagazet liegengelassen. Wendet{\\n}Strom-Angriff [Elektroschock] an.{\\n}Flinkes Ger\u00E4t, also schnell handeln!{\\n}Mit [Klauen] zerf\u00E4llt sie in ihre{\\n}einzelnen Bestandteile."
+    },
+    "95": {
+      "Name": "D\u00E4monolith",
+      "Sensor": "Vorsicht vor dem Fl\u00E4chenangriff [Hauch]. [Stein] mit schutzbietender R\u00FCstung abwehren.",
+      "Scan": "Kontert mit [Fluch des Pharao], der{\\n}[Gift]-, [Stumm]- [Blind]- und [Fluch]-{\\n}Zustand hervorruft. Zerschl\u00E4gt{\\n}versteinerte Mitstreiter, was zu{\\n}Kampfunf\u00E4higkeit f\u00FChrt. Vorsicht{\\n}auch vor dem [Zombie]-Zustand!"
+    },
+    "96": {
+      "Name": "Projektileinheit",
+      "Sensor": "Kann mit [Klauen] sofort niedergestreckt werden.",
+      "Scan": "Repariertes \u00DCberbleibsel aus der{\\n}Vergangenheit. Verf\u00FCgt \u00FCber mehr{\\n}HP als die Schutzeinheit. Mit [Klauen]{\\n}zerf\u00E4llt sie in ihre einzelnen{\\n}Bestandteile. Daher am besten Rikku{\\n}\u00FCberlassen! Strom-anf\u00E4llig."
+    },
+    "97": {
+      "Name": "J\u00E4gereinheit",
+      "Sensor": "Kann mit [Klauen] sofort niedergestreckt werden.",
+      "Scan": "Im besseren Zustand als ihre{\\n}Artgenossen in Sanubia, verf\u00FCgt {\\n}sie \u00FCber mehr HP. Langsamer als{\\n}die Sp\u00E4hereinheit, daf\u00FCr st\u00E4rker.{\\n}Mit [Klauen] zerf\u00E4llt sie in{\\n}ihre einzelnen Bestandteile."
+    },
+    "98": {
+      "Name": "Protekeinheit",
+      "Sensor": "Kann mit [Klauen] sofort niedergestreckt werden.",
+      "Scan": "Maschina, vor 1.000 Jahren {\\n}auf Gagazet liegengelassen.{\\n}Mehr HP und h\u00F6here Abwehr{\\n}als die Befehlseinheit.{\\n}Mit [Klauen] zerf\u00E4llt sie in{\\n}ihre einzelnen Bestandteile.{\\n}Hinterl\u00E4sst Heil-Items."
+    },
+    "99": {
+      "Name": "Ultima Weapon",
+      "Sensor": "Hier helfen keine Gebete. Am besten mit allen verf\u00FCgbaren Mitteln rangehen.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "100": {
+      "Name": "Omega Weapon",
+      "Sensor": "Hier helfen keine Gebete. Am besten mit allen verf\u00FCgbaren Mitteln rangehen.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "101": {
+      "Name": "Polyp",
+      "Sensor": "Entfernt sich, um Anlauf f\u00FCr einen [K\u00F6pper] zu nehmen.",
+      "Scan": "Verkriecht sich nach HP-Verlust{\\n}hinter die S\u00E4ule. Darauffolgender{\\n}[K\u00F6pper] erteilt Fl\u00E4chenschaden.{\\n}Durch Einsatz des Extra-Men\u00FCs{\\n}l\u00E4sst sich der [K\u00F6pper] verhindern."
+    },
+    "102": {
+      "Name": "Sin-Schuppe: Gunoh",
+      "Sensor": "Anf\u00E4llig gegen Zauberangriffe.",
+      "Scan": "Durch seinen Panzer gut gesch\u00FCtzt.{\\n}Physische Angriffe kaum wirksam{\\n}Zauber-Absorbtion durch Tentakel.{\\n}Nachdem diese besiegt sind, mit{\\n}Hitze-Zauber angreifen. Wenn es ihm{\\n}zu hei\u00DF wird, kommt er aus der H\u00FClle.{\\n}Saugt N\u00E4sse-Angriffe auf."
+    },
+    "103": {
+      "Name": "Gunohs Tentakel",
+      "Sensor": "Absorbiert alle Zauberangriffe, die sich gegen Gunoh richten.",
+      "Scan": "Absorbiert gegen Gunoh gerichtete{\\n}Zauberangriffe. Zuerst die Tentakel,{\\n}dann Gunoh selbst mit Zauber{\\n}angreifen! Tentakel mit physischen{\\n}Angriffen niederstrecken."
+    },
+    "104": {
+      "Name": "Chocogourmet",
+      "Sensor": "Anf\u00E4llig gegen [Blind].",
+      "Scan": "F\u00E4llt nach HP-Verlust um, ist dann{\\n}durch Waffen ohne [Durchschlag]{\\n}verletzbar. Nach seiner Drohung,{\\n}[Gleich bist du dran...], folgt ein{\\n}kraftvoller Angriff. Sein [Eis]{\\n}ist mit [Exeis] neutralisierbar."
+    },
+    "105": {
+      "Name": "Sabberschnecke",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "106": {
+      "Name": "Illumi Celesta",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "107": {
+      "Name": "Sins Schuppenrest",
+      "Sensor": "St\u00E4ndig r\u00FCcken neue Schuppenreste nach.",
+      "Scan": "Von [Sin] entsprungen. Wenn seine{\\n}Fl\u00FCgel anfangen zu gl\u00FChen, greift er{\\n}in der n\u00E4chsten Runde mit seinen{\\n}[Dornen] an."
+    },
+    "108": {
+      "Name": "Sins Schuppenrest",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "109": {
+      "Name": "Geos Geyno",
+      "Sensor": "Ist durch einen harten Panzer gesch\u00FCtzt. Anf\u00E4llig gegen Zauberangriffe.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "110": {
+      "Name": "Al Bhed-Schie\u00DFer",
+      "Sensor": "Anf\u00E4llig gegen Strom-Element.",
+      "Scan": "Je mehr Schaden er erleidet, desto{\\n}schneller greift er an. Anf\u00E4llig{\\n}gegen Strom, kontert auf [Blitz]{\\n}mit [Stumm-Ball]. Sein [Blitzball-Rush]{\\n}sollte durch umliegende Items{\\n}abgewehrt werden."
+    },
+    "111": {
+      "Name": "Al Bhed-F\u00E4nger",
+      "Sensor": "Anf\u00E4llig gegen Strom-Element. Wird er von unten angegriffen, dann...",
+      "Scan": "Fl\u00E4chenangriff [Detonator] ruft{\\n}[Blind]-Zustand hervor. Taucht bei{\\n}HP-Verlust unter, wobei [Detonator]{\\n}au\u00DFer Kraft gesetzt wird. Sobald er{\\n}auftaucht, so oft wie nur m\u00F6glich{\\n}angreifen, um [Detonator] zu{\\n}verhindern."
+    },
+    "112": {
+      "Name": "?????",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "113": {
+      "Name": "Sin",
+      "Sensor": "Angreifbar mit Zauber und Wakkas Waffe.",
+      "Scan": "Kilika muss gerettet werden! Wegen{\\n}der Distanz zum Schiff, am besten{\\n}mit Lulus Zauber und Wakkas Waffe{\\n}angreifen! Die Bestia {PC:08:VALEFOR}{\\n}ist ebenfalls wirksam."
+    },
+    "114": {
+      "Name": "Sin-Schuppe: Ekyu",
+      "Sensor": "Wenn er [Blind] ist, sind seine Angriffe leicht ausweichbar.",
+      "Scan": "Wendet nach 2x HP-entziehendem{\\n}[Saugtatscher] den Fl\u00E4chenangriff{\\n}[Schraube] an. Ist es [Blind], kann{\\n}man zwar seinem [Saugtatscher]{\\n}leichter ausweichen, nicht aber der{\\n}[Schraube]. Auf die HP-Werte der{\\n}Gruppe achten!"
+    },
+    "115": {
+      "Name": "Sins Schuppenrest",
+      "Sensor": "St\u00E4ndig r\u00FCcken neue Schuppenreste nach.",
+      "Scan": "Verschwindet mit [St\u00FCrmen] aus dem{\\n}Kampf. Neue Artgenossen r\u00FCcken{\\n}st\u00E4ndig nach. Am besten ignorieren."
+    },
+    "116": {
+      "Name": "Sins Schuppenrest",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "117": {
+      "Name": "Sin-Schuppe: Ghi",
+      "Sensor": "Sch\u00FCtzt sich durch seine Arme.",
+      "Scan": "Wehrt physische Angriffe auf seinen{\\n}K\u00F6rper mit seinen Armen ab. Mit{\\n}[Durchschlag]-Waffe zuerst seine{\\n}Arme, dann seinen K\u00F6rper angreifen!{\\n}[Giftsekret] wird durch eine{\\n}Kopfbewegung angek\u00FCndigt, kann{\\n}aber durch einen Angriff{\\n}auf den Kopf verhindert werden."
+    },
+    "118": {
+      "Name": "Illumi Celesta",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "119": {
+      "Name": "Efrye",
+      "Sensor": "Holt tief Luft, um dann zu [hauchen].",
+      "Scan": "Hohe Zauberabwehr, keine{\\n}Anf\u00E4lligkeiten. Kontert bei nahem,{\\n}physischem Angriff mit [Gifthauch].{\\n}Ist er am Durchatmen, Cid bitten,{\\n}das Schiff auf Distanz zu bringen.{\\n}Bei Distanz schie\u00DFt Cid mit Raketen."
+    },
+    "120": {
+      "Name": "Efrye Altana",
+      "Sensor": "Anf\u00E4llig gegen Heilzauber und -Items.",
+      "Scan": "[Perseusblick] schlie\u00DFt Betroffene{\\n}aus dem Kampf aus. Kontert auf{\\n}physische Angriffe. [Torschl\u00F6sser]{\\n}aufmachen, um auf Abstand zu{\\n}kommen.{\\n}Wegen [Zombie]-Zustand erweisen sich{\\n}Heilzauber und -Items als effektive{\\n}Angriffsm\u00F6glichkeiten."
+    },
+    "121": {
+      "Name": "Sph\u00E4romasse",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "122": {
+      "Name": "AB-Projektileinheit",
+      "Sensor": "Anf\u00E4llig gegen Strom-Element. Wird sie angegriffen, unterbindet die Siegeleinheit die Anwendung von Zauber und Beschw\u00F6rung.",
+      "Scan": "Hohe Abwehrkraft, Strom-anf\u00E4llig.{\\n}Wendet [Dauerfeuer] an. Ohne{\\n}Siegeleinheit beginnt der{\\n}[Magie-Strahl]-Countdown.{\\n}Angriffe in der Zeit werden stets{\\n}gekontert. Siegeleinheit erscheint{\\n}nach 4 erlittenen Zauberangriffen."
+    },
+    "123": {
+      "Name": "AB-Siegeleinheit",
+      "Sensor": "Versiegelt Zauber und Beschw\u00F6rung. Mit Items oder Wakkas Ball angreifbar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "124": {
+      "Name": "Seymor",
+      "Sensor": "Greift der Reihe nach mit K\u00E4lte-, Strom-, N\u00E4sse- und Hitze-Zauber an.",
+      "Scan": "Greift nacheinander mit K\u00E4lte-,{\\n}Strom-, N\u00E4sse- und Hitze-Zauber an.{\\n}Mit Yunas [Ex]-Zauber leicht zu {\\n}\u00FCberstehen. Sieht Seymor keinen{\\n}Ausweg mehr, dann beschw\u00F6rt er..."
+    },
+    "125": {
+      "Name": "Anima",
+      "Sensor": "Ekstase-Zustand bei voller Leiste.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "126": {
+      "Name": "Seymor Varia",
+      "Sensor": "Verwendet Zauber aller 4 Elemente, sowie [Stein] und [Flare].",
+      "Scan": "Wie beim Kampf im Tempel Macalania{\\n}wendet er Zauber der 4 Elemente{\\n}und zudem [Hades-Magie] an. Schl\u00E4gt{\\n}bei hohem HP-Verlust mit [Stein]-{\\n}Angriffen und dem elementneutralen{\\n}[Flare] zu."
+    },
+    "127": {
+      "Name": "Illumi Varia",
+      "Sensor": "Kombo-Angriffe mit Seymor m\u00FCssen verhindert werden.",
+      "Scan": "[Demolierkralle] zersprengt{\\n}versteinerte Personen, und wirft{\\n}diese aus dem Kampf. Fl\u00E4chenangriff{\\n}[Desperado] f\u00FCgt nicht nur Schaden{\\n}zu, sondern neutralisiert auch{\\n}unterst\u00FCtzende Zaubereffekte."
+    },
+    "128": {
+      "Name": "W\u00E4chter: Heiligtum",
+      "Sensor": "Die gr\u00F6\u00DFten Probleme sind seine hohe Abwehrkraft und Zauberabwehr.",
+      "Scan": "[Photonenstrahlen] rufen [Konfus],{\\n}[Schlaf], [Stumm], [Blind] und [Fluch]{\\n}hervor. Der [Unkrautj\u00E4ter] kann{\\n}[Hast] neutralisieren und verz\u00F6gert{\\n}den Angriffszeitpunkt der Gruppe.{\\n}Wendet Heilzauber und [Reflek] an."
+    },
+    "129": {
+      "Name": "W\u00E4chter: Heidentum",
+      "Sensor": "Ihm niemals frontal gegen\u00FCberstehen. Mittels [Position] im Extra-Men\u00FC ausweichen.",
+      "Scan": "Kontert in die Richtung, aus der er{\\n}angegriffen wurde. Leuchtet der{\\n}Kreis durch [Necroma-Mine] auf,{\\n}per Extramen\u00FC [Position] wechseln.{\\n}Sonst explodiert der Kreis und{\\n}macht Mitstreiter [kampfunf\u00E4hig]."
+    },
+    "130": {
+      "Name": "Yunalesca",
+      "Sensor": "Verf\u00FCgt \u00FCber die Toten. Anf\u00E4llig gegen das Himmels-Element.",
+      "Scan": "Ihre [Zombie]-Angriffe machen{\\n}anf\u00E4llig gegen [Vigra] und [Regena].{\\n}Sofort mit [Weihwasser] kurieren!{\\n}Konter neutralisiert Hilfszauber.{\\n}[Mindblaster] versetzt anwesende{\\n}Bestia in den [Fluch]-Zustand."
+    },
+    "131": {
+      "Name": "Seymor Ultima",
+      "Sensor": "Verf\u00FCgt \u00FCber die Kraft der Illumi Celesta.",
+      "Scan": "Die 4 Illumi Celesta hinter Seymor{\\n}verleihen ihm die Kraft, Zauber{\\n}einzusetzen. Seymors Aktionen{\\n}h\u00E4ngen von den Illumi Celesta ab.{\\n}Physische Angriffe:{\\n}Scheiben drehen sich nach links,{\\n}Magische Angriffe:{\\n}Scheiben drehen sich nach rechts."
+    },
+    "132": {
+      "Name": "Braskas Bestia",
+      "Sensor": "Braskas Hohe Beschw\u00F6rung. Wenn sie mittels Extra-Men\u00FC angesprochen wird...",
+      "Scan": "Wird durch Ju Pagoden gest\u00E4rkt, bis{\\n}sie mit voller Ekstase-Leiste ihren{\\n}Spezialangriff anwendet. Pagoden{\\n}angreifen, um dies zu verhindern.{\\n}{PC:00:TIDUS} kann durch{\\n}[Ansprechen] bis zu 2 mal die Leiste{\\n}verk\u00FCrzen."
+    },
+    "133": {
+      "Name": "Kran",
+      "Sensor": "Wird durch Strom betrieben.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "134": {
+      "Name": "Biran Ronzo",
+      "Sensor": "Sch\u00FCtzt Yenke. Wenn er alleine ist, dann...",
+      "Scan": "Kann nicht mehr mit [Bodyguard]{\\n}besch\u00FCtzen, wenn er sich mit{\\n}[Tackle] von Yenke entfernt hat.{\\n}Wendet 1 mal [Totalabwehr] an,{\\n}wenn er genug Schaden erlitten hat.{\\n}{CLR:YELLOW}Mehrere Feind-Techs erlernbar!"
+    },
+    "135": {
+      "Name": "Yenke Ronzo",
+      "Sensor": "Sch\u00FCtzt Biran. Wenn er alleine ist, dann...",
+      "Scan": "Kann nicht mehr mit [Bodyguard]{\\n}besch\u00FCtzen, wenn er sich mit{\\n}[Tackle] von Biran entfernt hat.{\\n}Wendet 1 mal [Himmelswind] an,{\\n}wenn er genug Schaden erlitten hat.{\\n}{CLR:YELLOW}Mehrere Feind-Techs erlernbar!"
+    },
+    "136": {
+      "Name": "Sins linker Arm",
+      "Sensor": "Sammelt Energie f\u00FCr [Gravija]. Mittels [Sich entfernen] im Extra-Men\u00FC ausweichen.",
+      "Scan": "Sammelt Energie im Kern und{\\n}l\u00E4sst [Gravija] los, wodurch die{\\n}HP der Gruppe auf 25% sinken.{\\n}Abwenden, indem Cid das Schiff{\\n}auf Distanz bringt. Wendet neben{\\n}Fl\u00E4chenangriffen auch{\\n}[Neutralisations-Aura] an, die{\\n}die Wirkung von Hilfszaubern{\\n}aufhebt."
+    },
+    "137": {
+      "Name": "Sins rechter Arm",
+      "Sensor": "Sammelt Energie f\u00FCr [Gravija]. Mittels [Sich entfernen] im Extra-Men\u00FC ausweichen.",
+      "Scan": "Sammelt Energie im Kern und{\\n}l\u00E4sst [Gravija] los, wodurch die{\\n}HP der Gruppe auf 25% sinken.{\\n}Abwenden, indem Cid das Schiff{\\n}auf Distanz bringt. Wendet neben{\\n}Fl\u00E4chenangriffen auch{\\n}[Neutralisations-Aura] an, die{\\n}die Wirkung von Hilfszaubern{\\n}aufhebt."
+    },
+    "138": {
+      "Name": "Sin",
+      "Sensor": "Verf\u00FCgt \u00FCber [Sins] Kraft. Wenn sich Gnai in seine H\u00FClle verkriecht, dann...",
+      "Scan": "Befindet sich Gnai im Panzer,{\\n}sammelt er Energie im Kern und{\\n}verringert mit [Gravija] die HP{\\n}der Gruppe auf 25%.{\\n}[Neutralisations-Aura] hebt alle{\\n}Hilfszauber auf."
+    },
+    "139": {
+      "Name": "Sin-Schuppe: Gnai",
+      "Sensor": "Absorbiert Zauberangriffe, die sich gegen [Sin] richten.",
+      "Scan": "Sinken seine HP auf die H\u00E4lfte,{\\n}verkriecht er sich in den Panzer.{\\n}Heilt sich bei Angriffen mit{\\n}[Vitra] und kommt in der n\u00E4chsten{\\n}Runde wieder heraus. Erleidet{\\n}im Panzer durch [Gravija] keine{\\n}Sch\u00E4den, doch..."
+    },
+    "140": {
+      "Name": "Sin",
+      "Sensor": "Niederstrecken, bevor sein Maul vollends ge\u00F6ffnet ist.",
+      "Scan": "Zieht das Luftschiff an sich und{\\n}versucht mit letzter Kraft{\\n}[Giga-Graviton] anzuwenden. Gelingt{\\n}der Versuch, stirbt die Gruppe.{\\n}Dringend vorher besiegen!"
+    },
+    "141": {
+      "Name": "Guado-Wache",
+      "Sensor": "Besch\u00FCtzt Seymor.",
+      "Scan": "Wendet [Auto-Potion] und Items{\\n}wie z.B. [Unheilmittel] an. Mit ihren{\\n}Items heilt sie sogar Seymor. Daher{\\n}unbedingt Benutzung verhindern!"
+    },
+    "142": {
+      "Name": "Seymor Obscura",
+      "Sensor": "Die Kooperation mit Illumi-Effektor muss verhindert werden.",
+      "Scan": "Nach [Destruktionsspeer] verwendet{\\n}der Effektor [Erzengel]. Die Kombo-{\\n}Attacke [Die absolute Zerst\u00F6rung]{\\n}richtet verheerenden Schaden an.{\\n}Das hei\u00DFt also, dass die Aktionen{\\n}Illumis bereits vorauszusehen sind."
+    },
+    "143": {
+      "Name": "Illumi-Effektor",
+      "Sensor": "Die Kooperation mit Seymor Obscura muss verhindert werden.",
+      "Scan": "Kooperiert mit Seymor. L\u00F6st{\\n}Seymors [Destruktionsspeer] den{\\n}[Zombie]-Zustand aus, verursacht{\\n}Illumi-Effektors [Erzengel]{\\n}[Kampfunf\u00E4higkeit]. Der Schaden{\\n}des Fl\u00E4chenangriffs{\\n}[Kreuzen der Todesklingen] kann{\\n}mit [Protes] abgeschw\u00E4cht werden."
+    },
+    "144": {
+      "Name": "Kimahris Waffe",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "145": {
+      "Name": "Sins Schuppenrest",
+      "Sensor": "Nur die vordersten niederstrecken. Vorsicht vor den [Dornen], wenn die Fl\u00FCgel anfangen zu gl\u00FChen!",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "146": {
+      "Name": "Kreis",
+      "Sensor": "Auf einem Kreis kann 1 Mitstreiter stehen.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "147": {
+      "Name": "Sins Schuppenrest",
+      "Sensor": "Nur die vordersten niederstrecken. Vorsicht vor den [Dornen], wenn die Fl\u00FCgel anfangen zu gl\u00FChen!",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "148": {
+      "Name": "Sins Schuppenrest",
+      "Sensor": "Kurzer Prozess mit Aurons Ekstase-Tech [Seisma].",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "149": {
+      "Name": "Cid",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "150": {
+      "Name": "Illumi Celesta",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "151": {
+      "Name": "Vivel",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "152": {
+      "Name": "Al Bhedomobil",
+      "Sensor": "Anf\u00E4llig gegen Strom-Element.",
+      "Scan": "Von den Al Bhed repariertes{\\n}\u00DCberbleibsel aus der Vergangenheit.{\\n}Nicht f\u00FCr K\u00E4mpfe konstruiert, kann{\\n}der Greifarm jedoch ziemlichen{\\n}Schaden anrichten. Anf\u00E4llig gegen{\\n}Strom-Element, folglich auch gegen{\\n}[Blitz]."
+    },
+    "153": {
+      "Name": "K\u00FCsschen Pariah",
+      "Sensor": "Anf\u00E4llig gegen Hitze-Element.",
+      "Scan": "Vorsicht vor der [Giftkralle]!{\\n}Schl\u00E4ft ein, um HP zu regenerieren.{\\n}Wird es aus dem Schlaf gerissen,{\\n}kontert es mit [Erdbeben].{\\n}Als Pflanze, anf\u00E4llig gegen Hitze."
+    },
+    "154": {
+      "Name": "Illumi Celesta",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "155": {
+      "Name": "Sahagin",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "156": {
+      "Name": "Obersahagin",
+      "Sensor": "Anf\u00E4llig gegen Strom-Element.",
+      "Scan": "Flinkes Wesen, das durch seine{\\n}niedrigen HP und schwache{\\n}Angriffskraft harmlos erscheint...{\\n}Solange er alleine auftaucht,{\\n}ist er das auch. Anf\u00E4llig gegen{\\n}Strom-Element, [Schlaf] und [Blind]."
+    },
+    "157": {
+      "Name": "Garuda",
+      "Sensor": "Ist es [Blind], so landet es kaum Treffer.",
+      "Scan": "Viele HP und hohe Angriffskraft.{\\n}Vorsicht vor [Schockwelle]! Ist{\\n}es im [Blind]-Zustand, kann man{\\n}seinen Angriffen leicht ausweichen."
+    },
+    "158": {
+      "Name": "Krik",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "159": {
+      "Name": "Sin-Schuppe: Esum",
+      "Sensor": "Verringert HP auf 3/4 mit Gravitas.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "160": {
+      "Name": "Kopf",
+      "Sensor": "[Giftsekret] l\u00E4sst sich verhindern indem der Kopf angegriffen wird.",
+      "Scan": "Wehrt physische Angriffe auf seinen{\\n}K\u00F6rper mit seinen Armen ab. Mit{\\n}[Durchschlag]-Waffe zuerst seine{\\n}Arme, dann seinen K\u00F6rper angreifen!{\\n}[Giftsekret] wird durch eine{\\n}Kopfbewegung angek\u00FCndigt, kann{\\n}aber durch einen Angriff{\\n}auf den Kopf verhindert werden."
+    },
+    "161": {
+      "Name": "Arm",
+      "Sensor": "Gut gepanzert. Sch\u00FCtzt den K\u00F6rper.",
+      "Scan": "Wehrt physische Angriffe auf seinen{\\n}K\u00F6rper mit seinen Armen ab. Mit{\\n}[Durchschlag]-Waffe zuerst seine{\\n}Arme, dann seinen K\u00F6rper angreifen!{\\n}[Giftsekret] wird durch eine{\\n}Kopfbewegung angek\u00FCndigt, kann{\\n}aber durch einen Angriff{\\n}auf den Kopf verhindert werden."
+    },
+    "162": {
+      "Name": "Torschloss",
+      "Sensor": "Tor \u00F6ffnet sich und erm\u00F6glicht Flucht.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "163": {
+      "Name": "Valfaris",
+      "Sensor": "Ich trage den Ursprung des \u00DCbels in mir...",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "164": {
+      "Name": "Ifrit",
+      "Sensor": "Z\u00F6gert nicht...",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "165": {
+      "Name": "Ixion",
+      "Sensor": "Setzt dem Ganzen ein Ende...",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "166": {
+      "Name": "Shiva",
+      "Sensor": "Besiegt mich...",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "167": {
+      "Name": "Bahamut",
+      "Sensor": "Gebt mir die ersehnte Ruhe...",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "168": {
+      "Name": "Anima",
+      "Sensor": "Das ist die Bu\u00DFe...",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "169": {
+      "Name": "Yojinbo",
+      "Sensor": "L\u00F6scht meine Existenz...",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "170": {
+      "Name": "Dampfwalze",
+      "Sensor": "F\u00E4llt jeden Moment von der Autobahn.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "171": {
+      "Name": "Torschloss",
+      "Sensor": "Tor \u00F6ffnet sich und erm\u00F6glicht Flucht.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "172": {
+      "Name": "Monster 172",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "173": {
+      "Name": "Ju Pagode",
+      "Sensor": "Draufhauen und zum Stillstand bringen.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "174": {
+      "Name": "Ju Pagode",
+      "Sensor": "Draufhauen und zum Stillstand bringen.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "175": {
+      "Name": "Tentakel",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "176": {
+      "Name": "Ju-Yevon",
+      "Sensor": "\u00DCbernimmt Kontrolle \u00FCber Bestia.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "177": {
+      "Name": "Illumi Celesta",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "178": {
+      "Name": "Mug",
+      "Sensor": "Bringen wir es hinter uns...",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "179": {
+      "Name": "Dug",
+      "Sensor": "Zum Weinen bleibt keine Zeit...",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "180": {
+      "Name": "Rug",
+      "Sensor": "Macht\u2019s gut...",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "181": {
+      "Name": "Eisengigant",
+      "Sensor": "Verwendet [Niederm\u00E4hen]. Mit [Blind-Schock] abwenden.",
+      "Scan": "Zielt auf denjenigen, der am{\\n}wenigsten HP hat. Wendet{\\n}Fl\u00E4chenangriff [Niederm\u00E4hen] an.{\\n}Ist gegen kein Element anf\u00E4llig.{\\n}Erleidet bei Strom nur die{\\n}H\u00E4lfte an Schaden. [Durchschlag]{\\n}und [Blind-Schock] sind wirksam."
+    },
+    "182": {
+      "Name": "Wolframator",
+      "Sensor": "Zu zweit setzen sie [Symmetriefeger] ein. Deshalb die Angriffe auf einen konzentrieren.",
+      "Scan": "Wenn ein Partner anwesend{\\n}ist, greifen beide mit dem{\\n}verheerenden [Symmetrie-Feger]{\\n}an. Absorbiert einer Strom und{\\n}Hitze, so absorbiert der{\\n}andere N\u00E4sse und K\u00E4lte."
+    },
+    "183": {
+      "Name": "Wolframator",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "184": {
+      "Name": "Wolframator",
+      "Sensor": "Zu zweit setzen sie [Symmetriefeger] ein. Deshalb die Angriffe auf einen konzentrieren.",
+      "Scan": "Wenn ein Partner anwesend{\\n}ist, greifen beide mit dem{\\n}verheerenden [Symmetrie-Feger]{\\n}an. Absorbiert einer Strom und{\\n}Hitze, so absorbiert der{\\n}andere N\u00E4sse und K\u00E4lte."
+    },
+    "185": {
+      "Name": "Basilisk",
+      "Sensor": "Vorsicht, sein [Anfunkeln] verursacht [Stein].",
+      "Scan": "Das [Anfunkeln] seines 3. Auges{\\n}kann Zustandsver\u00E4nderung [Stein]{\\n}hervorrufen! [Stein] mit [Medica]{\\n}oder [Goldnadel] kurieren. {CLR:YELLOW}Feind-Tech{\\n}[Perseus-Atem] erlernbar!"
+    },
+    "186": {
+      "Name": "Heckenschlange",
+      "Sensor": "Vorsicht, sein [Anfunkeln] verursacht [Stein].",
+      "Scan": "Das [Anfunkeln] seines 3. Auges{\\n}verursacht Zustand [Stein] mit{\\n}hoher Wahrscheinlichkeit. Benutzt{\\n}[Schallfeger], nachdem es ein paar{\\n}mal angegriffen worden ist. {CLR:YELLOW}Feind-{\\n}Tech [Perseus-Atem] erlernbar!"
+    },
+    "187": {
+      "Name": "Adaman Taimai",
+      "Sensor": "Durch harten Panzer gesch\u00FCtzt.",
+      "Scan": "Gut gepanzert. Sein [Hauch] ist ein{\\n}Hitze-elementarer Fl\u00E4chenangriff.{\\n}[Erdbeben] erteilt neben Schaden{\\n}auch Verz\u00F6gerung. Anf\u00E4llig gegen{\\n}[Panzerbrecher] und [Geistbrecher]."
+    },
+    "188": {
+      "Name": "Varuna",
+      "Sensor": "Gegen alle 4 Elemente gut gesch\u00FCtzt.",
+      "Scan": "Versetzt sich selbst in [Hast], um{\\n}dann mit Zaubern anzugreifen.{\\n}Deswegen mit [Anti-Z] vorbeugen!{\\n}Benutzt es [Magiekonzentration],{\\n}folgt in der n\u00E4chsten Runde{\\n}[Schicksalsemblem]. Kann mit{\\n}[Shell] abgewendet werden.{\\n}Wendet manchmal [Anti-Z] an."
+    },
+    "189": {
+      "Name": "K\u00FCsschen",
+      "Sensor": "Anf\u00E4llig gegen Hitze-elementare Angriffe.",
+      "Scan": "Verringern sich seine HP, erteilt{\\n}es mit [K\u00FCsschentanz]{\\n}Zustandsver\u00E4nderungen wie [Blind],{\\n}[Stumm], manchmal [Konfus] und{\\n}[Gemach]. Vorsicht vor{\\n}seiner giftigen Kralle!{\\n}Als Pflanze anf\u00E4llig gegen Hitze."
+    },
+    "190": {
+      "Name": "Mandragora",
+      "Sensor": "Anf\u00E4llig gegen Hitze-elementare Angriffe.",
+      "Scan": "Je \u00F6fter es angegriffen wird, desto{\\n}schneller setzt es [Erdbeben] ein.{\\n}Sinken seine HP, versetzt es{\\n}die Gruppe mit [K\u00FCsschentanz] in{\\n}[Blind] und [Stumm], manchmal in{\\n}[Konfus] und [Gemach]. Vorsicht{\\n}vor [Gift]! Anf\u00E4llig gegen Hitze."
+    },
+    "191": {
+      "Name": "Steindrache Ver. 99",
+      "Sensor": "Nahkampfwaffen erreichen ihn nicht. Zuerst die Gegner vor ihm erledigen.",
+      "Scan": "Eine Maschina, die heimlich{\\n}von Yevon eingesetzt wird.{\\n}Fl\u00E4chenangriffe verwendet er nur,{\\n}wenn er weit entfernt ist."
+    },
+    "192": {
+      "Name": "Steindrache Ver. 97",
+      "Sensor": "Nahkampfwaffen erreichen ihn nicht. Zuerst die Gegner vor ihm erledigen.",
+      "Scan": "Fl\u00E4chenangriffe setzt er nur ein,{\\n}wenn er weit entfernt ist.{\\n}Verz\u00F6gerungsattacken sind{\\n}unwirksam."
+    },
+    "193": {
+      "Name": "Bomber",
+      "Sensor": "Kontert mit [Explodieren], wenn er 3 Mal angegriffen worden ist.",
+      "Scan": "Nach 3 Angriffen kontert er{\\n}mit [Explodieren] auf den letzten{\\n}Angreifer. Ist er innerhalb 3 Runden{\\n}nicht zu besiegen, rechtzeitig mit{\\n}[Exfeu] sch\u00FCtzen! Anf\u00E4llig gegen{\\n}K\u00E4lte, daher ist [Eis] wirksam.{\\n}Kimahri kann die{\\n}{CLR:YELLOW}Feind-Tech [Explodieren] erlernen!"
+    },
+    "194": {
+      "Name": "Granatenbomber",
+      "Sensor": "Kontert mit [Explodieren], wenn er 3 Mal angegriffen worden ist.",
+      "Scan": "Genau wie Bomber, explodiert er{\\n}nach 3 Angriffen. Anf\u00E4llig gegen{\\n}K\u00E4lte, verf\u00FCgt aber \u00FCber hohe{\\n}Zauberabwehr, die gesenkt werden{\\n}muss, um ihn rechtzeitig zu besiegen.{\\n}Kimahri kann die {CLR:YELLOW}Feind-Tech{\\n}[Explodieren] erlernen!"
+    },
+    "195": {
+      "Name": "Eisenritter Ver. 63",
+      "Sensor": "Bleibt er alleine \u00FCbrig, setzt er [Wirbelkick] ein.",
+      "Scan": "Eine Maschina, die heimlich von{\\n}Yevon eingesetzt wird. Wenn er{\\n}alleine \u00FCbrigbleibt, benutzt er{\\n}den [Wirbelkick], der Mitstreiter{\\n}aus dem Kampf verbannt.{\\n}{CLR:YELLOW}Feind-Tech [Wirbelkick] erlernbar!"
+    },
+    "196": {
+      "Name": "Eisenritter Ver. 11",
+      "Sensor": "Bleibt er alleine \u00FCbrig, setzt er [Wirbelkick] ein.",
+      "Scan": "Wenn er alleine \u00FCbrigbleibt,{\\n}benutzt er den [Wirbelkick], der{\\n}Mitstreiter aus dem Kampf{\\n}verbannt. Verz\u00F6gerungsattacken{\\n}sind unwirksam.{\\n}{CLR:YELLOW}Feind-Tech [Wirbelkick] erlernbar!"
+    },
+    "197": {
+      "Name": "Yevon-Wache",
+      "Sensor": "Schie\u00DFt mit seinem Gewehr auf 1 Mitstreiter.",
+      "Scan": "Eine Wache, die den Yevon Tempel{\\n}St. Bevelle verteidigt. Ihr Gewehr{\\n}verursacht physischen Schaden.{\\n}Anf\u00E4llig gegen [Schlaf]."
+    },
+    "198": {
+      "Name": "Entweihte Wache",
+      "Sensor": "Immer im [Zombie]-Zustand. Anf\u00E4llig gegen Heilmittel und Heilzauber.",
+      "Scan": "Eine Wache, die \u00FCber den Tod hinaus{\\n}den Dom Yevons verteidigt.{\\n}Ihre Maschinenpistole f\u00FCgt{\\n}1 Mitstreiter physischen Schaden{\\n}zu. Vorsicht: Ihre Angriffe k\u00F6nnen{\\n}[Zombie]-Zustand hervorrufen!"
+    },
+    "199": {
+      "Name": "Yevon-Wache",
+      "Sensor": "Verwendet Hitze-Angriff [Flammenwerfer].",
+      "Scan": "Tempelwache, die St. Bevelle{\\n}besch\u00FCtzt. Ihr [Flammenwerfer]{\\n}verursacht Hitze-Fl\u00E4chenschaden.{\\n}Anf\u00E4llig gegen [Schlaf]."
+    },
+    "200": {
+      "Name": "Entweihte Wache",
+      "Sensor": "Stets im [Zombie]-Zustand. Anf\u00E4llig gegen Heilmittel und Heilzauber.",
+      "Scan": "Eine Wache, die \u00FCber den Tod hinaus{\\n}den Dom Yevons verteidigt. Ihr{\\n}[Flammenwerfer] verursacht Hitze-{\\n}Schaden im Fl\u00E4chenvisier."
+    },
+    "201": {
+      "Name": "Koyo-Koyo",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "202": {
+      "Name": "Wunderpott",
+      "Sensor": "Eines der Augen aussuchen und angreifen. Bei Treffer winkt eine Belohnung. Bei einer Niete...",
+      "Scan": "Bis zu 8 Items winken als Belohnung,{\\n}wenn das richtige Auge getroffen{\\n}wird. Anderenfalls explodiert der{\\n}Pott, und f\u00FCgt gro\u00DFen Schaden zu.{\\n}Stets Heilm\u00F6glichkeiten parat halten!"
+    },
+    "203": {
+      "Name": "Wunderpott",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "204": {
+      "Name": "Wunderpott",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "205": {
+      "Name": "Wunderpott",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "206": {
+      "Name": "Wunderpott",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "207": {
+      "Name": "Kaktor?",
+      "Sensor": "Wenn er besiegt wird, bevor er verschwindet, dann...",
+      "Scan": "Vorsicht vor [1.000 Stacheln], die{\\n}1.000 Schadenspunkte anrichten!{\\n}Weicht physischen Angriffen aus{\\n}und ist gegen Zauber gut gesch\u00FCtzt.{\\n}Je weniger HP, desto h\u00F6her die{\\n}Fluchtwahrscheinlichkeit. Schwer zu{\\n}besiegen, ist jedoch anf\u00E4llig gegen{\\n}[Drohen]."
+    },
+    "208": {
+      "Name": "Kaktor",
+      "Sensor": "Wenn er besiegt wird, bevor er verschwindet, dann...",
+      "Scan": "Vorsicht vor [10.000 Stacheln], die{\\n}10.000 Schadenspunkte anrichten.{\\n}Weicht physischen Angriffen aus{\\n}und ist gegen Zauber gut{\\n}gesch\u00FCtzt. Je weniger HP, desto{\\n}h\u00F6her die Fluchtwahrscheinlichkeit.{\\n}Bei erfolgreichem Kampf winken{\\n}eine Menge AP."
+    },
+    "209": {
+      "Name": "Ralvor",
+      "Sensor": "Heilt und st\u00E4rkt sich mit [Blitzra].",
+      "Scan": "Verringern sich seine HP um die{\\n}H\u00E4lfte, heilt es sich mit [Blitzra]{\\n}und verst\u00E4rkt seine Magie. Einfach{\\n}mit [Stumm-Hieb] in den [Stumm]-{\\n}Zustand versetzen. Anf\u00E4llig gegen{\\n}N\u00E4sse, also mit [Wassra] erledigen!"
+    },
+    "210": {
+      "Name": "Barbatus",
+      "Sensor": "Von einem Panzer gesch\u00FCtzt. Anf\u00E4llig gegen [Panzerbrecher], doch...",
+      "Scan": "Gesch\u00FCtzt durch R\u00FCstung. Anf\u00E4llig{\\n}gegen [Panzerbrecher], antwortet{\\n}darauf jedoch mit einem kraftvollen{\\n}Konter. Die Fl\u00E4chenangriffe{\\n}[Sturmflamme] und [Bauchplatscher]{\\n}verursachen verheerenden Schaden."
+    },
+    "211": {
+      "Name": "?????",
+      "Sensor": "Der Inhalt l\u00E4sst sich manchmal durch [Klauen] entnehmen.",
+      "Scan": "In Vorbereitung."
+    },
+    "212": {
+      "Name": "Wendigo",
+      "Sensor": "Immerfort mit physischen Angriffen attackieren. Wird [Tobsucht] aufgehoben, sinkt die Angriffskraft, aber...",
+      "Scan": "F\u00FChrt ausschlie\u00DFlich physische{\\n}Angriffe aus. Wird es bei{\\n}erhobenen Armen angegriffen,{\\n}kontert es mit einem kr\u00E4ftigen{\\n}Gegenschlag."
+    },
+    "213": {
+      "Name": "Guado-Wache",
+      "Sensor": "Verwendet [Auto-Potion]. Wenn m\u00F6glich, keine Gelegenheit dazu geben!",
+      "Scan": "Heilt sich mit [Auto-Potion]. Dies{\\n}sollte unbedingt verhindert werden!{\\n}Taucht sie zusammen mit anderen{\\n}Monstern auf, versetzt sie diese{\\n}manchmal in [Tobsucht]."
+    },
+    "214": {
+      "Name": "Fongo Ongo",
+      "Sensor": "Physische Angriffe kontert er mit [Pollen], die [Schlaf] ausl\u00F6sen.",
+      "Scan": "Wendet [Feuer] an. Anf\u00E4llig gegen{\\n}[Stumm]. Physische Angriffe werden{\\n}mit [Pollen] gekontert, die die Gruppe{\\n}in [Schlaf]-Zustand versetzen{\\n}k\u00F6nnen. Mit Zauber angreifen oder{\\n}in den [Schlaf]-Zustand versetzen!{\\n}Als Pflanze anf\u00E4llig gegen Hitze."
+    },
+    "215": {
+      "Name": "Sorn",
+      "Sensor": "Physische Angriffe kontert er mit [Pollen], die [Schlaf] und [Blind] ausl\u00F6sen.",
+      "Scan": "Wendet [Feura] an. Anf\u00E4llig gegen{\\n}[Schlaf]. Physische Angriffe{\\n}werden mit [Pollen] gekontert,{\\n}die die Gruppe in [Schlaf]- und{\\n}[Blind]-Zustand versetzen k\u00F6nnen.{\\n}Als Pflanze anf\u00E4llig gegen Hitze."
+    },
+    "216": {
+      "Name": "Antensan",
+      "Sensor": "Physische Angriffe kontert er mit [Pollen], die [Gift], [Stumm] und [Blind] ausl\u00F6sen.",
+      "Scan": "Wendet [Feuga] an. Anf\u00E4llig gegen{\\n}[Stumm]. Physische Angriffe werden{\\n}mit [Pollen] gekontert, die die{\\n}Gruppe in [Gift]-, [Stumm]- und [Blind]-{\\n}Zustand versetzen k\u00F6nnen.{\\n}Als Pflanze anf\u00E4llig gegen Hitze."
+    },
+    "217": {
+      "Name": "Kusipose",
+      "Sensor": "Ab und zu [Blind]-anf\u00E4llig.",
+      "Scan": "Flinkes Monster.{\\n}Anf\u00E4llig gegen [Drohen] und{\\n}manchmal auch gegen [Blind]."
+    },
+    "218": {
+      "Name": "Pyroboros",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "219": {
+      "Name": "Spiritia",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "220": {
+      "Name": "Todesabt",
+      "Sensor": "Spricht bei Kampfbeginn das [Todesurteil] aus.",
+      "Scan": "Vorsicht: Bei jeder Begegnung \u00E4ndert{\\n}sich das Element, gegen das er{\\n}anf\u00E4llig ist! Spricht [Todesurteil]{\\n}aus. Ist jedoch niemand verurteilt,{\\n}so besteht die Gefahr, dass er [Tod]{\\n}anwendet. {CLR:YELLOW}Feind-Tech [Todesurteil]{\\n}erlernbar!"
+    },
+    "221": {
+      "Name": "Sandspuckkraut",
+      "Sensor": "Saugt N\u00E4sse-elementare Angriffe auf.",
+      "Scan": "[Kernspucken] zieht nicht viel HP ab,{\\n}kann aber [Konfus] verursachen.{\\n}Als in der W\u00FCste lebende Pflanze,{\\n}absorbiert sie N\u00E4sse und ist{\\n}anf\u00E4llig gegen Hitze."
+    },
+    "222": {
+      "Name": "Guado-Wache",
+      "Sensor": "Versucht, Lulus Zauber zu verhindern.",
+      "Scan": "F\u00FChrt u.a. Bomber und Chim\u00E4ras mit{\\n}sich. Sichtet sie Lulu, so versucht{\\n}sie, ihre Zauber mit [Stumm] und{\\n}[Konfus] zu verhindern, doch mit{\\n}[Stumm-Hieb] stellt sie keine Gefahr{\\n}mehr dar."
+    },
+    "223": {
+      "Name": "Tombery",
+      "Sensor": "Wenn er in 4 Runden die Gruppe erreicht, dann...",
+      "Scan": "N\u00E4hert sich der Gruppe innerhalb{\\n}von 4 Runden, um dann mit dem{\\n}K\u00FCchenmesser zuzustechen. Sein{\\n}Konter [Fluch Aller] richtet mehr{\\n}Schaden an, je mehr Monster bisher{\\n}insgesamt besiegt worden sind."
+    },
+    "224": {
+      "Name": "Meister Tombery",
+      "Sensor": "Wenn er in 4 Runden die Gruppe erreicht, dann...",
+      "Scan": "N\u00E4hert sich der Gruppe innerhalb{\\n}von 4 Runden, um dann mit dem{\\n}K\u00FCchenmesser zuzustechen. Sein{\\n}Konter [Fluch Aller] richtet mehr{\\n}Schaden an, je mehr Monster bisher{\\n}insgesamt besiegt worden sind."
+    },
+    "225": {
+      "Name": "Teufelsauge",
+      "Sensor": "Flugmonster. Zauber relativ unwirksam. Vorsicht vor [Konfus].",
+      "Scan": "Flugmonster, schwer zu treffen.{\\n}Anf\u00E4llig gegen Hitze-elementare{\\n}Zauber, verf\u00FCgt jedoch \u00FCber eine{\\n}hohe Zauberabwehr. Sein{\\n}[Anfunkeln] verursacht [Konfus]."
+    },
+    "226": {
+      "Name": "Bomber",
+      "Sensor": "[Explodiert], wenn er 3 Mal angegriffen worden ist.",
+      "Scan": "Nach 3 Angriffen explodiert es und{\\n}zieht den letzten Angreifer mit{\\n}hinein. Vorsichtshalber mit [Exfeu]{\\n}vorsorgen. Anf\u00E4llig gegen K\u00E4lte-{\\n}elementare Angriffe, daher{\\n}empfindlich gegen [Eisra].{\\n}{CLR:YELLOW}Feind-Tech [Explodieren] erlernbar!"
+    },
+    "227": {
+      "Name": "Chim\u00E4ra",
+      "Sensor": "Anf\u00E4llig gegen [Blind], [Stumm] und [Drohen].",
+      "Scan": "Angriffsreihenfolge der einzelnen{\\n}K\u00F6rperteile: Schlange = [Blitzra],{\\n}Ochse = [St\u00FCrmen], Adler = N\u00E4sse-{\\n}Fl\u00E4chenangriff [Nasshauch],{\\n}L\u00F6we = [Megiddoflamme]. Anf\u00E4llig {\\n}gegen [Drohen], [Blind] und [Stumm].{\\n}{CLR:YELLOW}Feind-Tech [Nasshauch] erlernbar."
+    },
+    "228": {
+      "Name": "Doppelhorn",
+      "Sensor": "Ist es [Blind], sind seine Angriffe leichter ausweichbar.",
+      "Scan": "Sein [Horn] verursacht verheerenden{\\n}Schaden. Ist es jedoch im [Blind]-{\\n}Zustand, kann man ihm gut{\\n}ausweichen. Kann auch mittels{\\n}[Schlaf-Hieb] in den [Schlaf]-Zustand{\\n}versetzt werden.{\\n}{CLR:YELLOW}Feind-Tech [Flammen] erlernbar."
+    },
+    "229": {
+      "Name": "Golemw\u00E4chter",
+      "Sensor": "Ein Steinwesen, daher helfen physische Angriffe wenig.",
+      "Scan": "\u00C4u\u00DFerst gef\u00E4hrlicher Gegner.{\\n}Verf\u00FCgt \u00FCber hohe Angriffs- und{\\n}Abwehrkraft. Sein Konter-Angriff{\\n}[Sprengfaust] f\u00FCgt nicht nur{\\n}Schaden zu, sondern setzt den{\\n}betreffenden Charakter zur\u00FCck.{\\n}Wendet auch Zauber wie{\\n}[Totalabwehr] und [Gemachga] an."
+    },
+    "230": {
+      "Name": "Garuda",
+      "Sensor": "Ist es [Blind], sind seine Angriffe leichter ausweichbar.",
+      "Scan": "Viele HP und hohe Angriffskraft.{\\n}Vorsicht vor dem Fl\u00E4chenangriff{\\n}[Schockwelle]! Ist es im [Blind]-{\\n}Zustand, kann man seinen Angriffen{\\n}leicht ausweichen."
+    },
+    "231": {
+      "Name": "Dingo",
+      "Sensor": "Flinkes Monster. Zauber relativ unwirksam.",
+      "Scan": "Flinkes Monster, weicht Angriffen{\\n}leicht aus. Hohe Zauberabwehr.{\\n}Daher besiegen, bevor er{\\n}angreifen kann, vorzugsweise{\\n}mit {PC:00:TIDUS}!"
+    },
+    "232": {
+      "Name": "Wasserpudding",
+      "Sensor": "N\u00E4sse-elementares Monster. Anf\u00E4llig gegen gegenelementare Zauber. Physische Angriffe relativ unwirksam.",
+      "Scan": "Zu weich, um mit physischen{\\n}Attacken ernsthaften Schaden{\\n}zuzuf\u00FCgen. Dieses N\u00E4sse-{\\n}elementare Monster ist anf\u00E4llig{\\n}gegen das Gegenelement Strom.{\\n}daher mit {PC:05:LULU}s [Blitz]{\\n}angreifen! Vorsicht: Durch N\u00E4sse-{\\n}Angriffe wird er sogar geheilt!"
+    },
+    "233": {
+      "Name": "Kondorgeier",
+      "Sensor": "Fliegendes Monster. Anf\u00E4llig gegen Zauber.",
+      "Scan": "Flugmonster. Schwer zu treffen.{\\n}Am besten Wakka \u00FCberlassen!{\\n}Anf\u00E4llig gegen Hitze-Element, daher{\\n}auch mit Lulus [Feuer] zu besiegen."
+    },
+    "234": {
+      "Name": "Spuckkraut",
+      "Sensor": "Anf\u00E4llig gegen Hitze-elementare Angriffe.",
+      "Scan": "Vorsicht vor [Kernspucken]! Kann{\\n}sofortige [Kampfunf\u00E4higkeit]{\\n}hervorrufen. Wie die meisten{\\n}Pflanzen, anf\u00E4llig gegen Hitze.{\\n}Lulus [Feura] ist daher \u00E4u\u00DFerst{\\n}wirksam.{\\n}{CLR:YELLOW}Feind-Tech [Kernspucken] erlernbar!"
+    },
+    "235": {
+      "Name": "Raldo-Panzer",
+      "Sensor": "Gut gepanzert. Anf\u00E4llig gegen [Durchschlag].",
+      "Scan": "Gut gepanzert und deswegen etwas{\\n}tr\u00E4ge. Verf\u00FCgt sowohl \u00FCber hohe{\\n}Abwehrkraft als auch Zauberabwehr.{\\n}Anf\u00E4llig gegen K\u00E4lte-Element. Mit{\\n}[Durchschlag] manchmal sofort zu{\\n}besiegen. Daher Auron \u00FCberlassen!"
+    },
+    "236": {
+      "Name": "Barnip-Panzer",
+      "Sensor": "Gut gepanzert. Anf\u00E4llig gegen [Durchschlag].",
+      "Scan": "Gut gepanzert und daher etwas{\\n}tr\u00E4ge. Verf\u00FCgt sowohl \u00FCber hohe{\\n}Abwehrkraft als auch Zauberabwehr.{\\n}Anf\u00E4llig gegen K\u00E4lte und N\u00E4sse.{\\n}Manchmal mit [Durchschlag] sofort{\\n}besiegbar."
+    },
+    "237": {
+      "Name": "?????",
+      "Sensor": "???",
+      "Scan": "In Vorbereitung."
+    },
+    "238": {
+      "Name": "Montisaurus",
+      "Sensor": "Wenn die Fl\u00FCgel anfangen zu gl\u00FChen, setzt es zur [Schockwelle] an.",
+      "Scan": "Riesiges Flugmonster mit vielen HP.{\\n}Relativ einfach, Treffer zu landen.{\\n}Also, mit voller Kraft angreifen!{\\n}Wenn die Fl\u00FCgel anfangen zu gl\u00FChen,{\\n}setzt er in der n\u00E4chsten Runde zur{\\n}[Schockwelle] an. Rechtzeitig in{\\n}Abwehrhaltung gehen oder HP heilen!"
+    },
+    "239": {
+      "Name": "Saurus",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "240": {
+      "Name": "Harmer-Panzer",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "241": {
+      "Name": "Aqua-Pudding",
+      "Sensor": "N\u00E4sse-elementares Monster. Anf\u00E4llig gegen gegenelementare Zauber. Physische Angriffe relativ unwirksam.",
+      "Scan": "Wegen des elastischen K\u00F6rpers{\\n}sind physische Angriffe eher{\\n}unwirksam. Der Schwachpunkt des{\\n}N\u00E4sse-elementaren Monsters{\\n}ist das Gegenelement Strom.{\\n}Durch N\u00E4sse-elementare Angriffe{\\n}wird das Monster sogar geheilt,{\\n}also Vorsicht!"
+    },
+    "242": {
+      "Name": "Todesauge",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "243": {
+      "Name": "Wasser-Ralvor",
+      "Sensor": "Wendet [Wassra] gegen sich selbst an, um sich zu heilen und st\u00E4rker zu werden.",
+      "Scan": "Verliert er die H\u00E4lfte seiner HP, so{\\n}heilt er sich mit [Wassra] und st\u00E4rkt{\\n}damit seine Magie. Am besten mit{\\n}[Stumm-Hieb] in den [Stumm]-{\\n}Zustand versetzen. Anf\u00E4llig gegen{\\n}Strom, somit auch gegen [Blitzga]."
+    },
+    "244": {
+      "Name": "Meckye",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich. (f\u00FCr Omega)"
+    },
+    "245": {
+      "Name": "Gruft-Schmelke",
+      "Sensor": "Flinkes Monster. Zauber relativ unwirksam.",
+      "Scan": "Flinkes Monster, verf\u00FCgt \u00FCber hohe{\\n}Zauberabwehr. N\u00E4sse- und Hitze-{\\n}Angriffe wirken um die H\u00E4lfte{\\n}schw\u00E4cher."
+    },
+    "246": {
+      "Name": "Sumpf-Mafuto",
+      "Sensor": "Gut gepanzert. Zauber relativ unwirksam. Vorsicht vor [Gemach]!",
+      "Scan": "Gut gepanzert und daher etwas{\\n}tr\u00E4ge. Verf\u00FCgt sowohl \u00FCber hohe{\\n}Abwehrkraft als auch Zauberabwehr.{\\n}Anf\u00E4llig gegen Strom und K\u00E4lte."
+    },
+    "247": {
+      "Name": "Grimmauge",
+      "Sensor": "Fliegendes Monster. Zauber relativ unwirksam.",
+      "Scan": "Flugmonster. Schwierig, ihm{\\n}physischen Schaden zuzuf\u00FCgen.{\\n}Anf\u00E4llig gegen Hitze-Element,{\\n}verf\u00FCgt jedoch \u00FCber hohe{\\n}Zauberabwehr. Sein [Anfunkeln]{\\n}kann [Konfus] ausl\u00F6sen."
+    },
+    "248": {
+      "Name": "Isaar",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "249": {
+      "Name": "Maira",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "250": {
+      "Name": "Belgmene",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "251": {
+      "Name": "Mimik",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "252": {
+      "Name": "Mimik",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "253": {
+      "Name": "Mimik",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "254": {
+      "Name": "Fl\u00FCgel",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "255": {
+      "Name": "Wunderpott",
+      "Sensor": "Eines der Augen aussuchen und angreifen. Bei Treffer winkt eine Belohnung. Bei einer Niete...",
+      "Scan": "Bis zu 8 Items winken als Belohnung,{\\n}wenn das richtige Auge getroffen{\\n}wird. Anderenfalls explodiert der{\\n}Pott, und f\u00FCgt gro\u00DFen Schaden zu.{\\n}Stets Heilm\u00F6glichkeiten parat halten!"
+    },
+    "256": {
+      "Name": "Mimik",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "257": {
+      "Name": "Mimik-Teile",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "258": {
+      "Name": "Valfaris",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "259": {
+      "Name": "Ifrit",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "260": {
+      "Name": "Mimik-Teile",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "261": {
+      "Name": "Mimik-Teile",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "262": {
+      "Name": "Mimik-Teile",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "263": {
+      "Name": "Gewehr",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "264": {
+      "Name": "Feuergewehr",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "265": {
+      "Name": "Anima",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "266": {
+      "Name": "Daigoro",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "267": {
+      "Name": "Anima",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "268": {
+      "Name": "Anima",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "269": {
+      "Name": "Katana",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "270": {
+      "Name": "Kozuka",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "271": {
+      "Name": "Ninjastern",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "272": {
+      "Name": "Kopf",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "273": {
+      "Name": "Arm",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "274": {
+      "Name": "Nishida",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "275": {
+      "Name": "Akravator",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "276": {
+      "Name": "Deus",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "277": {
+      "Name": "Katastro-Tentakel",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "278": {
+      "Name": "Nichts.",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "279": {
+      "Name": "Erdverspeiser",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "280": {
+      "Name": "Ultima-Buster",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "281": {
+      "Name": "Wabbelmasse",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "282": {
+      "Name": "Photonenwerfer",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "283": {
+      "Name": "Himmelsdrache",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "284": {
+      "Name": "Faust",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "285": {
+      "Name": "Ixion",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "286": {
+      "Name": "Shiva",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "287": {
+      "Name": "Akravator",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "288": {
+      "Name": "Yojinbo",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "289": {
+      "Name": "Dug",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "290": {
+      "Name": "Mug",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "291": {
+      "Name": "Rug",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "292": {
+      "Name": "Elazul-Panzer",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "293": {
+      "Name": "Visaruja",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "294": {
+      "Name": "Fenrir",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "295": {
+      "Name": "Kolosspudding",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "296": {
+      "Name": "Tatscherechse",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "297": {
+      "Name": "Preterix",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "298": {
+      "Name": "Hornisse",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "299": {
+      "Name": "Fl\u00FCgelzyklop",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "300": {
+      "Name": "Strato-Vogel",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "301": {
+      "Name": "Abyss-Wurm",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "302": {
+      "Name": "Moloch",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "303": {
+      "Name": "Goldhorter",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "304": {
+      "Name": "Morbol des Grauens",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "305": {
+      "Name": "Kampfteufel",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "306": {
+      "Name": "Anti-Teilchen",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "307": {
+      "Name": "Catblepus",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "308": {
+      "Name": "Chim\u00E4ra-Geist",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "309": {
+      "Name": "Quahl-K\u00F6nigin",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "310": {
+      "Name": "Eisenkraut",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "311": {
+      "Name": "Midgardschlange",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "312": {
+      "Name": "Abadon",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "313": {
+      "Name": "K\u00F6nigsbomber",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "314": {
+      "Name": "Kaktrice",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "315": {
+      "Name": "Vovern",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "316": {
+      "Name": "Hypnopilz",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "317": {
+      "Name": "Don Tombery",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "318": {
+      "Name": "Espada",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "319": {
+      "Name": "Bomber",
+      "Sensor": "[Explodiert], wenn er 3 mal angegriffen worden ist.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "320": {
+      "Name": "Doppelhorn",
+      "Sensor": "Ein harmloser Gegner, wenn er [Blind] ist.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "321": {
+      "Name": "Voltura",
+      "Sensor": "Landet keine Treffer mehr, sobald er [Blind] ist.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "322": {
+      "Name": "Basilisk",
+      "Sensor": "Vorsicht vor dem versteinernden Blick.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "323": {
+      "Name": "K\u00FCsschen",
+      "Sensor": "Empfindlich gegen Hitze-Angriffe.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "324": {
+      "Name": "Ralvor",
+      "Sensor": "Text des Infofensters.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "325": {
+      "Name": "Eisengigant",
+      "Sensor": "Text des Infofensters.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "326": {
+      "Name": "Chim\u00E4ra",
+      "Sensor": "Text des Infofensters.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "327": {
+      "Name": "Monster 84",
+      "Sensor": "Text des Infofensters.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "328": {
+      "Name": "Kaktor?",
+      "Sensor": "Wenn er vor seinem Fluchtversuch besiegt wird, dann....",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "329": {
+      "Name": "Montisaurus",
+      "Sensor": "Text des Infofensters.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "330": {
+      "Name": "Sandwurm",
+      "Sensor": "Text des Infofensters.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "331": {
+      "Name": "Schreckgespenst",
+      "Sensor": "Text des Infofensters.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "332": {
+      "Name": "Morbol",
+      "Sensor": "Text des Infofensters.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "333": {
+      "Name": "Ashura",
+      "Sensor": "Text des Infofensters.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "334": {
+      "Name": "Schwarze Valfaris",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "335": {
+      "Name": "Schwarzer Ifrit",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "336": {
+      "Name": "Schwarzer Ixion",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "337": {
+      "Name": "Schwarze Shiva",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "338": {
+      "Name": "Schwarzer Bahamut",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "339": {
+      "Name": "Schwarze Anima",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "340": {
+      "Name": "Schwarzer Yojinbo",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "341": {
+      "Name": "Schwarze Mug",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "342": {
+      "Name": "Schwarze Dug",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "343": {
+      "Name": "Schwarze Rug",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "344": {
+      "Name": "Der Richter",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "345": {
+      "Name": "Der rechte Arm",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "346": {
+      "Name": "Der linke Arm",
+      "Sensor": "Nicht durchschaubar.",
+      "Scan": "Keine Analyse m\u00F6glich."
+    },
+    "347": {
+      "Name": "Unbekannt",
+      "Sensor": "Unbenutzt",
+      "Scan": "Unbenutzt"
+    },
+    "348": {
+      "Name": "Unbekannt",
+      "Sensor": "Unbenutzt",
+      "Scan": "Unbenutzt"
+    },
+    "349": {
+      "Name": "Unbekannt",
+      "Sensor": "Unbenutzt",
+      "Scan": "Unbenutzt"
+    },
+    "350": {
+      "Name": "Unbekannt",
+      "Sensor": "Unbenutzt",
+      "Scan": "Unbenutzt"
+    },
+    "351": {
+      "Name": "Unbekannt",
+      "Sensor": "Unbenutzt",
+      "Scan": "Unbenutzt"
+    },
+    "352": {
+      "Name": "Unbekannt",
+      "Sensor": "Unbenutzt",
+      "Scan": "Unbenutzt"
+    },
+    "353": {
+      "Name": "Unbekannt",
+      "Sensor": "Unbenutzt",
+      "Scan": "Unbenutzt"
+    },
+    "354": {
+      "Name": "Unbekannt",
+      "Sensor": "Unbenutzt",
+      "Scan": "Unbenutzt"
+    },
+    "355": {
+      "Name": "Unbekannt",
+      "Sensor": "Unbenutzt",
+      "Scan": "Unbenutzt"
+    },
+    "356": {
+      "Name": "Unbekannt",
+      "Sensor": "Unbenutzt",
+      "Scan": "Unbenutzt"
+    },
+    "357": {
+      "Name": "Unbekannt",
+      "Sensor": "Unbenutzt",
+      "Scan": "Unbenutzt"
+    },
+    "358": {
+      "Name": "Unbekannt",
+      "Sensor": "Unbenutzt",
+      "Scan": "Unbenutzt"
+    },
+    "359": {
+      "Name": "Unbekannt",
+      "Sensor": "Unbenutzt",
+      "Scan": "Unbenutzt"
+    },
+    "360": {
+      "Name": "Unbekannt",
+      "Sensor": "Unbenutzt",
+      "Scan": "Unbenutzt"
+    },
+    "361": {
+      "Name": "Unbekannt",
+      "Sensor": "Unbenutzt",
+      "Scan": "Unbenutzt"
+    },
+    "362": {
+      "Name": "Unbekannt",
+      "Sensor": "Unbenutzt",
+      "Scan": "Unbenutzt"
+    },
+    "363": {
+      "Name": "Unbekannt",
+      "Sensor": "Unbenutzt",
+      "Scan": "Unbenutzt"
+    },
+    "364": {
+      "Name": "Unbekannt",
+      "Sensor": "Unbenutzt",
+      "Scan": "Unbenutzt"
+    },
+    "365": {
+      "Name": "Unbekannt",
+      "Sensor": "Unbenutzt",
+      "Scan": "Unbenutzt"
+    }
+  }
+}

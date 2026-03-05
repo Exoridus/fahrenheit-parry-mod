@@ -1,0 +1,331 @@
+{
+  "SchemaVersion": 1,
+  "Domain": "keyitems",
+  "Locale": "sp",
+  "GeneratedAtUtc": "2026-03-04T07:27:52.3136366Z",
+  "SourceFiles": [
+    "READ_ALL_COMMANDS_LOCALIZED__sp.txt"
+  ],
+  "Entries": {
+    "A000": {
+      "Name": "Flores secas",
+      "Description": "Ramo preparado por alguien con mucho cari\u00F1o.",
+      "Kind": "KeyItem"
+    },
+    "A001": {
+      "Name": "Yesca y pedernal",
+      "Description": "Se usan para encender fuego.",
+      "Kind": "KeyItem"
+    },
+    "A002": {
+      "Name": "Espejo empa\u00F1ado",
+      "Description": "Ha perdido su antiguo resplandor.",
+      "Kind": "KeyItem"
+    },
+    "A003": {
+      "Name": "Espejo de 7 astros",
+      "Description": "Reluce intensamente.",
+      "Kind": "KeyItem"
+    },
+    "A004": {
+      "Name": "Diccionario albhed 1",
+      "Description": "Sirve para aprender la letra \u201Da\u201D en albhed.",
+      "Kind": "KeyItem"
+    },
+    "A005": {
+      "Name": "Diccionario albhed 2",
+      "Description": "Sirve para aprender la letra \u201Db\u201D en albhed.",
+      "Kind": "KeyItem"
+    },
+    "A006": {
+      "Name": "Diccionario albhed 3",
+      "Description": "Sirve para aprender la letra \u201Dc\u201D en albhed.",
+      "Kind": "KeyItem"
+    },
+    "A007": {
+      "Name": "Diccionario albhed 4",
+      "Description": "Sirve para aprender la letra \u201Dd\u201D en albhed.",
+      "Kind": "KeyItem"
+    },
+    "A008": {
+      "Name": "Diccionario albhed 5",
+      "Description": "Sirve para aprender la letra \u201De\u201D en albhed.",
+      "Kind": "KeyItem"
+    },
+    "A009": {
+      "Name": "Diccionario albhed 6",
+      "Description": "Sirve para aprender la letra \u201Df\u201D en albhed.",
+      "Kind": "KeyItem"
+    },
+    "A00A": {
+      "Name": "Diccionario albhed 7",
+      "Description": "Sirve para aprender la letra \u201Dg\u201D en albhed.",
+      "Kind": "KeyItem"
+    },
+    "A00B": {
+      "Name": "Diccionario albhed 8",
+      "Description": "Sirve para aprender la letra \u201Dh\u201D en albhed.",
+      "Kind": "KeyItem"
+    },
+    "A00C": {
+      "Name": "Diccionario albhed 9",
+      "Description": "Sirve para aprender la letra \u201Di\u201D en albhed.",
+      "Kind": "KeyItem"
+    },
+    "A00D": {
+      "Name": "Diccionario albhed 10",
+      "Description": "Sirve para aprender la letra \u201Dj\u201D en albhed.",
+      "Kind": "KeyItem"
+    },
+    "A00E": {
+      "Name": "Diccionario albhed 11",
+      "Description": "Sirve para aprender la letra \u201Dk\u201D en albhed.",
+      "Kind": "KeyItem"
+    },
+    "A00F": {
+      "Name": "Diccionario albhed 12",
+      "Description": "Sirve para aprender la letra \u201Dl\u201D en albhed.",
+      "Kind": "KeyItem"
+    },
+    "A010": {
+      "Name": "Diccionario albhed 13",
+      "Description": "Sirve para aprender la letra \u201Dm\u201D en albhed.",
+      "Kind": "KeyItem"
+    },
+    "A011": {
+      "Name": "Diccionario albhed 14",
+      "Description": "Sirve para aprender las letras \u201Dn\u201D y \u201D\u00F1\u201D en albhed.",
+      "Kind": "KeyItem"
+    },
+    "A012": {
+      "Name": "Diccionario albhed 15",
+      "Description": "Sirve para aprender la letra \u201Do\u201D en albhed.",
+      "Kind": "KeyItem"
+    },
+    "A013": {
+      "Name": "Diccionario albhed 16",
+      "Description": "Sirve para aprender la letra \u201Dp\u201D en albhed.",
+      "Kind": "KeyItem"
+    },
+    "A014": {
+      "Name": "Diccionario albhed 17",
+      "Description": "Sirve para aprender la letra \u201Dq\u201D en albhed.",
+      "Kind": "KeyItem"
+    },
+    "A015": {
+      "Name": "Diccionario albhed 18",
+      "Description": "Sirve para aprender la letra \u201Dr\u201D en albhed.",
+      "Kind": "KeyItem"
+    },
+    "A016": {
+      "Name": "Diccionario albhed 19",
+      "Description": "Sirve para aprender la letra \u201Ds\u201D en albhed.",
+      "Kind": "KeyItem"
+    },
+    "A017": {
+      "Name": "Diccionario albhed 20",
+      "Description": "Sirve para aprender la letra \u201Dt\u201D en albhed.",
+      "Kind": "KeyItem"
+    },
+    "A018": {
+      "Name": "Diccionario albhed 21",
+      "Description": "Sirve para aprender la letra \u201Du\u201D en albhed.",
+      "Kind": "KeyItem"
+    },
+    "A019": {
+      "Name": "Diccionario albhed 22",
+      "Description": "Sirve para aprender la letra \u201Dv\u201D en albhed.",
+      "Kind": "KeyItem"
+    },
+    "A01A": {
+      "Name": "Diccionario albhed 23",
+      "Description": "Sirve para aprender la letra \u201Dw\u201D en albhed.",
+      "Kind": "KeyItem"
+    },
+    "A01B": {
+      "Name": "Diccionario albhed 24",
+      "Description": "Sirve para aprender la letra \u201Dx\u201D en albhed.",
+      "Kind": "KeyItem"
+    },
+    "A01C": {
+      "Name": "Diccionario albhed 25",
+      "Description": "Sirve para aprender la letra \u201Dy\u201D en albhed.",
+      "Kind": "KeyItem"
+    },
+    "A01D": {
+      "Name": "Diccionario albhed 26",
+      "Description": "Sirve para aprender la letra \u201Dz\u201D en albhed.",
+      "Kind": "KeyItem"
+    },
+    "A01E": {
+      "Name": "Alma de invocador",
+      "Description": "Permite a los eones aprender habilidades.",
+      "Kind": "KeyItem"
+    },
+    "A01F": {
+      "Name": "Alma de e\u00F3n",
+      "Description": "Permite aumentar los par\u00E1metros de los eones.",
+      "Kind": "KeyItem"
+    },
+    "A020": {
+      "Name": "Esfera de Jecht",
+      "Description": "Esfera que grabaron Jecht y su grupo hace 10 a\u00F1os.",
+      "Kind": "KeyItem"
+    },
+    "A021": {
+      "Name": "Sable oxidado",
+      "Description": "Sable viejo y oxidado.",
+      "Kind": "KeyItem"
+    },
+    "A022": {
+      "Name": "No se usa.",
+      "Description": "\u00BF?",
+      "Kind": "KeyItem"
+    },
+    "A023": {
+      "Name": "S\u00EDmbolo del Sol",
+      "Description": "S\u00EDmbolo con la forma del Sol.",
+      "Kind": "KeyItem"
+    },
+    "A024": {
+      "Name": "Emblema del Sol",
+      "Description": "Emblema con la forma del Sol.",
+      "Kind": "KeyItem"
+    },
+    "A025": {
+      "Name": "S\u00EDmbolo de la Luna",
+      "Description": "S\u00EDmbolo con la forma de la Luna.",
+      "Kind": "KeyItem"
+    },
+    "A026": {
+      "Name": "Emblema de la Luna",
+      "Description": "Emblema con la forma de la Luna.",
+      "Kind": "KeyItem"
+    },
+    "A027": {
+      "Name": "S\u00EDmbolo de Saturno",
+      "Description": "S\u00EDmbolo con la forma de Saturno.",
+      "Kind": "KeyItem"
+    },
+    "A028": {
+      "Name": "Emblema de Saturno",
+      "Description": "Emblema con la forma de Saturno.",
+      "Kind": "KeyItem"
+    },
+    "A029": {
+      "Name": "Medalla de H\u00E9rcules",
+      "Description": "La reciben los guerreros m\u00E1s fuertes.",
+      "Kind": "KeyItem"
+    },
+    "A02A": {
+      "Name": "S\u00EDmbolo de J\u00FApiter",
+      "Description": "S\u00EDmbolo con la forma de J\u00FApiter.",
+      "Kind": "KeyItem"
+    },
+    "A02B": {
+      "Name": "Emblema de J\u00FApiter",
+      "Description": "Emblema con la forma de J\u00FApiter.",
+      "Kind": "KeyItem"
+    },
+    "A02C": {
+      "Name": "S\u00EDmbolo de Mercurio",
+      "Description": "S\u00EDmbolo con la forma de Mercurio.",
+      "Kind": "KeyItem"
+    },
+    "A02D": {
+      "Name": "Emblema de Mercurio",
+      "Description": "Emblema con la forma de Mercurio.",
+      "Kind": "KeyItem"
+    },
+    "A02E": {
+      "Name": "S\u00EDmbolo de Marte",
+      "Description": "S\u00EDmbolo con la forma de Marte.",
+      "Kind": "KeyItem"
+    },
+    "A02F": {
+      "Name": "Emblema de Marte",
+      "Description": "Emblema con la forma de Marte.",
+      "Kind": "KeyItem"
+    },
+    "A030": {
+      "Name": "S\u00EDmbolo de Venus",
+      "Description": "S\u00EDmbolo con la forma de Venus.",
+      "Kind": "KeyItem"
+    },
+    "A031": {
+      "Name": "Emblema de Venus",
+      "Description": "Emblema con la forma de Venus.",
+      "Kind": "KeyItem"
+    },
+    "A032": {
+      "Name": "Corona de pimpollos",
+      "Description": "Parece que tiene que ver con un e\u00F3n oculto...",
+      "Kind": "KeyItem"
+    },
+    "A033": {
+      "Name": "Corona de flores",
+      "Description": "Parece que tiene que ver con un e\u00F3n oculto...",
+      "Kind": "KeyItem"
+    },
+    "A034": {
+      "Name": "Objeto importante 53",
+      "Description": "\u00BF?",
+      "Kind": "KeyItem"
+    },
+    "A035": {
+      "Name": "Objeto importante 54",
+      "Description": "\u00BF?",
+      "Kind": "KeyItem"
+    },
+    "A036": {
+      "Name": "Objeto importante 55",
+      "Description": "\u00BF?",
+      "Kind": "KeyItem"
+    },
+    "A037": {
+      "Name": "Objeto importante 56",
+      "Description": "\u00BF?",
+      "Kind": "KeyItem"
+    },
+    "A038": {
+      "Name": "Objeto importante 57",
+      "Description": "\u00BF?",
+      "Kind": "KeyItem"
+    },
+    "A039": {
+      "Name": "Objeto importante 58",
+      "Description": "\u00BF?",
+      "Kind": "KeyItem"
+    },
+    "A03A": {
+      "Name": "Objeto importante 59",
+      "Description": "\u00BF?",
+      "Kind": "KeyItem"
+    },
+    "A03B": {
+      "Name": "Objeto importante 60",
+      "Description": "\u00BF?",
+      "Kind": "KeyItem"
+    },
+    "A03C": {
+      "Name": "Objeto importante 61",
+      "Description": "\u00BF?",
+      "Kind": "KeyItem"
+    },
+    "A03D": {
+      "Name": "Objeto importante 62",
+      "Description": "\u00BF?",
+      "Kind": "KeyItem"
+    },
+    "A03E": {
+      "Name": "Objeto importante 63",
+      "Description": "\u00BF?",
+      "Kind": "KeyItem"
+    },
+    "A03F": {
+      "Name": "Objeto importante 64",
+      "Description": "\u00BF?",
+      "Kind": "KeyItem"
+    }
+  }
+}

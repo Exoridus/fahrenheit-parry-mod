@@ -1,0 +1,681 @@
+{
+  "SchemaVersion": 1,
+  "Domain": "autoabilities",
+  "Locale": "it",
+  "GeneratedAtUtc": "2026-03-04T07:27:52.2871094Z",
+  "SourceFiles": [
+    "READ_ALL_COMMANDS_LOCALIZED__it.txt"
+  ],
+  "Entries": {
+    "8000": {
+      "Name": "Spot",
+      "Description": "Visualizza i dati del nemico in battaglia.",
+      "Kind": "AutoAbility"
+    },
+    "8001": {
+      "Name": "Iniziativa",
+      "Description": "Ha il primo turno in battaglia.",
+      "Kind": "AutoAbility"
+    },
+    "8002": {
+      "Name": "Priorit\u00E0",
+      "Description": "Aumenta la possibilit\u00E0 di un attacco prioritario.",
+      "Kind": "AutoAbility"
+    },
+    "8003": {
+      "Name": "Contrattacco",
+      "Description": "Contrattacca quando subisce un attacco fisico.",
+      "Kind": "AutoAbility"
+    },
+    "8004": {
+      "Name": "Duck \u0026 Boxe",
+      "Description": "Schiva un attacco fisico e contrattacca.",
+      "Kind": "AutoAbility"
+    },
+    "8005": {
+      "Name": "Contramagia",
+      "Description": "Contrattacca quando subisce un attacco magico.",
+      "Kind": "AutoAbility"
+    },
+    "8006": {
+      "Name": "Amplificamagia",
+      "Description": "Potenzia le magie consumando pi\u00F9 MP.",
+      "Kind": "AutoAbility"
+    },
+    "8007": {
+      "Name": "Arte medica",
+      "Description": "Raddoppia l\u2019effetto degli oggetti di recupero.",
+      "Kind": "AutoAbility"
+    },
+    "8008": {
+      "Name": "Autopozione",
+      "Description": "Usa automaticamente le pozioni.",
+      "Kind": "AutoAbility"
+    },
+    "8009": {
+      "Name": "Autopanacea",
+      "Description": "Cura automaticamente status alterati.",
+      "Kind": "AutoAbility"
+    },
+    "800A": {
+      "Name": "Autofenice",
+      "Description": "Cura automaticamente K.O. alla squadra.",
+      "Kind": "AutoAbility"
+    },
+    "800B": {
+      "Name": "Perforazione",
+      "Description": "Causa danni normali ai nemici con corazza.",
+      "Kind": "AutoAbility"
+    },
+    "800C": {
+      "Name": "Consumo 1/2 MP",
+      "Description": "Dimezza il consumo degli MP in battaglia.",
+      "Kind": "AutoAbility"
+    },
+    "800D": {
+      "Name": "Consumo MP = 1",
+      "Description": "Consuma 1 solo MP in battaglia.",
+      "Kind": "AutoAbility"
+    },
+    "800E": {
+      "Name": "Biturbo",
+      "Description": "La barra Turbo si riempie a doppia velocit\u00E0.",
+      "Kind": "AutoAbility"
+    },
+    "800F": {
+      "Name": "Triturbo",
+      "Description": "La barra Turbo si riempie a tripla velocit\u00E0.",
+      "Kind": "AutoAbility"
+    },
+    "8010": {
+      "Name": "Riserva Turbo",
+      "Description": "Effetto Biturbo quando gli HP sono bassi.",
+      "Kind": "AutoAbility"
+    },
+    "8011": {
+      "Name": "Turbo x AP",
+      "Description": "Non entra in Turbo, ma ottiene pi\u00F9 AP.",
+      "Kind": "AutoAbility"
+    },
+    "8012": {
+      "Name": "AP x 2",
+      "Description": "Raddoppia gli AP ottenuti a fine battaglia.",
+      "Kind": "AutoAbility"
+    },
+    "8013": {
+      "Name": "AP x 3",
+      "Description": "Triplica gli AP ottenuti a fine battaglia.",
+      "Kind": "AutoAbility"
+    },
+    "8014": {
+      "Name": "AP = 0",
+      "Description": "Non ottiene nessun AP a fine battaglia.",
+      "Kind": "AutoAbility"
+    },
+    "8015": {
+      "Name": "Rarit\u00E0 up",
+      "Description": "Aumenta la possibilit\u00E0 di rubare rarit\u00E0.",
+      "Kind": "AutoAbility"
+    },
+    "8016": {
+      "Name": "Solo rarit\u00E0",
+      "Description": "Con Ruba, sottrae soltanto rarit\u00E0.",
+      "Kind": "AutoAbility"
+    },
+    "8017": {
+      "Name": "HP apeiron",
+      "Description": "Permette di avere pi\u00F9 di 9999 HP.",
+      "Kind": "AutoAbility"
+    },
+    "8018": {
+      "Name": "MP apeiron",
+      "Description": "Permette di avere pi\u00F9 di 999 MP.",
+      "Kind": "AutoAbility"
+    },
+    "8019": {
+      "Name": "Danni apeiron",
+      "Description": "Pu\u00F2 causare un danno superiore a 9999 HP.",
+      "Kind": "AutoAbility"
+    },
+    "801A": {
+      "Name": "Guil x 2",
+      "Description": "Raddoppia i guil ottenuti a fine battaglia.",
+      "Kind": "AutoAbility"
+    },
+    "801B": {
+      "Name": "Maratona x HP",
+      "Description": "Recupera HP camminando.",
+      "Kind": "AutoAbility"
+    },
+    "801C": {
+      "Name": "Maratona x MP",
+      "Description": "Recupera MP camminando.",
+      "Kind": "AutoAbility"
+    },
+    "801D": {
+      "Name": "Incontri 0",
+      "Description": "Elimina gli incontri casuali coi nemici.",
+      "Kind": "AutoAbility"
+    },
+    "801E": {
+      "Name": "Fuocattacco",
+      "Description": "Attacca e Tecniche acquisiscono elemento Fuoco.",
+      "Kind": "AutoAbility"
+    },
+    "801F": {
+      "Name": "Fuoco -50%",
+      "Description": "Dimezza i danni subiti di elemento Fuoco.",
+      "Kind": "AutoAbility"
+    },
+    "8020": {
+      "Name": "Immunofuoco",
+      "Description": "Immunizza da elemento Fuoco.",
+      "Kind": "AutoAbility"
+    },
+    "8021": {
+      "Name": "Mangiafuoco",
+      "Description": "Assorbe elemento Fuoco e recupera HP.",
+      "Kind": "AutoAbility"
+    },
+    "8022": {
+      "Name": "Gelattacco",
+      "Description": "Attacca e Tecniche acquisiscono elemento Gelo.",
+      "Kind": "AutoAbility"
+    },
+    "8023": {
+      "Name": "Gelo -50%",
+      "Description": "Dimezza i danni subiti di elemento Gelo.",
+      "Kind": "AutoAbility"
+    },
+    "8024": {
+      "Name": "Immunogelo",
+      "Description": "Immunizza da elemento Gelo.",
+      "Kind": "AutoAbility"
+    },
+    "8025": {
+      "Name": "Mangiagelo",
+      "Description": "Assorbe elemento Gelo e recupera HP.",
+      "Kind": "AutoAbility"
+    },
+    "8026": {
+      "Name": "Tuonattacco",
+      "Description": "Attacca e Tecniche acquisiscono elemento Tuono.",
+      "Kind": "AutoAbility"
+    },
+    "8027": {
+      "Name": "Tuono -50%",
+      "Description": "Dimezza i danni subiti di elemento Tuono.",
+      "Kind": "AutoAbility"
+    },
+    "8028": {
+      "Name": "Immunotuono",
+      "Description": "Immunizza da elemento Tuono.",
+      "Kind": "AutoAbility"
+    },
+    "8029": {
+      "Name": "Mangiatuono",
+      "Description": "Assorbe elemento Tuono e recupera HP.",
+      "Kind": "AutoAbility"
+    },
+    "802A": {
+      "Name": "Acquattacco",
+      "Description": "Attacca e Tecniche acquisiscono elemento Acqua.",
+      "Kind": "AutoAbility"
+    },
+    "802B": {
+      "Name": "Acqua -50%",
+      "Description": "Dimezza i danni subiti di elemento Acqua.",
+      "Kind": "AutoAbility"
+    },
+    "802C": {
+      "Name": "Immunoacqua",
+      "Description": "Immunizza da elemento Acqua.",
+      "Kind": "AutoAbility"
+    },
+    "802D": {
+      "Name": "Mangiacqua",
+      "Description": "Assorbe elemento Acqua e recupera HP.",
+      "Kind": "AutoAbility"
+    },
+    "802E": {
+      "Name": "ATT Morte \u002B",
+      "Description": "Attacca e Tecniche infliggono Morte quasi sempre.",
+      "Kind": "AutoAbility"
+    },
+    "802F": {
+      "Name": "ATT Morte",
+      "Description": "Attacca e Tecniche a volte infliggono Morte.",
+      "Kind": "AutoAbility"
+    },
+    "8030": {
+      "Name": "DIF Morte \u002B",
+      "Description": "Difende quasi sempre da status Morte.",
+      "Kind": "AutoAbility"
+    },
+    "8031": {
+      "Name": "DIF Morte",
+      "Description": "Difende a volte da status Morte.",
+      "Kind": "AutoAbility"
+    },
+    "8032": {
+      "Name": "ATT Zombie \u002B",
+      "Description": "Attacca e Tecniche infliggono Zombie quasi sempre.",
+      "Kind": "AutoAbility"
+    },
+    "8033": {
+      "Name": "ATT Zombie",
+      "Description": "Attacca e Tecniche a volte infliggono Zombie.",
+      "Kind": "AutoAbility"
+    },
+    "8034": {
+      "Name": "DIF Zombie \u002B",
+      "Description": "Difende quasi sempre da status Zombie.",
+      "Kind": "AutoAbility"
+    },
+    "8035": {
+      "Name": "DIF Zombie",
+      "Description": "Difende a volte da status Zombie.",
+      "Kind": "AutoAbility"
+    },
+    "8036": {
+      "Name": "ATT Pietra \u002B",
+      "Description": "Attacca e Tecniche infliggono Pietra quasi sempre.",
+      "Kind": "AutoAbility"
+    },
+    "8037": {
+      "Name": "ATT Pietra",
+      "Description": "Attacca e Tecniche a volte infliggono Pietra.",
+      "Kind": "AutoAbility"
+    },
+    "8038": {
+      "Name": "DIF Pietra \u002B",
+      "Description": "Difende quasi sempre da status Pietra.",
+      "Kind": "AutoAbility"
+    },
+    "8039": {
+      "Name": "DIF Pietra",
+      "Description": "Difende a volte da status Pietra.",
+      "Kind": "AutoAbility"
+    },
+    "803A": {
+      "Name": "ATT Veleno \u002B",
+      "Description": "Attacca e Tecniche infliggono Veleno quasi sempre.",
+      "Kind": "AutoAbility"
+    },
+    "803B": {
+      "Name": "ATT Veleno",
+      "Description": "Attacca e Tecniche a volte infliggono Veleno.",
+      "Kind": "AutoAbility"
+    },
+    "803C": {
+      "Name": "DIF Veleno \u002B",
+      "Description": "Difende quasi sempre da status Veleno.",
+      "Kind": "AutoAbility"
+    },
+    "803D": {
+      "Name": "DIF Veleno",
+      "Description": "Difende a volte da status Veleno.",
+      "Kind": "AutoAbility"
+    },
+    "803E": {
+      "Name": "ATT Sonno \u002B",
+      "Description": "Attacca e Tecniche infliggono Sonno quasi sempre.",
+      "Kind": "AutoAbility"
+    },
+    "803F": {
+      "Name": "ATT Sonno",
+      "Description": "Attacca e Tecniche a volte infliggono Sonno.",
+      "Kind": "AutoAbility"
+    },
+    "8040": {
+      "Name": "DIF Sonno \u002B",
+      "Description": "Difende quasi sempre da status Sonno.",
+      "Kind": "AutoAbility"
+    },
+    "8041": {
+      "Name": "DIF Sonno",
+      "Description": "Difende a volte da status Sonno.",
+      "Kind": "AutoAbility"
+    },
+    "8042": {
+      "Name": "ATT Mutismo \u002B",
+      "Description": "Attacca e Tecniche infliggono Mutismo quasi sempre.",
+      "Kind": "AutoAbility"
+    },
+    "8043": {
+      "Name": "ATT Mutismo",
+      "Description": "Attacca e Tecniche a volte infliggono Mutismo.",
+      "Kind": "AutoAbility"
+    },
+    "8044": {
+      "Name": "DIF Mutismo \u002B",
+      "Description": "Difende quasi sempre da status Mutismo.",
+      "Kind": "AutoAbility"
+    },
+    "8045": {
+      "Name": "DIF Mutismo",
+      "Description": "Difende a volte da status Mutismo.",
+      "Kind": "AutoAbility"
+    },
+    "8046": {
+      "Name": "ATT Blind \u002B",
+      "Description": "Attacca e Tecniche infliggono Blind quasi sempre.",
+      "Kind": "AutoAbility"
+    },
+    "8047": {
+      "Name": "ATT Blind",
+      "Description": "Attacca e Tecniche a volte infliggono Blind.",
+      "Kind": "AutoAbility"
+    },
+    "8048": {
+      "Name": "DIF Blind \u002B",
+      "Description": "Difende quasi sempre da status Blind.",
+      "Kind": "AutoAbility"
+    },
+    "8049": {
+      "Name": "DIF Blind",
+      "Description": "Difende a volte da status Blind.",
+      "Kind": "AutoAbility"
+    },
+    "804A": {
+      "Name": "ATT Lentezza \u002B",
+      "Description": "Attacca e Tecniche infliggono Lentezza quasi sempre.",
+      "Kind": "AutoAbility"
+    },
+    "804B": {
+      "Name": "ATT Lentezza",
+      "Description": "Attacca e Tecniche a volte infliggono Lentezza.",
+      "Kind": "AutoAbility"
+    },
+    "804C": {
+      "Name": "DIF Lentezza \u002B",
+      "Description": "Difende quasi sempre da status Lentezza.",
+      "Kind": "AutoAbility"
+    },
+    "804D": {
+      "Name": "DIF Lentezza",
+      "Description": "Difende a volte da status Lentezza.",
+      "Kind": "AutoAbility"
+    },
+    "804E": {
+      "Name": "DIF Caos \u002B",
+      "Description": "Difende quasi sempre da status Caos.",
+      "Kind": "AutoAbility"
+    },
+    "804F": {
+      "Name": "DIF Caos",
+      "Description": "Difende a volte da status Caos.",
+      "Kind": "AutoAbility"
+    },
+    "8050": {
+      "Name": "DIF Berserk \u002B",
+      "Description": "Difende quasi sempre da status Berserk.",
+      "Kind": "AutoAbility"
+    },
+    "8051": {
+      "Name": "DIF Berserk",
+      "Description": "Difende a volte da status Berserk.",
+      "Kind": "AutoAbility"
+    },
+    "8052": {
+      "Name": "DIF Maledizione \u002B",
+      "Description": "Difende quasi sempre da status Maledizione.",
+      "Kind": "AutoAbility"
+    },
+    "8053": {
+      "Name": "DIF Maledizione",
+      "Description": "Difende a volte da status Maledizione.",
+      "Kind": "AutoAbility"
+    },
+    "8054": {
+      "Name": "Autoshell",
+      "Description": "Shell sempre attivato.",
+      "Kind": "AutoAbility"
+    },
+    "8055": {
+      "Name": "Autoprotect",
+      "Description": "Protect sempre attivato.",
+      "Kind": "AutoAbility"
+    },
+    "8056": {
+      "Name": "Autohaste",
+      "Description": "Haste sempre attivato.",
+      "Kind": "AutoAbility"
+    },
+    "8057": {
+      "Name": "Autorigene",
+      "Description": "Rigene sempre attivato.",
+      "Kind": "AutoAbility"
+    },
+    "8058": {
+      "Name": "Autoreflex",
+      "Description": "Reflex sempre attivato.",
+      "Kind": "AutoAbility"
+    },
+    "8059": {
+      "Name": "Riserva Shell",
+      "Description": "Attiva Shell quando gli HP sono bassi.",
+      "Kind": "AutoAbility"
+    },
+    "805A": {
+      "Name": "Riserva Protect",
+      "Description": "Attiva Protect quando gli HP sono bassi.",
+      "Kind": "AutoAbility"
+    },
+    "805B": {
+      "Name": "Riserva Haste",
+      "Description": "Attiva Haste quando gli HP sono bassi.",
+      "Kind": "AutoAbility"
+    },
+    "805C": {
+      "Name": "Riserva Rigene",
+      "Description": "Attiva Rigene quando gli HP sono bassi.",
+      "Kind": "AutoAbility"
+    },
+    "805D": {
+      "Name": "Riserva Reflex",
+      "Description": "Attiva Reflex quando gli HP sono bassi.",
+      "Kind": "AutoAbility"
+    },
+    "805E": {
+      "Name": "Riserva Paraidro",
+      "Description": "Attiva Paraidro quando gli HP sono bassi.",
+      "Kind": "AutoAbility"
+    },
+    "805F": {
+      "Name": "Riserva Parabliz",
+      "Description": "Attiva Parabliz quando gli HP sono bassi.",
+      "Kind": "AutoAbility"
+    },
+    "8060": {
+      "Name": "Riserva Parathund",
+      "Description": "Attiva Parathund quando gli HP sono bassi.",
+      "Kind": "AutoAbility"
+    },
+    "8061": {
+      "Name": "Riserva Parafire",
+      "Description": "Attiva Parafire quando gli HP sono bassi.",
+      "Kind": "AutoAbility"
+    },
+    "8062": {
+      "Name": "ATT fisico \u002B3%",
+      "Description": "Aumenta i danni fisici inflitti del 3%.",
+      "Kind": "AutoAbility"
+    },
+    "8063": {
+      "Name": "ATT fisico \u002B5%",
+      "Description": "Aumenta i danni fisici inflitti del 5%.",
+      "Kind": "AutoAbility"
+    },
+    "8064": {
+      "Name": "ATT fisico \u002B10%",
+      "Description": "Aumenta i danni fisici inflitti del 10%.",
+      "Kind": "AutoAbility"
+    },
+    "8065": {
+      "Name": "ATT fisico \u002B20%",
+      "Description": "Aumenta i danni fisici inflitti del 20%.",
+      "Kind": "AutoAbility"
+    },
+    "8066": {
+      "Name": "ATT magico \u002B3%",
+      "Description": "Aumenta i danni magici inflitti del 3%.",
+      "Kind": "AutoAbility"
+    },
+    "8067": {
+      "Name": "ATT magico \u002B5%",
+      "Description": "Aumenta i danni magici inflitti del 5%.",
+      "Kind": "AutoAbility"
+    },
+    "8068": {
+      "Name": "ATT magico \u002B10%",
+      "Description": "Aumenta i danni magici inflitti del 10%.",
+      "Kind": "AutoAbility"
+    },
+    "8069": {
+      "Name": "ATT magico \u002B20%",
+      "Description": "Aumenta i danni magici inflitti del 20%.",
+      "Kind": "AutoAbility"
+    },
+    "806A": {
+      "Name": "DIF fisica \u002B3%",
+      "Description": "Riduce i danni fisici subiti del 3%.",
+      "Kind": "AutoAbility"
+    },
+    "806B": {
+      "Name": "DIF fisica \u002B5%",
+      "Description": "Riduce i danni fisici subiti del 5%.",
+      "Kind": "AutoAbility"
+    },
+    "806C": {
+      "Name": "DIF fisica \u002B10%",
+      "Description": "Riduce i danni fisici subiti del 10%.",
+      "Kind": "AutoAbility"
+    },
+    "806D": {
+      "Name": "DIF fisica \u002B20%",
+      "Description": "Riduce i danni fisici subiti del 20%.",
+      "Kind": "AutoAbility"
+    },
+    "806E": {
+      "Name": "DIF magica \u002B3%",
+      "Description": "Riduce i danni magici subiti del 3%.",
+      "Kind": "AutoAbility"
+    },
+    "806F": {
+      "Name": "DIF magica \u002B5%",
+      "Description": "Riduce i danni magici subiti del 5%.",
+      "Kind": "AutoAbility"
+    },
+    "8070": {
+      "Name": "DIF magica \u002B10%",
+      "Description": "Riduce i danni magici subiti del 10%.",
+      "Kind": "AutoAbility"
+    },
+    "8071": {
+      "Name": "DIF magica \u002B20%",
+      "Description": "Riduce i danni magici subiti del 20%.",
+      "Kind": "AutoAbility"
+    },
+    "8072": {
+      "Name": "HP \u002B5%",
+      "Description": "Aumenta gli HP massimi del 5%.",
+      "Kind": "AutoAbility"
+    },
+    "8073": {
+      "Name": "HP \u002B10%",
+      "Description": "Aumenta gli HP massimi del 10%.",
+      "Kind": "AutoAbility"
+    },
+    "8074": {
+      "Name": "HP \u002B20%",
+      "Description": "Aumenta gli HP massimi del 20%.",
+      "Kind": "AutoAbility"
+    },
+    "8075": {
+      "Name": "HP \u002B30%",
+      "Description": "Aumenta gli HP massimi del 30%.",
+      "Kind": "AutoAbility"
+    },
+    "8076": {
+      "Name": "MP \u002B5%",
+      "Description": "Aumenta gli MP massimi del 5%.",
+      "Kind": "AutoAbility"
+    },
+    "8077": {
+      "Name": "MP \u002B10%",
+      "Description": "Aumenta gli MP massimi del 10%.",
+      "Kind": "AutoAbility"
+    },
+    "8078": {
+      "Name": "MP \u002B20%",
+      "Description": "Aumenta gli MP massimi del 20%.",
+      "Kind": "AutoAbility"
+    },
+    "8079": {
+      "Name": "MP \u002B30%",
+      "Description": "Aumenta gli MP massimi del 30%.",
+      "Kind": "AutoAbility"
+    },
+    "807A": {
+      "Name": "Cattura",
+      "Description": "Niente",
+      "Kind": "AutoAbility"
+    },
+    "807B": {
+      "Name": "-",
+      "Description": "Niente",
+      "Kind": "AutoAbility"
+    },
+    "807C": {
+      "Name": "Induttore E",
+      "Description": "Attacca e Tecniche acquisiscono effetto Protoenergia.",
+      "Kind": "AutoAbility"
+    },
+    "807D": {
+      "Name": "Induttore M",
+      "Description": "Attacca e Tecniche acquisiscono effetto Protomagia.",
+      "Kind": "AutoAbility"
+    },
+    "807E": {
+      "Name": "Induttore V",
+      "Description": "Attacca e Tecniche acquisiscono effetto Protorapidit\u00E0.",
+      "Kind": "AutoAbility"
+    },
+    "807F": {
+      "Name": "Induttore A",
+      "Description": "Attacca e Tecniche acquisiscono effetto Protoabilit\u00E0.",
+      "Kind": "AutoAbility"
+    },
+    "8080": {
+      "Name": "Fiocco",
+      "Description": "Difende quasi sempre da tutti gli status alterati.",
+      "Kind": "AutoAbility"
+    },
+    "8081": {
+      "Name": "Chiama 1",
+      "Description": "Niente",
+      "Kind": "AutoAbility"
+    },
+    "8082": {
+      "Name": "Chiama 2",
+      "Description": "Niente",
+      "Kind": "AutoAbility"
+    },
+    "8083": {
+      "Name": "Chiama 3",
+      "Description": "Niente",
+      "Kind": "AutoAbility"
+    },
+    "8084": {
+      "Name": "Chiama 4",
+      "Description": "Niente",
+      "Kind": "AutoAbility"
+    },
+    "8085": {
+      "Name": "Chiama 5",
+      "Description": "Niente",
+      "Kind": "AutoAbility"
+    }
+  }
+}

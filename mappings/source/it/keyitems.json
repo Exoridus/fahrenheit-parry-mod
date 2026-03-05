@@ -1,0 +1,331 @@
+{
+  "SchemaVersion": 1,
+  "Domain": "keyitems",
+  "Locale": "it",
+  "GeneratedAtUtc": "2026-03-04T07:27:52.2876921Z",
+  "SourceFiles": [
+    "READ_ALL_COMMANDS_LOCALIZED__it.txt"
+  ],
+  "Entries": {
+    "A000": {
+      "Name": "Fiori secchi",
+      "Description": "Mazzo di fiori amorevolmente preparato da qualcuno.",
+      "Kind": "KeyItem"
+    },
+    "A001": {
+      "Name": "Pietre focaie",
+      "Description": "Arnesi per accendere il fuoco.",
+      "Kind": "KeyItem"
+    },
+    "A002": {
+      "Name": "Specchio offuscato",
+      "Description": "La superficie dello specchio ha perso luminosit\u00E0.",
+      "Kind": "KeyItem"
+    },
+    "A003": {
+      "Name": "Specchio dei 7 astri",
+      "Description": "La superficie dello specchio irradia luminosit\u00E0.",
+      "Kind": "KeyItem"
+    },
+    "A004": {
+      "Name": "Dizionario Albhed 1",
+      "Description": "Serve per apprendere la lettera \u201Da\u201D in Albhed.",
+      "Kind": "KeyItem"
+    },
+    "A005": {
+      "Name": "Dizionario Albhed 2",
+      "Description": "Serve per apprendere la lettera \u201Db\u201D in Albhed.",
+      "Kind": "KeyItem"
+    },
+    "A006": {
+      "Name": "Dizionario Albhed 3",
+      "Description": "Serve per apprendere la lettera \u201Dc\u201D in Albhed.",
+      "Kind": "KeyItem"
+    },
+    "A007": {
+      "Name": "Dizionario Albhed 4",
+      "Description": "Serve per apprendere la lettera \u201Dd\u201D in Albhed.",
+      "Kind": "KeyItem"
+    },
+    "A008": {
+      "Name": "Dizionario Albhed 5",
+      "Description": "Serve per apprendere la lettera \u201De\u201D in Albhed.",
+      "Kind": "KeyItem"
+    },
+    "A009": {
+      "Name": "Dizionario Albhed 6",
+      "Description": "Serve per apprendere la lettera \u201Df\u201D in Albhed.",
+      "Kind": "KeyItem"
+    },
+    "A00A": {
+      "Name": "Dizionario Albhed 7",
+      "Description": "Serve per apprendere la lettera \u201Dg\u201D in Albhed.",
+      "Kind": "KeyItem"
+    },
+    "A00B": {
+      "Name": "Dizionario Albhed 8",
+      "Description": "Serve per apprendere la lettera \u201Dh\u201D in Albhed.",
+      "Kind": "KeyItem"
+    },
+    "A00C": {
+      "Name": "Dizionario Albhed 9",
+      "Description": "Serve per apprendere la lettera \u201Di\u201D in Albhed.",
+      "Kind": "KeyItem"
+    },
+    "A00D": {
+      "Name": "Dizionario Albhed 10",
+      "Description": "Serve per apprendere la lettera \u201Dj\u201D in Albhed.",
+      "Kind": "KeyItem"
+    },
+    "A00E": {
+      "Name": "Dizionario Albhed 11",
+      "Description": "Serve per apprendere la lettera \u201Dk\u201D in Albhed.",
+      "Kind": "KeyItem"
+    },
+    "A00F": {
+      "Name": "Dizionario Albhed 12",
+      "Description": "Serve per apprendere la lettera \u201Dl\u201D in Albhed.",
+      "Kind": "KeyItem"
+    },
+    "A010": {
+      "Name": "Dizionario Albhed 13",
+      "Description": "Serve per apprendere la lettera \u201Dm\u201D in Albhed.",
+      "Kind": "KeyItem"
+    },
+    "A011": {
+      "Name": "Dizionario Albhed 14",
+      "Description": "Serve per apprendere la lettera \u201Dn\u201D in Albhed.",
+      "Kind": "KeyItem"
+    },
+    "A012": {
+      "Name": "Dizionario Albhed 15",
+      "Description": "Serve per apprendere la lettera \u201Do\u201D in Albhed.",
+      "Kind": "KeyItem"
+    },
+    "A013": {
+      "Name": "Dizionario Albhed 16",
+      "Description": "Serve per apprendere la lettera \u201Dp\u201D in Albhed.",
+      "Kind": "KeyItem"
+    },
+    "A014": {
+      "Name": "Dizionario Albhed 17",
+      "Description": "Serve per apprendere la lettera \u201Dq\u201D in Albhed.",
+      "Kind": "KeyItem"
+    },
+    "A015": {
+      "Name": "Dizionario Albhed 18",
+      "Description": "Serve per apprendere la lettera \u201Dr\u201D in Albhed.",
+      "Kind": "KeyItem"
+    },
+    "A016": {
+      "Name": "Dizionario Albhed 19",
+      "Description": "Serve per apprendere la lettera \u201Ds\u201D in Albhed.",
+      "Kind": "KeyItem"
+    },
+    "A017": {
+      "Name": "Dizionario Albhed 20",
+      "Description": "Serve per apprendere la lettera \u201Dt\u201D in Albhed.",
+      "Kind": "KeyItem"
+    },
+    "A018": {
+      "Name": "Dizionario Albhed 21",
+      "Description": "Serve per apprendere la lettera \u201Du\u201D in Albhed.",
+      "Kind": "KeyItem"
+    },
+    "A019": {
+      "Name": "Dizionario Albhed 22",
+      "Description": "Serve per apprendere la lettera \u201Dv\u201D in Albhed.",
+      "Kind": "KeyItem"
+    },
+    "A01A": {
+      "Name": "Dizionario Albhed 23",
+      "Description": "Serve per apprendere la lettera \u201Dw\u201D in Albhed.",
+      "Kind": "KeyItem"
+    },
+    "A01B": {
+      "Name": "Dizionario Albhed 24",
+      "Description": "Serve per apprendere la lettera \u201Dx\u201D in Albhed.",
+      "Kind": "KeyItem"
+    },
+    "A01C": {
+      "Name": "Dizionario Albhed 25",
+      "Description": "Serve per apprendere la lettera \u201Dy\u201D in Albhed.",
+      "Kind": "KeyItem"
+    },
+    "A01D": {
+      "Name": "Dizionario Albhed 26",
+      "Description": "Serve per apprendere la lettera \u201Dz\u201D in Albhed.",
+      "Kind": "KeyItem"
+    },
+    "A01E": {
+      "Name": "Spirito d\u2019invocatore",
+      "Description": "Permette di insegnare le abilit\u00E0 agli Eoni.",
+      "Kind": "KeyItem"
+    },
+    "A01F": {
+      "Name": "Spirito di Eone",
+      "Description": "Permette di aumentare i parametri degli Eoni.",
+      "Kind": "KeyItem"
+    },
+    "A020": {
+      "Name": "Jechtsfera",
+      "Description": "Sfera filmata da Jecht dieci anni fa.",
+      "Kind": "KeyItem"
+    },
+    "A021": {
+      "Name": "Spada ossidata",
+      "Description": "Spada vecchia e arrugginita.",
+      "Kind": "KeyItem"
+    },
+    "A022": {
+      "Name": "",
+      "Description": "",
+      "Kind": "KeyItem"
+    },
+    "A023": {
+      "Name": "Simbolo del Sole",
+      "Description": "Simbolo raffigurante il Sole.",
+      "Kind": "KeyItem"
+    },
+    "A024": {
+      "Name": "Emblema del Sole",
+      "Description": "Emblema raffigurante il Sole.",
+      "Kind": "KeyItem"
+    },
+    "A025": {
+      "Name": "Simbolo della Luna",
+      "Description": "Simbolo raffigurante la Luna.",
+      "Kind": "KeyItem"
+    },
+    "A026": {
+      "Name": "Emblema della Luna",
+      "Description": "Emblema raffigurante la Luna.",
+      "Kind": "KeyItem"
+    },
+    "A027": {
+      "Name": "Simbolo di Saturno",
+      "Description": "Simbolo raffigurante Saturno.",
+      "Kind": "KeyItem"
+    },
+    "A028": {
+      "Name": "Emblema di Saturno",
+      "Description": "Emblema raffigurante Saturno.",
+      "Kind": "KeyItem"
+    },
+    "A029": {
+      "Name": "Medaglia del prode",
+      "Description": "Per il non plus ultra dei guerrieri!",
+      "Kind": "KeyItem"
+    },
+    "A02A": {
+      "Name": "Simbolo di Giove",
+      "Description": "Simbolo raffigurante Giove.",
+      "Kind": "KeyItem"
+    },
+    "A02B": {
+      "Name": "Emblema di Giove",
+      "Description": "Emblema raffigurante Giove.",
+      "Kind": "KeyItem"
+    },
+    "A02C": {
+      "Name": "Simbolo di Mercurio",
+      "Description": "Simbolo raffigurante Mercurio.",
+      "Kind": "KeyItem"
+    },
+    "A02D": {
+      "Name": "Emblema di Mercurio",
+      "Description": "Emblema raffigurante Mercurio.",
+      "Kind": "KeyItem"
+    },
+    "A02E": {
+      "Name": "Simbolo di Marte",
+      "Description": "Simbolo raffigurante Marte.",
+      "Kind": "KeyItem"
+    },
+    "A02F": {
+      "Name": "Emblema di Marte",
+      "Description": "Emblema raffigurante Marte.",
+      "Kind": "KeyItem"
+    },
+    "A030": {
+      "Name": "Simbolo di Venere",
+      "Description": "Simbolo raffigurante Venere.",
+      "Kind": "KeyItem"
+    },
+    "A031": {
+      "Name": "Emblema di Venere",
+      "Description": "Emblema raffigurante Venere.",
+      "Kind": "KeyItem"
+    },
+    "A032": {
+      "Name": "Corona di boccioli",
+      "Description": "Ha a che fare con un Eone nascosto.",
+      "Kind": "KeyItem"
+    },
+    "A033": {
+      "Name": "Corona di fiori",
+      "Description": "Ha a che fare con un Eone nascosto.",
+      "Kind": "KeyItem"
+    },
+    "A034": {
+      "Name": "Rarit\u00E0 53",
+      "Description": "Niente",
+      "Kind": "KeyItem"
+    },
+    "A035": {
+      "Name": "Rarit\u00E0 54",
+      "Description": "Niente",
+      "Kind": "KeyItem"
+    },
+    "A036": {
+      "Name": "Rarit\u00E0 55",
+      "Description": "Niente",
+      "Kind": "KeyItem"
+    },
+    "A037": {
+      "Name": "Rarit\u00E0 56",
+      "Description": "Niente",
+      "Kind": "KeyItem"
+    },
+    "A038": {
+      "Name": "Rarit\u00E0 57",
+      "Description": "Niente",
+      "Kind": "KeyItem"
+    },
+    "A039": {
+      "Name": "Rarit\u00E0 58",
+      "Description": "Niente",
+      "Kind": "KeyItem"
+    },
+    "A03A": {
+      "Name": "Rarit\u00E0 59",
+      "Description": "Niente",
+      "Kind": "KeyItem"
+    },
+    "A03B": {
+      "Name": "Rarit\u00E0 60",
+      "Description": "Niente",
+      "Kind": "KeyItem"
+    },
+    "A03C": {
+      "Name": "Rarit\u00E0 61",
+      "Description": "Niente",
+      "Kind": "KeyItem"
+    },
+    "A03D": {
+      "Name": "Rarit\u00E0 62",
+      "Description": "Niente",
+      "Kind": "KeyItem"
+    },
+    "A03E": {
+      "Name": "Rarit\u00E0 63",
+      "Description": "Niente",
+      "Kind": "KeyItem"
+    },
+    "A03F": {
+      "Name": "Rarit\u00E0 64",
+      "Description": "Niente",
+      "Kind": "KeyItem"
+    }
+  }
+}

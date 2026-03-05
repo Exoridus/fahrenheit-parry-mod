@@ -1,0 +1,681 @@
+{
+  "SchemaVersion": 1,
+  "Domain": "autoabilities",
+  "Locale": "fr",
+  "GeneratedAtUtc": "2026-03-04T07:27:52.2636794Z",
+  "SourceFiles": [
+    "READ_ALL_COMMANDS_LOCALIZED__fr.txt"
+  ],
+  "Entries": {
+    "8000": {
+      "Name": "Analyse",
+      "Description": "Permet d\u2019afficher les caract\u00E9ristiques d\u2019un ennemi.",
+      "Kind": "AutoAbility"
+    },
+    "8001": {
+      "Name": "Initiative",
+      "Description": "Permet d\u2019agir d\u00E8s le d\u00E9but d\u2019un combat.",
+      "Kind": "AutoAbility"
+    },
+    "8002": {
+      "Name": "Attaque surprise",
+      "Description": "Augmente les chances de surprendre les ennemis.",
+      "Kind": "AutoAbility"
+    },
+    "8003": {
+      "Name": "Riposte",
+      "Description": "Permet de riposter \u00E0 une attaque physique.",
+      "Kind": "AutoAbility"
+    },
+    "8004": {
+      "Name": "Contre-attaque",
+      "Description": "Permet d\u2019esquiver une attaque physique et de riposter.",
+      "Kind": "AutoAbility"
+    },
+    "8005": {
+      "Name": "Repr\u00E9sailles",
+      "Description": "Permet de riposter \u00E0 une attaque magique.",
+      "Kind": "AutoAbility"
+    },
+    "8006": {
+      "Name": "Transe",
+      "Description": "Renforce la magie en doublant son co\u00FBt en MP.",
+      "Kind": "AutoAbility"
+    },
+    "8007": {
+      "Name": "Pharmacologie",
+      "Description": "Double l\u2019effet des objets de soins (HP et MP).",
+      "Kind": "AutoAbility"
+    },
+    "8008": {
+      "Name": "Auto Potion",
+      "Description": "Utilise une potion en cas de blessure.",
+      "Kind": "AutoAbility"
+    },
+    "8009": {
+      "Name": "Auto Gu\u00E9rison",
+      "Description": "Utilise un objet appropri\u00E9 en cas d\u2019alt\u00E9ration d\u2019\u00E9tat.",
+      "Kind": "AutoAbility"
+    },
+    "800A": {
+      "Name": "Auto Ph\u00E9nix",
+      "Description": "Utilise une Queue de ph\u00E9nix sur un alli\u00E9 quand il est KO.",
+      "Kind": "AutoAbility"
+    },
+    "800B": {
+      "Name": "Percer",
+      "Description": "Inflige des d\u00E9g\u00E2ts normaux aux ennemis cuirass\u00E9s.",
+      "Kind": "AutoAbility"
+    },
+    "800C": {
+      "Name": "Demi MP",
+      "Description": "R\u00E9duit les co\u00FBts en MP de moiti\u00E9 pendant les combats.",
+      "Kind": "AutoAbility"
+    },
+    "800D": {
+      "Name": "MP 1",
+      "Description": "R\u00E9duit les co\u00FBts en MP \u00E0 1 point pendant les combats.",
+      "Kind": "AutoAbility"
+    },
+    "800E": {
+      "Name": "Overdrive x2",
+      "Description": "Fait monter la jauge d\u2019Overdrive 2 fois plus vite.",
+      "Kind": "AutoAbility"
+    },
+    "800F": {
+      "Name": "Overdrive x3",
+      "Description": "Fait monter la jauge d\u2019Overdrive 3 fois plus vite.",
+      "Kind": "AutoAbility"
+    },
+    "8010": {
+      "Name": "SOS Overdrive x2",
+      "Description": "Fait monter la jauge d\u2019OD 2x plus vite en cas de danger.",
+      "Kind": "AutoAbility"
+    },
+    "8011": {
+      "Name": "Overdrive en PC",
+      "Description": "Bloque la jauge d\u2019OD mais augmente les PC gagn\u00E9s.",
+      "Kind": "AutoAbility"
+    },
+    "8012": {
+      "Name": "PC x2",
+      "Description": "Double les PC gagn\u00E9s \u00E0 la fin d\u2019un combat.",
+      "Kind": "AutoAbility"
+    },
+    "8013": {
+      "Name": "PC x3",
+      "Description": "Triple les PC gagn\u00E9s \u00E0 la fin d\u2019un combat.",
+      "Kind": "AutoAbility"
+    },
+    "8014": {
+      "Name": "PC 0",
+      "Description": "Annule les PC gagn\u00E9s \u00E0 la fin d\u2019un combat.",
+      "Kind": "AutoAbility"
+    },
+    "8015": {
+      "Name": "Aubaine",
+      "Description": "Augmente les chances de voler des objets rares.",
+      "Kind": "AutoAbility"
+    },
+    "8016": {
+      "Name": "Lupin",
+      "Description": "Permet de voler exclusivement des objets rares.",
+      "Kind": "AutoAbility"
+    },
+    "8017": {
+      "Name": "HP extra",
+      "Description": "Permet de d\u00E9passer la limite des 9999 HP.",
+      "Kind": "AutoAbility"
+    },
+    "8018": {
+      "Name": "MP extra",
+      "Description": "Permet de d\u00E9passer la limite des 999 MP.",
+      "Kind": "AutoAbility"
+    },
+    "8019": {
+      "Name": "D\u00E9g\u00E2ts extra",
+      "Description": "Permet d\u2019infliger des d\u00E9g\u00E2ts sup\u00E9rieurs \u00E0 9999.",
+      "Kind": "AutoAbility"
+    },
+    "801A": {
+      "Name": "Gils x2",
+      "Description": "Double les Gils gagn\u00E9s \u00E0 la fin d\u2019un combat.",
+      "Kind": "AutoAbility"
+    },
+    "801B": {
+      "Name": "Regain de HP",
+      "Description": "Permet de regagner des HP en marchant.",
+      "Kind": "AutoAbility"
+    },
+    "801C": {
+      "Name": "Regain de MP",
+      "Description": "Permet de regagner des MP en marchant.",
+      "Kind": "AutoAbility"
+    },
+    "801D": {
+      "Name": "S\u00E9curit\u00E9",
+      "Description": "Permet d\u2019\u00E9viter toute rencontre al\u00E9atoire.",
+      "Kind": "AutoAbility"
+    },
+    "801E": {
+      "Name": "Atq Feu",
+      "Description": "Permet d\u2019effectuer des attaques de Feu.",
+      "Kind": "AutoAbility"
+    },
+    "801F": {
+      "Name": "Demi Feu",
+      "Description": "R\u00E9duit les d\u00E9g\u00E2ts dus au Feu de moiti\u00E9.",
+      "Kind": "AutoAbility"
+    },
+    "8020": {
+      "Name": "Annu Feu",
+      "Description": "Annule les d\u00E9g\u00E2ts dus au Feu.",
+      "Kind": "AutoAbility"
+    },
+    "8021": {
+      "Name": "Absorb Feu",
+      "Description": "Transforme les d\u00E9g\u00E2ts dus au Feu en HP.",
+      "Kind": "AutoAbility"
+    },
+    "8022": {
+      "Name": "Atq Glace",
+      "Description": "Permet d\u2019effectuer des attaques de Glace.",
+      "Kind": "AutoAbility"
+    },
+    "8023": {
+      "Name": "Demi Glace",
+      "Description": "R\u00E9duit les d\u00E9g\u00E2ts dus \u00E0 la Glace de moiti\u00E9.",
+      "Kind": "AutoAbility"
+    },
+    "8024": {
+      "Name": "Annu Glace",
+      "Description": "Annule les d\u00E9g\u00E2ts dus \u00E0 la Glace.",
+      "Kind": "AutoAbility"
+    },
+    "8025": {
+      "Name": "Absorb Glace",
+      "Description": "Transforme les d\u00E9g\u00E2ts dus \u00E0 la Glace en HP.",
+      "Kind": "AutoAbility"
+    },
+    "8026": {
+      "Name": "Atq Tonnerre",
+      "Description": "Permet d\u2019effectuer des attaques de Tonnerre.",
+      "Kind": "AutoAbility"
+    },
+    "8027": {
+      "Name": "Demi Tonnerre",
+      "Description": "R\u00E9duit les d\u00E9g\u00E2ts dus au Tonnerre de moiti\u00E9.",
+      "Kind": "AutoAbility"
+    },
+    "8028": {
+      "Name": "Annu Tonnerre",
+      "Description": "Annule les d\u00E9g\u00E2ts dus au Tonnerre.",
+      "Kind": "AutoAbility"
+    },
+    "8029": {
+      "Name": "Absorb Tonnerre",
+      "Description": "Transforme les d\u00E9g\u00E2ts dus au Tonnerre en HP.",
+      "Kind": "AutoAbility"
+    },
+    "802A": {
+      "Name": "Atq Eau",
+      "Description": "Permet d\u2019effectuer des attaques d\u2019Eau.",
+      "Kind": "AutoAbility"
+    },
+    "802B": {
+      "Name": "Demi Eau",
+      "Description": "R\u00E9duit les d\u00E9g\u00E2ts dus \u00E0 l\u2019Eau de moiti\u00E9.",
+      "Kind": "AutoAbility"
+    },
+    "802C": {
+      "Name": "Annu Eau",
+      "Description": "Annule les d\u00E9g\u00E2ts dus \u00E0 l\u2019Eau.",
+      "Kind": "AutoAbility"
+    },
+    "802D": {
+      "Name": "Absorb Eau",
+      "Description": "Transforme les d\u00E9g\u00E2ts dus \u00E0 l\u2019Eau en HP.",
+      "Kind": "AutoAbility"
+    },
+    "802E": {
+      "Name": "Atq Mort \u002B",
+      "Description": "Permet d\u2019infliger Mort \u00E0 coup s\u00FBr.",
+      "Kind": "AutoAbility"
+    },
+    "802F": {
+      "Name": "Atq Mort",
+      "Description": "Permet d\u2019infliger Mort.",
+      "Kind": "AutoAbility"
+    },
+    "8030": {
+      "Name": "D\u00E9f Mort \u002B",
+      "Description": "Prot\u00E8ge de Mort \u00E0 coup s\u00FBr.",
+      "Kind": "AutoAbility"
+    },
+    "8031": {
+      "Name": "D\u00E9f Mort",
+      "Description": "Prot\u00E8ge de Mort.",
+      "Kind": "AutoAbility"
+    },
+    "8032": {
+      "Name": "Atq Zombie \u002B",
+      "Description": "Permet d\u2019infliger Zombie \u00E0 coup s\u00FBr.",
+      "Kind": "AutoAbility"
+    },
+    "8033": {
+      "Name": "Atq Zombie",
+      "Description": "Permet d\u2019infliger Zombie.",
+      "Kind": "AutoAbility"
+    },
+    "8034": {
+      "Name": "D\u00E9f Zombie \u002B",
+      "Description": "Prot\u00E8ge de Zombie \u00E0 coup s\u00FBr.",
+      "Kind": "AutoAbility"
+    },
+    "8035": {
+      "Name": "D\u00E9f Zombie",
+      "Description": "Prot\u00E8ge de Zombie.",
+      "Kind": "AutoAbility"
+    },
+    "8036": {
+      "Name": "Atq Fossile \u002B",
+      "Description": "Permet d\u2019infliger Fossile \u00E0 coup s\u00FBr.",
+      "Kind": "AutoAbility"
+    },
+    "8037": {
+      "Name": "Atq Fossile",
+      "Description": "Permet d\u2019infliger Fossile.",
+      "Kind": "AutoAbility"
+    },
+    "8038": {
+      "Name": "D\u00E9f Fossile \u002B",
+      "Description": "Prot\u00E8ge de Fossile \u00E0 coup s\u00FBr.",
+      "Kind": "AutoAbility"
+    },
+    "8039": {
+      "Name": "D\u00E9f Fossile",
+      "Description": "Prot\u00E8ge de Fossile.",
+      "Kind": "AutoAbility"
+    },
+    "803A": {
+      "Name": "Atq Poison \u002B",
+      "Description": "Permet d\u2019infliger Poison \u00E0 coup s\u00FBr.",
+      "Kind": "AutoAbility"
+    },
+    "803B": {
+      "Name": "Atq Poison",
+      "Description": "Permet d\u2019infliger Poison.",
+      "Kind": "AutoAbility"
+    },
+    "803C": {
+      "Name": "D\u00E9f Poison \u002B",
+      "Description": "Prot\u00E8ge de Poison \u00E0 coup s\u00FBr.",
+      "Kind": "AutoAbility"
+    },
+    "803D": {
+      "Name": "D\u00E9f Poison",
+      "Description": "Prot\u00E8ge de Poison.",
+      "Kind": "AutoAbility"
+    },
+    "803E": {
+      "Name": "Atq Sommeil \u002B",
+      "Description": "Permet d\u2019infliger Sommeil \u00E0 coup s\u00FBr.",
+      "Kind": "AutoAbility"
+    },
+    "803F": {
+      "Name": "Atq Sommeil",
+      "Description": "Permet d\u2019infliger Sommeil.",
+      "Kind": "AutoAbility"
+    },
+    "8040": {
+      "Name": "D\u00E9f Sommeil \u002B",
+      "Description": "Prot\u00E8ge de Sommeil \u00E0 coup s\u00FBr.",
+      "Kind": "AutoAbility"
+    },
+    "8041": {
+      "Name": "D\u00E9f Sommeil",
+      "Description": "Prot\u00E8ge de Sommeil.",
+      "Kind": "AutoAbility"
+    },
+    "8042": {
+      "Name": "Atq Mutisme \u002B",
+      "Description": "Permet d\u2019infliger Mutisme \u00E0 coup s\u00FBr.",
+      "Kind": "AutoAbility"
+    },
+    "8043": {
+      "Name": "Atq Mutisme",
+      "Description": "Permet d\u2019infliger Mutisme.",
+      "Kind": "AutoAbility"
+    },
+    "8044": {
+      "Name": "D\u00E9f Mutisme \u002B",
+      "Description": "Prot\u00E8ge de Mutisme \u00E0 coup s\u00FBr.",
+      "Kind": "AutoAbility"
+    },
+    "8045": {
+      "Name": "D\u00E9f Mutisme",
+      "Description": "Prot\u00E8ge de Mutisme.",
+      "Kind": "AutoAbility"
+    },
+    "8046": {
+      "Name": "Atq Obscurit\u00E9 \u002B",
+      "Description": "Permet d\u2019infliger Obscurit\u00E9 \u00E0 coup s\u00FBr.",
+      "Kind": "AutoAbility"
+    },
+    "8047": {
+      "Name": "Atq Obscurit\u00E9",
+      "Description": "Permet d\u2019infliger Obscurit\u00E9.",
+      "Kind": "AutoAbility"
+    },
+    "8048": {
+      "Name": "D\u00E9f Obscurit\u00E9 \u002B",
+      "Description": "Prot\u00E8ge d\u2019Obscurit\u00E9 \u00E0 coup s\u00FBr.",
+      "Kind": "AutoAbility"
+    },
+    "8049": {
+      "Name": "D\u00E9f Obscurit\u00E9",
+      "Description": "Prot\u00E8ge d\u2019Obscurit\u00E9.",
+      "Kind": "AutoAbility"
+    },
+    "804A": {
+      "Name": "Atq Somni \u002B",
+      "Description": "Permet d\u2019infliger Somni \u00E0 coup s\u00FBr.",
+      "Kind": "AutoAbility"
+    },
+    "804B": {
+      "Name": "Atq Somni",
+      "Description": "Permet d\u2019infliger Somni.",
+      "Kind": "AutoAbility"
+    },
+    "804C": {
+      "Name": "D\u00E9f Somni \u002B",
+      "Description": "Prot\u00E8ge de Somni \u00E0 coup s\u00FBr.",
+      "Kind": "AutoAbility"
+    },
+    "804D": {
+      "Name": "D\u00E9f Somni",
+      "Description": "Prot\u00E8ge de Somni.",
+      "Kind": "AutoAbility"
+    },
+    "804E": {
+      "Name": "D\u00E9f Folie \u002B",
+      "Description": "Prot\u00E8ge de Folie \u00E0 coup s\u00FBr.",
+      "Kind": "AutoAbility"
+    },
+    "804F": {
+      "Name": "D\u00E9f Folie",
+      "Description": "Prot\u00E8ge de Folie.",
+      "Kind": "AutoAbility"
+    },
+    "8050": {
+      "Name": "D\u00E9f Furie \u002B",
+      "Description": "Prot\u00E8ge de Furie \u00E0 coup s\u00FBr.",
+      "Kind": "AutoAbility"
+    },
+    "8051": {
+      "Name": "D\u00E9f Furie",
+      "Description": "Prot\u00E8ge de Furie.",
+      "Kind": "AutoAbility"
+    },
+    "8052": {
+      "Name": "D\u00E9f Fl\u00E9au \u002B",
+      "Description": "Prot\u00E8ge de Fl\u00E9au \u00E0 coup s\u00FBr.",
+      "Kind": "AutoAbility"
+    },
+    "8053": {
+      "Name": "D\u00E9f Fl\u00E9au",
+      "Description": "Prot\u00E8ge de Fl\u00E9au.",
+      "Kind": "AutoAbility"
+    },
+    "8054": {
+      "Name": "Auto Blindage",
+      "Description": "Utilise Blindage en permanence.",
+      "Kind": "AutoAbility"
+    },
+    "8055": {
+      "Name": "Auto Carapace",
+      "Description": "Utilise Carapace en permanence.",
+      "Kind": "AutoAbility"
+    },
+    "8056": {
+      "Name": "Auto Booster",
+      "Description": "Utilise Booster en permanence.",
+      "Kind": "AutoAbility"
+    },
+    "8057": {
+      "Name": "Auto R\u00E9cup",
+      "Description": "Utilise R\u00E9cup en permanence.",
+      "Kind": "AutoAbility"
+    },
+    "8058": {
+      "Name": "Auto Boomerang",
+      "Description": "Utilise Boomerang en permanence.",
+      "Kind": "AutoAbility"
+    },
+    "8059": {
+      "Name": "SOS Blindage",
+      "Description": "Utilise Blindage en cas de danger.",
+      "Kind": "AutoAbility"
+    },
+    "805A": {
+      "Name": "SOS Carapace",
+      "Description": "Utilise Carapace en cas de danger.",
+      "Kind": "AutoAbility"
+    },
+    "805B": {
+      "Name": "SOS Booster",
+      "Description": "Utilise Booster en cas de danger.",
+      "Kind": "AutoAbility"
+    },
+    "805C": {
+      "Name": "SOS R\u00E9cup",
+      "Description": "Utilise R\u00E9cup en cas de danger.",
+      "Kind": "AutoAbility"
+    },
+    "805D": {
+      "Name": "SOS Boomerang",
+      "Description": "Utilise Boomerang en cas de danger.",
+      "Kind": "AutoAbility"
+    },
+    "805E": {
+      "Name": "SOS AntiEau",
+      "Description": "Utilise AntiEau en cas de danger.",
+      "Kind": "AutoAbility"
+    },
+    "805F": {
+      "Name": "SOS AntiGlace",
+      "Description": "Utilise AntiGlace en cas de danger.",
+      "Kind": "AutoAbility"
+    },
+    "8060": {
+      "Name": "SOS AntiTonnerre",
+      "Description": "Utilise AntiTonnerre en cas de danger.",
+      "Kind": "AutoAbility"
+    },
+    "8061": {
+      "Name": "SOS AntiFeu",
+      "Description": "Utilise AntiFeu en cas de danger.",
+      "Kind": "AutoAbility"
+    },
+    "8062": {
+      "Name": "Atq physique \u002B3 %",
+      "Description": "Augmente les d\u00E9g\u00E2ts physiques de 3 %.",
+      "Kind": "AutoAbility"
+    },
+    "8063": {
+      "Name": "Atq physique \u002B5 %",
+      "Description": "Augmente les d\u00E9g\u00E2ts physiques de 5 %.",
+      "Kind": "AutoAbility"
+    },
+    "8064": {
+      "Name": "Atq physique \u002B10 %",
+      "Description": "Augmente les d\u00E9g\u00E2ts physiques de 10 %.",
+      "Kind": "AutoAbility"
+    },
+    "8065": {
+      "Name": "Atq physique \u002B20 %",
+      "Description": "Augmente les d\u00E9g\u00E2ts physiques de 20 %.",
+      "Kind": "AutoAbility"
+    },
+    "8066": {
+      "Name": "Atq magique \u002B3 %",
+      "Description": "Augmente les d\u00E9g\u00E2ts magiques de 3 %.",
+      "Kind": "AutoAbility"
+    },
+    "8067": {
+      "Name": "Atq magique \u002B5 %",
+      "Description": "Augmente les d\u00E9g\u00E2ts magiques de 5 %.",
+      "Kind": "AutoAbility"
+    },
+    "8068": {
+      "Name": "Atq magique \u002B10 %",
+      "Description": "Augmente les d\u00E9g\u00E2ts magiques de 10 %.",
+      "Kind": "AutoAbility"
+    },
+    "8069": {
+      "Name": "Atq magique \u002B20 %",
+      "Description": "Augmente les d\u00E9g\u00E2ts magiques de 20 %.",
+      "Kind": "AutoAbility"
+    },
+    "806A": {
+      "Name": "D\u00E9f physique \u002B3 %",
+      "Description": "R\u00E9duit les d\u00E9g\u00E2ts physiques de 3 %.",
+      "Kind": "AutoAbility"
+    },
+    "806B": {
+      "Name": "D\u00E9f physique \u002B5 %",
+      "Description": "R\u00E9duit les d\u00E9g\u00E2ts physiques de 5 %.",
+      "Kind": "AutoAbility"
+    },
+    "806C": {
+      "Name": "D\u00E9f physique \u002B10 %",
+      "Description": "R\u00E9duit les d\u00E9g\u00E2ts physiques de 10 %.",
+      "Kind": "AutoAbility"
+    },
+    "806D": {
+      "Name": "D\u00E9f physique \u002B20 %",
+      "Description": "R\u00E9duit les d\u00E9g\u00E2ts physiques de 20 %.",
+      "Kind": "AutoAbility"
+    },
+    "806E": {
+      "Name": "D\u00E9f magique \u002B3 %",
+      "Description": "R\u00E9duit les d\u00E9g\u00E2ts magiques de 3 %.",
+      "Kind": "AutoAbility"
+    },
+    "806F": {
+      "Name": "D\u00E9f magique \u002B5 %",
+      "Description": "R\u00E9duit les d\u00E9g\u00E2ts magiques de 5 %.",
+      "Kind": "AutoAbility"
+    },
+    "8070": {
+      "Name": "D\u00E9f magique \u002B10 %",
+      "Description": "R\u00E9duit les d\u00E9g\u00E2ts magiques de 10 %.",
+      "Kind": "AutoAbility"
+    },
+    "8071": {
+      "Name": "D\u00E9f magique \u002B20 %",
+      "Description": "R\u00E9duit les d\u00E9g\u00E2ts magiques de 20 %.",
+      "Kind": "AutoAbility"
+    },
+    "8072": {
+      "Name": "HP \u002B5 %",
+      "Description": "Augmente les HP de 5 %.",
+      "Kind": "AutoAbility"
+    },
+    "8073": {
+      "Name": "HP \u002B10 %",
+      "Description": "Augmente les HP de 10 %.",
+      "Kind": "AutoAbility"
+    },
+    "8074": {
+      "Name": "HP \u002B20 %",
+      "Description": "Augmente les HP de 20 %.",
+      "Kind": "AutoAbility"
+    },
+    "8075": {
+      "Name": "HP \u002B30 %",
+      "Description": "Augmente les HP de 30 %.",
+      "Kind": "AutoAbility"
+    },
+    "8076": {
+      "Name": "MP \u002B5 %",
+      "Description": "Augmente les MP de 5 %.",
+      "Kind": "AutoAbility"
+    },
+    "8077": {
+      "Name": "MP \u002B10 %",
+      "Description": "Augmente les MP de 10 %.",
+      "Kind": "AutoAbility"
+    },
+    "8078": {
+      "Name": "MP \u002B20 %",
+      "Description": "Augmente les MP de 20 %.",
+      "Kind": "AutoAbility"
+    },
+    "8079": {
+      "Name": "MP \u002B30 %",
+      "Description": "Augmente les MP de 30 %.",
+      "Kind": "AutoAbility"
+    },
+    "807A": {
+      "Name": "Capture",
+      "Description": "Rien",
+      "Kind": "AutoAbility"
+    },
+    "807B": {
+      "Name": "Libre",
+      "Description": "Rien",
+      "Kind": "AutoAbility"
+    },
+    "807C": {
+      "Name": "Atq R\u00E9minifor",
+      "Description": "Donne aux attaques l\u2019effet d\u2019un R\u00E9minifor.",
+      "Kind": "AutoAbility"
+    },
+    "807D": {
+      "Name": "Atq R\u00E9minimag",
+      "Description": "Donne aux attaques l\u2019effet d\u2019un R\u00E9minimag.",
+      "Kind": "AutoAbility"
+    },
+    "807E": {
+      "Name": "Atq R\u00E9minivit",
+      "Description": "Donne aux attaques l\u2019effet d\u2019un R\u00E9minivit.",
+      "Kind": "AutoAbility"
+    },
+    "807F": {
+      "Name": "Atq R\u00E9minicomp",
+      "Description": "Donne aux attaques l\u2019effet d\u2019un R\u00E9minicomp.",
+      "Kind": "AutoAbility"
+    },
+    "8080": {
+      "Name": "Ruban",
+      "Description": "Prot\u00E8ge de presque toutes les alt\u00E9rations d\u2019\u00E9tat.",
+      "Kind": "AutoAbility"
+    },
+    "8081": {
+      "Name": "R\u00E9serve 1",
+      "Description": "Rien",
+      "Kind": "AutoAbility"
+    },
+    "8082": {
+      "Name": "R\u00E9serve 2",
+      "Description": "Rien",
+      "Kind": "AutoAbility"
+    },
+    "8083": {
+      "Name": "R\u00E9serve 3",
+      "Description": "Rien",
+      "Kind": "AutoAbility"
+    },
+    "8084": {
+      "Name": "R\u00E9serve 4",
+      "Description": "Rien",
+      "Kind": "AutoAbility"
+    },
+    "8085": {
+      "Name": "R\u00E9serve 5",
+      "Description": "Rien",
+      "Kind": "AutoAbility"
+    }
+  }
+}

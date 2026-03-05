@@ -115,4 +115,9 @@
         <None Include="resources/**" CopyToOutputDirectory="Always" />
     </ItemGroup>
 
+    <!-- ASSETS: RUNTIME MAPPINGS -->
+    <ItemGroup>
+        <None Include="mappings/runtime/*.json" CopyToOutputDirectory="Always" />
+    </ItemGroup>
+
 </Project>

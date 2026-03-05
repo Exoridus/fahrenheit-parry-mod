@@ -1,0 +1,681 @@
+{
+  "SchemaVersion": 1,
+  "Domain": "autoabilities",
+  "Locale": "sp",
+  "GeneratedAtUtc": "2026-03-04T07:27:52.3130227Z",
+  "SourceFiles": [
+    "READ_ALL_COMMANDS_LOCALIZED__sp.txt"
+  ],
+  "Entries": {
+    "8000": {
+      "Name": "Ojo penetrante",
+      "Description": "Visualiza los datos del rival durante la batalla.",
+      "Kind": "AutoAbility"
+    },
+    "8001": {
+      "Name": "Iniciativa",
+      "Description": "Toma el primer turno en la batalla.",
+      "Kind": "AutoAbility"
+    },
+    "8002": {
+      "Name": "Primer ataque",
+      "Description": "El grupo ataca primero m\u00E1s a menudo.",
+      "Kind": "AutoAbility"
+    },
+    "8003": {
+      "Name": "Contraataque",
+      "Description": "Contraataca al recibir un ataque f\u00EDsico.",
+      "Kind": "AutoAbility"
+    },
+    "8004": {
+      "Name": "Evade y ataca",
+      "Description": "Evade los ataques f\u00EDsicos y contraataca.",
+      "Kind": "AutoAbility"
+    },
+    "8005": {
+      "Name": "Contramagia",
+      "Description": "Contraataca al recibir ataques m\u00E1gicos.",
+      "Kind": "AutoAbility"
+    },
+    "8006": {
+      "Name": "Magia\u002B",
+      "Description": "Refuerza los hechizos consumiendo m\u00E1s PM.",
+      "Kind": "AutoAbility"
+    },
+    "8007": {
+      "Name": "Saber m\u00E9dico",
+      "Description": "Duplica el efecto de los remedios.",
+      "Kind": "AutoAbility"
+    },
+    "8008": {
+      "Name": "AutoPoci\u00F3n",
+      "Description": "Toma pociones al sufrir da\u00F1o.",
+      "Kind": "AutoAbility"
+    },
+    "8009": {
+      "Name": "AutoPanacea",
+      "Description": "Toma remedios al sufrir cambios de estado.",
+      "Kind": "AutoAbility"
+    },
+    "800A": {
+      "Name": "Autof\u00E9nix",
+      "Description": "Da Cola de f\u00E9nix a un aliado ca\u00EDdo.",
+      "Kind": "AutoAbility"
+    },
+    "800B": {
+      "Name": "Penetraci\u00F3n",
+      "Description": "Inflige da\u00F1o normal a los rivales acorazados.",
+      "Kind": "AutoAbility"
+    },
+    "800C": {
+      "Name": "Consumo 1/2 PM",
+      "Description": "Consume la mitad de PM durante la batalla.",
+      "Kind": "AutoAbility"
+    },
+    "800D": {
+      "Name": "Consumo PM=1",
+      "Description": "Consume solo 1 PM por ataque durante la batalla.",
+      "Kind": "AutoAbility"
+    },
+    "800E": {
+      "Name": "Turbo doble",
+      "Description": "La barra Turbo sube al doble de velocidad.",
+      "Kind": "AutoAbility"
+    },
+    "800F": {
+      "Name": "Turbo triple",
+      "Description": "La barra Turbo sube al triple de velocidad.",
+      "Kind": "AutoAbility"
+    },
+    "8010": {
+      "Name": "Turbo en apuros",
+      "Description": "Turbo doble cuando la VIT est\u00E1 baja.",
+      "Kind": "AutoAbility"
+    },
+    "8011": {
+      "Name": "Turbo por PH",
+      "Description": "No entra en Turbo, pero gana m\u00E1s PH.",
+      "Kind": "AutoAbility"
+    },
+    "8012": {
+      "Name": "PH x 2",
+      "Description": "Gana el doble de PH.",
+      "Kind": "AutoAbility"
+    },
+    "8013": {
+      "Name": "PH x 3",
+      "Description": "Gana el triple de PH.",
+      "Kind": "AutoAbility"
+    },
+    "8014": {
+      "Name": "PH=0",
+      "Description": "No gana PH en absoluto.",
+      "Kind": "AutoAbility"
+    },
+    "8015": {
+      "Name": "Objetos raros",
+      "Description": "M\u00E1s probabilidad de robar objetos raros.",
+      "Kind": "AutoAbility"
+    },
+    "8016": {
+      "Name": "Solo raros",
+      "Description": "S\u00F3lo roba objetos raros.",
+      "Kind": "AutoAbility"
+    },
+    "8017": {
+      "Name": "Expansi\u00F3n de VIT",
+      "Description": "Puede tener m\u00E1s de 9999 puntos de VIT.",
+      "Kind": "AutoAbility"
+    },
+    "8018": {
+      "Name": "Expansi\u00F3n de PM",
+      "Description": "Puede tener m\u00E1s de 999 PM (puntos m\u00E1gicos).",
+      "Kind": "AutoAbility"
+    },
+    "8019": {
+      "Name": "Expansi\u00F3n de da\u00F1o",
+      "Description": "Puede causar un da\u00F1o superior a 9999.",
+      "Kind": "AutoAbility"
+    },
+    "801A": {
+      "Name": "Guiles x 2",
+      "Description": "Obtiene el doble de guiles tras la batalla.",
+      "Kind": "AutoAbility"
+    },
+    "801B": {
+      "Name": "VIT al andar",
+      "Description": "Recupera VIT mientras anda.",
+      "Kind": "AutoAbility"
+    },
+    "801C": {
+      "Name": "PM al andar",
+      "Description": "Recupera PM mientras anda.",
+      "Kind": "AutoAbility"
+    },
+    "801D": {
+      "Name": "Ning\u00FAn encuentro",
+      "Description": "El grupo no se topa con enemigos.",
+      "Kind": "AutoAbility"
+    },
+    "801E": {
+      "Name": "Efecto Fuego",
+      "Description": "Atacar y T\u00E9cnica adquieren elemento Fuego.",
+      "Kind": "AutoAbility"
+    },
+    "801F": {
+      "Name": "Fuego x 1/2",
+      "Description": "El Fuego le causa la mitad del da\u00F1o normal.",
+      "Kind": "AutoAbility"
+    },
+    "8020": {
+      "Name": "Inmune al Fuego",
+      "Description": "El Fuego no le causa da\u00F1o alguno.",
+      "Kind": "AutoAbility"
+    },
+    "8021": {
+      "Name": "Absorbe Fuego",
+      "Description": "Absorbe el Fuego y recupera VIT.",
+      "Kind": "AutoAbility"
+    },
+    "8022": {
+      "Name": "Efecto Fr\u00EDo",
+      "Description": "Atacar y T\u00E9cnica adquieren elemento Fr\u00EDo.",
+      "Kind": "AutoAbility"
+    },
+    "8023": {
+      "Name": "Fr\u00EDo x 1/2",
+      "Description": "El Fr\u00EDo le causa la mitad del da\u00F1o normal.",
+      "Kind": "AutoAbility"
+    },
+    "8024": {
+      "Name": "Inmune al Fr\u00EDo",
+      "Description": "El Fr\u00EDo no le causa da\u00F1o alguno.",
+      "Kind": "AutoAbility"
+    },
+    "8025": {
+      "Name": "Absorbe Fr\u00EDo",
+      "Description": "Absorbe el Fr\u00EDo y recupera VIT.",
+      "Kind": "AutoAbility"
+    },
+    "8026": {
+      "Name": "Efecto Rayo",
+      "Description": "Atacar y T\u00E9cnica adquieren elemento Rayo.",
+      "Kind": "AutoAbility"
+    },
+    "8027": {
+      "Name": "Rayo x 1/2",
+      "Description": "El Rayo le causa la mitad del da\u00F1o normal.",
+      "Kind": "AutoAbility"
+    },
+    "8028": {
+      "Name": "Inmune al Rayo",
+      "Description": "El Rayo no le causa da\u00F1o alguno.",
+      "Kind": "AutoAbility"
+    },
+    "8029": {
+      "Name": "Absorbe Rayo",
+      "Description": "Absorbe el Rayo y recupera VIT.",
+      "Kind": "AutoAbility"
+    },
+    "802A": {
+      "Name": "Efecto Agua",
+      "Description": "Atacar y T\u00E9cnica adquieren elemento Agua.",
+      "Kind": "AutoAbility"
+    },
+    "802B": {
+      "Name": "Agua x 1/2",
+      "Description": "El Agua le causa la mitad del da\u00F1o normal.",
+      "Kind": "AutoAbility"
+    },
+    "802C": {
+      "Name": "Inmune al Agua",
+      "Description": "El Agua no le causa da\u00F1o alguno.",
+      "Kind": "AutoAbility"
+    },
+    "802D": {
+      "Name": "Absorbe Agua",
+      "Description": "Absorbe el Agua y recupera VIT.",
+      "Kind": "AutoAbility"
+    },
+    "802E": {
+      "Name": "Efecto Muerte \u002B",
+      "Description": "Atacar y T\u00E9cnica causan Muerte casi seguro.",
+      "Kind": "AutoAbility"
+    },
+    "802F": {
+      "Name": "Efecto Muerte",
+      "Description": "Atacar y T\u00E9cnica causan Muerte (a veces).",
+      "Kind": "AutoAbility"
+    },
+    "8030": {
+      "Name": "Defensa Muerte \u002B",
+      "Description": "Protecci\u00F3n casi total contra la Muerte.",
+      "Kind": "AutoAbility"
+    },
+    "8031": {
+      "Name": "Defensa Muerte",
+      "Description": "Protege contra la Muerte (a veces).",
+      "Kind": "AutoAbility"
+    },
+    "8032": {
+      "Name": "Efecto Zombi \u002B",
+      "Description": "Atacar y T\u00E9cnica causan Zombi casi seguro.",
+      "Kind": "AutoAbility"
+    },
+    "8033": {
+      "Name": "Efecto Zombi",
+      "Description": "Atacar y T\u00E9cnica causan Zombi (a veces).",
+      "Kind": "AutoAbility"
+    },
+    "8034": {
+      "Name": "Defensa Zombi \u002B",
+      "Description": "Protecci\u00F3n casi total contra Zombi.",
+      "Kind": "AutoAbility"
+    },
+    "8035": {
+      "Name": "Defensa Zombi",
+      "Description": "Protege contra Zombi (a veces).",
+      "Kind": "AutoAbility"
+    },
+    "8036": {
+      "Name": "Efecto Piedra \u002B",
+      "Description": "Atacar y T\u00E9cnica causan Piedra casi seguro.",
+      "Kind": "AutoAbility"
+    },
+    "8037": {
+      "Name": "Efecto Piedra",
+      "Description": "Atacar y T\u00E9cnica causan Piedra (a veces).",
+      "Kind": "AutoAbility"
+    },
+    "8038": {
+      "Name": "Defensa Piedra \u002B",
+      "Description": "Protecci\u00F3n casi total contra Piedra.",
+      "Kind": "AutoAbility"
+    },
+    "8039": {
+      "Name": "Defensa Piedra",
+      "Description": "Protege contra Piedra (a veces).",
+      "Kind": "AutoAbility"
+    },
+    "803A": {
+      "Name": "Efecto Veneno \u002B",
+      "Description": "Atacar y T\u00E9cnica causan Veneno casi seguro.",
+      "Kind": "AutoAbility"
+    },
+    "803B": {
+      "Name": "Efecto Veneno",
+      "Description": "Atacar y T\u00E9cnica causan Veneno (a veces).",
+      "Kind": "AutoAbility"
+    },
+    "803C": {
+      "Name": "Defensa Veneno \u002B",
+      "Description": "Protecci\u00F3n casi total contra Veneno.",
+      "Kind": "AutoAbility"
+    },
+    "803D": {
+      "Name": "Defensa Veneno",
+      "Description": "Protege contra Veneno (a veces).",
+      "Kind": "AutoAbility"
+    },
+    "803E": {
+      "Name": "Efecto Sue\u00F1o \u002B",
+      "Description": "Atacar y T\u00E9cnica causan Sue\u00F1o casi seguro.",
+      "Kind": "AutoAbility"
+    },
+    "803F": {
+      "Name": "Efecto Sue\u00F1o",
+      "Description": "Atacar y T\u00E9cnica causan Sue\u00F1o (a veces).",
+      "Kind": "AutoAbility"
+    },
+    "8040": {
+      "Name": "Defensa Sue\u00F1o \u002B",
+      "Description": "Protecci\u00F3n casi total contra Sue\u00F1o.",
+      "Kind": "AutoAbility"
+    },
+    "8041": {
+      "Name": "Defensa Sue\u00F1o",
+      "Description": "Protege contra Sue\u00F1o (a veces).",
+      "Kind": "AutoAbility"
+    },
+    "8042": {
+      "Name": "Efecto Mudez \u002B",
+      "Description": "Atacar y T\u00E9cnica causan Mudez casi seguro.",
+      "Kind": "AutoAbility"
+    },
+    "8043": {
+      "Name": "Efecto Mudez",
+      "Description": "Atacar y T\u00E9cnica causan Mudez (a veces).",
+      "Kind": "AutoAbility"
+    },
+    "8044": {
+      "Name": "Defensa Mudez \u002B",
+      "Description": "Protecci\u00F3n casi total contra Mudez.",
+      "Kind": "AutoAbility"
+    },
+    "8045": {
+      "Name": "Defensa Mudez",
+      "Description": "Protege contra Mudez (a veces).",
+      "Kind": "AutoAbility"
+    },
+    "8046": {
+      "Name": "Efecto Ceguera \u002B",
+      "Description": "Atacar y T\u00E9cnica causan Ceguera casi seguro.",
+      "Kind": "AutoAbility"
+    },
+    "8047": {
+      "Name": "Efecto Ceguera",
+      "Description": "Atacar y T\u00E9cnica causan Ceguera (a veces).",
+      "Kind": "AutoAbility"
+    },
+    "8048": {
+      "Name": "Defensa Ceguera \u002B",
+      "Description": "Protecci\u00F3n casi total contra Ceguera.",
+      "Kind": "AutoAbility"
+    },
+    "8049": {
+      "Name": "Defensa Ceguera",
+      "Description": "Protege contra Ceguera (a veces).",
+      "Kind": "AutoAbility"
+    },
+    "804A": {
+      "Name": "Efecto Freno \u002B",
+      "Description": "Atacar y T\u00E9cnica causan Freno casi seguro.",
+      "Kind": "AutoAbility"
+    },
+    "804B": {
+      "Name": "Efecto Freno",
+      "Description": "Atacar y T\u00E9cnica causan Freno (a veces).",
+      "Kind": "AutoAbility"
+    },
+    "804C": {
+      "Name": "Defensa Freno \u002B",
+      "Description": "Protecci\u00F3n casi total contra Freno.",
+      "Kind": "AutoAbility"
+    },
+    "804D": {
+      "Name": "Defensa Freno",
+      "Description": "Protege contra Freno (a veces).",
+      "Kind": "AutoAbility"
+    },
+    "804E": {
+      "Name": "Defensa Confu \u002B",
+      "Description": "Protecci\u00F3n casi total contra Confusi\u00F3n.",
+      "Kind": "AutoAbility"
+    },
+    "804F": {
+      "Name": "Defensa Confu",
+      "Description": "Protege contra Confusi\u00F3n (a veces).",
+      "Kind": "AutoAbility"
+    },
+    "8050": {
+      "Name": "Defensa Locura \u002B",
+      "Description": "Protecci\u00F3n casi total contra Locura.",
+      "Kind": "AutoAbility"
+    },
+    "8051": {
+      "Name": "Defensa Locura",
+      "Description": "Protege contra Locura (a veces).",
+      "Kind": "AutoAbility"
+    },
+    "8052": {
+      "Name": "Defensa Maldici\u00F3n \u002B",
+      "Description": "Protecci\u00F3n casi total contra Maldici\u00F3n.",
+      "Kind": "AutoAbility"
+    },
+    "8053": {
+      "Name": "Defensa Maldici\u00F3n",
+      "Description": "Protege contra Maldici\u00F3n (a veces).",
+      "Kind": "AutoAbility"
+    },
+    "8054": {
+      "Name": "AutoEscudo",
+      "Description": "Goza siempre del efecto Escudo.",
+      "Kind": "AutoAbility"
+    },
+    "8055": {
+      "Name": "AutoCoraza",
+      "Description": "Goza siempre del efecto Coraza.",
+      "Kind": "AutoAbility"
+    },
+    "8056": {
+      "Name": "AutoPrisa",
+      "Description": "Goza siempre del efecto Prisa.",
+      "Kind": "AutoAbility"
+    },
+    "8057": {
+      "Name": "AutoRevitalia",
+      "Description": "Goza siempre del efecto Revitalia.",
+      "Kind": "AutoAbility"
+    },
+    "8058": {
+      "Name": "AutoEspejo",
+      "Description": "Goza siempre del efecto Espejo.",
+      "Kind": "AutoAbility"
+    },
+    "8059": {
+      "Name": "Escudo en apuros",
+      "Description": "Efecto Escudo cuando la VIT est\u00E1 baja.",
+      "Kind": "AutoAbility"
+    },
+    "805A": {
+      "Name": "Coraza en apuros",
+      "Description": "Efecto Coraza cuando la VIT est\u00E1 baja.",
+      "Kind": "AutoAbility"
+    },
+    "805B": {
+      "Name": "Prisa en apuros",
+      "Description": "Efecto Prisa cuando la VIT est\u00E1 baja.",
+      "Kind": "AutoAbility"
+    },
+    "805C": {
+      "Name": "Revitalia en apuros",
+      "Description": "Efecto Revitalia cuando la VIT est\u00E1 baja.",
+      "Kind": "AutoAbility"
+    },
+    "805D": {
+      "Name": "Espejo en apuros",
+      "Description": "Efecto Espejo cuando la VIT est\u00E1 baja.",
+      "Kind": "AutoAbility"
+    },
+    "805E": {
+      "Name": "AntiAgua en apuros",
+      "Description": "Efecto AntiAgua cuando la VIT est\u00E1 baja.",
+      "Kind": "AutoAbility"
+    },
+    "805F": {
+      "Name": "AntiFr\u00EDo en apuros",
+      "Description": "Efecto AntiFr\u00EDo cuando la VIT est\u00E1 baja.",
+      "Kind": "AutoAbility"
+    },
+    "8060": {
+      "Name": "AntiRayo en apuros",
+      "Description": "Efecto AntiRayo cuando la VIT est\u00E1 baja.",
+      "Kind": "AutoAbility"
+    },
+    "8061": {
+      "Name": "AntiFuego en apuros",
+      "Description": "Efecto AntiFuego cuando la VIT est\u00E1 baja.",
+      "Kind": "AutoAbility"
+    },
+    "8062": {
+      "Name": "Atq. f\u00EDsico \u002B3%",
+      "Description": "Sus ataques f\u00EDsicos da\u00F1an un 3% m\u00E1s.",
+      "Kind": "AutoAbility"
+    },
+    "8063": {
+      "Name": "Atq. f\u00EDsico \u002B5%",
+      "Description": "Sus ataques f\u00EDsicos da\u00F1an un 5% m\u00E1s.",
+      "Kind": "AutoAbility"
+    },
+    "8064": {
+      "Name": "Atq. f\u00EDsico \u002B10%",
+      "Description": "Sus ataques f\u00EDsicos da\u00F1an un 10% m\u00E1s.",
+      "Kind": "AutoAbility"
+    },
+    "8065": {
+      "Name": "Atq. f\u00EDsico \u002B20%",
+      "Description": "Sus ataques f\u00EDsicos da\u00F1an un 20% m\u00E1s.",
+      "Kind": "AutoAbility"
+    },
+    "8066": {
+      "Name": "Atq. m\u00E1gico \u002B3%",
+      "Description": "Sus ataques m\u00E1gicos da\u00F1an un 3% m\u00E1s.",
+      "Kind": "AutoAbility"
+    },
+    "8067": {
+      "Name": "Atq. m\u00E1gico \u002B5%",
+      "Description": "Sus ataques m\u00E1gicos da\u00F1an un 5% m\u00E1s.",
+      "Kind": "AutoAbility"
+    },
+    "8068": {
+      "Name": "Atq. m\u00E1gico \u002B10%",
+      "Description": "Sus ataques m\u00E1gicos da\u00F1an un 10% m\u00E1s.",
+      "Kind": "AutoAbility"
+    },
+    "8069": {
+      "Name": "Atq. m\u00E1gico \u002B20%",
+      "Description": "Sus ataques m\u00E1gicos da\u00F1an un 20% m\u00E1s.",
+      "Kind": "AutoAbility"
+    },
+    "806A": {
+      "Name": "Def. f\u00EDsica \u002B3%",
+      "Description": "Los ataques f\u00EDsicos le afectan un 3% menos.",
+      "Kind": "AutoAbility"
+    },
+    "806B": {
+      "Name": "Def. f\u00EDsica \u002B5%",
+      "Description": "Los ataques f\u00EDsicos le afectan un 5% menos.",
+      "Kind": "AutoAbility"
+    },
+    "806C": {
+      "Name": "Def. f\u00EDsica \u002B10%",
+      "Description": "Los ataques f\u00EDsicos le afectan un 10% menos.",
+      "Kind": "AutoAbility"
+    },
+    "806D": {
+      "Name": "Def. f\u00EDsica \u002B20%",
+      "Description": "Los ataques f\u00EDsicos le afectan un 20% menos.",
+      "Kind": "AutoAbility"
+    },
+    "806E": {
+      "Name": "Def. m\u00E1gica \u002B3%",
+      "Description": "Los ataques m\u00E1gicos le afectan un 3% menos.",
+      "Kind": "AutoAbility"
+    },
+    "806F": {
+      "Name": "Def. m\u00E1gica \u002B5%",
+      "Description": "Los ataques m\u00E1gicos le afectan un 5% menos.",
+      "Kind": "AutoAbility"
+    },
+    "8070": {
+      "Name": "Def. m\u00E1gica \u002B10%",
+      "Description": "Los ataques m\u00E1gicos le afectan un 10% menos.",
+      "Kind": "AutoAbility"
+    },
+    "8071": {
+      "Name": "Def. m\u00E1gica \u002B20%",
+      "Description": "Los ataques m\u00E1gicos le afectan un 20% menos.",
+      "Kind": "AutoAbility"
+    },
+    "8072": {
+      "Name": "VIT \u002B5%",
+      "Description": "Aumenta la VIT m\u00E1xima en un 5%.",
+      "Kind": "AutoAbility"
+    },
+    "8073": {
+      "Name": "VIT \u002B10%",
+      "Description": "Aumenta la VIT m\u00E1xima en un 10%.",
+      "Kind": "AutoAbility"
+    },
+    "8074": {
+      "Name": "VIT \u002B20%",
+      "Description": "Aumenta la VIT m\u00E1xima en un 20%.",
+      "Kind": "AutoAbility"
+    },
+    "8075": {
+      "Name": "VIT \u002B30%",
+      "Description": "Aumenta la VIT m\u00E1xima en un 30%.",
+      "Kind": "AutoAbility"
+    },
+    "8076": {
+      "Name": "PM \u002B5%",
+      "Description": "Aumenta los PM m\u00E1ximos en un 5%.",
+      "Kind": "AutoAbility"
+    },
+    "8077": {
+      "Name": "PM \u002B10%",
+      "Description": "Aumenta los PM m\u00E1ximos en un 10%.",
+      "Kind": "AutoAbility"
+    },
+    "8078": {
+      "Name": "PM \u002B20%",
+      "Description": "Aumenta los PM m\u00E1ximos en un 20%.",
+      "Kind": "AutoAbility"
+    },
+    "8079": {
+      "Name": "PM \u002B30%",
+      "Description": "Aumenta los PM m\u00E1ximos en un 30%.",
+      "Kind": "AutoAbility"
+    },
+    "807A": {
+      "Name": "Capturar",
+      "Description": "Vac\u00EDo",
+      "Kind": "AutoAbility"
+    },
+    "807B": {
+      "Name": "Vac\u00EDo",
+      "Description": "Vac\u00EDo",
+      "Kind": "AutoAbility"
+    },
+    "807C": {
+      "Name": "Sembrar fuerza",
+      "Description": "Atacar y T\u00E9cnica siembran una Semilla de fuerza.",
+      "Kind": "AutoAbility"
+    },
+    "807D": {
+      "Name": "Sembrar magia",
+      "Description": "Atacar y T\u00E9cnica siembran una Semilla de magia.",
+      "Kind": "AutoAbility"
+    },
+    "807E": {
+      "Name": "Sembrar rapidez",
+      "Description": "Atacar y T\u00E9cnica siembran una Semilla de rapidez.",
+      "Kind": "AutoAbility"
+    },
+    "807F": {
+      "Name": "Sembrar habilidad",
+      "Description": "Atacar y T\u00E9cnica siembran una Semilla de habilidad.",
+      "Kind": "AutoAbility"
+    },
+    "8080": {
+      "Name": "Cinta",
+      "Description": "Ofrece inmunidad casi total a los estados alterados.",
+      "Kind": "AutoAbility"
+    },
+    "8081": {
+      "Name": "Vac\u00EDo",
+      "Description": "Vac\u00EDo",
+      "Kind": "AutoAbility"
+    },
+    "8082": {
+      "Name": "Vac\u00EDo",
+      "Description": "Vac\u00EDo",
+      "Kind": "AutoAbility"
+    },
+    "8083": {
+      "Name": "Vac\u00EDo",
+      "Description": "Vac\u00EDo",
+      "Kind": "AutoAbility"
+    },
+    "8084": {
+      "Name": "Vac\u00EDo",
+      "Description": "Vac\u00EDo",
+      "Kind": "AutoAbility"
+    },
+    "8085": {
+      "Name": "Vac\u00EDo",
+      "Description": "Vac\u00EDo",
+      "Kind": "AutoAbility"
+    }
+  }
+}

@@ -1,0 +1,4906 @@
+{
+  "SchemaVersion": 1,
+  "Domain": "commands",
+  "Locale": "kr",
+  "GeneratedAtUtc": "2026-03-04T07:27:52.3906033Z",
+  "SourceFiles": [
+    "READ_ALL_COMMANDS_LOCALIZED__kr.txt"
+  ],
+  "Entries": {
+    "3000": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC801\u3000\uD558\uB098\uB97C\u3000\uACF5\uACA9\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3001": {
+      "Name": "\uC544\uC774\uD15C",
+      "Description": "\uC544\uC774\uD15C\uC744\u3000\uC0AC\uC6A9\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3002": {
+      "Name": "\uAD50\uB300",
+      "Description": "\uB2E4\uB978\u3000\uB3D9\uB8CC\uC640\u3000\uAD50\uB300\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3003": {
+      "Name": "\uB3C4\uB9DD",
+      "Description": "\uBC30\uD2C0\uC5D0\uC11C\u3000\uB3C4\uB9DD\uCE69\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3004": {
+      "Name": "\uBB34\uAE30\u3000\uAD50\uD658",
+      "Description": "\uBB34\uAE30\uB97C\u3000\uAD50\uCCB4\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3005": {
+      "Name": "\uBC29\uC5B4\uAD6C\u3000\uAD50\uD658",
+      "Description": "\uBC29\uC5B4\uAD6C\uB97C\u3000\uAD50\uCCB4\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3006": {
+      "Name": "\uB51C\uB808\uC774\u3000\uC5B4\uD0DD",
+      "Description": "\uC801\u3000\uD558\uB098\uC758\u3000\uD589\uB3D9\uC744\u3000\uC9C0\uC5F0\uC2DC\uD0B5\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3007": {
+      "Name": "\uB51C\uB808\uC774\u3000\uBC84\uC2A4\uD130",
+      "Description": "\uC801\u3000\uD558\uB098\uC758\u3000\uD589\uB3D9\uC744\u3000\uB9E4\uC6B0\u3000\uC9C0\uC5F0\uC2DC\uD0B5\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3008": {
+      "Name": "\uC2AC\uB9AC\uD50C\u3000\uC5B4\uD0DD",
+      "Description": "\uFF13\uD68C\u3000\uD589\uB3D9\uD560\u3000\uB54C\uAE4C\uC9C0\u3000\uC801\u3000\uD558\uB098\uB97C\u3000\u300C\uC218\uBA74\u300D\uC0C1\uD0DC\uB85C\u3000\uB9CC\uB4ED\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3009": {
+      "Name": "\uC0AC\uC774\uB808\uC2A4\u3000\uC5B4\uD0DD",
+      "Description": "\uFF13\uD68C\u3000\uD589\uB3D9\uD560\u3000\uB54C\uAE4C\uC9C0\u3000\uC801\u3000\uD558\uB098\uB97C\u3000\u300C\uCE68\uBB35\u300D\uC0C1\uD0DC\uB85C\u3000\uB9CC\uB4ED\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "300A": {
+      "Name": "\uBE14\uB77C\uC778\u3000\uC5B4\uD0DD",
+      "Description": "\uFF13\uD68C\u3000\uD589\uB3D9\uD560\u3000\uB54C\uAE4C\uC9C0\u3000\uC801\u3000\uD558\uB098\uB97C\u3000\u300C\uC5B4\uB460\u300D\uC0C1\uD0DC\uB85C\u3000\uB9CC\uB4ED\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "300B": {
+      "Name": "\uC880\uBE44\u3000\uC5B4\uD0DD",
+      "Description": "\uC801\u3000\uD558\uB098\uB97C\u3000\u300C\uC880\uBE44\u300D\uC0C1\uD0DC\uB85C\u3000\uB9CC\uB4ED\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "300C": {
+      "Name": "\uC2AC\uB9AC\uD50C\u3000\uBC84\uC2A4\uD130",
+      "Description": "\uFF11\uD68C\u3000\uD589\uB3D9\uD560\u3000\uB54C\uAE4C\uC9C0\u3000\uC801\u3000\uD558\uB098\uB97C\u3000\uAC70\uC758\u3000\uD655\uC2E4\uD788\u3000\u300C\uC218\uBA74\u300D\uC0C1\uD0DC\uB85C\u3000\uB9CC\uB4ED\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "300D": {
+      "Name": "\uC0AC\uC774\uB808\uC2A4\u3000\uBC84\uC2A4\uD130",
+      "Description": "\uFF11\uD68C\u3000\uD589\uB3D9\uD560\u3000\uB54C\uAE4C\uC9C0\u3000\uC801\u3000\uD558\uB098\uB97C\u3000\uAC70\uC758\u3000\uD655\uC2E4\uD788\u3000\u300C\uCE68\uBB35\u300D\uC0C1\uD0DC\uB85C\u3000\uB9CC\uB4ED\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "300E": {
+      "Name": "\uBE14\uB77C\uC778\u3000\uBC84\uC2A4\uD130",
+      "Description": "\uFF11\uD68C\u3000\uD589\uB3D9\uD560\u3000\uB54C\uAE4C\uC9C0\u3000\uC801\u3000\uD558\uB098\uB97C\u3000\uAC70\uC758\u3000\uD655\uC2E4\uD788\u3000\u300C\uC5B4\uB460\u300D\uC0C1\uD0DC\uB85C\u3000\uB9CC\uB4ED\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "300F": {
+      "Name": "\uD398\uB110\uD2F0\uFF13",
+      "Description": "\uFF13\uD68C\u3000\uD589\uB3D9\uD560\u3000\uB54C\uAE4C\uC9C0\u3000\uC801\u3000\uD558\uB098\uB97C\u3000\u300C\uC218\uBA74\u300D\u300C\uCE68\uBB35\u300D\u300C\uC5B4\uB460\u300D\uC0C1\uD0DC\uB85C\u3000\uB9CC\uB4ED\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3010": {
+      "Name": "\uD30C\uC6CC\u3000\uBE0C\uB808\uC774\uD06C",
+      "Description": "\uC801\u3000\uD558\uB098\uC758\u3000\uACF5\uACA9\uB825\uC774\u3000\uAC10\uC18C\uB429\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3011": {
+      "Name": "\uB9E4\uC9C1\u3000\uBE0C\uB808\uC774\uD06C",
+      "Description": "\uC801\u3000\uD558\uB098\uC758\u3000\uB9C8\uB825\uC774\u3000\uAC10\uC18C\uB429\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3012": {
+      "Name": "\uC544\uBA38\u3000\uBE0C\uB808\uC774\uD06C",
+      "Description": "\uC801\u3000\uD558\uB098\uC758\u3000\uBB3C\uB9AC\u3000\uBC29\uC5B4\uAC00\u3000\uAC10\uC18C\uB418\uACE0\u3000\u300C\uACAC\uACE0\u300D\uB97C\u3000\uBB34\uD6A8\uD654",
+      "Kind": "PlayerCommand"
+    },
+    "3013": {
+      "Name": "\uBA58\uD0C8\u3000\uBE0C\uB808\uC774\uD06C",
+      "Description": "\uC801\u3000\uD558\uB098\uC758\u3000\uB9C8\uBC95\u3000\uBC29\uC5B4\uAC00\u3000\uAC10\uC18C\uB429\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3014": {
+      "Name": "\uAC15\uD0C8",
+      "Description": "\u300C\uC2F8\uC6B0\uAE30\u300D\uC640\u3000\uB3D9\uC2DC\uC5D0\u3000\u300C\uD6D4\uCE58\uAE30\u300D\uB97C\u3000\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3015": {
+      "Name": "\uD035\u3000\uD2B8\uB9AD",
+      "Description": "\uBBFC\uCCA9\uD55C\u3000\uD589\uB3D9\uC73C\uB85C\u3000\uC801\u3000\uD558\uB098\uB97C\u3000\uACF5\uACA9\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3016": {
+      "Name": "\uD6D4\uCE58\uAE30",
+      "Description": "\uC801\uC5D0\uAC8C\uC11C\u3000\uC544\uC774\uD15C\uC744\u3000\uD6D4\uCE69\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3017": {
+      "Name": "\uC0AC\uC6A9",
+      "Description": "\uD2B9\uC218\uD55C\u3000\uC544\uC774\uD15C\uC744\u3000\uC0AC\uC6A9\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3018": {
+      "Name": "\uC904\uD589\uB791",
+      "Description": "\uC804\uC6D0\uC774\u3000\uBC30\uD2C0\uC5D0\uC11C\u3000\uB3C4\uB9DD\uCE69\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3019": {
+      "Name": "\uAE30\uB3C4",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC758\u3000\uFF28\uFF30\uAC00\u3000\uD68C\uBCF5\uB429\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "301A": {
+      "Name": "\uACA9\uB824",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC758\u3000\uACF5\uACA9\uB825\uACFC\u3000\uBB3C\uB9AC\u3000\uBC29\uC5B4\uAC00\u3000\uC99D\uAC00\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "301B": {
+      "Name": "\uB178\uB9AC\uAE30",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC758\u3000\uACF5\uACA9\uC774\u3000\uBA85\uC911\uD558\uAE30\u3000\uC26C\uC6CC\uC9D1\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "301C": {
+      "Name": "\uC9D1\uC911",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC758\u3000\uB9C8\uB825\uACFC\u3000\uB9C8\uBC95\u3000\uBC29\uC5B4\uAC00\u3000\uC99D\uAC00\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "301D": {
+      "Name": "\uC8FC\uC2DC",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uAC00\u3000\uC801\uC758\u3000\uACF5\uACA9\uC744\u3000\uD68C\uD53C\uD558\uAE30\u3000\uC26C\uC6CC\uC9D1\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "301E": {
+      "Name": "\uD589\uC6B4",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC758\u3000\uC6B4\uC774\u3000\uC99D\uAC00\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "301F": {
+      "Name": "\uBD88\uD589",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC758\u3000\uC6B4\uC774\u3000\uAC10\uC18C\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3020": {
+      "Name": "\uC6A9\uAC80",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\uAC8C\uC11C\u3000\uFF28\uFF30\uC640\u3000\uFF2D\uFF30\uB97C\u3000\uD761\uC218\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3021": {
+      "Name": "\uBC29\uC5B4",
+      "Description": "\uBB3C\uB9AC\u3000\uACF5\uACA9\uC73C\uB85C\u3000\uBC1B\uB294\u3000\uB300\uBBF8\uC9C0\uAC00\u3000\uAC10\uC18C\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3022": {
+      "Name": "\uAC10\uC2F8\uAE30",
+      "Description": "\uC544\uAD70\u3000\uFF11\uBA85\uC744\u3000\uAC10\uC2F8\uACE0\u3000\uB300\uBBF8\uC9C0\uB97C\u3000\uB300\uC2E0\u3000\uBC1B\uC2B5\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3023": {
+      "Name": "\uCCA0\uBCBD",
+      "Description": "\u300C\uBC29\uC5B4\u300D\uC0C1\uD0DC\uC5D0\uC11C\u3000\u300C\uAC10\uC2F8\uAE30\u300D\uB97C\u3000\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3024": {
+      "Name": "\uB3C8\u3000\uB358\uC9C0\uAE30",
+      "Description": "\uFF27\uFF29\uFF2C\uC744\u3000\uC18C\uBE44\uD574\uC11C\u3000\uACF5\uACA9\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3025": {
+      "Name": "\uC704\uD611",
+      "Description": "\uC801\u3000\uD558\uB098\uC758\u3000\uD589\uB3D9\uC774\u3000\uBA48\uCDA5\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3026": {
+      "Name": "\uB3C4\uBC1C",
+      "Description": "\uC801\uC758\u3000\uACF5\uACA9\uC744\u3000\uC720\uC778\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3027": {
+      "Name": "\uB9E1\uAE30\uAE30",
+      "Description": "\uBAA8\uC740\u3000\uC624\uBC84\u3000\uB4DC\uB77C\uC774\uBE0C\u3000\uAC8C\uC774\uC9C0\uB97C\u3000\uB3D9\uB8CC\uC5D0\uAC8C\u3000\uB118\uACA8\u3000\uC90D\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3028": {
+      "Name": "\uD749\uB0B4\uB0B4\uAE30",
+      "Description": "\uC9C1\uC804\uC5D0\u3000\uD589\uB3D9\uD55C\u3000\uB3D9\uB8CC\uC758\u3000\uD589\uB3D9\uC744\u3000\uB530\uB77C\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3029": {
+      "Name": "\uC5F0\uC18D\u3000\uB9C8\uBC95",
+      "Description": "\uFF12\uD68C\u3000\uC5F0\uC18D\uC73C\uB85C\u3000\uD751\uB9C8\uBC95\uC744\u3000\uC0AC\uC6A9\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "302A": {
+      "Name": "\uB1CC\uBB3C",
+      "Description": "\uFF27\uFF29\uFF2C\uC744\u3000\uC8FC\uACE0\u3000\uC801\uC744\u3000\uB3CC\uB824\u3000\uBCF4\uB0C5\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "302B": {
+      "Name": "\uCF00\uC54C",
+      "Description": "\uC544\uAD70\u3000\uFF11\uBA85\uC758\u3000\uFF28\uFF30\uB97C\u3000\uD68C\uBCF5\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "302C": {
+      "Name": "\uCF00\uC54C\uB77C",
+      "Description": "\uC544\uAD70\u3000\uFF11\uBA85\uC758\u3000\uFF28\uFF30\uB97C\u3000\uD68C\uBCF5\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "302D": {
+      "Name": "\uCF00\uC54C\uAC00",
+      "Description": "\uC544\uAD70\u3000\uFF11\uBA85\uC758\u3000\uFF28\uFF30\uB97C\u3000\uD68C\uBCF5\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "302E": {
+      "Name": "\uBC14\uCF5C\uB4DC",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uAC00\u3000\uFF11\uBC88\uB9CC\u3000\uBE59\u3000\uC18D\uC131\uC758\u3000\uACF5\uACA9\uC744\u3000\uBB34\uD6A8\uD654\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "302F": {
+      "Name": "\uBC14\uD30C\uC774",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uAC00\u3000\uFF11\uBC88\uB9CC\u3000\uC5FC\u3000\uC18D\uC131\uC758\u3000\uACF5\uACA9\uC744\u3000\uBB34\uD6A8\uD654\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3030": {
+      "Name": "\uBC14\uC120\uB354",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uAC00\u3000\uFF11\uBC88\uB9CC\u3000\uB1CC\u3000\uC18D\uC131\uC758\u3000\uACF5\uACA9\uC744\u3000\uBB34\uD6A8\uD654\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3031": {
+      "Name": "\uBC14\uC6CC\uD130",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uAC00\u3000\uFF11\uBC88\uB9CC\u3000\uC218\u3000\uC18D\uC131\uC758\u3000\uACF5\uACA9\uC744\u3000\uBB34\uD6A8\uD654\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3032": {
+      "Name": "\uB77C\uC774\uBE0C\uB77C",
+      "Description": "\uC801\u3000\uD558\uB098\uC758\u3000\uC815\uBCF4\uB97C\u3000\uC870\uC0AC\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3033": {
+      "Name": "\uC5D0\uC2A4\uB098",
+      "Description": "\uC544\uAD70\u3000\uFF11\uBA85\uC758\u3000\uC0C1\uD0DC\u3000\uC774\uC0C1\uC744\u3000\uD68C\uBCF5\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3034": {
+      "Name": "\uB808\uC774\uC988",
+      "Description": "\uC544\uAD70\u3000\uFF11\uBA85\uC758\u3000\u300C\uC804\uD22C\u3000\uBD88\uB2A5\u300D\uC744\u3000\uD68C\uBCF5\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3035": {
+      "Name": "\uC5B4\uB808\uC774\uC988",
+      "Description": "\uC544\uAD70\u3000\uFF11\uBA85\uC758\u3000\u300C\uC804\uD22C\u3000\uBD88\uB2A5\u300D\uACFC\u3000\uFF28\uFF30\uB97C\u3000\uBAA8\uB450\u3000\uD68C\uBCF5\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3036": {
+      "Name": "\uD5E4\uC774\uC2A4\uD2B8",
+      "Description": "\uC544\uAD70\u3000\uFF11\uBA85\uC758\u3000\uD589\uB3D9\uC774\u3000\uBBFC\uCCA9\uD574\uC9D1\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3037": {
+      "Name": "\uD5E4\uC774\uC2A4\uAC00",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC758\u3000\uD589\uB3D9\uC774\u3000\uBBFC\uCCA9\uD574\uC9D1\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3038": {
+      "Name": "\uC2AC\uB85C\uC6B0",
+      "Description": "\uC801\u3000\uD558\uB098\uC758\u3000\uD589\uB3D9\uC744\u3000\uC9C0\uC5F0\uC2DC\uD0B5\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3039": {
+      "Name": "\uC2AC\uB85C\uC6B0\uAC00",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC758\u3000\uD589\uB3D9\uC744\u3000\uC9C0\uC5F0\uC2DC\uD0B5\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "303A": {
+      "Name": "\uC178",
+      "Description": "\uC544\uAD70\u3000\uFF11\uBA85\uC758\u3000\uB9C8\uBC95\u3000\uBC29\uC5B4\uAC00\u3000\uC99D\uAC00\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "303B": {
+      "Name": "\uD504\uB85C\uD14C\uC2A4",
+      "Description": "\uC544\uAD70\u3000\uFF11\uBA85\uC758\u3000\uBB3C\uB9AC\u3000\uBC29\uC5B4\uAC00\u3000\uC99D\uAC00\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "303C": {
+      "Name": "\uB9AC\uD50C\uB809",
+      "Description": "\uC544\uAD70\u3000\uFF11\uBA85\uC774\u3000\uB9C8\uBC95\uC744\u3000\uBC18\uC0AC\uD558\uB294\u3000\uC0C1\uD0DC\uAC00\u3000\uB429\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "303D": {
+      "Name": "\uB514\uC2A4\uD3A0",
+      "Description": "\uC801\u3000\uD558\uB098\uC758\u3000\uB9C8\uBC95\u3000\uD6A8\uACFC\uB97C\u3000\uC5C6\uC571\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "303E": {
+      "Name": "\uB9AC\uC81C\uB124",
+      "Description": "\uC544\uAD70\u3000\uFF11\uBA85\uC758\u3000\uFF28\uFF30\uAC00\u3000\uC870\uAE08\uC529\u3000\uD68C\uBCF5\uB429\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "303F": {
+      "Name": "\uD640\uB9AC",
+      "Description": "\uC801\u3000\uD558\uB098\uB97C\u3000\uC131\uC2A4\uB7EC\uC6B4\u3000\uD798\uC73C\uB85C\u3000\uB9C8\uBC95\u3000\uACF5\uACA9",
+      "Kind": "PlayerCommand"
+    },
+    "3040": {
+      "Name": "\uB9AC\uB808\uC774\uC988",
+      "Description": "\uC544\uAD70\u3000\uFF11\uBA85\uC758\u3000\u300C\uC804\uD22C\u3000\uBD88\uB2A5\u300D\uC744\u3000\uFF11\uBC88\uB9CC\u3000\uC608\uBC29\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3041": {
+      "Name": "\uBE14\uB9AC\uC790\uB4DC",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uBE59\u3000\uC18D\uC131\uC758\u3000\uB9C8\uBC95\u3000\uACF5\uACA9",
+      "Kind": "PlayerCommand"
+    },
+    "3042": {
+      "Name": "\uD30C\uC774\uC5B4",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uC5FC\u3000\uC18D\uC131\uC758\u3000\uB9C8\uBC95\u3000\uACF5\uACA9",
+      "Kind": "PlayerCommand"
+    },
+    "3043": {
+      "Name": "\uC120\uB354",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uB1CC\u3000\uC18D\uC131\uC758\u3000\uB9C8\uBC95\u3000\uACF5\uACA9",
+      "Kind": "PlayerCommand"
+    },
+    "3044": {
+      "Name": "\uC6CC\uD130",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uC218\u3000\uC18D\uC131\uC758\u3000\uB9C8\uBC95\u3000\uACF5\uACA9",
+      "Kind": "PlayerCommand"
+    },
+    "3045": {
+      "Name": "\uD30C\uC774\uB77C",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uC5FC\u3000\uC18D\uC131\uC758\u3000\uB9C8\uBC95\u3000\uACF5\uACA9",
+      "Kind": "PlayerCommand"
+    },
+    "3046": {
+      "Name": "\uBE14\uB9AC\uC790\uB77C",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uBE59\u3000\uC18D\uC131\uC758\u3000\uB9C8\uBC95\u3000\uACF5\uACA9",
+      "Kind": "PlayerCommand"
+    },
+    "3047": {
+      "Name": "\uC120\uB354\uB77C",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uB1CC\u3000\uC18D\uC131\uC758\u3000\uB9C8\uBC95\u3000\uACF5\uACA9",
+      "Kind": "PlayerCommand"
+    },
+    "3048": {
+      "Name": "\uC6CC\uD130\uB77C",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uC218\u3000\uC18D\uC131\uC758\u3000\uB9C8\uBC95\u3000\uACF5\uACA9",
+      "Kind": "PlayerCommand"
+    },
+    "3049": {
+      "Name": "\uD30C\uC774\uAC00",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uC5FC\u3000\uC18D\uC131\uC758\u3000\uB9C8\uBC95\u3000\uACF5\uACA9",
+      "Kind": "PlayerCommand"
+    },
+    "304A": {
+      "Name": "\uBE14\uB9AC\uC790\uAC00",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uBE59\u3000\uC18D\uC131\uC758\u3000\uB9C8\uBC95\u3000\uACF5\uACA9",
+      "Kind": "PlayerCommand"
+    },
+    "304B": {
+      "Name": "\uC120\uB354\uAC00",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uB1CC\u3000\uC18D\uC131\uC758\u3000\uB9C8\uBC95\u3000\uACF5\uACA9",
+      "Kind": "PlayerCommand"
+    },
+    "304C": {
+      "Name": "\uC6CC\uD130\uAC00",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uC218\u3000\uC18D\uC131\uC758\u3000\uB9C8\uBC95\u3000\uACF5\uACA9",
+      "Kind": "PlayerCommand"
+    },
+    "304D": {
+      "Name": "\uBC14\uC774\uC624",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\u300C\uB3C5\u300D\uC758\u3000\uB9C8\uBC95\u3000\uACF5\uACA9",
+      "Kind": "PlayerCommand"
+    },
+    "304E": {
+      "Name": "\uADF8\uB77C\uBE44\uB370",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC758\u3000\uFF28\uFF30\uB97C\u3000\uFF13\uFF0F\uFF14\uB85C\u3000\uB9CC\uB4ED\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "304F": {
+      "Name": "\uB370\uC2A4",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\u300C\uC989\uC0AC\u300D\uC758\u3000\uB9C8\uBC95\u3000\uACF5\uACA9",
+      "Kind": "PlayerCommand"
+    },
+    "3050": {
+      "Name": "\uB4DC\uB808\uC778",
+      "Description": "\uC801\u3000\uD558\uB098\uB85C\uBD80\uD130\u3000\uFF28\uFF30\uB97C\u3000\uD761\uC218\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3051": {
+      "Name": "\uC544\uC2A4\uD544",
+      "Description": "\uC801\u3000\uD558\uB098\uB85C\uBD80\uD130\u3000\uFF2D\uFF30\uB97C\u3000\uD761\uC218\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3052": {
+      "Name": "\uD50C\uB808\uC5B4",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uBB34\u3000\uC18D\uC131\uC758\u3000\uB9C8\uBC95\u3000\uACF5\uACA9",
+      "Kind": "PlayerCommand"
+    },
+    "3053": {
+      "Name": "\uC54C\uD14C\uB9C8",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uBB34\u3000\uC18D\uC131\uC758\u3000\uB9C8\uBC95\u3000\uACF5\uACA9",
+      "Kind": "PlayerCommand"
+    },
+    "3054": {
+      "Name": "\uC9C0\uD0A4\uAE30",
+      "Description": "\uBC1B\uB294\u3000\uB300\uBBF8\uC9C0\uAC00\u3000\uC904\uACE0\u3000\uC624\uBC84\u3000\uB4DC\uB77C\uC774\uBE0C\u3000\uAC8C\uC774\uC9C0\uAC00\u3000\uBAA8\uC774\uC9C0\u3000\uC54A\uC2B5\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3055": {
+      "Name": "\uBAA8\uC73C\uAE30",
+      "Description": "\uBC1B\uB294\u3000\uB300\uBBF8\uC9C0\uAC00\u3000\uB298\uACE0\u3000\uC624\uBC84\u3000\uB4DC\uB77C\uC774\uBE0C\u3000\uAC8C\uC774\uC9C0\uB97C\u3000\uBAA8\uC73C\uAE30\u3000\uC26C\uC6CC\uC9D1\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3056": {
+      "Name": "\uBCF5\uADC0",
+      "Description": "\uC18C\uD658\uC218\uB97C\u3000\uB418\uB3CC\uB9BD\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3057": {
+      "Name": "\uBCF5\uADC0",
+      "Description": "\uC18C\uD658\uC218\uB97C\u3000\uB418\uB3CC\uB9BD\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3058": {
+      "Name": "\uC2AC\uCA4D\uD558\uAE30",
+      "Description": "\uC801\uC5D0\uAC8C\u3000\uFF27\uFF29\uFF2C\uC744\u3000\uD6D4\uCE69\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3059": {
+      "Name": "\uD480\u3000\uBE0C\uB808\uC774\uD06C",
+      "Description": "\uC801\u3000\uD558\uB098\uC758\u3000\uACF5\uACA9\uB825\u30FB\uB9C8\uB825\u30FB\uBB3C\uB9AC\u3000\uBC29\uC5B4\u30FB\uB9C8\uBC95\u3000\uBC29\uC5B4\uAC00\u3000\uAC10\uC18C\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "305A": {
+      "Name": "\uD30C\uC6CC\u3000\uC5B4\uD0DD",
+      "Description": "\uC801\u3000\uD558\uB098\uAC00\u3000\u300C\uD30C\uC6CC\u3000\uC2A4\uD53C\uC5B4\u300D\uB97C\u3000\uB5A8\uC5B4\uD2B8\uB9AC\uAC8C\u3000\uB429\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "305B": {
+      "Name": "\uB9E4\uC9C1\u3000\uC5B4\uD0DD",
+      "Description": "\uC801\u3000\uD558\uB098\uAC00\u3000\u300C\uB9E4\uC9C1\u3000\uC2A4\uD53C\uC5B4\u300D\uB97C\u3000\uB5A8\uC5B4\uD2B8\uB9AC\uAC8C\u3000\uB429\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "305C": {
+      "Name": "\uC2A4\uD53C\uB4DC\u3000\uC5B4\uD0DD",
+      "Description": "\uC801\u3000\uD558\uB098\uAC00\u3000\u300C\uC2A4\uD53C\uB4DC\u3000\uC2A4\uD53C\uC5B4\u300D\uB97C\u3000\uB5A8\uC5B4\uD2B8\uB9AC\uAC8C\u3000\uB429\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "305D": {
+      "Name": "\uC5B4\uBE4C\uB9AC\uD2F0\u3000\uC5B4\uD0DD",
+      "Description": "\uC801\u3000\uD558\uB098\uAC00\u3000\u300C\uC5B4\uBE4C\uB9AC\uD2F0\u3000\uC2A4\uD53C\uC5B4\u300D\uB97C\u3000\uB5A8\uC5B4\uD2B8\uB9AC\uAC8C\u3000\uB429\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "305E": {
+      "Name": "\uC57D\uD0C8",
+      "Description": "\u300C\uC2F8\uC6B0\uAE30\u300D\uC640\u3000\uD568\uAED8\u3000\u300C\uC2AC\uCA4D\uD558\uAE30\u300D\uB97C\u3000\uC0AC\uC6A9\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "305F": {
+      "Name": "\uC2E0\uC18D",
+      "Description": "\uBE60\uB978\u3000\uC6C0\uC9C1\uC784\uC73C\uB85C\u3000\uC544\uC774\uD15C\uC744\u3000\uC0AC\uC6A9\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3060": {
+      "Name": "\uC2A4\uD30C\uC774\uB7F4\u3000\uCEF7",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "3061": {
+      "Name": "\uCC28\uC9C0\uFF06\uC5B4\uC370\uD2B8",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "3062": {
+      "Name": "\uC5D0\uB108\uC9C0\u3000\uB808\uC778",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "3063": {
+      "Name": "\uC5D0\uC774\uC2A4\u3000\uC624\uBE0C\u3000\uB354\u3000\uBE14\uB9AC\uCE20",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "3064": {
+      "Name": "\uC720\uC131",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "3065": {
+      "Name": "\uC544\uB8E1",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "3066": {
+      "Name": "\uC815\uBC8C",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "3067": {
+      "Name": "\uC9C4\uD48D",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "3068": {
+      "Name": "\uC810\uD504",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "3069": {
+      "Name": "\uD654\uC5FC",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uC5FC\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "306A": {
+      "Name": "\uC528\uC557\u3000\uB300\uD3EC",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "306B": {
+      "Name": "\uC790\uD3ED",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uD070\u3000\uB300\uBBF8\uC9C0\uB97C\u3000\uC8FC\uACE0\u3000\uC790\uC2E0\uB3C4\u3000\uBC30\uD2C0\uC5D0\uC11C\u3000\uC0AC\uB77C\uC9D1\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "306C": {
+      "Name": "\uB3CC\uB824\u3000\uCC28\uAE30",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "306D": {
+      "Name": "\uC11D\uD654\u3000\uBE0C\uB808\uC2A4",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\u300C\uC11D\uD654\u300D\uC758\u3000\uD6A8\uACFC",
+      "Kind": "PlayerCommand"
+    },
+    "306E": {
+      "Name": "\uC544\uCFE0\uC544\u3000\uBE0C\uB808\uC2A4",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uC218\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "306F": {
+      "Name": "\uC8FD\uC74C\uC758\u3000\uC120\uACE0",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\u300C\uC8FD\uC74C\uC758\u3000\uC120\uACE0\u300D\uD6A8\uACFC",
+      "Kind": "PlayerCommand"
+    },
+    "3070": {
+      "Name": "\uD654\uC774\uD2B8\u3000\uC708\uB4DC",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC758\u3000\uFF28\uFF30\uB97C\u3000\uD68C\uBCF5\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3071": {
+      "Name": "\uC5ED\uACA8\uC6B4\u3000\uC785\uAE40",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uC0C1\uD0DC\u3000\uC774\uC0C1\uC758\u3000\uD6A8\uACFC",
+      "Kind": "PlayerCommand"
+    },
+    "3072": {
+      "Name": "\uB9C8\uC774\uD2F0\u3000\uAC00\uB4DC",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC5D0\u3000\uBC29\uC5B4\u3000\uB9C8\uBC95\uC744\u3000\uAC81\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3073": {
+      "Name": "\uC120\uC0E4\uC778",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "3074": {
+      "Name": "\uC5D8\uB9AC\uBA58\uD2B8\u3000\uB9B4",
+      "Description": "\uC18D\uC131\u3000\uACF5\uACA9\uC758\u3000\uC2AC\uB86F\uC744\u3000\uB3CC\uB9BD\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3075": {
+      "Name": "\uC5B4\uD0DD\u3000\uB9B4",
+      "Description": "\uC5F0\uC18D\u3000\uACF5\uACA9\uC758\u3000\uC2AC\uB86F\uC744\u3000\uB3CC\uB9BD\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3076": {
+      "Name": "\uC2A4\uD14C\uC774\uD130\uC2A4\u3000\uB9B4",
+      "Description": "\uC0C1\uD0DC\u3000\uC774\uC0C1\uC758\u3000\uC2AC\uB86F\uC744\u3000\uB3CC\uB9BD\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3077": {
+      "Name": "\uC544\uC6B0\uB77C\uCE74\u3000\uB9B4",
+      "Description": "\uBE44\uC0AC\uC774\uB4DC\u3000\uC544\uC6B0\uB77C\uCE74\u3000\uD2B9\uBCC4\u3000\uC8FC\uBB38\u3000\uC2AC\uB86F\uC744\u3000\uB3CC\uB9BD\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3078": {
+      "Name": "\uFF34\u30FB\uBE14\uB9AC\uC790\uB4DC",
+      "Description": "\uBE59\u3000\uC18D\uC131\uC758\u3000\uB9C8\uBC95\uC744\u3000\uB09C\uC0AC\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3079": {
+      "Name": "\uFF34\u30FB\uD30C\uC774\uC5B4",
+      "Description": "\uC5FC\u3000\uC18D\uC131\uC758\u3000\uB9C8\uBC95\uC744\u3000\uB09C\uC0AC\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "307A": {
+      "Name": "\uFF34\u30FB\uC120\uB354",
+      "Description": "\uB1CC\u3000\uC18D\uC131\uC758\u3000\uB9C8\uBC95\uC744\u3000\uB09C\uC0AC\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "307B": {
+      "Name": "\uFF34\u30FB\uC6CC\uD130",
+      "Description": "\uC218\u3000\uC18D\uC131\uC758\u3000\uB9C8\uBC95\uC744\u3000\uB09C\uC0AC\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "307C": {
+      "Name": "\uFF34\u30FB\uD30C\uC774\uB77C",
+      "Description": "\uC5FC\u3000\uC18D\uC131\uC758\u3000\uB9C8\uBC95\uC744\u3000\uB09C\uC0AC\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "307D": {
+      "Name": "\uFF34\u30FB\uBE14\uB9AC\uC790\uB77C",
+      "Description": "\uBE59\u3000\uC18D\uC131\uC758\u3000\uB9C8\uBC95\uC744\u3000\uB09C\uC0AC\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "307E": {
+      "Name": "\uFF34\u30FB\uC120\uB354\uB77C",
+      "Description": "\uB1CC\u3000\uC18D\uC131\uC758\u3000\uB9C8\uBC95\uC744\u3000\uB09C\uC0AC\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "307F": {
+      "Name": "\uFF34\u30FB\uC6CC\uD130\uB77C",
+      "Description": "\uC218\u3000\uC18D\uC131\uC758\u3000\uB9C8\uBC95\uC744\u3000\uB09C\uC0AC\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3080": {
+      "Name": "\uFF34\u30FB\uD30C\uC774\uAC00",
+      "Description": "\uC5FC\u3000\uC18D\uC131\uC758\u3000\uB9C8\uBC95\uC744\u3000\uB09C\uC0AC\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3081": {
+      "Name": "\uFF34\u30FB\uBE14\uB9AC\uC790\uAC00",
+      "Description": "\uBE59\u3000\uC18D\uC131\uC758\u3000\uB9C8\uBC95\uC744\u3000\uB09C\uC0AC\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3082": {
+      "Name": "\uFF34\u30FB\uC120\uB354\uAC00",
+      "Description": "\uB1CC\u3000\uC18D\uC131\uC758\u3000\uB9C8\uBC95\uC744\u3000\uB09C\uC0AC\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3083": {
+      "Name": "\uFF34\u30FB\uC6CC\uD130\uAC00",
+      "Description": "\uC218\u3000\uC18D\uC131\uC758\u3000\uB9C8\uBC95\uC744\u3000\uB09C\uC0AC\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3084": {
+      "Name": "\uFF34\u30FB\uBC14\uC774\uC624",
+      "Description": "\u300C\uB3C5\u300D\uC758\u3000\uB9C8\uBC95\uC744\u3000\uB09C\uC0AC\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3085": {
+      "Name": "\uFF34\u30FB\uADF8\uB77C\uBE44\uB370",
+      "Description": "\uFF28\uFF30\uB97C\u3000\uFF17\uFF0F\uFF18\uB85C\u3000\uB9CC\uB4DC\uB294\u3000\uB9C8\uBC95\uC744\u3000\uB09C\uC0AC\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3086": {
+      "Name": "\uFF34\u30FB\uB370\uC2A4",
+      "Description": "\u300C\uC989\uC0AC\u300D\uC758\u3000\uB9C8\uBC95\uC744\u3000\uB09C\uC0AC\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3087": {
+      "Name": "\uFF34\u30FB\uB4DC\uB808\uC778",
+      "Description": "\uFF28\uFF30\uB97C\u3000\uD761\uC218\uD558\uB294\u3000\uB9C8\uBC95\uC744\u3000\uB09C\uC0AC\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3088": {
+      "Name": "\uFF34\u30FB\uC544\uC2A4\uD544",
+      "Description": "\uFF2D\uFF30\uB97C\u3000\uD761\uC218\uD558\uB294\u3000\uB9C8\uBC95\uC744\u3000\uB09C\uC0AC\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3089": {
+      "Name": "\uFF34\u30FB\uD50C\uB808\uC5B4",
+      "Description": "\uBB34\u3000\uC18D\uC131\uC758\u3000\uB9C8\uBC95\uC744\u3000\uB09C\uC0AC\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "308A": {
+      "Name": "\uFF34\u30FB\uC54C\uD14C\uB9C8",
+      "Description": "\uBB34\u3000\uC18D\uC131\uC758\u3000\uB9C8\uBC95\uC744\u3000\uB09C\uC0AC\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "308B": {
+      "Name": "\uC218\uB958\uD0C4",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "308C": {
+      "Name": "\uCCA0\uAC11\u3000\uC218\uB958\uD0C4",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB300\uBBF8\uC9C0\uC640\u3000\u300C\uC544\uBA38\u3000\uBE0C\uB808\uC774\uD06C\u300D",
+      "Kind": "PlayerCommand"
+    },
+    "308D": {
+      "Name": "\uD30C\uC778\uC560\uD50C",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "308E": {
+      "Name": "\uD3EC\uD14C\uC774\uD1A0\u3000\uB9E4\uC154",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "308F": {
+      "Name": "\uD074\uB7EC\uC2A4\uD130\u3000\uBD04",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "3090": {
+      "Name": "\uD1A8\u3000\uBCF4\uC774",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "3091": {
+      "Name": "\uBE14\uB798\uC2A4\uD130\u3000\uB9C8\uC778",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB300\uBBF8\uC9C0\uC640\u3000\uC0C1\uD0DC\u3000\uC774\uC0C1",
+      "Kind": "PlayerCommand"
+    },
+    "3092": {
+      "Name": "\uD574\uC800\uB4DC\u3000\uC178",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB300\uBBF8\uC9C0\uC640\u3000\uC0C1\uD0DC\u3000\uC774\uC0C1",
+      "Kind": "PlayerCommand"
+    },
+    "3093": {
+      "Name": "\uCE98\uB7EC\uBBF8\uD2F0\u3000\uBD04",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB300\uBBF8\uC9C0\uC640\u3000\uC0C1\uD0DC\u3000\uC774\uC0C1",
+      "Kind": "PlayerCommand"
+    },
+    "3094": {
+      "Name": "\uCE74\uC624\uC2A4\u3000\uADF8\uB808\uB124\uC774\uB4DC",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB300\uBBF8\uC9C0\uC640\u3000\uC0C1\uD0DC\u3000\uC774\uC0C1",
+      "Kind": "PlayerCommand"
+    },
+    "3095": {
+      "Name": "\uD788\uD2B8\u3000\uBC84\uC2A4\uD130",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uC5FC\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "3096": {
+      "Name": "\uD30C\uC774\uC5B4\u3000\uC2A4\uD1B0",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uC5FC\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "3097": {
+      "Name": "\uBC84\uB2DD\u3000\uC18C\uC6B8",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uC5FC\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "3098": {
+      "Name": "\uD5EC\u3000\uD30C\uC774\uC5B4",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uC5FC\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0\uC640\u3000\uC0C1\uD0DC\u3000\uC774\uC0C1",
+      "Kind": "PlayerCommand"
+    },
+    "3099": {
+      "Name": "\uC544\uBC14\uB3C8\u3000\uD50C\uB808\uC784",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uC5FC\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0\uC640\u3000\uC0C1\uD0DC\u3000\uC774\uC0C1",
+      "Kind": "PlayerCommand"
+    },
+    "309A": {
+      "Name": "\uCF5C\uB4DC\u3000\uC2A4\uB178\uC6B0",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uBE59\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "309B": {
+      "Name": "\uC544\uC774\uC2A4\u3000\uBE14\uB9AC\uC790\uB4DC",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uBE59\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "309C": {
+      "Name": "\uC708\uD130\u3000\uC2A4\uD1B0",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uBE59\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "309D": {
+      "Name": "\uD574\uC800\uB4DC\u3000\uC544\uC774\uC2A4",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uBE59\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0\uC640\u3000\uC0C1\uD0DC\u3000\uC774\uC0C1",
+      "Kind": "PlayerCommand"
+    },
+    "309E": {
+      "Name": "\uCF54\uD0A4\uD1A0\uC2A4",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uBE59\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0\uC640\u3000\uC0C1\uD0DC\u3000\uC774\uC0C1",
+      "Kind": "PlayerCommand"
+    },
+    "309F": {
+      "Name": "\uC120\uB354\u3000\uBCFC\uD2B8",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB1CC\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "30A0": {
+      "Name": "\uB864\uB9C1\u3000\uC120\uB354",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB1CC\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "30A1": {
+      "Name": "\uB77C\uC774\uD2B8\uB2DD\u3000\uBCFC\uD2B8",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB1CC\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "30A2": {
+      "Name": "\uC77C\uB809\u3000\uC1FC\uD06C",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB1CC\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0\uC640\u3000\uC0C1\uD0DC\u3000\uC774\uC0C1",
+      "Kind": "PlayerCommand"
+    },
+    "30A3": {
+      "Name": "\uBE14\uB798\uC2A4\uD2B8\u3000\uC120\uB354",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB1CC\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0\uC640\u3000\uC0C1\uD0DC\u3000\uC774\uC0C1",
+      "Kind": "PlayerCommand"
+    },
+    "30A4": {
+      "Name": "\uC6CC\uD130\u3000\uD3F4",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uC218\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "30A5": {
+      "Name": "\uD50C\uB798\uC2DC\u3000\uD50C\uB7EC\uB4DC",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uC218\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "30A6": {
+      "Name": "\uD0C0\uC774\uB2EC\u3000\uC6E8\uC774\uBE0C",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uC218\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "30A7": {
+      "Name": "\uC544\uCFE0\uC544\uD1A1\uC2E0",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uC218\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0\uC640\u3000\uC0C1\uD0DC\u3000\uC774\uC0C1",
+      "Kind": "PlayerCommand"
+    },
+    "30A8": {
+      "Name": "\uB2E4\uD06C\uB2C8\uC2A4\u3000\uB808\uC778",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uC218\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0\uC640\u3000\uC0C1\uD0DC\u3000\uC774\uC0C1",
+      "Kind": "PlayerCommand"
+    },
+    "30A9": {
+      "Name": "\uB124\uAC00\uBC84\uC2A4\uD2B8",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC758\u3000\uFF28\uFF30\uB97C\u3000\uFF11\uFF0F\uFF14\uB85C\u3000\uB9CC\uB4ED\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "30AA": {
+      "Name": "\uBE14\uB799\uD640",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC758\u3000\uFF28\uFF30\uB97C\u3000\uFF11\uFF0F\uFF11\uFF16\uC73C\uB85C\u3000\uB9CC\uB4ED\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "30AB": {
+      "Name": "\uC288\uD37C\uB178\uBC14",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "30AC": {
+      "Name": "\uC6B8\uD2B8\uB77C\u3000\uD3EC\uC158",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC758\u3000\uFF28\uFF30\uB97C\u3000\uBAA8\uB450\u3000\uD68C\uBCF5\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "30AD": {
+      "Name": "\uC62C\u3000\uD050\uC5B4",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC758\u3000\uBAA8\uB4E0\u3000\uC0C1\uD0DC\u3000\uC774\uC0C1\uC744\u3000\uD68C\uBCF5\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "30AE": {
+      "Name": "\uC6B8\uD2B8\uB77C\u3000\uD050\uC5B4",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC758\u3000\uFF28\uFF30\uC640\u3000\uBAA8\uB4E0\u3000\uC0C1\uD0DC\u3000\uC774\uC0C1\uC744\u3000\uD68C\uBCF5",
+      "Kind": "PlayerCommand"
+    },
+    "30AF": {
+      "Name": "\uBA54\uAC00\u3000\uD53C\uB2C9\uC2A4",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC758\u3000\u300C\uC804\uD22C\u3000\uBD88\uB2A5\u300D\uC744\u3000\uD68C\uBCF5\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "30B0": {
+      "Name": "\uB77C\uC2A4\uD2B8\u3000\uD53C\uB2C9\uC2A4",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC758\u3000\u300C\uC804\uD22C\u3000\uBD88\uB2A5\u300D\uACFC\u3000\uFF28\uFF30\uB97C\u3000\uBAA8\uB450\u3000\uD68C\uBCF5\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "30B1": {
+      "Name": "\uC5D8\uB9AD\uC11C",
+      "Description": "\uC544\uAD70\u3000\uFF11\uBA85\uC758\u3000\uFF28\uFF30\uC640\u3000\uFF2D\uFF30\uB97C\u3000\uBAA8\uB450\u3000\uD68C\uBCF5\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "30B2": {
+      "Name": "\uB77C\uC2A4\uD2B8\u3000\uC5D8\uB9AD\uC11C",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC758\u3000\uFF28\uFF30\uC640\u3000\uFF2D\uFF30\uB97C\u3000\uBAA8\uB450\u3000\uD68C\uBCF5\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "30B3": {
+      "Name": "\uC288\uD37C\u3000\uC5D8\uB9AD\uC11C",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC758\u3000\uFF28\uFF30\uC640\u3000\uFF2D\uFF30\uC640\u3000\uC0C1\uD0DC\u3000\uC774\uC0C1\uC744\u3000\uBAA8\uB450\u3000\uD68C\uBCF5",
+      "Kind": "PlayerCommand"
+    },
+    "30B4": {
+      "Name": "\uD30C\uC774\uB110\u3000\uC5D8\uB9AD\uC11C",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uB97C\u3000\uC644\uC804\u3000\uD68C\uBCF5\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "30B5": {
+      "Name": "\uBC14\uC62C",
+      "Description": "\uC544\uAD70\u3000\uFF11\uBA85\uC5D0\uAC8C\u3000\u300C\uFF14\uC18D\uC131\u3000\uBC29\uC5B4\u300D",
+      "Kind": "PlayerCommand"
+    },
+    "30B6": {
+      "Name": "\uBA54\uAC00\u3000\uBC14\uC62C",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC5D0\u3000\u300C\uFF14\uC18D\uC131\u3000\uBC29\uC5B4\u300D",
+      "Kind": "PlayerCommand"
+    },
+    "30B7": {
+      "Name": "\uD558\uC774\u3000\uBA54\uAC00\u3000\uBC14\uC62C",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC5D0\u3000\u300C\uFF14\uC18D\uC131\u3000\uBC29\uC5B4\u300D\u300C\uACA9\uB824\u300D\u300C\uC9D1\uC911\u300D",
+      "Kind": "PlayerCommand"
+    },
+    "30B8": {
+      "Name": "\uC6B8\uD2B8\uB77C\u3000\uBC14\uC62C",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC5D0\u3000\u300C\uFF14\uC18D\uC131\u3000\uBC29\uC5B4\u300D\uC640\u3000\uC2A4\uD14C\uC774\uD130\uC2A4\u3000\uC99D\uAC00",
+      "Kind": "PlayerCommand"
+    },
+    "30B9": {
+      "Name": "\uB9C8\uC774\uD2F0\u3000\uC6D4",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC5D0\u3000\u300C\uC178\u300D\u300C\uD504\uB85C\uD14C\uC2A4\u300D",
+      "Kind": "PlayerCommand"
+    },
+    "30BA": {
+      "Name": "\uB9C8\uC774\uD2F0\uFF27",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC5D0\u3000\u300C\uC178\u300D\u300C\uD504\uB85C\uD14C\uC2A4\u300D\u300C\uD5E4\uC774\uC2A4\uD2B8\u300D",
+      "Kind": "PlayerCommand"
+    },
+    "30BB": {
+      "Name": "\uB9C8\uC774\uD2F0\uFF27\u3000\uC288\uD37C",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC5D0\u3000\u300C\uB9C8\uC774\uD2F0\u3000\uAC00\uB4DC\u300D\uC640\u3000\u300C\uB9AC\uC81C\uB124\u300D",
+      "Kind": "PlayerCommand"
+    },
+    "30BC": {
+      "Name": "\uB9C8\uC774\uD2F0\uFF27\u3000\uADF8\uB808\uC774\uD2B8",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC5D0\u3000\u300C\uB9C8\uC774\uD2F0\u3000\uAC00\uB4DC\u300D\u300C\uB9AC\uC81C\uB124\u300D\u300C\uB9AC\uB808\uC774\uC988\u300D",
+      "Kind": "PlayerCommand"
+    },
+    "30BD": {
+      "Name": "\uBC14\uC774\uD0C8\uFF37",
+      "Description": "\uC544\uAD70\u3000\uFF11\uBA85\uC758\u3000\uCD5C\uB300\u3000\uFF28\uFF30\uAC00\u3000\uFF12\uBC30\uAC00\u3000\uB429\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "30BE": {
+      "Name": "\uBA54\uAC00\u3000\uBC14\uC774\uD0C8\uFF37",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC758\u3000\uCD5C\uB300\u3000\uFF28\uFF30\uAC00\u3000\uFF12\uBC30\uAC00\u3000\uB429\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "30BF": {
+      "Name": "\uD558\uC774\u3000\uBA54\uAC00\u3000\uBC14\uC774\uD0C8\uFF37",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC758\u3000\uCD5C\uB300\u3000\uFF28\uFF30\uAC00\u3000\uFF12\uBC30\uAC00\u3000\uB418\uACE0\u3000\u300C\uACA9\uB824\u300D",
+      "Kind": "PlayerCommand"
+    },
+    "30C0": {
+      "Name": "\uBA58\uD0C8\uFF37",
+      "Description": "\uC544\uAD70\u3000\uFF11\uBA85\uC758\u3000\uCD5C\uB300\u3000\uFF2D\uFF30\uAC00\u3000\uFF12\uBC30\uAC00\u3000\uB429\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "30C1": {
+      "Name": "\uBA54\uAC00\u3000\uBA58\uD0C8\uFF37",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC758\u3000\uCD5C\uB300\u3000\uFF2D\uFF30\uAC00\u3000\uFF12\uBC30\uAC00\u3000\uB429\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "30C2": {
+      "Name": "\uD558\uC774\u3000\uBA54\uAC00\u3000\uBA58\uD0C8\uFF37",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC758\u3000\uCD5C\uB300\u3000\uFF2D\uFF30\uAC00\u3000\uFF12\uBC30\uAC00\u3000\uB418\uACE0\u3000\u300C\uC9D1\uC911\u300D",
+      "Kind": "PlayerCommand"
+    },
+    "30C3": {
+      "Name": "\uD504\uB9AC\uB364\uFF25",
+      "Description": "\uC544\uAD70\u3000\uFF11\uBA85\uC774\u3000\uFF2D\uFF30\u3000\uC18C\uBE44\u3000\uFF10\uC73C\uB85C\u3000\uC5B4\uBE4C\uB9AC\uD2F0\uB97C\u3000\uC0AC\uC6A9",
+      "Kind": "PlayerCommand"
+    },
+    "30C4": {
+      "Name": "\uD504\uB9AC\uB364\uFF25\uFF38",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uAC00\u3000\uFF2D\uFF30\u3000\uC18C\uBE44\u3000\uFF10\uC73C\uB85C\u3000\uC5B4\uBE4C\uB9AC\uD2F0\uB97C\u3000\uC0AC\uC6A9",
+      "Kind": "PlayerCommand"
+    },
+    "30C5": {
+      "Name": "\uCFFC\uD15F\uFF19",
+      "Description": "\uC544\uAD70\u3000\uFF11\uBA85\uC758\u3000\uACF5\uACA9\uC774\u3000\uB300\uBBF8\uC9C0\u3000\uFF19\uFF19\uFF19\uFF19\uAC00\u3000\uB429\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "30C6": {
+      "Name": "\uCFFC\uD15F\uFF19\uFF19",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC758\u3000\uACF5\uACA9\uC774\u3000\uB300\uBBF8\uC9C0\u3000\uFF19\uFF19\uFF19\uFF19\uAC00\u3000\uB429\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "30C7": {
+      "Name": "\uC601\uC6C5\uC758\u3000\uC57D",
+      "Description": "\uC544\uAD70\u3000\uFF11\uBA85\uC758\u3000\uACF5\uACA9\uC774\u3000\uD06C\uB9AC\uD2F0\uCEEC\u3000\uC0C1\uD0DC\uAC00\u3000\uB429\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "30C8": {
+      "Name": "\uC131\uC804\uC758\u3000\uC57D",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC758\u3000\uACF5\uACA9\uC774\u3000\uD06C\uB9AC\uD2F0\uCEEC\u3000\uC0C1\uD0DC\uAC00\u3000\uB429\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "30C9": {
+      "Name": "\uD56B\uC2A4\uD37C",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uAC00\u3000\uC624\uBC84\u3000\uB4DC\uB77C\uC774\uBE0C\u3000\uAC8C\uC774\uC9C0\uB97C\u3000\uBAA8\uC73C\uAE30\u3000\uC26C\uC6CC\uC9D1\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "30CA": {
+      "Name": "\uC775\uC13C\uD2B8\uB9AD",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uAC00\u3000\uC624\uBC84\u3000\uB4DC\uB77C\uC774\uBE0C\u3000\uAC8C\uC774\uC9C0\uB97C\u3000\uBAA8\uC73C\uAE30\u3000\uB9E4\uC6B0\u3000\uC26C\uC6CC\uC9D1\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "30CB": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "30CC": {
+      "Name": "\uC18C\uB2C9\u3000\uC719",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uB300\uBBF8\uC9C0\uB97C\u3000\uC8FC\uACE0\u3000\uD589\uB3D9\uC744\u3000\uC9C0\uC5F0\uC2DC\uD0B5\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "30CD": {
+      "Name": "\uC288\uD305\u3000\uD30C\uC6CC",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uBB34\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "30CE": {
+      "Name": "\uC288\uD305\u3000\uB808\uC774",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uBB34\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "30CF": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "30D0": {
+      "Name": "\uBA54\uD14C\uC624\u3000\uC2A4\uD2B8\uB77C\uC774\uD06C",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "30D1": {
+      "Name": "\uC9C0\uC625\uC758\u3000\uD654\uC5FC",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uC5FC\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "30D2": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "30D3": {
+      "Name": "\uC5D0\uC5B4\uB85C\u3000\uC2A4\uD30C\uD06C",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uB300\uBBF8\uC9C0\uB97C\u3000\uC8FC\uACE0\u3000\uB9C8\uBC95\u3000\uD6A8\uACFC\uB97C\u3000\uBB34\uD6A8\uD654",
+      "Kind": "PlayerCommand"
+    },
+    "30D4": {
+      "Name": "\uD1A0\uB974\u3000\uD574\uBA38",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB1CC\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "30D5": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "30D6": {
+      "Name": "\uD558\uB298\uC758\u3000\uC77C\uACA9",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uB300\uBBF8\uC9C0\uB97C\u3000\uC8FC\uACE0\u3000\uD589\uB3D9\uC744\u3000\uBA48\uCD94\uAC8C\u3000\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "30D7": {
+      "Name": "\uB2E4\uC774\uC544\uBAAC\uB4DC\u3000\uB354\uC2A4\uD2B8",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uBE59\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "30D8": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "30D9": {
+      "Name": "\uC784\uD384\uC2A4",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "30DA": {
+      "Name": "\uBA54\uAC00\u3000\uD50C\uB808\uC5B4",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uBB34\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "30DB": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "30DC": {
+      "Name": "\uD398\uC778",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uB300\uBBF8\uC9C0\uB97C\u3000\uC8FC\uACE0\u3000\u300C\uC989\uC0AC\u300D\uC758\u3000\uD6A8\uACFC",
+      "Kind": "PlayerCommand"
+    },
+    "30DD": {
+      "Name": "\uCE74\uC624\uD2F1\uFF24",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uBB34\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "30DE": {
+      "Name": "\uB2E4\uC774\uACE0\uB85C",
+      "Description": "\uC5C6\uC74C",
+      "Kind": "PlayerCommand"
+    },
+    "30DF": {
+      "Name": "\uCF54\uC988\uCE74",
+      "Description": "\uC5C6\uC74C",
+      "Kind": "PlayerCommand"
+    },
+    "30E0": {
+      "Name": "\uC640\uD0A4\uC790\uC2DC",
+      "Description": "\uC5C6\uC74C",
+      "Kind": "PlayerCommand"
+    },
+    "30E1": {
+      "Name": "\uC640\uD0A4\uC790\uC2DC",
+      "Description": "\uC5C6\uC74C",
+      "Kind": "PlayerCommand"
+    },
+    "30E2": {
+      "Name": "\uCC38\uB9C8\uB3C4",
+      "Description": "\uC5C6\uC74C",
+      "Kind": "PlayerCommand"
+    },
+    "30E3": {
+      "Name": "\uB808\uD034\uC5E0",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "30E4": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC5C6\uC74C",
+      "Kind": "PlayerCommand"
+    },
+    "30E5": {
+      "Name": "\uC575\uAE00\uD2F8",
+      "Description": "\uC5C6\uC74C",
+      "Kind": "PlayerCommand"
+    },
+    "30E6": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC5C6\uC74C",
+      "Kind": "PlayerCommand"
+    },
+    "30E7": {
+      "Name": "\uC288\uBA5C\uC820\uB4DC",
+      "Description": "\uC5C6\uC74C",
+      "Kind": "PlayerCommand"
+    },
+    "30E8": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC5C6\uC74C",
+      "Kind": "PlayerCommand"
+    },
+    "30E9": {
+      "Name": "\uB9AC\uD2C0\uB098\uB808",
+      "Description": "\uC5C6\uC74C",
+      "Kind": "PlayerCommand"
+    },
+    "30EA": {
+      "Name": "\uB378\uD0C0\u3000\uC5B4\uD0DD",
+      "Description": "\uBA54\uC774\uAC70\uC2A4\u3000\uFF13\uC790\uB9E4\u3000\uD569\uCCB4\u3000\uAE30\uC220",
+      "Kind": "PlayerCommand"
+    },
+    "30EB": {
+      "Name": "\uC5C6\uC74C",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "30EC": {
+      "Name": "\uC5C6\uC74C",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "30ED": {
+      "Name": "\uC5C6\uC74C",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "30EE": {
+      "Name": "\uC5C6\uC74C",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "30EF": {
+      "Name": "\uD30C\uC774\uC5B4\u3000\uC29B",
+      "Description": "\uC640\uCE74\u3000\uAC1C\uC778\uAE30\uFF11",
+      "Kind": "PlayerCommand"
+    },
+    "30F0": {
+      "Name": "\uD30C\uC774\uC5B4\u3000\uC29B",
+      "Description": "\uC640\uCE74\u3000\uAC1C\uC778\uAE30\uFF12",
+      "Kind": "PlayerCommand"
+    },
+    "30F1": {
+      "Name": "\uC544\uC774\uC2A4\u3000\uC29B",
+      "Description": "\uC640\uCE74\u3000\uAC1C\uC778\uAE30\uFF13",
+      "Kind": "PlayerCommand"
+    },
+    "30F2": {
+      "Name": "\uC544\uC774\uC2A4\u3000\uC29B",
+      "Description": "\uC640\uCE74\u3000\uAC1C\uC778\uAE30\uFF14",
+      "Kind": "PlayerCommand"
+    },
+    "30F3": {
+      "Name": "\uC6CC\uD130\u3000\uC29B",
+      "Description": "\uC640\uCE74\u3000\uAC1C\uC778\uAE30\uFF15",
+      "Kind": "PlayerCommand"
+    },
+    "30F4": {
+      "Name": "\uC6CC\uD130\u3000\uC29B",
+      "Description": "\uC640\uCE74\u3000\uAC1C\uC778\uAE30\uFF16",
+      "Kind": "PlayerCommand"
+    },
+    "30F5": {
+      "Name": "\uC120\uB354\u3000\uC29B",
+      "Description": "\uC640\uCE74\u3000\uAC1C\uC778\uAE30\uFF17",
+      "Kind": "PlayerCommand"
+    },
+    "30F6": {
+      "Name": "\uC120\uB354\u3000\uC29B",
+      "Description": "\uC640\uCE74\u3000\uAC1C\uC778\uAE30\uFF18",
+      "Kind": "PlayerCommand"
+    },
+    "30F7": {
+      "Name": "\uCE74\uD0C0\uC2A4\uD2B8\u3000\uC29B",
+      "Description": "\uC640\uCE74\u3000\uAC1C\uC778\uAE30\uFF19",
+      "Kind": "PlayerCommand"
+    },
+    "30F8": {
+      "Name": "\uCE74\uD0C0\uC2A4\uD2B8\u3000\uC29B",
+      "Description": "\uC640\uCE74\u3000\uAC1C\uC778\uAE30\uFF11\uFF10",
+      "Kind": "PlayerCommand"
+    },
+    "30F9": {
+      "Name": "\uD0C0\uC784\u3000\uC29B",
+      "Description": "\uC640\uCE74\u3000\uAC1C\uC778\uAE30\uFF11\uFF11",
+      "Kind": "PlayerCommand"
+    },
+    "30FA": {
+      "Name": "\uD0C0\uC784\u3000\uC29B",
+      "Description": "\uC640\uCE74\u3000\uAC1C\uC778\uAE30\uFF11\uFF12",
+      "Kind": "PlayerCommand"
+    },
+    "30FB": {
+      "Name": "\uBE0C\uB808\uC774\uD06C\u3000\uC29B",
+      "Description": "\uC640\uCE74\u3000\uAC1C\uC778\uAE30\uFF11\uFF13",
+      "Kind": "PlayerCommand"
+    },
+    "30FC": {
+      "Name": "\uBE0C\uB808\uC774\uD06C\u3000\uC29B",
+      "Description": "\uC640\uCE74\u3000\uAC1C\uC778\uAE30\uFF11\uFF14",
+      "Kind": "PlayerCommand"
+    },
+    "30FD": {
+      "Name": "\uC544\uC6B0\uB77C\uCE74\u3000\uC29B",
+      "Description": "\uC640\uCE74\u3000\uAC1C\uC778\uAE30\uFF11\uFF15",
+      "Kind": "PlayerCommand"
+    },
+    "30FE": {
+      "Name": "\uD30C\uC6CC\u3000\uC29B",
+      "Description": "\uC640\uCE74\u3000\uAC1C\uC778\uAE30\uFF11\uFF16",
+      "Kind": "PlayerCommand"
+    },
+    "30FF": {
+      "Name": "\uBA54\uC774\uAC70\uC2A4\u3000\uFF13\uC790\uB9E4",
+      "Description": "\uC18C\uD658\uC218\u3000\u300C\uBA54\uC774\uAC70\uC2A4\u3000\uFF13\uC790\uB9E4\u300D\uB97C\u3000\uC18C\uD658\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3100": {
+      "Name": "\uC18C\uD658\uC218\u3000\uC18C\uD658",
+      "Description": "\uC18C\uD658",
+      "Kind": "PlayerCommand"
+    },
+    "3101": {
+      "Name": "\uD611\uACF5",
+      "Description": "\uC801\uC744\u3000\uD611\uACF5\uD569\uB2C8\uB2E4\uFF08\uC774\u3000\uBC30\uD2C0\uC5D0\uC11C\uB9CC\uFF09",
+      "Kind": "PlayerCommand"
+    },
+    "3102": {
+      "Name": "\uD06C\uB808\uC778",
+      "Description": "\uD06C\uB808\uC778\uC758\u3000\uC2A4\uC704\uCE58\uB97C\u3000\uC785\uB825\uD569\uB2C8\uB2E4\uFF08\uC774\u3000\uBC30\uD2C0\uC5D0\uC11C\uB9CC\uFF09",
+      "Kind": "PlayerCommand"
+    },
+    "3103": {
+      "Name": "\uC774\uB3D9",
+      "Description": "\uBE44\uC5B4\u3000\uC788\uB294\u3000\uC7A5\uC18C\uB85C\u3000\uC774\uB3D9\uD569\uB2C8\uB2E4\uFF08\uC774\u3000\uBC30\uD2C0\uC5D0\uC11C\uB9CC\uFF09",
+      "Kind": "PlayerCommand"
+    },
+    "3104": {
+      "Name": "\uC0B4\uD53C\uAE30",
+      "Description": "\uFF28\uFF30\uB97C\u3000\uD68C\uBCF5\uD558\uBA74\uC11C\u3000\uC0C1\uD669\uC744\u3000\uC0B4\uD54D\uB2C8\uB2E4\uFF08\uC774\u3000\uBC30\uD2C0\uC5D0\uC11C\uB9CC\uFF09",
+      "Kind": "PlayerCommand"
+    },
+    "3105": {
+      "Name": "\uB300\uD654",
+      "Description": "\uC801\uC5D0\uAC8C\u3000\uB9D0\uC744\u3000\uAC81\uB2C8\uB2E4\uFF08\uC774\u3000\uBC30\uD2C0\uC5D0\uC11C\uB9CC\uFF09",
+      "Kind": "PlayerCommand"
+    },
+    "3106": {
+      "Name": "\uB2E4\uAC00\uAC00\uAE30",
+      "Description": "\uC2DC\uB4DC\uC5D0\uAC8C\u3000\uBD80\uD0C1\uD574\u3000\uC801\uC5D0\uAC8C\u3000\uC811\uADFC\uD569\uB2C8\uB2E4\uFF08\uC774\u3000\uBC30\uD2C0\uC5D0\uC11C\uB9CC\uFF09",
+      "Kind": "PlayerCommand"
+    },
+    "3107": {
+      "Name": "\uBA40\uC5B4\uC9C0\uAE30",
+      "Description": "\uC2DC\uB4DC\uC5D0\uAC8C\u3000\uBD80\uD0C1\uD574\u3000\uC801\uC5D0\uAC8C\uC11C\u3000\uBA40\uC5B4\uC9D1\uB2C8\uB2E4\uFF08\uC774\u3000\uBC30\uD2C0\uC5D0\uC11C\uB9CC\uFF09",
+      "Kind": "PlayerCommand"
+    },
+    "3108": {
+      "Name": "\uCDE8\uC18C",
+      "Description": "\uC2DC\uB4DC\uC5D0\uAC8C\u3000\uBD80\uD0C1\uD55C\u3000\uAC83\uC744\u3000\uCDE8\uC18C\uD569\uB2C8\uB2E4\uFF08\uC774\u3000\uBC30\uD2C0\uC5D0\uC11C\uB9CC\uFF09",
+      "Kind": "PlayerCommand"
+    },
+    "3109": {
+      "Name": "\uB0A0\uB6F0\uAE30",
+      "Description": "\uC801\uC758\u3000\uCCB4\uB0B4\uC5D0\uC11C\u3000\uACF5\uACA9\uFF08\uC774\u3000\uBC30\uD2C0\uC5D0\uC11C\uB9CC\uFF09",
+      "Kind": "PlayerCommand"
+    },
+    "310A": {
+      "Name": "\uC5C6\uC74C",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "310B": {
+      "Name": "\uC5C6\uC74C",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "310C": {
+      "Name": "\uC5C6\uC74C",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "310D": {
+      "Name": "\uC5C6\uC74C",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "310E": {
+      "Name": "\uC5C6\uC74C",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "310F": {
+      "Name": "\uC5C6\uC74C",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "3110": {
+      "Name": "\uC5C6\uC74C",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "3111": {
+      "Name": "\uC5C6\uC74C",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "3112": {
+      "Name": "\uC5C6\uC74C",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "PlayerCommand"
+    },
+    "3113": {
+      "Name": "\uAE30\uC220",
+      "Description": "\uAE30\uC220\u3000\uC5B4\uBE4C\uB9AC\uD2F0\uB97C\u3000\uC0AC\uC6A9\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3114": {
+      "Name": "\uD2B9\uC218",
+      "Description": "\uD2B9\uC218\u3000\uC5B4\uBE4C\uB9AC\uD2F0\uB97C\u3000\uC0AC\uC6A9\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3115": {
+      "Name": "\uD751\uB9C8\uBC95",
+      "Description": "\uD751\uB9C8\uBC95\uC744\u3000\uC0AC\uC6A9\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3116": {
+      "Name": "\uBC31\uB9C8\uBC95",
+      "Description": "\uBC31\uB9C8\uBC95\uC744\u3000\uC0AC\uC6A9\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3117": {
+      "Name": "\uC18C\uD658",
+      "Description": "\uC18C\uD658\uC218\uB97C\u3000\uBD80\uB985\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3118": {
+      "Name": "\uB9C8\uC2A4\uD130\u3000\uC18C\uD658",
+      "Description": "\uC624\uBC84\u3000\uB4DC\uB77C\uC774\uBE0C\uD55C\u3000\uC18C\uD658\uC218\uB97C\u3000\uC18C\uD658\uFF01",
+      "Kind": "PlayerCommand"
+    },
+    "3119": {
+      "Name": "\uAC80\uAE30",
+      "Description": "\uD0C0\uC774\uBC0D\uC5D0\u3000\uB9DE\uCDB0\u3000\uD070\u3000\uB300\uBBF8\uC9C0\uFF01",
+      "Kind": "PlayerCommand"
+    },
+    "311A": {
+      "Name": "\uC801\u3000\uAE30\uC220",
+      "Description": "\uB9C8\uBB3C\uB85C\uBD80\uD130\u3000\uC2B5\uB4DD\uD55C\u3000\uAE30\uC220\uB85C\u3000\uB2E4\uC591\uD55C\u3000\uACF5\uACA9\uFF01",
+      "Kind": "PlayerCommand"
+    },
+    "311B": {
+      "Name": "\uBE44\uC804",
+      "Description": "\uCEE4\uB9E8\uB4DC\uB97C\u3000\uC785\uB825\uD558\uC5EC\u3000\uD544\uC0B4\uAC80\uFF01",
+      "Kind": "PlayerCommand"
+    },
+    "311C": {
+      "Name": "\uC2AC\uB86F",
+      "Description": "\uC2AC\uB86F\uC744\u3000\uB9DE\uCDB0\uC11C\u3000\uD63C\uC2E0\uC758\u3000\uC29B\uFF01",
+      "Kind": "PlayerCommand"
+    },
+    "311D": {
+      "Name": "\uD15C\uD14C\uC774\uC158",
+      "Description": "\uB192\uC544\uC9C4\u3000\uB9C8\uB825\uC744\u3000\uAC1C\uBC29\uD574\uC11C\u3000\uD070\u3000\uB300\uBBF8\uC9C0\uFF01",
+      "Kind": "PlayerCommand"
+    },
+    "311E": {
+      "Name": "\uC870\uD569",
+      "Description": "\uC544\uC774\uD15C\uC744\u3000\uC870\uD569\uD574\uC11C\u3000\uB2E4\uC591\uD55C\u3000\uD6A8\uACFC\uFF01",
+      "Kind": "PlayerCommand"
+    },
+    "311F": {
+      "Name": "\uB9AC\uB808\uC774\uC988",
+      "Description": "\uC5C6\uC74C",
+      "Kind": "PlayerCommand"
+    },
+    "3120": {
+      "Name": "\uB370\uC2A4",
+      "Description": "\uC5C6\uC74C",
+      "Kind": "PlayerCommand"
+    },
+    "3121": {
+      "Name": "\uB3C8",
+      "Description": "\uC5C6\uC74C",
+      "Kind": "PlayerCommand"
+    },
+    "3122": {
+      "Name": "\uB3C8",
+      "Description": "\uC5C6\uC74C",
+      "Kind": "PlayerCommand"
+    },
+    "3123": {
+      "Name": "\uC9C0\uBD88\uD558\uAE30",
+      "Description": "\uB3C8\uC744\u3000\uB0C5\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3124": {
+      "Name": "\uB9E1\uAE30\uACA0\uC2B5\uB2C8\uB2E4",
+      "Description": "\uC0DD\uAC01\uD55C\u3000\uB300\uB85C\u3000\uD589\uB3D9\uD558\uAC8C\u3000\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3125": {
+      "Name": "\uACC4\uC18D\uD574\u3000\uC8FC\uC138\uC694",
+      "Description": "\uC9C1\uC804\uACFC\u3000\uAC19\uC740\u3000\uD589\uB3D9\uC744\u3000\uD558\uAC8C\u3000\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3126": {
+      "Name": "\uACF5\uACA9\uD574\u3000\uC8FC\uC138\uC694",
+      "Description": "\uBB3C\uB9AC\u3000\uACF5\uB825\uC744\u3000\uD558\uAC8C\u3000\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3127": {
+      "Name": "\uD798\uB0B4\u3000\uC8FC\uC138\uC694",
+      "Description": "\uB9C8\uBC95\uACFC\u3000\uD2B9\uC218\u3000\uAE30\uC220\uB85C\u3000\uACF5\uACA9\uD558\uAC8C\u3000\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3128": {
+      "Name": "\uB3C4\uC640\uC8FC\uC138\uC694",
+      "Description": "\uD68C\uBCF5\uACC4\u3000\uB9C8\uBC95\uC744\u3000\uC0AC\uC6A9\uD558\uAC8C\u3000\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3129": {
+      "Name": "\uD798\uC744\u3000\uD569\uCCD0\uC11C\uFF01",
+      "Description": "\uFF13\uC790\uB9E4\uC758\u3000\uD544\uC0B4\uAE30\uB97C\u3000\uC0AC\uC6A9\uD558\uAC8C\u3000\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "312A": {
+      "Name": "\uC9C0\uCF1C\u3000\uC8FC\uC138\uC694",
+      "Description": "\uBC29\uC5B4\u30FB\uBCF4\uC870\uACC4\u3000\uB9C8\uBC95\uC744\u3000\uC0AC\uC6A9\uD558\uAC8C\u3000\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "312B": {
+      "Name": "\uAD1C\uCC2E\uC2B5\uB2C8\uAE4C",
+      "Description": "\uC801\uC73C\uB85C\uBD80\uD130\u3000\uFF28\uFF30\uC640\u3000\uFF2D\uFF30\uB97C\u3000\uD761\uC218\uD558\uAC8C\u3000\uD569\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "312C": {
+      "Name": "\uC544\uBB34\uAC83\uB3C4\u3000\uC548\u3000\uD55C\uB2E4",
+      "Description": "\uC5C6\uC74C",
+      "Kind": "PlayerCommand"
+    },
+    "312D": {
+      "Name": "\uBC14\uC62C",
+      "Description": "\uC5C6\uC74C",
+      "Kind": "PlayerCommand"
+    },
+    "312E": {
+      "Name": "\uC5B4\uD0DD\u3000\uB9B4",
+      "Description": "\uC640\uCE74\u3000\uAC1C\uC778\uAE30\uFF11\uFF16",
+      "Kind": "PlayerCommand"
+    },
+    "312F": {
+      "Name": "\uAC8C\uC774\uD2B8\u3000\uC5F4\uAE30",
+      "Description": "\uAC8C\uC774\uD2B8\uB97C\u3000\uC5F4\uC1E0\uB85C\u3000\uC5FD\uB2C8\uB2E4",
+      "Kind": "PlayerCommand"
+    },
+    "3130": {
+      "Name": "\uC608\uBE44\uFF12\uFF14",
+      "Description": "\uC5C6\uC74C",
+      "Kind": "PlayerCommand"
+    },
+    "3131": {
+      "Name": "\uC608\uBE44\uFF12\uFF15",
+      "Description": "\uC5C6\uC74C",
+      "Kind": "PlayerCommand"
+    },
+    "3132": {
+      "Name": "\uC608\uBE44\uFF12\uFF16",
+      "Description": "\uC5C6\uC74C",
+      "Kind": "PlayerCommand"
+    },
+    "3133": {
+      "Name": "\uC608\uBE44\uFF12\uFF17",
+      "Description": "\uC5C6\uC74C",
+      "Kind": "PlayerCommand"
+    },
+    "3134": {
+      "Name": "\uC608\uBE44\uFF12\uFF18",
+      "Description": "\uC5C6\uC74C",
+      "Kind": "PlayerCommand"
+    },
+    "3135": {
+      "Name": "\uC608\uBE44\uFF12\uFF19",
+      "Description": "\uC5C6\uC74C",
+      "Kind": "PlayerCommand"
+    },
+    "3136": {
+      "Name": "\uC608\uBE44\uFF13\uFF10",
+      "Description": "\uC5C6\uC74C",
+      "Kind": "PlayerCommand"
+    },
+    "3137": {
+      "Name": "\uC608\uBE44\uFF13\uFF11",
+      "Description": "\uC5C6\uC74C",
+      "Kind": "PlayerCommand"
+    },
+    "3138": {
+      "Name": "\uC608\uBE44\uFF13\uFF12",
+      "Description": "\uC5C6\uC74C",
+      "Kind": "PlayerCommand"
+    },
+    "3139": {
+      "Name": "\uC608\uBE44\uFF13\uFF13",
+      "Description": "\uC5C6\uC74C",
+      "Kind": "PlayerCommand"
+    },
+    "313A": {
+      "Name": "\uC608\uBE44\uFF13\uFF14",
+      "Description": "\uC5C6\uC74C",
+      "Kind": "PlayerCommand"
+    },
+    "313B": {
+      "Name": "\uC608\uBE44\uFF13\uFF15",
+      "Description": "\uC5C6\uC74C",
+      "Kind": "PlayerCommand"
+    },
+    "313C": {
+      "Name": "\uC608\uBE44\uFF13\uFF16",
+      "Description": "\uC5C6\uC74C",
+      "Kind": "PlayerCommand"
+    },
+    "313D": {
+      "Name": "\uC608\uBE44\uFF13\uFF17",
+      "Description": "\uC5C6\uC74C",
+      "Kind": "PlayerCommand"
+    },
+    "313E": {
+      "Name": "\uC608\uBE44\uFF13\uFF18",
+      "Description": "\uC5C6\uC74C",
+      "Kind": "PlayerCommand"
+    },
+    "313F": {
+      "Name": "\uC608\uBE44\uFF13\uFF19",
+      "Description": "\uC5C6\uC74C",
+      "Kind": "PlayerCommand"
+    },
+    "4000": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4001": {
+      "Name": "\uCEE4\uB9E8\uB4DC\uFF12",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4002": {
+      "Name": "\uCEE4\uB9E8\uB4DC\uFF13",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4003": {
+      "Name": "\uC528\uC557\u3000\uB300\uD3EC",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4004": {
+      "Name": "\uC528\uC557\u3000\uAE30\uAD00\uCD1D",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4005": {
+      "Name": "\uD761\uC785\uD558\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4006": {
+      "Name": "\uBC49\uC5B4\uB0B4\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4007": {
+      "Name": "\uC9C0\uC9C4\u3000\uC900\uBE44",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4008": {
+      "Name": "\uC9C0\uC9C4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4009": {
+      "Name": "\uC790\uD3ED",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "400A": {
+      "Name": "\uB178\uB824\uBCF4\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "400B": {
+      "Name": "\uCD08\uC74C\uD30C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "400C": {
+      "Name": "\uCDA9\uACA9\uD30C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "400D": {
+      "Name": "\uB3C5\uCE68",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "400E": {
+      "Name": "\uCEE4\uB9E8\uB4DC",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "400F": {
+      "Name": "\uBC84\uC11C\uD06C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4010": {
+      "Name": "\uC624\uD1A0\u3000\uD3EC\uC158",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4011": {
+      "Name": "\uB77C\uC774\uD50C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4012": {
+      "Name": "\uB77C\uC774\uD50C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4013": {
+      "Name": "\uD654\uC5FC\uBC29\uC0AC",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4014": {
+      "Name": "\uB3CC\uB824\u3000\uCC28\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4015": {
+      "Name": "\uBB3C\uB300\uD3EC",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4016": {
+      "Name": "\uCDA9\uACA9\uD30C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4017": {
+      "Name": "\uCEE4\uB9E8\uB4DC",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4018": {
+      "Name": "\uC900\uBE44",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4019": {
+      "Name": "\uCC29\uC9C0",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "401A": {
+      "Name": "\uAE30\uC5B4\uB2E4\uB2C8\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "401B": {
+      "Name": "\uBE0C\uB808\uC2A4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "401C": {
+      "Name": "\uBE0C\uB808\uC2A4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "401D": {
+      "Name": "\uBE0C\uB808\uC2A4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "401E": {
+      "Name": "\uBE0C\uB808\uC2A4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "401F": {
+      "Name": "\uD558\uB098",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4020": {
+      "Name": "\uC804\uCCB4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4021": {
+      "Name": "\uC18C\uB2C9\u3000\uC6E8\uC774\uBE0C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4022": {
+      "Name": "\uCF54\uC5B4\u3000\uC5D0\uB108\uC9C0",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4023": {
+      "Name": "\uB9AC\uD788\uD2B8\uB808\uAC90",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4024": {
+      "Name": "\uD63C\u3000\uC5B4\uD0DD",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4025": {
+      "Name": "\uBE0C\uB808\uC2A4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4026": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4027": {
+      "Name": "\uD6C4\uB824\uCE58\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4028": {
+      "Name": "\uC810\uD504\u3000\uBCA0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4029": {
+      "Name": "\uC804\uACA9",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "402A": {
+      "Name": "\uC9C0\uC9C4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "402B": {
+      "Name": "\uC624\uCE04\u3000\uB304\uC2A4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "402C": {
+      "Name": "\uAF43\uAC00\uB8E8",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "402D": {
+      "Name": "\uAF43\uAC00\uB8E8",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "402E": {
+      "Name": "\uAF43\uAC00\uB8E8",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "402F": {
+      "Name": "\uC5D8\uB2C8\uB1E8",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4030": {
+      "Name": "\uB3CC\uC9C4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4031": {
+      "Name": "\uCE68\u3000\uFF11\uFF10\uFF10\uFF10\uAC1C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4032": {
+      "Name": "\uCE68\u3000\uFF11\uFF10\uFF10\uFF10\uFF10\uAC1C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4033": {
+      "Name": "\uB3C4\uB9DD\uAC00\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4034": {
+      "Name": "\uBE14\uB798\uC2A4\uD2B8\u3000\uD380\uCE58",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4035": {
+      "Name": "\uB354\uBE14\u3000\uC5B4\uD0DD",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4036": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4037": {
+      "Name": "\uC5F4\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4038": {
+      "Name": "\uC11D\uD654\u3000\uB178\uB824\uBCF4\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4039": {
+      "Name": "\uD14C\uC77C\u3000\uC18C\uB2C9",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "403A": {
+      "Name": "\uC5E0\uBE14\uB7FC\u3000\uC624\uBE0C\u3000\uD398\uC774\uD2B8",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "403B": {
+      "Name": "\uCE74\uC6B4\uD130",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "403C": {
+      "Name": "\uAE30\uD569",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "403D": {
+      "Name": "\uC288\uD305\u3000\uB808\uC774",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "403E": {
+      "Name": "\uBC84\uB2DD",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "403F": {
+      "Name": "\uD655\uB300\uFF12",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4040": {
+      "Name": "\uD655\uB300\uFF13",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4041": {
+      "Name": "\uD655\uB300\uFF14",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4042": {
+      "Name": "\uC790\uD3ED",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4043": {
+      "Name": "\uB3CC\uC9C4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4044": {
+      "Name": "\uD30C\uB77C\uC624\uC758\u3000\uC800\uC8FC",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4045": {
+      "Name": "\uCC28\uC9C0",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4046": {
+      "Name": "\uD50C\uB808\uC784\u3000\uBCFC",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4047": {
+      "Name": "\uD50C\uB808\uC784\u3000\uBCFC",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4048": {
+      "Name": "\uC790\uD3ED",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4049": {
+      "Name": "\uC790\uD3ED",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "404A": {
+      "Name": "\uC790\uD3ED",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "404B": {
+      "Name": "\uB370\uC2A4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "404C": {
+      "Name": "\uC8FD\uC74C\uC758\u3000\uC120\uACE0",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "404D": {
+      "Name": "\uC544\uCFE0\uC544\u3000\uBE0C\uB808\uC2A4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "404E": {
+      "Name": "\uBA54\uAE30\uB3C4\u3000\uD50C\uB808\uC784",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "404F": {
+      "Name": "\uC0AC\uC774\uB808\uC2A4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4050": {
+      "Name": "\uBE14\uB808\uC774\uB4DC",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4051": {
+      "Name": "\uD3EC\uC774\uC98C\u3000\uBBF8\uC2A4\uD2B8",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4052": {
+      "Name": "\uBB3C\uC5B4\uB72F\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4053": {
+      "Name": "\uC5ED\uACA8\uC6B4\u3000\uC785\uAE40",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4054": {
+      "Name": "\uC18C\uD654\uC561",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4055": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4056": {
+      "Name": "\uBA39\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4057": {
+      "Name": "\uB9C8\uAD6C\u3000\uC3D8\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4058": {
+      "Name": "\uC2DC\uBA38\uD2B8\uB9AC\u3000\uD6C4\uB824\uCE58\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4059": {
+      "Name": "\uB3CC\uC9C4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "405A": {
+      "Name": "\uD654\uC774\uD2B8\u3000\uC708\uB4DC",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "405B": {
+      "Name": "\uB9C8\uC774\uD2F0\u3000\uAC00\uB4DC",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "405C": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "405D": {
+      "Name": "\uC18C\uB2C9\u3000\uC719",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "405E": {
+      "Name": "\uC9C0\uC625\uC758\u3000\uD654\uC5FC",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "405F": {
+      "Name": "\uBA54\uAC00\u3000\uD50C\uB808\uC5B4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4060": {
+      "Name": "\uBAA8\uB450\uC758\u3000\uC6D0\uD55C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4061": {
+      "Name": "\uC800\uC8FC\uC758\u3000\uC8FC\uC220",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4062": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4063": {
+      "Name": "\uCE74\uC6B4\uD130\u3000\uCDE8\uC18C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4064": {
+      "Name": "\uC5D0\uC5B4\uB85C\u3000\uC2A4\uD30C\uD06C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4065": {
+      "Name": "\uD1A0\uB974\u3000\uD574\uBA38",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4066": {
+      "Name": "\uCCD0\uC62C\uB9AC\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4067": {
+      "Name": "\uC120\uC0E4\uC778",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4068": {
+      "Name": "\uC9C0\uC9C4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4069": {
+      "Name": "\uBA54\uD14C\uC624",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "406A": {
+      "Name": "\uAF2C\uB9AC",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "406B": {
+      "Name": "\uBE0C\uB808\uC2A4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "406C": {
+      "Name": "\uBCF4\uB514\u3000\uD504\uB808\uC2A4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "406D": {
+      "Name": "\uC288\uD1A0\uB8F8\u3000\uD50C\uB808\uC784",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "406E": {
+      "Name": "\uB9C8\uB825\u3000\uC9D1\uC911",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "406F": {
+      "Name": "\uC9C0\uC9C4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4070": {
+      "Name": "\uBE14\uB798\uC2A4\uD130",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4071": {
+      "Name": "\uBE14\uB798\uC2A4\uD130",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4072": {
+      "Name": "\uBC1C\uD1B1",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4073": {
+      "Name": "\uC8FD\uC74C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4074": {
+      "Name": "\uC8FD\uC74C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4075": {
+      "Name": "\uC8FD\uC74C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4076": {
+      "Name": "\uC8FD\uC74C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4077": {
+      "Name": "\uC8FD\uC74C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4078": {
+      "Name": "\uC8FD\uC74C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4079": {
+      "Name": "\uC8FD\uC74C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "407A": {
+      "Name": "\uC8FD\uC74C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "407B": {
+      "Name": "\uC8FD\uC74C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "407C": {
+      "Name": "\uC8FD\uC74C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "407D": {
+      "Name": "\uC8FD\uC74C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "407E": {
+      "Name": "\uC8FD\uC74C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "407F": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4080": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4081": {
+      "Name": "\uC804\uC9C4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4082": {
+      "Name": "\uCF54\uC988\uCE74",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4083": {
+      "Name": "\uC640\uD0A4\uC790\uC2DC",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4084": {
+      "Name": "\uC640\uD0A4\uC790\uC2DC",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4085": {
+      "Name": "\uCC38\uB9C8\uB3C4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4086": {
+      "Name": "\uB2E4\uC774\uACE0\uB85C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4087": {
+      "Name": "\uAF5D\u3000\uC774\u3000\uB2E4\uFF01\uFF01",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4088": {
+      "Name": "\uB2F9\u3000\uCCA8\u3000\uC774\u3000\uB2E4\uFF01\uFF01",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4089": {
+      "Name": "\uBA54\uD14C\uC624\u3000\uC2A4\uD2B8\uB77C\uC774\uD06C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "408A": {
+      "Name": "\uC18C\uD658",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "408B": {
+      "Name": "\uC18C\uD658",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "408C": {
+      "Name": "\uC18C\uD658",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "408D": {
+      "Name": "\uC18C\uD658",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "408E": {
+      "Name": "\uC18C\uD658",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "408F": {
+      "Name": "\uC18C\uD658",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4090": {
+      "Name": "\uC18C\uD658",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4091": {
+      "Name": "\uC18C\uD658",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4092": {
+      "Name": "\uC18C\uD658",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4093": {
+      "Name": "\uC9C0\uC9C4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4094": {
+      "Name": "\uB9AC\uC561\uC158",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4095": {
+      "Name": "\uD558\uB298\uC758\u3000\uC77C\uACA9",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4096": {
+      "Name": "\uB2E4\uC774\uC544\uBAAC\uB4DC\u3000\uB354\uC2A4\uD2B8",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4097": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4098": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4099": {
+      "Name": "\uB178\uB824\uBCF4\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "409A": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "409B": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "409C": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "409D": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "409E": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "409F": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40A0": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40A1": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40A2": {
+      "Name": "\uBBF8\uBBF9\uFF11",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40A3": {
+      "Name": "\uBBF8\uBBF9\uFF12",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40A4": {
+      "Name": "\uBBF8\uBBF9\uFF13",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40A5": {
+      "Name": "\uBBF8\uBBF9\uFF14",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40A6": {
+      "Name": "\uC288\uD305\u3000\uD30C\uC6CC",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40A7": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40A8": {
+      "Name": "\uBB3C\uC5B4\uB72F\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40A9": {
+      "Name": "\uC11D\uD654\u3000\uB178\uB824\uBCF4\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40AA": {
+      "Name": "\uCC28\uC9C0",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40AB": {
+      "Name": "\uCC28\uC9C0",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40AC": {
+      "Name": "\uD558\uB298\uC758\u3000\uC77C\uACA9",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40AD": {
+      "Name": "\uC784\uD384\uC2A4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40AE": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40AF": {
+      "Name": "\uD398\uC778",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40B0": {
+      "Name": "\uCE74\uC624\uD2F1\uFF24",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40B1": {
+      "Name": "\uB2E4\uC774\uACE0\uB85C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40B2": {
+      "Name": "\uB300\uACF5\uC758\u3000\uAC1C\uAC00",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40B3": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40B4": {
+      "Name": "\uB9E4\uC6B0\u3000\uC5ED\uACA8\uC6B4\u3000\uC785\uAE40",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40B5": {
+      "Name": "\uC5C4\uCCAD\uB09C\u3000\uC18C\uD654\uC561",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40B6": {
+      "Name": "\uC798\u3000\uBA39\uACA0\uC2B5\uB2C8\uB2E4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40B7": {
+      "Name": "\uC815\uC2E0\u3000\uC5C6\uB294\u3000\uC18C\uD654\uC561",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40B8": {
+      "Name": "\uCE74\uC624\uC2A4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40B9": {
+      "Name": "\uD558\uC774\uD37C\u3000\uBE14\uB798\uC2A4\uD130",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40BA": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40BB": {
+      "Name": "\uBD80\uB3D9\uC758\u3000\uC2DC\uC120",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40BC": {
+      "Name": "\uCE68\u3000\uFF11\uFF10\uFF10\uFF10\uFF10\uAC1C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40BD": {
+      "Name": "\uC0AC\uC2E0\uC758\u3000\uBC1C\uD1B1",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40BE": {
+      "Name": "\uBE14\uB808\uC774\uB4DC\u3000\uB09C\uBB34",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40BF": {
+      "Name": "\uC0E4\uC774\uB2DD",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40C0": {
+      "Name": "\uACA9\uBA78\uC758\u3000\uC774\uBE68",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40C1": {
+      "Name": "\uD63C\uB780\uC758\u3000\uC774\uBE68",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40C2": {
+      "Name": "\uC9C0\uC625\uC758\u3000\uC774\uBE68",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40C3": {
+      "Name": "\uAC80\uC740\u3000\uC2DC\uC120",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40C4": {
+      "Name": "\uC1FC\uD06C\u3000\uC6E8\uC774\uBE0C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40C5": {
+      "Name": "\uB4DC\uB808\uC778\u3000\uD130\uCE58",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40C6": {
+      "Name": "\uD3EC\uC774\uC98C\u3000\uD130\uCE58",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40C7": {
+      "Name": "\uC5B4\uD0DD",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40C8": {
+      "Name": "\uB7EC\uC26C\u3000\uC5B4\uD0DD\uFF01",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40C9": {
+      "Name": "\uC5C6\uC74C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40CA": {
+      "Name": "\uC5C6\uC74C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40CB": {
+      "Name": "\uC5C6\uC74C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40CC": {
+      "Name": "\uBBF8\uD639\uC758\u3000\uCC0C\uB974\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40CD": {
+      "Name": "\uB3C5\u3000\uCC0C\uB974\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40CE": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40CF": {
+      "Name": "\uD06C\uB798\uC26C\u3000\uC2A4\uD30C\uC774\uD06C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40D0": {
+      "Name": "\uC0B4\uBCF4\uFF01",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40D1": {
+      "Name": "\uBD80\uB9AC",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40D2": {
+      "Name": "\uC2AC\uD514\uC758\u3000\uBD80\uB9AC",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40D3": {
+      "Name": "\uAC15\uAC80\uBC95\u30FB\uC5F4\uD30C\uACA9",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40D4": {
+      "Name": "\uAC15\uAC80\uBC95\u30FB\uBB34\uC2E0\uCC38",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40D5": {
+      "Name": "\uAC15\uAC80\uBC95\u30FB\uC2E0\uB8E1\uB2E8",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40D6": {
+      "Name": "\uC548\uB155\uD788\u3000\uC8FC\uBB34\uC138\uC694",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40D7": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40D8": {
+      "Name": "\uC774\uD130\uB110\u3000\uCE90\uB10C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40D9": {
+      "Name": "\uC6B8\uD2B8\uB77C\u3000\uC2A4\uD30C\uD06C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40DA": {
+      "Name": "\uC288\uBA5C\uC820\uB4DC",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40DB": {
+      "Name": "\uC575\uAE00\uD2F8",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40DC": {
+      "Name": "\uB9AC\uD2C0\uB098\uB808",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40DD": {
+      "Name": "\uB378\uD0C0\u3000\uC5B4\uD0DD",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40DE": {
+      "Name": "\uB9C8\uC774\uD2F0\u3000\uAC00\uB4DC",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40DF": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40E0": {
+      "Name": "\uBE0C\uB808\uC2A4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40E1": {
+      "Name": "\uBE0C\uB808\uC2A4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40E2": {
+      "Name": "\uC2DC\uACF5\uC9C4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40E3": {
+      "Name": "\uFF13\uB2E8\u3000\uACF5\uACA9",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40E4": {
+      "Name": "\uC2F8\uC6B0\uAE30\uFF13",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40E5": {
+      "Name": "\uC8FD\uC74C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40E6": {
+      "Name": "\uC9C0\uC625\uC758\u3000\uD654\uC5FC",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40E7": {
+      "Name": "\uD1A0\uB974\u3000\uD574\uBA38",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40E8": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40E9": {
+      "Name": "\uC790\uD3ED",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40EA": {
+      "Name": "\uBD80\uB450",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40EB": {
+      "Name": "\uBC49\uC5B4\uB0B4\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40EC": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40ED": {
+      "Name": "\uC2AC\uB85C\uC6B0\uAC00",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40EE": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40EF": {
+      "Name": "\uC3D8\uC544\uC62C\uB9AC\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40F0": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40F1": {
+      "Name": "\uC5E0\uBE14\uB7FC\u3000\uC624\uBE0C\u3000\uCF54\uC2A4\uBAA8\uC2A4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40F2": {
+      "Name": "\uCE68\u3000\uFF19\uFF19\uFF19\uFF19\uFF19\uAC1C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40F3": {
+      "Name": "\uC54C\uD14C\uB9C8",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40F4": {
+      "Name": "\uC138\uACC4\u3000\uCD5C\uD6C4\uC758\u3000\uB0A0",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40F5": {
+      "Name": "\uBA54\uAC00\uD1A4\u3000\uD380\uCE58",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40F6": {
+      "Name": "\uC774\uB808\uC774\uC800",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40F7": {
+      "Name": "\uC0AC\uB3C5\uC6B4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40F8": {
+      "Name": "\uC694\uC0B4\uC561",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40F9": {
+      "Name": "\uBC31\uC544\uACA9",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40FA": {
+      "Name": "\uBD88\uAE38\uD55C\u3000\uBB34\uC9C0\uAC1C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40FB": {
+      "Name": "\uC218\uC18D\u3000\uB9C8\uBC95\uC9C4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40FC": {
+      "Name": "\uB2E8\uC8C4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40FD": {
+      "Name": "\uC544\uCFE0\uC544\u3000\uD504\uB808\uC2A4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40FE": {
+      "Name": "\uB354\uB7EC\uC6B4\u3000\uC561\uCCB4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "40FF": {
+      "Name": "\uBAA8\uB450\uC758\u3000\uC6D0\uD55C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4100": {
+      "Name": "\uC288\uBA5C\uC820\uB4DC",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4101": {
+      "Name": "\uC575\uAE00\uD2F8",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4102": {
+      "Name": "\uB9AC\uD2C0\uB098\uB808",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4103": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4104": {
+      "Name": "\uCE74\uD0C0\uC2A4\uD2B8\uB85C\uD504",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4105": {
+      "Name": "\uBA54\uAC00\u3000\uADF8\uB798\uBE44\uD1A4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4106": {
+      "Name": "\uB378\uD0C0\u3000\uC5B4\uD0DD",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4107": {
+      "Name": "\uCF54\uC988\uCE74",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4108": {
+      "Name": "\uC640\uD0A4\uC790\uC2DC",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4109": {
+      "Name": "\uC640\uD0A4\uC790\uC2DC",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "410A": {
+      "Name": "\uCC38\uB9C8\uB3C4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "410B": {
+      "Name": "\uB2E4\uC774\uACE0\uB85C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "410C": {
+      "Name": "\uC9C0\uC625\uC758\u3000\uD654\uC5FC",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "410D": {
+      "Name": "\uC9C0\uC625\uC758\u3000\uD654\uC5FC",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "410E": {
+      "Name": "\uBA54\uD14C\uC624\u3000\uC2A4\uD2B8\uB77C\uC774\uD06C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "410F": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4110": {
+      "Name": "\uC5D0\uC5B4\uB85C\u3000\uC2A4\uD30C\uD06C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4111": {
+      "Name": "\uD1A0\uB974\u3000\uD574\uBA38",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4112": {
+      "Name": "\uD1A0\uB974\u3000\uD574\uBA38",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4113": {
+      "Name": "\uC120\uB354\uC7C8",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4114": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4115": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4116": {
+      "Name": "\uC5D0\uC5B4\uB85C\u3000\uC2A4\uD30C\uD06C",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4117": {
+      "Name": "\uD558\uB298\uC758\u3000\uC77C\uACA9",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4118": {
+      "Name": "\uB2E4\uC774\uC544\uBAAC\uB4DC\u3000\uB354\uC2A4\uD2B8",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4119": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "411A": {
+      "Name": "\uBA54\uAC00\u3000\uD50C\uB808\uC5B4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "411B": {
+      "Name": "\uC784\uD384\uC2A4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "411C": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "411D": {
+      "Name": "\uD398\uC778",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "411E": {
+      "Name": "\uCE74\uC624\uD2F1\uFF24",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "411F": {
+      "Name": "\uBA78\uB9DD\uC758\u3000\uBE5B",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4120": {
+      "Name": "\uD504\uB85C\uBE44\uB358\uC2A4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4121": {
+      "Name": "\uC800\uC9C0\uBA3C\uD2B8\u3000\uB370\uC774",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4122": {
+      "Name": "\uD558\uBC18\uC2E0\u3000\uBD84\uB9AC",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4123": {
+      "Name": "\uB4F1\uC7A5",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4124": {
+      "Name": "\uC0AC\uB9DD",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4125": {
+      "Name": "\uB9AC\uC778\uCE74\uB124\uC774\uC158",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4126": {
+      "Name": "\uC18C\uBA78",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4127": {
+      "Name": "\uC2F8\uC6B0\uAE30",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4128": {
+      "Name": "\uC288\uD305\u3000\uD30C\uC6CC",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "4129": {
+      "Name": "\uBA54\uAC00\u3000\uADF8\uB798\uBE44\uD1A4",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "412A": {
+      "Name": "\uB9C8\uC774\uD2F0\u3000\uAC00\uB4DC",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "412B": {
+      "Name": "\uB514\uC2A4\uD3A0\u3000\uD380\uCE58",
+      "Description": "\uC2F8\uC6B0\uAE30",
+      "Kind": "MonsterCommand"
+    },
+    "6000": {
+      "Name": "\uACF5\uACA9",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6001": {
+      "Name": "\uD2B9\uC218\uFF11",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6002": {
+      "Name": "\uD2B9\uC218\uFF12",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6003": {
+      "Name": "\uCD9C\uD604",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6004": {
+      "Name": "\uD55C\uC228",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6005": {
+      "Name": "\uB3C5\uC561",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6006": {
+      "Name": "\uB9C8\uAD6C\u3000\uC3D8\uAE30",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6007": {
+      "Name": "\uBCC0\uC2E0",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6008": {
+      "Name": "\uC8FD\uC74C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6009": {
+      "Name": "\uCD09\uC218\uAC00\u3000\uB9C8\uBC95\uC744\u3000\uD761\uC218\uD55C\uB2E4\uFF01",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "600A": {
+      "Name": "\uAC00\uC2DC",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "600B": {
+      "Name": "\uC2A4\uD06C\uB958",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "600C": {
+      "Name": "\uBE14\uB9AC\uCE20\uBCFC\u3000\uB7EC\uC26C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "600D": {
+      "Name": "\uC2AC\uB9AC\uD50C\uBCFC",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "600E": {
+      "Name": "\uBE14\uB77C\uC778\uBCFC",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "600F": {
+      "Name": "\uC0AC\uC774\uB808\uC2A4\uBCFC",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6010": {
+      "Name": "\uB0C5\uB2E4\u3000\uBC15\uAE30",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6011": {
+      "Name": "\uB0C5\uB2E4\u3000\uBC15\uAE30",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6012": {
+      "Name": "\uD06C\uB808\uC778",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6013": {
+      "Name": "\uC8FD\uC74C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6014": {
+      "Name": "\uC8FD\uC74C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6015": {
+      "Name": "\uD06C\uB808\uC778\uC774\u3000\uC6C0\uC9C1\uC600\uB2E4",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6016": {
+      "Name": "\uBB38\uC5B4\uBC1C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6017": {
+      "Name": "\uC555\uB3C4",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6018": {
+      "Name": "\uC77C\uC5B4\uC11C\uAE30",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6019": {
+      "Name": "\uCC28\uC9C0",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "601A": {
+      "Name": "\uB2E4\uC74C\uC740\u3000\uB108\uB2E4",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "601B": {
+      "Name": "\uC9C4\uC815\uD55C\u3000\uC8FC\uBA39",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "601C": {
+      "Name": "\uC8FD\uC74C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "601D": {
+      "Name": "\uC8FD\uC74C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "601E": {
+      "Name": "\uCDA9\uACA9\uD30C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "601F": {
+      "Name": "\uB4E4\uC774\uBC1B\uAE30",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6020": {
+      "Name": "\uC6B0\uD68C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6021": {
+      "Name": "\uB9C8\uBC95\u3000\uBE54",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6022": {
+      "Name": "\uAC1C\uD2C0\uB9C1",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6023": {
+      "Name": "\uBE44\uD2B8",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6024": {
+      "Name": "\uC544\uCFE0\uC544\u3000\uC288\uD130",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6025": {
+      "Name": "\uD3ED\uB8B0",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6026": {
+      "Name": "\uBD80\uC0C1",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6027": {
+      "Name": "\uD558\uAC15",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6028": {
+      "Name": "\uCE74\uC6B4\uD2B8",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6029": {
+      "Name": "\u300E\uC2E0\u300F\uC5D0\uAC8C\u3000\uB04C\uC5B4\u3000\uB2F9\uACA8\uC9C0\uACE0\u3000\uC788\uB2E4",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "602A": {
+      "Name": "\uC8FD\uC74C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "602B": {
+      "Name": "\uC774\uB3D9",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "602C": {
+      "Name": "\uC8FD\uC74C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "602D": {
+      "Name": "\uC8FD\uC74C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "602E": {
+      "Name": "\uD761\uC785\uD558\uAE30",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "602F": {
+      "Name": "\uBC49\uC5B4\uB0B4\uAE30",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6030": {
+      "Name": "\uC8FD\uC74C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6031": {
+      "Name": "\uB3C5\uC561",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6032": {
+      "Name": "\uC11D\uD654\u3000\uD380\uCE58",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6033": {
+      "Name": "\uC989\uC0AC\u3000\uD380\uCE58",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6034": {
+      "Name": "\uB3C5\u3000\uBC1C\uD1B1",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6035": {
+      "Name": "\uB098\uB978\uD55C\u3000\uC624\uCE04\uB294\u3000\uC7A0\uC5D0\u3000\uBE60\uC84C\uB2E4",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6036": {
+      "Name": "\uC704\uD06C\u3000\uCCB4\uC778\uC9C0",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6037": {
+      "Name": "\uFF28\uFF30\u3000\uC808\uBC18",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6038": {
+      "Name": "\uFF28\uFF30\u3000\uFF11",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6039": {
+      "Name": "\uD30C\uC774\uC5B4",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "603A": {
+      "Name": "\uBE14\uB9AC\uC790\uB4DC",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "603B": {
+      "Name": "\uC120\uB354",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "603C": {
+      "Name": "\uC6CC\uD130",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "603D": {
+      "Name": "\uB3CC\uACA9",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "603E": {
+      "Name": "\uD558\uC774\u3000\uD3EC\uC158",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "603F": {
+      "Name": "\uD504\uB808\uC2A4",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6040": {
+      "Name": "\uB9CC\uB2A5\uC57D",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6041": {
+      "Name": "\uBC88\uB1CC\uC57D",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6042": {
+      "Name": "\uD3EC\uD1A4\u3000\uC719",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6043": {
+      "Name": "\uB9E4\uC9C0\uCEEC\u3000\uBE0C\uB808\uC2A4",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6044": {
+      "Name": "\uC2AC\uB9BD\u3000\uD14C\uC77C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6045": {
+      "Name": "\uBC84\uC11C\uD06C\u3000\uD14C\uC77C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6046": {
+      "Name": "\uBC18\uACA9",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6047": {
+      "Name": "\uC804\uCCB4\u3000\uACF5\uACA9",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6048": {
+      "Name": "\uACF5\uACA9",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6049": {
+      "Name": "\uACF5\uACA9",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "604A": {
+      "Name": "\uC9C0\uC9C4",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "604B": {
+      "Name": "\uAD11\uD0C4",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "604C": {
+      "Name": "\uC11D\uD654\u3000\uB178\uB824\uBCF4\uAE30",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "604D": {
+      "Name": "\uB9E4\uC9C0\uCEEC\u3000\uB9C8\uC778",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "604E": {
+      "Name": "\uACF5\uACA9",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "604F": {
+      "Name": "\uBE0C\uB808\uC774\uD06C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6050": {
+      "Name": "\uC77C\uACA9\uC758\u3000\uC790\uBE44",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6051": {
+      "Name": "\uC2DC\uBAA8\uC5B4\uAC00\u3000\uC544\uB2C8\uB9C8\uB97C\u3000\uB418\uB3CC\uB838\uB2E4\uFF01",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6052": {
+      "Name": "\uD398\uC778",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6053": {
+      "Name": "\uCEE4\uB9E8\uB4DC\uFF19\uFF13",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6054": {
+      "Name": "\uCEE4\uB9E8\uB4DC\uFF19\uFF14",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6055": {
+      "Name": "\uCEE4\uB9E8\uB4DC\uFF19\uFF15",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6056": {
+      "Name": "\uCEE4\uB9E8\uB4DC\uFF19\uFF16",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6057": {
+      "Name": "\uACF5\uACA9",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6058": {
+      "Name": "\uACF5\uACA9",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6059": {
+      "Name": "\uACF5\uACA9",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "605A": {
+      "Name": "\uBB38\uC5B4\u3000\uBA38\uB9AC",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "605B": {
+      "Name": "\uC811\uADFC\u3000\uACF5\uACA9",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "605C": {
+      "Name": "\uB4DC\uB808\uC778\u3000\uD130\uCE58",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "605D": {
+      "Name": "\uACF5\uACA9",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "605E": {
+      "Name": "\uB370\uC2A4\uD398\uB77C\uB3C4",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "605F": {
+      "Name": "\uB9AC\uD50C\uB809",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6060": {
+      "Name": "\uD14C\uC2A4\uD2B8",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6061": {
+      "Name": "\uD3EC\uC774\uC98C\u3000\uBE0C\uB808\uC2A4",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6062": {
+      "Name": "\uC11D\uD654\u3000\uB178\uB824\uBCF4\uAE30",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6063": {
+      "Name": "\uAD11\uD0C4",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6064": {
+      "Name": "\uC228\u3000\uBE68\uC544\uB4E4\uC774\uAE30",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6065": {
+      "Name": "\uBE0C\uB808\uC2A4\uAC00\u3000\uB2FF\uC9C0\u3000\uC54A\uB294\uB2E4\uFF01",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6066": {
+      "Name": "\uD06C\uB9AC\uD2F0\uCEEC\u3000\uC788\uC74C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6067": {
+      "Name": "\uC8FD\uC74C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6068": {
+      "Name": "\uB9C8\uB825\u3000\uBD80\uD65C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6069": {
+      "Name": "\uBC49\uC5B4\uB0B4\uAE30",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "606A": {
+      "Name": "\uBC49\uC5B4\uB0B4\uAE30",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "606B": {
+      "Name": "\uAD11\uD0C4",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "606C": {
+      "Name": "\uC6CC\uD504",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "606D": {
+      "Name": "\uD761\uC218",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "606E": {
+      "Name": "\uC0AC\uC774\uB808\uC2A4",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "606F": {
+      "Name": "\uBC29\uD5A5",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6070": {
+      "Name": "\uBE14\uB77C\uC778",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6071": {
+      "Name": "\uC2AC\uB9AC\uD50C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6072": {
+      "Name": "\uCEE8\uD4E8",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6073": {
+      "Name": "\uBBF8\uC0AC\uC77C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6074": {
+      "Name": "\uC0AC\uC778\uC758\u3000\uAD50\uACA9",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6075": {
+      "Name": "\uC644\uC804\uD55C\u3000\uD30C\uAD34",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6076": {
+      "Name": "\uBD84\uC1C4\uC758\u3000\uBC1C\uD1B1",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6077": {
+      "Name": "\uBC14\uC774\uC624\uB77C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6078": {
+      "Name": "\uBA78\uB9DD\uC758\u3000\uCC3D",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6079": {
+      "Name": "\uD50C\uB808\uC5B4",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "607A": {
+      "Name": "\uC544\uC2A4\uD53C\uB77C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "607B": {
+      "Name": "\uCE74\uC96C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "607C": {
+      "Name": "\uB514\uC2A4\uD3A0\u3000\uB54C\uB9AC\uAE30",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "607D": {
+      "Name": "\uCEE4\uB9E8\uB4DC\u3000\uFF11\uFF13\uFF15",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "607E": {
+      "Name": "\uBCC0\uD615",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "607F": {
+      "Name": "\uBCC0\uD615",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6080": {
+      "Name": "\uD5EC\u3000\uBC14\uC774\uD130",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6081": {
+      "Name": "\uB9C8\uC778\uB4DC\u3000\uBE14\uB798\uC2A4\uD2B8",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6082": {
+      "Name": "\uC624\uBC84\u3000\uB370\uC2A4",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6083": {
+      "Name": "\uADF8\uB77C\uBE44\uC7C8",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6084": {
+      "Name": "\uC81D\uD2B8\u3000\uBE54",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6085": {
+      "Name": "\uC81D\uD2B8\u3000\uD551\uAC70",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6086": {
+      "Name": "\uC9C4\u30FB\uC81D\uD2B8\u3000\uC29B",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6087": {
+      "Name": "\uC81D\uD2B8\u3000\uBCF4\uBA38",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6088": {
+      "Name": "\uAC80\u3000\uBF51\uAE30",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6089": {
+      "Name": "\uC804\uCCB4\u3000\uBCA0\uAE30",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "608A": {
+      "Name": "\uC81D\uD2B8\u3000\uBE54",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "608B": {
+      "Name": "\uD30C\uC6CC\u3000\uC6E8\uC774\uBE0C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "608C": {
+      "Name": "\uCEE4\uB9E8\uB4DC\uFF11\uFF15\uFF10",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "608D": {
+      "Name": "\uC2AC\uB85C\uC6B0\uAC00",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "608E": {
+      "Name": "\uC2E0\u3000\uC774\uD0C8",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "608F": {
+      "Name": "\uC2E0\u3000\uC811\uADFC",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6090": {
+      "Name": "\uADF8\uB77C\uBE44\uC7C8",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6091": {
+      "Name": "\uB9AC\uC14B\u3000\uC544\uC6B0\uB77C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6092": {
+      "Name": "\uAC04\uACA9\u3000\uC881\uD788\uAE30",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6093": {
+      "Name": "\uD314\u3000\uB54C\uB9AC\uAE30",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6094": {
+      "Name": "\uADF8\uB77C\uBE44\uC7C8",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6095": {
+      "Name": "\uCEE4\uB9E8\uB4DC\uFF11\uFF15\uFF19",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6096": {
+      "Name": "\uD55C\uC228",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6097": {
+      "Name": "\uB3C5\uC561",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6098": {
+      "Name": "\uB9C8\uAD6C\u3000\uCC0C\uB974\uAE30",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "6099": {
+      "Name": "\uAECD\uC9C8\uC5D0\uC11C\u3000\uB098\uC624\uAE30",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "609A": {
+      "Name": "\uAECD\uC9C8\uC5D0\u3000\uB4E4\uC5B4\uAC00\uAE30",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "609B": {
+      "Name": "\uB9C8\uBC95\uC744\u3000\uD761\uC218\uD55C\uB2E4\uFF01",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "609C": {
+      "Name": "\uAE30\uAC00\u3000\uADF8\uB798\uBE44\uD1A4",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "609D": {
+      "Name": "\uB178\uB824\uBCF4\uAE30",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "609E": {
+      "Name": "\uB178\uB824\uBCF4\uAE30",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "609F": {
+      "Name": "\uB178\uB824\uBCF4\uAE30",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60A0": {
+      "Name": "\uB178\uB824\uBCF4\uAE30",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60A1": {
+      "Name": "\uD654\uC774\uD2B8\u3000\uC708\uB4DC",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60A2": {
+      "Name": "\uD654\uC5FC",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60A3": {
+      "Name": "\uC544\uCFE0\uC544\u3000\uBE0C\uB808\uC2A4",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60A4": {
+      "Name": "\uB9C8\uC774\uD2F0\u3000\uAC00\uB4DC",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60A5": {
+      "Name": "\uD0DC\uD074",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60A6": {
+      "Name": "\uADF8\uB77C\uBE44\uC7C8",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60A7": {
+      "Name": "\uB9AC\uC14B\u3000\uC544\uC6B0\uB77C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60A8": {
+      "Name": "\uCF54\uC5B4\uC5D0\u3000\uC5D0\uB108\uC9C0\uAC00\u3000\uBAA8\uC778\uB2E4",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60A9": {
+      "Name": "\uD658\uAD11\u3000\uD761\uC218",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60AA": {
+      "Name": "\uB3CC\uACA9",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60AB": {
+      "Name": "\uC5F0\uC18D\u3000\uB9C8\uBC95\u3000\uD30C\uC774\uB77C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60AC": {
+      "Name": "\uCEE4\uB9E8\uB4DC\uFF11\uFF18\uFF12",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60AD": {
+      "Name": "\uC5F0\uC18D\u3000\uB9C8\uBC95\u3000\uBE14\uB9AC\uC790\uB77C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60AE": {
+      "Name": "\uCEE4\uB9E8\uB4DC\uFF11\uFF18\uFF14",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60AF": {
+      "Name": "\uC5F0\uC18D\u3000\uB9C8\uBC95\u3000\uC120\uB354\uB77C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60B0": {
+      "Name": "\uCEE4\uB9E8\uB4DC\uFF11\uFF18\uFF16",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60B1": {
+      "Name": "\uC5F0\uC18D\u3000\uB9C8\uBC95\u3000\uC6CC\uD130\uB77C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60B2": {
+      "Name": "\uCEE4\uB9E8\uB4DC\uFF11\uFF18\uFF18",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60B3": {
+      "Name": "\uD06C\uB808\uC778\uC774\u3000\uC870\uAE08\u3000\uC6C0\uC9C1\uC600\uB2E4",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60B4": {
+      "Name": "\uC8FD\uC74C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60B5": {
+      "Name": "\uC544\uB2C8\uB9C8\u3000\uC18C\uD658",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60B6": {
+      "Name": "\uADF8\uB77C\uBE44\uC7C8",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60B7": {
+      "Name": "\uB9AC\uC14B\u3000\uC544\uC6B0\uB77C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60B8": {
+      "Name": "\uADF8\uB77C\uBE44\uC7C8",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60B9": {
+      "Name": "\uB9AC\uC14B\u3000\uC544\uC6B0\uB77C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60BA": {
+      "Name": "\uCF54\uC5B4\uC5D0\u3000\uC5D0\uB108\uC9C0\uAC00\u3000\uBAA8\uC778\uB2E4",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60BB": {
+      "Name": "\uB9AC\uC14B\u3000\uC544\uC6B0\uB77C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60BC": {
+      "Name": "\u300E\uC2E0\u300F\uC740\u3000\uC544\uBB34\uAC83\uB3C4\u3000\uD558\uC9C0\u3000\uC54A\uB294\uB2E4",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60BD": {
+      "Name": "\uCF54\uC5B4\uC5D0\u3000\uC6C0\uC9C1\uC784\uC740\u3000\uC5C6\uB2E4",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60BE": {
+      "Name": "\uFF11\uFF10\uFF10\uB9CC\u3000\uD1A4",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60BF": {
+      "Name": "\uC810\uC561\u3000\uCC10\uB4DD\uCC10\uB4DD",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60C0": {
+      "Name": "\uAECD\uC9C8\u3000\uBD80\uC218\uAE30",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60C1": {
+      "Name": "\uAECD\uC9C8\u3000\uB4E4\uC5B4\uAC00\uAE30",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60C2": {
+      "Name": "\uAECD\uC9C8\uC5D0\uC11C\u3000\uB098\uC628\uB2E4",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60C3": {
+      "Name": "\uC8FD\uC74C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60C4": {
+      "Name": "\uCF54\uC5B4\uC5D0\u3000\uC5D0\uB108\uC9C0\uAC00\u3000\uBAA8\uC778\uB2E4",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60C5": {
+      "Name": "\uB9AC\uC14B\u3000\uC544\uC6B0\uB77C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60C6": {
+      "Name": "\uC67C\uC190\u3000\uACF5\uACA9",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60C7": {
+      "Name": "\uC67C\uC18D\u3000\uACF5\uACA9\uFF12",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60C8": {
+      "Name": "\uC81D\uD2B8\u3000\uBCF4\uBA38",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60C9": {
+      "Name": "\uC81D\uD2B8\u3000\uD551\uAC70",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60CA": {
+      "Name": "\uC8FD\uC74C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60CB": {
+      "Name": "\uC8FD\uC74C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60CC": {
+      "Name": "\uC8FD\uC74C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60CD": {
+      "Name": "\uC8FD\uC74C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60CE": {
+      "Name": "\uC8FD\uC74C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60CF": {
+      "Name": "\uC8FD\uC74C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60D0": {
+      "Name": "\uC8FD\uC74C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60D1": {
+      "Name": "\uD5EC\u3000\uBC14\uC774\uD130",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60D2": {
+      "Name": "\uD30C\uC6CC\u3000\uC6E8\uC774\uBE0C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60D3": {
+      "Name": "\uC18C\uB2C9\u3000\uC719",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60D4": {
+      "Name": "\uC288\uD305\u3000\uD30C\uC6CC",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60D5": {
+      "Name": "\uC288\uD305\u3000\uB808\uC774",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60D6": {
+      "Name": "\uBA54\uD14C\uC624\u3000\uC2A4\uD2B8\uB77C\uC774\uD06C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60D7": {
+      "Name": "\uC9C0\uC625\uC758\u3000\uD654\uC5FC",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60D8": {
+      "Name": "\uC5D0\uC5B4\uB85C\u3000\uC2A4\uD30C\uD06C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60D9": {
+      "Name": "\uD1A0\uB974\u3000\uD574\uBA38",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60DA": {
+      "Name": "\uD558\uB298\uC758\u3000\uC77C\uACA9",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60DB": {
+      "Name": "\uB2E4\uC774\uC544\uBAAC\uB4DC\u3000\uB354\uC2A4\uD2B8",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60DC": {
+      "Name": "\uC784\uD384\uC2A4",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60DD": {
+      "Name": "\uBA54\uAC00\u3000\uD50C\uB808\uC5B4",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60DE": {
+      "Name": "\uD398\uC778",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60DF": {
+      "Name": "\uCE74\uC624\uD2F1\uFF24",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60E0": {
+      "Name": "\uCF54\uC988\uCE74",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60E1": {
+      "Name": "\uC640\uD0A4\uC790\uC2DC",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60E2": {
+      "Name": "\uCC38\uB9C8\uB3C4",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60E3": {
+      "Name": "\uC575\uAE00\uD2F8",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60E4": {
+      "Name": "\uC288\uBA5C\uC820\uB4DC",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60E5": {
+      "Name": "\uB9AC\uD2C0\uB098\uB808",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60E6": {
+      "Name": "\uB378\uD0C0\u3000\uC5B4\uD0DD",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60E7": {
+      "Name": "\uC5D0\uBCF8\uFF1D\uC96C\uAC00\u3000\uC62E\uACA8\u3000\uBD99\uB294\uB2E4\uFF01",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60E8": {
+      "Name": "\uC5D0\uBCF8\uFF1D\uC96C\uAC00\u3000\uC62E\uACA8\u3000\uBD99\uB294\uB2E4\uFF01",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60E9": {
+      "Name": "\uC5D0\uBCF8\uFF1D\uC96C\uAC00\u3000\uC62E\uACA8\u3000\uBD99\uB294\uB2E4\uFF01",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60EA": {
+      "Name": "\uC5D0\uBCF8\uFF1D\uC96C\uAC00\u3000\uC62E\uACA8\u3000\uBD99\uB294\uB2E4\uFF01",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60EB": {
+      "Name": "\uC5D0\uBCF8\uFF1D\uC96C\uAC00\u3000\uC62E\uACA8\u3000\uBD99\uB294\uB2E4\uFF01",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60EC": {
+      "Name": "\uC5D0\uBCF8\uFF1D\uC96C\uAC00\u3000\uC62E\uACA8\u3000\uBD99\uB294\uB2E4\uFF01",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60ED": {
+      "Name": "\uC5D0\uBCF8\uFF1D\uC96C\uAC00\u3000\uC62E\uACA8\u3000\uBD99\uB294\uB2E4\uFF01",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60EE": {
+      "Name": "\uC5D0\uBCF8\uFF1D\uC96C\uAC00\u3000\uC62E\uACA8\u3000\uBD99\uB294\uB2E4\uFF01",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60EF": {
+      "Name": "\uC8FD\uC74C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60F0": {
+      "Name": "\uC54C\uD14C\uB9C8",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60F1": {
+      "Name": "\uB0A0\uAC1C\uAC00\u3000\uACA9\uD558\uAC8C\u3000\uBE5B\uB09C\uB2E4",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60F2": {
+      "Name": "\uC8FD\uC74C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60F3": {
+      "Name": "\uB514\uC2A4\uD3A0\u3000\uC62C",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60F4": {
+      "Name": "\uCEE4\uB9E8\uB4DC\uFF12\uFF15\uFF14",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60F5": {
+      "Name": "\uC5B4\uB808\uC774\uC988",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "60F6": {
+      "Name": "\uB9C8\uC778\uB4DC\u3000\uBE14\uB798\uC2A4\uD2B8",
+      "Description": "\uACF5\uACA9",
+      "Kind": "BossCommand"
+    },
+    "2000": {
+      "Name": "\uD3EC\uC158",
+      "Description": "\uC544\uAD70\u3000\uFF11\uBA85\uC758\u3000\uFF28\uFF30\uB97C\u3000\uFF12\uFF10\uFF10\u3000\uD68C\uBCF5\uD569\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2001": {
+      "Name": "\uD558\uC774\u3000\uD3EC\uC158",
+      "Description": "\uC544\uAD70\u3000\uFF11\uBA85\uC758\u3000\uFF28\uFF30\uB97C\u3000\uFF11\uFF10\uFF10\uFF10\u3000\uD68C\uBCF5\uD569\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2002": {
+      "Name": "\uC5D1\uC2A4\u3000\uD3EC\uC158",
+      "Description": "\uC544\uAD70\u3000\uFF11\uBA85\uC758\u3000\uFF28\uFF30\uB97C\u3000\uBAA8\uB450\u3000\uD68C\uBCF5\uD569\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2003": {
+      "Name": "\uBA54\uAC00\u3000\uD3EC\uC158",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC758\u3000\uFF28\uFF30\uB97C\u3000\uFF12\uFF10\uFF10\uFF10\u3000\uD68C\uBCF5\uD569\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2004": {
+      "Name": "\uC5D0\uD154",
+      "Description": "\uC544\uAD70\u3000\uFF11\uBA85\uC758\u3000\uFF2D\uFF30\uB97C\u3000\uFF11\uFF10\uFF10\u3000\uD68C\uBCF5\uD569\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2005": {
+      "Name": "\uC5D0\uD154\u3000\uD130\uBCF4",
+      "Description": "\uC544\uAD70\u3000\uFF11\uBA85\uC758\u3000\uFF2D\uFF30\uB97C\u3000\uFF15\uFF10\uFF10\u3000\uD68C\uBCF5\uD569\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2006": {
+      "Name": "\uD53C\uB2C9\uC2A4\uC758\u3000\uAF2C\uB9AC",
+      "Description": "\uC544\uAD70\u3000\uFF11\uBA85\uC758\u3000\u300C\uC804\uD22C\u3000\uBD88\uB2A5\u300D\uC744\u3000\uD68C\uBCF5\uD569\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2007": {
+      "Name": "\uBA54\uAC00\u3000\uD53C\uB2C9\uC2A4",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC758\u3000\u300C\uC804\uD22C\u3000\uBD88\uB2A5\u300D\uC744\u3000\uD68C\uBCF5\uD569\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2008": {
+      "Name": "\uC5D8\uB9AD\uC11C",
+      "Description": "\uC544\uAD70\u3000\uFF11\uBA85\uC758\u3000\uFF28\uFF30\uC640\u3000\uFF2D\uFF30\uB97C\u3000\uBAA8\uB450\u3000\uD68C\uBCF5\uD569\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2009": {
+      "Name": "\uB77C\uC2A4\uD2B8\u3000\uC5D8\uB9AD\uC11C",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC758\u3000\uFF28\uFF30\uC640\u3000\uFF2D\uFF30\uB97C\u3000\uBAA8\uB450\u3000\uD68C\uBCF5\uD569\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "200A": {
+      "Name": "\uD574\uB3C5\uC81C",
+      "Description": "\u300C\uB3C5\u300D\uC744\u3000\uD68C\uBCF5\uD569\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "200B": {
+      "Name": "\uAE08\uBC14\uB298",
+      "Description": "\u300C\uC11D\uD654\u300D\uB97C\u3000\uD68C\uBCF5\uD569\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "200C": {
+      "Name": "\uC548\uC57D",
+      "Description": "\u300C\uC5B4\uB460\u300D\uC744\u3000\uD68C\uBCF5\uD569\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "200D": {
+      "Name": "\uBA54\uC544\uB9AC\uD480",
+      "Description": "\u300C\uCE68\uBB35\u300D\uC744\u3000\uD68C\uBCF5\uD569\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "200E": {
+      "Name": "\uC131\uC218",
+      "Description": "\u300C\uC880\uBE44\u300D\u300C\uCEE4\uC2A4\u300D\uB97C\u3000\uD68C\uBCF5\uD569\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "200F": {
+      "Name": "\uB9CC\uB2A5\uC57D",
+      "Description": "\uBAA8\uB4E0\u3000\uC0C1\uD0DC\u3000\uC774\uC0C1\uC744\u3000\uD68C\uBCF5\uD569\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2010": {
+      "Name": "\uD798\uC758\u3000\uAE30\uC5B5",
+      "Description": "\uC801\u3000\uD558\uB098\uAC00\u3000\u300C\uD30C\uC6CC\u3000\uC2A4\uD53C\uC5B4\u300D\uB97C\u3000\uB5A8\uC5B4\uD2B8\uB9AC\uAC8C\u3000\uD569\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2011": {
+      "Name": "\uB9C8\uBC95\uC758\u3000\uAE30\uC5B5",
+      "Description": "\uC801\u3000\uD558\uB098\uAC00\u3000\u300C\uB9E4\uC9C1\u3000\uC2A4\uD53C\uC5B4\u300D\uB97C\u3000\uB5A8\uC5B4\uD2B8\uB9AC\uAC8C\u3000\uD569\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2012": {
+      "Name": "\uBBFC\uCCA9\uC758\u3000\uAE30\uC5B5",
+      "Description": "\uC801\u3000\uD558\uB098\uAC00\u3000\u300C\uC2A4\uD53C\uB4DC\u3000\uC2A4\uD53C\uC5B4\u300D\uB97C\u3000\uB5A8\uC5B4\uD2B8\uB9AC\uAC8C\u3000\uD569\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2013": {
+      "Name": "\uC5B4\uBE4C\uB9AC\uD2F0\uC758\u3000\uAE30\uC5B5",
+      "Description": "\uC801\u3000\uD558\uB098\uAC00\u3000\u300C\uC5B4\uBE4C\uB9AC\uD2F0\u3000\uC2A4\uD53C\uC5B4\u300D\uB97C\u3000\uB5A8\uC5B4\uD2B8\uB9AC\uAC8C\u3000\uD569\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2014": {
+      "Name": "\uC54C\uBCA0\uB4DC\u3000\uD68C\uBCF5\uC57D",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC758\u3000\u300C\uB3C5\u300D\u300C\uCE68\uBB35\u300D\u300C\uC11D\uD654\u300D\uC640\u3000\uFF28\uFF30\u3000\uFF11\uFF10\uFF10\uFF10\u3000\uD68C\uBCF5",
+      "Kind": "ItemCommand"
+    },
+    "2015": {
+      "Name": "\uCE58\uC720\uC758\u3000\uBB3C",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC758\u3000\uFF28\uFF30\uB97C\u3000\uBAA8\uB450\u3000\uD68C\uBCF5\uD569\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2016": {
+      "Name": "\uD14C\uD2B8\uB77C\u3000\uC5D8\uB9AC\uBA58\uD0C8",
+      "Description": "\uC544\uAD70\u3000\uFF11\uBA85\uC758\u3000\uFF28\uFF30\uB97C\u3000\uBAA8\uB450\u3000\uD68C\uBCF5\uD558\uACE0\u3000\u300C\uFF14\uC18D\uC131\u3000\uBC29\uC5B4\u300D\uC758\u3000\uD6A8\uACFC",
+      "Kind": "ItemCommand"
+    },
+    "2017": {
+      "Name": "\uB0A8\uADF9\uC758\u3000\uBC14\uB78C",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uBE59\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "ItemCommand"
+    },
+    "2018": {
+      "Name": "\uBD81\uADF9\uC758\u3000\uBC14\uB78C",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uBE59\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "ItemCommand"
+    },
+    "2019": {
+      "Name": "\uC5BC\uC74C\uC758\u3000\uB9C8\uC11D",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uBE59\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "ItemCommand"
+    },
+    "201A": {
+      "Name": "\uBD04\uC758\u3000\uD30C\uD3B8",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uC5FC\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "ItemCommand"
+    },
+    "201B": {
+      "Name": "\uBD04\uC758\u3000\uD63C",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uC5FC\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "ItemCommand"
+    },
+    "201C": {
+      "Name": "\uD654\uC5FC\uC758\u3000\uB9C8\uC11D",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uC5FC\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "ItemCommand"
+    },
+    "201D": {
+      "Name": "\uC804\uAE30\uC625",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uB1CC\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "ItemCommand"
+    },
+    "201E": {
+      "Name": "\uB099\uB8B0\uC625",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uB1CC\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "ItemCommand"
+    },
+    "201F": {
+      "Name": "\uBC88\uAC1C\uC758\u3000\uB9C8\uC11D",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB1CC\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "ItemCommand"
+    },
+    "2020": {
+      "Name": "\uC0DD\uC120\u3000\uBE44\uB298",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uC218\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "ItemCommand"
+    },
+    "2021": {
+      "Name": "\uC6A9\uC758\u3000\uBE44\uB298",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uC218\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "ItemCommand"
+    },
+    "2022": {
+      "Name": "\uBB3C\uC758\u3000\uB9C8\uC11D",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uC218\u3000\uC18D\uC131\uC758\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "ItemCommand"
+    },
+    "2023": {
+      "Name": "\uC218\uB958\uD0C4",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "ItemCommand"
+    },
+    "2024": {
+      "Name": "\uCCA0\uAC11\u3000\uC218\uB958\uD0C4",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB300\uBBF8\uC9C0\uC640\u3000\u300C\uC544\uBA38\u3000\uBE0C\uB808\uC774\uD06C\u300D\uC758\u3000\uD6A8\uACFC",
+      "Kind": "ItemCommand"
+    },
+    "2025": {
+      "Name": "\uC2AC\uB9BD\u3000\uD30C\uC6B0\uB354",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB300\uBBF8\uC9C0\uC640\u3000\u300C\uC218\uBA74\u300D\uC758\u3000\uD6A8\uACFC",
+      "Kind": "ItemCommand"
+    },
+    "2026": {
+      "Name": "\uB4DC\uB9BC\u3000\uD30C\uC6B0\uB354",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB300\uBBF8\uC9C0\uC640\u3000\u300C\uC218\uBA74\u300D\uC758\u3000\uD6A8\uACFC",
+      "Kind": "ItemCommand"
+    },
+    "2027": {
+      "Name": "\uC0AC\uC77C\uB7F0\uD2B8\u3000\uB9C8\uC778",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB300\uBBF8\uC9C0\uC640\u3000\u300C\uCE68\uBB35\u300D\uC758\u3000\uD6A8\uACFC",
+      "Kind": "ItemCommand"
+    },
+    "2028": {
+      "Name": "\uC2A4\uBAA8\uD06C\u3000\uBD04",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB300\uBBF8\uC9C0\uC640\u3000\u300C\uC5B4\uB460\u300D\uC758\u3000\uD6A8\uACFC",
+      "Kind": "ItemCommand"
+    },
+    "2029": {
+      "Name": "\uC5B4\uB460\uC758\u3000\uB9C8\uC11D",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC758\u3000\uFF28\uFF30\uB97C\u3000\uFF11\uFF0F\uFF12\uB85C\u3000\uB9CC\uB4E0\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "202A": {
+      "Name": "\uBE5B\uC758\u3000\uB9C8\uC11D",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "ItemCommand"
+    },
+    "202B": {
+      "Name": "\uC131\uC2A4\uB7EC\uC6B4\u3000\uB9C8\uC11D",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "ItemCommand"
+    },
+    "202C": {
+      "Name": "\uC9C0\uACE0\uC758\u3000\uB9C8\uC11D",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "ItemCommand"
+    },
+    "202D": {
+      "Name": "\uB3C5\u3000\uC774\uBE68",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uB300\uBBF8\uC9C0\uC640\u3000\u300C\uB3C5\u300D\uC758\u3000\uD6A8\uACFC",
+      "Kind": "ItemCommand"
+    },
+    "202E": {
+      "Name": "\uC740\uC758\u3000\uBAA8\uB798\uC2DC\uACC4",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC758\u3000\uD589\uB3D9\uC744\u3000\uC9C0\uC5F0\uC2DC\uD0B5\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "202F": {
+      "Name": "\uAE08\uC758\u3000\uBAA8\uB798\uC2DC\uACC4",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC758\u3000\uD589\uB3D9\uC744\u3000\uC9C0\uC5F0\uC2DC\uD0A4\uACE0\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "ItemCommand"
+    },
+    "2030": {
+      "Name": "\uC0DD\uBA85\uC758\u3000\uCD08",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\u300C\uC8FD\uC74C\uC758\u3000\uC120\uACE0\u300D\uD6A8\uACFC",
+      "Kind": "ItemCommand"
+    },
+    "2031": {
+      "Name": "\uC11D\uD654\u3000\uC218\uB958\uD0C4",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\u300C\uC11D\uD654\u300D\uC758\u3000\uD6A8\uACFC",
+      "Kind": "ItemCommand"
+    },
+    "2032": {
+      "Name": "\uC774\uACC4\uC758\u3000\uADF8\uB9BC\uC790",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\u300C\uC989\uC0AC\u300D\uC758\u3000\uD6A8\uACFC",
+      "Kind": "ItemCommand"
+    },
+    "2033": {
+      "Name": "\uC774\uACC4\uC758\u3000\uBC14\uB78C",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\u300C\uC989\uC0AC\u300D\uC758\u3000\uD6A8\uACFC",
+      "Kind": "ItemCommand"
+    },
+    "2034": {
+      "Name": "\uBD80\uC790\u3000\uC9C0\uAC11",
+      "Description": "\uC5B4\uB518\uAC00\u3000\uC4F8\uBAA8\u3000\uC788\uC5B4\u3000\uBCF4\uC785\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2035": {
+      "Name": "\uB2E4\uD06C\u3000\uB9E4\uD130",
+      "Description": "\uC801\u3000\uC804\uCCB4\uC5D0\u3000\uD070\u3000\uB300\uBBF8\uC9C0",
+      "Kind": "ItemCommand"
+    },
+    "2036": {
+      "Name": "\uCD08\uCF54\uBCF4\uC758\u3000\uAF2C\uB9AC",
+      "Description": "\uC544\uAD70\u3000\uFF11\uBA85\uC5D0\uAC8C\u3000\u300C\uD5E4\uC774\uC2A4\uD2B8\u300D\uC758\u3000\uD6A8\uACFC",
+      "Kind": "ItemCommand"
+    },
+    "2037": {
+      "Name": "\uCD08\uCF54\uBCF4\uC758\u3000\uAE43\uD138",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC5D0\u3000\u300C\uD5E4\uC774\uC2A4\uD2B8\u300D\uC758\u3000\uD6A8\uACFC",
+      "Kind": "ItemCommand"
+    },
+    "2038": {
+      "Name": "\uB2EC\uC758\u3000\uCEE4\uD2BC",
+      "Description": "\uC544\uAD70\u3000\uFF11\uBA85\uC5D0\uAC8C\u3000\u300C\uC178\u300D\uC758\u3000\uD6A8\uACFC",
+      "Kind": "ItemCommand"
+    },
+    "2039": {
+      "Name": "\uBE5B\uC758\u3000\uCEE4\uD2BC",
+      "Description": "\uC544\uAD70\u3000\uFF11\uBA85\uC5D0\uAC8C\u3000\u300C\uD504\uB85C\uD14C\uC2A4\u300D\uC758\u3000\uD6A8\uACFC",
+      "Kind": "ItemCommand"
+    },
+    "203A": {
+      "Name": "\uBCC4\uC758\u3000\uCEE4\uD2BC",
+      "Description": "\uC544\uAD70\u3000\uFF11\uBA85\uC5D0\uAC8C\u3000\u300C\uB9AC\uD50C\uB809\u300D\uC758\u3000\uD6A8\uACFC",
+      "Kind": "ItemCommand"
+    },
+    "203B": {
+      "Name": "\uD68C\uBCF5\uC758\u3000\uC0D8",
+      "Description": "\uC544\uAD70\u3000\uFF11\uBA85\uC5D0\uAC8C\u3000\u300C\uB9AC\uC81C\uB124\u300D\uC758\u3000\uD6A8\uACFC",
+      "Kind": "ItemCommand"
+    },
+    "203C": {
+      "Name": "\uB9C8\uB825\uC758\u3000\uC0D8",
+      "Description": "\uC801\u3000\uD558\uB098\uB85C\uBD80\uD130\u3000\uFF2D\uFF30\uB97C\u3000\uD761\uC218\uD569\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "203D": {
+      "Name": "\uCCB4\uB825\uC758\u3000\uC0D8",
+      "Description": "\uC801\u3000\uD558\uB098\uB85C\uBD80\uD130\u3000\uFF28\uFF30\uB97C\u3000\uD761\uC218\uD569\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "203E": {
+      "Name": "\uC0DD\uBA85\uC758\u3000\uC0D8",
+      "Description": "\uC801\u3000\uD558\uB098\uB85C\uBD80\uD130\u3000\uFF28\uFF30\uC640\u3000\uFF2D\uFF30\uB97C\u3000\uD761\uC218\uD569\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "203F": {
+      "Name": "\uAE68\uB057\uD55C\u3000\uC18C\uAE08",
+      "Description": "\uC801\u3000\uD558\uB098\uC5D0\u3000\uB300\uBBF8\uC9C0\uB97C\u3000\uC8FC\uACE0\u3000\uB9C8\uBC95\u3000\uD6A8\uACFC\uB97C\u3000\uC5C6\uC571\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2040": {
+      "Name": "\uCCB4\uB825\uC758\u3000\uC57D",
+      "Description": "\uC544\uAD70\u3000\uFF11\uBA85\uC758\u3000\uCD5C\uB300\u3000\uFF28\uFF30\uAC00\u3000\uFF12\uBC30\uAC00\u3000\uB429\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2041": {
+      "Name": "\uB9C8\uB825\uC758\u3000\uC57D",
+      "Description": "\uC544\uAD70\u3000\uFF11\uBA85\uC758\u3000\uCD5C\uB300\u3000\uFF2D\uFF30\uAC00\u3000\uFF12\uBC30\uAC00\u3000\uB429\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2042": {
+      "Name": "\uD2B8\uC708\u3000\uC2A4\uD0C0\uC988",
+      "Description": "\uC544\uAD70\u3000\uFF11\uBA85\uC758\u3000\uC18C\uBE44\u3000\uFF2D\uFF30\uAC00\u3000\uFF10\uC774\u3000\uB429\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2043": {
+      "Name": "\uCCB4\uB825\uC758\u3000\uBE44\uC57D",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC758\u3000\uCD5C\uB300\u3000\uFF28\uFF30\uAC00\u3000\uFF12\uBC30\uAC00\u3000\uB429\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2044": {
+      "Name": "\uB9C8\uB825\uC758\u3000\uBE44\uC57D",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC758\u3000\uCD5C\uB300\u3000\uFF2D\uFF30\uAC00\u3000\uFF12\uBC30\uAC00\u3000\uB429\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2045": {
+      "Name": "\uC4F0\uB9AC\u3000\uC2A4\uD0C0\uC988",
+      "Description": "\uC544\uAD70\u3000\uC804\uCCB4\uC758\u3000\uC18C\uBE44\u3000\uFF2D\uFF30\uAC00\u3000\uFF10\uC774\uB429\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2046": {
+      "Name": "\uD30C\uC6CC\u3000\uC2A4\uD53C\uC5B4",
+      "Description": "\uC2A4\uD53C\uC5B4\u3000\uBCF4\uB4DC\uC5D0\uC11C\u3000\u300C\uACF5\uACA9\uB825\u300D\u300C\uBB3C\uB9AC\u3000\uBC29\uC5B4\u300D\u300C\uFF28\uFF30\u300D\uB97C\u3000\uBC1C\uB3D9",
+      "Kind": "ItemCommand"
+    },
+    "2047": {
+      "Name": "\uB9E4\uC9C1\u3000\uC2A4\uD53C\uC5B4",
+      "Description": "\uC2A4\uD53C\uC5B4\u3000\uBCF4\uB4DC\uC5D0\uC11C\u3000\u300C\uB9C8\uB825\u300D\u300C\uB9C8\uBC95\u3000\uBC29\uC5B4\u300D\u300C\uFF2D\uFF30\u300D\uB97C\u3000\uBC1C\uB3D9",
+      "Kind": "ItemCommand"
+    },
+    "2048": {
+      "Name": "\uC2A4\uD53C\uB4DC\u3000\uC2A4\uD53C\uC5B4",
+      "Description": "\uC2A4\uD53C\uC5B4\u3000\uBCF4\uB4DC\uC5D0\uC11C\u3000\u300C\uBBFC\uCCA9\u300D\u300C\uBA85\uC911\u300D\u300C\uD68C\uD53C\u300D\uB97C\u3000\uBC1C\uB3D9",
+      "Kind": "ItemCommand"
+    },
+    "2049": {
+      "Name": "\uC5B4\uBE4C\uB9AC\uD2F0\u3000\uC2A4\uD53C\uC5B4",
+      "Description": "\uC2A4\uD53C\uC5B4\u3000\uBCF4\uB4DC\uC5D0\uC11C\u3000\u300C\uC5B4\uBE4C\uB9AC\uD2F0\u300D\uB97C\u3000\uBC1C\uB3D9",
+      "Kind": "ItemCommand"
+    },
+    "204A": {
+      "Name": "\uB7ED\uD0A4\u3000\uC2A4\uD53C\uC5B4",
+      "Description": "\uC2A4\uD53C\uC5B4\u3000\uBCF4\uB4DC\uC5D0\uC11C\u300C\uC6B4\u300D\uC744\u3000\uBC1C\uB3D9",
+      "Kind": "ItemCommand"
+    },
+    "204B": {
+      "Name": "\uD30C\uB77C\uBBF8\uD130\u3000\uC2A4\uD53C\uC5B4",
+      "Description": "\uC2A4\uD53C\uC5B4\u3000\uBCF4\uB4DC\uC5D0\uC11C\u3000\uB3D9\uB8CC\uAC00\u3000\uBC1C\uB3D9\uD55C\u3000\u300C\uD30C\uB77C\uBBF8\uD130\u300D\uB97C\u3000\uBC1C\uB3D9",
+      "Kind": "ItemCommand"
+    },
+    "204C": {
+      "Name": "\uD2B9\uC218\u3000\uC2A4\uD53C\uC5B4",
+      "Description": "\uC2A4\uD53C\uC5B4\u3000\uBCF4\uB4DC\uC5D0\uC11C\u3000\uB3D9\uB8CC\uAC00\u3000\uBC1C\uB3D9\uD55C\u3000\u300C\uD2B9\uC218\u300D\uB97C\u3000\uBC1C\uB3D9",
+      "Kind": "ItemCommand"
+    },
+    "204D": {
+      "Name": "\uAE30\uC220\u3000\uC2A4\uD53C\uC5B4",
+      "Description": "\uC2A4\uD53C\uC5B4\u3000\uBCF4\uB4DC\uC5D0\uC11C\u3000\uB3D9\uB8CC\uAC00\u3000\uBC1C\uB3D9\uD55C\u3000\u300C\uAE30\uC220\u300D\uC744\u3000\uBC1C\uB3D9",
+      "Kind": "ItemCommand"
+    },
+    "204E": {
+      "Name": "\uBC31\uB9C8\uBC95\u3000\uC2A4\uD53C\uC5B4",
+      "Description": "\uC2A4\uD53C\uC5B4\u3000\uBCF4\uB4DC\uC5D0\uC11C\u3000\uB3D9\uB8CC\uAC00\u3000\uBC1C\uB3D9\uD55C\u3000\u300C\uBC31\uB9C8\uBC95\u300D\uC744\u3000\uBC1C\uB3D9",
+      "Kind": "ItemCommand"
+    },
+    "204F": {
+      "Name": "\uD751\uB9C8\uBC95\u3000\uC2A4\uD53C\uC5B4",
+      "Description": "\uC2A4\uD53C\uC5B4\u3000\uBCF4\uB4DC\uC5D0\uC11C\u3000\uB3D9\uB8CC\uAC00\u3000\uBC1C\uB3D9\uD55C\u3000\u300C\uD751\uB9C8\uBC95\u300D\uC744\u3000\uBC1C\uB3D9",
+      "Kind": "ItemCommand"
+    },
+    "2050": {
+      "Name": "\uB9C8\uC2A4\uD130\u3000\uC2A4\uD53C\uC5B4",
+      "Description": "\uC2A4\uD53C\uC5B4\u3000\uBCF4\uB4DC\uC758\u3000\uBAA8\uB4E0\u3000\uC2A4\uD53C\uC5B4\uB97C\u3000\uBC1C\uB3D9",
+      "Kind": "ItemCommand"
+    },
+    "2051": {
+      "Name": "\uFF2C\uFF56\uFF0E\uFF11\u3000\uD0A4\u3000\uC2A4\uD53C\uC5B4",
+      "Description": "\uC2A4\uD53C\uC5B4\u3000\uBCF4\uB4DC\uC758\u3000\u300C\uFF2C\uFF56\uFF0E\uFF11\u3000\uC2A4\uD53C\uC5B4\u3000\uB85D\u300D\uC744\u3000\uC5C6\uC571\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2052": {
+      "Name": "\uFF2C\uFF56\uFF0E\uFF12\u3000\uD0A4\u3000\uC2A4\uD53C\uC5B4",
+      "Description": "\uC2A4\uD53C\uC5B4\u3000\uBCF4\uB4DC\uC758\u3000\u300C\uFF2C\uFF56\uFF0E\uFF12\u3000\uC2A4\uD53C\uC5B4\u3000\uB85D\u300D\uC744\u3000\uC5C6\uC571\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2053": {
+      "Name": "\uFF2C\uFF56\uFF0E\uFF13\u3000\uD0A4\u3000\uC2A4\uD53C\uC5B4",
+      "Description": "\uC2A4\uD53C\uC5B4\u3000\uBCF4\uB4DC\uC758\u3000\u300C\uFF2C\uFF56\uFF0E\uFF13\u3000\uC2A4\uD53C\uC5B4\u3000\uB85D\u300D\uC744\u3000\uC5C6\uC571\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2054": {
+      "Name": "\uFF2C\uFF56\uFF0E\uFF14\u3000\uD0A4\u3000\uC2A4\uD53C\uC5B4",
+      "Description": "\uC2A4\uD53C\uC5B4\u3000\uBCF4\uB4DC\uC758\u3000\u300C\uFF2C\uFF56\uFF0E\uFF14\u3000\uC2A4\uD53C\uC5B4\u3000\uB85D\u300D\uC744\u3000\uC5C6\uC571\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2055": {
+      "Name": "\uFF28\uFF30\u3000\uC2A4\uD53C\uC5B4",
+      "Description": "\uC2A4\uD53C\uC5B4\u3000\uBCF4\uB4DC\uC5D0\uC11C\u3000\uC544\uBB34\uAC83\uB3C4\u3000\uC5C6\uB294\u3000\uC7A5\uC18C\uB97C\u3000\u300C\uFF28\uFF30\u300D\uB85C\u3000\uBC14\uAFC9\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2056": {
+      "Name": "\uFF2D\uFF30\u3000\uC2A4\uD53C\uC5B4",
+      "Description": "\uC2A4\uD53C\uC5B4\u3000\uBCF4\uB4DC\uC5D0\uC11C\u3000\uC544\uBB34\uAC83\uB3C4\u3000\uC5C6\uB294\u3000\uC7A5\uC18C\uB97C\u3000\u300C\uFF2D\uFF30\u300D\uB85C\u3000\uBC14\uAFC9\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2057": {
+      "Name": "\uACF5\uACA9\uB825\u3000\uC2A4\uD53C\uC5B4",
+      "Description": "\uC2A4\uD53C\uC5B4\u3000\uBCF4\uB4DC\uC5D0\uC11C\u3000\uC544\uBB34\uAC83\uB3C4\u3000\uC5C6\uB294\u3000\uC7A5\uC18C\uB97C\u3000\u300C\uACF5\uACA9\uB825\u300D\uC73C\uB85C\u3000\uBC14\uAFC9\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2058": {
+      "Name": "\uBB3C\uB9AC\u3000\uBC29\uC5B4\u3000\uC2A4\uD53C\uC5B4",
+      "Description": "\uC2A4\uD53C\uC5B4\u3000\uBCF4\uB4DC\uC5D0\uC11C\u3000\uC544\uBB34\uAC83\uB3C4\u3000\uC5C6\uB294\u3000\uC7A5\uC18C\uB97C\u3000\u300C\uBB3C\uB9AC\u3000\uBC29\uC5B4\u300D\uB85C\u3000\uBC14\uAFC9\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2059": {
+      "Name": "\uB9C8\uB825\u3000\uC2A4\uD53C\uC5B4",
+      "Description": "\uC2A4\uD53C\uC5B4\u3000\uBCF4\uB4DC\uC5D0\uC11C\u3000\uC544\uBB34\uAC83\uB3C4\u3000\uC5C6\uB294\u3000\uC7A5\uC18C\uB97C\u3000\u300C\uB9C8\uB825\u300D\uC73C\uB85C\u3000\uBC14\uAFC9\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "205A": {
+      "Name": "\uB9C8\uBC95\u3000\uBC29\uC5B4\u3000\uC2A4\uD53C\uC5B4",
+      "Description": "\uC2A4\uD53C\uC5B4\u3000\uBCF4\uB4DC\uC5D0\uC11C\u3000\uC544\uBB34\uAC83\uB3C4\u3000\uC5C6\uB294\u3000\uC7A5\uC18C\uB97C\u3000\u300C\uB9C8\uBC95\u3000\uBC29\uC5B4\u300D\uB85C\u3000\uBC14\uAFC9\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "205B": {
+      "Name": "\uBBFC\uCCA9\u3000\uC2A4\uD53C\uC5B4",
+      "Description": "\uC2A4\uD53C\uC5B4\u3000\uBCF4\uB4DC\uC5D0\uC11C\u3000\uC544\uBB34\uAC83\uB3C4\u3000\uC5C6\uB294\u3000\uC7A5\uC18C\uB97C\u3000\u300C\uBBFC\uCCA9\u300D\uC73C\uB85C\u3000\uBC14\uAFC9\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "205C": {
+      "Name": "\uD68C\uD53C\u3000\uC2A4\uD53C\uC5B4",
+      "Description": "\uC2A4\uD53C\uC5B4\u3000\uBCF4\uB4DC\uC5D0\uC11C\u3000\uC544\uBB34\uAC83\uB3C4\u3000\uC5C6\uB294\u3000\uC7A5\uC18C\uB97C\u3000\u300C\uD68C\uD53C\u300D\uB85C\u3000\uBC14\uAFC9\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "205D": {
+      "Name": "\uBA85\uC911\u3000\uC2A4\uD53C\uC5B4",
+      "Description": "\uC2A4\uD53C\uC5B4\u3000\uBCF4\uB4DC\uC5D0\uC11C\u3000\uC544\uBB34\uAC83\uB3C4\u3000\uC5C6\uB294\u3000\uC7A5\uC18C\uB97C\u3000\u300C\uBA85\uC911\u300D\uC73C\uB85C\u3000\uBC14\uAFC9\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "205E": {
+      "Name": "\uC6B4\u3000\uC2A4\uD53C\uC5B4",
+      "Description": "\uC2A4\uD53C\uC5B4\u3000\uBCF4\uB4DC\uC5D0\uC11C\u3000\uC544\uBB34\uAC83\uB3C4\u3000\uC5C6\uB294\u3000\uC7A5\uC18C\uB97C\u3000\u300C\uC6B4\u300D\uC73C\uB85C\u3000\uBC14\uAFC9\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "205F": {
+      "Name": "\uD074\uB9AC\uC5B4\u3000\uC2A4\uD53C\uC5B4",
+      "Description": "\uC2A4\uD53C\uC5B4\u3000\uBCF4\uB4DC\uC758\u3000\uC131\uC7A5\u3000\uC2A4\uD53C\uC5B4\uB97C\u3000\uC5C6\uC571\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2060": {
+      "Name": "\uB9AC\uD134\u3000\uC2A4\uD53C\uC5B4",
+      "Description": "\uC2A4\uD53C\uC5B4\u3000\uBCF4\uB4DC\uC5D0\uC11C\u3000\uC790\uC2E0\uC774\u3000\uBC1C\uB3D9\uD55C\u3000\uC7A5\uC18C\uB85C\u3000\uC774\uB3D9\uD560\u3000\uC218\u3000\uC788\uC2B5\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2061": {
+      "Name": "\uD504\uB80C\uB4DC\u3000\uC2A4\uD53C\uC5B4",
+      "Description": "\uC2A4\uD53C\uC5B4\u3000\uBCF4\uB4DC\uC5D0\uC11C\u3000\uB3D9\uB8CC\uAC00\u3000\uC788\uB294\u3000\uC7A5\uC18C\uB85C\u3000\uC774\uB3D9\uD560\u3000\uC218\u3000\uC788\uC2B5\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2062": {
+      "Name": "\uD154\uB808\uD3EC\u3000\uC2A4\uD53C\uC5B4",
+      "Description": "\uC2A4\uD53C\uC5B4\u3000\uBCF4\uB4DC\uC5D0\uC11C\u3000\uB3D9\uB8CC\uAC00\u3000\uBC1C\uB3D9\uD55C\u3000\uC7A5\uC18C\uB85C\u3000\uC774\uB3D9\uD560\u3000\uC218\u3000\uC788\uC2B5\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2063": {
+      "Name": "\uC6CC\uD504\u3000\uC2A4\uD53C\uC5B4",
+      "Description": "\uC2A4\uD53C\uC5B4\u3000\uBCF4\uB4DC\uC5D0\uC11C\u3000\uC5B4\uB514\uB85C\uB4E0\u3000\uC774\uB3D9\uD560\u3000\uC218\u3000\uC788\uC2B5\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2064": {
+      "Name": "\uB9F5",
+      "Description": "\uC138\uACC4\uB97C\u3000\uBD05\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2065": {
+      "Name": "\uB9AC\uB124\uC784\u3000\uCE74\uB4DC",
+      "Description": "\uC18C\uD658\uC218\uC5D0\u3000\uC0C8\uB85C\uC6B4\u3000\uC774\uB984\uC744\u3000\uC9C0\uC5B4\u3000\uC90D\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2066": {
+      "Name": "\uAC01\uC131\uC81C",
+      "Description": "\uC5B4\uB518\uAC00\u3000\uC4F8\uBAA8\u3000\uC788\uC5B4\u3000\uBCF4\uC785\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2067": {
+      "Name": "\uD558\uC774\uD3A0\uB85C\uC758\u3000\uC57D",
+      "Description": "\uC5B4\uB518\uAC00\u3000\uC4F8\uBAA8\u3000\uC788\uC5B4\u3000\uBCF4\uC785\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2068": {
+      "Name": "\uD30C\uB9C8\uC758\u3000\uAC00\uC2DC",
+      "Description": "\uC5B4\uB518\uAC00\u3000\uC4F8\uBAA8\u3000\uC788\uC5B4\u3000\uBCF4\uC785\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "2069": {
+      "Name": "\uD39C\uB4C0\uB7FC",
+      "Description": "\uC5B4\uB518\uAC00\u3000\uC4F8\uBAA8\u3000\uC788\uC5B4\u3000\uBCF4\uC785\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "206A": {
+      "Name": "\uC544\uBBAC\uB81B",
+      "Description": "\uC5B4\uB518\uAC00\u3000\uC4F8\uBAA8\u3000\uC788\uC5B4\u3000\uBCF4\uC785\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "206B": {
+      "Name": "\uB0B4\uC77C\uB85C\uC758\u3000\uBB38",
+      "Description": "\uC5B4\uB518\uAC00\u3000\uC4F8\uBAA8\u3000\uC788\uC5B4\u3000\uBCF4\uC785\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "206C": {
+      "Name": "\uBBF8\uC9C0\uB85C\uC758\u3000\uB0A0\uAC1C",
+      "Description": "\uC5B4\uB518\uAC00\u3000\uC4F8\uBAA8\u3000\uC788\uC5B4\u3000\uBCF4\uC785\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "206D": {
+      "Name": "\uC2B9\uBD80\uC0AC\uC758\u3000\uD63C",
+      "Description": "\uC5B4\uB518\uAC00\u3000\uC4F8\uBAA8\u3000\uC788\uC5B4\u3000\uBCF4\uC785\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "206E": {
+      "Name": "\uC5ED\uC804\uC758\u3000\uC5F4\uC1E0",
+      "Description": "\uC5B4\uB518\uAC00\u3000\uC4F8\uBAA8\u3000\uC788\uC5B4\u3000\uBCF4\uC785\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    },
+    "206F": {
+      "Name": "\uC2B9\uB9AC\uC758\u3000\uBC29\uC815\uC2DD",
+      "Description": "\uC5B4\uB518\uAC00\u3000\uC4F8\uBAA8\u3000\uC788\uC5B4\u3000\uBCF4\uC785\uB2C8\uB2E4",
+      "Kind": "ItemCommand"
+    }
+  }
+}

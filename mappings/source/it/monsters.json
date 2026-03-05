@@ -1,0 +1,1841 @@
+{
+  "SchemaVersion": 1,
+  "Domain": "monsters",
+  "Locale": "it",
+  "GeneratedAtUtc": "2026-03-04T07:27:52.2881854Z",
+  "SourceFiles": [
+    "READ_MONSTER_LOCALIZATIONS__it.txt"
+  ],
+  "Entries": {
+    "0": {
+      "Name": "Mostro",
+      "Sensor": "Messaggio della finestra informazioni.",
+      "Scan": "Messaggio della finestra Scan."
+    },
+    "1": {
+      "Name": "Rarth",
+      "Sensor": "Coperto da carapace. Efficaci armi con Perforazione.",
+      "Scan": "Lento e coperto da carapace. Alta{\\n}difesa fisica e magica. Debole all\u2019{\\n}elemento Gelo. Le armi dotate di{\\n}abilit\u00E0 Perforazione lo fanno fuori{\\n}in un colpo solo. Rivale facile per{\\n}Auron."
+    },
+    "2": {
+      "Name": "Bunyips",
+      "Sensor": "Coperto da carapace. Efficaci armi con Perforazione.",
+      "Scan": "Lento e coperto da carapace. Alta{\\n}difesa fisica e magica. Debole agli{\\n}elementi Gelo e Acqua e ad armi{\\n}dotate di abilit\u00E0 Perforazione."
+    },
+    "3": {
+      "Name": "Mulfus",
+      "Sensor": "Coperto da carapace. Efficaci armi con Perforazione. Attenzione a status Lentezza!",
+      "Scan": "Lento e coperto da carapace. Alta{\\n}difesa fisica e magica. Debole agli{\\n}elementi Tuono e Fuoco.{\\n}Pu\u00F2 infliggere status Lentezza con{\\n}la tecnica Spintone."
+    },
+    "4": {
+      "Name": "Mafut",
+      "Sensor": "Coperto da carapace. Efficaci armi con Perforazione. Attenzione a status Lentezza!",
+      "Scan": "Lento e coperto da carapace. Alta{\\n}difesa fisica e magica. Debole agli{\\n}elementi Tuono e Gelo.{\\n}Pu\u00F2 infliggere status Lentezza con{\\n}la tecnica Spintone."
+    },
+    "5": {
+      "Name": "Shred",
+      "Sensor": "Coperto da carapace. Efficaci armi con Perforazione. Attenzione a status Lentezza!",
+      "Scan": "Lento e coperto da carapace. Alta{\\n}difesa fisica e magica. Debole all\u2019{\\n}elemento Fuoco; dimezza l\u2019effetto{\\n}degli attacchi degli altri 3 elementi.{\\n}Pu\u00F2 infliggere status Lentezza con{\\n}la tecnica Spintone."
+    },
+    "6": {
+      "Name": "Gandharva",
+      "Sensor": "Vola. Magia poco efficace.",
+      "Scan": "Usa Thunder. Vola, difficile{\\n}centrarlo. Debole all\u2019elemento{\\n}Acqua. Alta difesa magica.{\\n}Efficace il pallone di Wakka."
+    },
+    "7": {
+      "Name": "Aroj",
+      "Sensor": "Vola. Magia poco efficace.",
+      "Scan": "Vola, difficile centrarlo. Debole{\\n}all\u2019elemento Acqua. Alta difesa{\\n}magica. Attacca soltanto con la{\\n}magia Thundara: impedirne l\u2019uso{\\n}infliggendo status Mutismo."
+    },
+    "8": {
+      "Name": "Galkimasela",
+      "Sensor": "Vola. Magia poco efficace.",
+      "Scan": "Vola, difficile centrarlo. Debole{\\n}all\u2019elemento Acqua. Alta difesa{\\n}magica. Attacca soltanto con la{\\n}magia Thundaga: impedirne l\u2019uso{\\n}infliggendo status Mutismo."
+    },
+    "9": {
+      "Name": "Dingo",
+      "Sensor": "Veloce. Magia poco efficace.",
+      "Scan": "Veloce, difficile centrarlo. Alta{\\n}difesa magica. Prevenirne l\u2019attacco{\\n}abbattendolo subito. Efficace l\u2019at-{\\n}tacco rapido di {PC:00:TIDUS}."
+    },
+    "10": {
+      "Name": "Mihen Phang",
+      "Sensor": "Veloce. Magia poco efficace.",
+      "Scan": "Veloce, difficile centrarlo. Alta di-{\\n}fesa magica. Prevenirne l\u2019attacco{\\n}abbattendolo subito. Debole agli ele-{\\n}menti Fuoco e Acqua: consigliabile{\\n}usare armi con propriet\u00E0 elementali{\\n}per conseguire Ultracidio."
+    },
+    "11": {
+      "Name": "Garm",
+      "Sensor": "Veloce. Magia poco efficace.",
+      "Scan": "Veloce, difficile centrarlo. Alta di-{\\n}fesa magica. Prevenirne l\u2019attacco{\\n}abbattendolo subito. Debole agli ele-{\\n}menti Tuono e Fuoco."
+    },
+    "12": {
+      "Name": "Lupo delle nevi",
+      "Sensor": "Veloce. Magia poco efficace.",
+      "Scan": "Veloce, difficile centrarlo. Alta di-{\\n}fesa magica. Prevenirne l\u2019attacco{\\n}abbattendolo subito. Debole all\u2019ele-{\\n}mento Fuoco."
+    },
+    "13": {
+      "Name": "Lupo del deserto",
+      "Sensor": "Veloce. Magia poco efficace. Attenzione a status Sonno e Mutismo!",
+      "Scan": "Veloce, difficile centrarlo. Alta di-{\\n}fesa magica. Prevenirne l\u2019attacco{\\n}abbattendolo subito. Debole agli ele-{\\n}menti Fuoco e Gelo. Quando subisce{\\n}un attacco, contrattacca causando{\\n}status Mutismo e Sonno."
+    },
+    "14": {
+      "Name": "Scoor",
+      "Sensor": "Veloce. Magia poco efficace. Attenzione a status Sonno e Mutismo!",
+      "Scan": "Veloce, difficile centrarlo. Alta di-{\\n}fesa magica. Prevenirne l\u2019attacco{\\n}abbattendolo subito. Debole agli ele-{\\n}menti Fuoco e Tuono. Quando subisce{\\n}un attacco, contrattacca causando{\\n}status Mutismo e Sonno."
+    },
+    "15": {
+      "Name": "Mal Bernardo",
+      "Sensor": "Veloce. Magia poco efficace. Attenzione a status Sonno e Mutismo!",
+      "Scan": "Veloce, difficile centrarlo. Alta di-{\\n}fesa magica. Prevenirne l\u2019attacco{\\n}abbattendolo subito. Debole all\u2019ele-{\\n}mento Fuoco. Quando subisce un{\\n}attacco, contrattacca causando{\\n}status Mutismo e Sonno."
+    },
+    "16": {
+      "Name": "Budino d\u2019acqua",
+      "Sensor": "Elemento Acqua. Abbattibile con magie d\u2019elemento opposto. Attacco fisico poco efficace.",
+      "Scan": "Morbido e sfuggente all\u2019attacco{\\n}fisico. Mostro d\u2019elemento Acqua,{\\n}debole all\u2019elemento opposto Tuono.{\\n}Efficace la magia Thunder di Lulu.{\\n}Recupera HP assorbendo attacchi{\\n}di elemento Acqua: attenzione a{\\n}non usare Idro."
+    },
+    "17": {
+      "Name": "Budino di tuono",
+      "Sensor": "Elemento Tuono. Abbattibile con magie d\u2019elemento opposto. Attacco fisico poco efficace.",
+      "Scan": "Morbido e sfuggente all\u2019attacco{\\n}fisico. Mostro d\u2019elemento Tuono.{\\n}Recupera HP assorbendo attacchi{\\n}d\u2019elemento Tuono. Debole all\u2019ele-{\\n}mento opposto Acqua."
+    },
+    "18": {
+      "Name": "Budino di neve",
+      "Sensor": "Elemento Gelo. Abbattibile con magie d\u2019elemento opposto. Attacco fisico poco efficace.",
+      "Scan": "Morbido e sfuggente all\u2019attacco{\\n}fisico. Mostro di elemento Gelo.{\\n}Recupera HP assorbendo attacchi{\\n}d\u2019elemento Gelo. Debole all\u2019elemen-{\\n}to opposto Fuoco. Usa Blizzard."
+    },
+    "19": {
+      "Name": "Budino di ghiaccio",
+      "Sensor": "Elemento Gelo. Abbattibile con magie d\u2019elemento opposto. Attacco fisico poco efficace.",
+      "Scan": "Morbido e sfuggente all\u2019attacco{\\n}fisico. Mostro di elemento Gelo.{\\n}Recupera HP assorbendo attacchi{\\n}d\u2019elemento Gelo. Debole all\u2019elemen-{\\n}to opposto Fuoco."
+    },
+    "20": {
+      "Name": "Budino di fiamme",
+      "Sensor": "Elemento Fuoco. Abbattibile con magie d\u2019elemento opposto. Attacco fisico poco efficace.",
+      "Scan": "Usa Firaga. Morbido e sfuggente all\u2019{\\n}attacco fisico. Mostro di elemento{\\n}Fuoco. Recupera HP assorbendo at-{\\n}tacchi d\u2019elemento Fuoco. Debole all\u2019{\\n}elemento opposto Gelo."
+    },
+    "21": {
+      "Name": "Budino oscuro",
+      "Sensor": "Non \u00E8 debole a nessun elemento. Attacco fisico poco efficace.",
+      "Scan": "Attacco fisico poco efficace.{\\n}Dimezza i danni elementali subiti.{\\n}Usa diverse magie non-elementali{\\n}(Antima, Bio, Flare, Aspir, Drain).{\\n}{CLR:YELLOW}Possibile apprendere la Nemitec{\\n}Vento bianco."
+    },
+    "22": {
+      "Name": "Deinonychus",
+      "Sensor": "Veloce. Magia poco efficace.",
+      "Scan": "Veloce, difficile centrarlo. Alta di-{\\n}fesa magica. Prevenirne l\u2019attacco{\\n}abbattendolo subito. Debole all\u2019ele-{\\n}mento Gelo: colpire nel punto debole{\\n}per causargli gravi danni."
+    },
+    "23": {
+      "Name": "Ipiria",
+      "Sensor": "Veloce. Magia poco efficace.",
+      "Scan": "Veloce, difficile centrarlo. Alta di-{\\n}fesa magica. Prevenirne l\u2019attacco{\\n}abbattendolo subito. Dimezza i danni{\\n}d\u2019elemento Fuoco. Debole all\u2019elemen-{\\n}to Gelo."
+    },
+    "24": {
+      "Name": "Raptor",
+      "Sensor": "Veloce. Magia poco efficace.",
+      "Scan": "Veloce, difficile centrarlo. Alta di-{\\n}fesa magica. Prevenirne l\u2019attacco{\\n}abbattendolo subito. Dimezza i danni{\\n}d\u2019elemento Tuono e Fuoco. Debole{\\n}all\u2019elemento Gelo."
+    },
+    "25": {
+      "Name": "Meryujin",
+      "Sensor": "Veloce. Magia poco efficace. Attenzione a status Pietra e Mutismo!",
+      "Scan": "Veloce, difficile centrarlo. Alta{\\n}difesa magica. Dimezza i danni{\\n}d\u2019elemento Tuono e Fuoco. Pu\u00F2{\\n}infliggere status Pietra e Mu-{\\n}tismo con i suoi attacchi."
+    },
+    "26": {
+      "Name": "Shumelke",
+      "Sensor": "Veloce. Magia poco efficace. Attenzione a status Pietra e Mutismo!",
+      "Scan": "Veloce, difficile centrarlo. Alta{\\n}difesa magica. Dimezza i danni{\\n}d\u2019elemento Acqua e Fuoco. Pu\u00F2{\\n}infliggere status Pietra e Mu-{\\n}tismo con i suoi attacchi."
+    },
+    "27": {
+      "Name": "Yowie",
+      "Sensor": "Veloce. Magia poco efficace. Attenzione a status Pietra e Mutismo!",
+      "Scan": "Veloce, difficile centrarlo. Alta{\\n}difesa magica. Dimezza i danni{\\n}elemento Tuono, Acqua e Fuoco.{\\n}Pu\u00F2 infliggere status Pietra e{\\n}Mutismo con i suoi attacchi."
+    },
+    "28": {
+      "Name": "Condor",
+      "Sensor": "Vola. Magia efficace.",
+      "Scan": "Vola, difficile centrarlo. Vittoria{\\n}sicura con Wakka. Debole all\u2019ele-{\\n}mento Fuoco. Efficace la magia{\\n}Fire di Lulu."
+    },
+    "29": {
+      "Name": "Simurgh",
+      "Sensor": "Vola. Magia efficace. Attenzione a status Blind!",
+      "Scan": "Vola, difficile centrarlo. Magia ef-{\\n}ficace. Debole all\u2019elemento Fuoco.{\\n}Consigliabile la magia Fira per con-{\\n}seguire Ultracidio. Pu\u00F2 infliggere{\\n}status Blind con i suoi attacchi."
+    },
+    "30": {
+      "Name": "Alcione",
+      "Sensor": "Vola. Magia efficace. Attenzione a status Blind!",
+      "Scan": "Vola, difficile centrarlo. Magia ef-{\\n}ficace. Debole all\u2019elemento Fuoco.{\\n}Consigliabile la magia Fira per con-{\\n}seguire Ultracidio. Pu\u00F2 infliggere{\\n}status Blind con i suoi attacchi."
+    },
+    "31": {
+      "Name": "Ape Killer",
+      "Sensor": "Vola. Debole all\u2019elemento Gelo. Attenzione a status Veleno!",
+      "Scan": "Vola, difficile centrarlo. Abbat-{\\n}terlo subito con Wakka. Debole a{\\n}elemento Gelo. Efficace la magia{\\n}Blizzard di Lulu. Pu\u00F2 infliggere{\\n}status Veleno con i suoi attacchi."
+    },
+    "32": {
+      "Name": "Lesmathor",
+      "Sensor": "Vola. Debole all\u2019elemento Gelo. Attenzione a status Veleno!",
+      "Scan": "Vola, difficile centrarlo. Magia ef-{\\n}ficace. Debole all\u2019elemento Gelo.{\\n}Consigliabile la magia Blizzard per{\\n}conseguire Ultracidio. Pu\u00F2 causare{\\n}status Veleno coi suoi attacchi."
+    },
+    "33": {
+      "Name": "Vespa",
+      "Sensor": "Vola. Debole all\u2019elemento Gelo. Attenzione a status Veleno!",
+      "Scan": "Vola, difficile centrarlo. Magia ef-{\\n}ficace. Debole all\u2019elemento Gelo.{\\n}Consigliabile la magia Blizzara per{\\n}conseguire Ultracidio. Pu\u00F2 causare{\\n}status Veleno coi suoi attacchi."
+    },
+    "34": {
+      "Name": "Nebiros",
+      "Sensor": "Vola. Debole all\u2019elemento Gelo. Attenzione a status Veleno!",
+      "Scan": "Vola, difficile centrarlo. Magia ef-{\\n}ficace. Debole all\u2019elemento Gelo.{\\n}Consigliabile la magia Blizzaga per{\\n}conseguire Ultracidio. Pu\u00F2 causare{\\n}status Veleno coi suoi attacchi."
+    },
+    "35": {
+      "Name": "Occhio fluttuante",
+      "Sensor": "Vola. Magia poco efficace.",
+      "Scan": "Vola, difficile centrarlo. Debole{\\n}all\u2019elemento Tuono. Alta difesa{\\n}magica. Vittoria sicura con Wakka."
+    },
+    "36": {
+      "Name": "Buel",
+      "Sensor": "Vola. Magia poco efficace.",
+      "Scan": "Vola, difficile centrarlo. Debole{\\n}all\u2019elemento Acqua. Alta difesa{\\n}magica. Pu\u00F2 infliggere status Caos{\\n}con la tecnica Sguardo maledetto."
+    },
+    "37": {
+      "Name": "Occhio diabolico",
+      "Sensor": "Vola. Magia poco efficace. Attenzione a status Caos!",
+      "Scan": "Vola, difficile centrarlo. Debole{\\n}all\u2019elemento Fuoco. Alta difesa{\\n}magica. Pu\u00F2 infliggere status Caos{\\n}con la tecnica Sguardo maledetto."
+    },
+    "38": {
+      "Name": "Alyman",
+      "Sensor": "Vola. Magia poco efficace. Attenzione a status Caos!",
+      "Scan": "Vola, difficile centrarlo. Non \u00E8{\\n}debole a nessun elemento. Alta{\\n}difesa magica. A volte infligge{\\n}status Caos con Sguardo ma-{\\n}ledetto. Sferra anche l\u2019attacco{\\n}totale Ultrasuoni."
+    },
+    "39": {
+      "Name": "Balsamiko",
+      "Sensor": "Debole all\u2019elemento Fuoco.",
+      "Scan": "Attenzione a Cerbottana: causa{\\n}gravi danni, a volte infligge anche{\\n}K.O. Come tutti i mostri vegetali,{\\n}\u00E8 debole all\u2019elemento Fuoco. Effi-{\\n}cace la magia Fira di Lulu. {CLR:YELLOW}Possibile{\\n}apprendere la Nemitec Cerbottana."
+    },
+    "40": {
+      "Name": "Grat",
+      "Sensor": "Debole all\u2019elemento Fuoco.",
+      "Scan": "Causa gravi danni con la tecnica{\\n}Cerbottana. Con Semetragliatrice{\\n}danni leggeri, ma a volte infligge{\\n}status Caos. Debole all\u2019elemento{\\n}Fuoco. {CLR:YELLOW}Possibile apprendere la{\\n}Nemitec Cerbottana."
+    },
+    "41": {
+      "Name": "Sahagin",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "42": {
+      "Name": "Sahagin",
+      "Sensor": "Debole all\u2019elemento Tuono. Lento nei movimenti a terra.",
+      "Scan": "Veloce, ma potenza fisica e HP bassi.{\\n}Non \u00E8 un nemico temibile se da solo.{\\n}Debole all\u2019elemento Tuono e a status{\\n}Blind e Sonno."
+    },
+    "43": {
+      "Name": "Sahagin",
+      "Sensor": "Debole all\u2019elemento Tuono. Lento nei movimenti a terra.",
+      "Scan": "Mostro emerso in superficie, quindi{\\n}molto lento nei movimenti. Usa la{\\n}tecnica Pistola ad acqua. Debole{\\n}all\u2019elemento Tuono e a status Blind{\\n}e Sonno."
+    },
+    "44": {
+      "Name": "Garuda",
+      "Sensor": "Debole a status Blind.",
+      "Scan": "Potenza fisica e HP alti. Occhio{\\n}all\u2019attacco totale Onda cosmica.{\\n}Infliggendogli status Blind, \u00E8 pi\u00F9{\\n}facile schivarne gli attacchi."
+    },
+    "45": {
+      "Name": "Zuu",
+      "Sensor": "Attenzione a Onda cosmica quando le ali cominciano a brillare!",
+      "Scan": "Dimensioni gigantesche e alti HP.{\\n}Vola, ma \u00E8 facile centrarlo. Usare{\\n}un attacco che causi danni ingenti.{\\n}Quando le ali cominciano a brillare,{\\n}al turno seguente sferra l\u2019attacco{\\n}totale Onda cosmica: colpirlo pre-{\\n}ventivamente con Ambliopya X."
+    },
+    "46": {
+      "Name": "Anellidus",
+      "Sensor": "Attenzione all\u2019attacco totale Terremoto! Infliggendogli status Blind, \u00E8 pi\u00F9 facile schivare le sue testate.",
+      "Scan": "Si prepara con Preterremoto e al{\\n}turno successivo sferra l\u2019attacco{\\n}totale Terremoto causando ingenti{\\n}danni. Se un alleato cade vittima di{\\n}Risucchio, non pu\u00F2 partecipare alla{\\n}battaglia fino a Rigurgito. A volte,{\\n}efficaci status Blind e Sonno."
+    },
+    "47": {
+      "Name": "Lumbrikus",
+      "Sensor": "Attenzione all\u2019attacco totale Terremoto! La battaglia potrebbe avere tempi lunghi: occhio agli HP!",
+      "Scan": "Si prepara con Preterremoto e al{\\n}turno successivo sferra l\u2019attacco{\\n}totale Terremoto causando ingenti{\\n}danni. Efficaci status Blind e Sonno.{\\n}Alta difesa fisica e magica. In vista{\\n}di una lunga battaglia, si consiglia{\\n}di usare Antimajix e Antiscutum."
+    },
+    "48": {
+      "Name": "Defender",
+      "Sensor": "Difesa magica bassa.",
+      "Scan": "Potenza fisica e difesa fisica alte.{\\n}Attenzione: 50% di possibilit\u00E0 che{\\n}sferri Doppio pugno causando in-{\\n}genti danni. Consigliabile applicare{\\n}una difesa. Difesa magica bassa:{\\n}attacco magico efficace."
+    },
+    "49": {
+      "Name": "Defender Zero",
+      "Sensor": "Efficace Antimajix.",
+      "Scan": "Potenza fisica, difesa magica e{\\n}fisica alte. Attenzione: 50% di{\\n}possibilit\u00E0 che sferri Doppio pugno{\\n}causando ingenti danni. Se perde{\\n}HP, attacca con Gancio esplosivo{\\n}che causa gravi danni e rallenta{\\n}l\u2019azione. Efficace Antimajix."
+    },
+    "50": {
+      "Name": "Fantasma",
+      "Sensor": "Attacca con Sentenza a inizio battaglia.",
+      "Scan": "Attacca con Sentenza a inizio bat-{\\n}taglia: abbatterlo prima che il conto{\\n}alla rovescia arrivi a 0 per evitare{\\n}K.O. I punti deboli elementali mutano{\\n}ad ogni incontro: scegliere attacchi{\\n}appropriati. {CLR:YELLOW}Possibile apprendere la{\\n}Nemitec Sentenza."
+    },
+    "51": {
+      "Name": "Phlegyas",
+      "Sensor": "Attenzione quando comincia a brillare! Dopo tre cariche luminose rilascia Onde soniche.",
+      "Scan": "Quando subisce danni comincia a{\\n}emettere raggi luminosi: dopo tre{\\n}cariche, lancia Onde soniche cau-{\\n}sando danni alla squadra. Consi-{\\n}gliabile causargli status Sonno per{\\n}prevenirne le emissioni luminose.{\\n}Dimezza i danni d\u2019elemento Acqua,{\\n}ma \u00E8 debole all\u2019elemento Tuono."
+    },
+    "52": {
+      "Name": "Aquelous",
+      "Sensor": "Attenzione quando comincia a brillare! Dopo tre cariche luminose rilascia Onde soniche.",
+      "Scan": "Quando subisce danni comincia a{\\n}emettere raggi luminosi: dopo tre{\\n}cariche, lancia Onde soniche cau-{\\n}sando danni alla squadra. Consi-{\\n}gliabile causargli status Sonno per{\\n}prevenirne le emissioni luminose.{\\n}Immune dall\u2019elemento Acqua, per\u00F2{\\n}debole all\u2019elemento Tuono."
+    },
+    "53": {
+      "Name": "Remora",
+      "Sensor": "Attenzione all\u2019attacco totale El Ni\u00F1o.",
+      "Scan": "Abbatterlo prima che lanci l\u2019attacco{\\n}totale El Ni\u00F1o. Attenzione: pi\u00F9 volte{\\n}lo si attacca, prima user\u00E0 El Ni\u00F1o.{\\n}Dimezza i danni di elemento Acqua.{\\n}Debole all\u2019elemento Tuono e a status{\\n}Blind e Veleno."
+    },
+    "54": {
+      "Name": "Echeneis",
+      "Sensor": "Attenzione all\u2019attacco totale El Ni\u00F1o.",
+      "Scan": "Abbatterlo prima che lanci l\u2019attacco{\\n}totale El Ni\u00F1o. Attenzione: pi\u00F9 volte{\\n}lo si attacca, prima user\u00E0 El Ni\u00F1o.{\\n}Immune dagli attacchi di elemento{\\n}Acqua. Debole all\u2019elemento Tuono e{\\n}a status Blind e Veleno."
+    },
+    "55": {
+      "Name": "Bikorno",
+      "Sensor": "Infliggendogli status Blind, \u00E8 pi\u00F9 facile schivarne gli attacchi.",
+      "Scan": "Causa ingenti danni con la tecnica{\\n}Incornata, ma pu\u00F2 essere schivato{\\n}pi\u00F9 facilmente infliggendogli status{\\n}Blind. Efficace anche Narcoipnosi{\\n}che gli infligge status Sonno. {CLR:YELLOW}Possi-{\\n}bile apprendere la Nemitec Pirosbolle."
+    },
+    "56": {
+      "Name": "Varaha",
+      "Sensor": "Infliggendogli status Blind, \u00E8 pi\u00F9 facile schivarne gli attacchi.",
+      "Scan": "Infliggere status Blind per schivarne{\\n}gli attacchi. Effettua Charge prima{\\n}di lanciare Meteorite, il terribile at-{\\n}tacco totale di elemento Fuoco che{\\n}causa ingenti danni. {CLR:YELLOW}Possibile{\\n}apprendere la Nemitec Pirosbolle."
+    },
+    "57": {
+      "Name": "Grendel",
+      "Sensor": "Infliggendogli status Blind, \u00E8 pi\u00F9 facile schivarne gli attacchi. Efficaci armi con Perforazione.",
+      "Scan": "Infliggere status Blind per schivarne{\\n}gli attacchi. Effettua Charge prima{\\n}di lanciare Meteorite, il terribile at-{\\n}tacco totale di elemento Fuoco che{\\n}causa ingenti danni. Efficace Veleno{\\n}e le armi dotate di Perforazione.{\\n}{CLR:YELLOW}Possibile apprendere la Nemitec{\\n}Pirosbolle."
+    },
+    "58": {
+      "Name": "Octopus",
+      "Sensor": "Ha la testa coperta da una dura conchiglia.",
+      "Scan": "Coperto da una dura conchiglia:{\\n}efficaci le armi dotate dell\u2019abilit\u00E0{\\n}Perforazione. Difesa magica bassa.{\\n}Debole all\u2019elemento Tuono. A volte{\\n}pu\u00F2 infliggere status Lentezza."
+    },
+    "59": {
+      "Name": "Vivre",
+      "Sensor": "Coperto da dure squame. Efficaci armi con abilit\u00E0 Perforazione.",
+      "Scan": "Coperto da dure squame, molto lento{\\n}ma con alta difesa fisica e magica.{\\n}Debole all\u2019elemento Gelo e alle armi{\\n}dotate di abilit\u00E0 Perforazione. Oltre{\\n}ai regolari attacchi fisici, infligge{\\n}danni a tutta la squadra con Respiro."
+    },
+    "60": {
+      "Name": "Ramashut",
+      "Sensor": "Coperto da dure squame. Efficaci armi con abilit\u00E0 Perforazione.",
+      "Scan": "Coperto da dure squame, molto lento{\\n}ma con alta difesa fisica e magica.{\\n}Debole all\u2019elemento Fuoco. Con degli{\\n}attacchi normali, a volte pu\u00F2 inflig-{\\n}gere status Lentezza. Usa l\u2019attacco{\\n}totale Respiro d\u2019elemento Gelo."
+    },
+    "61": {
+      "Name": "Kusarik",
+      "Sensor": "Coperto da dure squame. Efficaci armi con abilit\u00E0 Perforazione. Attenzione a status Lentezza!",
+      "Scan": "Coperto da dure squame, molto lento{\\n}ma con alta difesa fisica e magica.{\\n}Debole all\u2019elemento Acqua. Con degli{\\n}attacchi normali, a volte pu\u00F2 inflig-{\\n}gere status Lentezza. Usa l\u2019attacco{\\n}totale Respiro d\u2019elemento Tuono."
+    },
+    "62": {
+      "Name": "MushuHushu",
+      "Sensor": "Coperto da dure squame. Efficaci armi con abilit\u00E0 Perforazione. Attenzione a status Lentezza!",
+      "Scan": "Coperto da dure squame, molto lento{\\n}ma con alta difesa fisica e magica.{\\n}Debole all\u2019elemento Gelo. Dimezza{\\n}i danni d\u2019elemento Fuoco. Con degli{\\n}attacchi normali, a volte pu\u00F2 inflig-{\\n}gere status Lentezza. Usa l\u2019attacco{\\n}totale Respiro d\u2019elemento Fuoco."
+    },
+    "63": {
+      "Name": "Heg",
+      "Sensor": "Coperto da dure squame. Efficaci armi con abilit\u00E0 Perforazione. Attenzione a status Lentezza!",
+      "Scan": "Coperto da dure squame, molto lento{\\n}ma con alta difesa fisica e magica.{\\n}Debole all\u2019elemento Gelo. Dimezza{\\n}i danni d\u2019elemento Fuoco. Con degli{\\n}attacchi normali, a volte pu\u00F2 inflig-{\\n}gere status Lentezza. Usa l\u2019attacco{\\n}totale Respiro d\u2019elemento Fuoco."
+    },
+    "64": {
+      "Name": "Molboro",
+      "Sensor": "Infligge status alterati con Alito fetido. Abbatterlo prima che esali!",
+      "Scan": "Attenzione all\u2019attacco totale Alito{\\n}fetido che d\u00E0 vari status alterati.{\\n}Se causa Veleno, Caos e Berserk allo{\\n}stesso tempo, \u00E8 probabilmente K.O.{\\n}Equipaggiarsi di una protezione ade-{\\n}guata. Colpire con elemento Fuoco.{\\n}{CLR:YELLOW}Possibile apprendere la Nemitec Alito{\\n}fetido."
+    },
+    "65": {
+      "Name": "Molboro il Grande",
+      "Sensor": "Esala Alito fetido 1 volta su 3. Equipaggiarsi di una protezione adeguata.",
+      "Scan": "Esala Alito fetido 1 volta su 3. Se{\\n}attacca per primo, a volte riesce ad{\\n}immobilizzare tutta la squadra ed \u00E8{\\n}K.O. Equipaggiarsi di una protezione{\\n}efficace contro gli status alterati.{\\n}Come tutti i vegetali, \u00E8 debole all\u2019e-{\\n}lemento Fuoco. {CLR:YELLOW}Possibile apprendere{\\n}la Nemitec Alito fetido."
+    },
+    "66": {
+      "Name": "Hoga",
+      "Sensor": "Quando alza le braccia...",
+      "Scan": "Quando alza le braccia in postura{\\n}offensiva e subisce un attacco{\\n}fisico, contrattacca con potenza{\\n}distruttiva. Consigliabili gli attacchi{\\n}di elemento Fuoco."
+    },
+    "67": {
+      "Name": "Ashoor",
+      "Sensor": "Quando alza le braccia...",
+      "Scan": "Quando alza le braccia in postura{\\n}offensiva e subisce un attacco{\\n}fisico, contrattacca con potenza{\\n}distruttiva. Consigliabile usare le{\\n}magie o infliggergli status Veleno."
+    },
+    "68": {
+      "Name": "Piranha",
+      "Sensor": "Potenza fisica e HP bassi.",
+      "Scan": "Attacca mordendo. Potenza fisica e{\\n}HP bassi. Non \u00E8 un nemico temibile."
+    },
+    "69": {
+      "Name": "Piranha",
+      "Sensor": "Agiscono in coppia.",
+      "Scan": "Attaccano mordendo. Se agiscono{\\n}in coppia, la potenza fisica e gli HP{\\n}sono pi\u00F9 alti."
+    },
+    "70": {
+      "Name": "Piranha",
+      "Sensor": "Agiscono in gruppi di 3.",
+      "Scan": "Attaccano mordendo. Se agiscono{\\n}in gruppi di 3, la potenza fisica e{\\n}gli HP sono pi\u00F9 alti."
+    },
+    "71": {
+      "Name": "Splasher",
+      "Sensor": "Attenzione alla tecnica Kamikaze!",
+      "Scan": "Quando viene sconfitto, autoesplode{\\n}con la tecnica Kamikaze: potrebbe{\\n}causare danni a chi l\u2019ha attaccato."
+    },
+    "72": {
+      "Name": "Splasher",
+      "Sensor": "Attenzione a status Veleno!",
+      "Scan": "Agiscono in coppia. Il loro morso{\\n}pu\u00F2 causare status Veleno."
+    },
+    "73": {
+      "Name": "Splasher",
+      "Sensor": "Attenzione a status Veleno!",
+      "Scan": "Agiscono in gruppi di 3. Il loro morso{\\n}pu\u00F2 causare status Veleno."
+    },
+    "74": {
+      "Name": "Vepal",
+      "Sensor": "Attenzione alla tecnica Kamikaze!",
+      "Scan": "Quando viene sconfitto, autoesplode{\\n}con la tecnica Kamikaze: potrebbe{\\n}causare danni a chi l\u2019ha attaccato."
+    },
+    "75": {
+      "Name": "Vepal",
+      "Sensor": "Attenzione a status Veleno!",
+      "Scan": "Agiscono in coppia. Il loro morso{\\n}pu\u00F2 causare status Veleno."
+    },
+    "76": {
+      "Name": "Vepal",
+      "Sensor": "Attenzione a status Veleno!",
+      "Scan": "Agiscono in gruppi di 3. Il loro morso{\\n}pu\u00F2 causare status Veleno."
+    },
+    "77": {
+      "Name": "Elemento giallo",
+      "Sensor": "Elemento Tuono. Abbattibile con magie d\u2019elemento opposto.",
+      "Scan": "Usa Thunder. Attacco fisico poco{\\n}efficace. Recupera HP assorbendo{\\n}gli attacchi d\u2019elemento Tuono. Debole{\\n}all\u2019elemento opposto Acqua: efficace{\\n}la magia Idro."
+    },
+    "78": {
+      "Name": "Elemento bianco",
+      "Sensor": "Elemento Gelo. Abbattibile con magie d\u2019elemento opposto.",
+      "Scan": "Usa Blizzard. Attacco fisico poco{\\n}efficace. Recupera HP assorbendo{\\n}gli attacchi d\u2019elemento Gelo. Debole{\\n}all\u2019elemento opposto Fuoco: efficace{\\n}la magia Fire."
+    },
+    "79": {
+      "Name": "Elemento rosso",
+      "Sensor": "Elemento Fuoco. Abbattibile con magie d\u2019elemento opposto.",
+      "Scan": "Usa Fire. Attacco fisico poco effi-{\\n}cace. Recupera HP assorbendo gli{\\n}attacchi d\u2019elemento Fuoco. Debole{\\n}all\u2019elemento opposto Gelo: efficace{\\n}la magia Blizzard."
+    },
+    "80": {
+      "Name": "Elemento dorato",
+      "Sensor": "Elemento Tuono. Abbattibile con magie d\u2019elemento opposto.",
+      "Scan": "Usa Thunder. Attacco fisico poco{\\n}efficace. Recupera HP assorbendo{\\n}gli attacchi d\u2019elemento Tuono. Debole{\\n}all\u2019elemento opposto Acqua: usare la{\\n}magia Idrora per poter conseguire{\\n}Ultracidio."
+    },
+    "81": {
+      "Name": "Elemento blu",
+      "Sensor": "Elemento Acqua. Abbattibile con magie d\u2019elemento opposto.",
+      "Scan": "Usa Idrora. Attacco fisico poco ef-{\\n}ficace. Recupera HP assorbendo gli{\\n}attacchi d\u2019elemento Acqua. Debole all\u2019{\\n}elemento opposto Tuono: efficace la{\\n}magia Thundara."
+    },
+    "82": {
+      "Name": "Elemento scuro",
+      "Sensor": "Non \u00E8 debole a nessun elemento. Usa Reflex.",
+      "Scan": "Attacco fisico poco efficace. Non{\\n}\u00E8 debole a nessun elemento. Utilizza{\\n}Reflex e attacca riflettendo magie{\\n}elementali. Se si neutralizza Reflex con{\\n}la magia Dispel, ricorre a magie come{\\n}Bio, Aspir, Drain, ecc."
+    },
+    "83": {
+      "Name": "Elemento nero",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "In preparazione!"
+    },
+    "84": {
+      "Name": "Epej",
+      "Sensor": "Attenzione a status Veleno!",
+      "Scan": "Veloce, infligge status Veleno coi{\\n}suoi artigli. Talvolta \u00E8 possibile{\\n}infliggergli status Blind. Efficace{\\n}Altol\u00E0."
+    },
+    "85": {
+      "Name": "Behemoth",
+      "Sensor": "Attenzione a Singhiozzo!",
+      "Scan": "Attacca con gli artigli, con Thundara{\\n}e con Singhiozzo che causa gravi{\\n}danni e a volte infligge anche K.O.{\\n}{CLR:YELLOW}Possibile apprendere la Nemitec{\\n}Difesa totale."
+    },
+    "86": {
+      "Name": "King Behemoth",
+      "Sensor": "Contrattacca con Meteo prima di crollare.",
+      "Scan": "Attacca con gli artigli, con le magie{\\n}di elemento Tuono e con Singhiozzo{\\n}che causa gravi danni. Attenzione{\\n}all\u2019attacco Meteo che sferra prima{\\n}di morire: causa danni fisici; difen-{\\n}dersi con Protect o premendo {CTRL:30:TRIANGLE}.{\\n}{CLR:YELLOW}Possibile apprendere la Nemitec{\\n}Difesa totale."
+    },
+    "87": {
+      "Name": "Chimera",
+      "Sensor": "Efficaci status Blind e Mutismo. Debole a Altol\u00E0.",
+      "Scan": "Attacca in quest\u2019ordine: il serpente{\\n}con Thundara, il toro con Assalto,{\\n}l\u2019aquila con Idrorespiro (attacco to-{\\n}tale Acqua), il leone con Carica sis-{\\n}mica (attacco Fuoco). Sono efficaci{\\n}Altol\u00E0 e gli status Blind e Mutismo.{\\n}{CLR:YELLOW}Possibile apprendere la Nemitec{\\n}Idrorespiro."
+    },
+    "88": {
+      "Name": "Chimera Brain",
+      "Sensor": "Efficaci status Blind e Mutismo. Debole a Altol\u00E0.",
+      "Scan": "Attacca in quest\u2019ordine: il serpente{\\n}con magie Tuono, il toro con Assalto,{\\n}l\u2019aquila con Idrorespiro (attacco to-{\\n}tale Acqua), il leone con Carica sis-{\\n}mica (attacco Fuoco). Sono efficaci{\\n}Altol\u00E0 e gli status Blind e Mutismo.{\\n}{CLR:YELLOW}Possibile apprendere la Nemitec{\\n}Idrorespiro."
+    },
+    "89": {
+      "Name": "Iaguaro",
+      "Sensor": "Con HP bassi, usa Drain e Blaster.",
+      "Scan": "Potenza e difesa magica alte. Usa{\\n}Thundara e Blizzara. Con HP bassi{\\n}usa Drain. Difendersi dagli attacchi{\\n}magici con Silenziatore X, ma atten-{\\n}zione: non c\u2019\u00E8 nessuna difesa contro{\\n}Blaster che infligge status Pietra."
+    },
+    "90": {
+      "Name": "Master Iaguaro",
+      "Sensor": "Con HP bassi, usa Drain, Bailamme e Blaster.",
+      "Scan": "Potenza e difesa magica alte. Usa{\\n}Thundaga e Blizzaga e con HP bassi{\\n}anche Drain e Bailamme che infligge{\\n}status Caos. Difendersi da attacchi{\\n}magici con Silenziatore X, ma atten-{\\n}zione: non c\u2019\u00E8 nessuna difesa contro{\\n}Blaster che infligge status Morte."
+    },
+    "91": {
+      "Name": "Autoguardiano",
+      "Sensor": "Abbattibile con Ruba.",
+      "Scan": "Antichissima macchina restaurata{\\n}come Portiere Albhed incontrato a{\\n}Luka. Eseguendo Ruba \u00E8 possibile{\\n}sottrargli un pezzo e abbatterlo{\\n}in un colpo: un lavoro per Rikku!{\\n}Debole all\u2019elemento Tuono."
+    },
+    "92": {
+      "Name": "Autoscout",
+      "Sensor": "Abbattibile con Ruba.",
+      "Scan": "Rispetto alle macchine del deserto{\\n}di Sanubia, \u00E8 in condizioni migliori{\\n}e ha potenza fisica e HP alti. Ese-{\\n}guendo Ruba \u00E8 possibile sottrargli{\\n}un pezzo e abbatterlo in un colpo."
+    },
+    "93": {
+      "Name": "Autoscout",
+      "Sensor": "Abbattibile con Ruba.",
+      "Scan": "Rispetto alle macchine del deserto{\\n}di Sanubia, \u00E8 in condizioni migliori{\\n}e ha potenza fisica e HP alti. Ese-{\\n}guendo Ruba \u00E8 possibile sottrargli{\\n}un pezzo e abbatterlo in un colpo."
+    },
+    "94": {
+      "Name": "Autocommander",
+      "Sensor": "Abbattibile con Ruba.",
+      "Scan": "Macchina abbandonata 1000 anni{\\n}fa sul monte Gagazet. Causa danni{\\n}elemento Tuono con Elettroshock.{\\n}Molto veloce: sconfiggerlo subito.{\\n}Eseguendo Ruba \u00E8 possibile sot-{\\n}trargli un pezzo e abbatterlo{\\n}in un colpo."
+    },
+    "95": {
+      "Name": "Demomonolix",
+      "Sensor": "Attenzione all\u2019attacco totale Respiro. Usare protezioni contro status Pietra.",
+      "Scan": "Infligge status Veleno, Maledizione,{\\n}Mutismo e Blind con il contrattacco{\\n}Anatema del faraone. A volte causa{\\n}status Pietra a un alleato e dopo lo{\\n}attacca polverizzandolo e facendolo{\\n}sparire dalla battaglia. Attenzione:{\\n}pu\u00F2 infliggere anche status Zombie."
+    },
+    "96": {
+      "Name": "Autoartigliere",
+      "Sensor": "Abbattibile con Ruba.",
+      "Scan": "Antichissima macchina parzialmente{\\n}riparata. Ha HP pi\u00F9 alti di Autoguar-{\\n}diano. Eseguendo Ruba \u00E8 possibile{\\n}sottrargli un pezzo e abbatterlo{\\n}in un colpo: un lavoro per Rikku!{\\n}Debole all\u2019elemento Tuono."
+    },
+    "97": {
+      "Name": "Autocacciatore",
+      "Sensor": "Abbattibile con Ruba.",
+      "Scan": "Rispetto alle macchine del deserto di{\\n}Sanubia, \u00E8 in migliori condizioni e con{\\n}HP pi\u00F9 alti. Pi\u00F9 lento di Autoscout, ma{\\n}con maggiore potenza fisica. Ese-{\\n}guendo Ruba \u00E8 possibile sottrargli un{\\n}pezzo e abbatterlo in un colpo."
+    },
+    "98": {
+      "Name": "Autoarmatura",
+      "Sensor": "Abbattibile con Ruba.",
+      "Scan": "Macchina abbandonata 1000 anni fa{\\n}sul monte Gagazet. Difesa fisica e{\\n}HP pi\u00F9 alti di Autocommander. Ese-{\\n}guendo Ruba \u00E8 possibile sottrargli{\\n}un pezzo e abbatterlo in un colpo.{\\n}Si possono ottenere vari oggetti{\\n}di recupero."
+    },
+    "99": {
+      "Name": "Ultima Weapon",
+      "Sensor": "Battaglia a oltranza!",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "100": {
+      "Name": "Omega Weapon",
+      "Sensor": "Battaglia a oltranza!",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "101": {
+      "Name": "Thros",
+      "Sensor": "Si allontana ed attacca con Testata di polipo.",
+      "Scan": "Subita una certa quantit\u00E0 di danni, si{\\n}nasconde dietro la colonna dove gli{\\n}attacchi non lo raggiungono. Al turno{\\n}successivo sferra l\u2019attacco totale{\\n}Testata di polipo. Usare diligente-{\\n}mente i comandi extra per evitare{\\n}Testata di polipo e sconfiggerlo."
+    },
+    "102": {
+      "Name": "Scaglia Guno",
+      "Sensor": "Debole alla magia.",
+      "Scan": "Attacco fisico poco efficace contro{\\n}il suo guscio protettivo. Attacco{\\n}magico assorbito dai tentacoli: prima{\\n}sconfiggere i tentacoli e poi farlo{\\n}uscire dal guscio attaccandolo con{\\n}magie d\u2019elemento Fuoco. Attenzione:{\\n}recupera HP assorbendo gli attacchi{\\n}di elemento Acqua."
+    },
+    "103": {
+      "Name": "Tentacolo di Guno",
+      "Sensor": "Assorbe gli attacchi magici lanciati contro Guno.",
+      "Scan": "Assorbe le magie lanciate contro{\\n}Guno. Consigliabile sconfiggerlo, poi{\\n}attaccare il resto del corpo con la{\\n}magia. I tentacoli godono di un\u2019alta{\\n}difesa magica: gli attacchi fisici{\\n}saranno molto pi\u00F9 efficaci."
+    },
+    "104": {
+      "Name": "Mangiachocobo",
+      "Sensor": "Debole a status Blind.",
+      "Scan": "Subita una certa quantit\u00E0 di danni,{\\n}cade a terra ed \u00E8 vulnerabile anche{\\n}ad armi senza l\u2019abilit\u00E0 Perforazione.{\\n}Pronunciato \u201DIl prossimo sei tu!\u201D,{\\n}sferra un potente attacco: mettersi{\\n}in guardia e recuperare con oggetti.{\\n}Con HP bassi usa Blizzard: difendersi{\\n}con Parabliz."
+    },
+    "105": {
+      "Name": "Gasteropodos",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "106": {
+      "Name": "Luniodisko",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "107": {
+      "Name": "Trito di Scaglia",
+      "Sensor": "Anche se vengono abbattuti, altri ne arrivano.",
+      "Scan": "Rimasugli di Scaglie lanciate da Sin.{\\n}Quando le ali cominciano a brillare,{\\n}al turno successivo lanciano Aculei.{\\n}Cercare di sconfiggerli velocemente."
+    },
+    "108": {
+      "Name": "Trito di Scaglia",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "109": {
+      "Name": "Josguein",
+      "Sensor": "Coperto da dure squame. Debole alla magia.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "110": {
+      "Name": "Lanciatore Albhed",
+      "Sensor": "Debole all\u2019elemento Tuono.",
+      "Scan": "Subito un danno, aumenta la velocit\u00E0{\\n}d\u2019azione. Debole all\u2019elemento Tuono,{\\n}ma se subisce Thunder, contrattacca{\\n}con Pallonata Mutis. Usare le cose{\\n}che si trovano nelle vicinanze per{\\n}difendersi dalla sua potente Raffica{\\n}blitzball."
+    },
+    "111": {
+      "Name": "Ricevitore Albhed",
+      "Sensor": "Debole all\u2019elemento Tuono. Attaccandolo dal basso...",
+      "Scan": "Quando \u00E8 in superficie, bombarda{\\n}con Elettrobombe infliggendo danni{\\n}e status Blind alla squadra. Subita{\\n}una certa quantit\u00E0 di danni, s\u2019ina-{\\n}bissa e non pu\u00F2 usare Elettrobombe.{\\n}\u00C8 consigliabile colpirlo con un po-{\\n}tente attacco quando \u00E8 in superfi-{\\n}cie per evitare il bombardamento."
+    },
+    "112": {
+      "Name": "????",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "113": {
+      "Name": "Sin",
+      "Sensor": "Attaccare con la magia e il pallone di Wakka.",
+      "Scan": "Di questo passo, distrugger\u00E0 Kilika!{\\n}Essendo molto distante dalla nave,{\\n}risulteranno efficaci la magia di Lulu,{\\n}il pallone di Wakka e gli attacchi{\\n}dell\u2019Eone {PC:08:VALEFOR}."
+    },
+    "114": {
+      "Name": "Scaglia Ekyu",
+      "Sensor": "Infliggendogli status Blind, \u00E8 pi\u00F9 facile schivarne gli attacchi.",
+      "Scan": "Dopo aver assorbito HP usando due{\\n}volte Tocco Drain, sferra l\u2019attacco{\\n}totale Avvitamento. Per schivare{\\n}Tocco Drain, si consiglia di infliggere{\\n}status Blind, che per\u00F2 non \u00E8 efficace{\\n}contro Avvitamento: occhio agli HP!"
+    },
+    "115": {
+      "Name": "Trito di Scaglia",
+      "Sensor": "Anche se vengono abbattuti, altri ne arrivano.",
+      "Scan": "Abbattibili con Assalto. Tuttavia,{\\n}anche se vengono sconfitti, altri{\\n}ne arrivano. Pare non finiscano{\\n}mai!"
+    },
+    "116": {
+      "Name": "Trito di Scaglia",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "117": {
+      "Name": "Scaglia Ghy",
+      "Sensor": "Si protegge dagli attacchi con le braccia.",
+      "Scan": "Le potenti braccia lo proteggono{\\n}dagli attacchi fisici. Sconfiggere{\\n}prima le braccia con armi dotate di{\\n}abilit\u00E0 Perforazione, poi attaccare{\\n}il corpo. Quando la testa comincia{\\n}a muoversi nevroticamente, lancia{\\n}Fluido tossico: evitarlo attaccando{\\n}la testa."
+    },
+    "118": {
+      "Name": "Luniodisko",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "119": {
+      "Name": "Efrey",
+      "Sensor": "Prende fiato e lancia Respiro.",
+      "Scan": "Alta difesa magica e resistente{\\n}agli attacchi elementali. Quando{\\n}\u00E8 attaccato da vicino, risponde{\\n}con Respiro tossico. Consigliabile{\\n}chiedere a Cid di allontanarsi ap-{\\n}pena prende fiato: provveder\u00E0 poi{\\n}a dare supporto alla squadra lan-{\\n}ciando Missili."
+    },
+    "120": {
+      "Name": "Efrey Oltana",
+      "Sensor": "Vulnerabile a magie e oggetti di recupero.",
+      "Scan": "Se lancia Sguardo pietrificante in{\\n}acqua, infligge Pietra e manda in{\\n}K.O. Contrattacca ogni volta che{\\n}subisce un attacco. Consigliabile{\\n}aprire il lucchetto del cancello...{\\n}Poich\u00E9 \u00E8 in status Zombie, sono ef-{\\n}ficaci oggetti e magie di recupero."
+    },
+    "121": {
+      "Name": "Sferogestore",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "122": {
+      "Name": "Cannoniere Albhed",
+      "Sensor": "Debole all\u2019elemento Tuono. Contrattacca bloccando le magie e le invocazioni con Sigillo Albhed.",
+      "Scan": "Alta difesa fisica, ma debole all\u2019ele-{\\n}mento Tuono. Sferra l\u2019attacco totale{\\n}Mitragliatore. Eliminato Sigillo Albhed,{\\n}inizia a fare il conto alla rovescia{\\n}per Fascio magico. Nel frattempo,{\\n}contrattacca se subisce attacchi{\\n}Tuono e rilancia Sigillo Albhed se{\\n}subisce quattro attacchi magici."
+    },
+    "123": {
+      "Name": "Sigillo Albhed",
+      "Sensor": "Blocca le magie e le invocazioni. Possibile attaccarlo con oggetti o col pallone.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "124": {
+      "Name": "Seymour",
+      "Sensor": "Attacca con magie elementali nell\u2019ordine seguente: Gelo, Tuono, Acqua, Fuoco.",
+      "Scan": "Lancia magie elementali nell\u2019ordine{\\n}seguente: Gelo, Tuono, Acqua, Fuoco.{\\n}Consigliabile usare le difese di Yuna:{\\n}Parabliz, Parathund, Paraidro e poi{\\n}Parafire. In caso di necessit\u00E0, il suo{\\n}Eone..."
+    },
+    "125": {
+      "Name": "Anima",
+      "Sensor": "Esegue Turbotecniche quando la barra Turbo \u00E8 piena.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "126": {
+      "Name": "Neo Seymour",
+      "Sensor": "Oltre alle magie elementali, usa Flare e Medusa.",
+      "Scan": "Oltre alle magie elementali che{\\n}lanciava nella battaglia nel tempio{\\n}di Macalania, usa anche Bimagia.{\\n}Quando scendono gli HP, attacca{\\n}con Medusa che infligge status{\\n}Pietra e con la potente magia{\\n}non-elementale Flare."
+    },
+    "127": {
+      "Name": "Neolunio",
+      "Sensor": "Evitare assolutamente la combinazione con Seymour!",
+      "Scan": "Se dopo aver inflitto status Pietra{\\n}attacca con Artigli disintegranti,{\\n}polverizza l\u2019avversario e lo manda{\\n}fuori combattimento. Attenzione:{\\n}l\u2019attacco totale Desperado non solo{\\n}causa gravi danni, ma neutralizza{\\n}anche l\u2019effetto delle magie di sup-{\\n}porto."
+    },
+    "128": {
+      "Name": "Custode celeste",
+      "Sensor": "Alta difesa magica e fisica. Cominciare da l\u00EC...",
+      "Scan": "La tecnica Ali fotoniche infligge{\\n}status Caos, Sonno, Mutismo,{\\n}Blind e Maledizione. La tecnica{\\n}Coda Morfeo neutralizza Haste{\\n}e rallenta la velocit\u00E0 d\u2019azione.{\\n}Usa magie di recupero e Reflex."
+    },
+    "129": {
+      "Name": "Custode del limbo",
+      "Sensor": "Contrattacca chi gli \u00E8 di fronte. Schivarlo col comando extra Muove.",
+      "Scan": "Contrattacca chi si trova di fronte.{\\n}Quando la piattaforma si illumina{\\n}con Mina magica, usare il comando{\\n}extra Muove per evitare l\u2019esplosione{\\n}che infligge inesorabilmente K.O."
+    },
+    "130": {
+      "Name": "Yunalesca",
+      "Sensor": "Essere che manovra la morte. Debole alle forze sacre.",
+      "Scan": "Se si subisce status Zombie,{\\n}recuperare con Acquasanta poich\u00E9{\\n}Energiga e Rigene causano danni.{\\n}Quando contrattacca, annulla{\\n}l\u2019effetto delle magie di supporto.{\\n}Inoltre, se lancia Scarica mentale{\\n}a un Eone, infligge di riflesso{\\n}status Maledizione alla squadra."
+    },
+    "131": {
+      "Name": "Seymour Omega",
+      "Sensor": "Assorbe energia dai Luniodiski.",
+      "Scan": "Usa le magie e si avvale dell\u2019energia{\\n}che riceve dai quattro Luniodiski alle{\\n}sue spalle. Le capacit\u00E0 elementali di{\\n}Seymour sono collegate alla dispo-{\\n}sizione assunta dai dischi. Subito un{\\n}attacco fisico, i Luniodiski girano a{\\n}sinistra; subito un attacco magico,{\\n}girano a destra."
+    },
+    "132": {
+      "Name": "Eone di Braska",
+      "Sensor": "Usando il comando extra Parla...",
+      "Scan": "Riempie la barra con la forza che{\\n}riceve dalle Pagoda Yu e sferra un{\\n}attacco mortale. Sconfiggere prima{\\n}le Pagoda Yu per bloccare il loro{\\n}poderoso attacco. {PC:00:TIDUS}{\\n}pu\u00F2 far abbassare la barra due{\\n}volte usando il comando extra Parla."
+    },
+    "133": {
+      "Name": "Gru",
+      "Sensor": "Funziona a elettricit\u00E0.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "134": {
+      "Name": "Biran Ronso",
+      "Sensor": "Copre Yenke. Ma se rimane solo...",
+      "Scan": "Copre Yenke dagli attacchi nemici{\\n}con Altruismo. Tuttavia, se sferra{\\n}Tackle, si separa dal compagno e{\\n}non pu\u00F2 pi\u00F9 difenderlo. Subita una{\\n}certa quantit\u00E0 di danni, attiva per{\\n}un turno Difesa totale.{\\n}{CLR:YELLOW}Possibile apprendere varie Nemitec!"
+    },
+    "135": {
+      "Name": "Yenke Ronso",
+      "Sensor": "Copre Biran. Ma se rimane solo...",
+      "Scan": "Copre Biran dagli attacchi nemici{\\n}con Altruismo. Tuttavia, se sferra{\\n}Tackle, si separa dal compagno e{\\n}non pu\u00F2 pi\u00F9 difenderlo. Subita una{\\n}certa quantit\u00E0 di danni, attiva per{\\n}un turno Vento bianco.{\\n}{CLR:YELLOW}Possibile apprendere varie Nemitec!"
+    },
+    "136": {
+      "Name": "Braccio sx di Sin",
+      "Sensor": "Accumula energia e lancia Antigrav. Schivarlo con il comando extra Allontana.",
+      "Scan": "Accumula energia nel nucleo, al turno{\\n}successivo sferra Antigrav e toglie{\\n}3/4 di HP. Consigliabile chiedere a Cid{\\n}di allontanarsi per evitare l\u2019attacco.{\\n}Attenzione: oltre a dei rari attacchi{\\n}fisici totali, attacca con Aura reset{\\n}che neutralizza l\u2019effetto delle magie{\\n}di supporto."
+    },
+    "137": {
+      "Name": "Braccio dx di Sin",
+      "Sensor": "Accumula energia e lancia Antigrav. Schivarlo con il comando extra Allontana.",
+      "Scan": "Accumula energia nel nucleo, al turno{\\n}successivo sferra Antigrav e toglie{\\n}3/4 di HP. Consigliabile chiedere a Cid{\\n}di allontanarsi per evitare l\u2019attacco.{\\n}Attenzione: oltre a dei rari attacchi{\\n}fisici totali, attacca con Aura reset{\\n}che neutralizza l\u2019effetto delle magie{\\n}di supporto."
+    },
+    "138": {
+      "Name": "Sin",
+      "Sensor": "Gunai amministra la forza di Sin: quando entra nel guscio, accumula energia e...",
+      "Scan": "Quando Gunai entra nel guscio, Sin{\\n}comincia ad accumulare energia nel{\\n}nucleo e lancia Antigrav che toglie{\\n}3/4 di HP all\u2019avversario. Attenzione{\\n}all\u2019attacco Aura reset: neutralizza{\\n}l\u2019effetto delle magie di supporto."
+    },
+    "139": {
+      "Name": "Scaglia Gunai",
+      "Sensor": "Assorbe gli attacchi magici lanciati contro Sin.",
+      "Scan": "Quando gli HP sono dimezzati,{\\n}al turno successivo si ritira{\\n}nel guscio. Subito un attacco,{\\n}usa Energira, recupera HP ed{\\n}esce fuori di nuovo. Quand\u2019\u00E8{\\n}nel guscio non c\u2019\u00E8 pericolo di{\\n}subire Antigrav, ma..."
+    },
+    "140": {
+      "Name": "Sin",
+      "Sensor": "Dargli il colpo di grazia prima che apra completamente la bocca.",
+      "Scan": "Anche mentre cerca di risucchiare{\\n}l\u2019aeronave, sfrutta le ultime forze{\\n}rimaste per attaccare con la po-{\\n}derosa magia Gigagravit\u00E0. Atten-{\\n}zione: con Gigagravit\u00E0 \u00E8 inesora-{\\n}bilmente Game Over. Sconfiggerlo{\\n}prima!"
+    },
+    "141": {
+      "Name": "Guardia Guado",
+      "Sensor": "Copre Seymour.",
+      "Scan": "Infligge status Caos con l\u2019oggetto{\\n}Gran Opzione e si difende con{\\n}Autopozione. Recupera HP anche{\\n}a Seymour. Attenzione: trovare{\\n}un modo per non fargli usare gli{\\n}oggetti."
+    },
+    "142": {
+      "Name": "Seymour Beta",
+      "Sensor": "Evitare assolutamente la combinazione con Mekalunio!",
+      "Scan": "Dopo l\u2019attacco Lancia devastante{\\n}che causa status Zombie, Mekalunio{\\n}lancia Areiz. Massima attenzione alla{\\n}loro temibilissima tecnica combinata{\\n}Distruzione totale. Osservando bene{\\n}le azioni di Seymour, \u00E8 possibile pre-{\\n}vedere le mosse di Mekalunio."
+    },
+    "143": {
+      "Name": "Mekalunio",
+      "Sensor": "Evitare assolutamente la combinazione con Seymour!",
+      "Scan": "Attenzione alla combinazione letale{\\n}con Seymour! Dopo l\u2019attacco Lancia{\\n}devastante di Seymour che infligge{\\n}status Zombie, Mekalunio causa K.O.{\\n}con Areiz. Difendersi con Protect{\\n}dal temibile attacco fisico totale{\\n}Forbiciata letale."
+    },
+    "144": {
+      "Name": "Arma Kimahri",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "145": {
+      "Name": "Trito di Scaglia",
+      "Sensor": "Sconfiggere solo quelli di fronte. Attenzione all\u2019attacco Aculei quando le ali cominciano a brillare!",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "146": {
+      "Name": "Piattaforma",
+      "Sensor": "Un alleato si pu\u00F2 spostare su una piattaforma magica.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "147": {
+      "Name": "Trito di Scaglia",
+      "Sensor": "Sconfiggere solo quelli di fronte. Attenzione all\u2019attacco Aculei quando le ali cominciano a brillare!",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "148": {
+      "Name": "Trito di Scaglia",
+      "Sensor": "Risolutiva la Turbotecnica Autarchia di Auron!",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "149": {
+      "Name": "Cid",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "150": {
+      "Name": "Luniodisko",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "151": {
+      "Name": "Vihur",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "152": {
+      "Name": "Portiere Albhed",
+      "Sensor": "Debole all\u2019elemento Tuono.",
+      "Scan": "Antichissima macchina da lavoro{\\n}restaurata dagli Albhed. Origina-{\\n}riamente non fu concepita come{\\n}macchina da guerra, ma non per{\\n}questo da sottovalutare. Debole{\\n}all\u2019elemento Tuono: Thunder gli{\\n}causa gravi danni."
+    },
+    "153": {
+      "Name": "Ochu smarrito",
+      "Sensor": "Debole all\u2019elemento Fuoco.",
+      "Scan": "Attenzione agli artigli: infliggono{\\n}status Veleno. Con HP bassi, si{\\n}addormenta e recupera energia.{\\n}Se lo si attacca mentre dorme,{\\n}si sveglia e contrattacca con{\\n}Terremoto. Come tutti i mostri{\\n}vegetali, \u00E8 debole all\u2019elemento{\\n}Fuoco."
+    },
+    "154": {
+      "Name": "Luniodisko",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "155": {
+      "Name": "Sahagin",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "156": {
+      "Name": "Capitan Sahagin",
+      "Sensor": "Debole all\u2019elemento Tuono.",
+      "Scan": "Veloce, ma con potenza fisica e HP{\\n}bassi. Se da solo, non \u00E8 un nemico{\\n}temibile. Debole all\u2019elemento Tuono e{\\n}vulnerabile a status Blind e Sonno."
+    },
+    "157": {
+      "Name": "Garuda",
+      "Sensor": "Infliggendogli status Blind, \u00E8 pi\u00F9 facile schivarne gli attacchi.",
+      "Scan": "Potenza fisica e HP alti. Attenzione{\\n}all\u2019attacco totale Onda cosmica.{\\n}Infliggendogli status Blind, \u00E8 pi\u00F9{\\n}facile schivarne gli attacchi."
+    },
+    "158": {
+      "Name": "Klik",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "159": {
+      "Name": "Scaglia Emuzu",
+      "Sensor": "Toglie 1/4 degli HP con Antima.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "160": {
+      "Name": "Testa",
+      "Sensor": "Attaccarla per prevenire Fluido tossico.",
+      "Scan": "Le potenti braccia la proteggono{\\n}dagli attacchi fisici. Sconfiggere{\\n}prima le braccia con armi dotate di{\\n}abilit\u00E0 Perforazione, poi attaccare{\\n}il corpo. Quando la testa comincia{\\n}a muoversi nevroticamente, lancia{\\n}Fluido tossico: evitarlo attaccando{\\n}la testa."
+    },
+    "161": {
+      "Name": "Braccio",
+      "Sensor": "Corazza blindata che protegge il corpo.",
+      "Scan": "Le braccia proteggono la testa{\\n}dagli attacchi fisici. Sconfiggere{\\n}prima le braccia con armi dotate di{\\n}abilit\u00E0 Perforazione, poi attaccare{\\n}il corpo. Quando la testa comincia{\\n}a muoversi nevroticamente, lancia{\\n}Fluido tossico: evitarlo attaccando{\\n}la testa."
+    },
+    "162": {
+      "Name": "Lucchetto del cancello",
+      "Sensor": "Aprire il cancello per fuggire!",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "163": {
+      "Name": "Valefor",
+      "Sensor": "Sconfiggimi...",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "164": {
+      "Name": "Ifrit",
+      "Sensor": "Non avere piet\u00E0...",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "165": {
+      "Name": "Ixion",
+      "Sensor": "Finiscimi...",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "166": {
+      "Name": "Shiva",
+      "Sensor": "Sconfiggimi...",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "167": {
+      "Name": "Bahamut",
+      "Sensor": "Donami la pace eterna...",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "168": {
+      "Name": "Anima",
+      "Sensor": "Mea culpa...",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "169": {
+      "Name": "Yojimbo",
+      "Sensor": "Annientami...",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "170": {
+      "Name": "Camion blindato",
+      "Sensor": "\u00C8 caduto dall\u2019autostrada.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "171": {
+      "Name": "Lucchetto del cancello",
+      "Sensor": "Aprire il cancello per fuggire!",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "172": {
+      "Name": "Mostro 172",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "173": {
+      "Name": "Pagoda Yu",
+      "Sensor": "Attaccare e cercare di bloccarlo!",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "174": {
+      "Name": "Pagoda Yu",
+      "Sensor": "Attaccare e cercare di bloccarlo!",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "175": {
+      "Name": "Tentacolo",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "176": {
+      "Name": "Yu Yevon",
+      "Sensor": "Si impossessa degli Eoni.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "177": {
+      "Name": "Luniodisko",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "178": {
+      "Name": "Cindy",
+      "Sensor": "Facciamola finita...",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "179": {
+      "Name": "Sandy",
+      "Sensor": "Non piangere...",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "180": {
+      "Name": "Mindy",
+      "Sensor": "Addio...",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "181": {
+      "Name": "Thytan",
+      "Sensor": "Attenzione a Nagiharai. Evitare l\u2019attacco con Ambliopya X.",
+      "Scan": "Attacca chi ha pochi HP. Attenzione{\\n}all\u2019attacco totale Nagiharai. Non \u00E8{\\n}debole a nessun elemento. Dimezza{\\n}gli attacchi d\u2019elemento Tuono. Ef-{\\n}ficaci Ambliopya X e le armi dotate{\\n}dell\u2019abilit\u00E0 Perforazione."
+    },
+    "182": {
+      "Name": "Ultra Might",
+      "Sensor": "Se in coppia, attaccano con Nagiharai simmetrico. Sconfiggerne uno per volta.",
+      "Scan": "Sferra l\u2019attacco totale Nagiharai.{\\n}Ma se i due giganti sono allineati,{\\n}attaccano insieme con Nagiharai{\\n}simmetrico causando gravi danni.{\\n}Se uno assorbe gli elementi Tuono e{\\n}Fuoco, l\u2019altro assorbe Acqua e Gelo."
+    },
+    "183": {
+      "Name": "Ultra Might",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "184": {
+      "Name": "Ultra Might",
+      "Sensor": "Se in coppia, attaccano con Nagiharai simmetrico. Sconfiggerne uno per volta.",
+      "Scan": "Sferra l\u2019attacco totale Nagiharai.{\\n}Ma se i due giganti sono allineati,{\\n}attaccano insieme con Nagiharai{\\n}simmetrico causando gravi danni.{\\n}Se uno assorbe gli elementi Tuono e{\\n}Fuoco, l\u2019altro assorbe Acqua e Gelo."
+    },
+    "185": {
+      "Name": "Basilisk",
+      "Sensor": "Attenzione a Sguardo pietrificante che infligge status Pietra.",
+      "Scan": "Attenzione: quando il terzo occhio{\\n}attacca con Sguardo pietrificante,{\\n}potrebbe infliggere status Pietra.{\\n}Consigliabile curare lo status alte-{\\n}rato con Esna o con Ago dorato.{\\n}{CLR:YELLOW}Possibile apprendere la Nemitec{\\n}Fossilspiro."
+    },
+    "186": {
+      "Name": "Anacondar",
+      "Sensor": "Attenzione a Sguardo maledetto che infligge status Pietra.",
+      "Scan": "Attenzione: quando il terzo occhio{\\n}attacca con Sguardo maledetto,{\\n}quasi sicuramente infligge status{\\n}Pietra. Dopo aver subito diversi{\\n}attacchi, la coda lancia l\u2019attacco{\\n}totale a ultrasuoni Codata sonica.{\\n}{CLR:YELLOW}Possibile apprendere la Nemitec{\\n}Fossilspiro."
+    },
+    "187": {
+      "Name": "Adamanthart",
+      "Sensor": "Coperto da carapace.",
+      "Scan": "Coperto da un possente carapace.{\\n}Con la tecnica Respiro causa danni{\\n}d\u2019elemento Fuoco a tutti i nemici.{\\n}L\u2019attacco totale Terremoto causa{\\n}danni e rallenta la velocit\u00E0 d\u2019azione{\\n}della squadra. Efficaci Antiscutum{\\n}e Antimajix."
+    },
+    "188": {
+      "Name": "Varna",
+      "Sensor": "Poco efficaci gli attacchi elementali.",
+      "Scan": "Si autoapplica Haste e lancia magie:{\\n}contrattaccare con Dispel. Quando{\\n}effettua la concentrazione magica,{\\n}lancia Emblema della fede: proteg-{\\n}gersi con Shell, anche se potrebbe{\\n}essere annullata dal suo attacco{\\n}Dispel."
+    },
+    "189": {
+      "Name": "Ochu",
+      "Sensor": "Debole all\u2019elemento Fuoco.",
+      "Scan": "Con gli HP bassi, esegue Ochu dance{\\n}causando Blind, Mutismo e a volte{\\n}Caos e Lentezza a tutta la squadra.{\\n}Attenzione all\u2019attacco con le unghie{\\n}velenose. Come tutti i mostri vege-{\\n}tali, \u00E8 debole all\u2019elemento Fuoco."
+    },
+    "190": {
+      "Name": "Mandragora",
+      "Sensor": "Debole all\u2019elemento Fuoco.",
+      "Scan": "Quanti pi\u00F9 attacchi subisce, tanto{\\n}prima contrattacca con l\u2019attacco{\\n}totale Terremoto. Con gli HP bassi,{\\n}esegue Ochu dance causando Blind,{\\n}Mutismo e a volte Caos e Lentezza{\\n}a tutta la squadra. Attenzione anche{\\n}a Veleno. Debole all\u2019elemento Fuoco."
+    },
+    "191": {
+      "Name": "Unit\u00E0 99",
+      "Sensor": "Attacchi ravvicinati impossibili: sconfiggere i nemici di fronte e avvicinarsi.",
+      "Scan": "Macchina utilizzata segretamente{\\n}nel tempio di Yevon nonostante i{\\n}precetti del credo. Sferra attacchi{\\n}totali, ma solo a distanza."
+    },
+    "192": {
+      "Name": "Unit\u00E0 97",
+      "Sensor": "Attacchi ravvicinati impossibili: sconfiggere i nemici di fronte e avvicinarsi.",
+      "Scan": "Sferra attacchi totali, ma solo a{\\n}distanza. Inefficaci gli attacchi{\\n}con effetto ritardante."
+    },
+    "193": {
+      "Name": "Piros",
+      "Sensor": "Subiti 3 attacchi fisici, sferra Kamikaze.",
+      "Scan": "Subiti 3 attacchi, contrattacca l\u2019ul-{\\n}timo attaccante con la tecnica{\\n}Kamikaze. Se \u00E8 improbabile sconfig-{\\n}gerlo in 3 volte, difendersi con{\\n}Parafire. Debole a Gelo: usare Blizzard.{\\n}{CLR:YELLOW}Possibile apprendere {\\n}Kamikaze."
+    },
+    "194": {
+      "Name": "Granad",
+      "Sensor": "Subiti 3 attacchi fisici, sferra Kamikaze.",
+      "Scan": "Subiti 3 attacchi, contrattacca l\u2019ul-{\\n}timo attaccante con la tecnica{\\n}Kamikaze. Debole all\u2019elemento Gelo,{\\n}ma gode di alta difesa magica.{\\n}Per sconfiggerlo usare Antimajix{\\n}e una magia di elemento Gelo.{\\n}{CLR:YELLOW}Possibile apprendere Kamikaze."
+    },
+    "195": {
+      "Name": "Unit\u00E0 blindata 63",
+      "Sensor": "Quando rimane da solo, attacca con Mawashigeri.",
+      "Scan": "Macchina utilizzata segretamente{\\n}nel tempio di Yevon nonostante i{\\n}precetti del credo. Quando rimane{\\n}da solo attacca con Mawashigeri{\\n}mettendo l\u2019avversario fuori com-{\\n}battimento. {CLR:YELLOW}Possibile apprendere{\\n}la Nemitec Mawashigeri."
+    },
+    "196": {
+      "Name": "Unit\u00E0 blindata 11",
+      "Sensor": "Quando rimane da solo, attacca con Mawashigeri.",
+      "Scan": "Quando rimane da solo, attacca con{\\n}Mawashigeri mettendo l\u2019avversario{\\n}fuori combattimento. Inefficaci gli{\\n}attacchi con effetto ritardante.{\\n}{CLR:YELLOW}Possibile apprendere la Nemitec{\\n}Mawashigeri."
+    },
+    "197": {
+      "Name": "Templare",
+      "Sensor": "Sferra attacchi singoli con la carabina.",
+      "Scan": "Soldato del tempio di Yevon che{\\n}protegge il palazzo di S. Bevelle.{\\n}Sferra attacchi singoli con la{\\n}carabina causando danni fisici.{\\n}Efficace status Sonno."
+    },
+    "198": {
+      "Name": "Templare redivivo",
+      "Sensor": "Essere in status Zombie. Debole ad oggetti e magie di recupero.",
+      "Scan": "Soldato redivivo che protegge il{\\n}duomo di Yevon. Sferra attacchi{\\n}singoli con la carabina causando{\\n}danni fisici. Attenzione: a volte{\\n}infligge status Zombie."
+    },
+    "199": {
+      "Name": "Templare",
+      "Sensor": "Causa danni d\u2019elemento Fuoco a tutta la squadra col lanciafiamme.",
+      "Scan": "Soldato del tempio di Yevon che{\\n}protegge il palazzo di S. Bevelle.{\\n}Causa danni d\u2019elemento Fuoco a{\\n}tutta la squadra col lanciafiamme.{\\n}Efficace status Sonno."
+    },
+    "200": {
+      "Name": "Templare redivivo",
+      "Sensor": "Essere in status Zombie. Debole ad oggetti e magie di recupero.",
+      "Scan": "Soldato redivivo che protegge il{\\n}duomo di Yevon. Provoca danni di{\\n}elemento Fuoco a tutta la squadra{\\n}col lanciafiamme."
+    },
+    "201": {
+      "Name": "Koyokoyo",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "202": {
+      "Name": "Botte magica",
+      "Sensor": "Scegliere un occhio e attaccare. Se \u00E8 Giusto, un oggetto! Ma se \u00E8 Sbagliato...",
+      "Scan": "Se il bersaglio colpito \u00E8 Giusto, si{\\n}ottiene un oggetto. Se \u00E8 Sbagliato,{\\n}esplode e termina la battaglia cau-{\\n}sando gravi danni: consigliabile l\u2019uso{\\n}di oggetti di recupero. In totale, si{\\n}possono ottenere 8 tipi di oggetti."
+    },
+    "203": {
+      "Name": "Botte magica",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "204": {
+      "Name": "Botte magica",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "205": {
+      "Name": "Botte magica",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "206": {
+      "Name": "Botte magica",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "207": {
+      "Name": "Kyactus?",
+      "Sensor": "Sconfiggerlo prima che scappi via.",
+      "Scan": "Attenzione a 1.000 aghi: causa{\\n}inesorabilmente un danno di ben{\\n}1.000 HP. Magia poco efficace.{\\n}Alta destrezza nello schivare gli{\\n}attacchi. Quando perde HP, fugge{\\n}dalla battaglia. Consigliabile ap-{\\n}plicare Altol\u00E0."
+    },
+    "208": {
+      "Name": "Kyactus",
+      "Sensor": "Sconfiggerlo prima che scappi via.",
+      "Scan": "Attenzione a 10.000 aghi: causa{\\n}inesorabilmente un danno di ben{\\n}10.000 HP. Magia poco efficace.{\\n}Alta destrezza nello schivare gli{\\n}attacchi. Quando perde HP, fugge{\\n}dalla battaglia. Si ottiene una quan-{\\n}tit\u00E0 enorme di AP sconfiggendolo!"
+    },
+    "209": {
+      "Name": "Larva",
+      "Sensor": "Si applica Thundara e recupera HP e potenza.",
+      "Scan": "Quando ha HP a met\u00E0, recupera for-{\\n}ze e potenza magica con Thundara.{\\n}Infliggergli Mutismo con Silenziatore{\\n}per bloccare il meccanismo di recu-{\\n}pero. Debole all\u2019elemento Acqua: si{\\n}consiglia di usare Idrora."
+    },
+    "210": {
+      "Name": "Barbatos",
+      "Sensor": "Coperto da corazza blindata, ma con Antiscutum...",
+      "Scan": "Pesantemente corazzato. Efficace{\\n}Antiscutum, anche se contrattacca{\\n}con grande potenza. Attenzione all\u2019{\\n}attacco totale magico Shuttle vi-{\\n}scerale e all\u2019attacco totale fisico{\\n}Schiacciaossa: causano gravi danni."
+    },
+    "211": {
+      "Name": "???",
+      "Sensor": "Possibile sottrarre qualcosa con Ruba.",
+      "Scan": "In preparazione!"
+    },
+    "212": {
+      "Name": "Wendigo",
+      "Sensor": "Sferra solo attacchi fisici. Curandogli Berserk, diminuisce la potenza fisica, ma...",
+      "Scan": "Sferra solo attacchi fisici. Quando{\\n}alza le braccia in postura offensiva{\\n}e subisce un attacco fisico, con-{\\n}trattacca con potenza distruttiva."
+    },
+    "213": {
+      "Name": "Guardia Guado",
+      "Sensor": "Recupera HP con Autopozione. Impedirgli di usare oggetti.",
+      "Scan": "Recupera HP con Autopozione:{\\n}cercare un modo per non fargli{\\n}usare gli oggetti. Se \u00E8 in squadra{\\n}con altri mostri, spesso li rafforza{\\n}infliggendo loro status Berserk."
+    },
+    "214": {
+      "Name": "FungOngo",
+      "Sensor": "Contrattacca con Polline infliggendo status Sonno.",
+      "Scan": "Usa magia Fire: efficace infliggergli{\\n}status Mutismo. Subito un attacco{\\n}fisico, contrattacca con Polline:{\\n}attenzione, potrebbe infliggere{\\n}Sonno e Blind a tutta la squadra.{\\n}Colpirlo con magie{\\n}dopo avergli inflitto Sonno. Come{\\n}tutti i vegetali, \u00E8 debole a Fuoco."
+    },
+    "215": {
+      "Name": "Son",
+      "Sensor": "Contrattacca con Polline infliggendo status Sonno e Blind.",
+      "Scan": "Usa Fira: efficace infliggergli{\\n}status Sonno. Subito un attacco{\\n}fisico, contrattacca con Polline:{\\n}attenzione, potrebbe infliggere{\\n}Sonno e Blind a tutta la squadra.{\\n}Come tutti i mostri vegetali, \u00E8{\\n}debole all\u2019elemento Fuoco."
+    },
+    "216": {
+      "Name": "Exoray",
+      "Sensor": "Contrattacca con Polline infliggendo status Veleno, Mutismo e Blind.",
+      "Scan": "Usa Firaga: efficace infliggergli{\\n}status Mutismo. Subito un attacco{\\n}fisico, contrattacca con Polline:{\\n}attenzione, potrebbe infliggere{\\n}Veleno, Mutismo e Blind a tutta la{\\n}squadra. Come tutti i mostri ve-{\\n}getali, \u00E8 debole all\u2019elemento Fuoco."
+    },
+    "217": {
+      "Name": "Kushipos",
+      "Sensor": "A volte \u00E8 possibile infliggergli status Blind.",
+      "Scan": "Veloce. A volte \u00E8 possibile{\\n}infliggergli status Blind.{\\n}Efficace Altol\u00E0."
+    },
+    "218": {
+      "Name": "Byurobolos",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile (uso Omega)."
+    },
+    "219": {
+      "Name": "Esprit",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile (uso Omega)."
+    },
+    "220": {
+      "Name": "Alyadin",
+      "Sensor": "Attacca con Sentenza a inizio battaglia.",
+      "Scan": "I punti deboli elementali e gli ele-{\\n}menti che assorbe cambiano a ogni{\\n}incontro: scegliere attacchi appro-{\\n}priati. Attacca con Sentenza, ma se{\\n}non colpisce nessun avversario, a{\\n}volte lancia Ade. {CLR:YELLOW}Possibile appren-{\\n}dere la Nemitec Sentenza."
+    },
+    "221": {
+      "Name": "Balsamiko grasso",
+      "Sensor": "Assorbe elemento Acqua.",
+      "Scan": "Con la sua tecnica Semetragliatrice{\\n}causa leggeri danni fisici, ma pu\u00F2{\\n}infliggere status Caos. Come tutti{\\n}i mostri vegetali del deserto, as-{\\n}sorbe l\u2019elemento Acqua ed \u00E8 debole{\\n}all\u2019elemento Fuoco."
+    },
+    "222": {
+      "Name": "Guardia Guado",
+      "Sensor": "Tenta di bloccare le magie di Lulu.",
+      "Scan": "Manovra Piros e Chimera. Blocca le{\\n}magie di Lulu con Novox e Bailamme.{\\n}Per impedirgli di sigillare le magie,{\\n}consigliabile precederlo attaccando{\\n}con Silenziatore."
+    },
+    "223": {
+      "Name": "Tomberry",
+      "Sensor": "Attenzione: impiega 4 turni per avvicinarsi. Sconfiggerlo prima!",
+      "Scan": "Si avvicina in 4 turni, poi attacca{\\n}col coltello. Attenzione al forte{\\n}contrattacco Astio generale che{\\n}causa dei danni in proporzione al{\\n}numero di mostri gi\u00E0 sconfitti."
+    },
+    "224": {
+      "Name": "Mastro Tomberry",
+      "Sensor": "Attenzione: impiega 4 turni per avvicinarsi. Sconfiggerlo prima!",
+      "Scan": "Si avvicina in 4 turni, poi attacca{\\n}col coltello. Attenzione al forte{\\n}contrattacco Astio generale che{\\n}causa dei danni in proporzione al{\\n}numero di mostri gi\u00E0 sconfitti."
+    },
+    "225": {
+      "Name": "Occhio diabolico",
+      "Sensor": "Vola. Magia poco efficace. Attenzione a status Caos.",
+      "Scan": "Vola, difficile centrarlo. Debole{\\n}all\u2019elemento Fuoco. Alta difesa{\\n}magica. Pu\u00F2 infliggere status{\\n}Caos con Sguardo maledetto."
+    },
+    "226": {
+      "Name": "Piros",
+      "Sensor": "Subiti 3 attacchi fisici, sferra Kamikaze.",
+      "Scan": "Subiti 3 attacchi, contrattacca l\u2019ul-{\\n}timo attaccante con la tecnica d\u2019ele-{\\n}mento Fuoco Kamikaze. Se \u00E8 impro-{\\n}babile sconfiggerlo in 3 volte, difen-{\\n}dersi con Parafire contro l\u2019elemento{\\n}Fuoco. Debole a Gelo: usare Blizzara.{\\n}{CLR:YELLOW}Possibile apprendere la Nemitec{\\n}Kamikaze."
+    },
+    "227": {
+      "Name": "Chimera",
+      "Sensor": "Efficaci status Blind, Mutismo e Altol\u00E0.",
+      "Scan": "Attacca in quest\u2019ordine: il serpente{\\n}con Thundara, il toro con Assalto,{\\n}l\u2019aquila con Idrorespiro (attacco to-{\\n}tale Acqua), il leone con Carica sis-{\\n}mica (attacco Fuoco). Sono efficaci{\\n}Altol\u00E0 e gli status Blind e Mutismo.{\\n}{CLR:YELLOW}Possibile apprendere la Nemitec{\\n}Idrorespiro."
+    },
+    "228": {
+      "Name": "Bikorno",
+      "Sensor": "Infliggendogli status Blind, \u00E8 pi\u00F9 facile schivarne gli attacchi.",
+      "Scan": "Causa ingenti danni con la tecnica{\\n}Incornata, ma pu\u00F2 essere schivato{\\n}pi\u00F9 facilmente infliggendogli status{\\n}Blind. Efficace anche Narcoipnosi{\\n}che gli infligge status Sonno. {CLR:YELLOW}Pos-{\\n}sibile apprendere la Nemitec Piros-{\\n}bolle."
+    },
+    "229": {
+      "Name": "Defensor",
+      "Sensor": "Mostro di pietra, attacchi fisici poco efficaci.",
+      "Scan": "Potenza e difesa fisica alte: peri-{\\n}coloso affrontarlo faccia a faccia.{\\n}Contrattacca con Gancio esplosivo{\\n}che, oltre a causare danni fisici,{\\n}rallenta la velocit\u00E0 d\u2019azione. Usa{\\n}anche Difesa totale e la magia{\\n}Slowga."
+    },
+    "230": {
+      "Name": "Garuda",
+      "Sensor": "Infliggendogli status Blind, \u00E8 pi\u00F9 facile schivarne gli attacchi.",
+      "Scan": "Potenza fisica e HP alti. Attenzione{\\n}al suo attacco totale Onda cosmica.{\\n}Infliggendogli status Blind, \u00E8 pi\u00F9 fa-{\\n}cile schivarne gli attacchi."
+    },
+    "231": {
+      "Name": "Dingo",
+      "Sensor": "Veloce. Magia poco efficace.",
+      "Scan": "Veloce, difficile centrarlo. Alta{\\n}difesa magica. Prevenirne l\u2019attacco{\\n}abbattendolo subito. Efficace l\u2019at-{\\n}tacco rapido di {PC:00:TIDUS}."
+    },
+    "232": {
+      "Name": "Budino d\u2019acqua",
+      "Sensor": "Elemento Acqua. Abbattibile con magie d\u2019elemento opposto. Attacco fisico poco efficace.",
+      "Scan": "Morbido e sfuggente all\u2019attacco fi-{\\n}sico. Mostro elemento Acqua, debole{\\n}all\u2019elemento opposto Tuono. Efficace{\\n}la magia Thunder di Lulu. Recupera{\\n}HP assorbendo attacchi d\u2019elemento{\\n}Acqua: attenzione a non usare Idro."
+    },
+    "233": {
+      "Name": "Condor",
+      "Sensor": "Vola. Efficace la magia.",
+      "Scan": "Vola, difficile centrarlo.{\\n}Vittoria sicura con Wakka.{\\n}Debole all\u2019elemento Fuoco.{\\n}Efficace la magia Fire di Lulu."
+    },
+    "234": {
+      "Name": "Balsamiko",
+      "Sensor": "Debole all\u2019elemento Fuoco.",
+      "Scan": "Attenzione a Cerbottana: provoca{\\n}gravi danni e a volte pu\u00F2 infliggere{\\n}anche K.O. con un colpo solo. Come{\\n}tutti i mostri vegetali, \u00E8 debole all\u2019{\\n}elemento Fuoco. Efficace la magia{\\n}Fira di Lulu. {CLR:YELLOW}Possibile apprendere la{\\n}Nemitec Cerbottana."
+    },
+    "235": {
+      "Name": "Rarth",
+      "Sensor": "Coperto da carapace. Efficaci armi con Perforazione.",
+      "Scan": "Lento e coperto da carapace. Alta{\\n}difesa fisica e magica. Debole all\u2019{\\n}elemento Gelo e ad armi dotate{\\n}di abilit\u00E0 Perforazione. Auron pu\u00F2{\\n}sconfiggerlo con un sol colpo."
+    },
+    "236": {
+      "Name": "Bunyips",
+      "Sensor": "Coperto da carapace. Efficaci armi con Perforazione.",
+      "Scan": "Lento e coperto da carapace. Alta{\\n}difesa fisica e magica. Debole agli{\\n}elementi Gelo e Acqua e ad armi{\\n}dotate di abilit\u00E0 Perforazione."
+    },
+    "237": {
+      "Name": "???",
+      "Sensor": "??",
+      "Scan": "In preparazione!"
+    },
+    "238": {
+      "Name": "Zuu",
+      "Sensor": "Attenzione ad Onda cosmica quando le ali cominciano a brillare!",
+      "Scan": "Dimensioni gigantesche e alti HP.{\\n}Vola, ma \u00E8 facile centrarlo. Usare{\\n}attacchi molto potenti. Quando le{\\n}ali cominciano a brillare, al turno{\\n}successivo sferra l\u2019attacco totale{\\n}Onda cosmica: occhio agli HP!"
+    },
+    "239": {
+      "Name": "Zauras",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile (uso Omega)."
+    },
+    "240": {
+      "Name": "Haruma",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile (uso Omega)."
+    },
+    "241": {
+      "Name": "Budino d\u2019acqua",
+      "Sensor": "Elemento Acqua. Abbattibile con magie d\u2019elemento opposto. Attacco fisico poco efficace.",
+      "Scan": "Morbido e sfuggente all\u2019attacco fi-{\\n}sico. Mostro elemento Acqua, debole{\\n}all\u2019elemento opposto Tuono. Recupera{\\n}HP assorbendo gli attacchi di ele-{\\n}mento Acqua. Attaccare con magie{\\n}d\u2019elemento Tuono ed evitare quelle{\\n}d\u2019elemento Acqua."
+    },
+    "242": {
+      "Name": "Desflot",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile (uso Omega)."
+    },
+    "243": {
+      "Name": "Dedalarva",
+      "Sensor": "Si applica Idrora e recupera HP e potenza.",
+      "Scan": "Con gli HP a met\u00E0, recupera forze e{\\n}potenza magica con la magia Idrora.{\\n}Infliggergli Mutismo con Silenziatore{\\n}per bloccare il meccanismo di recu-{\\n}pero. Debole all\u2019elemento Tuono: si{\\n}consiglia di usare Thundaga."
+    },
+    "244": {
+      "Name": "Mechy",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile (uso Omega)."
+    },
+    "245": {
+      "Name": "Shumelke Krypt",
+      "Sensor": "Veloce. Magia poco efficace.",
+      "Scan": "Veloce, difficile centrarlo. Alta{\\n}difesa magica. Dimezza i danni{\\n}d\u2019elemento Fuoco e Acqua."
+    },
+    "246": {
+      "Name": "Paludomafut",
+      "Sensor": "Coperto da carapace. Efficaci armi con Perforazione.",
+      "Scan": "Lento e coperto da carapace.{\\n}Alta la difesa fisica e magica.{\\n}Debole all\u2019elemento Tuono e Gelo."
+    },
+    "247": {
+      "Name": "Occhio malvagio",
+      "Sensor": "Vola. Attacco magico poco efficace.",
+      "Scan": "Vola, difficile centrarlo. Debole{\\n}all\u2019elemento Fuoco, ma la difesa{\\n}magica \u00E8 alta. Attenzione: quando{\\n}attacca con Sguardo maledetto,{\\n}pu\u00F2 infliggere status Caos."
+    },
+    "248": {
+      "Name": "Isaaru",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "249": {
+      "Name": "Mira",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "250": {
+      "Name": "Belgemine",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "251": {
+      "Name": "Mimik",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "252": {
+      "Name": "Mimik",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "253": {
+      "Name": "Mimik",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "254": {
+      "Name": "Ala",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "255": {
+      "Name": "Botte magica",
+      "Sensor": "Scegliere un occhio e attaccare. Se \u00E8 Giusto, un oggetto! Ma se \u00E8 Sbagliato...",
+      "Scan": "Se il bersaglio colpito \u00E8 Giusto, si{\\n}ottiene un oggetto. Se \u00E8 Sbagliato,{\\n}esplode e termina la battaglia cau-{\\n}sando gravi danni: consigliabile l\u2019uso{\\n}di oggetti di recupero. In totale, si{\\n}possono ottenere 8 tipi di oggetti."
+    },
+    "256": {
+      "Name": "Mimik",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "257": {
+      "Name": "Pezzo di Mimik",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "258": {
+      "Name": "Valefor",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "259": {
+      "Name": "Ifrit",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "260": {
+      "Name": "Pezzo di Mimik",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "261": {
+      "Name": "Pezzo di Mimik",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "262": {
+      "Name": "Pezzo di Mimik",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "263": {
+      "Name": "Carabina",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "264": {
+      "Name": "Carabina a fuoco",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "265": {
+      "Name": "Anima",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "266": {
+      "Name": "Komainu",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "267": {
+      "Name": "Anima",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "268": {
+      "Name": "Anima",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "269": {
+      "Name": "Katana",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "270": {
+      "Name": "Kozuka",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "271": {
+      "Name": "Shuriken",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "272": {
+      "Name": "Testa",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "273": {
+      "Name": "Braccio",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "274": {
+      "Name": "Nishida-san",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "275": {
+      "Name": "Tsurugi",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "276": {
+      "Name": "Il Supremo",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "277": {
+      "Name": "Catastrophe",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "278": {
+      "Name": "Niente",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "279": {
+      "Name": "Mangiaterra",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "280": {
+      "Name": "Ultima X",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "281": {
+      "Name": "Titanosfera",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "282": {
+      "Name": "Vlakorados",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "283": {
+      "Name": "Shinryu",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "284": {
+      "Name": "Pugno",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "285": {
+      "Name": "Ixion",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "286": {
+      "Name": "Shiva",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "287": {
+      "Name": "Tsurugi",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "288": {
+      "Name": "Yojimbo",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "289": {
+      "Name": "Sandy",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "290": {
+      "Name": "Cindy",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "291": {
+      "Name": "Mindy",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "292": {
+      "Name": "Tanket",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "293": {
+      "Name": "Vizalsha",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "294": {
+      "Name": "Fenril",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "295": {
+      "Name": "Budino Jumbo",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "296": {
+      "Name": "Ornitorestes",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "297": {
+      "Name": "Pterix",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "298": {
+      "Name": "Honet",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "299": {
+      "Name": "Unioculum",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "300": {
+      "Name": "Trusthevis",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "301": {
+      "Name": "Abyss Worm",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "302": {
+      "Name": "Juggernaut",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "303": {
+      "Name": "Fefnil",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "304": {
+      "Name": "Molboro Beta",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "305": {
+      "Name": "Kolossos",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "306": {
+      "Name": "Elemento nega",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "307": {
+      "Name": "Catoplepas",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "308": {
+      "Name": "Chimera X",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "309": {
+      "Name": "Iaguaro regina",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "310": {
+      "Name": "Clod d\u2019acciaio",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "311": {
+      "Name": "Yormungand",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "312": {
+      "Name": "Abadon",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "313": {
+      "Name": "Re Piros",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "314": {
+      "Name": "Kyactus",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "315": {
+      "Name": "Vorban",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "316": {
+      "Name": "Sonnellino",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "317": {
+      "Name": "Don Tomberry",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "318": {
+      "Name": "Espada",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "319": {
+      "Name": "Piros",
+      "Sensor": "Subiti 3 attacchi fisici, sferra Kamikaze.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "320": {
+      "Name": "Bikorno",
+      "Sensor": "Infliggendogli status Blind, \u00E8 possibile neutralizzarne gli attacchi.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "321": {
+      "Name": "Vulture",
+      "Sensor": "Infliggendogli status Blind, \u00E8 pi\u00F9 facile schivarne gli attacchi.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "322": {
+      "Name": "Basilisk",
+      "Sensor": "Attenzione allo sguardo: pu\u00F2 infliggere status Pietra.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "323": {
+      "Name": "Ochu",
+      "Sensor": "Debole all\u2019attacco d\u2019elemento Fuoco.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "324": {
+      "Name": "Larva",
+      "Sensor": "Messaggio della finestra informazioni.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "325": {
+      "Name": "Thytan",
+      "Sensor": "Messaggio della finestra informazioni.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "326": {
+      "Name": "Chimera",
+      "Sensor": "Messaggio della finestra informazioni.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "327": {
+      "Name": "Mostro 84",
+      "Sensor": "Messaggio della finestra informazioni.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "328": {
+      "Name": "Kyactus?",
+      "Sensor": "Sconfiggerlo prima che scappi via.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "329": {
+      "Name": "Zuu",
+      "Sensor": "Messaggio della finestra informazioni.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "330": {
+      "Name": "Anellidus",
+      "Sensor": "Messaggio della finestra informazioni.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "331": {
+      "Name": "Fantasma",
+      "Sensor": "Messaggio della finestra informazioni.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "332": {
+      "Name": "Molboro",
+      "Sensor": "Messaggio della finestra informazioni.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "333": {
+      "Name": "Ashoor",
+      "Sensor": "Messaggio della finestra informazioni.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "334": {
+      "Name": "Dark Valefor",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "335": {
+      "Name": "Dark Ifrit",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "336": {
+      "Name": "Dark Ixion",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "337": {
+      "Name": "Dark Shiva",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "338": {
+      "Name": "Dark Bahamut",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "339": {
+      "Name": "Dark Anima",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "340": {
+      "Name": "Dark Yojimbo",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "341": {
+      "Name": "Dark Cindy",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "342": {
+      "Name": "Dark Sandy",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "343": {
+      "Name": "Dark Mindy",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "344": {
+      "Name": "Der Richter",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "345": {
+      "Name": "Mano destra",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "346": {
+      "Name": "Mano sinistra",
+      "Sensor": "Abilit\u00E0 Spot inapplicabile.",
+      "Scan": "Magia Scan inapplicabile."
+    },
+    "347": {
+      "Name": "Sconosciuto",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "348": {
+      "Name": "Sconosciuto",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "349": {
+      "Name": "Sconosciuto",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "350": {
+      "Name": "Sconosciuto",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "351": {
+      "Name": "Sconosciuto",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "352": {
+      "Name": "Sconosciuto",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "353": {
+      "Name": "Sconosciuto",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "354": {
+      "Name": "Sconosciuto",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "355": {
+      "Name": "Sconosciuto",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "356": {
+      "Name": "Sconosciuto",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "357": {
+      "Name": "Sconosciuto",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "358": {
+      "Name": "Sconosciuto",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "359": {
+      "Name": "Sconosciuto",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "360": {
+      "Name": "Sconosciuto",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "361": {
+      "Name": "Sconosciuto",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "362": {
+      "Name": "Sconosciuto",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "363": {
+      "Name": "Sconosciuto",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "364": {
+      "Name": "Sconosciuto",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "365": {
+      "Name": "Sconosciuto",
+      "Sensor": "?",
+      "Scan": "?"
+    }
+  }
+}

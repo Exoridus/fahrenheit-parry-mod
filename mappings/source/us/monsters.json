@@ -1,0 +1,1841 @@
+{
+  "SchemaVersion": 1,
+  "Domain": "monsters",
+  "Locale": "us",
+  "GeneratedAtUtc": "2026-03-04T10:54:18.7674413Z",
+  "SourceFiles": [
+    "READ_MONSTER_LOCALIZATIONS__us.txt"
+  ],
+  "Entries": {
+    "0": {
+      "Name": "Monster 0",
+      "Sensor": "Info window message",
+      "Scan": "Scan window message"
+    },
+    "1": {
+      "Name": "Raldo",
+      "Sensor": "Covered by a hard shell. {CLR:OL_CYAN}Piercing{CLR:WHITE} weapons are the way to go.",
+      "Scan": "Covered by a hard shell.{\\n}Slow-moving, but has high{\\n}physical and magic defense.{\\n}Vulnerable to ice.{\\n}Falls easily to {CLR:OL_CYAN}piercing{CLR:WHITE} weapons.{\\n}Have Auron slice it down the{\\n}middle."
+    },
+    "2": {
+      "Name": "Bunyip",
+      "Sensor": "Covered by a hard shell. {CLR:OL_CYAN}Piercing{CLR:WHITE} weapons are the way to go.",
+      "Scan": "Covered by a hard shell.{\\n}Slow-moving, but has high{\\n}physical and magic defense.{\\n}Vulnerable to ice and water.{\\n}Falls easily to {CLR:OL_CYAN}piercing{CLR:WHITE} weapons."
+    },
+    "3": {
+      "Name": "Murussu",
+      "Sensor": "Covered by a hard shell. {CLR:OL_CYAN}Piercing{CLR:WHITE} weapons are the way to go. Watch out for {CLR:OL_CYAN}slow{CLR:WHITE}.",
+      "Scan": "Covered by a hard shell.{\\n}Slow-moving, but has high{\\n}physical and magic defense.{\\n}Vulnerable to fire and lightning.{\\n}Its {CLR:OL_CYAN}Bash{CLR:WHITE} may inflict {CLR:OL_CYAN}slow{CLR:WHITE}."
+    },
+    "4": {
+      "Name": "Mafdet",
+      "Sensor": "Covered by a hard shell. {CLR:OL_CYAN}Piercing{CLR:WHITE} weapons are the way to go. Watch out for {CLR:OL_CYAN}slow{CLR:WHITE}.",
+      "Scan": "Covered by a hard shell.{\\n}Slow-moving, but has high{\\n}physical and magic defense.{\\n}Vulnerable to lightning and ice.{\\n}Its {CLR:OL_CYAN}Bash{CLR:WHITE} may inflict {CLR:OL_CYAN}slow{CLR:WHITE}."
+    },
+    "5": {
+      "Name": "Shred",
+      "Sensor": "Covered by a hard shell. {CLR:OL_CYAN}Piercing{CLR:WHITE} weapons are the way to go. Watch out for {CLR:OL_CYAN}slow{CLR:WHITE}.",
+      "Scan": "Covered by a hard shell.{\\n}Slow-moving, but has high{\\n}physical and magic defense.{\\n}Vulnerable to fire, but takes{\\n}only half damage from other{\\n}elements.{\\n}Its {CLR:OL_CYAN}Bash{CLR:WHITE} may inflict {CLR:OL_CYAN}slow{CLR:WHITE}."
+    },
+    "6": {
+      "Name": "Gandarewa",
+      "Sensor": "Aerial. Resistant to magic.",
+      "Scan": "Aerial and hard to hit.{\\n}Casts {CLR:OL_CYAN}Thunder{CLR:WHITE}.{\\n}It\u2019s vulnerable to water, but{\\n}has high magic defense.{\\n}Use Wakka to knock it out of{\\n}the sky."
+    },
+    "7": {
+      "Name": "Aerouge",
+      "Sensor": "Aerial. Resistant to magic.",
+      "Scan": "Aerial and hard to hit.{\\n}It\u2019s weak against water,{\\n}but has high magic defense.{\\n}The only attack it has is{\\n}{CLR:OL_CYAN}Thundara{CLR:WHITE}, so inflict {CLR:OL_CYAN}silence{CLR:WHITE}{\\n}to leave it powerless."
+    },
+    "8": {
+      "Name": "Imp",
+      "Sensor": "Aerial. Resistant to magic.",
+      "Scan": "Aerial and hard to hit.{\\n}It\u2019s weak against water,{\\n}but has high magic defense.{\\n}The only attack it has is{\\n}{CLR:OL_CYAN}Thundaga{CLR:WHITE}, so inflict {CLR:OL_CYAN}silence{CLR:WHITE}{\\n}to leave it powerless."
+    },
+    "9": {
+      "Name": "Dingo",
+      "Sensor": "Very nimble. Resistant to magic.",
+      "Scan": "Very nimble and hard to hit.{\\n}Magic defense is also high.{\\n}Try to defeat it quickly to{\\n}avoid damage.{\\n}Attack swiftly with {PC:00:TIDUS}."
+    },
+    "10": {
+      "Name": "Mi\u2019ihen Fang",
+      "Sensor": "Very nimble. Resistant to magic.",
+      "Scan": "Very nimble and hard to hit.{\\n}Magic defense is also high.{\\n}It\u2019s vulnerable to fire- and{\\n}water-based attacks, so use{\\n}weapons with these elements{\\n}to inflict greater damage."
+    },
+    "11": {
+      "Name": "Garm",
+      "Sensor": "Very nimble. Resistant to magic.",
+      "Scan": "Very nimble and hard to hit.{\\n}Magic defense is also high.{\\n}Defeat it quickly to avoid{\\n}damage.{\\n}It\u2019s vulnerable to lightning{\\n}and fire."
+    },
+    "12": {
+      "Name": "Snow Wolf",
+      "Sensor": "Very nimble. Resistant to magic.",
+      "Scan": "Very nimble and hard to hit.{\\n}Magic defense is also high.{\\n}Defeat it quickly to avoid{\\n}damage.{\\n}It\u2019s vulnerable to fire."
+    },
+    "13": {
+      "Name": "Sand Wolf",
+      "Sensor": "Very nimble. Resistant to magic. Watch out for {CLR:OL_CYAN}sleep{CLR:WHITE} and {CLR:OL_CYAN}silence{CLR:WHITE}.",
+      "Scan": "Very nimble and hard to hit.{\\n}Magic defense is also high.{\\n}Defeat it quickly to avoid{\\n}damage.{\\n}Vulnerable to fire and ice.{\\n}Its attacks may cause {CLR:OL_CYAN}sleep{CLR:WHITE}{\\n}and {CLR:OL_CYAN}silence{CLR:WHITE}."
+    },
+    "14": {
+      "Name": "Skoll",
+      "Sensor": "Very nimble. Resistant to magic. Watch out for {CLR:OL_CYAN}sleep{CLR:WHITE} and {CLR:OL_CYAN}silence{CLR:WHITE}.",
+      "Scan": "Very nimble and hard to hit.{\\n}Magic defense is also high.{\\n}Defeat it quickly to avoid{\\n}damage.{\\n}Vulnerable to fire and lightning.{\\n}Its attacks may cause {CLR:OL_CYAN}sleep{CLR:WHITE}{\\n}and {CLR:OL_CYAN}silence{CLR:WHITE}."
+    },
+    "15": {
+      "Name": "Bandersnatch",
+      "Sensor": "Very nimble. Resistant to magic. Watch out for {CLR:OL_CYAN}sleep{CLR:WHITE} and {CLR:OL_CYAN}silence{CLR:WHITE}.",
+      "Scan": "Very nimble and hard to hit.{\\n}Magic defense is also high.{\\n}Defeat it quickly to avoid{\\n}damage.{\\n}Vulnerable to fire.{\\n}Its attacks may cause {CLR:OL_CYAN}sleep{CLR:WHITE}{\\n}and {CLR:OL_CYAN}silence{CLR:WHITE}."
+    },
+    "16": {
+      "Name": "Water Flan",
+      "Sensor": "Water elemental. Vulnerable to opposing element. Resistant to physical attacks.",
+      "Scan": "Water-based.{\\n}So soft, it\u2019s hard to damage{\\n}physically.{\\n}Weak against lightning, so blast{\\n}it with Lulu\u2019s {CLR:OL_CYAN}Thunder{CLR:WHITE} spell.{\\n}Don\u2019t use {CLR:OL_CYAN}Water{CLR:WHITE} or it will{\\n}recover HP."
+    },
+    "17": {
+      "Name": "Thunder Flan",
+      "Sensor": "Lightning elemental. Vulnerable to opposing element. Resistant to physical attacks.",
+      "Scan": "Lightning-based.{\\n}So soft, it\u2019s hard to damage{\\n}physically.{\\n}Weak against water, so blast{\\n}it with {CLR:OL_CYAN}Water{CLR:WHITE}.{\\n}Don\u2019t use lightning or it will{\\n}recover HP."
+    },
+    "18": {
+      "Name": "Snow Flan",
+      "Sensor": "Ice elemental. Vulnerable to opposing element. Resistant to physical attacks.",
+      "Scan": "Ice-based.{\\n}So soft, it\u2019s hard to damage{\\n}physically.{\\n}Weak against fire, but will{\\n}absorb HP from ice.{\\n}Casts {CLR:OL_CYAN}Blizzard{CLR:WHITE}."
+    },
+    "19": {
+      "Name": "Ice Flan",
+      "Sensor": "Ice elemental. Vulnerable to opposing element. Resistant to physical attacks.",
+      "Scan": "Ice-based.{\\n}So soft, it\u2019s hard to damage{\\n}physically.{\\n}Weak against fire, but will{\\n}absorb HP from ice."
+    },
+    "20": {
+      "Name": "Flame Flan",
+      "Sensor": "Fire elemental. Vulnerable to opposing element. Resistant to physical attacks.",
+      "Scan": "Fire-based.{\\n}So soft, it\u2019s hard to damage{\\n}physically.{\\n}Weak against ice, but absorbs{\\n}HP from fire.{\\n}Casts {CLR:OL_CYAN}Firaga{CLR:WHITE}."
+    },
+    "21": {
+      "Name": "Dark Flan",
+      "Sensor": "No elemental weaknesses. Resistant to physical attacks.",
+      "Scan": "Resistant to physical attacks{\\n}and cuts all elemental damage{\\n}by half.{\\n}Casts non-elemental magic{\\n}like {CLR:OL_CYAN}Demi{CLR:WHITE}, {CLR:OL_CYAN}Bio{CLR:WHITE}, {CLR:OL_CYAN}Flare{CLR:WHITE}, {CLR:OL_CYAN}Osmose{CLR:WHITE},{\\n}and {CLR:OL_CYAN}Drain{CLR:WHITE}.{\\n}{\\n}{CLR:YELLOW}Kimahri can learn {CLR:OL_CYAN}White Wind{CLR:YELLOW}.{CLR:WHITE}"
+    },
+    "22": {
+      "Name": "Dinonix",
+      "Sensor": "Very nimble. Resistant to magic.",
+      "Scan": "Very nimble and hard to hit.{\\n}Magic defense is also high.{\\n}Defeat it quickly to avoid{\\n}damage.{\\n}Vulnerable to ice."
+    },
+    "23": {
+      "Name": "Ipiria",
+      "Sensor": "Very nimble. Resistant to magic.",
+      "Scan": "Very nimble and hard to hit.{\\n}Magic defense is also high.{\\n}Defeat it quickly to avoid{\\n}damage.{\\n}Takes only half damage from {\\n}fire, but vulnerable to ice."
+    },
+    "24": {
+      "Name": "Raptor",
+      "Sensor": "Very nimble. Resistant to magic.",
+      "Scan": "Very nimble and hard to hit.{\\n}Magic defense is also high.{\\n}Defeat it quickly to avoid{\\n}damage.{\\n}Takes only half damage from{\\n}fire and lightning, but is{\\n}vulnerable to ice."
+    },
+    "25": {
+      "Name": "Melusine",
+      "Sensor": "Very nimble. Resistant to magic. Watch out for {CLR:OL_CYAN}petrification{CLR:WHITE} and {CLR:OL_CYAN}silence{CLR:WHITE}.",
+      "Scan": "Very nimble and hard to hit.{\\n}Magic defense is also high.{\\n}Takes only half damage from{\\n}fire and lightning.{\\n}Attacks may cause {CLR:OL_CYAN}petrification{CLR:WHITE}{\\n}and {CLR:OL_CYAN}silence{CLR:WHITE}."
+    },
+    "26": {
+      "Name": "Iguion",
+      "Sensor": "Very nimble. Resistant to magic. Watch out for {CLR:OL_CYAN}petrification{CLR:WHITE} and {CLR:OL_CYAN}silence{CLR:WHITE}.",
+      "Scan": "Very nimble and hard to hit.{\\n}Magic defense is also high.{\\n}Takes only half damage from{\\n}fire and water.{\\n}Attacks may cause {CLR:OL_CYAN}petrification{CLR:WHITE}{\\n}and {CLR:OL_CYAN}silence{CLR:WHITE}."
+    },
+    "27": {
+      "Name": "Yowie",
+      "Sensor": "Very nimble. Resistant to magic. Watch out for {CLR:OL_CYAN}petrification{CLR:WHITE} and {CLR:OL_CYAN}silence{CLR:WHITE}.",
+      "Scan": "Very nimble and hard to hit.{\\n}Magic defense is also high.{\\n}Takes only half damage from{\\n}fire, lightning, and water.{\\n}Attacks may cause {CLR:OL_CYAN}petrification{CLR:WHITE}{\\n}and {CLR:OL_CYAN}silence{CLR:WHITE}."
+    },
+    "28": {
+      "Name": "Condor",
+      "Sensor": "Aerial. Magic attacks are the way to go.",
+      "Scan": "Aerial and hard to hit.{\\n}Use Wakka\u2019s attack to knock it{\\n}down.{\\n}It\u2019s vulnerable to fire, so you{\\n}can also use Lulu\u2019s {CLR:OL_CYAN}Fire{CLR:WHITE} spell."
+    },
+    "29": {
+      "Name": "Simurgh",
+      "Sensor": "Aerial. Magic attacks are the way to go. Watch out for {CLR:OL_CYAN}darkness{CLR:WHITE}.",
+      "Scan": "Aerial and hard to hit.{\\n}Magic attacks are effective.{\\n}It\u2019s vulnerable to fire, so use{\\n}{CLR:OL_CYAN}Fira{CLR:WHITE} to achieve Overkill.{\\n}Attacks may inflict {CLR:OL_CYAN}darkness{CLR:WHITE}."
+    },
+    "30": {
+      "Name": "Alcyone",
+      "Sensor": "Aerial. Magic attacks are the way to go. Watch out for {CLR:OL_CYAN}darkness{CLR:WHITE}.",
+      "Scan": "Aerial and hard to hit.{\\n}Magic attacks are effective.{\\n}It\u2019s vulnerable to fire, so use{\\n}{CLR:OL_CYAN}Fira{CLR:WHITE} to achieve Overkill.{\\n}Attacks may inflict {CLR:OL_CYAN}darkness{CLR:WHITE}."
+    },
+    "31": {
+      "Name": "Killer Bee",
+      "Sensor": "Aerial. Vulnerable to ice. Watch out for {CLR:OL_CYAN}poison{CLR:WHITE}.",
+      "Scan": "Aerial and hard to hit.{\\n}Use Wakka\u2019s attack to knock it{\\n}down.{\\n}It\u2019s vulnerable to ice, so {CLR:OL_CYAN}Blizzard{CLR:WHITE}{\\n}is also effective.{\\n}Attacks may inflict {CLR:OL_CYAN}poison{CLR:WHITE}."
+    },
+    "32": {
+      "Name": "Bite Bug",
+      "Sensor": "Aerial. Vulnerable to ice. Watch out for {CLR:OL_CYAN}poison{CLR:WHITE}.",
+      "Scan": "Aerial and hard to hit.{\\n}Magic attacks are effective.{\\n}It\u2019s vulnerable to ice, so cast{\\n}{CLR:OL_CYAN}Blizzard{CLR:WHITE} to achieve Overkill.{\\n}Attacks may inflict {CLR:OL_CYAN}poison{CLR:WHITE}."
+    },
+    "33": {
+      "Name": "Wasp",
+      "Sensor": "Aerial. Vulnerable to ice. Watch out for {CLR:OL_CYAN}poison{CLR:WHITE}.",
+      "Scan": "Aerial and hard to hit.{\\n}Magic attacks are effective.{\\n}It\u2019s vulnerable to ice, so cast{\\n}{CLR:OL_CYAN}Blizzara{CLR:WHITE} to achieve Overkill.{\\n}Attacks may inflict {CLR:OL_CYAN}poison{CLR:WHITE}."
+    },
+    "34": {
+      "Name": "Nebiros",
+      "Sensor": "Aerial. Vulnerable to ice. Watch out for {CLR:OL_CYAN}poison{CLR:WHITE}.",
+      "Scan": "Aerial and hard to hit.{\\n}Magic attacks are effective.{\\n}It\u2019s vulnerable to ice, so cast{\\n}{CLR:OL_CYAN}Blizzaga{CLR:WHITE} to achieve Overkill.{\\n}Attacks may inflict {CLR:OL_CYAN}poison{CLR:WHITE}."
+    },
+    "35": {
+      "Name": "Floating Eye",
+      "Sensor": "Aerial. Resistant to magic.",
+      "Scan": "Aerial and hard to hit.{\\n}Its weakness is lightning, but{\\n}it has high magic defense.{\\n}Use Wakka\u2019s attack to defeat it."
+    },
+    "36": {
+      "Name": "Buer",
+      "Sensor": "Aerial. Resistant to magic. Watch out for {CLR:OL_CYAN}confusion{CLR:WHITE}.",
+      "Scan": "Aerial and hard to hit.{\\n}Its weakness is water, but{\\n}it has high magic defense.{\\n}Its {CLR:OL_CYAN}Gaze{CLR:WHITE} may cause {CLR:OL_CYAN}confusion{CLR:WHITE}."
+    },
+    "37": {
+      "Name": "Evil Eye",
+      "Sensor": "Aerial. Resistant to magic. Watch out for {CLR:OL_CYAN}confusion{CLR:WHITE}.",
+      "Scan": "Aerial and hard to hit.{\\n}Its weakness is fire, but{\\n}it has high magic defense.{\\n}Its {CLR:OL_CYAN}Gaze{CLR:WHITE} may cause {CLR:OL_CYAN}confusion{CLR:WHITE}."
+    },
+    "38": {
+      "Name": "Ahriman",
+      "Sensor": "Aerial. Resistant to magic. Watch out for {CLR:OL_CYAN}confusion{CLR:WHITE}.",
+      "Scan": "Aerial and hard to hit.{\\n}It has high magic defense and{\\n}no elemental weaknesses.{\\n}Its {CLR:OL_CYAN}Gaze{CLR:WHITE} may cause {CLR:OL_CYAN}confusion{CLR:WHITE}.{\\n}It also has {CLR:OL_CYAN}Ultrasonics{CLR:WHITE}, which{\\n}strikes all characters."
+    },
+    "39": {
+      "Name": "Ragora",
+      "Sensor": "Vulnerable to fire.",
+      "Scan": "Watch out for its powerful {CLR:OL_CYAN}Seed{\\n}Cannon{CLR:WHITE}.{\\n}One bad hit will knock characters{\\n}out.{\\n}Plants tend to be weak against{\\n}fire, so have Lulu cast {CLR:OL_CYAN}Fira{CLR:WHITE}.{\\n}{\\n}{CLR:YELLOW}Kimahri can learn {CLR:OL_CYAN}Seed Cannon{CLR:YELLOW}.{CLR:WHITE}"
+    },
+    "40": {
+      "Name": "Grat",
+      "Sensor": "Vulnerable to fire.",
+      "Scan": "Its {CLR:OL_CYAN}Seed Cannon{CLR:WHITE} packs quite{\\n}a punch.{\\n}{CLR:OL_CYAN}Seed Burst{CLR:WHITE} doesn\u2019t do much{\\n}damage, but may inflict{\\n}{CLR:OL_CYAN}confusion{CLR:WHITE} on characters.{\\n}Vulnerable to fire.{\\n}{\\n}{CLR:YELLOW}Kimahri can learn {CLR:OL_CYAN}Seed Cannon{CLR:YELLOW}.{CLR:WHITE}"
+    },
+    "41": {
+      "Name": "Sahagin",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "42": {
+      "Name": "Sahagin",
+      "Sensor": "Vulnerable to lightning. Slow on land.",
+      "Scan": "Very nimble, but attacks are{\\n}weak.{\\n}HP is also low, so it\u2019s no threat{\\n}when it appears alone.{\\n}Vulnerable to lightning.{\\n}Cripple it early by inflicting{\\n}{CLR:OL_CYAN}darkness{CLR:WHITE} or {CLR:OL_CYAN}sleep{CLR:WHITE} on it."
+    },
+    "43": {
+      "Name": "Sahagin",
+      "Sensor": "Vulnerable to lightning. Slow on land.",
+      "Scan": "Although it\u2019s slow on land,{\\n}watch out for its {CLR:OL_CYAN}Water Spurt{CLR:WHITE}.{\\n}Vulnerable to lightning.{\\n}Cripple it early by inflicting{\\n}{CLR:OL_CYAN}darkness{CLR:WHITE} or {CLR:OL_CYAN}sleep{CLR:WHITE} on it."
+    },
+    "44": {
+      "Name": "Garuda",
+      "Sensor": "Dodging its attacks is easier after inflicting {CLR:OL_CYAN}darkness{CLR:WHITE}.",
+      "Scan": "It has high strength and{\\n}tons of HP.{\\n}Beware of {CLR:OL_CYAN}Sonic Boom{CLR:WHITE}, which hits{\\n}all characters.{\\n}Dodge its attacks more easily by{\\n}inflicting {CLR:OL_CYAN}darkness{CLR:WHITE}."
+    },
+    "45": {
+      "Name": "Zu",
+      "Sensor": "Watch out for {CLR:OL_CYAN}Sonic Boom{CLR:WHITE} when wings glow.",
+      "Scan": "High HP. Aerial, but so big that{\\n}it\u2019s easy to hit.{\\n}Its wings will start flashing{\\n}the turn before it unleashes{\\n}{CLR:OL_CYAN}Sonic Boom{CLR:WHITE}.{\\n}{\\n}Use {CLR:OL_CYAN}Dark Buster{CLR:WHITE} and strong{\\n}attacks, or else..."
+    },
+    "46": {
+      "Name": "Sand Worm",
+      "Sensor": "Watch out for {CLR:OL_CYAN}Earthquake{CLR:WHITE}, which hits all. Inflict {CLR:OL_CYAN}darkness{CLR:WHITE} to avoid its head butt.",
+      "Scan": "Watch out for its {CLR:OL_CYAN}Earthquake{CLR:WHITE},{\\n}which hits all characters.{\\n}If a character is {CLR:OL_CYAN}Swallowed{CLR:WHITE},{\\n}he will be unavailable until the{\\n}worm {CLR:OL_CYAN}Regurgitates{CLR:WHITE} him back out.{\\n}Try inflicting {CLR:OL_CYAN}darkness{CLR:WHITE} and {CLR:OL_CYAN}sleep{CLR:WHITE}."
+    },
+    "47": {
+      "Name": "Land Worm",
+      "Sensor": "Watch out for {CLR:OL_CYAN}Earthquake{CLR:WHITE}, which hits all.  It\u2019ll be a long battle, so keep an eye on your HP.",
+      "Scan": "Beware of its {CLR:OL_CYAN}Earthquake{CLR:WHITE},{\\n}which hits all.{\\n}Inflict {CLR:OL_CYAN}sleep{CLR:WHITE} and {CLR:OL_CYAN}darkness{CLR:WHITE}{\\n}on it to hinder its attacks.{\\n}Both its physical and magic{\\n}defense are high, so use{\\n}{CLR:OL_CYAN}Armor Break{CLR:WHITE} and {CLR:OL_CYAN}Mental Break{CLR:WHITE}."
+    },
+    "48": {
+      "Name": "Defender",
+      "Sensor": "Low magic defense.",
+      "Scan": "Strength and defense are high.{\\n}There is a 1/2 chance of the{\\n}monster using {CLR:OL_CYAN}Haymaker{CLR:WHITE}, so{\\n}be sure to raise your defense.{\\n}Use magic often, since its{\\n}magic defense is low."
+    },
+    "49": {
+      "Name": "Defender Z",
+      "Sensor": "{CLR:OL_CYAN}Mental Break{CLR:WHITE} works well.",
+      "Scan": "Strength, physical, and magic{\\n}defense are high.{\\n}There is a 1/2 chance of the{\\n}monster using {CLR:OL_CYAN}Haymaker{CLR:WHITE}.{\\n}When HP is low, it also releases{\\n}{CLR:OL_CYAN}Blast Punch{CLR:WHITE}, which delays turns."
+    },
+    "50": {
+      "Name": "Ghost",
+      "Sensor": "Casts {CLR:OL_CYAN}Doom{CLR:WHITE} at the beginning of battle.",
+      "Scan": "Casts {CLR:OL_CYAN}Doom{CLR:WHITE} at the beginning of{\\n}battle.{\\n}Defeat it before the countdown{\\n}runs out to avoid {CLR:OL_CYAN}KO{CLR:WHITE}.{\\n}Its elemental weaknesses change{\\n}every battle.{\\n}{\\n}{CLR:YELLOW}Kimahri can learn {CLR:OL_CYAN}Doom{CLR:YELLOW}.{CLR:WHITE}"
+    },
+    "51": {
+      "Name": "Phlegyas",
+      "Sensor": "Watch out when it starts glowing. It releases {CLR:OL_CYAN}Sonic Wave{CLR:WHITE} after the third pulse.",
+      "Scan": "It starts glowing when hit.{\\n}After the 3rd pulse, it attacks{\\n}with a {CLR:OL_CYAN}Sonic Wave{CLR:WHITE} that hits all.{\\n}Put it to {CLR:OL_CYAN}sleep{CLR:WHITE} to prevent it{\\n}from glowing.{\\n}It takes only half damage from{\\n}water.{\\n}Weak against lightning."
+    },
+    "52": {
+      "Name": "Achelous",
+      "Sensor": "Watch out when it starts glowing. It releases {CLR:OL_CYAN}Sonic Wave{CLR:WHITE} after the third pulse.",
+      "Scan": "It starts glowing when hit.{\\n}After the 3rd pulse, it attacks{\\n}with a {CLR:OL_CYAN}Sonic Wave{CLR:WHITE}.{\\n}Put it to {CLR:OL_CYAN}sleep{CLR:WHITE} to prevent it{\\n}from glowing.{\\n}It takes no damage from water,{\\n}but is weak against lightning."
+    },
+    "53": {
+      "Name": "Remora",
+      "Sensor": "Watch out for {CLR:OL_CYAN}Maelstrom{CLR:WHITE}.",
+      "Scan": "The more you attack it the{\\n}sooner it casts {CLR:OL_CYAN}Maelstrom{CLR:WHITE}.{\\n}Takes half damage from water.{\\n}Weak against lightning.{\\n}{CLR:OL_CYAN}Darkness{CLR:WHITE} and {CLR:OL_CYAN}poison{CLR:WHITE} are the{\\n}way to go."
+    },
+    "54": {
+      "Name": "Maelspike",
+      "Sensor": "Watch out for {CLR:OL_CYAN}Maelstrom{CLR:WHITE}.",
+      "Scan": "The more you attack it the{\\n}sooner it casts {CLR:OL_CYAN}Maelstrom{CLR:WHITE}.{\\n}Immune to water and weak{\\n}against lightning.{\\n}{CLR:OL_CYAN}Darkness{CLR:WHITE} and {CLR:OL_CYAN}poison{CLR:WHITE} are the{\\n}way to go."
+    },
+    "55": {
+      "Name": "Dual Horn",
+      "Sensor": "Inflict {CLR:OL_CYAN}darkness{CLR:WHITE} to evade its attacks.",
+      "Scan": "Its {CLR:OL_CYAN}Gore{CLR:WHITE} is powerful, but{\\n}inflict {CLR:OL_CYAN}darkness{CLR:WHITE} or use {CLR:OL_CYAN}Sleep{\\n}Attack{CLR:WHITE} to avoid it easily.{\\n}{\\n}{CLR:YELLOW}Kimahri can learn {CLR:OL_CYAN}Fire Breath{CLR:YELLOW}.{CLR:WHITE}"
+    },
+    "56": {
+      "Name": "Valaha",
+      "Sensor": "Inflict {CLR:OL_CYAN}darkness{CLR:WHITE} to evade its attacks.",
+      "Scan": "Inflict {CLR:OL_CYAN}darkness{CLR:WHITE} to hinder its{\\n}attacks.{\\n}Its {CLR:OL_CYAN}Flame Ball{CLR:WHITE} is a powerful{\\n}fire attack that hits all, but{\\n}it needs to {CLR:OL_CYAN}Charge{CLR:WHITE} before{\\n}it\u2019s released.{\\n}{\\n}{CLR:YELLOW}Kimahri can learn {CLR:OL_CYAN}Fire Breath{CLR:YELLOW}.{CLR:WHITE}"
+    },
+    "57": {
+      "Name": "Grendel",
+      "Sensor": "Inflict {CLR:OL_CYAN}darkness{CLR:WHITE} to evade its attacks. {CLR:OL_CYAN}Piercing{CLR:WHITE} weapons are the way to go.",
+      "Scan": "Inflict {CLR:OL_CYAN}darkness{CLR:WHITE} to hinder its{\\n}attacks.{\\n}Its {CLR:OL_CYAN}Flame Ball{CLR:WHITE} is a powerful fire{\\n}attack that hits all, but it needs{\\n}to {CLR:OL_CYAN}Charge{CLR:WHITE} before it\u2019s released.{\\n}Use {CLR:OL_CYAN}poison{CLR:WHITE} and {CLR:OL_CYAN}piercing{CLR:WHITE} weapons.{\\n}{\\n}{CLR:YELLOW}Kimahri can learn {CLR:OL_CYAN}Fire Breath{CLR:YELLOW}.{CLR:WHITE}"
+    },
+    "58": {
+      "Name": "Octopus",
+      "Sensor": "Head is covered by a hard shell.",
+      "Scan": "Since it\u2019s covered by a hard{\\n}shell, {CLR:OL_CYAN}piercing{CLR:WHITE} weapons are the{\\n}way to go.{\\n}Magic defense is low, and it\u2019s{\\n}also weak against lightning.{\\n}Its attacks may inflict {CLR:OL_CYAN}slow{CLR:WHITE}."
+    },
+    "59": {
+      "Name": "Vouivre",
+      "Sensor": "Covered with hard scales. {CLR:OL_CYAN}Piercing{CLR:WHITE} weapons are the way to go.",
+      "Scan": "Covered with hard scales, but{\\n}{CLR:OL_CYAN}piercing{CLR:WHITE} weapons can easily{\\n}defeat it.{\\n}Physical and magic defense are{\\n}high, but it\u2019s weak against ice.{\\n}Watch out for its {CLR:OL_CYAN}Breath{CLR:WHITE}, which{\\n}hits all."
+    },
+    "60": {
+      "Name": "Lamashtu",
+      "Sensor": "Covered with hard scales. {CLR:OL_CYAN}Piercing{CLR:WHITE} weapons are the way to go.",
+      "Scan": "Covered with hard scales.{\\n}Physical and magic defense are{\\n}high, but it\u2019s weak against fire.{\\n}Its attack may cause {CLR:OL_CYAN}slow{CLR:WHITE}.{\\n}Watch out for its ice-based{\\n}{CLR:OL_CYAN}Breath{CLR:WHITE}, which hits all."
+    },
+    "61": {
+      "Name": "Kusariqqu",
+      "Sensor": "Covered with hard scales. {CLR:OL_CYAN}Piercing{CLR:WHITE} weapons are the way to go. Watch out for {CLR:OL_CYAN}slow{CLR:WHITE}.",
+      "Scan": "Covered with hard scales.{\\n}Physical and magic defense{\\n}are high, but it\u2019s weak against{\\n}water.{\\n}Its attack may cause {CLR:OL_CYAN}slow{CLR:WHITE}.{\\n}Watch out for its lightning-{\\n}based {CLR:OL_CYAN}Breath{CLR:WHITE}, which hits all."
+    },
+    "62": {
+      "Name": "Mushussu",
+      "Sensor": "Covered with hard scales. {CLR:OL_CYAN}Piercing{CLR:WHITE} weapons are the way to go. Watch out for {CLR:OL_CYAN}slow{CLR:WHITE}.",
+      "Scan": "Covered with hard scales.{\\n}Physical and magic defense are{\\n}high.{\\n}It only takes half damage from{\\n}fire, but it\u2019s weak against ice.{\\n}Its attack may cause {CLR:OL_CYAN}slow{CLR:WHITE}.{\\n}Beware of its fire-based {CLR:OL_CYAN}Breath{CLR:WHITE},{\\n}which hits all."
+    },
+    "63": {
+      "Name": "Nidhogg",
+      "Sensor": "Covered with hard scales. {CLR:OL_CYAN}Piercing{CLR:WHITE} weapons are the way to go. Watch out for {CLR:OL_CYAN}slow{CLR:WHITE}.",
+      "Scan": "Covered with hard scales.{\\n}Physical and magic defense are{\\n}high.{\\n}It only takes half damage from{\\n}fire, but it\u2019s weak against ice.{\\n}Its attack may cause {CLR:OL_CYAN}slow{CLR:WHITE}.{\\n}Beware of its fire-based {CLR:OL_CYAN}Breath{CLR:WHITE},{\\n}which hits all."
+    },
+    "64": {
+      "Name": "Malboro",
+      "Sensor": "Watch out for its {CLR:OL_CYAN}Bad Breath{CLR:WHITE} attack, which causes multiple status effects.",
+      "Scan": "Its {CLR:OL_CYAN}Bad Breath{CLR:WHITE} inflicts multiple{\\n}status effects on all characters.{\\n}Guard against the status effects{\\n}with armor, and attack with fire.{\\n}{\\n}{CLR:YELLOW}Kimahri can learn {CLR:OL_CYAN}Bad Breath{CLR:YELLOW}.{CLR:WHITE}"
+    },
+    "65": {
+      "Name": "Great Malboro",
+      "Sensor": "Breathes {CLR:OL_CYAN}Bad Breath{CLR:WHITE} 1/3 of the time. Be ready for anything.",
+      "Scan": "Danger! There is a 1/3 chance{\\n}of it attacking with {CLR:OL_CYAN}Bad Breath{CLR:WHITE}.{\\n}To avoid being wiped out, equip{\\n}armor that guards against status{\\n}effects and attack with fire.{\\n}{\\n}{CLR:YELLOW}Kimahri can learn {CLR:OL_CYAN}Bad Breath{CLR:YELLOW}.{CLR:WHITE}"
+    },
+    "66": {
+      "Name": "Ogre",
+      "Sensor": "Be careful if it puts up its dukes.",
+      "Scan": "When it puts up its dukes, it{\\n}will respond to physical attacks{\\n}with a mighty counterattack.{\\n}Fire-based attacks are the way{\\n}to go."
+    },
+    "67": {
+      "Name": "Bashura",
+      "Sensor": "Be careful if it puts up its dukes.",
+      "Scan": "When it puts up its dukes, it will{\\n}respond to physical attacks{\\n}with a mighty counter.{\\n}Use magic and {CLR:OL_CYAN}poison{CLR:WHITE} to soften{\\n}it up."
+    },
+    "68": {
+      "Name": "Piranha",
+      "Sensor": "Low attack and HP.",
+      "Scan": "Attacks by biting.{\\n}Low HP and strength.{\\n}It should be an easy{\\n}enemy to handle."
+    },
+    "69": {
+      "Name": "Piranha",
+      "Sensor": "Attacks in packs of two.",
+      "Scan": "Attacks by biting.{\\n}Both HP and attack power{\\n}are higher when they appear{\\n}in pairs."
+    },
+    "70": {
+      "Name": "Piranha",
+      "Sensor": "Attacks in packs of three.",
+      "Scan": "Attacks by biting.{\\n}Both HP and attack power are{\\n}higher when they appear in{\\n}groups of three."
+    },
+    "71": {
+      "Name": "Splasher",
+      "Sensor": "Watch out for {CLR:OL_CYAN}Self-Destruct{CLR:WHITE}.",
+      "Scan": "When defeated, it sometimes{\\n}inflicts damage on its attacker{\\n}with {CLR:OL_CYAN}Self-Destruct{CLR:WHITE}."
+    },
+    "72": {
+      "Name": "Splasher",
+      "Sensor": "Watch out for {CLR:OL_CYAN}poison{CLR:WHITE}.",
+      "Scan": "Acts in pairs.{\\n}May inflict {CLR:OL_CYAN}poison{CLR:WHITE} when it bites."
+    },
+    "73": {
+      "Name": "Splasher",
+      "Sensor": "Watch out for {CLR:OL_CYAN}poison{CLR:WHITE}.",
+      "Scan": "Acts in groups of three.{\\n}May inflict {CLR:OL_CYAN}poison{CLR:WHITE} when it bites."
+    },
+    "74": {
+      "Name": "Vepar",
+      "Sensor": "Watch out for {CLR:OL_CYAN}Self-Destruct{CLR:WHITE}.",
+      "Scan": "When defeated, it sometimes{\\n}inflicts damage on its attacker{\\n}with {CLR:OL_CYAN}Self-Destruct{CLR:WHITE}."
+    },
+    "75": {
+      "Name": "Vepar",
+      "Sensor": "Watch out for {CLR:OL_CYAN}poison{CLR:WHITE}.",
+      "Scan": "Acts in pairs.{\\n}May inflict {CLR:OL_CYAN}poison{CLR:WHITE} when it bites."
+    },
+    "76": {
+      "Name": "Vepar",
+      "Sensor": "Watch out for {CLR:OL_CYAN}poison{CLR:WHITE}.",
+      "Scan": "Acts in groups of three.{\\n}May inflict {CLR:OL_CYAN}poison{CLR:WHITE} when it bites."
+    },
+    "77": {
+      "Name": "Yellow Element",
+      "Sensor": "Lightning elemental. Vulnerable to opposing element.",
+      "Scan": "Casts {CLR:OL_CYAN}Thunder{CLR:WHITE}.{\\n}Physical attacks hardly hurt it.{\\n}Absorbs lightning, so {CLR:OL_CYAN}Water{CLR:WHITE} is{\\n}the way to go."
+    },
+    "78": {
+      "Name": "White Element",
+      "Sensor": "Ice elemental. Vulnerable to opposing element.",
+      "Scan": "Casts {CLR:OL_CYAN}Blizzard{CLR:WHITE}.{\\n}Physical attacks hardly hurt it.{\\n}Absorbs ice, so {CLR:OL_CYAN}Fire{CLR:WHITE} is the way{\\n}to go."
+    },
+    "79": {
+      "Name": "Red Element",
+      "Sensor": "Fire elemental. Vulnerable to opposing element.",
+      "Scan": "Casts {CLR:OL_CYAN}Fire{CLR:WHITE}.{\\n}Physical attacks hardly hurt it.{\\n}Absorbs fire, so {CLR:OL_CYAN}Blizzard{CLR:WHITE} is the{\\n}way to go."
+    },
+    "80": {
+      "Name": "Gold Element",
+      "Sensor": "Lightning elemental. Vulnerable to opposing element.",
+      "Scan": "Casts {CLR:OL_CYAN}Thunder{CLR:WHITE}.{\\n}Physical attacks hardly hurt it.{\\n}Absorbs lightning, so use {CLR:OL_CYAN}Watera{CLR:WHITE}{\\n}for an Overkill."
+    },
+    "81": {
+      "Name": "Blue Element",
+      "Sensor": "Water elemental. Vulnerable to opposing element.",
+      "Scan": "Casts {CLR:OL_CYAN}Watera{CLR:WHITE}.{\\n}Physical attacks hardly hurt it.{\\n}Absorbs water, so {CLR:OL_CYAN}Thundara{CLR:WHITE} is{\\n}the way to go."
+    },
+    "82": {
+      "Name": "Dark Element",
+      "Sensor": "No elemental weaknesses. Casts {CLR:OL_CYAN}Reflect{CLR:WHITE} on itself.",
+      "Scan": "No elemental weaknesses, and{\\n}physical attacks hardly hurt it.{\\n}Casts {CLR:OL_CYAN}Reflect{CLR:WHITE} on itself.{\\n}If its Reflect is dispelled, it{\\n}retaliates with {CLR:OL_CYAN}Bio{CLR:WHITE}, {CLR:OL_CYAN}Osmose{CLR:WHITE}, and{\\n}{CLR:OL_CYAN}Drain{CLR:WHITE}."
+    },
+    "83": {
+      "Name": "Black Element",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Preparing"
+    },
+    "84": {
+      "Name": "Epaaj",
+      "Sensor": "Watch out for {CLR:OL_CYAN}poison{CLR:WHITE}.",
+      "Scan": "Very nimble.{\\n}Its claws can inflict {CLR:OL_CYAN}poison{CLR:WHITE}.{\\n}Inflicting {CLR:OL_CYAN}darkness{CLR:WHITE} or {CLR:OL_CYAN}Threaten{CLR:WHITE}{\\n}on it are the way to go."
+    },
+    "85": {
+      "Name": "Behemoth",
+      "Sensor": "Watch out for {CLR:OL_CYAN}Heave{CLR:WHITE}.",
+      "Scan": "Its {CLR:OL_CYAN}Thundara{CLR:WHITE}, {CLR:OL_CYAN}Heave{CLR:WHITE}, and claw{\\n}attacks are deadly.{\\n}One good hit will knock you out.{\\n}{\\n}{CLR:YELLOW}Kimahri can learn {CLR:OL_CYAN}Mighty Guard{CLR:YELLOW}.{CLR:WHITE}"
+    },
+    "86": {
+      "Name": "Behemoth King",
+      "Sensor": "Retaliates with {CLR:OL_CYAN}Meteor{CLR:WHITE} when defeated.",
+      "Scan": "Its claws, lightning, and {CLR:OL_CYAN}Heave{CLR:WHITE}{\\n}attacks are deadly.{\\n}Watch out for the {CLR:OL_CYAN}Meteor{CLR:WHITE} it casts{\\n}before it dies.{\\n}Cast Protect, or defend with{\\n}{CTRL:30:TRIANGLE} to survive.{\\n}{\\n}{CLR:YELLOW}Kimahri can learn {CLR:OL_CYAN}Mighty Guard{CLR:YELLOW}.{CLR:WHITE}"
+    },
+    "87": {
+      "Name": "Chimera",
+      "Sensor": "{CLR:OL_CYAN}Darkness{CLR:WHITE} and {CLR:OL_CYAN}silence{CLR:WHITE} work well. Vulnerable to {CLR:OL_CYAN}Threaten{CLR:WHITE}.",
+      "Scan": "The snake casts {CLR:OL_CYAN}Thundara{CLR:WHITE}, the bull{\\n}{CLR:OL_CYAN}Assaults{CLR:WHITE}, the hawk uses {CLR:OL_CYAN}Aqua{\\n}Breath{CLR:WHITE}, and the lion uses {CLR:OL_CYAN}Megiddo{\\n}Flame{CLR:WHITE}, in that order.{\\n}Vulnerable to {CLR:OL_CYAN}Threaten{CLR:WHITE}, {CLR:OL_CYAN}darkness{CLR:WHITE},{\\n}and {CLR:OL_CYAN}silence{CLR:WHITE}.{\\n}{\\n}{CLR:YELLOW}Kimahri can learn {CLR:OL_CYAN}Aqua Breath{CLR:YELLOW}.{CLR:WHITE}"
+    },
+    "88": {
+      "Name": "Chimera Brain",
+      "Sensor": "{CLR:OL_CYAN}Darkness{CLR:WHITE} and {CLR:OL_CYAN}silence{CLR:WHITE} work well. Vulnerable to {CLR:OL_CYAN}Threaten{CLR:WHITE}.",
+      "Scan": "The snake casts lightning magic,{\\n}the bull {CLR:OL_CYAN}Assaults{CLR:WHITE}, the hawk uses{\\n}{CLR:OL_CYAN}Aqua Breath{CLR:WHITE}, and the lion uses{\\n}{CLR:OL_CYAN}Megiddo Flame{CLR:WHITE}, in that order.{\\n}Vulnerable to {CLR:OL_CYAN}Threaten{CLR:WHITE}, {CLR:OL_CYAN}darkness{CLR:WHITE},{\\n}and {CLR:OL_CYAN}silence{CLR:WHITE}.{\\n}{\\n}{CLR:YELLOW}Kimahri can learn {CLR:OL_CYAN}Aqua Breath{CLR:YELLOW}.{CLR:WHITE}"
+    },
+    "89": {
+      "Name": "Coeurl",
+      "Sensor": "Casts {CLR:OL_CYAN}Drain{CLR:WHITE} and {CLR:OL_CYAN}Blaster{CLR:WHITE} when low on HP.",
+      "Scan": "High magic attack and defense.{\\n}Casts {CLR:OL_CYAN}Thundara{CLR:WHITE} and {CLR:OL_CYAN}Blizzara{CLR:WHITE}.{\\n}Also casts {CLR:OL_CYAN}Drain{CLR:WHITE} when HP is low.{\\n}Beware of {CLR:OL_CYAN}Blaster{CLR:WHITE}, since it\u2019s{\\n}unblockable and causes{\\n}{CLR:OL_CYAN}petrification{CLR:WHITE}."
+    },
+    "90": {
+      "Name": "Master Coeurl",
+      "Sensor": "Casts {CLR:OL_CYAN}Drain{CLR:WHITE}, {CLR:OL_CYAN}Confusion{CLR:WHITE}, and {CLR:OL_CYAN}Blaster{CLR:WHITE} when low on HP.",
+      "Scan": "High magic attack and defense.{\\n}Casts {CLR:OL_CYAN}Thundaga{CLR:WHITE} and {CLR:OL_CYAN}Blizzaga{CLR:WHITE}.{\\n}Also casts {CLR:OL_CYAN}Drain{CLR:WHITE} and {CLR:OL_CYAN}Confuse{CLR:WHITE}{\\n}when HP is low.{\\n}Beware of {CLR:OL_CYAN}Blaster{CLR:WHITE}, since it\u2019s{\\n}unblockable and causes instant{\\n}death."
+    },
+    "91": {
+      "Name": "Mech Guard",
+      "Sensor": "{CLR:OL_CYAN}Steal{CLR:WHITE} to inflict terminal malfunction.",
+      "Scan": "Same type of machina as the{\\n}Workers at Luca.{\\n}{CLR:OL_CYAN}Stealing{CLR:WHITE} will cause a terminal{\\n}malfunction, so leave it to Rikku.{\\n}Vulnerable to lightning."
+    },
+    "92": {
+      "Name": "Mech Scouter",
+      "Sensor": "{CLR:OL_CYAN}Steal{CLR:WHITE} to inflict terminal malfunction.",
+      "Scan": "Higher HP and strength than the{\\n}ones in the Sanubia Desert.{\\n}{CLR:OL_CYAN}Steal{CLR:WHITE} to cause a terminal{\\n}malfunction."
+    },
+    "93": {
+      "Name": "Mech Scouter",
+      "Sensor": "{CLR:OL_CYAN}Steal{CLR:WHITE} to inflict terminal malfunction.",
+      "Scan": "Higher HP and strength than the{\\n}ones in the Sanubia Desert.{\\n}{CLR:OL_CYAN}Steal{CLR:WHITE} to cause a terminal{\\n}malfunction."
+    },
+    "94": {
+      "Name": "Mech Leader",
+      "Sensor": "{CLR:OL_CYAN}Steal{CLR:WHITE} to inflict terminal malfunction.",
+      "Scan": "Abandoned machina from ages past.{\\n}Its {CLR:OL_CYAN}Electrocute{CLR:WHITE} attack inflicts{\\n}severe lightning damage.{\\n}{CLR:OL_CYAN}Steal{CLR:WHITE} to terminate immediately."
+    },
+    "95": {
+      "Name": "Demonolith",
+      "Sensor": "Beware of its {CLR:OL_CYAN}Breath{CLR:WHITE}, which can {CLR:OL_CYAN}petrify{CLR:WHITE} you.",
+      "Scan": "Beware of its {CLR:OL_CYAN}Pharaoh\u2019s Curse{CLR:WHITE},{\\n}which inflicts {CLR:OL_CYAN}poison{CLR:WHITE}, {CLR:OL_CYAN}silence{CLR:WHITE},{\\n}{CLR:OL_CYAN}darkness{CLR:WHITE}, and {CLR:OL_CYAN}curse{CLR:WHITE}.{\\n}If attacked when {CLR:OL_CYAN}petrified{CLR:WHITE}, the{\\n}party member will be unable to{\\n}return to battle.{\\n}Also watch out for {CLR:OL_CYAN}zombie{CLR:WHITE}."
+    },
+    "96": {
+      "Name": "Mech Gunner",
+      "Sensor": "{CLR:OL_CYAN}Steal{CLR:WHITE} to inflict terminal malfunction.",
+      "Scan": "Ancient machina.{\\n}Has higher HP than the Mech Guard,{\\n}but {CLR:OL_CYAN}Stealing{CLR:WHITE} parts will destroy it{\\n}in one shot, so leave it to Rikku.{\\n}Weak against lightning."
+    },
+    "97": {
+      "Name": "Mech Hunter",
+      "Sensor": "{CLR:OL_CYAN}Steal{CLR:WHITE} to inflict terminal malfunction.",
+      "Scan": "Higher HP and strength than the{\\n}ones in the Sanubia Desert.{\\n}{CLR:OL_CYAN}Steal{CLR:WHITE} to cause a terminal{\\n}malfunction."
+    },
+    "98": {
+      "Name": "Mech Defender",
+      "Sensor": "{CLR:OL_CYAN}Steal{CLR:WHITE} to inflict terminal malfunction.",
+      "Scan": "Abandoned machina from ages past.{\\n}Higher HP and defense than the{\\n}Mech Leader.{\\n}{CLR:OL_CYAN}Steal{CLR:WHITE} to cause a terminal{\\n}malfunction."
+    },
+    "99": {
+      "Name": "Ultima Weapon",
+      "Sensor": "Give it all you\u2019ve got!",
+      "Scan": "Scan not available."
+    },
+    "100": {
+      "Name": "Omega Weapon",
+      "Sensor": "Give it all you\u2019ve got!",
+      "Scan": "Scan not available."
+    },
+    "101": {
+      "Name": "Tros",
+      "Sensor": "Attacks with {CLR:OL_CYAN}Nautilus Charge{CLR:WHITE} after backing away.",
+      "Scan": "Retreats behind the column after{\\n}taking damage, where it cannot be{\\n}attacked. Hits all targets with{\\n}{CLR:OL_CYAN}Nautilus Charge{CLR:WHITE} on the next turn,{\\n}inflicting great damage.{\\n}Use trigger commands to stop it{\\n}from unleashing {CLR:OL_CYAN}Nautilus Charge{CLR:WHITE}."
+    },
+    "102": {
+      "Name": "Sinspawn Geneaux",
+      "Sensor": "Vulnerable to magic.",
+      "Scan": "Its shell deflects physical attacks{\\n}well.{\\n}Tentacles absorb magic attacks.{\\n}Defeat tentacles first, then{\\n}force it from its shell with{\\n}fire magic.{\\n}Absorbs water-based attacks."
+    },
+    "103": {
+      "Name": "Geneaux\u2019s Tentacle",
+      "Sensor": "Absorbs magical attacks against Geneaux.",
+      "Scan": "Absorbs magic cast against{\\n}Geneaux\u2019s body.{\\n}Defeat tentacles first, then use{\\n}magic attacks on the body.{\\n}Tentacles have high magic defense,{\\n}so physical attacks are the way{\\n}to go."
+    },
+    "104": {
+      "Name": "Chocobo Eater",
+      "Sensor": "Vulnerable to {CLR:OL_CYAN}darkness{CLR:WHITE}.",
+      "Scan": "Stick with {CLR:OL_CYAN}piercing{CLR:WHITE} weapons until{\\n}you knock him over.{\\n}After he says \u201D{CLR:OL_CYAN}You\u2019re next!{CLR:WHITE}\u201D he\u2019ll{\\n}unleash a powerful attack.{\\n}Casts {CLR:OL_CYAN}Blizzard{CLR:WHITE} when HP is low,{\\n}so stay warm with {CLR:OL_CYAN}NulFrost{CLR:WHITE}."
+    },
+    "105": {
+      "Name": "Neslug",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "106": {
+      "Name": "Mortiphasm",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "107": {
+      "Name": "Sinscale",
+      "Sensor": "They just keep coming.",
+      "Scan": "Launched from Sin\u2019s body.{\\n}They unleash {CLR:OL_CYAN}Spines{CLR:WHITE} once their{\\n}wings flicker, so dispatch them{\\n}quickly."
+    },
+    "108": {
+      "Name": "Sinscale",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "109": {
+      "Name": "Geosgaeno",
+      "Sensor": "Covered with thick scales. Vulnerable to magic.",
+      "Scan": "Scan not available."
+    },
+    "110": {
+      "Name": "Oblitzerator",
+      "Sensor": "Vulnerable to lightning.",
+      "Scan": "Speeds up when damaged.{\\n}Vulnerable to lightning, but chucks{\\n}a {CLR:OL_CYAN}Mute Ball{CLR:WHITE} at anyone casting{\\n}{CLR:OL_CYAN}Thunder{CLR:WHITE}.{\\n}Use a nearby object to escape{\\n}its mighty {CLR:OL_CYAN}Blitzball Rush{CLR:WHITE}."
+    },
+    "111": {
+      "Name": "Extractor",
+      "Sensor": "Vulnerable to lightning.",
+      "Scan": "After rising, it releases {CLR:OL_CYAN}Depth{\\n}Charges{CLR:WHITE}, inflicting {CLR:OL_CYAN}darkness{CLR:WHITE}{\\n}and damage on {PC:00:TIDUS}{\\n}and Wakka.{\\n}Hurt it as much as you can{\\n}to bring it back down."
+    },
+    "112": {
+      "Name": "???",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "113": {
+      "Name": "Sin",
+      "Sensor": "Attack with magic and Wakka\u2019s ball.",
+      "Scan": "Save Kilika!{\\n}Hit Sin from a distance with{\\n}Wakka\u2019s blitzball and Lulu\u2019s{\\n}black magic.{\\n}{PC:08:VALEFOR}\u2019s attacks{\\n}work well, too."
+    },
+    "114": {
+      "Name": "Sinspawn Echuilles",
+      "Sensor": "Afflict it with {CLR:OL_CYAN}darkness{CLR:WHITE} to make it miss.",
+      "Scan": "Absorbs HP with its {CLR:OL_CYAN}Drain Touch{CLR:WHITE}.{\\n}Inflicting {CLR:OL_CYAN}darkness{CLR:WHITE} is the way{\\n}to go.{\\n}But after two {CLR:OL_CYAN}Drain Touches{CLR:WHITE}{\\n}it will bring out the {CLR:OL_CYAN}Blender{CLR:WHITE},{\\n}inflicting damage on all targets."
+    },
+    "115": {
+      "Name": "Sinscale",
+      "Sensor": "They just keep coming.",
+      "Scan": "Disappears after each attack,{\\n}but more keep coming with{\\n}no end in sight."
+    },
+    "116": {
+      "Name": "Sinscale",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "117": {
+      "Name": "Sinspawn Gui",
+      "Sensor": "Blocks attacks with both arms.",
+      "Scan": "Blocks physical attacks with{\\n}its toughened arms.{\\n}Remove them with {CLR:OL_CYAN}piercing{CLR:WHITE}{\\n}weapons, and then strike{\\n}the body.{\\n}Hit the head when it starts{\\n}twitching or else it will belch{\\n}{CLR:OL_CYAN}Venom{CLR:WHITE} at you."
+    },
+    "118": {
+      "Name": "Mortiphasm",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "119": {
+      "Name": "Evrae",
+      "Sensor": "Releases {CLR:OL_CYAN}Poison Breath{CLR:WHITE} attack after inhaling.",
+      "Scan": "High magic defense.{\\n}No elemental weaknesses.{\\n}Exhales {CLR:OL_CYAN}Poison Breath{CLR:WHITE} if hit{\\n}repeatedly by melee attacks.{\\n}Ask Cid to move the airship{\\n}away and he\u2019ll launch a volley{\\n}of {CLR:OL_CYAN}Guided Missiles{CLR:WHITE} for you."
+    },
+    "120": {
+      "Name": "Evrae Altana",
+      "Sensor": "Weak against healing effects.",
+      "Scan": "Beware its {CLR:OL_CYAN}Stone Gaze{CLR:WHITE} and{\\n}nasty counterattacks.{\\n}{CLR:OL_CYAN}Open the gate locks{CLR:WHITE} to get{\\n}some distance.{\\n}Since it\u2019s a {CLR:OL_CYAN}zombie{CLR:WHITE}, healing{\\n}magic and items are the way{\\n}to go."
+    },
+    "121": {
+      "Name": "Spherimorph",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "122": {
+      "Name": "Crawler",
+      "Sensor": "Vulnerable to lightning. {CLR:OL_CYAN}Negator{CLR:WHITE} disables all magic and summoning.",
+      "Scan": "Shoots all targets with {CLR:OL_CYAN}Gatling Gun{CLR:WHITE}.{\\n}Vulnerable to lightning.{\\n}Starts countdown to {CLR:OL_CYAN}Mana Beam{CLR:WHITE}{\\n}once the {CLR:OL_CYAN}Negator{CLR:WHITE} is destroyed.{\\n}Retaliates when hit by lightning{\\n}magic during countdown.{\\n}Restores {CLR:OL_CYAN}Negator{CLR:WHITE} after being{\\n}hit by magic four times."
+    },
+    "123": {
+      "Name": "Negator",
+      "Sensor": "Disables magic and summoning. Attack it with items and Wakka\u2019s ball.",
+      "Scan": "Scan not available."
+    },
+    "124": {
+      "Name": "Seymour",
+      "Sensor": "Casts ice, lightning, water, and fire, in that order.",
+      "Scan": "Casts ice, lightning, water, and{\\n}fire spells in that order, so have{\\n}Yuna cast {CLR:OL_CYAN}NulFrost{CLR:WHITE}, {CLR:OL_CYAN}NulShock{CLR:WHITE},{\\n}{CLR:OL_CYAN}NulTide{CLR:WHITE}, and {CLR:OL_CYAN}NulBlaze{CLR:WHITE}.{\\n}He\u2019ll summon when cornered.{\\n}Beware!"
+    },
+    "125": {
+      "Name": "Anima",
+      "Sensor": "Goes into Overdrive when its gauge charges up.",
+      "Scan": "Scan not available."
+    },
+    "126": {
+      "Name": "Seymour Natus",
+      "Sensor": "Casts elemental magic, {CLR:OL_CYAN}Break{CLR:WHITE}, and {CLR:OL_CYAN}Flare{CLR:WHITE}.",
+      "Scan": "Still uses elemental magic,{\\n}but now uses multi-spells.{\\n}When HP is low he\u2019ll {CLR:OL_CYAN}petrify{CLR:WHITE}{\\n}with {CLR:OL_CYAN}Break{CLR:WHITE} and cast the{\\n}non-elemental spell {CLR:OL_CYAN}Flare{CLR:WHITE}."
+    },
+    "127": {
+      "Name": "Mortibody",
+      "Sensor": "Watch out for their combo attacks.",
+      "Scan": "Its {CLR:OL_CYAN}Shattering Claw{CLR:WHITE} hits {CLR:OL_CYAN}petrified{CLR:WHITE}{\\n}characters, smashing them to{\\n}smithereens.{\\n}Beware the {CLR:OL_CYAN}Desperado{CLR:WHITE}, which{\\n}inflicts damage and negates{\\n}any magical augmentations."
+    },
+    "128": {
+      "Name": "Sanctuary Keeper",
+      "Sensor": "High physical and magic defense.",
+      "Scan": "Its {CLR:OL_CYAN}Photon Wings{CLR:WHITE} attack causes{\\n}{CLR:OL_CYAN}confusion{CLR:WHITE}, {CLR:OL_CYAN}sleep{CLR:WHITE}, {CLR:OL_CYAN}silence{CLR:WHITE}, {CLR:OL_CYAN}darkness{CLR:WHITE},{\\n}{CLR:OL_CYAN}curse{CLR:WHITE}, and other status effects.{\\n}{CLR:OL_CYAN}Tail Sweep{CLR:WHITE} negates {CLR:OL_CYAN}Haste{CLR:WHITE} and{\\n}delays targets\u2019 next turn.{\\n}Uses healing magic and {CLR:OL_CYAN}Reflect{CLR:WHITE},{\\n}among other spells."
+    },
+    "129": {
+      "Name": "Spectral Keeper",
+      "Sensor": "Attacks all frontal targets when hit. Use trigger command {CLR:OL_CYAN}Move{CLR:WHITE} to get out of the way.",
+      "Scan": "Attacks all frontal targets{\\n}when hit.{\\n}It will plant a {CLR:OL_CYAN}Glyph Mine{CLR:WHITE} upon{\\n}a circle, causing instant {CLR:OL_CYAN}KO{CLR:WHITE}{\\n}when detonated.{\\n}Use the trigger command {CLR:OL_CYAN}Move{CLR:WHITE}{\\n}to transfer to another circle."
+    },
+    "130": {
+      "Name": "Yunalesca",
+      "Sensor": "Reaper of souls. Vulnerable to holy magic.",
+      "Scan": "Casts {CLR:OL_CYAN}Curaga{CLR:WHITE} and {CLR:OL_CYAN}Regen{CLR:WHITE} on{\\n}{CLR:OL_CYAN}zombified{CLR:WHITE} characters.{\\n}Cure {CLR:OL_CYAN}zombie{CLR:WHITE} with {CLR:OL_CYAN}Holy Water{CLR:WHITE}.{\\n}Her counterattacks dispel{\\n}support magic.{\\n}She also {CLR:OL_CYAN}curses{CLR:WHITE} aeons with{\\n}her {CLR:OL_CYAN}Mind Blast{CLR:WHITE}."
+    },
+    "131": {
+      "Name": "Seymour Omnis",
+      "Sensor": "Energized by the Mortiphasms.",
+      "Scan": "Casts spells once energized{\\n}by the four Mortiphasms behind{\\n}him.{\\n}Their positions somehow affect{\\n}his actions.{\\n}Physical attacks turn the{\\n}Mortiphasms to the left, while{\\n}magic turns them to the right."
+    },
+    "132": {
+      "Name": "Braska\u2019s Final Aeon",
+      "Sensor": "Use the trigger command to talk.",
+      "Scan": "Draws power from the Yu Pagodas{\\n}and unleashes Overdrive attacks{\\n}once his gauge is charged.{\\n}Stop him from using Overdrives.{\\n}Have {PC:00:TIDUS} {CLR:OL_CYAN}talk{CLR:WHITE} to lower{\\n}the gauge."
+    },
+    "133": {
+      "Name": "Crane",
+      "Sensor": "Electric motor.",
+      "Scan": "Scan not available."
+    },
+    "134": {
+      "Name": "Biran Ronso",
+      "Sensor": "Covers Yenke when together.",
+      "Scan": "Blocks attacks on Yenke with{\\n}{CLR:OL_CYAN}Guard{CLR:WHITE}, except when separated{\\n}after performing a {CLR:OL_CYAN}Bulldoze{CLR:WHITE}.{\\n}Casts {CLR:OL_CYAN}Mighty Guard{CLR:WHITE} just once{\\n}after losing HP.{\\n}{\\n}{CLR:YELLOW}Kimahri can learn many techniques.{CLR:WHITE}"
+    },
+    "135": {
+      "Name": "Yenke Ronso",
+      "Sensor": "Covers Biran when together.",
+      "Scan": "Blocks attacks on Biran with{\\n}{CLR:OL_CYAN}Guard{CLR:WHITE}, except when separated{\\n}after performing a {CLR:OL_CYAN}Bulldoze{CLR:WHITE}.{\\n}Casts {CLR:OL_CYAN}White Wind{CLR:WHITE} just once{\\n}after losing HP.{\\n}{\\n}{CLR:YELLOW}Kimahri can learn many techniques.{CLR:WHITE}"
+    },
+    "136": {
+      "Name": "Left Fin",
+      "Sensor": "Gathers energy to cast {CLR:OL_CYAN}Gravija{CLR:WHITE}. Avoid with trigger command {CLR:OL_CYAN}Pull Back{CLR:WHITE}.",
+      "Scan": "Unleashes {CLR:OL_CYAN}Gravija{CLR:WHITE} once the core{\\n}is energized, reducing all{\\n}characters\u2019 HP by 3/4.{\\n}To avoid this, get Cid to back off.{\\n}Dispels with {CLR:OL_CYAN}Negation{CLR:WHITE} and sometimes{\\n}attacks all with a physical attack."
+    },
+    "137": {
+      "Name": "Right Fin",
+      "Sensor": "Gathers energy to cast {CLR:OL_CYAN}Gravija{CLR:WHITE}. Avoid with trigger command {CLR:OL_CYAN}Pull Back{CLR:WHITE}.",
+      "Scan": "Unleashes {CLR:OL_CYAN}Gravija{CLR:WHITE} once the core{\\n}is energized, reducing all{\\n}characters\u2019 HP by 3/4.{\\n}To avoid this, get Cid to back off.{\\n}Dispels with {CLR:OL_CYAN}Negation{CLR:WHITE} and sometimes{\\n}attacks all with a physical attack."
+    },
+    "138": {
+      "Name": "Sin",
+      "Sensor": "Gathers energy when Genais enters its shell.",
+      "Scan": "When Genais enters its shell,{\\n}the core begins to energize,{\\n}unleashing {CLR:OL_CYAN}Gravija{CLR:WHITE}, which reduces{\\n}the HP of all targets by 3/4.{\\n}Also dispels positive status{\\n}effects with {CLR:OL_CYAN}Negation{CLR:WHITE}."
+    },
+    "139": {
+      "Name": "Sinspawn Genais",
+      "Sensor": "Absorbs magical attacks against Sin.",
+      "Scan": "After losing half its HP, it enters{\\n}its shell on its next turn.{\\n}If hit there, it recovers with {CLR:OL_CYAN}Cura{CLR:WHITE}{\\n}and exits the shell on its next turn.{\\n}Protected from {CLR:OL_CYAN}Gravija{CLR:WHITE} when inside{\\n}the shell."
+    },
+    "140": {
+      "Name": "Sin",
+      "Sensor": "Finish him before he opens his mouth all the way.",
+      "Scan": "Pulls the airship in while{\\n}gathering all his strength to cast{\\n}the ultimate terror, {CLR:OL_CYAN}Giga-Graviton{CLR:WHITE}.{\\n}Stop him before he wipes{\\n}everyone out!"
+    },
+    "141": {
+      "Name": "Guado Guardian",
+      "Sensor": "Protects Seymour.",
+      "Scan": "Attacks and defends with items,{\\n}using {CLR:OL_CYAN}Auto-Potion{CLR:WHITE} and {CLR:OL_CYAN}confusion{CLR:WHITE}-{\\n}inducing {CLR:OL_CYAN}Shremedies{CLR:WHITE}.{\\n}He restores Seymour\u2019s HP too,{\\n}so stop him from using items{\\n}somehow."
+    },
+    "142": {
+      "Name": "Seymour Flux",
+      "Sensor": "Watch out for their combo attacks.",
+      "Scan": "Predict the Mortiorchis\u2019s actions{\\n}by watching Seymour\u2019s.{\\n}His {CLR:OL_CYAN}Lance of Atrophy{CLR:WHITE} causes{\\n}{CLR:OL_CYAN}zombie{CLR:WHITE}, and the Mortiorchis{\\n}follows with {CLR:OL_CYAN}Full-Life{CLR:WHITE}.{\\n}Together they unleash {CLR:OL_CYAN}Total{\\n}Annihilation{CLR:WHITE}."
+    },
+    "143": {
+      "Name": "Mortiorchis",
+      "Sensor": "Watch out for their combo attacks.",
+      "Scan": "Beware its combo attacks.{\\n}If a character is {CLR:OL_CYAN}zombified{CLR:WHITE} by{\\n}Seymour\u2019s {CLR:OL_CYAN}Lance of Atrophy{CLR:WHITE}, it{\\n}will cast {CLR:OL_CYAN}Full-Life{CLR:WHITE}, causing{\\n}instant {CLR:OL_CYAN}KO{CLR:WHITE}.{\\n}Use {CLR:OL_CYAN}Protect{CLR:WHITE} to help survive{\\n}the {CLR:OL_CYAN}Cross Cleave{CLR:WHITE}."
+    },
+    "144": {
+      "Name": "Kimahri Weapon",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "145": {
+      "Name": "Sinscale",
+      "Sensor": "Just take out the ones in front. They launch {CLR:OL_CYAN}Spines{CLR:WHITE} soon after their wings start to flicker.",
+      "Scan": "Scan not available."
+    },
+    "146": {
+      "Name": "Circle",
+      "Sensor": "Each magic circle can support one character.",
+      "Scan": "Scan not available."
+    },
+    "147": {
+      "Name": "Sinscale",
+      "Sensor": "Just take out the ones in front. They launch {CLR:OL_CYAN}Spines{CLR:WHITE} soon after their wings start to flicker.",
+      "Scan": "Scan not available."
+    },
+    "148": {
+      "Name": "Sinscale",
+      "Sensor": "Take them out with Auron\u2019s Overdrive {CLR:OL_CYAN}Dragon Fang{CLR:WHITE}.",
+      "Scan": "Scan not available."
+    },
+    "149": {
+      "Name": "Cid",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "150": {
+      "Name": "Mortiphasm",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "151": {
+      "Name": "Vouivre",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "152": {
+      "Name": "Worker",
+      "Sensor": "Vulnerable to lightning.",
+      "Scan": "Ancient machina restored{\\n}by the Al Bhed.{\\n}Not a war machine, but hits{\\n}hard with its tool arm.{\\n}Vulnerable to lightning, so{\\n}{CLR:OL_CYAN}Thunder{CLR:WHITE} is the way to go."
+    },
+    "153": {
+      "Name": "Lord Ochu",
+      "Sensor": "Vulnerable to fire.",
+      "Scan": "Its claws inflict {CLR:OL_CYAN}poison{CLR:WHITE}.{\\n}Restores lost HP by sleeping.{\\n}Retaliates with {CLR:OL_CYAN}Earthquake{CLR:WHITE} if{\\n}awakened, so watch out.{\\n}Being a plant, it burns easily."
+    },
+    "154": {
+      "Name": "Mortiphasm",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "155": {
+      "Name": "Sahagin",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "156": {
+      "Name": "Sahagin Chief",
+      "Sensor": "Vulnerable to lightning.",
+      "Scan": "Nimble, but has low HP and{\\n}strength.{\\n}Just one is nothing to write{\\n}home about.{\\n}Vulnerable to lightning, {CLR:OL_CYAN}darkness{CLR:WHITE},{\\n}and {CLR:OL_CYAN}sleep{CLR:WHITE}."
+    },
+    "157": {
+      "Name": "Garuda",
+      "Sensor": "Dodging its attacks is easier after inflicting {CLR:OL_CYAN}darkness{CLR:WHITE}.",
+      "Scan": "It has high strength and{\\n}tons of HP.{\\n}Beware of {CLR:OL_CYAN}Sonic Boom{CLR:WHITE}, which hits{\\n}all characters.{\\n}Dodge its attacks more easily by{\\n}inflicting {CLR:OL_CYAN}darkness{CLR:WHITE}."
+    },
+    "158": {
+      "Name": "Klikk",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "159": {
+      "Name": "Sinspawn Ammes",
+      "Sensor": "Unleashes {CLR:OL_CYAN}Demi{CLR:WHITE} when its HP is reduced by 1/4.",
+      "Scan": "Scan not available."
+    },
+    "160": {
+      "Name": "Head",
+      "Sensor": "Strike the head to disable its {CLR:OL_CYAN}Venom{CLR:WHITE}.",
+      "Scan": "Blocks physical attacks with{\\n}its toughened arms.{\\n}Remove them with {CLR:OL_CYAN}piercing{CLR:WHITE}{\\n}weapons, and then strike{\\n}the body.{\\n}Hit the head when it starts{\\n}twitching or else it will belch{\\n}{CLR:OL_CYAN}Venom{CLR:WHITE} at you."
+    },
+    "161": {
+      "Name": "Arm",
+      "Sensor": "Protects the body with thick armor.",
+      "Scan": "Blocks physical attacks with{\\n}its toughened arms.{\\n}Remove them with {CLR:OL_CYAN}piercing{CLR:WHITE}{\\n}weapons, and then strike{\\n}the body.{\\n}Hit the head when it starts{\\n}twitching or else it will belch{\\n}{CLR:OL_CYAN}Venom{CLR:WHITE} at you."
+    },
+    "162": {
+      "Name": "Gate Lock",
+      "Sensor": "Open the gate to escape.",
+      "Scan": "Scan not available."
+    },
+    "163": {
+      "Name": "{PC:08:VALEFOR}",
+      "Sensor": "Strike me down.",
+      "Scan": "Scan not available."
+    },
+    "164": {
+      "Name": "{PC:09:IFRIT}",
+      "Sensor": "Extinguish me.",
+      "Scan": "Scan not available."
+    },
+    "165": {
+      "Name": "{PC:0A:IXION}",
+      "Sensor": "End it right here.",
+      "Scan": "Scan not available."
+    },
+    "166": {
+      "Name": "{PC:0B:SHIVA}",
+      "Sensor": "Please... Defeat me.",
+      "Scan": "Scan not available."
+    },
+    "167": {
+      "Name": "{PC:0C:BAHAMUT}",
+      "Sensor": "Soon... Eternal rest.",
+      "Scan": "Scan not available."
+    },
+    "168": {
+      "Name": "{PC:0D:ANIMA}",
+      "Sensor": "Thus I atone.",
+      "Scan": "Scan not available."
+    },
+    "169": {
+      "Name": "{PC:0E:YOJIMBO}",
+      "Sensor": "Take my life.",
+      "Scan": "Scan not available."
+    },
+    "170": {
+      "Name": "Tanker",
+      "Sensor": "Dangling off the edge of the highway.",
+      "Scan": "Scan not available."
+    },
+    "171": {
+      "Name": "Gate Lock",
+      "Sensor": "Open the gate to escape.",
+      "Scan": "Scan not available."
+    },
+    "172": {
+      "Name": "Monster 172",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "173": {
+      "Name": "Yu Pagoda",
+      "Sensor": "Inflict damage to halt its actions.",
+      "Scan": "Scan not available."
+    },
+    "174": {
+      "Name": "Yu Pagoda",
+      "Sensor": "Inflict damage to halt its actions.",
+      "Scan": "Scan not available."
+    },
+    "175": {
+      "Name": "Tentacle",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "176": {
+      "Name": "Yu Yevon",
+      "Sensor": "Possesses aeons.",
+      "Scan": "Scan not available."
+    },
+    "177": {
+      "Name": "Mortiphasm",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "178": {
+      "Name": "Cindy",
+      "Sensor": "Stop the suffering.",
+      "Scan": "Scan not available."
+    },
+    "179": {
+      "Name": "Sandy",
+      "Sensor": "Don\u2019t cry.",
+      "Scan": "Scan not available."
+    },
+    "180": {
+      "Name": "Mindy",
+      "Sensor": "Gotta say goodbye.",
+      "Scan": "Scan not available."
+    },
+    "181": {
+      "Name": "Iron Giant",
+      "Sensor": "{CLR:OL_CYAN}Dark Buster{CLR:WHITE} is effective, but beware its {CLR:OL_CYAN}Reaper{CLR:WHITE} attack.",
+      "Scan": "Targets character with lowest HP.{\\n}Beware its {CLR:OL_CYAN}Reaper{CLR:WHITE} attack, which{\\n}hits all characters.{\\n}No elemental weaknesses.{\\n}Takes half damage from lightning.{\\n}Use {CLR:OL_CYAN}piercing{CLR:WHITE} weapons and {CLR:OL_CYAN}Dark{\\n}Buster{CLR:WHITE}."
+    },
+    "182": {
+      "Name": "Gemini",
+      "Sensor": "When paired together they unleash {CLR:OL_CYAN}Double Reaper{CLR:WHITE}. Focus your attacks to defeat one quickly.",
+      "Scan": "When paired, after receiving a certain{\\n}amount of damage, they unleash a{\\n}powerful synchronized attack,{\\n}the {CLR:OL_CYAN}Double Reaper{CLR:WHITE}.{\\n}One absorbs lightning and fire,{\\n}while the other absorbs water{\\n}and ice."
+    },
+    "183": {
+      "Name": "Gemini",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "184": {
+      "Name": "Gemini",
+      "Sensor": "When paired together they unleash {CLR:OL_CYAN}Double Reaper{CLR:WHITE}. Focus your attacks to defeat one quickly.",
+      "Scan": "When paired, after receiving a certain{\\n}amount of damage, they unleash a{\\n}powerful synchronized attack,{\\n}the {CLR:OL_CYAN}Double Reaper{CLR:WHITE}.{\\n}One absorbs lightning and fire,{\\n}while the other absorbs water{\\n}and ice."
+    },
+    "185": {
+      "Name": "Basilisk",
+      "Sensor": "Watch out for its {CLR:OL_CYAN}Stone Gaze{CLR:WHITE}.",
+      "Scan": "Beware the third eye. Its {CLR:OL_CYAN}Stone{\\n}Gaze{CLR:WHITE} may cause {CLR:OL_CYAN}petrification{CLR:WHITE}.{\\n}If {CLR:OL_CYAN}petrified{CLR:WHITE}, restore with {CLR:OL_CYAN}Esuna{CLR:WHITE}{\\n}or Soft.{\\n}{\\n}{CLR:YELLOW}Kimahri can learn {CLR:OL_CYAN}Stone Breath{CLR:YELLOW}.{CLR:WHITE}"
+    },
+    "186": {
+      "Name": "Anacondaur",
+      "Sensor": "Watch out for its {CLR:OL_CYAN}Stone Gaze{CLR:WHITE}.",
+      "Scan": "The third eye\u2019s {CLR:OL_CYAN}Stone Gaze{CLR:WHITE}{\\n}often causes {CLR:OL_CYAN}petrification{CLR:WHITE}.{\\n}After taking multiple hits, it{\\n}retaliates with {CLR:OL_CYAN}Sonic Tail{CLR:WHITE},{\\n}which strikes all.{\\n}{\\n}{CLR:YELLOW}Kimahri can learn {CLR:OL_CYAN}Stone Breath{CLR:YELLOW}.{CLR:WHITE}"
+    },
+    "187": {
+      "Name": "Adamantoise",
+      "Sensor": "Covered by a hard shell.",
+      "Scan": "Protected by a hard shell.{\\n}Attacks mutliple targets with{\\n}its fire-based {CLR:OL_CYAN}Breath{CLR:WHITE}.{\\n}{CLR:OL_CYAN}Armor Break{CLR:WHITE} and {CLR:OL_CYAN}Mental Break{CLR:WHITE}{\\n}are the way to go."
+    },
+    "188": {
+      "Name": "Varuna",
+      "Sensor": "Resistant to all four elements.",
+      "Scan": "Casts {CLR:OL_CYAN}Haste{CLR:WHITE} on himself and{\\n}attacks with magic, so use {CLR:OL_CYAN}Dispel{CLR:WHITE}{\\n}on him.{\\n}After his {CLR:OL_CYAN}Mana Focus{CLR:WHITE}, he\u2019ll cast{\\n}{CLR:OL_CYAN}Emblem of Fate{CLR:WHITE}.{\\n}You can reduce damage with {CLR:OL_CYAN}Shell{CLR:WHITE},{\\n}but he can cast {CLR:OL_CYAN}Dispel{CLR:WHITE} on you, too."
+    },
+    "189": {
+      "Name": "Ochu",
+      "Sensor": "Vulnerable to fire.",
+      "Scan": "When HP is low, it performs{\\n}{CLR:OL_CYAN}Ochu Dance{CLR:WHITE}, which inflicts{\\n}{CLR:OL_CYAN}darkness{CLR:WHITE}, {CLR:OL_CYAN}silence{CLR:WHITE}, {CLR:OL_CYAN}confusion{CLR:WHITE},{\\n}and {CLR:OL_CYAN}slow{CLR:WHITE}.{\\n}Beware of its {CLR:OL_CYAN}poison{CLR:WHITE} claws.{\\n}Vulnerable to fire."
+    },
+    "190": {
+      "Name": "Mandragora",
+      "Sensor": "Vulnerable to fire.",
+      "Scan": "The more damage it takes, the{\\n}sooner it uses {CLR:OL_CYAN}Earthquake{CLR:WHITE}.{\\n}Its {CLR:OL_CYAN}Ochu Dance{CLR:WHITE} inflicts {CLR:OL_CYAN}darkness{CLR:WHITE},{\\n}{CLR:OL_CYAN}silence{CLR:WHITE}, {CLR:OL_CYAN}confusion{CLR:WHITE}, and {CLR:OL_CYAN}slow{CLR:WHITE}.{\\n}Also beware of {CLR:OL_CYAN}poison{CLR:WHITE}.{\\n}Vulnerable to fire."
+    },
+    "191": {
+      "Name": "YAT-99",
+      "Sensor": "Close in to melee range by defeating frontline enemies first.",
+      "Scan": "Forbidden machina secretly{\\n}used by Yevon.{\\n}Hits multiple targets when firing{\\n}from a distance."
+    },
+    "192": {
+      "Name": "YAT-97",
+      "Sensor": "Close in to melee range by defeating frontline enemies first.",
+      "Scan": "Hits multiple targets when firing{\\n}from a distance.{\\n}Immune to {CLR:OL_CYAN}delay{CLR:WHITE} skills."
+    },
+    "193": {
+      "Name": "Bomb",
+      "Sensor": "Retaliates with {CLR:OL_CYAN}Self-Destruct{CLR:WHITE} after receiving damage three times.",
+      "Scan": "Retaliates with {CLR:OL_CYAN}Self-Destruct{CLR:WHITE}{\\n}against whoever deals damage to it{\\n}a third time.{\\n}Use {CLR:OL_CYAN}NulBlaze{CLR:WHITE} if you can\u2019t defeat it{\\n}before then.{\\n}Vulnerable to ice, so use {CLR:OL_CYAN}Blizzard{CLR:WHITE}.{\\n}{\\n}{CLR:YELLOW}Kimahri can learn {CLR:OL_CYAN}Self-Destruct{CLR:YELLOW}.{CLR:WHITE}"
+    },
+    "194": {
+      "Name": "Grenade",
+      "Sensor": "Retaliates with {CLR:OL_CYAN}Self-Destruct{CLR:WHITE} after receiving damage three times.",
+      "Scan": "Retaliates with {CLR:OL_CYAN}Self-Destruct{CLR:WHITE}{\\n}against whoever deals damage to it{\\n}a third time.{\\n}Weak against ice, but has high magic{\\n}defense, so use {CLR:OL_CYAN}Mental Break{CLR:WHITE} and{\\n}your best ice magic.{\\n}{\\n}{CLR:YELLOW}Kimahri can learn {CLR:OL_CYAN}Self-Destruct{CLR:YELLOW}.{CLR:WHITE}"
+    },
+    "195": {
+      "Name": "YKT-63",
+      "Sensor": "If it\u2019s the last enemy standing, it will unleash a vicious {CLR:OL_CYAN}Thrust Kick{CLR:WHITE}.",
+      "Scan": "Forbidden machina secretly used{\\n}by Yevon.{\\n}If it\u2019s the last enemy standing,{\\n}it throws a mean {CLR:OL_CYAN}Thrust Kick{CLR:WHITE} that{\\n}ejects the target from battle.{\\n}{\\n}{CLR:YELLOW}Kimahri can learn {CLR:OL_CYAN}Thrust Kick{CLR:YELLOW}.{CLR:WHITE}"
+    },
+    "196": {
+      "Name": "YKT-11",
+      "Sensor": "If it\u2019s the last enemy standing, it will unleash a vicious {CLR:OL_CYAN}Thrust Kick{CLR:WHITE}.",
+      "Scan": "If it\u2019s the last enemy standing,{\\n}it throws a mean {CLR:OL_CYAN}Thrust Kick{CLR:WHITE}{\\n}that ejects the target from battle.{\\n}Immune to {CLR:OL_CYAN}delay{CLR:WHITE} techniques.{\\n}{\\n}{CLR:YELLOW}Kimahri can learn {CLR:OL_CYAN}Thrust Kick{CLR:YELLOW}.{CLR:WHITE}"
+    },
+    "197": {
+      "Name": "Warrior Monk",
+      "Sensor": "Attacks single targets with rifle.",
+      "Scan": "St. Bevelle sentry and soldier{\\n}of Yevon.{\\n}Attacks single targets with his{\\n}rifle.{\\n}{CLR:OL_CYAN}Sleep{CLR:WHITE} attacks are the way to go."
+    },
+    "198": {
+      "Name": "Fallen Monk",
+      "Sensor": "{CLR:OL_CYAN}Zombie{CLR:WHITE}. Vulnerable to healing magic and items.",
+      "Scan": "A soldier who continues to{\\n}protect the Yevon Dome even{\\n}after death.{\\n}His rifle hits single targets.{\\n}He can inflict {CLR:OL_CYAN}zombie{CLR:WHITE} status,{\\n}so watch out."
+    },
+    "199": {
+      "Name": "Warrior Monk",
+      "Sensor": "Attacks multiple targets with flamethrower.",
+      "Scan": "St. Bevelle sentry and soldier{\\n}of Yevon.{\\n}Attacks all targets with his{\\n}flamethrower for fire-based{\\n}damage.{\\n}{CLR:OL_CYAN}Sleep{CLR:WHITE} attacks are the way to go."
+    },
+    "200": {
+      "Name": "Fallen Monk",
+      "Sensor": "{CLR:OL_CYAN}Zombie{CLR:WHITE}. Vulnerable to healing magic and items.",
+      "Scan": "A soldier who continues to{\\n}protect the Yevon Dome even{\\n}after death.{\\n}Attacks all targets with his{\\n}flamethrower for fire-based{\\n}damage."
+    },
+    "201": {
+      "Name": "PuPu",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "202": {
+      "Name": "Magic Urn",
+      "Sensor": "Hit the correct eye for prizes!",
+      "Scan": "Hit the correct target to win{\\n}items.{\\n}The wrong target ends the battle{\\n}with a bang.{\\n}Damage is substantial, so be sure{\\n}to heal.{\\n}Eight fabulous prizes in all,{\\n}while supplies last."
+    },
+    "203": {
+      "Name": "Magic Urn",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "204": {
+      "Name": "Magic Urn",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "205": {
+      "Name": "Magic Urn",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "206": {
+      "Name": "Magic Urn",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "207": {
+      "Name": "Qactuar",
+      "Sensor": "You\u2019ll get a treat if you can defeat it before it gets away.",
+      "Scan": "Beware of {CLR:OL_CYAN}1000 Needles{CLR:WHITE}, as it{\\n}inflicts 1000 points of damage.{\\n}Resistant to both physical and{\\n}magical attacks.{\\n}Runs away when HP is low.{\\n}{CLR:OL_CYAN}Threaten{CLR:WHITE} is recommended."
+    },
+    "208": {
+      "Name": "Cactuar",
+      "Sensor": "You\u2019ll get a treat if you can defeat it before it gets away.",
+      "Scan": "Its {CLR:OL_CYAN}10000 Needles{CLR:WHITE} inflict{\\n}10000 points of damage.{\\n}Resistant to both physical{\\n}and magical attacks.{\\n}Runs away when HP is low.{\\n}Hard to defeat, but worth{\\n}a lot of AP."
+    },
+    "209": {
+      "Name": "Larva",
+      "Sensor": "Casts {CLR:OL_CYAN}Thundara{CLR:WHITE} on itself to replenish HP and grow even more powerful.",
+      "Scan": "When HP is halved, it casts{\\n}{CLR:OL_CYAN}Thundara{CLR:WHITE} on itself to recover{\\n}HP and increase magic power.{\\n}Silence it with {CLR:OL_CYAN}Silence Attack{CLR:WHITE}.{\\n}It\u2019s vulnerable to water,{\\n}so {CLR:OL_CYAN}Watera{CLR:WHITE} is the way to go."
+    },
+    "210": {
+      "Name": "Barbatos",
+      "Sensor": "Protected by tough armor. Try {CLR:OL_CYAN}Armor Break{CLR:WHITE}.",
+      "Scan": "Covered in thick armor.{\\n}{CLR:OL_CYAN}Armor Break{CLR:WHITE} works well, but{\\n}watch out for a powerful{\\n}counterattack.{\\n}All of its attacks deal great{\\n}damage, so beware."
+    },
+    "211": {
+      "Name": "???",
+      "Sensor": "{CLR:OL_CYAN}Steal{CLR:WHITE} to get the stuff inside.",
+      "Scan": "Not ready yet."
+    },
+    "212": {
+      "Name": "Wendigo",
+      "Sensor": "Only uses physical attacks. Curing its {CLR:OL_CYAN}berserk{CLR:WHITE} status will lower its strength...",
+      "Scan": "Uses physical attacks only.{\\n}Once it puts up its dukes,{\\n}it\u2019ll retaliate to any physical{\\n}attacks with a deadly{\\n}counterattack."
+    },
+    "213": {
+      "Name": "Guado Guardian",
+      "Sensor": "Heals himself with {CLR:OL_CYAN}Auto-Potion{CLR:WHITE}, so stop him from using items.",
+      "Scan": "Try to stop him from healing{\\n}himself with {CLR:OL_CYAN}Auto-Potion{CLR:WHITE}.{\\n}He sometimes casts {CLR:OL_CYAN}Berserk{CLR:WHITE}{\\n}on other enemies, making them{\\n}stronger."
+    },
+    "214": {
+      "Name": "Funguar",
+      "Sensor": "Occasionally counters with {CLR:OL_CYAN}Pollen{CLR:WHITE}, which induces {CLR:OL_CYAN}sleep{CLR:WHITE}.",
+      "Scan": "Casts {CLR:OL_CYAN}Fire{CLR:WHITE}, so it\u2019s best to{\\n}{CLR:OL_CYAN}silence{CLR:WHITE} it.{\\n}Occasionally retaliates with{\\n}{CLR:OL_CYAN}sleep{CLR:WHITE}-inducing {CLR:OL_CYAN}Pollen{CLR:WHITE}.{\\n}Putting it to {CLR:OL_CYAN}sleep{CLR:WHITE} is effective.{\\n}Vulnerable to fire."
+    },
+    "215": {
+      "Name": "Thorn",
+      "Sensor": "Counters physical attacks with {CLR:OL_CYAN}Pollen{CLR:WHITE}, which induces {CLR:OL_CYAN}sleep{CLR:WHITE} and {CLR:OL_CYAN}darkness{CLR:WHITE}.",
+      "Scan": "Casts {CLR:OL_CYAN}Fira{CLR:WHITE}.{\\n}Putting it to {CLR:OL_CYAN}sleep{CLR:WHITE} is effective.{\\n}Releases {CLR:OL_CYAN}sleep{CLR:WHITE}- and {CLR:OL_CYAN}darkness{CLR:WHITE}-{\\n}inducing {CLR:OL_CYAN}Pollen{CLR:WHITE} when hit by a{\\n}weapon.{\\n}Vulnerable to fire."
+    },
+    "216": {
+      "Name": "Exoray",
+      "Sensor": "Counters physical attacks with {CLR:OL_CYAN}Pollen{CLR:WHITE}, which induces {CLR:OL_CYAN}poison{CLR:WHITE}, {CLR:OL_CYAN}silence{CLR:WHITE}, and {CLR:OL_CYAN}darkness{CLR:WHITE}.",
+      "Scan": "Casts {CLR:OL_CYAN}Firaga{CLR:WHITE}, but {CLR:OL_CYAN}Silence{CLR:WHITE}{\\n}works well.{\\n}Sometimes counters physical attacks{\\n}with pollen that may cause {CLR:OL_CYAN}poison{CLR:WHITE},{\\n}{CLR:OL_CYAN}silence{CLR:WHITE} and {CLR:OL_CYAN}darkness{CLR:WHITE}.{\\n}Vulnerable to fire."
+    },
+    "217": {
+      "Name": "Xiphos",
+      "Sensor": "Occasionally succumbs to {CLR:OL_CYAN}darkness{CLR:WHITE}.",
+      "Scan": "Very nimble.{\\n}{CLR:OL_CYAN}Darkness{CLR:WHITE} works, but {CLR:OL_CYAN}Threaten{CLR:WHITE}{\\n}is the way to go."
+    },
+    "218": {
+      "Name": "Puroboros",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "219": {
+      "Name": "Spirit",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "220": {
+      "Name": "Wraith",
+      "Sensor": "Casts {CLR:OL_CYAN}Doom{CLR:WHITE} at the beginning of battle.",
+      "Scan": "Elemental strengths/weaknesses{\\n}are different each encounter.{\\n}Casts {CLR:OL_CYAN}Doom{CLR:WHITE} in battle.{\\n}If nobody is {CLR:OL_CYAN}Doomed{CLR:WHITE}, it may{\\n}unleash {CLR:OL_CYAN}Death{CLR:WHITE}, so watch out.{\\n}{\\n}{CLR:YELLOW}Kimahri can learn {CLR:OL_CYAN}Doom{CLR:YELLOW}.{CLR:WHITE}"
+    },
+    "221": {
+      "Name": "Sandragora",
+      "Sensor": "Absorbs water.",
+      "Scan": "Its {CLR:OL_CYAN}Seed Burst{CLR:WHITE} doesn\u2019t hurt{\\n}much, but may cause {CLR:OL_CYAN}confusion{CLR:WHITE}.{\\n}As a desert plant it absorbs{\\n}water, but burns easily."
+    },
+    "222": {
+      "Name": "Guado Guardian",
+      "Sensor": "Tries to nullify Lulu\u2019s magic.",
+      "Scan": "Controls fiends like Bombs{\\n}and Chimeras.{\\n}Tries to stop Lulu\u2019s magic{\\n}with {CLR:OL_CYAN}Silence{CLR:WHITE} and {CLR:OL_CYAN}Confuse{CLR:WHITE}.{\\n}Hit him with {CLR:OL_CYAN}Silence Attack{CLR:WHITE}{\\n}first to leave him helpless."
+    },
+    "223": {
+      "Name": "Tonberry",
+      "Sensor": "Advances closer four times. Defeat it before then, or else...",
+      "Scan": "After four {CLR:OL_CYAN}waddles{CLR:WHITE}, he stabs{\\n}with his {CLR:OL_CYAN}Chef\u2019s Knife{CLR:WHITE}.{\\n}His counterattack {CLR:OL_CYAN}Karma{CLR:WHITE} deals{\\n}damage based on the number of{\\n}enemies that character has{\\n}defeated."
+    },
+    "224": {
+      "Name": "Master Tonberry",
+      "Sensor": "Advances closer four times. Defeat it before then, or else...",
+      "Scan": "After four {CLR:OL_CYAN}waddles{CLR:WHITE}, he stabs{\\n}with his {CLR:OL_CYAN}Chef\u2019s Knife{CLR:WHITE}.{\\n}His counterattack {CLR:OL_CYAN}Karma{CLR:WHITE} deals{\\n}damage based on the number of{\\n}enemies that character has{\\n}defeated."
+    },
+    "225": {
+      "Name": "Evil Eye",
+      "Sensor": "Aerial creature with high magic defense. Beware of its {CLR:OL_CYAN}confusion{CLR:WHITE} attack.",
+      "Scan": "Aerial and hard to hit.{\\n}Vulnerable to fire, but{\\n}has high magic defense.{\\n}Its {CLR:OL_CYAN}Gaze{CLR:WHITE} may cause{\\n}{CLR:OL_CYAN}confusion{CLR:WHITE}."
+    },
+    "226": {
+      "Name": "Bomb",
+      "Sensor": "Retaliates with {CLR:OL_CYAN}Self-Destruct{CLR:WHITE} when attacked three times.",
+      "Scan": "Retaliates with {CLR:OL_CYAN}Self-Destruct{CLR:WHITE}{\\n}against whoever attacks it a third{\\n}time.{\\n}Use {CLR:OL_CYAN}NulBlaze{CLR:WHITE} if you can\u2019t defeat it{\\n}before then.{\\n}Vulnerable to ice, so use {CLR:OL_CYAN}Blizzara{CLR:WHITE}.{\\n}{\\n}{CLR:YELLOW}Kimahri can learn {CLR:OL_CYAN}Self-Destruct{CLR:YELLOW}.{CLR:WHITE}"
+    },
+    "227": {
+      "Name": "Chimera",
+      "Sensor": "{CLR:OL_CYAN}Darkness{CLR:WHITE} and {CLR:OL_CYAN}silence{CLR:WHITE} work well. Vulnerable to {CLR:OL_CYAN}Threaten{CLR:WHITE}.",
+      "Scan": "The snake casts {CLR:OL_CYAN}Thundara{CLR:WHITE}, the bull{\\n}{CLR:OL_CYAN}Assaults{CLR:WHITE}, the hawk uses {CLR:OL_CYAN}Aqua{\\n}Breath{CLR:WHITE}, and the lion uses {CLR:OL_CYAN}Megiddo{\\n}Flame{CLR:WHITE}, in that order.{\\n}Vulnerable to {CLR:OL_CYAN}Threaten{CLR:WHITE}, {CLR:OL_CYAN}darkness{CLR:WHITE},{\\n}and {CLR:OL_CYAN}silence{CLR:WHITE}.{\\n}{\\n}{CLR:YELLOW}Kimahri can learn {CLR:OL_CYAN}Aqua Breath{CLR:YELLOW}.{CLR:WHITE}"
+    },
+    "228": {
+      "Name": "Dual Horn",
+      "Sensor": "Inflict {CLR:OL_CYAN}darkness{CLR:WHITE} to evade its attacks.",
+      "Scan": "Its {CLR:OL_CYAN}Gore{CLR:WHITE} is powerful, but{\\n}inflict {CLR:OL_CYAN}darkness{CLR:WHITE} or use {CLR:OL_CYAN}Sleep{\\n}Attack{CLR:WHITE} to avoid it easily.{\\n}{\\n}{CLR:YELLOW}Kimahri can learn {CLR:OL_CYAN}Fire Breath{CLR:YELLOW}.{CLR:WHITE}"
+    },
+    "229": {
+      "Name": "Defender X",
+      "Sensor": "Made of stone. Resistant to physical attacks.",
+      "Scan": "Boasts very high physical attack{\\n}and defense.{\\n}Its counterattack {CLR:OL_CYAN}Blast Punch{CLR:WHITE}{\\n}delays target and causes damage.{\\n}Casts {CLR:OL_CYAN}Mighty Guard{CLR:WHITE} and {CLR:OL_CYAN}Slowga{CLR:WHITE}."
+    },
+    "230": {
+      "Name": "Garuda",
+      "Sensor": "Dodging its attacks is easier after inflicting {CLR:OL_CYAN}darkness{CLR:WHITE}.",
+      "Scan": "It has high strength and{\\n}tons of HP.{\\n}Beware of {CLR:OL_CYAN}Sonic Boom{CLR:WHITE}, which hits{\\n}all characters.{\\n}Dodge its attacks more easily by{\\n}inflicting {CLR:OL_CYAN}darkness{CLR:WHITE}."
+    },
+    "231": {
+      "Name": "Dingo",
+      "Sensor": "Very nimble. Resistant to magic.",
+      "Scan": "Very nimble and hard to hit.{\\n}High magic defense.{\\n}Must defeat it quickly{\\n}or be attacked.{\\n}Have {PC:00:TIDUS} beat it{\\n}pronto."
+    },
+    "232": {
+      "Name": "Water Flan",
+      "Sensor": "Water elemental. Vulnerable to opposing element. Resistant to physical attacks.",
+      "Scan": "Water-based.{\\n}So soft, it\u2019s hard to damage{\\n}physically.{\\n}Weak against lightning, so blast{\\n}it with Lulu\u2019s {CLR:OL_CYAN}Thunder{CLR:WHITE} spell.{\\n}Don\u2019t use {CLR:OL_CYAN}Water{CLR:WHITE} or it will{\\n}recover HP."
+    },
+    "233": {
+      "Name": "Condor",
+      "Sensor": "Aerial. Magic attacks are the way to go.",
+      "Scan": "Aerial and hard to hit.{\\n}Have Wakka shoot it down{\\n}or let Lulu toast it with {CLR:OL_CYAN}Fire{CLR:WHITE}."
+    },
+    "234": {
+      "Name": "Ragora",
+      "Sensor": "Vulnerable to fire.",
+      "Scan": "Beware the powerful {CLR:OL_CYAN}Seed Cannon{CLR:WHITE}.{\\n}It can {CLR:OL_CYAN}KO{CLR:WHITE} in a single shot.{\\n}Most plant fiends burn easily,{\\n}so have Lulu cast {CLR:OL_CYAN}Fira{CLR:WHITE}.{\\n}{\\n}{CLR:YELLOW}Kimahri can learn {CLR:OL_CYAN}Seed Cannon{CLR:YELLOW}.{CLR:WHITE}"
+    },
+    "235": {
+      "Name": "Raldo",
+      "Sensor": "Covered by a hard shell. {CLR:OL_CYAN}Piercing{CLR:WHITE} weapons are the way to go.",
+      "Scan": "Covered by a hard shell.{\\n}Slow-moving, but has high physical{\\n}and magic defense.{\\n}Vulnerable to ice.{\\n}Falls easily to {CLR:OL_CYAN}piercing{CLR:WHITE} weapons.{\\n}Have Auron slice it down the middle."
+    },
+    "236": {
+      "Name": "Bunyip",
+      "Sensor": "Covered by a hard shell. {CLR:OL_CYAN}Piercing{CLR:WHITE} weapons are the way to go.",
+      "Scan": "Covered by a hard shell.{\\n}Slow-moving, but has high physical{\\n}and magic defense.{\\n}Vulnerable to ice and water.{\\n}Falls easily to {CLR:OL_CYAN}piercing{CLR:WHITE} weapons."
+    },
+    "237": {
+      "Name": "???",
+      "Sensor": "???",
+      "Scan": "Not ready yet."
+    },
+    "238": {
+      "Name": "Zu",
+      "Sensor": "Beware the {CLR:OL_CYAN}Sonic Boom{CLR:WHITE} when its wings glow.",
+      "Scan": "High HP. Aerial, but so big that{\\n}it\u2019s easy to hit.{\\n}Its wings will start flashing{\\n}the turn before it unleashes{\\n}{CLR:OL_CYAN}Sonic Boom{CLR:WHITE}.{\\n}{\\n}Use {CLR:OL_CYAN}Dark Buster{CLR:WHITE} and strong{\\n}attacks, or else..."
+    },
+    "239": {
+      "Name": "Zaurus",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "240": {
+      "Name": "Halma",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "241": {
+      "Name": "Aqua Flan",
+      "Sensor": "Water elemental. Vulnerable to opposing element. Resistant to physical attacks.",
+      "Scan": "Water-based.{\\n}So soft, it\u2019s hard to damage{\\n}physically.{\\n}Weak against lightning, so blast{\\n}it with {CLR:OL_CYAN}Thunder{CLR:WHITE}.{\\n}Water attacks heal it, so avoid{\\n}using them."
+    },
+    "242": {
+      "Name": "Floating Death",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "243": {
+      "Name": "Maze Larva",
+      "Sensor": "Casts {CLR:OL_CYAN}Watera{CLR:WHITE} on itself to replenish HP and grow even more powerful.",
+      "Scan": "When HP is halved, it casts{\\n}{CLR:OL_CYAN}Watera{CLR:WHITE} on itself to recover HP{\\n}and raise magic power.{\\n}Use {CLR:OL_CYAN}Silence Attack{CLR:WHITE} to silence it.{\\n}Vulnerable to lightning, so{\\n}{CLR:OL_CYAN}Thundaga{CLR:WHITE} is the way to go."
+    },
+    "244": {
+      "Name": "Machea",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "245": {
+      "Name": "Cave Iguion",
+      "Sensor": "Very nimble. Resistant to magic.",
+      "Scan": "Very nimble and hard to hit.{\\n}It has high magic defense{\\n}and takes half damage from{\\n}fire and water."
+    },
+    "246": {
+      "Name": "Swamp Mafdet",
+      "Sensor": "Covered by a hard shell. {CLR:OL_CYAN}Piercing{CLR:WHITE} weapons are the way to go.",
+      "Scan": "Covered by a hard shell.{\\n}Slow-moving, but has high{\\n}physical and magic defense.{\\n}Vulnerable to lightning and ice."
+    },
+    "247": {
+      "Name": "Bat Eye",
+      "Sensor": "Aerial. Resistant to magic.",
+      "Scan": "Aerial and hard to hit.{\\n}Vulnerable to fire, but has high{\\n}magic defense.{\\n}Its {CLR:OL_CYAN}Gaze{CLR:WHITE} can inflict {CLR:OL_CYAN}confusion{CLR:WHITE}."
+    },
+    "248": {
+      "Name": "Isaaru",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "249": {
+      "Name": "Mira",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "250": {
+      "Name": "Belgemine",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "251": {
+      "Name": "Mimic",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "252": {
+      "Name": "Mimic",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "253": {
+      "Name": "Mimic",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "254": {
+      "Name": "Wing",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "255": {
+      "Name": "Magic Urn",
+      "Sensor": "Hit the correct eye for prizes!",
+      "Scan": "Hit the correct target to win{\\n}items.{\\n}The wrong target ends the battle{\\n}with a bang.{\\n}Damage is substantial, so be sure{\\n}to heal.{\\n}Eight fabulous prizes in all,{\\n}while supplies last."
+    },
+    "256": {
+      "Name": "Mimic",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "257": {
+      "Name": "Mimic Parts",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "258": {
+      "Name": "Valefor",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "259": {
+      "Name": "Ifrit",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "260": {
+      "Name": "Mimic Parts",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "261": {
+      "Name": "Mimic Parts",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "262": {
+      "Name": "Mimic Parts",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "263": {
+      "Name": "Rifle",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "264": {
+      "Name": "Fire Rifle",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "265": {
+      "Name": "Anima",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "266": {
+      "Name": "Koma Inu",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "267": {
+      "Name": "Anima",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "268": {
+      "Name": "Anima",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "269": {
+      "Name": "Katana",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "270": {
+      "Name": "Kozuka",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "271": {
+      "Name": "Shuriken",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "272": {
+      "Name": "Head",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "273": {
+      "Name": "Arm",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "274": {
+      "Name": "Nishida",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "275": {
+      "Name": "Sword",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "276": {
+      "Name": "Nemesis",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "277": {
+      "Name": "Catastrophe",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "278": {
+      "Name": "None",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "279": {
+      "Name": "Earth Eater",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "280": {
+      "Name": "Ultima Buster",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "281": {
+      "Name": "Greater Sphere",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "282": {
+      "Name": "Th\u2019uban",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "283": {
+      "Name": "Shinryu",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "284": {
+      "Name": "Fist",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "285": {
+      "Name": "Ixion",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "286": {
+      "Name": "Shiva",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "287": {
+      "Name": "Sword",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "288": {
+      "Name": "Yojimbo",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "289": {
+      "Name": "Sandy",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "290": {
+      "Name": "Cindy",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "291": {
+      "Name": "Mindy",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "292": {
+      "Name": "Tanket",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "293": {
+      "Name": "Vidatu",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "294": {
+      "Name": "Fenrir",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "295": {
+      "Name": "Jumbo Flan",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "296": {
+      "Name": "Ornitholestes",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "297": {
+      "Name": "Pteryx",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "298": {
+      "Name": "Hornet",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "299": {
+      "Name": "One-Eye",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "300": {
+      "Name": "Stratoavis",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "301": {
+      "Name": "Abyss Worm",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "302": {
+      "Name": "Juggernaut",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "303": {
+      "Name": "Fafnir",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "304": {
+      "Name": "Malboro Menace",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "305": {
+      "Name": "Kottos",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "306": {
+      "Name": "Nega Elemental",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "307": {
+      "Name": "Catoblepas",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "308": {
+      "Name": "Chimerageist",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "309": {
+      "Name": "Coeurlregina",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "310": {
+      "Name": "Ironclad",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "311": {
+      "Name": "Jormungand",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "312": {
+      "Name": "Abaddon",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "313": {
+      "Name": "Bomb King",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "314": {
+      "Name": "Cactuar King",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "315": {
+      "Name": "Vorban",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "316": {
+      "Name": "Sleep Sprout",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "317": {
+      "Name": "Don Tonberry",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "318": {
+      "Name": "Espada",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "319": {
+      "Name": "Bomb",
+      "Sensor": "Retaliates with {CLR:OL_CYAN}Self-Destruct{CLR:WHITE} when attacked three times.",
+      "Scan": "Scan not available."
+    },
+    "320": {
+      "Name": "Dual Horn",
+      "Sensor": "Afflict it with {CLR:OL_CYAN}darkness{CLR:WHITE} so it can\u2019t hit you.",
+      "Scan": "Scan not available."
+    },
+    "321": {
+      "Name": "Vulture",
+      "Sensor": "Once it succumbs to {CLR:OL_CYAN}darkness{CLR:WHITE}, its attacks miss.",
+      "Scan": "Scan not available."
+    },
+    "322": {
+      "Name": "Basilisk",
+      "Sensor": "Watch out for its {CLR:OL_CYAN}Stone Gaze{CLR:WHITE}.",
+      "Scan": "Scan not available."
+    },
+    "323": {
+      "Name": "Ochu",
+      "Sensor": "Vulnerable to fire.",
+      "Scan": "Scan not available."
+    },
+    "324": {
+      "Name": "Larva",
+      "Sensor": "",
+      "Scan": "Scan not available."
+    },
+    "325": {
+      "Name": "Iron Giant",
+      "Sensor": "",
+      "Scan": "Scan not available."
+    },
+    "326": {
+      "Name": "Chimera",
+      "Sensor": "",
+      "Scan": "Scan not available."
+    },
+    "327": {
+      "Name": "Monster 84",
+      "Sensor": "",
+      "Scan": "Scan not available."
+    },
+    "328": {
+      "Name": "Qactuar",
+      "Sensor": "You\u2019ll get a treat if you can defeat it before it gets away.",
+      "Scan": "Scan not available."
+    },
+    "329": {
+      "Name": "Zu",
+      "Sensor": "",
+      "Scan": "Scan not available."
+    },
+    "330": {
+      "Name": "Sand Worm",
+      "Sensor": "",
+      "Scan": "Scan not available."
+    },
+    "331": {
+      "Name": "Ghost",
+      "Sensor": "",
+      "Scan": "Scan not available."
+    },
+    "332": {
+      "Name": "Malboro",
+      "Sensor": "",
+      "Scan": "Scan not available."
+    },
+    "333": {
+      "Name": "Bashura",
+      "Sensor": "",
+      "Scan": "Scan not available."
+    },
+    "334": {
+      "Name": "Dark Valefor",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "335": {
+      "Name": "Dark Ifrit",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "336": {
+      "Name": "Dark Ixion",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "337": {
+      "Name": "Dark Shiva",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "338": {
+      "Name": "Dark Bahamut",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "339": {
+      "Name": "Dark Anima",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "340": {
+      "Name": "Dark Yojimbo",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "341": {
+      "Name": "Dark Cindy",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "342": {
+      "Name": "Dark Sandy",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "343": {
+      "Name": "Dark Mindy",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "344": {
+      "Name": "Penance",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "345": {
+      "Name": "Right Arm",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "346": {
+      "Name": "Left Arm",
+      "Sensor": "Immune to sensors.",
+      "Scan": "Scan not available."
+    },
+    "347": {
+      "Name": "Unknown",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "348": {
+      "Name": "Unknown",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "349": {
+      "Name": "Unknown",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "350": {
+      "Name": "Unknown",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "351": {
+      "Name": "Unknown",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "352": {
+      "Name": "Unknown",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "353": {
+      "Name": "Unknown",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "354": {
+      "Name": "Unknown",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "355": {
+      "Name": "Unknown",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "356": {
+      "Name": "Unknown",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "357": {
+      "Name": "(Offset 4688)",
+      "Sensor": "",
+      "Scan": ""
+    },
+    "358": {
+      "Name": "(Offset 468F)",
+      "Sensor": "",
+      "Scan": ""
+    },
+    "359": {
+      "Name": "(Offset 4696)",
+      "Sensor": "",
+      "Scan": ""
+    },
+    "360": {
+      "Name": "(Offset 469D)",
+      "Sensor": "",
+      "Scan": ""
+    },
+    "361": {
+      "Name": "(Offset 46A4)",
+      "Sensor": "",
+      "Scan": ""
+    },
+    "362": {
+      "Name": "(Offset 46AB)",
+      "Sensor": "",
+      "Scan": ""
+    },
+    "363": {
+      "Name": "(Offset 46B2)",
+      "Sensor": "",
+      "Scan": ""
+    },
+    "364": {
+      "Name": "(Offset 46B9)",
+      "Sensor": "",
+      "Scan": ""
+    },
+    "365": {
+      "Name": "(Offset 46C0)",
+      "Sensor": "",
+      "Scan": ""
+    }
+  }
+}

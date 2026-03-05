@@ -1,0 +1,1841 @@
+{
+  "SchemaVersion": 1,
+  "Domain": "monsters",
+  "Locale": "fr",
+  "GeneratedAtUtc": "2026-03-04T07:27:52.2647987Z",
+  "SourceFiles": [
+    "READ_MONSTER_LOCALIZATIONS__fr.txt"
+  ],
+  "Entries": {
+    "0": {
+      "Name": "Monstre 0",
+      "Sensor": "Fen\u00EAtre d\u2019Analyse.",
+      "Scan": "Fen\u00EAtre de Scan."
+    },
+    "1": {
+      "Name": "Cujo",
+      "Sensor": "Cuirass\u00E9. Utilisez des armes per\u00E7antes.",
+      "Scan": "Recouvert d\u2019une \u00E9paisse carapace, il{\\n}est un peu lent, mais sa Constitution{\\n}et son Esprit sont \u00E9lev\u00E9s.{\\n}Point faible : Glace.{\\n}Peut \u00EAtre \u00E9limin\u00E9 d\u2019un coup avec une{\\n}arme per\u00E7ante. Laissez-donc Auron{\\n}le pourfendre !"
+    },
+    "2": {
+      "Name": "Bunyips",
+      "Sensor": "Cuirass\u00E9. Utilisez des armes per\u00E7antes.",
+      "Scan": "Recouvert d\u2019une \u00E9paisse carapace, il{\\n}est un peu lent, mais sa Constitution{\\n}et son Esprit sont \u00E9lev\u00E9s.{\\n}Points faibles : Glace et Eau.{\\n}Peut \u00EAtre \u00E9limin\u00E9 d\u2019un coup avec une{\\n}arme per\u00E7ante."
+    },
+    "3": {
+      "Name": "Mulfus",
+      "Sensor": "Cuirass\u00E9. Utilisez des armes per\u00E7antes. Attention \u00E0 Somni !",
+      "Scan": "Recouvert d\u2019une \u00E9paisse carapace, il{\\n}est un peu lent, mais sa Constitution{\\n}et son Esprit sont \u00E9lev\u00E9s.{\\n}Points faibles : Feu et Tonnerre.{\\n}Inflige parfois Somni en attaquant."
+    },
+    "4": {
+      "Name": "Mafut",
+      "Sensor": "Cuirass\u00E9. Utilisez des armes per\u00E7antes. Attention \u00E0 Somni !",
+      "Scan": "Recouvert d\u2019une \u00E9paisse carapace, il{\\n}est un peu lent, mais sa Constitution{\\n}et son Esprit sont \u00E9lev\u00E9s.{\\n}Points faibles : Glace et Tonnerre.{\\n}Inflige parfois Somni en attaquant."
+    },
+    "5": {
+      "Name": "Shred",
+      "Sensor": "Cuirass\u00E9. Utilisez des armes per\u00E7antes. Attention \u00E0 Somni !",
+      "Scan": "Recouvert d\u2019une \u00E9paisse carapace, il{\\n}est un peu lent, mais sa Constitution{\\n}et son Esprit sont \u00E9lev\u00E9s.{\\n}Point faible : Feu.{\\n}Ne subit que la moiti\u00E9 des d\u00E9g\u00E2ts{\\n}dus aux 3 autres \u00E9l\u00E9ments.{\\n}Inflige parfois Somni en attaquant."
+    },
+    "6": {
+      "Name": "Gandharva",
+      "Sensor": "Vole. R\u00E9sistant \u00E0 la magie.",
+      "Scan": "Utilise le sort Foudre. Le fait qu\u2019il{\\n}vole le rend difficile \u00E0 atteindre.{\\n}Son Esprit est \u00E9lev\u00E9, mais il est{\\n}vuln\u00E9rable \u00E0 l\u2019Eau. Laissez Wakka lui{\\n}r\u00E9gler son compte gr\u00E2ce \u00E0 sa balle."
+    },
+    "7": {
+      "Name": "Aroj",
+      "Sensor": "Vole. R\u00E9sistant \u00E0 la magie.",
+      "Scan": "Le fait qu\u2019il vole le rend difficile{\\n}\u00E0 atteindre. Son Esprit est \u00E9lev\u00E9,{\\n}mais il est vuln\u00E9rable \u00E0 l\u2019Eau.{\\n}Sa seule attaque est Foudre \u002B.{\\n}Infligez-lui Mutisme pour le rendre{\\n}inoffensif."
+    },
+    "8": {
+      "Name": "Galkimasera",
+      "Sensor": "Vole. R\u00E9sistant \u00E0 la magie.",
+      "Scan": "Le fait qu\u2019il vole le rend difficile{\\n}\u00E0 atteindre. Son Esprit est \u00E9lev\u00E9,{\\n}mais il est vuln\u00E9rable \u00E0 l\u2019Eau.{\\n}Sa seule attaque est Foudre X.{\\n}Infligez-lui Mutisme pour le rendre{\\n}inoffensif."
+    },
+    "9": {
+      "Name": "Dingo",
+      "Sensor": "Rapide. R\u00E9sistant \u00E0 la magie.",
+      "Scan": "Tr\u00E8s rapide, il est difficile \u00E0{\\n}atteindre, et son Esprit est \u00E9lev\u00E9.{\\n}Eliminez-le rapidement. Prenez-le{\\n}de court avec {PC:00:TIDUS}."
+    },
+    "10": {
+      "Name": "Chien de Mi\u2019ihen",
+      "Sensor": "Rapide. R\u00E9sistant \u00E0 la magie.",
+      "Scan": "Tr\u00E8s rapide, il est difficile \u00E0{\\n}atteindre, et son Esprit est \u00E9lev\u00E9.{\\n}Eliminez-le rapidement.{\\n}Points faibles : Feu et Eau.{\\n}Tentez un Overkill en lui infligeant{\\n}d\u2019importants d\u00E9g\u00E2ts \u00E0 l\u2019aide{\\n}d\u2019armes dot\u00E9es de ces \u00E9l\u00E9ments."
+    },
+    "11": {
+      "Name": "Garoum",
+      "Sensor": "Rapide. R\u00E9sistant \u00E0 la magie.",
+      "Scan": "Tr\u00E8s rapide, il est difficile \u00E0{\\n}atteindre, et son Esprit est \u00E9lev\u00E9.{\\n}Eliminez-le rapidement.{\\n}Points faibles : Feu et Tonnerre."
+    },
+    "12": {
+      "Name": "Loup des neiges",
+      "Sensor": "Rapide. R\u00E9sistant \u00E0 la magie.",
+      "Scan": "Tr\u00E8s rapide, il est difficile \u00E0{\\n}atteindre, et son Esprit est \u00E9lev\u00E9.{\\n}Eliminez-le rapidement.{\\n}Point faible : Feu."
+    },
+    "13": {
+      "Name": "Loup des sables",
+      "Sensor": "Rapide. R\u00E9sistant \u00E0 la magie. Attention \u00E0 Sommeil et Mutisme !",
+      "Scan": "Tr\u00E8s rapide, il est difficile \u00E0{\\n}atteindre, et son Esprit est \u00E9lev\u00E9.{\\n}Eliminez-le rapidement.{\\n}Points faibles : Feu et Glace.{\\n}Inflige parfois Sommeil ou Mutisme{\\n}en attaquant."
+    },
+    "14": {
+      "Name": "Lycaon",
+      "Sensor": "Rapide. R\u00E9sistant \u00E0 la magie. Attention \u00E0 Sommeil et Mutisme !",
+      "Scan": "Tr\u00E8s rapide, il est difficile \u00E0{\\n}atteindre, et son Esprit est \u00E9lev\u00E9.{\\n}Eliminez-le rapidement.{\\n}Points faibles : Feu et Tonnerre.{\\n}Inflige parfois Sommeil ou Mutisme{\\n}en attaquant."
+    },
+    "15": {
+      "Name": "Bandersnatch",
+      "Sensor": "Rapide. R\u00E9sistant \u00E0 la magie. Attention \u00E0 Sommeil et Mutisme !",
+      "Scan": "Tr\u00E8s rapide, il est difficile \u00E0{\\n}atteindre, et son Esprit est \u00E9lev\u00E9.{\\n}Eliminez-le rapidement.{\\n}Point faible : Feu.{\\n}Inflige parfois Sommeil ou Mutisme{\\n}en attaquant."
+    },
+    "16": {
+      "Name": "Flambos d\u2019eau",
+      "Sensor": "El\u00E9ment Eau. Vuln\u00E9rable \u00E0 l\u2019\u00E9l\u00E9ment oppos\u00E9. R\u00E9sistant aux attaques physiques.",
+      "Scan": "Sa nature flasque le rend r\u00E9sistant{\\n}aux attaques physiques.{\\n}Point faible : Tonnerre.{\\n}Eliminez-le d\u2019un coup avec le sort{\\n}Foudre de Lulu. N\u2019utilisez pas le{\\n}sort H2O, car il regagne des HP{\\n}en absorbant les attaques d\u2019Eau."
+    },
+    "17": {
+      "Name": "Flambos de foudre",
+      "Sensor": "El\u00E9ment Tonnerre. Vuln\u00E9rable \u00E0 l\u2019\u00E9l\u00E9ment oppos\u00E9. R\u00E9sistant aux attaques physiques.",
+      "Scan": "Sa nature flasque le rend r\u00E9sistant{\\n}aux attaques physiques.{\\n}Il regagne des HP en absorbant les{\\n}attaques de Tonnerre, mais il est{\\n}vuln\u00E9rable \u00E0 l\u2019\u00E9l\u00E9ment oppos\u00E9 Eau."
+    },
+    "18": {
+      "Name": "Flambos de neige",
+      "Sensor": "El\u00E9ment Glace. Vuln\u00E9rable \u00E0 l\u2019\u00E9l\u00E9ment oppos\u00E9. R\u00E9sistant aux attaques physiques.",
+      "Scan": "Sa nature flasque le rend r\u00E9sistant{\\n}aux attaques physiques.{\\n}Il regagne des HP en absorbant{\\n}les attaques de Glace, mais il est{\\n}vuln\u00E9rable \u00E0 l\u2019\u00E9l\u00E9ment oppos\u00E9 Feu.{\\n}Il utilise le sort Glacier."
+    },
+    "19": {
+      "Name": "Flambos de glace",
+      "Sensor": "El\u00E9ment Glace. Vuln\u00E9rable \u00E0 l\u2019\u00E9l\u00E9ment oppos\u00E9. R\u00E9sistant aux attaques physiques.",
+      "Scan": "Sa nature flasque le rend r\u00E9sistant{\\n}aux attaques physiques.{\\n}Il regagne des HP en absorbant{\\n}les attaques de Glace, mais il est{\\n}vuln\u00E9rable \u00E0 l\u2019\u00E9l\u00E9ment oppos\u00E9 Feu."
+    },
+    "20": {
+      "Name": "Flambos de feu",
+      "Sensor": "El\u00E9ment Feu. Vuln\u00E9rable \u00E0 l\u2019\u00E9l\u00E9ment oppos\u00E9. R\u00E9sistant aux attaques physiques.",
+      "Scan": "Sa nature flasque le rend r\u00E9sistant{\\n}aux attaques physiques.{\\n}Il regagne des HP en absorbant{\\n}les attaques de Feu, mais il est{\\n}vuln\u00E9rable \u00E0 l\u2019\u00E9l\u00E9ment oppos\u00E9 Glace.{\\n}Il utilise le sort Brasier X."
+    },
+    "21": {
+      "Name": "Flambos noir",
+      "Sensor": "Pas de point faible. R\u00E9sistant aux attaques physiques.",
+      "Scan": "Il ne subit que la moiti\u00E9 des d\u00E9g\u00E2ts{\\n}dus aux attaques \u00E9l\u00E9mentaires, et{\\n}est tr\u00E8s r\u00E9sistant aux attaques{\\n}physiques.{\\n}Il utilise des sorts tels que Cyanure,{\\n}Quart, Atomnium, Aspire ou Saign\u00E9e.{\\n}{CLR:YELLOW}Emulattak assimilable : Mistral."
+    },
+    "22": {
+      "Name": "Dinonyx",
+      "Sensor": "Rapide. R\u00E9sistant \u00E0 la magie.",
+      "Scan": "Tr\u00E8s rapide, il est difficile \u00E0{\\n}atteindre, et son Esprit est \u00E9lev\u00E9.{\\n}Eliminez-le rapidement.{\\n}Point faible : Glace."
+    },
+    "23": {
+      "Name": "Ipiria",
+      "Sensor": "Rapide. R\u00E9sistant \u00E0 la magie.",
+      "Scan": "Tr\u00E8s rapide, il est difficile \u00E0{\\n}atteindre, et son Esprit est \u00E9lev\u00E9.{\\n}Eliminez-le rapidement.{\\n}Il ne subit que la moiti\u00E9 des d\u00E9g\u00E2ts{\\n}dus au Feu, mais il est vuln\u00E9rable \u00E0{\\n}la Glace."
+    },
+    "24": {
+      "Name": "Raptour",
+      "Sensor": "Rapide. R\u00E9sistant \u00E0 la magie.",
+      "Scan": "Tr\u00E8s rapide, il est difficile \u00E0{\\n}atteindre, et son Esprit est \u00E9lev\u00E9.{\\n}Eliminez-le rapidement.{\\n}Il ne subit que la moiti\u00E9 des d\u00E9g\u00E2ts{\\n}dus au Feu et au Tonnerre, mais il{\\n}est vuln\u00E9rable \u00E0 la Glace."
+    },
+    "25": {
+      "Name": "M\u00E9lusine",
+      "Sensor": "Rapide. R\u00E9sistante \u00E0 la magie. Attention \u00E0 Fossile et Mutisme !",
+      "Scan": "Tr\u00E8s rapide, elle est difficile \u00E0{\\n}atteindre, et son Esprit est \u00E9lev\u00E9.{\\n}Ne subit que la moiti\u00E9 des d\u00E9g\u00E2ts{\\n}dus au Feu et au Tonnerre.{\\n}Inflige parfois Fossile ou Mutisme{\\n}en attaquant."
+    },
+    "26": {
+      "Name": "Iguanor",
+      "Sensor": "Rapide. R\u00E9sistant \u00E0 la magie. Attention \u00E0 Fossile et Mutisme !",
+      "Scan": "Tr\u00E8s rapide, il est difficile \u00E0{\\n}atteindre, et son Esprit est \u00E9lev\u00E9.{\\n}Ne subit que la moiti\u00E9 des d\u00E9g\u00E2ts{\\n}dus au Feu et \u00E0 l\u2019Eau.{\\n}Inflige parfois Fossile ou Mutisme{\\n}en attaquant."
+    },
+    "27": {
+      "Name": "Yowie",
+      "Sensor": "Rapide. R\u00E9sistant \u00E0 la magie. Attention \u00E0 Fossile et Mutisme !",
+      "Scan": "Tr\u00E8s rapide, il est difficile \u00E0{\\n}atteindre, et son Esprit est \u00E9lev\u00E9.{\\n}Ne subit que la moiti\u00E9 des d\u00E9g\u00E2ts{\\n}dus au Feu, au Tonnerre et \u00E0 l\u2019Eau.{\\n}Inflige parfois Fossile ou Mutisme{\\n}en attaquant."
+    },
+    "28": {
+      "Name": "Condor",
+      "Sensor": "Vole. Utilisez la magie.",
+      "Scan": "Le fait qu\u2019il vole le rend difficile{\\n}\u00E0 atteindre. Mieux vaut laisser{\\n}Wakka s\u2019en charger, ou profiter{\\n}de sa vuln\u00E9rabilit\u00E9 au Feu pour{\\n}utiliser le sort Brasier de Lulu."
+    },
+    "29": {
+      "Name": "Simurgh",
+      "Sensor": "Vole. Utilisez la magie. Attention \u00E0 Obscurit\u00E9 !",
+      "Scan": "Le fait qu\u2019il vole le rend difficile \u00E0{\\n}atteindre. Utilisez plut\u00F4t la magie.{\\n}Son point faible \u00E9tant le Feu, vous{\\n}pouvez tenter un Overkill \u00E0 l\u2019aide{\\n}du sort Brasier. Il inflige parfois{\\n}Obscurit\u00E9 en attaquant."
+    },
+    "30": {
+      "Name": "Alcyon",
+      "Sensor": "Vole. Utilisez la magie. Attention \u00E0 Obscurit\u00E9 !",
+      "Scan": "Le fait qu\u2019il vole le rend difficile \u00E0{\\n}atteindre. Utilisez plut\u00F4t la magie.{\\n}Son point faible \u00E9tant le Feu, vous{\\n}pouvez tenter un Overkill \u00E0 l\u2019aide{\\n}du sort Brasier \u002B. Il inflige parfois{\\n}Obscurit\u00E9 en attaquant."
+    },
+    "31": {
+      "Name": "Abeille tueuse",
+      "Sensor": "Vole. Vuln\u00E9rable \u00E0 la Glace. Attention au Poison !",
+      "Scan": "Le fait qu\u2019elle vole la rend difficile{\\n}\u00E0 atteindre. Mieux vaut laisser{\\n}Wakka s\u2019en charger, ou profiter{\\n}de sa vuln\u00E9rabilit\u00E9 \u00E0 la Glace pour{\\n}utiliser le sort Glacier de Lulu.{\\n}Inflige parfois Poison en attaquant."
+    },
+    "32": {
+      "Name": "Elmidea",
+      "Sensor": "Vole. Vuln\u00E9rable \u00E0 la Glace. Attention au Poison !",
+      "Scan": "Le fait qu\u2019elle vole la rend difficile{\\n}\u00E0 atteindre. Utilisez plut\u00F4t la magie.{\\n}Son point faible \u00E9tant la Glace,{\\n}vous pouvez tenter un Overkill{\\n}\u00E0 l\u2019aide du sort Glacier.{\\n}Inflige parfois Poison en attaquant."
+    },
+    "33": {
+      "Name": "Gu\u00EApe",
+      "Sensor": "Vole. Vuln\u00E9rable \u00E0 la Glace. Attention au Poison !",
+      "Scan": "Le fait qu\u2019elle vole la rend difficile{\\n}\u00E0 atteindre. Utilisez plut\u00F4t la magie.{\\n}Son point faible \u00E9tant la Glace,{\\n}vous pouvez tenter un Overkill{\\n}\u00E0 l\u2019aide du sort Glacier \u002B.{\\n}Inflige parfois Poison en attaquant."
+    },
+    "34": {
+      "Name": "Nebiros",
+      "Sensor": "Vole. Vuln\u00E9rable \u00E0 la Glace. Attention au Poison !",
+      "Scan": "Le fait qu\u2019il vole le rend difficile{\\n}\u00E0 atteindre. Utilisez plut\u00F4t la magie.{\\n}Son point faible \u00E9tant la Glace,{\\n}vous pouvez tenter un Overkill{\\n}\u00E0 l\u2019aide du sort Glacier X.{\\n}Inflige parfois Poison en attaquant."
+    },
+    "35": {
+      "Name": "Oeil flottant",
+      "Sensor": "Vole. R\u00E9sistant \u00E0 la magie.",
+      "Scan": "Le fait qu\u2019il vole le rend difficile{\\n}\u00E0 atteindre. Son Esprit est \u00E9lev\u00E9,{\\n}mais il est vuln\u00E9rable au Tonnerre.{\\n}Laissez plut\u00F4t Wakka s\u2019en charger."
+    },
+    "36": {
+      "Name": "Buer",
+      "Sensor": "Vole. R\u00E9sistant \u00E0 la magie.",
+      "Scan": "Le fait qu\u2019il vole le rend difficile{\\n}\u00E0 atteindre. Son Esprit est \u00E9lev\u00E9,{\\n}mais il est vuln\u00E9rable \u00E0 l\u2019Eau.{\\n}Son Regard provoque parfois la Folie."
+    },
+    "37": {
+      "Name": "Oeil d\u00E9moniaque",
+      "Sensor": "Vole. R\u00E9sistant \u00E0 la magie. Attention \u00E0 Folie !",
+      "Scan": "Le fait qu\u2019il vole le rend difficile{\\n}\u00E0 atteindre. Son Esprit est \u00E9lev\u00E9,{\\n}mais il est vuln\u00E9rable au Feu.{\\n}Son Regard provoque parfois la Folie."
+    },
+    "38": {
+      "Name": "Ahriman",
+      "Sensor": "Vole. R\u00E9sistant \u00E0 la magie. Attention \u00E0 Folie !",
+      "Scan": "Le fait qu\u2019il vole le rend difficile{\\n}\u00E0 atteindre. Son Esprit est \u00E9lev\u00E9,{\\n}et il n\u2019a pas de point faible.{\\n}Il peut \u00E9mettre des Ultrasons (AG).{\\n}Son Regard provoque parfois la Folie."
+    },
+    "39": {
+      "Name": "Balsamine",
+      "Sensor": "Vuln\u00E9rable au Feu.",
+      "Scan": "Attention \u00E0 sa Graine-obus !{\\n}Elle est si puissante qu\u2019elle peut{\\n}vous mettre KO d\u2019un coup.{\\n}La plupart des monstres v\u00E9g\u00E9taux{\\n}sont vuln\u00E9rables au Feu.{\\n}Profitez-en pour \u00E9liminer celui-ci{\\n}avec le sort Brasier \u002B de Lulu.{\\n}{CLR:YELLOW}Emulattak assimilable : Graine-obus."
+    },
+    "40": {
+      "Name": "Orchida",
+      "Sensor": "Vuln\u00E9rable au Feu.",
+      "Scan": "Sa Graine-obus inflige d\u2019importants{\\n}d\u00E9g\u00E2ts. Elle peut \u00E9galement tirer{\\n}des Rafales de graines, plus faibles,{\\n}mais qui provoquent parfois la Folie.{\\n}Point faible : Feu.{\\n}{CLR:YELLOW}Emulattak assimilable : Graine-obus."
+    },
+    "41": {
+      "Name": "Sahuagin",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "42": {
+      "Name": "Sahuagin",
+      "Sensor": "Vuln\u00E9rable au Tonnerre. Lent sur terre.",
+      "Scan": "Rapide mais faible.{\\n}Ses HP peu \u00E9lev\u00E9s font de lui un{\\n}adversaire peu coriace pris \u00E0 part.{\\n}Point faible : Tonnerre.{\\n}Sensible \u00E0 Obscurit\u00E9 et Sommeil."
+    },
+    "43": {
+      "Name": "Sahuagin",
+      "Sensor": "Vuln\u00E9rable au Tonnerre. Lent sur terre.",
+      "Scan": "Sorti de l\u2019eau, il est plus lent,{\\n}mais il crache des Aquaballes.{\\n}Point faible : Tonnerre.{\\n}Sensible \u00E0 Obscurit\u00E9 et Sommeil."
+    },
+    "44": {
+      "Name": "Garuda",
+      "Sensor": "Sensible \u00E0 Obscurit\u00E9.",
+      "Scan": "Sa Force et ses HP sont \u00E9lev\u00E9s.{\\n}Attention \u00E0 son Onde de choc (AG).{\\n}Infligez-lui Obscurit\u00E9 pour esquiver{\\n}plus facilement ses attaques."
+    },
+    "45": {
+      "Name": "Zu",
+      "Sensor": "Attention \u00E0 Onde de choc quand ses ailes brillent !",
+      "Scan": "Ses HP sont \u00E9lev\u00E9s, mais bien qu\u2019il{\\n}vole, il est facile \u00E0 atteindre.{\\n}Profitez-en pour lui ass\u00E9ner des{\\n}coups puissants. Quand ses ailes se{\\n}mettent \u00E0 briller, c\u2019est signe qu\u2019il va{\\n}provoquer une Onde de choc (AG) au{\\n}tour suivant. Infligez-lui Obscurit\u00E9{\\n}avant qu\u2019il ne le fasse."
+    },
+    "46": {
+      "Name": "Ver des sables",
+      "Sensor": "Attention \u00E0 S\u00E9isme ! Infligez-lui Obscurit\u00E9 pour esquiver ses coups.",
+      "Scan": "Attention au S\u00E9isme (AG) qu\u2019il{\\n}provoque un tour apr\u00E8s s\u2019\u00EAtre{\\n}appuy\u00E9 sur sa queue. Les personnes{\\n}qu\u2019il aspire en ripostant ne peuvent{\\n}reprendre le combat qu\u2019apr\u00E8s avoir{\\n}\u00E9t\u00E9 recrach\u00E9es.{\\n}Obscurit\u00E9 et Sommeil ne sont que{\\n}rarement efficaces contre lui."
+    },
+    "47": {
+      "Name": "Ver g\u00E9ant",
+      "Sensor": "Attention \u00E0 S\u00E9isme ! Pr\u00E9parez-vous \u00E0 un long combat et gardez un oeil sur vos HP.",
+      "Scan": "Attention au S\u00E9isme (AG) qu\u2019il{\\n}provoque un tour apr\u00E8s s\u2019\u00EAtre{\\n}appuy\u00E9 sur sa queue. Tentez de{\\n}lui infliger Obscurit\u00E9 ou Sommeil.{\\n}Sa Constitution et son Esprit{\\n}\u00E9tant \u00E9lev\u00E9s, le combat risque{\\n}d\u2019\u00EAtre long. Mieux vaut utiliser{\\n}Tr\u00E9pan et D\u00E9prime."
+    },
+    "48": {
+      "Name": "Golem",
+      "Sensor": "Esprit peu \u00E9lev\u00E9.",
+      "Scan": "Sa Force et sa Constitution sont{\\n}\u00E9lev\u00E9es. Il a 50 % de chances{\\n}d\u2019utiliser une Double attaque{\\n}redoutable \u00E0 chaque tour.{\\n}Mieux vaut utiliser la magie,{\\n}car son Esprit est peu \u00E9lev\u00E9."
+    },
+    "49": {
+      "Name": "Golem Type 0",
+      "Sensor": "Utilisez D\u00E9prime.",
+      "Scan": "Sa Force, sa Constitution et son{\\n}Esprit sont \u00E9lev\u00E9s. Il a 50 % de{\\n}chances d\u2019utiliser une Double{\\n}attaque redoutable \u00E0 chaque tour.{\\n}Quand ses HP sont bas, il lance son{\\n}Rocketopoing qui retarde le tour{\\n}d\u2019action de sa victime.{\\n}Mieux vaut lui infliger D\u00E9prime."
+    },
+    "50": {
+      "Name": "Fant\u00F4me",
+      "Sensor": "Lance Ch\u00E2timent au d\u00E9but du combat.",
+      "Scan": "Lance Ch\u00E2timent au d\u00E9but du{\\n}combat. Eliminez-le avant que{\\n}le compteur n\u2019arrive \u00E0 z\u00E9ro.{\\n}Attention : il change de point{\\n}faible \u00E0 chaque rencontre.{\\n}{CLR:YELLOW}Emulattak assimilable : Ch\u00E2timent."
+    },
+    "51": {
+      "Name": "Phlegyas",
+      "Sensor": "Utilise Sonic Wave apr\u00E8s 3 irradiations.",
+      "Scan": "Il irradie lorsqu\u2019il subit des d\u00E9g\u00E2ts,{\\n}et il utilise Sonic Wave (AG) apr\u00E8s 3{\\n}irradiations. Emp\u00EAchez-le d\u2019irradier{\\n}en lui infligeant Sommeil. Il ne subit{\\n}que la moiti\u00E9 des d\u00E9g\u00E2ts dus \u00E0 l\u2019Eau,{\\n}mais il est vuln\u00E9rable au Tonnerre."
+    },
+    "52": {
+      "Name": "Achelus",
+      "Sensor": "Utilise Sonic Wave apr\u00E8s 3 irradiations.",
+      "Scan": "Il irradie lorsqu\u2019il subit des d\u00E9g\u00E2ts,{\\n}et il utilise Sonic Wave (AG) apr\u00E8s 3{\\n}irradiations. Emp\u00EAchez-le d\u2019irradier{\\n}en lui infligeant Sommeil.{\\n}Il est insensible \u00E0 l\u2019Eau, mais il est{\\n}vuln\u00E9rable au Tonnerre."
+    },
+    "53": {
+      "Name": "R\u00E9mora",
+      "Sensor": "Attention \u00E0 El Ni\u00F1o !",
+      "Scan": "Plus vous l\u2019attaquez, plus il y a de{\\n}chances qu\u2019il utilise El Ni\u00F1o (AG).{\\n}Eliminez-le en un minimum de coups.{\\n}Il ne subit que la moiti\u00E9 des d\u00E9g\u00E2ts{\\n}dus \u00E0 l\u2019Eau, mais il est vuln\u00E9rable au{\\n}Tonnerre, et sensible \u00E0 Obscurit\u00E9 et{\\n}Poison."
+    },
+    "54": {
+      "Name": "Barracuda cornu",
+      "Sensor": "Attention \u00E0 El Ni\u00F1o !",
+      "Scan": "Plus vous l\u2019attaquez, plus il y a de{\\n}chances qu\u2019il utilise El Ni\u00F1o (AG).{\\n}Eliminez-le en un minimum de coups.{\\n}Il est insensible \u00E0 l\u2019Eau, mais il est{\\n}vuln\u00E9rable au Tonnerre, et sensible{\\n}\u00E0 Obscurit\u00E9 et Poison."
+    },
+    "55": {
+      "Name": "Bicorne",
+      "Sensor": "Infligez-lui Obscurit\u00E9 pour esquiver ses attaques.",
+      "Scan": "Ses Cornes causent de gros d\u00E9g\u00E2ts,{\\n}mais il est facile de les esquiver en{\\n}lui infligeant Obscurit\u00E9. L\u2019endormir{\\n}\u00E0 l\u2019aide d\u2019une attaque Morph\u00E9e est{\\n}aussi une bonne strat\u00E9gie.{\\n}{CLR:YELLOW}Emulattak assimilable : G\u00E9henne."
+    },
+    "56": {
+      "Name": "Varaha",
+      "Sensor": "Infligez-lui Obscurit\u00E9 pour esquiver ses attaques.",
+      "Scan": "Infligez-lui Obscurit\u00E9 pour esquiver{\\n}ses attaques. Il peut cracher de{\\n}puissantes Boules de feu (AG), mais{\\n}il a besoin de se concentrer un tour{\\n}auparavant.{\\n}{CLR:YELLOW}Emulattak assimilable : G\u00E9henne."
+    },
+    "57": {
+      "Name": "Grendel",
+      "Sensor": "Infligez-lui Obscurit\u00E9 pour esquiver ses attaques. Utilisez des armes per\u00E7antes.",
+      "Scan": "Infligez-lui Obscurit\u00E9 pour esquiver{\\n}ses attaques. Il peut cracher de{\\n}puissantes Boules de feu (AG), mais{\\n}il a besoin de se concentrer un tour{\\n}auparavant. Infligez-lui Poison, ou{\\n}utilisez des armes per\u00E7antes pour{\\n}le vaincre plus facilement.{\\n}{CLR:YELLOW}Emulattak assimilable : G\u00E9henne."
+    },
+    "58": {
+      "Name": "Pieuvre",
+      "Sensor": "Sa t\u00EAte est recouverte d\u2019une \u00E9paisse coquille.",
+      "Scan": "Recouverte d\u2019une \u00E9paisse coquille.{\\n}Sans une arme per\u00E7ante, il est{\\n}difficile de lui infliger des d\u00E9g\u00E2ts.{\\n}Mais son Esprit est peu \u00E9lev\u00E9,{\\n}et elle est vuln\u00E9rable au Tonnerre.{\\n}Inflige parfois Somni en attaquant."
+    },
+    "59": {
+      "Name": "Vouivre",
+      "Sensor": "Cuirass\u00E9e. Utilisez des armes per\u00E7antes.",
+      "Scan": "Recouverte de solides \u00E9cailles, elle{\\n}est un peu lente, mais son Esprit{\\n}et sa Constitution sont \u00E9lev\u00E9s.{\\n}Point faible : Glace.{\\n}Peut \u00EAtre \u00E9limin\u00E9e d\u2019un coup avec{\\n}une arme per\u00E7ante.{\\n}Attention \u00E0 son Souffle (AG)."
+    },
+    "60": {
+      "Name": "Lamashtu",
+      "Sensor": "Cuirass\u00E9. Utilisez des armes per\u00E7antes.",
+      "Scan": "Recouvert de solides \u00E9cailles, il est{\\n}un peu lent, mais sa Constitution et{\\n}son Esprit sont \u00E9lev\u00E9s.{\\n}Point faible : Feu.{\\n}Inflige parfois Somni en attaquant.{\\n}Attention \u00E0 son Souffle de Glace qui{\\n}touche tous les alli\u00E9s."
+    },
+    "61": {
+      "Name": "Kusarique",
+      "Sensor": "Cuirass\u00E9. Utilisez des armes per\u00E7antes. Attention \u00E0 Somni !",
+      "Scan": "Recouvert de solides \u00E9cailles, il est{\\n}un peu lent, mais sa Constitution et{\\n}son Esprit sont \u00E9lev\u00E9s.{\\n}Point faible : Eau.{\\n}Inflige parfois Somni en attaquant.{\\n}Attention \u00E0 son Souffle de Tonnerre{\\n}qui touche tous les alli\u00E9s."
+    },
+    "62": {
+      "Name": "Mushussu",
+      "Sensor": "Cuirass\u00E9. Utilisez des armes per\u00E7antes. Attention \u00E0 Somni !",
+      "Scan": "Recouvert de solides \u00E9cailles, il est{\\n}un peu lent, mais sa Constitution et{\\n}son Esprit sont \u00E9lev\u00E9s. Il ne subit{\\n}que la moiti\u00E9 des d\u00E9g\u00E2ts dus au Feu,{\\n}mais il est vuln\u00E9rable \u00E0 la Glace.{\\n}Inflige parfois Somni en attaquant.{\\n}Attention \u00E0 son Souffle de Feu qui{\\n}touche tous les alli\u00E9s."
+    },
+    "63": {
+      "Name": "Nidhog",
+      "Sensor": "Cuirass\u00E9. Utilisez des armes per\u00E7antes. Attention \u00E0 Somni !",
+      "Scan": "Recouvert de solides \u00E9cailles, il est{\\n}un peu lent, mais sa Constitution et{\\n}son Esprit sont \u00E9lev\u00E9s. Il ne subit{\\n}que la moiti\u00E9 des d\u00E9g\u00E2ts dus au Feu,{\\n}mais il est vuln\u00E9rable \u00E0 la Glace.{\\n}Inflige parfois Somni en attaquant.{\\n}Attention \u00E0 son Souffle de Feu qui{\\n}touche tous les alli\u00E9s."
+    },
+    "64": {
+      "Name": "Xylomid",
+      "Sensor": "Attention \u00E0 Infection qui inflige des alt\u00E9rations d\u2019\u00E9tat. Eliminez-le avant qu\u2019il ne l\u2019utilise.",
+      "Scan": "Attention \u00E0 Infection (AG) qui inflige{\\n}plusieurs alt\u00E9rations d\u2019\u00E9tat \u00E0 la fois.{\\n}Subir Poison et Folie ou Furie en{\\n}m\u00EAme temps peut \u00EAtre fatal, car{\\n}il devient impossible de se gu\u00E9rir.{\\n}Choisissez bien vos protections,{\\n}et attaquez-le par le Feu.{\\n}{CLR:YELLOW}Emulattak assimilable : Infection."
+    },
+    "65": {
+      "Name": "Morbol",
+      "Sensor": "Utilise Infection 1 fois sur 3. Choisissez bien vos protections.",
+      "Scan": "Utilise Infection 1 fois sur 3.{\\n}Pr\u00E9voyez des protections efficaces{\\n}contre les alt\u00E9rations d\u2019\u00E9tat pour{\\n}ne pas vous faire d\u00E9cimer en cas{\\n}d\u2019attaque surprise.{\\n}Etant un monstre v\u00E9g\u00E9tal, il est{\\n}vuln\u00E9rable au Feu.{\\n}{CLR:YELLOW}Emulattak assimilable : Infection."
+    },
+    "66": {
+      "Name": "Ogre",
+      "Sensor": "M\u00E9fiez-vous quand il a les bras lev\u00E9s.",
+      "Scan": "A chaque fois qu\u2019il re\u00E7oit une{\\n}attaque physique alors qu\u2019il a les{\\n}bras lev\u00E9s, il riposte violemment.{\\n}Il est vuln\u00E9rable au Feu."
+    },
+    "67": {
+      "Name": "Asherah",
+      "Sensor": "M\u00E9fiez-vous quand il a les bras lev\u00E9s.",
+      "Scan": "A chaque fois qu\u2019il re\u00E7oit une{\\n}attaque physique alors qu\u2019il a les{\\n}bras lev\u00E9s, il riposte violemment.{\\n}Mieux vaut utiliser la magie ou lui{\\n}infliger Poison."
+    },
+    "68": {
+      "Name": "Piranha",
+      "Sensor": "Force et HP peu \u00E9lev\u00E9s.",
+      "Scan": "Attaque en mordant. Sa faiblesse{\\n}et ses HP peu \u00E9lev\u00E9s font de lui{\\n}un adversaire peu coriace."
+    },
+    "69": {
+      "Name": "Piranhas",
+      "Sensor": "Attaquent par 2.",
+      "Scan": "Attaquent en mordant.{\\n}Regroup\u00E9s par 2, leur Force{\\n}et leurs HP sont augment\u00E9s."
+    },
+    "70": {
+      "Name": "Piranhas",
+      "Sensor": "Attaquent par 3.",
+      "Scan": "Attaquent en mordant.{\\n}Regroup\u00E9s par 3, leur Force{\\n}et leurs HP sont augment\u00E9s."
+    },
+    "71": {
+      "Name": "Serrasalmus",
+      "Sensor": "Attention \u00E0 Kamikaze.",
+      "Scan": "Utilise parfois Kamikaze sur son{\\n}agresseur en mourant."
+    },
+    "72": {
+      "Name": "Serrasalmus",
+      "Sensor": "Attention au Poison.",
+      "Scan": "Attaquent par 2.{\\n}Infligent parfois Poison en mordant."
+    },
+    "73": {
+      "Name": "Serrasalmus",
+      "Sensor": "Attention au Poison.",
+      "Scan": "Attaquent par 3.{\\n}Infligent parfois Poison en mordant."
+    },
+    "74": {
+      "Name": "Vepar",
+      "Sensor": "Attention \u00E0 Kamikaze.",
+      "Scan": "Utilise parfois Kamikaze sur son{\\n}agresseur en mourant."
+    },
+    "75": {
+      "Name": "Vepars",
+      "Sensor": "Attention au Poison.",
+      "Scan": "Attaquent par 2.{\\n}Infligent parfois Poison en mordant."
+    },
+    "76": {
+      "Name": "Vepars",
+      "Sensor": "Attention au Poison.",
+      "Scan": "Attaquent par 3.{\\n}Infligent parfois Poison en mordant."
+    },
+    "77": {
+      "Name": "El\u00E9mentaire jaune",
+      "Sensor": "El\u00E9ment Tonnerre. Vuln\u00E9rable \u00E0 l\u2019\u00E9l\u00E9ment oppos\u00E9.",
+      "Scan": "Utilise le sort Foudre.{\\n}R\u00E9sistant aux attaques physiques.{\\n}Il regagne des HP en absorbant les{\\n}attaques de Tonnerre, mais il est{\\n}vuln\u00E9rable \u00E0 l\u2019\u00E9l\u00E9ment oppos\u00E9 Eau.{\\n}Utilisez le sort H2O."
+    },
+    "78": {
+      "Name": "El\u00E9mentaire blanc",
+      "Sensor": "El\u00E9ment Glace. Vuln\u00E9rable \u00E0 l\u2019\u00E9l\u00E9ment oppos\u00E9.",
+      "Scan": "Utilise le sort Glacier.{\\n}R\u00E9sistant aux attaques physiques.{\\n}Il regagne des HP en absorbant{\\n}les attaques de Glace, mais il est{\\n}vuln\u00E9rable \u00E0 l\u2019\u00E9l\u00E9ment oppos\u00E9 Feu.{\\n}Utilisez le sort Brasier."
+    },
+    "79": {
+      "Name": "El\u00E9mentaire rouge",
+      "Sensor": "El\u00E9ment Feu. Vuln\u00E9rable \u00E0 l\u2019\u00E9l\u00E9ment oppos\u00E9.",
+      "Scan": "Utilise le sort Brasier.{\\n}R\u00E9sistant aux attaques physiques.{\\n}Il regagne des HP en absorbant{\\n}les attaques de Feu, mais il est{\\n}vuln\u00E9rable \u00E0 l\u2019\u00E9l\u00E9ment oppos\u00E9 Glace.{\\n}Utilisez le sort Glacier."
+    },
+    "80": {
+      "Name": "El\u00E9mentaire or",
+      "Sensor": "El\u00E9ment Tonnerre. Vuln\u00E9rable \u00E0 l\u2019\u00E9l\u00E9ment oppos\u00E9.",
+      "Scan": "Utilise le sort Foudre.{\\n}R\u00E9sistant aux attaques physiques.{\\n}Il regagne des HP en absorbant les{\\n}attaques de Tonnerre, mais il est{\\n}vuln\u00E9rable \u00E0 l\u2019\u00E9l\u00E9ment oppos\u00E9 Eau.{\\n}Tentez un Overkill \u00E0 l\u2019aide du sort{\\n}H2O \u002B."
+    },
+    "81": {
+      "Name": "El\u00E9mentaire bleu",
+      "Sensor": "El\u00E9ment Eau. Vuln\u00E9rable \u00E0 l\u2019\u00E9l\u00E9ment oppos\u00E9.",
+      "Scan": "Utilise le sort H2O \u002B.{\\n}R\u00E9sistant aux attaques physiques.{\\n}Il regagne des HP en absorbant{\\n}les attaques d\u2019Eau, mais il est{\\n}vuln\u00E9rable \u00E0 l\u2019\u00E9l\u00E9ment oppos\u00E9{\\n}Tonnerre. Utilisez le sort Foudre \u002B."
+    },
+    "82": {
+      "Name": "El\u00E9mentaire obscur",
+      "Sensor": "Pas de point faible. Utilise Boomerang pour envoyer des sorts.",
+      "Scan": "Il est r\u00E9sistant aux attaques{\\n}physiques et n\u2019a pas de point faible.{\\n}Il utilise Boomerang pour renvoyer{\\n}ses propres attaques \u00E9l\u00E9mentaires.{\\n}Si vous l\u2019annulez \u00E0 l\u2019aide du sort{\\n}Dissipation, il utilisera des sorts{\\n}comme Cyanure, Aspire ou Saign\u00E9e."
+    },
+    "83": {
+      "Name": "El\u00E9mentaire noir",
+      "Sensor": "Analyse impossible.",
+      "Scan": "En travaux."
+    },
+    "84": {
+      "Name": "Epehj",
+      "Sensor": "Attention au Poison.",
+      "Scan": "Il est rapide, et ses griffes{\\n}infligent Poison.{\\n}Il arrive qu\u2019Obscurit\u00E9 fasse effet{\\n}sur lui, et il est sensible \u00E0 Intimider."
+    },
+    "85": {
+      "Name": "Behemoth",
+      "Sensor": "Attention \u00E0 Ejecter.",
+      "Scan": "Ses coups de griffes, son sort{\\n}Foudre \u002B et son attaque Ejecter{\\n}sont si puissants qu\u2019il pourrait{\\n}vous mettre KO d\u2019un coup.{\\n}{CLR:YELLOW}Emulattak assimilable : Mother."
+    },
+    "86": {
+      "Name": "M\u00E9ga Behemoth",
+      "Sensor": "Lance M\u00E9t\u00E9ore en mourant.",
+      "Scan": "Ses coups de griffes, ses sorts de{\\n}Tonnerre et son attaque Ejecter{\\n}sont tr\u00E8s puissants. Attention \u00E0{\\n}M\u00E9t\u00E9ore qu\u2019il lance avant de mourir.{\\n}C\u2019est une attaque physique :{\\n}prot\u00E9gez-vous avec Carapace{\\n}ou en appuyant sur {CTRL:30:TRIANGLE}.{\\n}{CLR:YELLOW}Emulattak assimilable : Mother."
+    },
+    "87": {
+      "Name": "Chimaira",
+      "Sensor": "Sensible \u00E0 Obscurit\u00E9, Mutisme et Intimider.",
+      "Scan": "Ses 4 t\u00EAtes attaquent dans l\u2019ordre{\\n}suivant : le serpent avec Foudre \u002B,{\\n}le taureau avec Charge, l\u2019aigle avec{\\n}Aquasouffle (AG) et le lion avec Feu{\\n}de Megido. Elle est sensible \u00E0{\\n}Intimider, Obscurit\u00E9, et Mutisme.{\\n}{CLR:YELLOW}Emulattak assimilable : Aquasouffle."
+    },
+    "88": {
+      "Name": "Kimaira",
+      "Sensor": "Sensible \u00E0 Obscurit\u00E9, Mutisme et Intimider.",
+      "Scan": "Ses 4 t\u00EAtes attaquent dans l\u2019ordre{\\n}suivant : le serpent avec Foudre \u002B{\\n}ou Foudre X, le taureau avec Charge,{\\n}l\u2019aigle avec Aquasouffle (AG) et le{\\n}lion avec Feu de Megido.{\\n}Elle est sensible \u00E0 Intimider, Mutisme{\\n}et Obscurit\u00E9.{\\n}{CLR:YELLOW}Emulattak assimilable : Aquasouffle."
+    },
+    "89": {
+      "Name": "Couguar",
+      "Sensor": "Utilise Saign\u00E9e et Blaster quand ses HP sont bas.",
+      "Scan": "Sa Magie et son Esprit sont \u00E9lev\u00E9s.{\\n}Il utilise Foudre \u002B et Glacier \u002B, ainsi{\\n}que Saign\u00E9e quand ses HP sont bas.{\\n}L\u2019attaquer avec le coup sp\u00E9cial{\\n}Silence \u002B l\u2019emp\u00EAchera de lancer ces{\\n}sorts, mais pas de recourir \u00E0 son{\\n}Blaster p\u00E9trifiant."
+    },
+    "90": {
+      "Name": "Ma\u00EEtre Couguar",
+      "Sensor": "Utilise Saign\u00E9e, Folie et Blaster quand ses HP sont bas.",
+      "Scan": "Sa Magie et son Esprit sont \u00E9lev\u00E9s.{\\n}Il utilise Foudre X et Glacier X, ainsi{\\n}que Saign\u00E9e et Folie quand ses HP{\\n}sont bas.{\\n}L\u2019attaquer avec le coup sp\u00E9cial{\\n}Silence \u002B l\u2019emp\u00EAchera de lancer ces{\\n}sorts, mais pas de recourir \u00E0 son{\\n}Blaster mortel."
+    },
+    "91": {
+      "Name": "M\u00E9ca-garde",
+      "Sensor": "D\u00E9truisez-le d\u2019un coup avec Voler.",
+      "Scan": "Machine antique, semblable aux{\\n}Porteurs Al Bheds combattus \u00E0 Luca.{\\n}Il a \u00E9t\u00E9 un peu r\u00E9par\u00E9.{\\n}Rikku peut le d\u00E9truire d\u2019un coup{\\n}en le d\u00E9montant avec Voler.{\\n}Il est vuln\u00E9rable au Tonnerre."
+    },
+    "92": {
+      "Name": "M\u00E9ca-\u00E9claireur",
+      "Sensor": "D\u00E9truisez-le d\u2019un coup avec Voler.",
+      "Scan": "Il est en meilleur \u00E9tat que les{\\n}machines rencontr\u00E9es dans le{\\n}d\u00E9sert de Sanubia. Il est donc{\\n}plus puissant et a plus de HP.{\\n}Vous pouvez le d\u00E9truire d\u2019un{\\n}coup en le d\u00E9montant avec Voler."
+    },
+    "93": {
+      "Name": "M\u00E9ca-\u00E9claireur",
+      "Sensor": "D\u00E9truisez-le d\u2019un coup avec Voler.",
+      "Scan": "Il est en meilleur \u00E9tat que les{\\n}machines rencontr\u00E9es dans le{\\n}d\u00E9sert de Sanubia. Il est donc{\\n}plus puissant et a plus de HP.{\\n}Vous pouvez le d\u00E9truire d\u2019un{\\n}coup en le d\u00E9montant avec Voler."
+    },
+    "94": {
+      "Name": "M\u00E9ca-leader",
+      "Sensor": "D\u00E9truisez-le d\u2019un coup avec Voler.",
+      "Scan": "Machine antique abandonn\u00E9e au{\\n}mont Gagazet il y a 1000 ans.{\\n}D\u00E9barrassez-vous en vite, car{\\n}il est rapide, et son Electrochoc{\\n}est tr\u00E8s puissant.{\\n}Vous pouvez le d\u00E9truire d\u2019un{\\n}coup en le d\u00E9montant avec Voler."
+    },
+    "95": {
+      "Name": "D\u00E9monolithe",
+      "Sensor": "Attention \u00E0 son Souffle (AG). Utilisez des protections efficaces contre Fossile.",
+      "Scan": "Il riposte avec Mal\u00E9diction, qui{\\n}inflige Poison, Mutisme, Obscurit\u00E9{\\n}et Fl\u00E9au. Un alli\u00E9 qui a subi Fossile{\\n}et qui re\u00E7oit un coup, se brise et{\\n}ne peut plus participer au combat.{\\n}Il inflige aussi parfois Zombie."
+    },
+    "96": {
+      "Name": "M\u00E9ca-artilleur",
+      "Sensor": "D\u00E9truisez-le d\u2019un coup avec Voler.",
+      "Scan": "Machine antique. Il a \u00E9t\u00E9 un peu{\\n}r\u00E9par\u00E9. Ses HP sont plus \u00E9lev\u00E9s{\\n}que ceux d\u2019un M\u00E9ca-garde.{\\n}Rikku peut le d\u00E9truire d\u2019un coup{\\n}en le d\u00E9montant avec Voler.{\\n}Il est vuln\u00E9rable au Tonnerre."
+    },
+    "97": {
+      "Name": "M\u00E9ca-chasseur",
+      "Sensor": "D\u00E9truisez-le d\u2019un coup avec Voler.",
+      "Scan": "Il est en meilleur \u00E9tat que les{\\n}machines rencontr\u00E9es dans le{\\n}d\u00E9sert de Sanubia, et a donc{\\n}plus de HP. Il est plus lent qu\u2019un{\\n}m\u00E9ca-\u00E9claireur, mais bien plus{\\n}puissant.{\\n}Vous pouvez le d\u00E9truire d\u2019un{\\n}coup en le d\u00E9montant avec Voler."
+    },
+    "98": {
+      "Name": "M\u00E9ca-armure",
+      "Sensor": "D\u00E9truisez-la d\u2019un coup avec Voler.",
+      "Scan": "Machine antique abandonn\u00E9e au{\\n}mont Gagazet il y a 1000 ans.{\\n}Sa Constitution et ses HP sont plus{\\n}\u00E9lev\u00E9s que ceux d\u2019un M\u00E9ca-leader.{\\n}Utiliser Voler sur elle permet non{\\n}seulement de la d\u00E9truire d\u2019un coup{\\n}en la d\u00E9montant, mais \u00E9galement de{\\n}r\u00E9cup\u00E9rer des objets de soins."
+    },
+    "99": {
+      "Name": "Utlima Arma",
+      "Sensor": "Combattez de toutes vos forces !",
+      "Scan": "Scan impossible."
+    },
+    "100": {
+      "Name": "Omega Arma",
+      "Sensor": "Combattez de toutes vos forces !",
+      "Scan": "Scan impossible."
+    },
+    "101": {
+      "Name": "Ultros",
+      "Sensor": "Donne un Coup de t\u00EAte apr\u00E8s s\u2019\u00EAtre \u00E9loign\u00E9.",
+      "Scan": "Apr\u00E8s avoir subi des d\u00E9g\u00E2ts{\\n}importants, il se met hors d\u2019atteinte{\\n}derri\u00E8re les piliers et inflige de gros{\\n}d\u00E9g\u00E2ts au tour suivant en donnant{\\n}un Coup de t\u00EAte (AG). Servez-vous{\\n}des Astuces pour l\u2019en emp\u00EAcher !"
+    },
+    "102": {
+      "Name": "Guno",
+      "Sensor": "Vuln\u00E9rable \u00E0 la magie.",
+      "Scan": "Cach\u00E9 sous sa carapace, il est quasi{\\n}insensible aux attaques physiques,{\\n}et ses Tentacules absorbent tous{\\n}les sorts lanc\u00E9s contre lui. Une fois{\\n}ces derniers \u00E9limin\u00E9s, vous pouvez{\\n}l\u2019attaquer avec des sorts de Feu{\\n}pour le faire sortir. Il regagne des{\\n}HP en absorbant les attaques d\u2019Eau."
+    },
+    "103": {
+      "Name": "Tentacules",
+      "Sensor": "Absorbent les sorts lanc\u00E9s contre Guno.",
+      "Scan": "Les Tentacules absorbent les sorts{\\n}lanc\u00E9s contre Guno. Mieux vaut donc{\\n}les d\u00E9truire en priorit\u00E9. Ils sont{\\n}eux-m\u00EAmes r\u00E9sistants \u00E0 la magie.{\\n}Attaquez-les plut\u00F4t physiquement."
+    },
+    "104": {
+      "Name": "Chocobogre",
+      "Sensor": "Sensible \u00E0 Obscurit\u00E9.",
+      "Scan": "Il tombe en arri\u00E8re apr\u00E8s avoir subi{\\n}des d\u00E9g\u00E2ts importants. Sa Cuirasse{\\n}devient alors inefficace. Il lance une{\\n}puissante attaque apr\u00E8s avoir dit :{\\n}\u201Dt\u2019es le suivant !\u201D. Veillez donc \u00E0{\\n}vous soigner et \u00E0 vous prot\u00E9ger.{\\n}Il utilise Glacier quand ses HP sont{\\n}bas. Prot\u00E9gez-vous avec AntiGlace."
+    },
+    "105": {
+      "Name": "Neslug",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "106": {
+      "Name": "Rosace c\u00E9leste",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "107": {
+      "Name": "Squamelle",
+      "Sensor": "Il en arrive sans cesse !",
+      "Scan": "Elles tombent du corps de Sin les{\\n}unes apr\u00E8s les autres. Leurs ailes{\\n}se mettent \u00E0 briller un tour avant{\\n}qu\u2019elles ne lancent Aiguillon.{\\n}D\u00E9truisez-les rapidement !"
+    },
+    "108": {
+      "Name": "Squamelle",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "109": {
+      "Name": "Geosgaeno",
+      "Sensor": "Cuirass\u00E9. Vuln\u00E9rable \u00E0 la magie.",
+      "Scan": "Scan impossible."
+    },
+    "110": {
+      "Name": "Lanceur Al Bhed",
+      "Sensor": "Vuln\u00E9rable au Tonnerre.",
+      "Scan": "Plus vous lui infligez de d\u00E9g\u00E2ts, plus{\\n}il devient rapide. Il est vuln\u00E9rable{\\n}au Tonnerre, mais si vous lui lancez{\\n}le sort Foudre, il riposte avec des{\\n}Balles Silence. Servez-vous de ce{\\n}qui vous entoure pour l\u2019emp\u00EAcher{\\n}d\u2019utiliser sa puissante Rafale de{\\n}balles."
+    },
+    "111": {
+      "Name": "Pi\u00E9geur Al Bhed",
+      "Sensor": "Vuln\u00E9rable au Tonnerre. Ne restez pas en dessous.",
+      "Scan": "Les Grenades (AG) qu\u2019il largue apr\u00E8s{\\n}\u00EAtre remont\u00E9 infligent Obscurit\u00E9 en{\\n}plus des d\u00E9g\u00E2ts qu\u2019elles causent.{\\n}Mais si vous parvenez \u00E0 lui infliger{\\n}suffisamment de d\u00E9g\u00E2ts, il replonge{\\n}et ne peut plus les utiliser."
+    },
+    "112": {
+      "Name": "???",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "113": {
+      "Name": "Sin",
+      "Sensor": "Utilisez la magie ou les attaques de Wakka pour l\u2019atteindre.",
+      "Scan": "Si vous le laissez faire, il d\u00E9truira{\\n}Kilika ! Il est trop \u00E9loign\u00E9 du bateau.{\\n}Attaquez-le avec les sorts de Lulu{\\n}ou les balles de Wakka. Vous pouvez{\\n}aussi invoquer Valefore."
+    },
+    "114": {
+      "Name": "Ekyu",
+      "Sensor": "Infligez-lui Oscurit\u00E9 pour \u00E9viter ses attaques.",
+      "Scan": "Il provoque un Tourbillon (AG) apr\u00E8s{\\n}avoir aspir\u00E9 des HP 2 fois de suite{\\n}avec Drain. Lui infliger Obscurit\u00E9{\\n}permet d\u2019\u00E9viter plus facilement{\\n}Drain, mais n\u2019influe en rien sur{\\n}Tourbillon. Surveillez donc vos HP."
+    },
+    "115": {
+      "Name": "Squamelle",
+      "Sensor": "Il en arrive sans cesse !",
+      "Scan": "Elles ne sont pas tr\u00E8s r\u00E9sistantes,{\\n}mais il en vient sans cesse de{\\n}nouvelles. Ne perdez pas votre{\\n}temps avec elles."
+    },
+    "116": {
+      "Name": "Squamelle",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "117": {
+      "Name": "Ghi",
+      "Sensor": "Il se prot\u00E8ge des attaques avec ses bras.",
+      "Scan": "Il se prot\u00E8ge des attaques{\\n}physiques avec ses 2 bras{\\n}cuirass\u00E9s. D\u00E9truisez-les \u00E0 l\u2019aide{\\n}d\u2019armes per\u00E7antes avant de vous{\\n}attaquer au corps. La t\u00EAte se met{\\n}\u00E0 bouger bizarrement avant de{\\n}cracher un Mucus toxique.{\\n}Attaquez-la pour l\u2019en emp\u00EAcher."
+    },
+    "118": {
+      "Name": "Rosace c\u00E9leste",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "119": {
+      "Name": "Effray",
+      "Sensor": "Il aspire de l\u2019air avant de cracher son Souffle.",
+      "Scan": "Son Esprit est \u00E9lev\u00E9 et il n\u2019a pas de{\\n}point faible. Faites attention \u00E0 son{\\n}Souffle empoisonn\u00E9 quand vous \u00EAtes{\\n}pr\u00E8s de lui. Demander \u00E0 Cid d\u2019\u00E9loigner{\\n}le Vaisseau pour l\u2019esquiver d\u00E8s que{\\n}vous le voyez Aspirer de l\u2019air.{\\n}Rester \u00E0 distance permet \u00E9galement{\\n}\u00E0 Cid de lancer des Missiles."
+    },
+    "120": {
+      "Name": "Spectre d\u2019Effray",
+      "Sensor": "Vuln\u00E9rable aux objets et sorts de soins.",
+      "Scan": "Succomber \u00E0 son Regard p\u00E9trifiant{\\n}vous \u00E9limine du combat. Il riposte{\\n}\u00E0 chacune de vos attaques.{\\n}Vous pouvez lui \u00E9chapper en{\\n}d\u00E9verrouillant le portail. Son \u00E9tat{\\n}de Zombie le rend vuln\u00E9rable{\\n}aux objets et sorts de soins."
+    },
+    "121": {
+      "Name": "M\u00E9tasph\u00E8re",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "122": {
+      "Name": "Canon Al Bhed",
+      "Sensor": "Vuln\u00E9rable au Tonnerre. Se sert d\u2019un Scelleur Al Bhed pour bloquer la magie et les Chim\u00E8res.",
+      "Scan": "Sa Constitution est \u00E9lev\u00E9e, mais il{\\n}est vuln\u00E9rable au Tonnerre.{\\n}Il attaque avec une Mitrailleuse (AG){\\n}et commence le compte \u00E0 rebours de{\\n}son Rayon magique quand le Scelleur{\\n}est d\u00E9truit. Il riposte aux sorts de{\\n}Tonnerre et cr\u00E9e un autre Scelleur{\\n}d\u00E8s qu\u2019il a subi 4 attaques magiques."
+    },
+    "123": {
+      "Name": "Scelleur Al Bhed",
+      "Sensor": "Bloque la magie et les Chim\u00E8res. Attaquez-le avec des objets ou la balle de Wakka.",
+      "Scan": "Scan impossible."
+    },
+    "124": {
+      "Name": "Seymour",
+      "Sensor": "Lance des sorts \u00E9l\u00E9mentaires dans l\u2019ordre suivant : Glace, Tonnerre, Eau et Feu.",
+      "Scan": "Il lance des sorts \u00E9l\u00E9mentaires{\\n}toujours dans le m\u00EAme ordre :{\\n}Glace, Tonnerre, Eau et Feu.{\\n}Utilisez les sorts AntiGlace,{\\n}AntiTonnerre, AntiEau et AntiFeu{\\n}pour vous prot\u00E9ger en cons\u00E9quence.{\\n}Accul\u00E9, il fait appel \u00E0 sa fameuse{\\n}Chim\u00E8re..."
+    },
+    "125": {
+      "Name": "Anima",
+      "Sensor": "Utilise son Overdrive quand sa jauge est pleine.",
+      "Scan": "Scan impossible."
+    },
+    "126": {
+      "Name": "Seymour spectral",
+      "Sensor": "Lance des sorts des 4 \u00E9l\u00E9ments, ainsi que M\u00E9galith (Fossile) et Atomnium.",
+      "Scan": "Comme au temple de Macalania,{\\n}il utilise les sorts des 4 \u00E9l\u00E9ments{\\n}toujours dans le m\u00EAme ordre, mais{\\n}cette fois, il les lance par 2.{\\n}Quand ses HP sont bas, il utilise{\\n}M\u00E9galith (Fossile) et Atomnium."
+    },
+    "127": {
+      "Name": "Furomorphe",
+      "Sensor": "Attention aux attaques combin\u00E9es avec celles de Seymour !",
+      "Scan": "Sa Queue brise les adversaires{\\n}fossilis\u00E9s, les \u00E9liminant du combat.{\\n}Son attaque Desperado (AG) inflige{\\n}des d\u00E9g\u00E2ts et neutralise les sorts{\\n}de soutien."
+    },
+    "128": {
+      "Name": "Gardien du Sanctuaire",
+      "Sensor": "Sa Constitution et son Esprit sont \u00E9lev\u00E9s.",
+      "Scan": "Son attaque Photon Wing inflige{\\n}Folie, Sommeil, Mutisme, Obscurit\u00E9{\\n}et Fl\u00E9au. Sa S\u00E9daqueue annule{\\n}Booster et retarde le prochain{\\n}tour d\u2019action de sa victime.{\\n}Il utilise \u00E9galement des sorts{\\n}de soins et Boomerang."
+    },
+    "129": {
+      "Name": "Gardien des Limbes",
+      "Sensor": "Ne restez pas en face de lui sous peine de subir ses ripostes. Utilisez l\u2019Astuce T\u00E9l\u00E9portation pour changer de place.",
+      "Scan": "Il riposte dans la direction qui lui{\\n}fait face \u00E0 chaque attaque qu\u2019il{\\n}re\u00E7oit. Ses Mines magiques mettent{\\n}syst\u00E9matiquement KO les personnes{\\n}qui se trouvent dessus lorsqu\u2019elles{\\n}explosent. Utilisez l\u2019Astuce{\\n}T\u00E9l\u00E9portation pour les \u00E9viter."
+    },
+    "130": {
+      "Name": "Yunalesca",
+      "Sensor": "Celle qui manipule la mort. Vuln\u00E9rable aux attaques sacr\u00E9es.",
+      "Scan": "Elle annule les effets de Carapace,{\\n}Blindage et Booster en ripostant.{\\n}Subir l\u2019alt\u00E9ration d\u2019\u00E9tat Zombie{\\n}vous rendra vuln\u00E9rable \u00E0 Soin Max{\\n}et R\u00E9cup. Gu\u00E9rissez-vous avec{\\n}de l\u2019Eau b\u00E9nite."
+    },
+    "131": {
+      "Name": "Seymour \u00E9th\u00E9r\u00E9",
+      "Sensor": "Rendu plus puissant par les Rosaces c\u00E9lestes.",
+      "Scan": "Ses sorts sont rendus plus{\\n}puissants par les 4 Rosaces{\\n}c\u00E9lestes. Leur position semble{\\n}d\u00E9terminer le type d\u2019\u00E9l\u00E9ment qu\u2019il{\\n}utilise. Les attaques physiques les{\\n}font tourner vers la gauche et les{\\n}attaques magiques vers la droite."
+    },
+    "132": {
+      "Name": "Jecht l\u2019Ultime Chim\u00E8re",
+      "Sensor": "Lui parler (Astuces) permet de...",
+      "Scan": "Re\u00E7oit de l\u2019\u00E9nergie des Yu Pagodas{\\n}qui lui permet, une fois sa jauge{\\n}remplie, de lancer une attaque tr\u00E8s{\\n}puissante. Attaquez les Yu Pagodas{\\n}afin de l\u2019en emp\u00EAcher.{\\n}{PC:00:TIDUS} peut faire baisser la{\\n}jauge 2 fois gr\u00E2ce \u00E0 l\u2019Astuce Parler."
+    },
+    "133": {
+      "Name": "Grue",
+      "Sensor": "Fonctionne \u00E0 l\u2019\u00E9lectricit\u00E9.",
+      "Scan": "Scan impossible."
+    },
+    "134": {
+      "Name": "Biran Ronso",
+      "Sensor": "Prot\u00E8ge Yenke. Seul...",
+      "Scan": "Il cherche toujours \u00E0 Couvrir Yenke,{\\n}mais ne le pourra pas s\u2019il est s\u00E9par\u00E9{\\n}de lui suite \u00E0 un Tacle. S\u2019il subit des{\\n}d\u00E9g\u00E2ts importants, il utilise Mother,{\\n}mais une seule fois.{\\n}{CLR:YELLOW}Ma\u00EEtrise de nombreuses Emulattaks."
+    },
+    "135": {
+      "Name": "Yenke Ronso",
+      "Sensor": "Prot\u00E8ge Biran. Seul...",
+      "Scan": "Il cherche toujours \u00E0 Couvrir Biran,{\\n}mais ne le pourra pas s\u2019il est s\u00E9par\u00E9{\\n}de lui suite \u00E0 un Tacle. S\u2019il subit des{\\n}d\u00E9g\u00E2ts importants, il utilise Mistral,{\\n}mais une seule fois.{\\n}{CLR:YELLOW}Ma\u00EEtrise de nombreuses Emulattaks."
+    },
+    "136": {
+      "Name": "Bras gauche",
+      "Sensor": "Concentre son \u00E9nergie pour lancer Quartum. Esquivez-le avec l\u2019Astuce S\u2019\u00E9loigner.",
+      "Scan": "Un tour apr\u00E8s avoir concentr\u00E9 son{\\n}\u00E9nergie, il lance Quartum, qui divise{\\n}les HP par 4, mais vous pouvez{\\n}l\u2019esquiver en demandant \u00E0 Cid{\\n}d\u2019\u00E9loigner le Vaisseau. Il effectue{\\n}parfois une attaque g\u00E9n\u00E9rale.{\\n}Attention \u00E0 AnnulAura qui neutralise{\\n}tous les sorts de soutien."
+    },
+    "137": {
+      "Name": "Bras droit",
+      "Sensor": "Concentre son \u00E9nergie pour lancer Quartum. Esquivez-le avec l\u2019Astuce S\u2019\u00E9loigner.",
+      "Scan": "Un tour apr\u00E8s avoir concentr\u00E9 son{\\n}\u00E9nergie, il lance Quartum, qui divise{\\n}les HP par 4, mais vous pouvez{\\n}l\u2019esquiver en demandant \u00E0 Cid{\\n}d\u2019\u00E9loigner le Vaisseau. Il effectue{\\n}parfois une attaque g\u00E9n\u00E9rale.{\\n}Attention \u00E0 AnnulAura qui neutralise{\\n}tous les sorts de soutien."
+    },
+    "138": {
+      "Name": "Sinucl\u00E9us",
+      "Sensor": "R\u00E9gulateur de puissance de Sin. Il concentre de l\u2019\u00E9nergie quand Gunay entre dans sa carapace et...",
+      "Scan": "Il concentre de l\u2019\u00E9nergie pour lancer{\\n}Quartum quand Gunay entre dans sa{\\n}carapace, divisant les HP de ses{\\n}victimes par 4. Il utilise \u00E9galement{\\n}AnnulAura, qui neutralise tous les{\\n}sorts de soutien."
+    },
+    "139": {
+      "Name": "Gunay",
+      "Sensor": "Aspire les sorts lanc\u00E9s contre Sin.",
+      "Scan": "Quand il a perdu plus de la moiti\u00E9 de{\\n}ses HP, il entre dans sa carapace et{\\n}utilise Soin \u002B \u00E0 chaque attaque qu\u2019il{\\n}re\u00E7oit. Il n\u2019en ressort que quand il{\\n}en a suffisamment r\u00E9cup\u00E9r\u00E9. Cach\u00E9{\\n}sous sa carapace, il est insensible \u00E0{\\n}Quartum, mais..."
+    },
+    "140": {
+      "Name": "Sin",
+      "Sensor": "Arr\u00EAtez-le avant qu\u2019il n\u2019ouvre compl\u00E8tement la bouche !",
+      "Scan": "Il attire le Vaisseau et rassemble{\\n}ses derni\u00E8res forces pour lancer{\\n}Gigagravitron. Arr\u00EAtez-le avant qu\u2019il{\\n}ne le fasse, ou c\u2019est la fin assur\u00E9e."
+    },
+    "141": {
+      "Name": "Garde Guado",
+      "Sensor": "Prot\u00E8ge Seymour.",
+      "Scan": "Il se sert d\u2019objets, aussi bien pour{\\n}attaquer, en infligeant Folie avec{\\n}Absinthe, que pour se d\u00E9fendre,{\\n}gr\u00E2ce \u00E0 la comp\u00E9tence Auto Potion,{\\n}mais aussi pour r\u00E9g\u00E9n\u00E9rer Seymour.{\\n}Trouvez un moyen de l\u2019emp\u00EAcher{\\n}d\u2019utiliser ses objets."
+    },
+    "142": {
+      "Name": "Seymour sublim\u00E9",
+      "Sensor": "Attention aux attaques combin\u00E9es avec celles du Furoprior !",
+      "Scan": "Attention aux attaques combin\u00E9es,{\\n}comme les coups de Lance l\u00E9tale,{\\n}infligeant Zombie, suivis du sort{\\n}Vie Max du Furoprior, ou l\u2019attaque{\\n}Extermination, qu\u2019ils lancent \u00E0 deux.{\\n}Etudier les mouvements de Seymour{\\n}permet d\u2019anticiper ceux du Furoprior."
+    },
+    "143": {
+      "Name": "Furoprior",
+      "Sensor": "Attention aux attaques combin\u00E9es avec celles de Seymour !",
+      "Scan": "Attention aux attaques combin\u00E9es,{\\n}comme le sort Vie Max, qu\u2019il utilise{\\n}pour mettre KO ceux qui ont subi{\\n}Zombie d\u2019un coup de Lance l\u00E9tale de{\\n}Seymour. Les d\u00E9g\u00E2ts de son attaque{\\n}Faucheuse (AG) peuvent \u00EAtre r\u00E9duits{\\n}gr\u00E2ce au sort Carapace."
+    },
+    "144": {
+      "Name": "Arme de Kimahri",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "145": {
+      "Name": "Squamelle",
+      "Sensor": "Eliminez celles qui vous barrent la route. Attention \u00E0 Aiguillon quand leurs ailes brillent.",
+      "Scan": "Scan impossible."
+    },
+    "146": {
+      "Name": "Cercle t\u00E9l\u00E9porteur",
+      "Sensor": "Chaque cercle ne peut accueillir qu\u2019une personne \u00E0 la fois.",
+      "Scan": "Scan impossible."
+    },
+    "147": {
+      "Name": "Squamelle",
+      "Sensor": "Eliminez celles qui vous barrent la route. Attention \u00E0 Aiguillon quand leurs ailes brillent.",
+      "Scan": "Scan impossible."
+    },
+    "148": {
+      "Name": "Squamelle",
+      "Sensor": "Eliminez-les toutes d\u2019un coup avec Dent de dragon, l\u2019OD d\u2019Auron.",
+      "Scan": "Scan impossible."
+    },
+    "149": {
+      "Name": "Cid",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "150": {
+      "Name": "Rosace c\u00E9leste",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "151": {
+      "Name": "Vouivre",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "152": {
+      "Name": "Porteur Al Bhed",
+      "Sensor": "Vuln\u00E9rable au Tonnerre.",
+      "Scan": "Machine antique restaur\u00E9e par les{\\n}Al Bheds. Elle n\u2019est pas destin\u00E9e au{\\n}combat, mais son bras articul\u00E9 peut{\\n}lui servir d\u2019arme. Profitez de sa{\\n}vuln\u00E9rabilit\u00E9 au Tonnerre pour lui{\\n}infliger de gros d\u00E9g\u00E2ts avec le sort{\\n}Foudre."
+    },
+    "153": {
+      "Name": "Ochu \u00E9gar\u00E9",
+      "Sensor": "Vuln\u00E9rable au Feu.",
+      "Scan": "Faites attention \u00E0 ses Griffes{\\n}empoisonn\u00E9es. S\u2019il perd trop de HP,{\\n}il s\u2019endort et se r\u00E9g\u00E9n\u00E8re. S\u2019il est{\\n}attaqu\u00E9 pendant qu\u2019il dort, il se{\\n}r\u00E9veille et riposte en provoquant{\\n}un S\u00E9isme. En tant que monstre{\\n}v\u00E9g\u00E9tal, il est vuln\u00E9rable au Feu."
+    },
+    "154": {
+      "Name": "Rosace c\u00E9leste",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "155": {
+      "Name": "Sahuagin",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "156": {
+      "Name": "Commando Sahuagin",
+      "Sensor": "Vuln\u00E9rable au Tonnerre.",
+      "Scan": "Il est rapide, mais sa faiblesse et{\\n}ses HP peu \u00E9lev\u00E9s font de lui un{\\n}adversaire peu coriace pris \u00E0 part.{\\n}Il est vuln\u00E9rable au Tonnerre et{\\n}sensible \u00E0 Obscurit\u00E9 et Sommeil."
+    },
+    "157": {
+      "Name": "Garuda",
+      "Sensor": "Infligez-lui Obscurit\u00E9 afin d\u2019esquiver ses attaques.",
+      "Scan": "Sa Force et ses HP sont \u00E9lev\u00E9s.{\\n}Attention \u00E0 son Onde de choc (AG).{\\n}Infligez-lui Obscurit\u00E9 pour esquiver{\\n}plus facilement ses attaques."
+    },
+    "158": {
+      "Name": "Kourik",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "159": {
+      "Name": "Ems",
+      "Sensor": "Utilise le sort Quart.",
+      "Scan": "Scan impossible."
+    },
+    "160": {
+      "Name": "T\u00EAte",
+      "Sensor": "Attaquez-la pour l\u2019emp\u00EAcher de cracher son Mucus toxique.",
+      "Scan": "Il faut attaquer le corps pour en{\\n}venir \u00E0 bout, mais il se prot\u00E8ge des{\\n}attaques physiques avec ses 2 bras{\\n}cuirass\u00E9s. Commencez donc par les{\\n}d\u00E9truire \u00E0 l\u2019aide d\u2019armes per\u00E7antes.{\\n}La t\u00EAte se met \u00E0 bouger bizarrement{\\n}avant de cracher son Mucus toxique.{\\n}Attaquez-la pour l\u2019en emp\u00EAcher."
+    },
+    "161": {
+      "Name": "Bras",
+      "Sensor": "Prot\u00E8gent le corps de leur \u00E9paisse cuirasse.",
+      "Scan": "Il faut attaquer le corps pour en{\\n}venir \u00E0 bout, mais il se prot\u00E8ge des{\\n}attaques physiques avec ses 2 bras{\\n}cuirass\u00E9s. Commencez donc par les{\\n}d\u00E9truire \u00E0 l\u2019aide d\u2019armes per\u00E7antes.{\\n}La t\u00EAte se met \u00E0 bouger bizarrement{\\n}avant de cracher son Mucus toxique.{\\n}Attaquez-la pour l\u2019en emp\u00EAcher."
+    },
+    "162": {
+      "Name": "Levier",
+      "Sensor": "Ouvrez la porte pour vous \u00E9chapper.",
+      "Scan": "Scan impossible."
+    },
+    "163": {
+      "Name": "Valefore",
+      "Sensor": "Tuez-moi...",
+      "Scan": "Scan impossible."
+    },
+    "164": {
+      "Name": "Ifrit",
+      "Sensor": "Ne retenez pas vos coups...",
+      "Scan": "Scan impossible."
+    },
+    "165": {
+      "Name": "Ixion",
+      "Sensor": "Mettez fin \u00E0 tout ceci...",
+      "Scan": "Scan impossible."
+    },
+    "166": {
+      "Name": "Shiva",
+      "Sensor": "Tuez-moi...",
+      "Scan": "Scan impossible."
+    },
+    "167": {
+      "Name": "Bahamut",
+      "Sensor": "Accordez-moi le repos \u00E9ternel...",
+      "Scan": "Scan impossible."
+    },
+    "168": {
+      "Name": "Anima",
+      "Sensor": "Je saurai expier...",
+      "Scan": "Scan impossible."
+    },
+    "169": {
+      "Name": "Yojimbo",
+      "Sensor": "Tuez-moi !",
+      "Scan": "Scan impossible."
+    },
+    "170": {
+      "Name": "Rouleau compresseur",
+      "Sensor": "Sur le point de tomber de l\u2019autoroute.",
+      "Scan": "Scan impossible."
+    },
+    "171": {
+      "Name": "Levier",
+      "Sensor": "Ouvrez la porte pour vous \u00E9chapper.",
+      "Scan": "Scan impossible."
+    },
+    "172": {
+      "Name": "Monstre 172",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "173": {
+      "Name": "Yu Pagoda",
+      "Sensor": "Infligez-lui des d\u00E9g\u00E2ts pour la stopper.",
+      "Scan": "Scan impossible."
+    },
+    "174": {
+      "Name": "Yu Pagoda",
+      "Sensor": "Infligez-lui des d\u00E9g\u00E2ts pour la stopper.",
+      "Scan": "Scan impossible."
+    },
+    "175": {
+      "Name": "Tentacule",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "176": {
+      "Name": "Yu Yevon",
+      "Sensor": "Prend possession des Chim\u00E8res.",
+      "Scan": "Scan impossible."
+    },
+    "177": {
+      "Name": "Rosace c\u00E9leste",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "178": {
+      "Name": "Maria",
+      "Sensor": "Finissons-en...",
+      "Scan": "Scan impossible."
+    },
+    "179": {
+      "Name": "Samanta",
+      "Sensor": "Ne pleurez pas...",
+      "Scan": "Scan impossible."
+    },
+    "180": {
+      "Name": "Anabella",
+      "Sensor": "C\u2019est l\u2019heure des adieux...",
+      "Scan": "Scan impossible."
+    },
+    "181": {
+      "Name": "Ekarissor",
+      "Sensor": "Attention \u00E0 Fauchage ! Utilisez C\u00E9cit\u00E9 \u002B.",
+      "Scan": "Il vise toujours l\u2019alli\u00E9 ayant le moins{\\n}de HP, et utilise Fauchage (AG).{\\n}Il n\u2019a pas de point faible et ne subit{\\n}que la moiti\u00E9 des d\u00E9g\u00E2ts dus au{\\n}Tonnerre, mais il est sensible \u00E0{\\n}C\u00E9cit\u00E9 \u002B. Mieux vaut le combattre{\\n}\u00E0 l\u2019aide d\u2019armes per\u00E7antes."
+    },
+    "182": {
+      "Name": "Gemini",
+      "Sensor": "Utilisent Fauchage combin\u00E9 quand ils sont r\u00E9unis. Concentrez vos attaques sur l\u2019un des deux.",
+      "Scan": "Attention \u00E0 Fauchage (AG).{\\n}Lorsqu\u2019ils sont r\u00E9unis, ils effectuent{\\n}un puissant Fauchage combin\u00E9 s\u2019ils{\\n}subissent des d\u00E9g\u00E2ts importants.{\\n}L\u2019un absorbe les attaques de Feu{\\n}et de Tonnerre, l\u2019autre celles d\u2019Eau{\\n}et de Glace."
+    },
+    "183": {
+      "Name": "Gemini",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "184": {
+      "Name": "Gemini",
+      "Sensor": "Utilisent Fauchage combin\u00E9 quand ils sont r\u00E9unis. Concentrez vos attaques sur l\u2019un des deux.",
+      "Scan": "Attention \u00E0 Fauchage (AG).{\\n}Lorsqu\u2019ils sont r\u00E9unis, ils effectuent{\\n}un puissant Fauchage combin\u00E9 s\u2019ils{\\n}subissent des d\u00E9g\u00E2ts importants.{\\n}L\u2019un absorbe les attaques de Feu{\\n}et de Tonnerre, l\u2019autre celles d\u2019Eau{\\n}et de Glace."
+    },
+    "185": {
+      "Name": "Basilisk",
+      "Sensor": "Attention \u00E0 son Regard p\u00E9trifiant !",
+      "Scan": "Le Regard p\u00E9trifiant de son 3\u00E8me{\\n}oeil inflige parfois Fossile.{\\n}Pour gu\u00E9rir Fossile, utilisez Esuna{\\n}ou un D\u00E9figeur.{\\n}{CLR:YELLOW}Emulattak assimilable : P\u00E9trasouffle."
+    },
+    "186": {
+      "Name": "Vip\u00E8re-m\u00E9duse",
+      "Sensor": "Attention \u00E0 son Regard p\u00E9trifiant !",
+      "Scan": "Le Regard p\u00E9trifiant de son 3\u00E8me{\\n}oeil inflige tr\u00E8s souvent Fossile.{\\n}Elle \u00E9met des Ultrasons (AG) avec{\\n}sa queue apr\u00E8s avoir re\u00E7u quelques{\\n}attaques.{\\n}{CLR:YELLOW}Emulattak assimilable : P\u00E9trasouffle."
+    },
+    "187": {
+      "Name": "Adamankhelone",
+      "Sensor": "Cuirass\u00E9e.",
+      "Scan": "Recouverte d\u2019une \u00E9paisse carapace.{\\n}Son Souffle (AG) est une attaque{\\n}de Feu. Les S\u00E9ismes (AG) qu\u2019elle{\\n}provoque retardent le tour d\u2019action{\\n}de leurs victimes en plus des d\u00E9g\u00E2ts{\\n}qu\u2019ils infligent. Mieux vaut utiliser{\\n}Tr\u00E9pan et D\u00E9prime."
+    },
+    "188": {
+      "Name": "Varuna",
+      "Sensor": "R\u00E9sistant aux quatre \u00E9l\u00E9ments.",
+      "Scan": "Il lance des sorts apr\u00E8s avoir utilis\u00E9{\\n}Booster sur lui-m\u00EAme. Annulez-le{\\n}avec Dissipation. S\u2019il se concentre,{\\n}c\u2019est qu\u2019il va utiliser Embl\u00E8me du{\\n}Destin au tour suivant. Blindage est{\\n}efficace contre cette attaque, mais{\\n}il peut l\u2019annuler avec Dissipation X."
+    },
+    "189": {
+      "Name": "Ochu",
+      "Sensor": "Vuln\u00E9rable au Feu.",
+      "Scan": "Quand ses HP sont bas, il utilise{\\n}Danse d\u2019Ochu (AG) qui inflige{\\n}Obscurit\u00E9, Mutisme, et parfois Folie{\\n}et Somni. Attention \u00E0 ses griffes{\\n}empoisonn\u00E9es. Etant un monstre{\\n}v\u00E9g\u00E9tal, il est vuln\u00E9rable au Feu."
+    },
+    "190": {
+      "Name": "Mandragore",
+      "Sensor": "Vuln\u00E9rable au Feu.",
+      "Scan": "Plus elle re\u00E7oit de coups, plus il{\\n}y a de chances qu\u2019elle provoque un{\\n}S\u00E9isme (AG). Quand ses HP sont bas,{\\n}elle utilise Danse d\u2019Ochu (AG) qui{\\n}inflige Obscurit\u00E9, Mutisme et parfois{\\n}Folie et Somni. Attention au Poison.{\\n}Point faible : Feu."
+    },
+    "191": {
+      "Name": "Mortier v.99",
+      "Sensor": "Hors de port\u00E9e. Rapprochez-vous en \u00E9liminant les ennemis en premi\u00E8re ligne.",
+      "Scan": "Machine que l\u2019Eglise de Yevon{\\n}utilise dans l\u2019ombre au m\u00E9pris{\\n}de ses propres pr\u00E9ceptes.{\\n}Il n\u2019emploie ses attaques g\u00E9n\u00E9rales{\\n}que lorsqu\u2019il est hors de port\u00E9e."
+    },
+    "192": {
+      "Name": "Mortier v.97",
+      "Sensor": "Hors de port\u00E9e. Rapprochez-vous en \u00E9liminant les ennemis en premi\u00E8re ligne.",
+      "Scan": "Il n\u2019emploie ses attaques g\u00E9n\u00E9rales{\\n}que lorsqu\u2019il est hors de port\u00E9e.{\\n}Les attaques de type D\u00E9lai n\u2019ont{\\n}pas d\u2019effet sur lui."
+    },
+    "193": {
+      "Name": "Bombo",
+      "Sensor": "Utilise Kamikaze apr\u00E8s avoir re\u00E7u 3 attaques.",
+      "Scan": "Apr\u00E8s avoir re\u00E7u 3 coups, il utilise{\\n}Kamikaze sur la derni\u00E8re personne{\\n}\u00E0 l\u2019avoir attaqu\u00E9. Si vous ne pensez{\\n}pas pouvoir le vaincre en 3 coups,{\\n}prot\u00E9gez-vous \u00E0 l\u2019aide d\u2019AntiFeu.{\\n}Il est vuln\u00E9rable \u00E0 la Glace.{\\n}{CLR:YELLOW}Kimahri peut apprendre Kamikaze."
+    },
+    "194": {
+      "Name": "Grenada",
+      "Sensor": "Utilise Kamikaze apr\u00E8s avoir re\u00E7u 3 attaques.",
+      "Scan": "Tout comme le bombo, elle utilise{\\n}Kamikaze apr\u00E8s avoir re\u00E7u 3 coups.{\\n}Elle est vuln\u00E9rable \u00E0 la Glace, mais{\\n}son Esprit est \u00E9lev\u00E9.{\\n}Il vaut donc mieux utiliser D\u00E9prime{\\n}et de puissantes attaques de Glace.{\\n}{CLR:YELLOW}Kimahri peut apprendre Kamikaze."
+    },
+    "195": {
+      "Name": "Tekkick v.63",
+      "Sensor": "Utilise Mawashigeri quand il se retrouve seul.",
+      "Scan": "Machine que l\u2019Eglise de Yevon{\\n}utilise dans l\u2019ombre au m\u00E9pris{\\n}de ses propres pr\u00E9ceptes.{\\n}Le Mawashigeri qu\u2019il utilise quand il{\\n}se retrouve seul \u00E9jecte sa victime,{\\n}l\u2019emp\u00EAchant de reprendre le combat.{\\n}{CLR:YELLOW}Emulattak assimilable : Mawashigeri."
+    },
+    "196": {
+      "Name": "Tekkick v.11",
+      "Sensor": "Utilise Mawashigeri quand il se retrouve seul.",
+      "Scan": "Le Mawashigeri qu\u2019il utilise quand il{\\n}se retrouve seul \u00E9jecte sa victime,{\\n}l\u2019emp\u00EAchant de reprendre le combat.{\\n}Les attaques de type D\u00E9lai n\u2019ont pas{\\n}d\u2019effet sur lui.{\\n}{CLR:YELLOW}Emulattak assimilable : Mawashigeri."
+    },
+    "197": {
+      "Name": "Moine guerrier",
+      "Sensor": "Arm\u00E9 d\u2019un fusil.",
+      "Scan": "Soldat de Yevon charg\u00E9 de prot\u00E9ger{\\n}le Palais de Sainte Bevelle. Il ne peut{\\n}attaquer qu\u2019un alli\u00E9 \u00E0 la fois avec{\\n}son fusil. Il est sensible \u00E0 Sommeil."
+    },
+    "198": {
+      "Name": "Moine guerrier zombie",
+      "Sensor": "Vuln\u00E9rable aux objets et sorts de soins.",
+      "Scan": "Soldat prot\u00E9geant le D\u00F4me de Yevon{\\n}m\u00EAme apr\u00E8s sa mort. Il ne peut{\\n}attaquer qu\u2019un alli\u00E9 \u00E0 la fois avec{\\n}son fusil. Il inflige parfois Zombie{\\n}en attaquant."
+    },
+    "199": {
+      "Name": "Moine guerrier",
+      "Sensor": "Arm\u00E9 d\u2019un lance-flammes.",
+      "Scan": "Soldat de Yevon charg\u00E9 de prot\u00E9ger{\\n}le Palais de Sainte Bevelle.{\\n}Il peut attaquer tous les alli\u00E9s{\\n}\u00E0 la fois avec son lance-flammes.{\\n}Il est sensible \u00E0 Sommeil."
+    },
+    "200": {
+      "Name": "Moine guerrier zombie",
+      "Sensor": "Vuln\u00E9rable aux objets et sorts de soins.",
+      "Scan": "Soldat prot\u00E9geant le D\u00F4me de Yevon{\\n}m\u00EAme apr\u00E8s sa mort.{\\n}Il peut attaquer tous les alli\u00E9s{\\n}\u00E0 la fois avec son lance-flammes."
+    },
+    "201": {
+      "Name": "Koyo K",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "202": {
+      "Name": "Pot magique",
+      "Sensor": "Frappez les bons yeux pour gagner des objets, sinon...",
+      "Scan": "Tentez votre chance en frappant{\\n}l\u2019oeil de votre choix.{\\n}Si c\u2019est \u201DGagn\u00E9 !\u201D, vous obtenez{\\n}un objet. Mais si c\u2019est \u201DPerdu !\u201D,{\\n}le pot explose, infligeant des d\u00E9g\u00E2ts{\\n}importants \u00E0 tous les alli\u00E9s.{\\n}Il y a 8 objets diff\u00E9rents \u00E0 gagner."
+    },
+    "203": {
+      "Name": "Pot magique",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "204": {
+      "Name": "Pot magique",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "205": {
+      "Name": "Pot magique",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "206": {
+      "Name": "Pot magique",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "207": {
+      "Name": "Pampa ?",
+      "Sensor": "Si vous r\u00E9ussissez \u00E0 le vaincre avant qu\u2019il ne fuie...",
+      "Scan": "Attention \u00E0 ses 1000 \u00E9pines qui{\\n}infligent immanquablement 1000{\\n}points de d\u00E9g\u00E2ts. Il est difficile \u00E0{\\n}atteindre, et son Esprit est \u00E9lev\u00E9.{\\n}Il n\u2019est pas \u00E9vident de le vaincre,{\\n}car il a tendance \u00E0 fuir s\u2019il sent{\\n}qu\u2019il va perdre. Il est cependant{\\n}sensible \u00E0 Intimider."
+    },
+    "208": {
+      "Name": "Pampa",
+      "Sensor": "Si vous r\u00E9ussissez \u00E0 le vaincre avant qu\u2019il ne fuie...",
+      "Scan": "Attention \u00E0 ses 10.000 \u00E9pines qui{\\n}infligent immanquablement 10.000{\\n}points de d\u00E9g\u00E2ts. Il est difficile \u00E0{\\n}atteindre, et son Esprit est \u00E9lev\u00E9.{\\n}Il n\u2019est pas \u00E9vident de le vaincre,{\\n}car il a tendance \u00E0 fuir s\u2019il sent{\\n}qu\u2019il va perdre, mais vous gagnerez{\\n}de nombreux PC si vous y parvenez."
+    },
+    "209": {
+      "Name": "Larva",
+      "Sensor": "Se r\u00E9g\u00E9n\u00E8re et devient plus forte en se lan\u00E7ant Foudre \u002B.",
+      "Scan": "D\u00E8s que ses HP sont r\u00E9duits de{\\n}moiti\u00E9, elle se r\u00E9g\u00E9n\u00E8re et augmente{\\n}sa Magie en se lan\u00E7ant Foudre \u002B.{\\n}Utilisez le coup sp\u00E9cial Silence pour{\\n}lui infliger Mutisme. Le sort H2O \u002B{\\n}est tr\u00E8s efficace contre elle, car{\\n}elle est vuln\u00E9rable \u00E0 l\u2019Eau."
+    },
+    "210": {
+      "Name": "Barbatos",
+      "Sensor": "Cuirass\u00E9. Si vous utilisez Tr\u00E9pan...",
+      "Scan": "Son corps est recouvert d\u2019une{\\n}\u00E9paisse cuirasse. Si vous utilisez{\\n}Tr\u00E9pan, il riposte violemment.{\\n}Soyez prudent, car ses attaques{\\n}sont tr\u00E8s puissantes, notamment{\\n}Nova (AG) et Body Press (AG)."
+    },
+    "211": {
+      "Name": "???",
+      "Sensor": "Utilisez Voler pour prendre son contenu.",
+      "Scan": "En travaux."
+    },
+    "212": {
+      "Name": "Wendigo",
+      "Sensor": "N\u2019utilise que des attaques physiques. Si vous annulez Furie, il devient moins puissant mais...",
+      "Scan": "Il n\u2019utilise que des attaques{\\n}physiques. S\u2019il re\u00E7oit une attaque{\\n}physique alors qu\u2019il a les bras lev\u00E9s,{\\n}il riposte violemment."
+    },
+    "213": {
+      "Name": "Garde Guado",
+      "Sensor": "Se r\u00E9g\u00E9n\u00E8re gr\u00E2ce \u00E0 Auto Potion. Emp\u00EAchez-le d\u2019utiliser des objets.",
+      "Scan": "Il se r\u00E9g\u00E9n\u00E8re gr\u00E2ce \u00E0 Auto Potion.{\\n}R\u00E9fl\u00E9chissez \u00E0 un moyen de{\\n}l\u2019emp\u00EAcher d\u2019utiliser des objets.{\\n}S\u2019il est accompagn\u00E9 de monstres,{\\n}il arrive qu\u2019il les soutienne \u00E0 l\u2019aide{\\n}de sorts tels que Furie."
+    },
+    "214": {
+      "Name": "Fungus",
+      "Sensor": "Lib\u00E8re un nuage de Spores (AG) infligeant Sommeil quand il re\u00E7oit une attaque physique.",
+      "Scan": "Il utilise le sort Brasier, mais{\\n}il est sensible \u00E0 Mutisme.{\\n}S\u2019il re\u00E7oit une attaque physique,{\\n}il lib\u00E8re un nuage de Spores (AG){\\n}infligeant Sommeil. Mieux vaut lui{\\n}lancer des sorts ou l\u2019endormir.{\\n}Etant de nature v\u00E9g\u00E9tale, il est{\\n}vuln\u00E9rable au Feu."
+    },
+    "215": {
+      "Name": "Thorn",
+      "Sensor": "Lib\u00E8re un nuage de Spores (AG) infligeant Sommeil et Obscurit\u00E9 quand il re\u00E7oit une attaque physique.",
+      "Scan": "Il utilise le sort Brasier \u002B{\\n}mais il est sensible \u00E0 Sommeil.{\\n}S\u2019il re\u00E7oit une attaque physique,{\\n}il lib\u00E8re un nuage de Spores (AG){\\n}infligeant Sommeil et Obscurit\u00E9.{\\n}Etant de nature v\u00E9g\u00E9tale, il est{\\n}vuln\u00E9rable au Feu."
+    },
+    "216": {
+      "Name": "Exoray",
+      "Sensor": "Lib\u00E8re un nuage de Spores (AG) infligeant Poison, Mutisme et Obscurit\u00E9 quand il re\u00E7oit une attaque physique.",
+      "Scan": "Il utilise le sort Brasier X{\\n}mais il est sensible \u00E0 Mutisme.{\\n}S\u2019il re\u00E7oit une attaque physique,{\\n}il lib\u00E8re un nuage de Spores (AG){\\n}infligeant Mutisme, Obscurit\u00E9 et{\\n}Poison. \u00C9tant de nature v\u00E9g\u00E9tale,{\\n}il est vuln\u00E9rable au Feu."
+    },
+    "217": {
+      "Name": "Koospos",
+      "Sensor": "Il arrive qu\u2019Obscurit\u00E9 fasse effet sur lui.",
+      "Scan": "Tr\u00E8s rapide. Il arrive qu\u2019Obscurit\u00E9{\\n}fasse effet sur lui. Il est sensible{\\n}\u00E0 Intimider."
+    },
+    "218": {
+      "Name": "Pyrobolse",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "219": {
+      "Name": "Esprit",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "220": {
+      "Name": "Spectre",
+      "Sensor": "Lance Ch\u00E2timent au d\u00E9but du combat.",
+      "Scan": "Attention : il change de point faible{\\n}et d\u2019\u00E9l\u00E9ment r\u00E9g\u00E9n\u00E9rant \u00E0 chaque{\\n}rencontre.{\\n}Si son Ch\u00E2timent n\u2019a eu d\u2019effet sur{\\n}personne, il arrive qu\u2019il utilise Had\u00E8s.{\\n}{CLR:YELLOW}Emulattak assimilable : Ch\u00E2timent."
+    },
+    "221": {
+      "Name": "Balsamine des sables",
+      "Sensor": "Regagne des HP en absorbant les attaques d\u2019Eau.",
+      "Scan": "Ses Rafales de graines ne sont{\\n}pas tr\u00E8s puissantes, mais elles{\\n}provoquent parfois la Folie.{\\n}Elle regagne des HP en absorbant{\\n}les attaques d\u2019Eau, mais elle est{\\n}vuln\u00E9rable au Feu."
+    },
+    "222": {
+      "Name": "Garde Guado",
+      "Sensor": "Tente d\u2019emp\u00EAcher Lulu d\u2019utiliser sa magie.",
+      "Scan": "Il dirige les monstres qui{\\n}l\u2019accompagnent.{\\n}Il tente d\u2019emp\u00EAcher Lulu d\u2019utiliser{\\n}sa magie en lui infligeant Mutisme{\\n}ou Folie, mais si vous parvenez \u00E0{\\n}lui ass\u00E9ner un coup sp\u00E9cial Silence,{\\n}il ne peut plus rien faire."
+    },
+    "223": {
+      "Name": "Tomberry",
+      "Sensor": "Se rapproche par 4 fois. Tuez-le avant, sinon...",
+      "Scan": "Il se rapproche petit \u00E0 petit. Apr\u00E8s{\\n}s\u2019\u00EAtre rapproch\u00E9 4 fois, il utilise son{\\n}Couteau. La puissance de sa riposte{\\n}Rancune d\u00E9pend du nombre d\u2019ennemis{\\n}vaincus par sa cible."
+    },
+    "224": {
+      "Name": "Tomberry Nion",
+      "Sensor": "Se rapproche par 4 fois. Tuez-le avant, sinon...",
+      "Scan": "Il se rapproche petit \u00E0 petit. Apr\u00E8s{\\n}s\u2019\u00EAtre rapproch\u00E9 4 fois, il utilise son{\\n}Couteau. La puissance de sa riposte{\\n}Rancune d\u00E9pend du nombre d\u2019ennemis{\\n}vaincus par sa cible."
+    },
+    "225": {
+      "Name": "Oeil d\u00E9moniaque",
+      "Sensor": "Vole. R\u00E9sistant \u00E0 la magie. Attention \u00E0 Folie !",
+      "Scan": "Le fait qu\u2019il vole le rend difficile{\\n}\u00E0 atteindre. Son Esprit est \u00E9lev\u00E9,{\\n}mais il est vuln\u00E9rable au Feu.{\\n}Son regard provoque parfois la Folie."
+    },
+    "226": {
+      "Name": "Bombo",
+      "Sensor": "Utilise Kamikaze apr\u00E8s avoir re\u00E7u 3 attaques.",
+      "Scan": "Apr\u00E8s avoir re\u00E7u 3 coups, il utilise{\\n}Kamikaze sur la derni\u00E8re personne{\\n}\u00E0 l\u2019avoir attaqu\u00E9. Si vous ne pensez{\\n}pas pouvoir le vaincre en 3 coups,{\\n}prot\u00E9gez-vous \u00E0 l\u2019aide d\u2019AntiFeu.{\\n}Il est vuln\u00E9rable \u00E0 la Glace.{\\n}{CLR:YELLOW}Emulattak assimilable : Kamikaze."
+    },
+    "227": {
+      "Name": "Chimaira",
+      "Sensor": "Sensible \u00E0 Obscurit\u00E9, Mutisme et Intimider.",
+      "Scan": "Ses 4 t\u00EAtes attaquent dans l\u2019ordre{\\n}suivant : le serpent avec Foudre \u002B,{\\n}le taureau avec Charge, l\u2019aigle avec{\\n}Aquasouffle (AG) et le lion avec Feu{\\n}de Megido. Elle est sensible \u00E0{\\n}Intimider, Obscurit\u00E9, et Mutisme.{\\n}{CLR:YELLOW}Emulattak assimilable : Aquasouffle."
+    },
+    "228": {
+      "Name": "Bicorne",
+      "Sensor": "Infligez-lui Obscurit\u00E9 pour esquiver ses attaques.",
+      "Scan": "Ses Cornes causent de gros d\u00E9g\u00E2ts,{\\n}mais il est facile de les esquiver en{\\n}lui infligeant Obscurit\u00E9. L\u2019endormir{\\n}\u00E0 l\u2019aide d\u2019une attaque Morph\u00E9e est{\\n}aussi une bonne strat\u00E9gie.{\\n}{CLR:YELLOW}Emulattak assimilable : G\u00E9henne."
+    },
+    "229": {
+      "Name": "Protektor",
+      "Sensor": "Fait de pierre, il est tr\u00E8s r\u00E9sistant.",
+      "Scan": "Sa Force et sa Constitution sont{\\n}tr\u00E8s \u00E9lev\u00E9es. Il serait dangereux de{\\n}l\u2019affronter \u201D\u00E0 la loyale\u201D. Il riposte{\\n}avec son Rocketopoing qui retarde{\\n}le tour d\u2019action de sa victime.{\\n}Il utilise aussi Mother et Somni X."
+    },
+    "230": {
+      "Name": "Garuda",
+      "Sensor": "Infligez-lui Obscurit\u00E9 pour esquiver ses attaques.",
+      "Scan": "Sa Force et ses HP sont \u00E9lev\u00E9s.{\\n}Attention \u00E0 son Onde de choc (AG).{\\n}Infligez-lui Obscurit\u00E9 pour esquiver{\\n}plus facilement ses attaques."
+    },
+    "231": {
+      "Name": "Dingo",
+      "Sensor": "Rapide. R\u00E9sistant \u00E0 la magie.",
+      "Scan": "Tr\u00E8s rapide, il est difficile \u00E0{\\n}atteindre, et son Esprit est \u00E9lev\u00E9.{\\n}Eliminez-le rapidement. Prenez-le{\\n}de court avec {PC:00:TIDUS}."
+    },
+    "232": {
+      "Name": "Flambos d\u2019eau",
+      "Sensor": "El\u00E9ment Eau. Vuln\u00E9rable \u00E0 l\u2019\u00E9l\u00E9ment oppos\u00E9. R\u00E9sistant aux attaques physiques.",
+      "Scan": "Sa nature flasque le rend r\u00E9sistant{\\n}aux attaques physiques.{\\n}Point faible : Tonnerre.{\\n}Eliminez-le d\u2019un coup avec le sort{\\n}Foudre de Lulu. N\u2019utilisez pas le{\\n}sort H2O, car il regagne des HP{\\n}en absorbant les attaques d\u2019Eau."
+    },
+    "233": {
+      "Name": "Condor",
+      "Sensor": "Vole. Utilisez la magie.",
+      "Scan": "Le fait qu\u2019il vole le rend difficile{\\n}\u00E0 atteindre. Mieux vaut laisser{\\n}Wakka s\u2019en charger, ou profiter{\\n}de sa vuln\u00E9rabilit\u00E9 au Feu pour{\\n}utiliser le sort Brasier de Lulu."
+    },
+    "234": {
+      "Name": "Balsamine",
+      "Sensor": "Vuln\u00E9rable au Feu.",
+      "Scan": "Attention \u00E0 sa Graine-obus !{\\n}Elle est si puissante qu\u2019elle peut{\\n}vous mettre KO d\u2019un coup.{\\n}La plupart des monstres v\u00E9g\u00E9taux{\\n}sont vuln\u00E9rables au Feu.{\\n}Profitez-en pour \u00E9liminer celui-ci{\\n}avec le sort Brasier \u002B de Lulu.{\\n}{CLR:YELLOW}Emulattak assimilable : Graine-obus."
+    },
+    "235": {
+      "Name": "Cujo",
+      "Sensor": "Cuirass\u00E9. Utilisez des armes per\u00E7antes.",
+      "Scan": "Recouvert d\u2019une \u00E9paisse carapace, il{\\n}est un peu lent, mais sa Constitution{\\n}et son Esprit sont \u00E9lev\u00E9s.{\\n}Point faible : Glace.{\\n}Peut \u00EAtre \u00E9limin\u00E9 d\u2019un coup avec une{\\n}arme per\u00E7ante. Laissez-donc Auron{\\n}le pourfendre !"
+    },
+    "236": {
+      "Name": "Bunyips",
+      "Sensor": "Cuirass\u00E9. Utilisez des armes per\u00E7antes.",
+      "Scan": "Recouvert d\u2019une \u00E9paisse carapace, il{\\n}est un peu lent, mais sa Constitution{\\n}et son Esprit sont \u00E9lev\u00E9s.{\\n}Points faibles : Glace et Eau.{\\n}Peut \u00EAtre \u00E9limin\u00E9 d\u2019un coup avec une{\\n}arme per\u00E7ante."
+    },
+    "237": {
+      "Name": "???",
+      "Sensor": "???",
+      "Scan": "En travaux."
+    },
+    "238": {
+      "Name": "Zu",
+      "Sensor": "Attention \u00E0 Onde de choc quand ses ailes brillent !",
+      "Scan": "Ses HP sont \u00E9lev\u00E9s, mais bien qu\u2019il{\\n}vole, il est facile \u00E0 atteindre.{\\n}Profitez-en pour lui ass\u00E9ner des{\\n}coups puissants. Quand ses ailes se{\\n}mettent \u00E0 briller, c\u2019est signe qu\u2019il va{\\n}provoquer une Onde de choc (AG) au{\\n}tour suivant. Infligez-lui Obscurit\u00E9{\\n}avant qu\u2019il ne le fasse."
+    },
+    "239": {
+      "Name": "Zaurus",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "240": {
+      "Name": "Haarma",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "241": {
+      "Name": "Aquaflambos",
+      "Sensor": "El\u00E9ment Eau. Vuln\u00E9rable \u00E0 l\u2019\u00E9l\u00E9ment oppos\u00E9. R\u00E9sistant aux attaques physiques.",
+      "Scan": "Sa nature flasque le rend r\u00E9sistant{\\n}aux attaques physiques.{\\n}Il regagne des HP en absorbant{\\n}les attaques d\u2019Eau, mais il est{\\n}vuln\u00E9rable \u00E0 l\u2019\u00E9l\u00E9ment oppos\u00E9{\\n}Tonnerre"
+    },
+    "242": {
+      "Name": "Oeil de la mort",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "243": {
+      "Name": "Maze Larva",
+      "Sensor": "Se r\u00E9g\u00E9n\u00E8re et devient plus forte en se lan\u00E7ant H2O \u002B.",
+      "Scan": "D\u00E8s que ses HP sont r\u00E9duits de{\\n}moiti\u00E9, elle se r\u00E9g\u00E9n\u00E8re et augmente{\\n}sa Magie en se lan\u00E7ant H2O \u002B.{\\n}Utilisez le coup sp\u00E9cial Silence pour{\\n}lui infliger Mutisme. Le sort Foudre X{\\n}est tr\u00E8s efficace contre elle, car{\\n}elle est vuln\u00E9rable au Tonnerre."
+    },
+    "244": {
+      "Name": "M\u00E9till\u00E9",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "245": {
+      "Name": "Caviguanor",
+      "Sensor": "Rapide. R\u00E9sistant \u00E0 la magie.",
+      "Scan": "Tr\u00E8s rapide, il est difficile \u00E0{\\n}atteindre, et son Esprit est \u00E9lev\u00E9.{\\n}Ne subit que la moiti\u00E9 des d\u00E9g\u00E2ts{\\n}dus au Feu et \u00E0 l\u2019Eau."
+    },
+    "246": {
+      "Name": "Paludomafut",
+      "Sensor": "Cuirass\u00E9. Vuln\u00E9rable aux armes per\u00E7antes.",
+      "Scan": "Recouvert d\u2019une \u00E9paisse carapace, il{\\n}est un peu lent, mais sa Constitution{\\n}et son Esprit sont \u00E9lev\u00E9s.{\\n}Points faibles : Glace et Tonnerre."
+    },
+    "247": {
+      "Name": "Chiroptoeil",
+      "Sensor": "Vole. R\u00E9sistant \u00E0 la magie.",
+      "Scan": "Le fait qu\u2019il vole le rend difficile{\\n}\u00E0 atteindre. Son Esprit est \u00E9lev\u00E9,{\\n}mais il est vuln\u00E9rable au Feu.{\\n}Son regard provoque parfois la Folie."
+    },
+    "248": {
+      "Name": "Isaaru",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "249": {
+      "Name": "Ma\u00EFla",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "250": {
+      "Name": "Belgemine",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "251": {
+      "Name": "Mimic",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "252": {
+      "Name": "Mimic",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "253": {
+      "Name": "Mimic",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "254": {
+      "Name": "Aile",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "255": {
+      "Name": "Pot magique",
+      "Sensor": "Frappez les bons yeux pour gagner des objets, sinon...",
+      "Scan": "Tentez votre chance en frappant{\\n}l\u2019oeil de votre choix.{\\n}Si c\u2019est \u201DGagn\u00E9 !\u201D, vous obtenez{\\n}un objet. Mais si c\u2019est \u201DPerdu !\u201D,{\\n}le pot explose, infligeant des d\u00E9g\u00E2ts{\\n}importants \u00E0 tous les alli\u00E9s.{\\n}Il y a 8 objets diff\u00E9rents \u00E0 gagner."
+    },
+    "256": {
+      "Name": "Mimic",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "257": {
+      "Name": "Bout de mimic",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "258": {
+      "Name": "Valefore",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "259": {
+      "Name": "Ifrit",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "260": {
+      "Name": "Bout de mimic",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "261": {
+      "Name": "Bout de mimic",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "262": {
+      "Name": "Bout de mimic",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "263": {
+      "Name": "Fusil",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "264": {
+      "Name": "Lance-flammes",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "265": {
+      "Name": "Anima",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "266": {
+      "Name": "Daigoro",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "267": {
+      "Name": "Anima",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "268": {
+      "Name": "Anima",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "269": {
+      "Name": "Katana",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "270": {
+      "Name": "Kozuka",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "271": {
+      "Name": "Shuriken",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "272": {
+      "Name": "T\u00EAte",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "273": {
+      "Name": "Bras",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "274": {
+      "Name": "Nishida-san",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "275": {
+      "Name": "Ep\u00E9e",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "276": {
+      "Name": "Etre supr\u00EAme",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "277": {
+      "Name": "Catastrophe",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "278": {
+      "Name": "Rien",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "279": {
+      "Name": "Terraglouton",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "280": {
+      "Name": "Ultima Buster",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "281": {
+      "Name": "Sph\u00E8re g\u00E9ante",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "282": {
+      "Name": "Brachioraidos",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "283": {
+      "Name": "Shinryu",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "284": {
+      "Name": "Poing",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "285": {
+      "Name": "Ixion",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "286": {
+      "Name": "Shiva",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "287": {
+      "Name": "Ep\u00E9e",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "288": {
+      "Name": "Yojimbo",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "289": {
+      "Name": "Samanta",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "290": {
+      "Name": "Maria",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "291": {
+      "Name": "Anabella",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "292": {
+      "Name": "Tankujo",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "293": {
+      "Name": "Wizarsha",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "294": {
+      "Name": "Fenril",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "295": {
+      "Name": "Jumbo flambos",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "296": {
+      "Name": "Ornitholestes",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "297": {
+      "Name": "Pterix",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "298": {
+      "Name": "Frelon",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "299": {
+      "Name": "Lieo Nukan",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "300": {
+      "Name": "Stratoeibis",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "301": {
+      "Name": "Ver abyssal",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "302": {
+      "Name": "Juggernaut",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "303": {
+      "Name": "Fafnir",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "304": {
+      "Name": "M\u00E9ga morbol",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "305": {
+      "Name": "Toki",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "306": {
+      "Name": "N\u00E9ga \u00E9l\u00E9mentaire",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "307": {
+      "Name": "Catoblepas",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "308": {
+      "Name": "M\u00E9ga chimaira",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "309": {
+      "Name": "M\u00E9ga couguar",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "310": {
+      "Name": "Titan d\u2019acier",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "311": {
+      "Name": "Jormungand",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "312": {
+      "Name": "Abadon",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "313": {
+      "Name": "Atomico",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "314": {
+      "Name": "Pampi",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "315": {
+      "Name": "Vorban",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "316": {
+      "Name": "Soporichamp",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "317": {
+      "Name": "Don Tomberry",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "318": {
+      "Name": "Espada",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "319": {
+      "Name": "Bombo",
+      "Sensor": "Utilise Kamikaze apr\u00E8s avoir re\u00E7u 3 attaques.",
+      "Scan": "Scan impossible."
+    },
+    "320": {
+      "Name": "Bicorne",
+      "Sensor": "Infligez-lui Obscurit\u00E9 pour esquiver ses attaques.",
+      "Scan": "Scan impossible."
+    },
+    "321": {
+      "Name": "Vautour",
+      "Sensor": "Infligez-lui Obscurit\u00E9 pour esquiver ses attaques.",
+      "Scan": "Scan impossible."
+    },
+    "322": {
+      "Name": "Basilisk",
+      "Sensor": "Attention \u00E0 son Regard p\u00E9trifiant !",
+      "Scan": "Scan impossible."
+    },
+    "323": {
+      "Name": "Ochu",
+      "Sensor": "Vuln\u00E9rable au Feu.",
+      "Scan": "Scan impossible."
+    },
+    "324": {
+      "Name": "Larva",
+      "Sensor": "Fen\u00EAtre d\u2019infos.",
+      "Scan": "Scan impossible."
+    },
+    "325": {
+      "Name": "Ekarissor",
+      "Sensor": "Fen\u00EAtre d\u2019infos.",
+      "Scan": "Scan impossible."
+    },
+    "326": {
+      "Name": "Chimaira",
+      "Sensor": "Fen\u00EAtre d\u2019infos.",
+      "Scan": "Scan impossible."
+    },
+    "327": {
+      "Name": "Monstre 84",
+      "Sensor": "Fen\u00EAtre d\u2019infos.",
+      "Scan": "Scan impossible."
+    },
+    "328": {
+      "Name": "Pampa ?",
+      "Sensor": "Si vous r\u00E9ussissez \u00E0 le vaincre avant qu\u2019il ne fuie...",
+      "Scan": "Scan impossible."
+    },
+    "329": {
+      "Name": "Zu",
+      "Sensor": "Fen\u00EAtre d\u2019infos.",
+      "Scan": "Scan impossible."
+    },
+    "330": {
+      "Name": "Ver des sables",
+      "Sensor": "Fen\u00EAtre d\u2019infos.",
+      "Scan": "Scan impossible."
+    },
+    "331": {
+      "Name": "Fant\u00F4me",
+      "Sensor": "Fen\u00EAtre d\u2019infos.",
+      "Scan": "Scan impossible."
+    },
+    "332": {
+      "Name": "Xylomid",
+      "Sensor": "Fen\u00EAtre d\u2019infos.",
+      "Scan": "Scan impossible."
+    },
+    "333": {
+      "Name": "Asherah",
+      "Sensor": "Fen\u00EAtre d\u2019infos.",
+      "Scan": "Scan impossible."
+    },
+    "334": {
+      "Name": "Valefore purgatrice",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "335": {
+      "Name": "Ifrit purgateur",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "336": {
+      "Name": "Ixion purgateur",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "337": {
+      "Name": "Shiva purgatrice",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "338": {
+      "Name": "Bahamut purgateur",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "339": {
+      "Name": "Anima purgatrice",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "340": {
+      "Name": "Yojimbo purgateur",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "341": {
+      "Name": "Maria purgatrice",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "342": {
+      "Name": "Samanta purgatrice",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "343": {
+      "Name": "Anabella purgatrice",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "344": {
+      "Name": "Der Richter",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "345": {
+      "Name": "Bras droit",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "346": {
+      "Name": "Bras gauche",
+      "Sensor": "Analyse impossible.",
+      "Scan": "Scan impossible."
+    },
+    "347": {
+      "Name": "Inconnu",
+      "Sensor": "???",
+      "Scan": "???"
+    },
+    "348": {
+      "Name": "Inconnu",
+      "Sensor": "???",
+      "Scan": "???"
+    },
+    "349": {
+      "Name": "Inconnu",
+      "Sensor": "???",
+      "Scan": "???"
+    },
+    "350": {
+      "Name": "Inconnu",
+      "Sensor": "???",
+      "Scan": "???"
+    },
+    "351": {
+      "Name": "Inconnu",
+      "Sensor": "???",
+      "Scan": "???"
+    },
+    "352": {
+      "Name": "Inconnu",
+      "Sensor": "???",
+      "Scan": "???"
+    },
+    "353": {
+      "Name": "Inconnu",
+      "Sensor": "???",
+      "Scan": "???"
+    },
+    "354": {
+      "Name": "Inconnu",
+      "Sensor": "???",
+      "Scan": "???"
+    },
+    "355": {
+      "Name": "Inconnu",
+      "Sensor": "???",
+      "Scan": "???"
+    },
+    "356": {
+      "Name": "Inconnu",
+      "Sensor": "???",
+      "Scan": "???"
+    },
+    "357": {
+      "Name": "Inconnu",
+      "Sensor": "???",
+      "Scan": "???"
+    },
+    "358": {
+      "Name": "Inconnu",
+      "Sensor": "???",
+      "Scan": "???"
+    },
+    "359": {
+      "Name": "Inconnu",
+      "Sensor": "???",
+      "Scan": "???"
+    },
+    "360": {
+      "Name": "Inconnu",
+      "Sensor": "???",
+      "Scan": "???"
+    },
+    "361": {
+      "Name": "Inconnu",
+      "Sensor": "???",
+      "Scan": "???"
+    },
+    "362": {
+      "Name": "Inconnu",
+      "Sensor": "???",
+      "Scan": "???"
+    },
+    "363": {
+      "Name": "Inconnu",
+      "Sensor": "???",
+      "Scan": "???"
+    },
+    "364": {
+      "Name": "Inconnu",
+      "Sensor": "???",
+      "Scan": "???"
+    },
+    "365": {
+      "Name": "Inconnu",
+      "Sensor": "???",
+      "Scan": "???"
+    }
+  }
+}

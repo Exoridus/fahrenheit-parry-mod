@@ -1,0 +1,331 @@
+{
+  "SchemaVersion": 1,
+  "Domain": "keyitems",
+  "Locale": "fr",
+  "GeneratedAtUtc": "2026-03-04T07:27:52.2642932Z",
+  "SourceFiles": [
+    "READ_ALL_COMMANDS_LOCALIZED__fr.txt"
+  ],
+  "Entries": {
+    "A000": {
+      "Name": "Fleurs s\u00E9ch\u00E9es",
+      "Description": "Bouquet confectionn\u00E9 avec amour.",
+      "Kind": "KeyItem"
+    },
+    "A001": {
+      "Name": "Silex",
+      "Description": "Pratiques pour allumer un feu.",
+      "Kind": "KeyItem"
+    },
+    "A002": {
+      "Name": "Miroir terni",
+      "Description": "Miroir sans \u00E9clat.",
+      "Kind": "KeyItem"
+    },
+    "A003": {
+      "Name": "Miroir des 7 astres",
+      "Description": "Miroir \u00E9tincelant.",
+      "Kind": "KeyItem"
+    },
+    "A004": {
+      "Name": "Manuel d\u2019Al Bhed 1",
+      "Description": "Permet de reconna\u00EEtre l\u2019\u00E9quivalent du A en Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A005": {
+      "Name": "Manuel d\u2019Al Bhed 2",
+      "Description": "Permet de reconna\u00EEtre l\u2019\u00E9quivalent du B en Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A006": {
+      "Name": "Manuel d\u2019Al Bhed 3",
+      "Description": "Permet de reconna\u00EEtre l\u2019\u00E9quivalent du C en Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A007": {
+      "Name": "Manuel d\u2019Al Bhed 4",
+      "Description": "Permet de reconna\u00EEtre l\u2019\u00E9quivalent du D en Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A008": {
+      "Name": "Manuel d\u2019Al Bhed 5",
+      "Description": "Permet de reconna\u00EEtre l\u2019\u00E9quivalent du E en Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A009": {
+      "Name": "Manuel d\u2019Al Bhed 6",
+      "Description": "Permet de reconna\u00EEtre l\u2019\u00E9quivalent du F en Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A00A": {
+      "Name": "Manuel d\u2019Al Bhed 7",
+      "Description": "Permet de reconna\u00EEtre l\u2019\u00E9quivalent du G en Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A00B": {
+      "Name": "Manuel d\u2019Al Bhed 8",
+      "Description": "Permet de reconna\u00EEtre l\u2019\u00E9quivalent du H en Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A00C": {
+      "Name": "Manuel d\u2019Al Bhed 9",
+      "Description": "Permet de reconna\u00EEtre l\u2019\u00E9quivalent du I en Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A00D": {
+      "Name": "Manuel d\u2019Al Bhed 10",
+      "Description": "Permet de reconna\u00EEtre l\u2019\u00E9quivalent du J en Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A00E": {
+      "Name": "Manuel d\u2019Al Bhed 11",
+      "Description": "Permet de reconna\u00EEtre l\u2019\u00E9quivalent du K en Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A00F": {
+      "Name": "Manuel d\u2019Al Bhed 12",
+      "Description": "Permet de reconna\u00EEtre l\u2019\u00E9quivalent du L en Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A010": {
+      "Name": "Manuel d\u2019Al Bhed 13",
+      "Description": "Permet de reconna\u00EEtre l\u2019\u00E9quivalent du M en Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A011": {
+      "Name": "Manuel d\u2019Al Bhed 14",
+      "Description": "Permet de reconna\u00EEtre l\u2019\u00E9quivalent du N en Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A012": {
+      "Name": "Manuel d\u2019Al Bhed 15",
+      "Description": "Permet de reconna\u00EEtre l\u2019\u00E9quivalent du O en Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A013": {
+      "Name": "Manuel d\u2019Al Bhed 16",
+      "Description": "Permet de reconna\u00EEtre l\u2019\u00E9quivalent du P en Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A014": {
+      "Name": "Manuel d\u2019Al Bhed 17",
+      "Description": "Permet de reconna\u00EEtre l\u2019\u00E9quivalent du Q en Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A015": {
+      "Name": "Manuel d\u2019Al Bhed 18",
+      "Description": "Permet de reconna\u00EEtre l\u2019\u00E9quivalent du R en Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A016": {
+      "Name": "Manuel d\u2019Al Bhed 19",
+      "Description": "Permet de reconna\u00EEtre l\u2019\u00E9quivalent du S en Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A017": {
+      "Name": "Manuel d\u2019Al Bhed 20",
+      "Description": "Permet de reconna\u00EEtre l\u2019\u00E9quivalent du T en Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A018": {
+      "Name": "Manuel d\u2019Al Bhed 21",
+      "Description": "Permet de reconna\u00EEtre l\u2019\u00E9quivalent du U en Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A019": {
+      "Name": "Manuel d\u2019Al Bhed 22",
+      "Description": "Permet de reconna\u00EEtre l\u2019\u00E9quivalent du V en Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A01A": {
+      "Name": "Manuel d\u2019Al Bhed 23",
+      "Description": "Permet de reconna\u00EEtre l\u2019\u00E9quivalent du W en Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A01B": {
+      "Name": "Manuel d\u2019Al Bhed 24",
+      "Description": "Permet de reconna\u00EEtre l\u2019\u00E9quivalent du X en Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A01C": {
+      "Name": "Manuel d\u2019Al Bhed 25",
+      "Description": "Permet de reconna\u00EEtre l\u2019\u00E9quivalent du Y en Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A01D": {
+      "Name": "Manuel d\u2019Al Bhed 26",
+      "Description": "Permet de reconna\u00EEtre l\u2019\u00E9quivalent du Z en Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A01E": {
+      "Name": "Coeur d\u2019Invokeur",
+      "Description": "Permet d\u2019enseigner des Comp\u00E9tences aux Chim\u00E8res.",
+      "Kind": "KeyItem"
+    },
+    "A01F": {
+      "Name": "Coeur de Chim\u00E8re",
+      "Description": "Permet d\u2019augmenter les Caract\u00E9ristiques des Chim\u00E8res.",
+      "Kind": "KeyItem"
+    },
+    "A020": {
+      "Name": "Sph\u00E8re de Jecht",
+      "Description": "Sph\u00E8re enregistr\u00E9e par Jecht 10 ans plus t\u00F4t.",
+      "Kind": "KeyItem"
+    },
+    "A021": {
+      "Name": "Ep\u00E9e rouill\u00E9e",
+      "Description": "Vieille \u00E9p\u00E9e rouill\u00E9e.",
+      "Kind": "KeyItem"
+    },
+    "A022": {
+      "Name": "Ind\u00E9termin\u00E9",
+      "Description": "?",
+      "Kind": "KeyItem"
+    },
+    "A023": {
+      "Name": "Symbole Solaire",
+      "Description": "Repr\u00E9sente le Soleil, l\u2019un des 7 astres antiques.",
+      "Kind": "KeyItem"
+    },
+    "A024": {
+      "Name": "Sceau Solaire",
+      "Description": "Sceau sacr\u00E9 du Soleil, l\u2019un des 7 astres antiques.",
+      "Kind": "KeyItem"
+    },
+    "A025": {
+      "Name": "Symbole Lunaire",
+      "Description": "Repr\u00E9sente la Lune, l\u2019un des 7 astres antiques.",
+      "Kind": "KeyItem"
+    },
+    "A026": {
+      "Name": "Sceau Lunaire",
+      "Description": "Sceau sacr\u00E9 de la Lune, l\u2019un des 7 astres antiques.",
+      "Kind": "KeyItem"
+    },
+    "A027": {
+      "Name": "Symbole de Saturne",
+      "Description": "Repr\u00E9sente Saturne, l\u2019un des 7 astres antiques.",
+      "Kind": "KeyItem"
+    },
+    "A028": {
+      "Name": "Sceau de Saturne",
+      "Description": "Sceau sacr\u00E9 de Saturne, l\u2019un des 7 astres antiques.",
+      "Kind": "KeyItem"
+    },
+    "A029": {
+      "Name": "Geste du Magnifique",
+      "Description": "Elle t\u00E9moigne des exploits du plus grand des guerriers !",
+      "Kind": "KeyItem"
+    },
+    "A02A": {
+      "Name": "Symbole de Jupiter",
+      "Description": "Repr\u00E9sente Jupiter, l\u2019un des 7 astres antiques.",
+      "Kind": "KeyItem"
+    },
+    "A02B": {
+      "Name": "Sceau de Jupiter",
+      "Description": "Sceau sacr\u00E9 de Jupiter, l\u2019un des 7 astres antiques.",
+      "Kind": "KeyItem"
+    },
+    "A02C": {
+      "Name": "Symbole de Mercure",
+      "Description": "Repr\u00E9sente Mercure, l\u2019un des 7 astres antiques.",
+      "Kind": "KeyItem"
+    },
+    "A02D": {
+      "Name": "Sceau de Mercure",
+      "Description": "Sceau sacr\u00E9 de Mercure, l\u2019un des 7 astres antiques.",
+      "Kind": "KeyItem"
+    },
+    "A02E": {
+      "Name": "Symbole de Mars",
+      "Description": "Repr\u00E9sente Mars, l\u2019un des 7 astres antiques.",
+      "Kind": "KeyItem"
+    },
+    "A02F": {
+      "Name": "Sceau de Mars",
+      "Description": "Sceau sacr\u00E9 de Mars, l\u2019un des 7 astres antiques.",
+      "Kind": "KeyItem"
+    },
+    "A030": {
+      "Name": "Symbole de V\u00E9nus",
+      "Description": "Repr\u00E9sente V\u00E9nus, l\u2019un des 7 astres antiques.",
+      "Kind": "KeyItem"
+    },
+    "A031": {
+      "Name": "Sceau de V\u00E9nus",
+      "Description": "Sceau sacr\u00E9 de V\u00E9nus, l\u2019un des 7 astres antiques.",
+      "Kind": "KeyItem"
+    },
+    "A032": {
+      "Name": "Tiare de bourgeons",
+      "Description": "Semble avoir un lien avec une Chim\u00E8re oubli\u00E9e.",
+      "Kind": "KeyItem"
+    },
+    "A033": {
+      "Name": "Tiare fleurie",
+      "Description": "Semble avoir un lien avec une Chim\u00E8re oubli\u00E9e.",
+      "Kind": "KeyItem"
+    },
+    "A034": {
+      "Name": "Tr\u00E9sor 53",
+      "Description": "?",
+      "Kind": "KeyItem"
+    },
+    "A035": {
+      "Name": "Tr\u00E9sor 54",
+      "Description": "?",
+      "Kind": "KeyItem"
+    },
+    "A036": {
+      "Name": "Tr\u00E9sor 55",
+      "Description": "?",
+      "Kind": "KeyItem"
+    },
+    "A037": {
+      "Name": "Tr\u00E9sor 56",
+      "Description": "?",
+      "Kind": "KeyItem"
+    },
+    "A038": {
+      "Name": "Tr\u00E9sor 57",
+      "Description": "?",
+      "Kind": "KeyItem"
+    },
+    "A039": {
+      "Name": "Tr\u00E9sor 58",
+      "Description": "?",
+      "Kind": "KeyItem"
+    },
+    "A03A": {
+      "Name": "Tr\u00E9sor 59",
+      "Description": "?",
+      "Kind": "KeyItem"
+    },
+    "A03B": {
+      "Name": "Tr\u00E9sor 60",
+      "Description": "?",
+      "Kind": "KeyItem"
+    },
+    "A03C": {
+      "Name": "Tr\u00E9sor 61",
+      "Description": "?",
+      "Kind": "KeyItem"
+    },
+    "A03D": {
+      "Name": "Tr\u00E9sor 62",
+      "Description": "?",
+      "Kind": "KeyItem"
+    },
+    "A03E": {
+      "Name": "Tr\u00E9sor 63",
+      "Description": "?",
+      "Kind": "KeyItem"
+    },
+    "A03F": {
+      "Name": "Tr\u00E9sor 64",
+      "Description": "?",
+      "Kind": "KeyItem"
+    }
+  }
+}

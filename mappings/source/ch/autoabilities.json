@@ -1,0 +1,681 @@
+{
+  "SchemaVersion": 1,
+  "Domain": "autoabilities",
+  "Locale": "ch",
+  "GeneratedAtUtc": "2026-03-04T07:27:52.3659326Z",
+  "SourceFiles": [
+    "READ_ALL_COMMANDS_LOCALIZED__ch.txt"
+  ],
+  "Entries": {
+    "8000": {
+      "Name": "\u8B58\u7834",
+      "Description": "\u5728\u6230\u9B25\u4E2D\u5BDF\u770B\u6575\u4EBA\u7684\u8CC7\u6599\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8001": {
+      "Name": "\u5148\u653B",
+      "Description": "\u6230\u9B25\u958B\u59CB\u5F8C\u53EF\u7ACB\u5373\u884C\u52D5\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8002": {
+      "Name": "\u5148\u767C\u5236\u4EBA",
+      "Description": "\u5076\u723E\u53EF\u9032\u884C\u5148\u5236\u653B\u64CA\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8003": {
+      "Name": "\u53CD\u64CA",
+      "Description": "\u906D\u53D7\u7269\u7406\u653B\u64CA\u6642\u6703\u9032\u884C\u53CD\u64CA\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8004": {
+      "Name": "\u9583\u907F\u53CD\u64CA",
+      "Description": "\u906D\u53D7\u7269\u7406\u653B\u64CA\u6642\u6703\u5148\u9583\u907F\u518D\u9032\u884C\u53CD\u64CA\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8005": {
+      "Name": "\u9B54\u6CD5\u53CD\u64CA",
+      "Description": "\u906D\u53D7\u9B54\u6CD5\u653B\u64CA\u6642\u6703\u9032\u884C\u53CD\u64CA\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8006": {
+      "Name": "\u9B54\u6CD5\u589E\u5E45",
+      "Description": "\u6D88\u8017\u66F4\u591A\uFF2D\uFF30\u4EE5\u63D0\u6607\u9B54\u6CD5\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8007": {
+      "Name": "\u85E5\u7684\u77E5\u8B58",
+      "Description": "\u4F7F\u7528\u56DE\u5FA9\u9053\u5177\u6642\u7684\uFF28\uFF30\uFF0F\uFF2D\uFF30\u56DE\u5FA9\u91CF\u8B8A\u70BA\uFF12\u500D\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8008": {
+      "Name": "\u81EA\u52D5\u6CBB\u7642\u5291",
+      "Description": "\u906D\u53D7\u640D\u50B7\u6642\u6703\u81EA\u52D5\u4F7F\u7528\u9053\u5177\u56DE\u5FA9\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8009": {
+      "Name": "\u81EA\u52D5\uFF33\uFF34\u56DE\u5FA9\u85E5",
+      "Description": "\u9677\u5165\u72C0\u614B\u7570\u5E38\u6642\u6703\u81EA\u52D5\u4F7F\u7528\u9053\u5177\u56DE\u5FA9\u3002",
+      "Kind": "AutoAbility"
+    },
+    "800A": {
+      "Name": "\u81EA\u52D5\u9CF3\u51F0\u5C3E\u5DF4",
+      "Description": "\u82E5\u6709\u5925\u4F34\u9677\u5165\u300C\u7121\u6CD5\u6230\u9B25\u300D\u72C0\u614B\u6642\uFF0C\u6703\u5C0D\u5176\u4F7F\u7528\u9CF3\u51F0\u5C3E\u5DF4\u9032\u884C\u56DE\u5FA9\u3002",
+      "Kind": "AutoAbility"
+    },
+    "800B": {
+      "Name": "\u8CAB\u901A",
+      "Description": "\u5C0D\u5177\u6709\u300C\u5805\u786C\u300D\u7279\u6027\u7684\u6575\u4EBA\u4ECD\u80FD\u9020\u6210\u4E00\u822C\u640D\u50B7\u3002",
+      "Kind": "AutoAbility"
+    },
+    "800C": {
+      "Name": "\uFF2D\uFF30\u6D88\u8017\uFF11\uFF0F\uFF12",
+      "Description": "\u6D88\u8017\uFF2D\uFF30\u6E1B\u534A\u3002",
+      "Kind": "AutoAbility"
+    },
+    "800D": {
+      "Name": "\uFF2D\uFF30\u6D88\u8017\uFF11",
+      "Description": "\u6D88\u8017\uFF2D\uFF30\u6210\u70BA\uFF11\u3002",
+      "Kind": "AutoAbility"
+    },
+    "800E": {
+      "Name": "\u96D9\u500D\u589E\u9A45",
+      "Description": "\u589E\u9A45\u6307\u6578\u7684\u7D2F\u7A4D\u901F\u5EA6\u8B8A\u70BA\uFF12\u500D\u3002",
+      "Kind": "AutoAbility"
+    },
+    "800F": {
+      "Name": "\u4E09\u500D\u589E\u9A45",
+      "Description": "\u589E\u9A45\u6307\u6578\u7684\u7D2F\u7A4D\u901F\u5EA6\u8B8A\u70BA\uFF13\u500D\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8010": {
+      "Name": "\u5371\u6A5F\u6642\u589E\u9A45",
+      "Description": "\u9677\u5165\u5371\u6A5F\u6642\u589E\u9A45\u6307\u6578\u7684\u7D2F\u7A4D\u901F\u5EA6\u8B8A\u70BA\uFF12\u500D\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8011": {
+      "Name": "\u5316\u589E\u9A45\u70BA\uFF21\uFF30",
+      "Description": "\u96D6\u7136\u589E\u9A45\u6307\u6578\u4E0D\u518D\u7D2F\u7A4D\uFF0C\u4F46\u7372\u5F97\u7684\uFF21\uFF30\u6703\u589E\u52A0\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8012": {
+      "Name": "\uFF21\uFF30\uFF12\u500D",
+      "Description": "\u7372\u5F97\u7684\uFF21\uFF30\u8B8A\u70BA\uFF12\u500D\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8013": {
+      "Name": "\uFF21\uFF30\uFF13\u500D",
+      "Description": "\u7372\u5F97\u7684\uFF21\uFF30\u8B8A\u70BA\uFF13\u500D\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8014": {
+      "Name": "\u7121\uFF21\uFF30",
+      "Description": "\u4E0D\u518D\u7372\u5F97\uFF21\uFF30\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8015": {
+      "Name": "\u53D6\u5F97\u7A00\u6709\u9053\u5177",
+      "Description": "\u4F7F\u7528\u300C\u76DC\u53D6\u300D\u6307\u4EE4\u7372\u5F97\u7A00\u6709\u9053\u5177\u7684\u6A5F\u7387\u4E0A\u6607\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8016": {
+      "Name": "\u53EA\u62FF\u7A00\u6709\u9053\u5177",
+      "Description": "\u4F7F\u7528\u300C\u76DC\u53D6\u300D\u6307\u4EE4\u53EA\u6703\u7372\u5F97\u7A00\u6709\u9053\u5177\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8017": {
+      "Name": "\uFF28\uFF30\u7A81\u7834\u754C\u9650",
+      "Description": "\uFF28\uFF30\u53EF\u4EE5\u6210\u9577\u81F3\u8D85\u904E\uFF19\uFF19\uFF19\uFF19\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8018": {
+      "Name": "\uFF2D\uFF30\u7A81\u7834\u754C\u9650",
+      "Description": "\uFF2D\uFF30\u53EF\u4EE5\u6210\u9577\u81F3\u8D85\u904E\uFF19\uFF19\uFF19\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8019": {
+      "Name": "\u7A81\u7834\u640D\u50B7\u754C\u9650",
+      "Description": "\u53EF\u4EE5\u9020\u6210\u8D85\u904E\uFF19\uFF19\uFF19\uFF19\u7684\u640D\u50B7\u3002",
+      "Kind": "AutoAbility"
+    },
+    "801A": {
+      "Name": "\u91D1\u9322\uFF12\u500D",
+      "Description": "\u7372\u5F97\u7684\uFF27\uFF29\uFF2C\u8B8A\u70BA\uFF12\u500D\u3002",
+      "Kind": "AutoAbility"
+    },
+    "801B": {
+      "Name": "\u8D70\u8DEF\u5C31\u56DE\u5FA9\uFF28\uFF30",
+      "Description": "\u6B65\u884C\u6642\u53EF\u56DE\u5FA9\uFF28\uFF30\u3002",
+      "Kind": "AutoAbility"
+    },
+    "801C": {
+      "Name": "\u8D70\u8DEF\u5C31\u56DE\u5FA9\uFF2D\uFF30",
+      "Description": "\u6B65\u884C\u6642\u53EF\u56DE\u5FA9\uFF2D\uFF30\u3002",
+      "Kind": "AutoAbility"
+    },
+    "801D": {
+      "Name": "\u4E0D\u9047\u6575",
+      "Description": "\u4E0D\u6703\u906D\u9047\u6575\u4EBA\u3002",
+      "Kind": "AutoAbility"
+    },
+    "801E": {
+      "Name": "\u706B\u653B\u64CA",
+      "Description": "\u5C07\u300C\u6230\u9B25\u300D\u8207\u300C\u6280\u5DE7\u300D\u7684\u653B\u64CA\u8F49\u70BA\u706B\u5C6C\u6027\u3002",
+      "Kind": "AutoAbility"
+    },
+    "801F": {
+      "Name": "\u706B\u534A\u6E1B",
+      "Description": "\u906D\u53D7\u706B\u5C6C\u6027\u653B\u64CA\u6642\u640D\u50B7\u6E1B\u534A\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8020": {
+      "Name": "\u706B\u7121\u6548",
+      "Description": "\u906D\u53D7\u706B\u5C6C\u6027\u653B\u64CA\u6642\u4E0D\u6703\u53D7\u5230\u640D\u50B7\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8021": {
+      "Name": "\u706B\u5438\u6536",
+      "Description": "\u906D\u53D7\u706B\u5C6C\u6027\u653B\u64CA\u6642\u5438\u6536\u640D\u50B7\u4EE5\u56DE\u5FA9\uFF28\uFF30\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8022": {
+      "Name": "\u51B0\u653B\u64CA",
+      "Description": "\u5C07\u300C\u6230\u9B25\u300D\u8207\u300C\u6280\u5DE7\u300D\u7684\u653B\u64CA\u8F49\u70BA\u51B0\u5C6C\u6027\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8023": {
+      "Name": "\u51B0\u534A\u6E1B",
+      "Description": "\u906D\u53D7\u51B0\u5C6C\u6027\u653B\u64CA\u6642\u640D\u50B7\u6E1B\u534A\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8024": {
+      "Name": "\u51B0\u7121\u6548",
+      "Description": "\u906D\u53D7\u51B0\u5C6C\u6027\u653B\u64CA\u6642\u4E0D\u6703\u53D7\u5230\u640D\u50B7\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8025": {
+      "Name": "\u51B0\u5438\u6536",
+      "Description": "\u906D\u53D7\u51B0\u5C6C\u6027\u653B\u64CA\u6642\u5438\u6536\u640D\u50B7\u4EE5\u56DE\u5FA9\uFF28\uFF30\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8026": {
+      "Name": "\u96F7\u653B\u64CA",
+      "Description": "\u5C07\u300C\u6230\u9B25\u300D\u8207\u300C\u6280\u5DE7\u300D\u7684\u653B\u64CA\u8F49\u70BA\u96F7\u5C6C\u6027\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8027": {
+      "Name": "\u96F7\u534A\u6E1B",
+      "Description": "\u906D\u53D7\u96F7\u5C6C\u6027\u653B\u64CA\u6642\u640D\u50B7\u6E1B\u534A\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8028": {
+      "Name": "\u96F7\u7121\u6548",
+      "Description": "\u906D\u53D7\u96F7\u5C6C\u6027\u653B\u64CA\u6642\u4E0D\u6703\u53D7\u5230\u640D\u50B7\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8029": {
+      "Name": "\u96F7\u5438\u6536",
+      "Description": "\u906D\u53D7\u96F7\u5C6C\u6027\u653B\u64CA\u6642\u5438\u6536\u640D\u50B7\u4EE5\u56DE\u5FA9\uFF28\uFF30\u3002",
+      "Kind": "AutoAbility"
+    },
+    "802A": {
+      "Name": "\u6C34\u653B\u64CA",
+      "Description": "\u5C07\u300C\u6230\u9B25\u300D\u8207\u300C\u6280\u5DE7\u300D\u7684\u653B\u64CA\u8F49\u70BA\u6C34\u5C6C\u6027\u3002",
+      "Kind": "AutoAbility"
+    },
+    "802B": {
+      "Name": "\u6C34\u534A\u6E1B",
+      "Description": "\u906D\u53D7\u6C34\u5C6C\u6027\u653B\u64CA\u6642\u640D\u50B7\u6E1B\u534A\u3002",
+      "Kind": "AutoAbility"
+    },
+    "802C": {
+      "Name": "\u6C34\u7121\u6548",
+      "Description": "\u906D\u53D7\u6C34\u5C6C\u6027\u653B\u64CA\u6642\u4E0D\u6703\u53D7\u5230\u640D\u50B7\u3002",
+      "Kind": "AutoAbility"
+    },
+    "802D": {
+      "Name": "\u6C34\u5438\u6536",
+      "Description": "\u906D\u53D7\u6C34\u5C6C\u6027\u653B\u64CA\u6642\u5438\u6536\u640D\u50B7\u4EE5\u56DE\u5FA9\uFF28\uFF30\u3002",
+      "Kind": "AutoAbility"
+    },
+    "802E": {
+      "Name": "\u5373\u6B7B\u653B\u64CA\uFF08\u6539\u826F\u7248\uFF09",
+      "Description": "\u300C\u6230\u9B25\u300D\u8207\u300C\u6280\u5DE7\u300D\u7684\u653B\u64CA\u5E7E\u4E4E\u5FC5\u5B9A\u9644\u52A0\u300C\u5373\u6B7B\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "802F": {
+      "Name": "\u5373\u6B7B\u653B\u64CA",
+      "Description": "\u300C\u6230\u9B25\u300D\u8207\u300C\u6280\u5DE7\u300D\u7684\u653B\u64CA\u9644\u52A0\u300C\u5373\u6B7B\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8030": {
+      "Name": "\u5B8C\u5168\u5373\u6B7B\u9632\u79A6",
+      "Description": "\u5E7E\u4E4E\u5FC5\u5B9A\u80FD\u9632\u79A6\u300C\u5373\u6B7B\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8031": {
+      "Name": "\u5373\u6B7B\u9632\u79A6",
+      "Description": "\u6709\u6642\u53EF\u9632\u79A6\u300C\u5373\u6B7B\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8032": {
+      "Name": "\u6BAD\u5C4D\u653B\u64CA\uFF08\u6539\u826F\u7248\uFF09",
+      "Description": "\u300C\u6230\u9B25\u300D\u8207\u300C\u6280\u5DE7\u300D\u7684\u653B\u64CA\u5E7E\u4E4E\u5FC5\u5B9A\u9644\u52A0\u300C\u6BAD\u5C4D\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8033": {
+      "Name": "\u6BAD\u5C4D\u653B\u64CA",
+      "Description": "\u300C\u6230\u9B25\u300D\u8207\u300C\u6280\u5DE7\u300D\u7684\u653B\u64CA\u9644\u52A0\u300C\u6BAD\u5C4D\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8034": {
+      "Name": "\u5B8C\u5168\u6BAD\u5C4D\u9632\u79A6",
+      "Description": "\u5E7E\u4E4E\u5FC5\u5B9A\u80FD\u9632\u79A6\u300C\u6BAD\u5C4D\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8035": {
+      "Name": "\u6BAD\u5C4D\u9632\u79A6",
+      "Description": "\u6709\u6642\u53EF\u9632\u79A6\u300C\u6BAD\u5C4D\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8036": {
+      "Name": "\u77F3\u5316\u653B\u64CA\uFF08\u6539\u826F\u7248\uFF09",
+      "Description": "\u300C\u6230\u9B25\u300D\u8207\u300C\u6280\u5DE7\u300D\u7684\u653B\u64CA\u5E7E\u4E4E\u5FC5\u5B9A\u9644\u52A0\u300C\u77F3\u5316\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8037": {
+      "Name": "\u77F3\u5316\u653B\u64CA",
+      "Description": "\u300C\u6230\u9B25\u300D\u8207\u300C\u6280\u5DE7\u300D\u7684\u653B\u64CA\u9644\u52A0\u300C\u77F3\u5316\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8038": {
+      "Name": "\u5B8C\u5168\u77F3\u5316\u9632\u79A6",
+      "Description": "\u5E7E\u4E4E\u5FC5\u5B9A\u80FD\u9632\u79A6\u300C\u77F3\u5316\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8039": {
+      "Name": "\u77F3\u5316\u9632\u79A6",
+      "Description": "\u6709\u6642\u53EF\u9632\u79A6\u300C\u77F3\u5316\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "803A": {
+      "Name": "\u6BD2\u6027\u653B\u64CA\uFF08\u6539\u826F\u7248\uFF09",
+      "Description": "\u300C\u6230\u9B25\u300D\u8207\u300C\u6280\u5DE7\u300D\u7684\u653B\u64CA\u5E7E\u4E4E\u5FC5\u5B9A\u9644\u52A0\u300C\u4E2D\u6BD2\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "803B": {
+      "Name": "\u6BD2\u6027\u653B\u64CA",
+      "Description": "\u300C\u6230\u9B25\u300D\u8207\u300C\u6280\u5DE7\u300D\u7684\u653B\u64CA\u9644\u52A0\u300C\u4E2D\u6BD2\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "803C": {
+      "Name": "\u5B8C\u5168\u4E2D\u6BD2\u9632\u79A6",
+      "Description": "\u5E7E\u4E4E\u5FC5\u5B9A\u80FD\u9632\u79A6\u300C\u4E2D\u6BD2\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "803D": {
+      "Name": "\u4E2D\u6BD2\u9632\u79A6",
+      "Description": "\u6709\u6642\u53EF\u9632\u79A6\u300C\u4E2D\u6BD2\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "803E": {
+      "Name": "\u7761\u7720\u653B\u64CA\uFF08\u6539\u826F\u7248\uFF09",
+      "Description": "\u300C\u6230\u9B25\u300D\u8207\u300C\u6280\u5DE7\u300D\u7684\u653B\u64CA\u5E7E\u4E4E\u5FC5\u5B9A\u9644\u52A0\u300C\u7761\u7720\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "803F": {
+      "Name": "\u7761\u7720\u653B\u64CA",
+      "Description": "\u300C\u6230\u9B25\u300D\u8207\u300C\u6280\u5DE7\u300D\u7684\u653B\u64CA\u9644\u52A0\u300C\u7761\u7720\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8040": {
+      "Name": "\u5B8C\u5168\u7761\u7720\u9632\u79A6",
+      "Description": "\u5E7E\u4E4E\u5FC5\u5B9A\u80FD\u9632\u79A6\u300C\u7761\u7720\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8041": {
+      "Name": "\u7761\u7720\u9632\u79A6",
+      "Description": "\u6709\u6642\u53EF\u9632\u79A6\u300C\u7761\u7720\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8042": {
+      "Name": "\u6C89\u9ED8\u653B\u64CA\uFF08\u6539\u826F\u7248\uFF09",
+      "Description": "\u300C\u6230\u9B25\u300D\u8207\u300C\u6280\u5DE7\u300D\u7684\u653B\u64CA\u5E7E\u4E4E\u5FC5\u5B9A\u9644\u52A0\u300C\u6C89\u9ED8\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8043": {
+      "Name": "\u6C89\u9ED8\u653B\u64CA",
+      "Description": "\u300C\u6230\u9B25\u300D\u8207\u300C\u6280\u5DE7\u300D\u7684\u653B\u64CA\u9644\u52A0\u300C\u6C89\u9ED8\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8044": {
+      "Name": "\u5B8C\u5168\u6C89\u9ED8\u9632\u79A6",
+      "Description": "\u5E7E\u4E4E\u5FC5\u5B9A\u80FD\u9632\u79A6\u300C\u6C89\u9ED8\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8045": {
+      "Name": "\u6C89\u9ED8\u9632\u79A6",
+      "Description": "\u6709\u6642\u53EF\u9632\u79A6\u300C\u6C89\u9ED8\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8046": {
+      "Name": "\u9ED1\u6697\u653B\u64CA\uFF08\u6539\u826F\u7248\uFF09",
+      "Description": "\u300C\u6230\u9B25\u300D\u8207\u300C\u6280\u5DE7\u300D\u7684\u653B\u64CA\u5E7E\u4E4E\u5FC5\u5B9A\u9644\u52A0\u300C\u9ED1\u6697\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8047": {
+      "Name": "\u9ED1\u6697\u653B\u64CA",
+      "Description": "\u300C\u6230\u9B25\u300D\u8207\u300C\u6280\u5DE7\u300D\u7684\u653B\u64CA\u9644\u52A0\u300C\u9ED1\u6697\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8048": {
+      "Name": "\u5B8C\u5168\u9ED1\u6697\u9632\u79A6",
+      "Description": "\u5E7E\u4E4E\u5FC5\u5B9A\u80FD\u9632\u79A6\u300C\u9ED1\u6697\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8049": {
+      "Name": "\u9ED1\u6697\u9632\u79A6",
+      "Description": "\u6709\u6642\u53EF\u9632\u79A6\u300C\u9ED1\u6697\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "804A": {
+      "Name": "\u7DE9\u6162\u653B\u64CA\uFF08\u6539\u826F\u7248\uFF09",
+      "Description": "\u300C\u6230\u9B25\u300D\u8207\u300C\u6280\u5DE7\u300D\u7684\u653B\u64CA\u5E7E\u4E4E\u5FC5\u5B9A\u9644\u52A0\u300C\u7DE9\u6162\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "804B": {
+      "Name": "\u7DE9\u6162\u653B\u64CA",
+      "Description": "\u300C\u6230\u9B25\u300D\u8207\u300C\u6280\u5DE7\u300D\u7684\u653B\u64CA\u9644\u52A0\u300C\u7DE9\u6162\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "804C": {
+      "Name": "\u5B8C\u5168\u7DE9\u6162\u9632\u79A6",
+      "Description": "\u5E7E\u4E4E\u5FC5\u5B9A\u80FD\u9632\u79A6\u300C\u7DE9\u6162\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "804D": {
+      "Name": "\u7DE9\u6162\u9632\u79A6",
+      "Description": "\u6709\u6642\u53EF\u9632\u79A6\u300C\u7DE9\u6162\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "804E": {
+      "Name": "\u5B8C\u5168\u6DF7\u4E82\u9632\u79A6",
+      "Description": "\u5E7E\u4E4E\u5FC5\u5B9A\u80FD\u9632\u79A6\u300C\u6DF7\u4E82\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "804F": {
+      "Name": "\u6DF7\u4E82\u9632\u79A6",
+      "Description": "\u6709\u6642\u53EF\u9632\u79A6\u300C\u6DF7\u4E82\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8050": {
+      "Name": "\u5B8C\u5168\u72C2\u66B4\u9632\u79A6",
+      "Description": "\u5E7E\u4E4E\u5FC5\u5B9A\u80FD\u9632\u79A6\u300C\u72C2\u66B4\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8051": {
+      "Name": "\u72C2\u66B4\u9632\u79A6",
+      "Description": "\u6709\u6642\u53EF\u9632\u79A6\u300C\u72C2\u66B4\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8052": {
+      "Name": "\u5B8C\u5168\u5492\u7F75\u9632\u79A6",
+      "Description": "\u5E7E\u4E4E\u5FC5\u5B9A\u80FD\u9632\u79A6\u300C\u5492\u7F75\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8053": {
+      "Name": "\u5492\u7F75\u9632\u79A6",
+      "Description": "\u6709\u6642\u53EF\u9632\u79A6\u300C\u5492\u7F75\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8054": {
+      "Name": "\u81EA\u52D5\u9B54\u9632\u6BBC",
+      "Description": "\u5E38\u99D0\u300C\u9B54\u9632\u6BBC\u300D\u7684\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8055": {
+      "Name": "\u81EA\u52D5\u7269\u9632\u8B77",
+      "Description": "\u5E38\u99D0\u300C\u7269\u9632\u8B77\u300D\u7684\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8056": {
+      "Name": "\u81EA\u52D5\u6025\u901F",
+      "Description": "\u5E38\u99D0\u300C\u6025\u901F\u300D\u7684\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8057": {
+      "Name": "\u81EA\u52D5\u6CBB\u7642",
+      "Description": "\u5E38\u99D0\u300C\u6CBB\u7642\u300D\u7684\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8058": {
+      "Name": "\u81EA\u52D5\u53CD\u5C04",
+      "Description": "\u5E38\u99D0\u300C\u53CD\u5C04\u300D\u7684\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8059": {
+      "Name": "\u5371\u6A5F\u6642\u9B54\u9632\u6BBC",
+      "Description": "\u9677\u5165\u5371\u6A5F\u6642\u7ACB\u523B\u767C\u52D5\u300C\u9B54\u9632\u6BBC\u300D\u7684\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "805A": {
+      "Name": "\u5371\u6A5F\u6642\u7269\u9632\u8B77",
+      "Description": "\u9677\u5165\u5371\u6A5F\u6642\u7ACB\u523B\u767C\u52D5\u300C\u7269\u9632\u8B77\u300D\u7684\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "805B": {
+      "Name": "\u5371\u6A5F\u6642\u6025\u901F",
+      "Description": "\u9677\u5165\u5371\u6A5F\u6642\u7ACB\u523B\u767C\u52D5\u300C\u6025\u901F\u300D\u7684\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "805C": {
+      "Name": "\u5371\u6A5F\u6642\u6CBB\u7642",
+      "Description": "\u9677\u5165\u5371\u6A5F\u6642\u7ACB\u523B\u767C\u52D5\u300C\u6CBB\u7642\u300D\u7684\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "805D": {
+      "Name": "\u5371\u6A5F\u6642\u53CD\u5C04",
+      "Description": "\u9677\u5165\u5371\u6A5F\u6642\u7ACB\u523B\u767C\u52D5\u300C\u53CD\u5C04\u300D\u7684\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "805E": {
+      "Name": "\u5371\u6A5F\u6642\u9632\u6C34\u7F69",
+      "Description": "\u9677\u5165\u5371\u6A5F\u6642\u7ACB\u523B\u767C\u52D5\u300C\u9632\u6C34\u7F69\u300D\u7684\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "805F": {
+      "Name": "\u5371\u6A5F\u6642\u9632\u51B0\u7F69",
+      "Description": "\u9677\u5165\u5371\u6A5F\u6642\u7ACB\u523B\u767C\u52D5\u300C\u9632\u51B0\u7F69\u300D\u7684\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8060": {
+      "Name": "\u5371\u6A5F\u6642\u9632\u96F7\u7F69",
+      "Description": "\u9677\u5165\u5371\u6A5F\u6642\u7ACB\u523B\u767C\u52D5\u300C\u9632\u96F7\u7F69\u300D\u7684\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8061": {
+      "Name": "\u5371\u6A5F\u6642\u9632\u706B\u7F69",
+      "Description": "\u9677\u5165\u5371\u6A5F\u6642\u7ACB\u523B\u767C\u52D5\u300C\u9632\u706B\u7F69\u300D\u7684\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8062": {
+      "Name": "\u7269\u7406\u653B\u64CA\uFF0B\uFF13\uFF05",
+      "Description": "\u7269\u7406\u653B\u64CA\u640D\u50B7\u589E\u52A0\uFF13\uFF05\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8063": {
+      "Name": "\u7269\u7406\u653B\u64CA\uFF0B\uFF15\uFF05",
+      "Description": "\u7269\u7406\u653B\u64CA\u640D\u50B7\u589E\u52A0\uFF15\uFF05\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8064": {
+      "Name": "\u7269\u7406\u653B\u64CA\uFF0B\uFF11\uFF10\uFF05",
+      "Description": "\u7269\u7406\u653B\u64CA\u640D\u50B7\u589E\u52A0\uFF11\uFF10\uFF05\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8065": {
+      "Name": "\u7269\u7406\u653B\u64CA\uFF0B\uFF12\uFF10\uFF05",
+      "Description": "\u7269\u7406\u653B\u64CA\u640D\u50B7\u589E\u52A0\uFF12\uFF10\uFF05\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8066": {
+      "Name": "\u9B54\u6CD5\u653B\u64CA\uFF0B\uFF13\uFF05",
+      "Description": "\u9B54\u6CD5\u653B\u64CA\u640D\u50B7\u589E\u52A0\uFF13\uFF05\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8067": {
+      "Name": "\u9B54\u6CD5\u653B\u64CA\uFF0B\uFF15\uFF05",
+      "Description": "\u9B54\u6CD5\u653B\u64CA\u640D\u50B7\u589E\u52A0\uFF15\uFF05\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8068": {
+      "Name": "\u9B54\u6CD5\u653B\u64CA\uFF0B\uFF11\uFF10\uFF05",
+      "Description": "\u9B54\u6CD5\u653B\u64CA\u640D\u50B7\u589E\u52A0\uFF11\uFF10\uFF05\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8069": {
+      "Name": "\u9B54\u6CD5\u653B\u64CA\uFF0B\uFF12\uFF10\uFF05",
+      "Description": "\u9B54\u6CD5\u653B\u64CA\u640D\u50B7\u589E\u52A0\uFF12\uFF10\uFF05\u3002",
+      "Kind": "AutoAbility"
+    },
+    "806A": {
+      "Name": "\u7269\u7406\u9632\u79A6\uFF0B\uFF13\uFF05",
+      "Description": "\u906D\u53D7\u7269\u7406\u653B\u64CA\u640D\u50B7\u6E1B\u5C11\uFF13\uFF05\u3002",
+      "Kind": "AutoAbility"
+    },
+    "806B": {
+      "Name": "\u7269\u7406\u9632\u79A6\uFF0B\uFF15\uFF05",
+      "Description": "\u906D\u53D7\u7269\u7406\u653B\u64CA\u640D\u50B7\u6E1B\u5C11\uFF15\uFF05\u3002",
+      "Kind": "AutoAbility"
+    },
+    "806C": {
+      "Name": "\u7269\u7406\u9632\u79A6\uFF0B\uFF11\uFF10\uFF05",
+      "Description": "\u906D\u53D7\u7269\u7406\u653B\u64CA\u640D\u50B7\u6E1B\u5C11\uFF11\uFF10\uFF05\u3002",
+      "Kind": "AutoAbility"
+    },
+    "806D": {
+      "Name": "\u7269\u7406\u9632\u79A6\uFF0B\uFF12\uFF10\uFF05",
+      "Description": "\u906D\u53D7\u7269\u7406\u653B\u64CA\u640D\u50B7\u6E1B\u5C11\uFF12\uFF10\uFF05\u3002",
+      "Kind": "AutoAbility"
+    },
+    "806E": {
+      "Name": "\u9B54\u6CD5\u9632\u79A6\uFF0B\uFF13\uFF05",
+      "Description": "\u906D\u53D7\u9B54\u6CD5\u653B\u64CA\u640D\u50B7\u6E1B\u5C11\uFF13\uFF05\u3002",
+      "Kind": "AutoAbility"
+    },
+    "806F": {
+      "Name": "\u9B54\u6CD5\u9632\u79A6\uFF0B\uFF15\uFF05",
+      "Description": "\u906D\u53D7\u9B54\u6CD5\u653B\u64CA\u640D\u50B7\u6E1B\u5C11\uFF15\uFF05\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8070": {
+      "Name": "\u9B54\u6CD5\u9632\u79A6\uFF0B\uFF11\uFF10\uFF05",
+      "Description": "\u906D\u53D7\u9B54\u6CD5\u653B\u64CA\u640D\u50B7\u6E1B\u5C11\uFF11\uFF10\uFF05\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8071": {
+      "Name": "\u9B54\u6CD5\u9632\u79A6\uFF0B\uFF12\uFF10\uFF05",
+      "Description": "\u906D\u53D7\u9B54\u6CD5\u653B\u64CA\u640D\u50B7\u6E1B\u5C11\uFF12\uFF10\uFF05\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8072": {
+      "Name": "\uFF28\uFF30\uFF0B\uFF15\uFF05",
+      "Description": "\uFF28\uFF30\u589E\u52A0\uFF15\uFF05\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8073": {
+      "Name": "\uFF28\uFF30\uFF0B\uFF11\uFF10\uFF05",
+      "Description": "\uFF28\uFF30\u589E\u52A0\uFF11\uFF10\uFF05\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8074": {
+      "Name": "\uFF28\uFF30\uFF0B\uFF12\uFF10\uFF05",
+      "Description": "\uFF28\uFF30\u589E\u52A0\uFF12\uFF10\uFF05\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8075": {
+      "Name": "\uFF28\uFF30\uFF0B\uFF13\uFF10\uFF05",
+      "Description": "\uFF28\uFF30\u589E\u52A0\uFF13\uFF10\uFF05\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8076": {
+      "Name": "\uFF2D\uFF30\uFF0B\uFF15\uFF05",
+      "Description": "\uFF2D\uFF30\u589E\u52A0\uFF15\uFF05\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8077": {
+      "Name": "\uFF2D\uFF30\uFF0B\uFF11\uFF10\uFF05",
+      "Description": "\uFF2D\uFF30\u589E\u52A0\uFF11\uFF10\uFF05\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8078": {
+      "Name": "\uFF2D\uFF30\uFF0B\uFF12\uFF10\uFF05",
+      "Description": "\uFF2D\uFF30\u589E\u52A0\uFF12\uFF10\uFF05\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8079": {
+      "Name": "\uFF2D\uFF30\uFF0B\uFF13\uFF10\uFF05",
+      "Description": "\uFF2D\uFF30\u589E\u52A0\uFF13\uFF10\uFF05\u3002",
+      "Kind": "AutoAbility"
+    },
+    "807A": {
+      "Name": "\u6355\u7372",
+      "Description": "\u7121",
+      "Kind": "AutoAbility"
+    },
+    "807B": {
+      "Name": "\u7121",
+      "Description": "\u7121",
+      "Kind": "AutoAbility"
+    },
+    "807C": {
+      "Name": "\u529B\u91CF\u8B8A\u63DB",
+      "Description": "\u300C\u6230\u9B25\u300D\u8207\u300C\u6280\u5DE7\u300D\u7684\u653B\u64CA\u9644\u52A0\u300C\u529B\u4E4B\u8A18\u61B6\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "807D": {
+      "Name": "\u9B54\u6CD5\u8B8A\u63DB",
+      "Description": "\u300C\u6230\u9B25\u300D\u8207\u300C\u6280\u5DE7\u300D\u7684\u653B\u64CA\u9644\u52A0\u300C\u9B54\u6CD5\u4E4B\u8A18\u61B6\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "807E": {
+      "Name": "\u901F\u5EA6\u8B8A\u63DB",
+      "Description": "\u300C\u6230\u9B25\u300D\u8207\u300C\u6280\u5DE7\u300D\u7684\u653B\u64CA\u9644\u52A0\u300C\u901F\u5EA6\u4E4B\u8A18\u61B6\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "807F": {
+      "Name": "\u6280\u80FD\u8B8A\u63DB",
+      "Description": "\u300C\u6230\u9B25\u300D\u8207\u300C\u6280\u5DE7\u300D\u7684\u653B\u64CA\u9644\u52A0\u300C\u6280\u80FD\u4E4B\u8A18\u61B6\u300D\u6548\u679C\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8080": {
+      "Name": "\u7DDE\u5E36",
+      "Description": "\u5E7E\u4E4E\u5FC5\u5B9A\u80FD\u9632\u79A6\u6240\u6709\u72C0\u614B\u7570\u5E38\u3002",
+      "Kind": "AutoAbility"
+    },
+    "8081": {
+      "Name": "\u9810\u5099\uFF11",
+      "Description": "\u7121",
+      "Kind": "AutoAbility"
+    },
+    "8082": {
+      "Name": "\u9810\u5099\uFF12",
+      "Description": "\u7121",
+      "Kind": "AutoAbility"
+    },
+    "8083": {
+      "Name": "\u9810\u5099\uFF13",
+      "Description": "\u7121",
+      "Kind": "AutoAbility"
+    },
+    "8084": {
+      "Name": "\u9810\u5099\uFF14",
+      "Description": "\u7121",
+      "Kind": "AutoAbility"
+    },
+    "8085": {
+      "Name": "\u9810\u5099\uFF15",
+      "Description": "\u7121",
+      "Kind": "AutoAbility"
+    }
+  }
+}

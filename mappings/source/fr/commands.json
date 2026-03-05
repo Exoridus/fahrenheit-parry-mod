@@ -1,0 +1,4906 @@
+{
+  "SchemaVersion": 1,
+  "Domain": "commands",
+  "Locale": "fr",
+  "GeneratedAtUtc": "2026-03-04T07:27:52.2621755Z",
+  "SourceFiles": [
+    "READ_ALL_COMMANDS_LOCALIZED__fr.txt"
+  ],
+  "Entries": {
+    "3000": {
+      "Name": "Attaquer",
+      "Description": "Frapper un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "3001": {
+      "Name": "Objets",
+      "Description": "Utiliser un Objet.",
+      "Kind": "PlayerCommand"
+    },
+    "3002": {
+      "Name": "Rel\u00E8ve",
+      "Description": "Se faire remplacer par un alli\u00E9 en retrait.",
+      "Kind": "PlayerCommand"
+    },
+    "3003": {
+      "Name": "Fuir",
+      "Description": "Fuir le combat individuellement.",
+      "Kind": "PlayerCommand"
+    },
+    "3004": {
+      "Name": "Armes",
+      "Description": "Changer d\u2019arme.",
+      "Kind": "PlayerCommand"
+    },
+    "3005": {
+      "Name": "Protections",
+      "Description": "Changer de protection.",
+      "Kind": "PlayerCommand"
+    },
+    "3006": {
+      "Name": "D\u00E9lai",
+      "Description": "Retarde le tour d\u2019action d\u2019un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "3007": {
+      "Name": "D\u00E9lai \u002B",
+      "Description": "Retarde grandement le tour d\u2019action d\u2019un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "3008": {
+      "Name": "Morph\u00E9e",
+      "Description": "Inflige Sommeil \u00E0 un ennemi pendant 3 tours.",
+      "Kind": "PlayerCommand"
+    },
+    "3009": {
+      "Name": "Silence",
+      "Description": "Inflige Mutisme \u00E0 un ennemi pendant 3 tours.",
+      "Kind": "PlayerCommand"
+    },
+    "300A": {
+      "Name": "C\u00E9cit\u00E9",
+      "Description": "Inflige Obscurit\u00E9 \u00E0 un ennemi pendant 3 tours.",
+      "Kind": "PlayerCommand"
+    },
+    "300B": {
+      "Name": "Zombie",
+      "Description": "Inflige Zombie \u00E0 un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "300C": {
+      "Name": "Morph\u00E9e \u002B",
+      "Description": "Inflige \u00E0 coup s\u00FBr Sommeil \u00E0 un ennemi pendant 1 tour.",
+      "Kind": "PlayerCommand"
+    },
+    "300D": {
+      "Name": "Silence \u002B",
+      "Description": "Inflige \u00E0 coup s\u00FBr Mutisme \u00E0 un ennemi pendant 1 tour.",
+      "Kind": "PlayerCommand"
+    },
+    "300E": {
+      "Name": "C\u00E9cit\u00E9 \u002B",
+      "Description": "Inflige \u00E0 coup s\u00FBr Obscurit\u00E9 \u00E0 un ennemi pendant 1 tour.",
+      "Kind": "PlayerCommand"
+    },
+    "300F": {
+      "Name": "3 Plaies",
+      "Description": "Inflige Sommeil, Mutisme et Obscurit\u00E9 pendant 3 tours.",
+      "Kind": "PlayerCommand"
+    },
+    "3010": {
+      "Name": "Emousse",
+      "Description": "Abaisse la Force d\u2019un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "3011": {
+      "Name": "Annumagik",
+      "Description": "Abaisse la Magie d\u2019un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "3012": {
+      "Name": "Tr\u00E9pan",
+      "Description": "Abaisse la Constitution et neutralise Cuirasse.",
+      "Kind": "PlayerCommand"
+    },
+    "3013": {
+      "Name": "D\u00E9prime",
+      "Description": "Abaisse l\u2019Esprit d\u2019un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "3014": {
+      "Name": "Piller",
+      "Description": "Attaquer et Voler en m\u00EAme temps.",
+      "Kind": "PlayerCommand"
+    },
+    "3015": {
+      "Name": "Attaque \u00E9clair",
+      "Description": "Attaquer tr\u00E8s rapidement.",
+      "Kind": "PlayerCommand"
+    },
+    "3016": {
+      "Name": "Voler",
+      "Description": "Voler un objet \u00E0 un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "3017": {
+      "Name": "Utiliser",
+      "Description": "Utiliser un objet sp\u00E9cial.",
+      "Kind": "PlayerCommand"
+    },
+    "3018": {
+      "Name": "D\u00E9camper",
+      "Description": "Fuir le combat tous ensemble.",
+      "Kind": "PlayerCommand"
+    },
+    "3019": {
+      "Name": "Pri\u00E8re",
+      "Description": "Redonne des HP aux alli\u00E9s.",
+      "Kind": "PlayerCommand"
+    },
+    "301A": {
+      "Name": "Encourager",
+      "Description": "Augmenter la Force et la Constitution des alli\u00E9s.",
+      "Kind": "PlayerCommand"
+    },
+    "301B": {
+      "Name": "Viser",
+      "Description": "Augmenter la Pr\u00E9cision des alli\u00E9s.",
+      "Kind": "PlayerCommand"
+    },
+    "301C": {
+      "Name": "Concentrer",
+      "Description": "Augmenter la Magie et l\u2019Esprit des alli\u00E9s.",
+      "Kind": "PlayerCommand"
+    },
+    "301D": {
+      "Name": "Vigilance",
+      "Description": "Augmenter l\u2019Esquive des alli\u00E9s.",
+      "Kind": "PlayerCommand"
+    },
+    "301E": {
+      "Name": "Bonne \u00E9toile",
+      "Description": "Augmenter la Chance des alli\u00E9s.",
+      "Kind": "PlayerCommand"
+    },
+    "301F": {
+      "Name": "Mauvais oeil",
+      "Description": "Abaisser la Chance des ennemis.",
+      "Kind": "PlayerCommand"
+    },
+    "3020": {
+      "Name": "Ryuken",
+      "Description": "Absorber les HP et les MP d\u2019un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "3021": {
+      "Name": "D\u00E9fense",
+      "Description": "R\u00E9duit les d\u00E9g\u00E2ts dus aux attaques physiques.",
+      "Kind": "PlayerCommand"
+    },
+    "3022": {
+      "Name": "Couvrir",
+      "Description": "Prot\u00E9ger un alli\u00E9 en encaissant les d\u00E9g\u00E2ts \u00E0 sa place.",
+      "Kind": "PlayerCommand"
+    },
+    "3023": {
+      "Name": "Sentinelle",
+      "Description": "Couvrir un alli\u00E9 en utilisant D\u00E9fense.",
+      "Kind": "PlayerCommand"
+    },
+    "3024": {
+      "Name": "Dilapider",
+      "Description": "Infliger des d\u00E9g\u00E2ts en lan\u00E7ant des Gils.",
+      "Kind": "PlayerCommand"
+    },
+    "3025": {
+      "Name": "Intimider",
+      "Description": "\u201DP\u00E9trifier\u201D de peur un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "3026": {
+      "Name": "Provoquer",
+      "Description": "Attirer les attaques d\u2019un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "3027": {
+      "Name": "Transfert",
+      "Description": "Transf\u00E9rer sa jauge d\u2019Overdrive \u00E0 un alli\u00E9.",
+      "Kind": "PlayerCommand"
+    },
+    "3028": {
+      "Name": "Imiter",
+      "Description": "R\u00E9p\u00E9ter l\u2019action de l\u2019alli\u00E9 pr\u00E9c\u00E9dent.",
+      "Kind": "PlayerCommand"
+    },
+    "3029": {
+      "Name": "Sorcellerie",
+      "Description": "Lancer 2 sorts de Magie Noire.",
+      "Kind": "PlayerCommand"
+    },
+    "302A": {
+      "Name": "Corruption",
+      "Description": "Se d\u00E9barrasser d\u2019un ennemi en le soudoyant.",
+      "Kind": "PlayerCommand"
+    },
+    "302B": {
+      "Name": "Soin",
+      "Description": "Redonne un peu de HP \u00E0 un alli\u00E9.",
+      "Kind": "PlayerCommand"
+    },
+    "302C": {
+      "Name": "Soin \u002B",
+      "Description": "Redonne des HP \u00E0 un alli\u00E9.",
+      "Kind": "PlayerCommand"
+    },
+    "302D": {
+      "Name": "Soin Max",
+      "Description": "Redonne beaucoup de HP \u00E0 un alli\u00E9.",
+      "Kind": "PlayerCommand"
+    },
+    "302E": {
+      "Name": "AntiGlace",
+      "Description": "Prot\u00E8ge 1 fois chaque alli\u00E9 des attaques de Glace.",
+      "Kind": "PlayerCommand"
+    },
+    "302F": {
+      "Name": "AntiFeu",
+      "Description": "Prot\u00E8ge 1 fois chaque alli\u00E9 des attaques de Feu.",
+      "Kind": "PlayerCommand"
+    },
+    "3030": {
+      "Name": "AntiTonnerre",
+      "Description": "Prot\u00E8ge 1 fois chaque alli\u00E9 des attaques de Tonnerre.",
+      "Kind": "PlayerCommand"
+    },
+    "3031": {
+      "Name": "AntiEau",
+      "Description": "Prot\u00E8ge 1 fois chaque alli\u00E9 des attaques d\u2019Eau.",
+      "Kind": "PlayerCommand"
+    },
+    "3032": {
+      "Name": "Scan",
+      "Description": "Affiche des informations au sujet d\u2019un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "3033": {
+      "Name": "Esuna",
+      "Description": "Soigne les alt\u00E9rations d\u2019\u00E9tat d\u2019un alli\u00E9.",
+      "Kind": "PlayerCommand"
+    },
+    "3034": {
+      "Name": "Vie",
+      "Description": "Ranime un alli\u00E9 KO.",
+      "Kind": "PlayerCommand"
+    },
+    "3035": {
+      "Name": "Vie Max",
+      "Description": "Ranime un alli\u00E9 KO et restaure ses HP.",
+      "Kind": "PlayerCommand"
+    },
+    "3036": {
+      "Name": "Booster",
+      "Description": "Augmente la vitesse d\u2019action d\u2019un alli\u00E9.",
+      "Kind": "PlayerCommand"
+    },
+    "3037": {
+      "Name": "Booster X",
+      "Description": "Augmente la vitesse d\u2019action des alli\u00E9s.",
+      "Kind": "PlayerCommand"
+    },
+    "3038": {
+      "Name": "Somni",
+      "Description": "Abaisse la vitesse d\u2019action d\u2019un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "3039": {
+      "Name": "Somni X",
+      "Description": "Abaisse la vitesse d\u2019action des ennemis.",
+      "Kind": "PlayerCommand"
+    },
+    "303A": {
+      "Name": "Blindage",
+      "Description": "Augmente l\u2019Esprit d\u2019un alli\u00E9.",
+      "Kind": "PlayerCommand"
+    },
+    "303B": {
+      "Name": "Carapace",
+      "Description": "Augmente la Constitution d\u2019un alli\u00E9.",
+      "Kind": "PlayerCommand"
+    },
+    "303C": {
+      "Name": "Boomerang",
+      "Description": "Cr\u00E9e autour d\u2019un alli\u00E9 une barri\u00E8re renvoyant la magie.",
+      "Kind": "PlayerCommand"
+    },
+    "303D": {
+      "Name": "Dissipation",
+      "Description": "Annule certains effets magiques.",
+      "Kind": "PlayerCommand"
+    },
+    "303E": {
+      "Name": "R\u00E9cup",
+      "Description": "R\u00E9g\u00E9n\u00E8re progressivement les HP d\u2019un alli\u00E9.",
+      "Kind": "PlayerCommand"
+    },
+    "303F": {
+      "Name": "Sid\u00E9ral",
+      "Description": "Lance une attaque magique sacr\u00E9e sur un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "3040": {
+      "Name": "Aur\u00E9ole",
+      "Description": "Pr\u00E9serve un alli\u00E9 d\u2019un KO.",
+      "Kind": "PlayerCommand"
+    },
+    "3041": {
+      "Name": "Glacier",
+      "Description": "Attaque de Glace sur un ennemi. (Faible)",
+      "Kind": "PlayerCommand"
+    },
+    "3042": {
+      "Name": "Brasier",
+      "Description": "Attaque de Feu sur un ennemi. (Faible)",
+      "Kind": "PlayerCommand"
+    },
+    "3043": {
+      "Name": "Foudre",
+      "Description": "Attaque de Tonnerre sur un ennemi. (Faible)",
+      "Kind": "PlayerCommand"
+    },
+    "3044": {
+      "Name": "H2O",
+      "Description": "Attaque d\u2019Eau sur un ennemi. (Faible)",
+      "Kind": "PlayerCommand"
+    },
+    "3045": {
+      "Name": "Brasier \u002B",
+      "Description": "Attaque de Feu sur un ennemi. (Moyenne)",
+      "Kind": "PlayerCommand"
+    },
+    "3046": {
+      "Name": "Glacier \u002B",
+      "Description": "Attaque de Glace sur un ennemi. (Moyenne)",
+      "Kind": "PlayerCommand"
+    },
+    "3047": {
+      "Name": "Foudre \u002B",
+      "Description": "Attaque de Tonnerre sur un ennemi. (Moyenne)",
+      "Kind": "PlayerCommand"
+    },
+    "3048": {
+      "Name": "H2O \u002B",
+      "Description": "Attaque d\u2019Eau sur un ennemi. (Moyenne)",
+      "Kind": "PlayerCommand"
+    },
+    "3049": {
+      "Name": "Brasier X",
+      "Description": "Attaque de Feu sur un ennemi. (Forte)",
+      "Kind": "PlayerCommand"
+    },
+    "304A": {
+      "Name": "Glacier X",
+      "Description": "Attaque de Glace sur un ennemi. (Forte)",
+      "Kind": "PlayerCommand"
+    },
+    "304B": {
+      "Name": "Foudre X",
+      "Description": "Attaque de Tonnerre sur un ennemi. (Forte)",
+      "Kind": "PlayerCommand"
+    },
+    "304C": {
+      "Name": "H2O X",
+      "Description": "Attaque d\u2019Eau sur un ennemi. (Forte)",
+      "Kind": "PlayerCommand"
+    },
+    "304D": {
+      "Name": "Cyanure",
+      "Description": "Inflige Poison \u00E0 un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "304E": {
+      "Name": "Quart",
+      "Description": "Enl\u00E8ve \u00E0 tous les ennemis 1/4 de leurs HP.",
+      "Kind": "PlayerCommand"
+    },
+    "304F": {
+      "Name": "Had\u00E8s",
+      "Description": "Inflige Mort \u00E0 un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "3050": {
+      "Name": "Saign\u00E9e",
+      "Description": "Absorbe les HP d\u2019un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "3051": {
+      "Name": "Aspire",
+      "Description": "Absorbe les MP d\u2019un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "3052": {
+      "Name": "Atomnium",
+      "Description": "Attaque non-\u00E9l\u00E9mentaire sur un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "3053": {
+      "Name": "Ultima",
+      "Description": "Attaque non-\u00E9l\u00E9mentaire sur tous les ennemis.",
+      "Kind": "PlayerCommand"
+    },
+    "3054": {
+      "Name": "Garde",
+      "Description": "R\u00E9duit les d\u00E9g\u00E2ts re\u00E7us mais bloque la jauge d\u2019OD.",
+      "Kind": "PlayerCommand"
+    },
+    "3055": {
+      "Name": "Stock",
+      "Description": "Augmente les d\u00E9g\u00E2ts re\u00E7us mais booste la jauge d\u2019OD.",
+      "Kind": "PlayerCommand"
+    },
+    "3056": {
+      "Name": "Rappeler",
+      "Description": "Rappeler la Chim\u00E8re.",
+      "Kind": "PlayerCommand"
+    },
+    "3057": {
+      "Name": "Rappeler",
+      "Description": "Rappeler la Chim\u00E8re.",
+      "Kind": "PlayerCommand"
+    },
+    "3058": {
+      "Name": "Chaparder",
+      "Description": "Voler des Gils \u00E0 un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "3059": {
+      "Name": "D\u00E9ch\u00E9ance",
+      "Description": "Abaisse Force, Magie, Constitution et Esprit d\u2019un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "305A": {
+      "Name": "Mutafor",
+      "Description": "Fait perdre des Sph\u00E8res Physiques en fin de combat.",
+      "Kind": "PlayerCommand"
+    },
+    "305B": {
+      "Name": "Mutamag",
+      "Description": "Fait perdre des Sph\u00E8res Mentales en fin de combat.",
+      "Kind": "PlayerCommand"
+    },
+    "305C": {
+      "Name": "Mutavit",
+      "Description": "Fait perdre des Sph\u00E8res Agilit\u00E9 en fin de combat.",
+      "Kind": "PlayerCommand"
+    },
+    "305D": {
+      "Name": "Mutacomp",
+      "Description": "Fait perdre des Sph\u00E8res Comp en fin de combat.",
+      "Kind": "PlayerCommand"
+    },
+    "305E": {
+      "Name": "Racketter",
+      "Description": "Attaquer et Chaparder en m\u00EAme temps.",
+      "Kind": "PlayerCommand"
+    },
+    "305F": {
+      "Name": "C\u00E9l\u00E9rit\u00E9",
+      "Description": "Utiliser un objet tr\u00E8s rapidement.",
+      "Kind": "PlayerCommand"
+    },
+    "3060": {
+      "Name": "Flip-flap",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "3061": {
+      "Name": "Assaut",
+      "Description": "Effectue plusieurs attaques al\u00E9atoirement.",
+      "Kind": "PlayerCommand"
+    },
+    "3062": {
+      "Name": "D\u00E9luge d\u2019\u00E9nergie",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 tous les ennemis.",
+      "Kind": "PlayerCommand"
+    },
+    "3063": {
+      "Name": "Champion de blitz",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "3064": {
+      "Name": "Com\u00E8te",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "3065": {
+      "Name": "Dent de dragon",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 tous les ennemis.",
+      "Kind": "PlayerCommand"
+    },
+    "3066": {
+      "Name": "Eradication",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "3067": {
+      "Name": "Tornade",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 tous les ennemis.",
+      "Kind": "PlayerCommand"
+    },
+    "3068": {
+      "Name": "Sauter",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "3069": {
+      "Name": "G\u00E9henne",
+      "Description": "Attaque \u00E9l\u00E9mentaire de Feu g\u00E9n\u00E9rale.",
+      "Kind": "PlayerCommand"
+    },
+    "306A": {
+      "Name": "Graine-obus",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "306B": {
+      "Name": "Kamikaze",
+      "Description": "Infliger de gros d\u00E9g\u00E2ts \u00E0 un ennemi en se sacrifiant.",
+      "Kind": "PlayerCommand"
+    },
+    "306C": {
+      "Name": "Mawashigeri",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "306D": {
+      "Name": "P\u00E9trasouffle",
+      "Description": "Inflige Fossile \u00E0 tous les ennemis.",
+      "Kind": "PlayerCommand"
+    },
+    "306E": {
+      "Name": "Aquasouffle",
+      "Description": "Attaque \u00E9l\u00E9mentaire d\u2019Eau g\u00E9n\u00E9rale.",
+      "Kind": "PlayerCommand"
+    },
+    "306F": {
+      "Name": "Ch\u00E2timent",
+      "Description": "Inflige Ch\u00E2timent \u00E0 un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "3070": {
+      "Name": "Mistral",
+      "Description": "Redonne des HP \u00E0 tous les alli\u00E9s.",
+      "Kind": "PlayerCommand"
+    },
+    "3071": {
+      "Name": "Infection",
+      "Description": "Inflige des alt\u00E9rations d\u2019\u00E9tat \u00E0 tous les ennemis.",
+      "Kind": "PlayerCommand"
+    },
+    "3072": {
+      "Name": "Mother",
+      "Description": "Cr\u00E9e un champ protecteur sur tous les alli\u00E9s.",
+      "Kind": "PlayerCommand"
+    },
+    "3073": {
+      "Name": "Eruption solaire",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 tous les ennemis.",
+      "Kind": "PlayerCommand"
+    },
+    "3074": {
+      "Name": "El\u00E9ments",
+      "Description": "Lancer le Jackpot des attaques \u00E9l\u00E9mentaires.",
+      "Kind": "PlayerCommand"
+    },
+    "3075": {
+      "Name": "Combos",
+      "Description": "Lancer le Jackpot des attaques multiples.",
+      "Kind": "PlayerCommand"
+    },
+    "3076": {
+      "Name": "Alt\u00E9rations",
+      "Description": "Lancer le Jackpot des alt\u00E9rations d\u2019\u00E9tat.",
+      "Kind": "PlayerCommand"
+    },
+    "3077": {
+      "Name": "Aurochs Special",
+      "Description": "Lancer le Jackpot des Besaid Aurochs.",
+      "Kind": "PlayerCommand"
+    },
+    "3078": {
+      "Name": "S. Glacier",
+      "Description": "Lance plusieurs attaques de Glace. (Faibles)",
+      "Kind": "PlayerCommand"
+    },
+    "3079": {
+      "Name": "S. Brasier",
+      "Description": "Lance plusieurs attaques de Feu. (Faibles)",
+      "Kind": "PlayerCommand"
+    },
+    "307A": {
+      "Name": "S. Foudre",
+      "Description": "Lance plusieurs attaques de Tonnerre. (Faibles)",
+      "Kind": "PlayerCommand"
+    },
+    "307B": {
+      "Name": "S. H2O",
+      "Description": "Lance plusieurs attaques d\u2019Eau. (Faibles)",
+      "Kind": "PlayerCommand"
+    },
+    "307C": {
+      "Name": "S. Brasier \u002B",
+      "Description": "Lance plusieurs attaques de Feu. (Moyennes)",
+      "Kind": "PlayerCommand"
+    },
+    "307D": {
+      "Name": "S. Glacier \u002B",
+      "Description": "Lance plusieurs attaques de Glace. (Moyennes)",
+      "Kind": "PlayerCommand"
+    },
+    "307E": {
+      "Name": "S. Foudre \u002B",
+      "Description": "Lance plusieurs attaques de Tonnerre. (Moyennes)",
+      "Kind": "PlayerCommand"
+    },
+    "307F": {
+      "Name": "S. H2O \u002B",
+      "Description": "Lance plusieurs attaques d\u2019Eau. (Moyennes)",
+      "Kind": "PlayerCommand"
+    },
+    "3080": {
+      "Name": "S. Brasier X",
+      "Description": "Lance plusieurs attaques de Feu. (Fortes)",
+      "Kind": "PlayerCommand"
+    },
+    "3081": {
+      "Name": "S. Glacier X",
+      "Description": "Lance plusieurs attaques de Glace. (Fortes)",
+      "Kind": "PlayerCommand"
+    },
+    "3082": {
+      "Name": "S. Foudre X",
+      "Description": "Lance plusieurs attaques de Tonnerre. (Fortes)",
+      "Kind": "PlayerCommand"
+    },
+    "3083": {
+      "Name": "S. H2O X",
+      "Description": "Lance plusieurs attaques d\u2019Eau. (Fortes)",
+      "Kind": "PlayerCommand"
+    },
+    "3084": {
+      "Name": "S. Cyanure",
+      "Description": "Lance Cyanure plusieurs fois.",
+      "Kind": "PlayerCommand"
+    },
+    "3085": {
+      "Name": "S. Quart",
+      "Description": "Lance plusieurs sorts retirant 1/8 des HP.",
+      "Kind": "PlayerCommand"
+    },
+    "3086": {
+      "Name": "S. Had\u00E8s",
+      "Description": "Lance Had\u00E8s plusieurs fois.",
+      "Kind": "PlayerCommand"
+    },
+    "3087": {
+      "Name": "S. Saign\u00E9e",
+      "Description": "Lance Saign\u00E9e plusieurs fois.",
+      "Kind": "PlayerCommand"
+    },
+    "3088": {
+      "Name": "S. Aspire",
+      "Description": "Lance Aspire plusieurs fois.",
+      "Kind": "PlayerCommand"
+    },
+    "3089": {
+      "Name": "S. Atomnium",
+      "Description": "Lance plusieurs attaques non-\u00E9l\u00E9mentaires.",
+      "Kind": "PlayerCommand"
+    },
+    "308A": {
+      "Name": "S. Ultima",
+      "Description": "Lance plusieurs attaques non-\u00E9l\u00E9mentaires.",
+      "Kind": "PlayerCommand"
+    },
+    "308B": {
+      "Name": "Grenade",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 tous les ennemis.",
+      "Kind": "PlayerCommand"
+    },
+    "308C": {
+      "Name": "Grenade Antichar",
+      "Description": "Inflige des d\u00E9g\u00E2ts et Tr\u00E9pan \u00E0 tous les ennemis.",
+      "Kind": "PlayerCommand"
+    },
+    "308D": {
+      "Name": "Grenade Pineapple",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 tous les ennemis.",
+      "Kind": "PlayerCommand"
+    },
+    "308E": {
+      "Name": "Dynamite",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 tous les ennemis.",
+      "Kind": "PlayerCommand"
+    },
+    "308F": {
+      "Name": "Cluster Bomb",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 tous les ennemis.",
+      "Kind": "PlayerCommand"
+    },
+    "3090": {
+      "Name": "Big Boy",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 tous les ennemis.",
+      "Kind": "PlayerCommand"
+    },
+    "3091": {
+      "Name": "Blaster Mine",
+      "Description": "Inflige des d\u00E9g\u00E2ts et des alt\u00E9rations d\u2019\u00E9tat (AG).",
+      "Kind": "PlayerCommand"
+    },
+    "3092": {
+      "Name": "Hazard Shell",
+      "Description": "Inflige des d\u00E9g\u00E2ts et des alt\u00E9rations d\u2019\u00E9tat (AG).",
+      "Kind": "PlayerCommand"
+    },
+    "3093": {
+      "Name": "Calamity Bomb",
+      "Description": "Inflige des d\u00E9g\u00E2ts et des alt\u00E9rations d\u2019\u00E9tat (AG).",
+      "Kind": "PlayerCommand"
+    },
+    "3094": {
+      "Name": "Grenade Chaos",
+      "Description": "Inflige des d\u00E9g\u00E2ts et des alt\u00E9rations d\u2019\u00E9tat (AG).",
+      "Kind": "PlayerCommand"
+    },
+    "3095": {
+      "Name": "Canicule",
+      "Description": "Attaque \u00E9l\u00E9mentaire de Feu g\u00E9n\u00E9rale.",
+      "Kind": "PlayerCommand"
+    },
+    "3096": {
+      "Name": "Fournaise",
+      "Description": "Attaque \u00E9l\u00E9mentaire de Feu g\u00E9n\u00E9rale.",
+      "Kind": "PlayerCommand"
+    },
+    "3097": {
+      "Name": "Burning Soul",
+      "Description": "Attaque \u00E9l\u00E9mentaire de Feu g\u00E9n\u00E9rale.",
+      "Kind": "PlayerCommand"
+    },
+    "3098": {
+      "Name": "Hell Fire",
+      "Description": "Attaque \u00E9l\u00E9mentaire de Feu et alt\u00E9rations d\u2019\u00E9tat (AG).",
+      "Kind": "PlayerCommand"
+    },
+    "3099": {
+      "Name": "Abbadon",
+      "Description": "Attaque \u00E9l\u00E9mentaire de Feu et alt\u00E9rations d\u2019\u00E9tat (AG).",
+      "Kind": "PlayerCommand"
+    },
+    "309A": {
+      "Name": "Dyedmaroz",
+      "Description": "Attaque \u00E9l\u00E9mentaire de Glace g\u00E9n\u00E9rale.",
+      "Kind": "PlayerCommand"
+    },
+    "309B": {
+      "Name": "Lavanche",
+      "Description": "Attaque \u00E9l\u00E9mentaire de Glace g\u00E9n\u00E9rale.",
+      "Kind": "PlayerCommand"
+    },
+    "309C": {
+      "Name": "Avalanche",
+      "Description": "Attaque \u00E9l\u00E9mentaire de Glace g\u00E9n\u00E9rale.",
+      "Kind": "PlayerCommand"
+    },
+    "309D": {
+      "Name": "Blizzard Maudit",
+      "Description": "Attaque \u00E9l\u00E9mentaire de Glace et alt\u00E9rations d\u2019\u00E9tat (AG).",
+      "Kind": "PlayerCommand"
+    },
+    "309E": {
+      "Name": "Cocytos",
+      "Description": "Attaque \u00E9l\u00E9mentaire de Glace et alt\u00E9rations d\u2019\u00E9tat (AG).",
+      "Kind": "PlayerCommand"
+    },
+    "309F": {
+      "Name": "Thunderbolt",
+      "Description": "Attaque \u00E9l\u00E9mentaire de Tonnerre g\u00E9n\u00E9rale.",
+      "Kind": "PlayerCommand"
+    },
+    "30A0": {
+      "Name": "Rolling Thunder",
+      "Description": "Attaque \u00E9l\u00E9mentaire de Tonnerre g\u00E9n\u00E9rale.",
+      "Kind": "PlayerCommand"
+    },
+    "30A1": {
+      "Name": "Flash",
+      "Description": "Attaque \u00E9l\u00E9mentaire de Tonnerre g\u00E9n\u00E9rale.",
+      "Kind": "PlayerCommand"
+    },
+    "30A2": {
+      "Name": "Electrochoc",
+      "Description": "Attaque \u00E9l\u00E9m. de Tonnerre et alt\u00E9rations d\u2019\u00E9tat (AG).",
+      "Kind": "PlayerCommand"
+    },
+    "30A3": {
+      "Name": "Blast Thunder",
+      "Description": "Attaque \u00E9l\u00E9m. de Tonnerre et alt\u00E9rations d\u2019\u00E9tat (AG).",
+      "Kind": "PlayerCommand"
+    },
+    "30A4": {
+      "Name": "Cataractes",
+      "Description": "Attaque \u00E9l\u00E9mentaire d\u2019Eau g\u00E9n\u00E9rale.",
+      "Kind": "PlayerCommand"
+    },
+    "30A5": {
+      "Name": "Raz de Mar\u00E9e",
+      "Description": "Attaque \u00E9l\u00E9mentaire d\u2019Eau g\u00E9n\u00E9rale.",
+      "Kind": "PlayerCommand"
+    },
+    "30A6": {
+      "Name": "Tsunami",
+      "Description": "Attaque \u00E9l\u00E9mentaire d\u2019Eau g\u00E9n\u00E9rale.",
+      "Kind": "PlayerCommand"
+    },
+    "30A7": {
+      "Name": "Aquatoxine",
+      "Description": "Attaque \u00E9l\u00E9mentaire d\u2019Eau et alt\u00E9rations d\u2019\u00E9tat (AG).",
+      "Kind": "PlayerCommand"
+    },
+    "30A8": {
+      "Name": "Pluie Noire",
+      "Description": "Attaque \u00E9l\u00E9mentaire d\u2019Eau et alt\u00E9rations d\u2019\u00E9tat (AG).",
+      "Kind": "PlayerCommand"
+    },
+    "30A9": {
+      "Name": "Negaburst",
+      "Description": "Divise les HP des ennemis par 4.",
+      "Kind": "PlayerCommand"
+    },
+    "30AA": {
+      "Name": "Trou Noir",
+      "Description": "Divise les HP des ennemis par 16.",
+      "Kind": "PlayerCommand"
+    },
+    "30AB": {
+      "Name": "Super Nova",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 tous les ennemis.",
+      "Kind": "PlayerCommand"
+    },
+    "30AC": {
+      "Name": "Ultra Potion",
+      "Description": "Restaure les HP de tous les alli\u00E9s.",
+      "Kind": "PlayerCommand"
+    },
+    "30AD": {
+      "Name": "Gu\u00E9rison X",
+      "Description": "Soigne les alt\u00E9rations d\u2019\u00E9tat des alli\u00E9s.",
+      "Kind": "PlayerCommand"
+    },
+    "30AE": {
+      "Name": "Ultra Gu\u00E9rison",
+      "Description": "Soigne les HP et les alt\u00E9rations d\u2019\u00E9tat des alli\u00E9s.",
+      "Kind": "PlayerCommand"
+    },
+    "30AF": {
+      "Name": "M\u00E9ga Ph\u00E9nix",
+      "Description": "Ranime les alli\u00E9s KO.",
+      "Kind": "PlayerCommand"
+    },
+    "30B0": {
+      "Name": "Ultra Ph\u00E9nix",
+      "Description": "Ranime les alli\u00E9s KO et restaure leurs HP.",
+      "Kind": "PlayerCommand"
+    },
+    "30B1": {
+      "Name": "Elixir",
+      "Description": "Restaure les HP et les MP d\u2019un alli\u00E9.",
+      "Kind": "PlayerCommand"
+    },
+    "30B2": {
+      "Name": "Elixir \u002B",
+      "Description": "Restaure les HP et les MP des alli\u00E9s.",
+      "Kind": "PlayerCommand"
+    },
+    "30B3": {
+      "Name": "Elixir X",
+      "Description": "Soigne les alt. d\u2019\u00E9tat et restaure les HP \u0026 MP des alli\u00E9s.",
+      "Kind": "PlayerCommand"
+    },
+    "30B4": {
+      "Name": "Ultra Elixir",
+      "Description": "R\u00E9tablit totalement les alli\u00E9s.",
+      "Kind": "PlayerCommand"
+    },
+    "30B5": {
+      "Name": "AntiElements",
+      "Description": "Prot\u00E8ge un alli\u00E9 des 4 \u00E9l\u00E9ments.",
+      "Kind": "PlayerCommand"
+    },
+    "30B6": {
+      "Name": "AntiElements \u002B",
+      "Description": "Prot\u00E8ge les alli\u00E9s des 4 \u00E9l\u00E9ments.",
+      "Kind": "PlayerCommand"
+    },
+    "30B7": {
+      "Name": "AntiElements X",
+      "Description": "Prot\u00E8ge des 4 \u00E9l\u00E9ments \u002B Encourager \u0026 Concentrer (G).",
+      "Kind": "PlayerCommand"
+    },
+    "30B8": {
+      "Name": "Ultra AntiElements",
+      "Description": "Prot\u00E8ge des 4 \u00E9l\u00E9ments et augmente les carac. (G).",
+      "Kind": "PlayerCommand"
+    },
+    "30B9": {
+      "Name": "Mother Wall",
+      "Description": "Lance Blindage et Carapace sur les alli\u00E9s.",
+      "Kind": "PlayerCommand"
+    },
+    "30BA": {
+      "Name": "Mother G",
+      "Description": "Lance Blindage, Carapace et Booster sur les alli\u00E9s.",
+      "Kind": "PlayerCommand"
+    },
+    "30BB": {
+      "Name": "Super Mother G",
+      "Description": "Lance Mother G et R\u00E9cup sur les alli\u00E9s.",
+      "Kind": "PlayerCommand"
+    },
+    "30BC": {
+      "Name": "Great Mother G",
+      "Description": "Lance Mother G, R\u00E9cup et Aur\u00E9ole sur les alli\u00E9s.",
+      "Kind": "PlayerCommand"
+    },
+    "30BD": {
+      "Name": "Bivitale",
+      "Description": "Double les HP maximums d\u2019un alli\u00E9.",
+      "Kind": "PlayerCommand"
+    },
+    "30BE": {
+      "Name": "M\u00E9ga Bivitale",
+      "Description": "Double les HP maximums des alli\u00E9s.",
+      "Kind": "PlayerCommand"
+    },
+    "30BF": {
+      "Name": "Ultra Bivitale",
+      "Description": "HP maximums doubl\u00E9s et Encourager sur les alli\u00E9s.",
+      "Kind": "PlayerCommand"
+    },
+    "30C0": {
+      "Name": "Bimentale",
+      "Description": "Double les MP maximums d\u2019un alli\u00E9.",
+      "Kind": "PlayerCommand"
+    },
+    "30C1": {
+      "Name": "M\u00E9ga Bimentale",
+      "Description": "Double les MP maximums des alli\u00E9s.",
+      "Kind": "PlayerCommand"
+    },
+    "30C2": {
+      "Name": "Ultra Bimentale",
+      "Description": "MP maximums doubl\u00E9s et Concentrer sur les alli\u00E9s.",
+      "Kind": "PlayerCommand"
+    },
+    "30C3": {
+      "Name": "Freedom",
+      "Description": "Annule le co\u00FBt en MP des Comp\u00E9tences d\u2019un alli\u00E9.",
+      "Kind": "PlayerCommand"
+    },
+    "30C4": {
+      "Name": "M\u00E9ga Freedom",
+      "Description": "Annule le co\u00FBt en MP des Comp\u00E9tences des alli\u00E9s.",
+      "Kind": "PlayerCommand"
+    },
+    "30C5": {
+      "Name": "Fever 9",
+      "Description": "Permet \u00E0 un alli\u00E9 de toujours faire 9999 pts de d\u00E9g\u00E2ts.",
+      "Kind": "PlayerCommand"
+    },
+    "30C6": {
+      "Name": "M\u00E9ga Fever 9",
+      "Description": "Permet aux alli\u00E9s de toujours faire 9999 pts de d\u00E9g\u00E2ts.",
+      "Kind": "PlayerCommand"
+    },
+    "30C7": {
+      "Name": "H\u00E9ro\u00EFsme",
+      "Description": "Permet \u00E0 un alli\u00E9 de toujours faire des coups critiques.",
+      "Kind": "PlayerCommand"
+    },
+    "30C8": {
+      "Name": "M\u00E9ga H\u00E9ro\u00EFsme",
+      "Description": "Permet aux alli\u00E9s de toujours faire des coups critiques.",
+      "Kind": "PlayerCommand"
+    },
+    "30C9": {
+      "Name": "Excitant",
+      "Description": "Booste la jauge d\u2019Overdrive des alli\u00E9s.",
+      "Kind": "PlayerCommand"
+    },
+    "30CA": {
+      "Name": "Excentrique",
+      "Description": "Booste \u00E9norm\u00E9ment la jauge d\u2019Overdrive des alli\u00E9s.",
+      "Kind": "PlayerCommand"
+    },
+    "30CB": {
+      "Name": "Attaquer",
+      "Description": "Infliger des d\u00E9g\u00E2ts \u00E0 un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "30CC": {
+      "Name": "Sonic Wing",
+      "Description": "Inflige des d\u00E9g\u00E2ts et retarde le tour d\u2019action.",
+      "Kind": "PlayerCommand"
+    },
+    "30CD": {
+      "Name": "Echo",
+      "Description": "Attaque non-\u00E9l\u00E9mentaire g\u00E9n\u00E9rale.",
+      "Kind": "PlayerCommand"
+    },
+    "30CE": {
+      "Name": "Hurlements",
+      "Description": "Attaque non-\u00E9l\u00E9mentaire g\u00E9n\u00E9rale.",
+      "Kind": "PlayerCommand"
+    },
+    "30CF": {
+      "Name": "Attaquer",
+      "Description": "Infliger des d\u00E9g\u00E2ts \u00E0 un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "30D0": {
+      "Name": "Magma",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "30D1": {
+      "Name": "Divine Com\u00E9die",
+      "Description": "Attaque \u00E9l\u00E9mentaire de Feu g\u00E9n\u00E9rale.",
+      "Kind": "PlayerCommand"
+    },
+    "30D2": {
+      "Name": "Attaquer",
+      "Description": "Infliger des d\u00E9g\u00E2ts \u00E0 un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "30D3": {
+      "Name": "Electrodisques",
+      "Description": "Inflige des d\u00E9g\u00E2ts et annule les effets magiques.",
+      "Kind": "PlayerCommand"
+    },
+    "30D4": {
+      "Name": "Electroflux",
+      "Description": "Attaque \u00E9l\u00E9mentaire de Tonnerre g\u00E9n\u00E9rale.",
+      "Kind": "PlayerCommand"
+    },
+    "30D5": {
+      "Name": "Attaquer",
+      "Description": "Infliger des d\u00E9g\u00E2ts \u00E0 un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "30D6": {
+      "Name": "C\u00E9leste",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 un ennemi et le paralyse.",
+      "Kind": "PlayerCommand"
+    },
+    "30D7": {
+      "Name": "Transcendantale",
+      "Description": "Attaque \u00E9l\u00E9mentaire de Glace g\u00E9n\u00E9rale.",
+      "Kind": "PlayerCommand"
+    },
+    "30D8": {
+      "Name": "Attaquer",
+      "Description": "Infliger des d\u00E9g\u00E2ts \u00E0 un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "30D9": {
+      "Name": "Pulsar",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 tous les ennemis.",
+      "Kind": "PlayerCommand"
+    },
+    "30DA": {
+      "Name": "M\u00E9ga Atomnium",
+      "Description": "Attaque non-\u00E9l\u00E9mentaire g\u00E9n\u00E9rale.",
+      "Kind": "PlayerCommand"
+    },
+    "30DB": {
+      "Name": "Attaquer",
+      "Description": "Infliger des d\u00E9g\u00E2ts \u00E0 un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "30DC": {
+      "Name": "Lamento",
+      "Description": "Inflige des d\u00E9g\u00E2ts et Mort \u00E0 un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "30DD": {
+      "Name": "Chaos",
+      "Description": "Attaque non-\u00E9l\u00E9mentaire g\u00E9n\u00E9rale.",
+      "Kind": "PlayerCommand"
+    },
+    "30DE": {
+      "Name": "Daigoro",
+      "Description": "Rien",
+      "Kind": "PlayerCommand"
+    },
+    "30DF": {
+      "Name": "Kozuka",
+      "Description": "Rien",
+      "Kind": "PlayerCommand"
+    },
+    "30E0": {
+      "Name": "Wakizashi",
+      "Description": "Rien",
+      "Kind": "PlayerCommand"
+    },
+    "30E1": {
+      "Name": "Wakizashi",
+      "Description": "Rien",
+      "Kind": "PlayerCommand"
+    },
+    "30E2": {
+      "Name": "Zanmato",
+      "Description": "Rien",
+      "Kind": "PlayerCommand"
+    },
+    "30E3": {
+      "Name": "Requiem",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 tous les ennemis.",
+      "Kind": "PlayerCommand"
+    },
+    "30E4": {
+      "Name": "Attaquer",
+      "Description": "Rien",
+      "Kind": "PlayerCommand"
+    },
+    "30E5": {
+      "Name": "Pataplouf !",
+      "Description": "Rien",
+      "Kind": "PlayerCommand"
+    },
+    "30E6": {
+      "Name": "Attaquer",
+      "Description": "Rien",
+      "Kind": "PlayerCommand"
+    },
+    "30E7": {
+      "Name": "Ergots de feu !",
+      "Description": "Rien",
+      "Kind": "PlayerCommand"
+    },
+    "30E8": {
+      "Name": "Attaquer",
+      "Description": "Rien",
+      "Kind": "PlayerCommand"
+    },
+    "30E9": {
+      "Name": "Dard-dard !",
+      "Description": "Rien",
+      "Kind": "PlayerCommand"
+    },
+    "30EA": {
+      "Name": "Delta",
+      "Description": "Attaque concert\u00E9e des 3 soeurs Magus.",
+      "Kind": "PlayerCommand"
+    },
+    "30EB": {
+      "Name": "Rien",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "30EC": {
+      "Name": "Rien",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 tous les ennemis.",
+      "Kind": "PlayerCommand"
+    },
+    "30ED": {
+      "Name": "Rien",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 tous les ennemis.",
+      "Kind": "PlayerCommand"
+    },
+    "30EE": {
+      "Name": "Rien",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "30EF": {
+      "Name": "Tir Brasier",
+      "Description": "Technique sp\u00E9ciale de Wakka 1.",
+      "Kind": "PlayerCommand"
+    },
+    "30F0": {
+      "Name": "Tir Brasier",
+      "Description": "Technique sp\u00E9ciale de Wakka 2.",
+      "Kind": "PlayerCommand"
+    },
+    "30F1": {
+      "Name": "Tir Glacier",
+      "Description": "Technique sp\u00E9ciale de Wakka 3.",
+      "Kind": "PlayerCommand"
+    },
+    "30F2": {
+      "Name": "Tir Glacier",
+      "Description": "Technique sp\u00E9ciale de Wakka 4.",
+      "Kind": "PlayerCommand"
+    },
+    "30F3": {
+      "Name": "Tir H2O",
+      "Description": "Technique sp\u00E9ciale de Wakka 5.",
+      "Kind": "PlayerCommand"
+    },
+    "30F4": {
+      "Name": "Tir H2O",
+      "Description": "Technique sp\u00E9ciale de Wakka 6.",
+      "Kind": "PlayerCommand"
+    },
+    "30F5": {
+      "Name": "Tir Foudre",
+      "Description": "Technique sp\u00E9ciale de Wakka 7.",
+      "Kind": "PlayerCommand"
+    },
+    "30F6": {
+      "Name": "Tir Foudre",
+      "Description": "Technique sp\u00E9ciale de Wakka 8.",
+      "Kind": "PlayerCommand"
+    },
+    "30F7": {
+      "Name": "Tir Catastrophe",
+      "Description": "Technique sp\u00E9ciale de Wakka 9.",
+      "Kind": "PlayerCommand"
+    },
+    "30F8": {
+      "Name": "Tir Catastrophe",
+      "Description": "Technique sp\u00E9ciale de Wakka 10.",
+      "Kind": "PlayerCommand"
+    },
+    "30F9": {
+      "Name": "Tir Temporel",
+      "Description": "Technique sp\u00E9ciale de Wakka 11.",
+      "Kind": "PlayerCommand"
+    },
+    "30FA": {
+      "Name": "Tir Temporel",
+      "Description": "Technique sp\u00E9ciale de Wakka 12.",
+      "Kind": "PlayerCommand"
+    },
+    "30FB": {
+      "Name": "Tir M\u00E9galith",
+      "Description": "Technique sp\u00E9ciale de Wakka 13.",
+      "Kind": "PlayerCommand"
+    },
+    "30FC": {
+      "Name": "Tir M\u00E9galith",
+      "Description": "Technique sp\u00E9ciale de Wakka 14.",
+      "Kind": "PlayerCommand"
+    },
+    "30FD": {
+      "Name": "Tir Aurochs",
+      "Description": "Technique sp\u00E9ciale de Wakka 15.",
+      "Kind": "PlayerCommand"
+    },
+    "30FE": {
+      "Name": "Boulet de Canon",
+      "Description": "Technique sp\u00E9ciale de Wakka 16.",
+      "Kind": "PlayerCommand"
+    },
+    "30FF": {
+      "Name": "Les Magus",
+      "Description": "Invoquer les 3 soeurs Magus.",
+      "Kind": "PlayerCommand"
+    },
+    "3100": {
+      "Name": "Chim\u00E8re",
+      "Description": "Chim\u00E8re",
+      "Kind": "PlayerCommand"
+    },
+    "3101": {
+      "Name": "Encercler",
+      "Description": "Prendre l\u2019ennemi \u00E0 revers.",
+      "Kind": "PlayerCommand"
+    },
+    "3102": {
+      "Name": "Grue",
+      "Description": "Mettre la grue en marche.",
+      "Kind": "PlayerCommand"
+    },
+    "3103": {
+      "Name": "T\u00E9l\u00E9portation",
+      "Description": "Aller sur un emplacement libre.",
+      "Kind": "PlayerCommand"
+    },
+    "3104": {
+      "Name": "R\u00E9cup\u00E9rer",
+      "Description": "Rester sur ses gardes et r\u00E9cup\u00E9rer des HP.",
+      "Kind": "PlayerCommand"
+    },
+    "3105": {
+      "Name": "Parler",
+      "Description": "Parler \u00E0 l\u2019ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "3106": {
+      "Name": "Se rapprocher",
+      "Description": "Demander \u00E0 Cid de rapprocher le Vaisseau de l\u2019ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "3107": {
+      "Name": "S\u2019\u00E9loigner",
+      "Description": "Demander \u00E0 Cid d\u2019\u00E9loigner le Vaisseau de l\u2019ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "3108": {
+      "Name": "Annuler",
+      "Description": "Annuler la demande faite \u00E0 Cid.",
+      "Kind": "PlayerCommand"
+    },
+    "3109": {
+      "Name": "Se d\u00E9battre",
+      "Description": "Attaquer de l\u2019int\u00E9rieur du corps de l\u2019ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "310A": {
+      "Name": "Rien",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "310B": {
+      "Name": "Rien",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 tous les ennemis.",
+      "Kind": "PlayerCommand"
+    },
+    "310C": {
+      "Name": "Rien",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "310D": {
+      "Name": "Rien",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 tous les ennemis.",
+      "Kind": "PlayerCommand"
+    },
+    "310E": {
+      "Name": "Rien",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "310F": {
+      "Name": "Rien",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 tous les ennemis.",
+      "Kind": "PlayerCommand"
+    },
+    "3110": {
+      "Name": "Rien",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "3111": {
+      "Name": "Rien",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 tous les ennemis.",
+      "Kind": "PlayerCommand"
+    },
+    "3112": {
+      "Name": "Rien",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "3113": {
+      "Name": "Sp\u00E9ciaux",
+      "Description": "Utiliser une comp\u00E9tence Sp\u00E9ciaux.",
+      "Kind": "PlayerCommand"
+    },
+    "3114": {
+      "Name": "Techniques",
+      "Description": "Utiliser une comp\u00E9tence Techniques.",
+      "Kind": "PlayerCommand"
+    },
+    "3115": {
+      "Name": "Magie Noire",
+      "Description": "Lancer un sort de Magie Noire.",
+      "Kind": "PlayerCommand"
+    },
+    "3116": {
+      "Name": "Magie Blanche",
+      "Description": "Lancer un sort de Magie Blanche.",
+      "Kind": "PlayerCommand"
+    },
+    "3117": {
+      "Name": "Invoquer",
+      "Description": "Invoquer une Chim\u00E8re.",
+      "Kind": "PlayerCommand"
+    },
+    "3118": {
+      "Name": "Osmose",
+      "Description": "Invoquez une Chim\u00E8re avec sa jauge d\u2019Overdrive pleine !",
+      "Kind": "PlayerCommand"
+    },
+    "3119": {
+      "Name": "Escrime",
+      "Description": "Visez juste pour infliger plus de d\u00E9g\u00E2ts !",
+      "Kind": "PlayerCommand"
+    },
+    "311A": {
+      "Name": "Emulattak",
+      "Description": "Utilisez les techniques apprises de vos ennemis !",
+      "Kind": "PlayerCommand"
+    },
+    "311B": {
+      "Name": "Arcanes",
+      "Description": "Ex\u00E9cutez les commandes de techniques mortelles !",
+      "Kind": "PlayerCommand"
+    },
+    "311C": {
+      "Name": "Jackpot",
+      "Description": "Alignez les rouleaux pour faire des shoots sp\u00E9ciaux !",
+      "Kind": "PlayerCommand"
+    },
+    "311D": {
+      "Name": "Subjuguer",
+      "Description": "Lancez des sorts de Magie Noire en rafale !",
+      "Kind": "PlayerCommand"
+    },
+    "311E": {
+      "Name": "Alchimie",
+      "Description": "Cr\u00E9ez des attaques originales en combinant 2 objets !",
+      "Kind": "PlayerCommand"
+    },
+    "311F": {
+      "Name": "Aur\u00E9ole",
+      "Description": "Rien",
+      "Kind": "PlayerCommand"
+    },
+    "3120": {
+      "Name": "Had\u00E8s",
+      "Description": "Rien",
+      "Kind": "PlayerCommand"
+    },
+    "3121": {
+      "Name": "Gils",
+      "Description": "Rien",
+      "Kind": "PlayerCommand"
+    },
+    "3122": {
+      "Name": "Gils",
+      "Description": "Rien",
+      "Kind": "PlayerCommand"
+    },
+    "3123": {
+      "Name": "Motiver",
+      "Description": "Payer les services de Yojimbo.",
+      "Kind": "PlayerCommand"
+    },
+    "3124": {
+      "Name": "J\u2019ai confiance !",
+      "Description": "La laisser agir \u00E0 sa guise.",
+      "Kind": "PlayerCommand"
+    },
+    "3125": {
+      "Name": "Ne changez rien !",
+      "Description": "Lui faire faire la m\u00EAme chose qu\u2019au tour pr\u00E9c\u00E9dent.",
+      "Kind": "PlayerCommand"
+    },
+    "3126": {
+      "Name": "Attaquez !",
+      "Description": "Lui faire utiliser une attaque physique.",
+      "Kind": "PlayerCommand"
+    },
+    "3127": {
+      "Name": "Courage !",
+      "Description": "Lui faire utiliser un sort ou une attaque sp\u00E9ciale.",
+      "Kind": "PlayerCommand"
+    },
+    "3128": {
+      "Name": "Gu\u00E9rissez-vous !",
+      "Description": "Lui faire utiliser un sort de soins.",
+      "Kind": "PlayerCommand"
+    },
+    "3129": {
+      "Name": "Toutes ensemble !",
+      "Description": "Leur faire utiliser l\u2019attaque concert\u00E9e Delta.",
+      "Kind": "PlayerCommand"
+    },
+    "312A": {
+      "Name": "Soyez prudentes !",
+      "Description": "Lui faire utiliser un sort de soutien.",
+      "Kind": "PlayerCommand"
+    },
+    "312B": {
+      "Name": "Ca va aller ?!",
+      "Description": "Lui faire aspirer les HP et les MP d\u2019un ennemi.",
+      "Kind": "PlayerCommand"
+    },
+    "312C": {
+      "Name": "Elle ne fait rien.",
+      "Description": "Rien",
+      "Kind": "PlayerCommand"
+    },
+    "312D": {
+      "Name": "AntiEl\u00E9ments",
+      "Description": "Rien",
+      "Kind": "PlayerCommand"
+    },
+    "312E": {
+      "Name": "Combos",
+      "Description": "Technique sp\u00E9ciale de Wakka 16.",
+      "Kind": "PlayerCommand"
+    },
+    "312F": {
+      "Name": "D\u00E9verrouiller",
+      "Description": "Actionner les leviers qui ouvrent le portail.",
+      "Kind": "PlayerCommand"
+    },
+    "3130": {
+      "Name": "Appel24",
+      "Description": "Rien",
+      "Kind": "PlayerCommand"
+    },
+    "3131": {
+      "Name": "Appel25",
+      "Description": "Rien",
+      "Kind": "PlayerCommand"
+    },
+    "3132": {
+      "Name": "Appel26",
+      "Description": "Rien",
+      "Kind": "PlayerCommand"
+    },
+    "3133": {
+      "Name": "Appel27",
+      "Description": "Rien",
+      "Kind": "PlayerCommand"
+    },
+    "3134": {
+      "Name": "Appel28",
+      "Description": "Rien",
+      "Kind": "PlayerCommand"
+    },
+    "3135": {
+      "Name": "Appel29",
+      "Description": "Rien",
+      "Kind": "PlayerCommand"
+    },
+    "3136": {
+      "Name": "Appel30",
+      "Description": "Rien",
+      "Kind": "PlayerCommand"
+    },
+    "3137": {
+      "Name": "Appel31",
+      "Description": "Rien",
+      "Kind": "PlayerCommand"
+    },
+    "3138": {
+      "Name": "Appel32",
+      "Description": "Rien",
+      "Kind": "PlayerCommand"
+    },
+    "3139": {
+      "Name": "Appel33",
+      "Description": "Rien",
+      "Kind": "PlayerCommand"
+    },
+    "313A": {
+      "Name": "Appel34",
+      "Description": "Rien",
+      "Kind": "PlayerCommand"
+    },
+    "313B": {
+      "Name": "Appel35",
+      "Description": "Rien",
+      "Kind": "PlayerCommand"
+    },
+    "313C": {
+      "Name": "Appel36",
+      "Description": "Rien",
+      "Kind": "PlayerCommand"
+    },
+    "313D": {
+      "Name": "Appel37",
+      "Description": "Rien",
+      "Kind": "PlayerCommand"
+    },
+    "313E": {
+      "Name": "Appel38",
+      "Description": "Rien",
+      "Kind": "PlayerCommand"
+    },
+    "313F": {
+      "Name": "Appel39",
+      "Description": "Rien",
+      "Kind": "PlayerCommand"
+    },
+    "4000": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4001": {
+      "Name": "Commande 2",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4002": {
+      "Name": "Commande 3",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4003": {
+      "Name": "Graine-obus",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4004": {
+      "Name": "Rafale de graines",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4005": {
+      "Name": "Aspirer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4006": {
+      "Name": "Recracher",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4007": {
+      "Name": "Pr\u00E9paration s\u00E9isme",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4008": {
+      "Name": "S\u00E9isme",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4009": {
+      "Name": "Kamikaze",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "400A": {
+      "Name": "Regard",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "400B": {
+      "Name": "Ultrasons",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "400C": {
+      "Name": "Onde de choc",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "400D": {
+      "Name": "Dard empoisonn\u00E9",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "400E": {
+      "Name": "Commande",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "400F": {
+      "Name": "Furie",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4010": {
+      "Name": "Auto Potion",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4011": {
+      "Name": "Fusil",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4012": {
+      "Name": "Fusil",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4013": {
+      "Name": "Lance-flammes",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4014": {
+      "Name": "Mawashigeri",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4015": {
+      "Name": "Aquaballe",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4016": {
+      "Name": "Onde de choc",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4017": {
+      "Name": "Commande",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4018": {
+      "Name": "Concentration",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4019": {
+      "Name": "R\u00E9ception",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "401A": {
+      "Name": "Se tra\u00EEner",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "401B": {
+      "Name": "Souffle",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "401C": {
+      "Name": "Souffle",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "401D": {
+      "Name": "Souffle",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "401E": {
+      "Name": "Souffle",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "401F": {
+      "Name": "Cible unique",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4020": {
+      "Name": "Cible multiple",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4021": {
+      "Name": "Sonic Wave",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4022": {
+      "Name": "Nucl\u00E9osph\u00E8re",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4023": {
+      "Name": "Lumina Diluvium",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4024": {
+      "Name": "Cornes",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4025": {
+      "Name": "Souffle",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4026": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4027": {
+      "Name": "Fauchage",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4028": {
+      "Name": "Pulv\u00E9riser",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4029": {
+      "Name": "Electrochoc",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "402A": {
+      "Name": "S\u00E9isme",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "402B": {
+      "Name": "Danse d\u2019Ochu",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "402C": {
+      "Name": "Spores",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "402D": {
+      "Name": "Spores",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "402E": {
+      "Name": "Spores",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "402F": {
+      "Name": "El ni\u00F1o",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4030": {
+      "Name": "Charge",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4031": {
+      "Name": "1000 \u00E9pines",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4032": {
+      "Name": "10.000 \u00E9pines",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4033": {
+      "Name": "Adiooos !",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4034": {
+      "Name": "Rocketopoing",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4035": {
+      "Name": "Double attaque",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4036": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4037": {
+      "Name": "Ouvrir",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4038": {
+      "Name": "Regard p\u00E9trifiant",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4039": {
+      "Name": "Ultrasons",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "403A": {
+      "Name": "Embl\u00E8me du Destin",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "403B": {
+      "Name": "Riposte",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "403C": {
+      "Name": "Kiai",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "403D": {
+      "Name": "Hurlements",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "403E": {
+      "Name": "Br\u00FBler",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "403F": {
+      "Name": "Dilatation 2",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4040": {
+      "Name": "Dilatation 3",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4041": {
+      "Name": "Dilatation 4",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4042": {
+      "Name": "Kamikaze",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4043": {
+      "Name": "Charge",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4044": {
+      "Name": "Mal\u00E9diction",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4045": {
+      "Name": "Concentration",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4046": {
+      "Name": "Boules de feu",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4047": {
+      "Name": "Boules de feu",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4048": {
+      "Name": "Kamikaze",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4049": {
+      "Name": "Kamikaze",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "404A": {
+      "Name": "Kamikaze",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "404B": {
+      "Name": "Had\u00E8s",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "404C": {
+      "Name": "Ch\u00E2timent",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "404D": {
+      "Name": "Aquasouffle",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "404E": {
+      "Name": "Feu de Megido",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "404F": {
+      "Name": "Silence",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4050": {
+      "Name": "Cisaille",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4051": {
+      "Name": "Nuage de poison",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4052": {
+      "Name": "Morsures",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4053": {
+      "Name": "Infection",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4054": {
+      "Name": "Sucs digestifs",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4055": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4056": {
+      "Name": "Manger",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4057": {
+      "Name": "Pluie de coups",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4058": {
+      "Name": "Fauchage combin\u00E9",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4059": {
+      "Name": "Charge",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "405A": {
+      "Name": "Mistral",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "405B": {
+      "Name": "Mother",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "405C": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "405D": {
+      "Name": "Sonic Wing",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "405E": {
+      "Name": "Divine Com\u00E9die",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "405F": {
+      "Name": "M\u00E9ga Atomnium",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4060": {
+      "Name": "Rancune",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4061": {
+      "Name": "L\u2019heure du crime",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4062": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4063": {
+      "Name": "Annuler Riposte",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4064": {
+      "Name": "Electrodisques",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4065": {
+      "Name": "Electroflux",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4066": {
+      "Name": "Ejecter",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4067": {
+      "Name": "Eruption solaire",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4068": {
+      "Name": "S\u00E9isme",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4069": {
+      "Name": "M\u00E9t\u00E9ore",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "406A": {
+      "Name": "Queue",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "406B": {
+      "Name": "Souffle",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "406C": {
+      "Name": "Body Press",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "406D": {
+      "Name": "Nova",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "406E": {
+      "Name": "Concentration",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "406F": {
+      "Name": "S\u00E9isme",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4070": {
+      "Name": "Blaster",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4071": {
+      "Name": "Blaster",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4072": {
+      "Name": "Griffes",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4073": {
+      "Name": "Mourir",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4074": {
+      "Name": "Mourir",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4075": {
+      "Name": "Mourir",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4076": {
+      "Name": "Mourir",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4077": {
+      "Name": "Mourir",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4078": {
+      "Name": "Mourir",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4079": {
+      "Name": "Mourir",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "407A": {
+      "Name": "Mourir",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "407B": {
+      "Name": "Mourir",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "407C": {
+      "Name": "Mourir",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "407D": {
+      "Name": "Mourir",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "407E": {
+      "Name": "Mourir",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "407F": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4080": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4081": {
+      "Name": "Avancer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4082": {
+      "Name": "Kozuka",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4083": {
+      "Name": "Wakizashi",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4084": {
+      "Name": "Wakizashi",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4085": {
+      "Name": "Zanmato",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4086": {
+      "Name": "Daigoro",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4087": {
+      "Name": "Perdu !",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4088": {
+      "Name": "Gagn\u00E9 !",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4089": {
+      "Name": "Magma",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "408A": {
+      "Name": "Invocation",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "408B": {
+      "Name": "Invocation",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "408C": {
+      "Name": "Invocation",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "408D": {
+      "Name": "Invocation",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "408E": {
+      "Name": "Invocation",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "408F": {
+      "Name": "Invocation",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4090": {
+      "Name": "Invocation",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4091": {
+      "Name": "Invocation",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4092": {
+      "Name": "Invocation",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4093": {
+      "Name": "S\u00E9isme",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4094": {
+      "Name": "R\u00E9action",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4095": {
+      "Name": "C\u00E9leste",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4096": {
+      "Name": "Transcendantale",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4097": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4098": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4099": {
+      "Name": "Regard",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "409A": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "409B": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "409C": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "409D": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "409E": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "409F": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40A0": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40A1": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40A2": {
+      "Name": "Mimic 1",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40A3": {
+      "Name": "Mimic 2",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40A4": {
+      "Name": "Mimic 3",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40A5": {
+      "Name": "Mimic 4",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40A6": {
+      "Name": "Echo",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40A7": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40A8": {
+      "Name": "Morsures",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40A9": {
+      "Name": "Regard p\u00E9trifiant",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40AA": {
+      "Name": "Concentration",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40AB": {
+      "Name": "Concentration",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40AC": {
+      "Name": "C\u00E9leste",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40AD": {
+      "Name": "Pulsar",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40AE": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40AF": {
+      "Name": "Lamento",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40B0": {
+      "Name": "Chaos",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40B1": {
+      "Name": "Daigoro",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40B2": {
+      "Name": "Hymne C\u00E9leste",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40B3": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40B4": {
+      "Name": "M\u00E9ga Infection",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40B5": {
+      "Name": "M\u00E9ga sucs digestifs",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40B6": {
+      "Name": "Miam miam",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40B7": {
+      "Name": "Rafale de sucs digestifs",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40B8": {
+      "Name": "Chaosium",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40B9": {
+      "Name": "Super Blaster",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40BA": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40BB": {
+      "Name": "Regard p\u00E9trifiant",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40BC": {
+      "Name": "10.000 \u00E9pines",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40BD": {
+      "Name": "Griffes mortelles",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40BE": {
+      "Name": "Danse du sabre",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40BF": {
+      "Name": "Flash bomb",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40C0": {
+      "Name": "Crocs",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40C1": {
+      "Name": "Crocs de Folie",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40C2": {
+      "Name": "Crocs de l\u2019Enfer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40C3": {
+      "Name": "Regard t\u00E9n\u00E9breux",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40C4": {
+      "Name": "Ultrasons",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40C5": {
+      "Name": "Morsure absorbante",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40C6": {
+      "Name": "Morsure empoisonn\u00E9e",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40C7": {
+      "Name": "Coup d\u2019\u00E9paule",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40C8": {
+      "Name": "Rush !",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40C9": {
+      "Name": "Rien",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40CA": {
+      "Name": "Rien",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40CB": {
+      "Name": "Rien",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40CC": {
+      "Name": "Dard de Folie",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40CD": {
+      "Name": "Dard empoisonn\u00E9",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40CE": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40CF": {
+      "Name": "Cornes fatales",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40D0": {
+      "Name": "Boules de feu",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40D1": {
+      "Name": "Bec",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40D2": {
+      "Name": "Bec maudit",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40D3": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40D4": {
+      "Name": "Fauchage",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40D5": {
+      "Name": "Pulv\u00E9riser",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40D6": {
+      "Name": "Marchand de sable",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40D7": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40D8": {
+      "Name": "Nucl\u00E9osph\u00E8re",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40D9": {
+      "Name": "Diluvius Luminum",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40DA": {
+      "Name": "Ergots de feu !",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40DB": {
+      "Name": "Pataplouf !",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40DC": {
+      "Name": "Dard-Dard !",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40DD": {
+      "Name": "Delta",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40DE": {
+      "Name": "Mother",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40DF": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40E0": {
+      "Name": "Souffle",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40E1": {
+      "Name": "Souffle",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40E2": {
+      "Name": "Ultrasons",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40E3": {
+      "Name": "Triple attaque",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40E4": {
+      "Name": "Attaquer 3",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40E5": {
+      "Name": "Mourir",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40E6": {
+      "Name": "Divine Com\u00E9die",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40E7": {
+      "Name": "Electroflux",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40E8": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40E9": {
+      "Name": "Kamikaze",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40EA": {
+      "Name": "L\u2019heure du crime",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40EB": {
+      "Name": "Recracher",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40EC": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40ED": {
+      "Name": "Somni X",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40EE": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40EF": {
+      "Name": "Ejecter",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40F0": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40F1": {
+      "Name": "Embl\u00E8me du Destin",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40F2": {
+      "Name": "99.999 \u00E9pines",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40F3": {
+      "Name": "Ultima",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40F4": {
+      "Name": "Eruption solaire",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40F5": {
+      "Name": "Coup puissant",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40F6": {
+      "Name": "Regard p\u00E9trifiant",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40F7": {
+      "Name": "Soupir",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40F8": {
+      "Name": "Mucus toxique",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40F9": {
+      "Name": "Pluie de coups",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40FA": {
+      "Name": "Photon wing",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40FB": {
+      "Name": "Souffle magique",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40FC": {
+      "Name": "S\u00E9daqueue",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40FD": {
+      "Name": "Aquasouffle",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40FE": {
+      "Name": "Mucus toxique",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "40FF": {
+      "Name": "Rancune",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4100": {
+      "Name": "Ergots de feu !",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4101": {
+      "Name": "Pataplouf !",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4102": {
+      "Name": "Dard-Dard !",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4103": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4104": {
+      "Name": "Mal\u00E9diction",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4105": {
+      "Name": "M\u00E9ga gravitron",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4106": {
+      "Name": "Delta",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4107": {
+      "Name": "Kozuka",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4108": {
+      "Name": "Wakizashi",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4109": {
+      "Name": "Wakizashi",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "410A": {
+      "Name": "Zanmato",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "410B": {
+      "Name": "Daigoro",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "410C": {
+      "Name": "Divine Com\u00E9die",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "410D": {
+      "Name": "Divine Com\u00E9die",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "410E": {
+      "Name": "Magma",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "410F": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4110": {
+      "Name": "Electrodisques",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4111": {
+      "Name": "Electroflux",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4112": {
+      "Name": "Electroflux",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4113": {
+      "Name": "M\u00E9ga Foudre",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4114": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4115": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4116": {
+      "Name": "Electrodisques",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4117": {
+      "Name": "C\u00E9leste",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4118": {
+      "Name": "Transcendantale",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4119": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "411A": {
+      "Name": "M\u00E9ga Atomnium",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "411B": {
+      "Name": "Pulsar",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "411C": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "411D": {
+      "Name": "Lamento",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "411E": {
+      "Name": "Chaos",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "411F": {
+      "Name": "Immolation",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4120": {
+      "Name": "Providence",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4121": {
+      "Name": "Jugement dernier",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4122": {
+      "Name": "S\u00E9paration",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4123": {
+      "Name": "Apparition",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4124": {
+      "Name": "Mort",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4125": {
+      "Name": "Apparition",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4126": {
+      "Name": "Disparition",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4127": {
+      "Name": "Coup p\u00E9trifiant",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4128": {
+      "Name": "Echo",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "4129": {
+      "Name": "M\u00E9ga gravitron",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "412A": {
+      "Name": "Mother Angel",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "412B": {
+      "Name": "Frappe Dissipation",
+      "Description": "Attaquer",
+      "Kind": "MonsterCommand"
+    },
+    "6000": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6001": {
+      "Name": "Technique 1",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6002": {
+      "Name": "Technique 2",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6003": {
+      "Name": "Apparition",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6004": {
+      "Name": "Soupir",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6005": {
+      "Name": "Mucus toxique",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6006": {
+      "Name": "Pluie de coups",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6007": {
+      "Name": "M\u00E9tamorphose",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6008": {
+      "Name": "Mourir",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6009": {
+      "Name": "Les tentacules aspirent la magie !",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "600A": {
+      "Name": "Aiguillon",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "600B": {
+      "Name": "Tourbillon",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "600C": {
+      "Name": "Rafale de balles",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "600D": {
+      "Name": "Balles Morph\u00E9e",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "600E": {
+      "Name": "Balles C\u00E9cit\u00E9",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "600F": {
+      "Name": "Balles Silence",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6010": {
+      "Name": "Se ruer",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6011": {
+      "Name": "Se ruer",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6012": {
+      "Name": "Grue",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6013": {
+      "Name": "Mourir",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6014": {
+      "Name": "Mourir",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6015": {
+      "Name": "La grue s\u2019est mise en marche.",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6016": {
+      "Name": "Tentacules",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6017": {
+      "Name": "Chute en arri\u00E8re",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6018": {
+      "Name": "Se relever",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6019": {
+      "Name": "Concentration",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "601A": {
+      "Name": "T\u2019es le suivant !",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "601B": {
+      "Name": "Coup puissant",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "601C": {
+      "Name": "Mourir",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "601D": {
+      "Name": "Mourir",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "601E": {
+      "Name": "Onde de choc",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "601F": {
+      "Name": "Heurter",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6020": {
+      "Name": "Contourner",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6021": {
+      "Name": "Rayon magique",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6022": {
+      "Name": "Mitrailleuse",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6023": {
+      "Name": "Scelleur",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6024": {
+      "Name": "Aquashooter",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6025": {
+      "Name": "Grenades",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6026": {
+      "Name": "Remont\u00E9e",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6027": {
+      "Name": "Plong\u00E9e",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6028": {
+      "Name": "Compte \u00E0 rebours",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6029": {
+      "Name": "Sin attire le Vaisseau !",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "602A": {
+      "Name": "Mourir",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "602B": {
+      "Name": "Bouger",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "602C": {
+      "Name": "Mourir",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "602D": {
+      "Name": "Mourir",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "602E": {
+      "Name": "Aspirer",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "602F": {
+      "Name": "Recracher",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6030": {
+      "Name": "Mourir",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6031": {
+      "Name": "Mucus toxique",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6032": {
+      "Name": "Coup p\u00E9trifiant",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6033": {
+      "Name": "Coup mortel",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6034": {
+      "Name": "Griffes empoisonn\u00E9es",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6035": {
+      "Name": "L\u2019Ochu \u00E9gar\u00E9 s\u2019endort.",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6036": {
+      "Name": "Changement d\u2019\u00E9l\u00E9ment",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6037": {
+      "Name": "HP 1/2",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6038": {
+      "Name": "HP 1",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6039": {
+      "Name": "Brasier",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "603A": {
+      "Name": "Glacier",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "603B": {
+      "Name": "Foudre",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "603C": {
+      "Name": "H2O",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "603D": {
+      "Name": "Charge",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "603E": {
+      "Name": "Potion \u002B",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "603F": {
+      "Name": "Presse",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6040": {
+      "Name": "Rem\u00E8de",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6041": {
+      "Name": "Absinthe",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6042": {
+      "Name": "Photon Wing",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6043": {
+      "Name": "Souffle magique",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6044": {
+      "Name": "Queue de Sommeil",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6045": {
+      "Name": "Queue de Furie",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6046": {
+      "Name": "Contre-attaque",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6047": {
+      "Name": "Attaque g\u00E9n\u00E9rale",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6048": {
+      "Name": "Attaque",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6049": {
+      "Name": "Attaque",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "604A": {
+      "Name": "S\u00E9isme",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "604B": {
+      "Name": "Flash bomb",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "604C": {
+      "Name": "Regard p\u00E9trifiant",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "604D": {
+      "Name": "Mine magique",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "604E": {
+      "Name": "Attaque",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "604F": {
+      "Name": "M\u00E9galith",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6050": {
+      "Name": "Mort douce",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6051": {
+      "Name": "Seymour a rappel\u00E9 Anima !",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6052": {
+      "Name": "Lamento",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6053": {
+      "Name": "Commande 93",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6054": {
+      "Name": "Commande 94",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6055": {
+      "Name": "Commande 95",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6056": {
+      "Name": "Commande 96",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6057": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6058": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6059": {
+      "Name": "Attaquer",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "605A": {
+      "Name": "Coup de t\u00EAte",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "605B": {
+      "Name": "Piqu\u00E9",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "605C": {
+      "Name": "Drain",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "605D": {
+      "Name": "Attaque",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "605E": {
+      "Name": "Desperado",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "605F": {
+      "Name": "Boomerang",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6060": {
+      "Name": "Test",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6061": {
+      "Name": "Souffle empoisonn\u00E9",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6062": {
+      "Name": "Regard p\u00E9trifiant",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6063": {
+      "Name": "Flash bomb",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6064": {
+      "Name": "Aspirer",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6065": {
+      "Name": "Le souffle ne vous atteint pas !",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6066": {
+      "Name": "Critique",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6067": {
+      "Name": "Mourir",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6068": {
+      "Name": "Restaure MP",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6069": {
+      "Name": "Recracher",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "606A": {
+      "Name": "Recracher",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "606B": {
+      "Name": "Flash bomb",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "606C": {
+      "Name": "T\u00E9l\u00E9portation",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "606D": {
+      "Name": "Absorbe",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "606E": {
+      "Name": "Silence",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "606F": {
+      "Name": "Pivoter",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6070": {
+      "Name": "C\u00E9cit\u00E9",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6071": {
+      "Name": "Morph\u00E9e",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6072": {
+      "Name": "Folie",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6073": {
+      "Name": "Missiles",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6074": {
+      "Name": "Faucheuse",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6075": {
+      "Name": "Extermination",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6076": {
+      "Name": "Queue",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6077": {
+      "Name": "Cyanidre",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6078": {
+      "Name": "Lance l\u00E9tale",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6079": {
+      "Name": "Atomnium",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "607A": {
+      "Name": "Aspire",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "607B": {
+      "Name": "Anath\u00E8me",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "607C": {
+      "Name": "Frappe Dissipation",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "607D": {
+      "Name": "Commande 135",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "607E": {
+      "Name": "Transformation",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "607F": {
+      "Name": "Transformation",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6080": {
+      "Name": "Hydre infernale",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6081": {
+      "Name": "Psycho blast",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6082": {
+      "Name": "Over Had\u00E8s",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6083": {
+      "Name": "Quartum",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6084": {
+      "Name": "Regard de tueur",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6085": {
+      "Name": "Poigne de fer",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6086": {
+      "Name": "Ultime Jecht Shoot",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6087": {
+      "Name": "Aura oppressante",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6088": {
+      "Name": "D\u00E9gainer",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6089": {
+      "Name": "Fauchage",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "608A": {
+      "Name": "Regard de tueur",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "608B": {
+      "Name": "Vague d\u2019\u00E9nergie",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "608C": {
+      "Name": "Commande 150",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "608D": {
+      "Name": "Somni X",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "608E": {
+      "Name": "S\u2019\u00E9loigner",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "608F": {
+      "Name": "Choc",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6090": {
+      "Name": "Quartum",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6091": {
+      "Name": "AnnulAura",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6092": {
+      "Name": "Envergure",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6093": {
+      "Name": "Baffe",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6094": {
+      "Name": "Quartum",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6095": {
+      "Name": "Commande 159",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6096": {
+      "Name": "Soupir",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6097": {
+      "Name": "Mucus toxique",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6098": {
+      "Name": "Pluie de coups",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "6099": {
+      "Name": "Sortir de la carapace.",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "609A": {
+      "Name": "Rentrer dans la carapace.",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "609B": {
+      "Name": "Aspire la magie !",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "609C": {
+      "Name": "Gigagravitron",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "609D": {
+      "Name": "Regard",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "609E": {
+      "Name": "Regard",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "609F": {
+      "Name": "Regard",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60A0": {
+      "Name": "Regard",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60A1": {
+      "Name": "Mistral",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60A2": {
+      "Name": "G\u00E9henne",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60A3": {
+      "Name": "Aquasouffle",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60A4": {
+      "Name": "Mother",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60A5": {
+      "Name": "Tacle",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60A6": {
+      "Name": "Quartum",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60A7": {
+      "Name": "AnnulAura",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60A8": {
+      "Name": "Le sinucl\u00E9us concentre son \u00E9nergie.",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60A9": {
+      "Name": "R\u00E9g\u00E9n\u00E9ration",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60AA": {
+      "Name": "Charge",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60AB": {
+      "Name": "Multi Brasier \u002B",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60AC": {
+      "Name": "Commande 182",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60AD": {
+      "Name": "Multi Glacier \u002B",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60AE": {
+      "Name": "Commande 184",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60AF": {
+      "Name": "Multi Foudre \u002B",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60B0": {
+      "Name": "Commande 186",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60B1": {
+      "Name": "Multi H2O \u002B",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60B2": {
+      "Name": "Commande 188",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60B3": {
+      "Name": "La grue a boug\u00E9.",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60B4": {
+      "Name": "Mourir",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60B5": {
+      "Name": "Anima",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60B6": {
+      "Name": "Quartum",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60B7": {
+      "Name": "AnnulAura",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60B8": {
+      "Name": "Quartum",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60B9": {
+      "Name": "AnnulAura",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60BA": {
+      "Name": "Le sinucl\u00E9us concentre son \u00E9nergie.",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60BB": {
+      "Name": "AnnulAura",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60BC": {
+      "Name": "Sin ne fait rien.",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60BD": {
+      "Name": "Le sinucl\u00E9us ne fait rien.",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60BE": {
+      "Name": "Cent mille tonnes",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60BF": {
+      "Name": "Crachat",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60C0": {
+      "Name": "Coquille bris\u00E9e.",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60C1": {
+      "Name": "Rentrer dans la coquille.",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60C2": {
+      "Name": "Sortir de la coquille.",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60C3": {
+      "Name": "Mourir",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60C4": {
+      "Name": "Le sinucl\u00E9us concentre son \u00E9nergie.",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60C5": {
+      "Name": "AnnulAura",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60C6": {
+      "Name": "Main gauche",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60C7": {
+      "Name": "Main gauche 2",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60C8": {
+      "Name": "Aura oppressante",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60C9": {
+      "Name": "Poigne de fer",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60CA": {
+      "Name": "Mourir",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60CB": {
+      "Name": "Mourir",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60CC": {
+      "Name": "Mourir",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60CD": {
+      "Name": "Mourir",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60CE": {
+      "Name": "Mourir",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60CF": {
+      "Name": "Mourir",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60D0": {
+      "Name": "Mourir",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60D1": {
+      "Name": "Hydre infernale",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60D2": {
+      "Name": "Vague d\u2019\u00E9nergie",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60D3": {
+      "Name": "Sonic Wing",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60D4": {
+      "Name": "Echo",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60D5": {
+      "Name": "Hurlements",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60D6": {
+      "Name": "Magma",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60D7": {
+      "Name": "Divine Com\u00E9die",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60D8": {
+      "Name": "Electrodisques",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60D9": {
+      "Name": "Electroflux",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60DA": {
+      "Name": "C\u00E9leste",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60DB": {
+      "Name": "Transcendantale",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60DC": {
+      "Name": "Pulsar",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60DD": {
+      "Name": "M\u00E9ga Atomnium",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60DE": {
+      "Name": "Lamento",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60DF": {
+      "Name": "Chaos",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60E0": {
+      "Name": "Kozuka",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60E1": {
+      "Name": "Wakizashi",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60E2": {
+      "Name": "Zanmato",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60E3": {
+      "Name": "Pataplouf !",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60E4": {
+      "Name": "Ergots de feu !",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60E5": {
+      "Name": "Dard-dard !",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60E6": {
+      "Name": "Delta",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60E7": {
+      "Name": "Possession",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60E8": {
+      "Name": "Possession",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60E9": {
+      "Name": "Possession",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60EA": {
+      "Name": "Possession",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60EB": {
+      "Name": "Possession",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60EC": {
+      "Name": "Possession",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60ED": {
+      "Name": "Possession",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60EE": {
+      "Name": "Possession",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60EF": {
+      "Name": "Mourir",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60F0": {
+      "Name": "Ultima",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60F1": {
+      "Name": "Les ailes commencent \u00E0 briller !",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60F2": {
+      "Name": "Mourir",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60F3": {
+      "Name": "Dissipation X",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60F4": {
+      "Name": "Commande 254",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60F5": {
+      "Name": "Vie Max",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "60F6": {
+      "Name": "Psycho blast",
+      "Description": "Attaquer",
+      "Kind": "BossCommand"
+    },
+    "2000": {
+      "Name": "Potion",
+      "Description": "Redonne 200 HP \u00E0 un alli\u00E9.",
+      "Kind": "ItemCommand"
+    },
+    "2001": {
+      "Name": "Potion \u002B",
+      "Description": "Redonne 1000 HP \u00E0 un alli\u00E9.",
+      "Kind": "ItemCommand"
+    },
+    "2002": {
+      "Name": "Maxipotion",
+      "Description": "Restaure les HP d\u2019un alli\u00E9.",
+      "Kind": "ItemCommand"
+    },
+    "2003": {
+      "Name": "M\u00E9gapotion",
+      "Description": "Redonne 2000 HP aux alli\u00E9s.",
+      "Kind": "ItemCommand"
+    },
+    "2004": {
+      "Name": "Ether",
+      "Description": "Redonne 100 MP \u00E0 un alli\u00E9.",
+      "Kind": "ItemCommand"
+    },
+    "2005": {
+      "Name": "Ether \u002B",
+      "Description": "Redonne 500 MP \u00E0 un alli\u00E9.",
+      "Kind": "ItemCommand"
+    },
+    "2006": {
+      "Name": "Queue de ph\u00E9nix",
+      "Description": "Ranime un alli\u00E9 KO.",
+      "Kind": "ItemCommand"
+    },
+    "2007": {
+      "Name": "M\u00E9ga ph\u00E9nix",
+      "Description": "Ranime les alli\u00E9s KO.",
+      "Kind": "ItemCommand"
+    },
+    "2008": {
+      "Name": "Elixir",
+      "Description": "Restaure les HP et les MP d\u2019un alli\u00E9.",
+      "Kind": "ItemCommand"
+    },
+    "2009": {
+      "Name": "M\u00E9galixir",
+      "Description": "Restaure les HP et les MP des alli\u00E9s.",
+      "Kind": "ItemCommand"
+    },
+    "200A": {
+      "Name": "Antidote",
+      "Description": "Gu\u00E9rit l\u2019alt\u00E9ration d\u2019\u00E9tat Poison.",
+      "Kind": "ItemCommand"
+    },
+    "200B": {
+      "Name": "D\u00E9figeur",
+      "Description": "Gu\u00E9rit l\u2019alt\u00E9ration d\u2019\u00E9tat Fossile.",
+      "Kind": "ItemCommand"
+    },
+    "200C": {
+      "Name": "Collyre",
+      "Description": "Gu\u00E9rit l\u2019alt\u00E9ration d\u2019\u00E9tat Obscurit\u00E9.",
+      "Kind": "ItemCommand"
+    },
+    "200D": {
+      "Name": "Bocca",
+      "Description": "Gu\u00E9rit l\u2019alt\u00E9ration d\u2019\u00E9tat Mutisme.",
+      "Kind": "ItemCommand"
+    },
+    "200E": {
+      "Name": "Eau b\u00E9nite",
+      "Description": "Gu\u00E9rit les alt\u00E9rations d\u2019\u00E9tat Zombie et Fl\u00E9au.",
+      "Kind": "ItemCommand"
+    },
+    "200F": {
+      "Name": "Rem\u00E8de",
+      "Description": "Gu\u00E9rit toutes les alt\u00E9rations d\u2019\u00E9tat.",
+      "Kind": "ItemCommand"
+    },
+    "2010": {
+      "Name": "R\u00E9minifor",
+      "Description": "Fait perdre des Sph\u00E8res Physiques en fin de combat.",
+      "Kind": "ItemCommand"
+    },
+    "2011": {
+      "Name": "R\u00E9minimag",
+      "Description": "Fait perdre des Sph\u00E8res Mentales en fin de combat.",
+      "Kind": "ItemCommand"
+    },
+    "2012": {
+      "Name": "R\u00E9minivit",
+      "Description": "Fait perdre des Sph\u00E8res Agilit\u00E9 en fin de combat.",
+      "Kind": "ItemCommand"
+    },
+    "2013": {
+      "Name": "R\u00E9minicomp",
+      "Description": "Fait perdre des Sph\u00E8res Comp en fin de combat.",
+      "Kind": "ItemCommand"
+    },
+    "2014": {
+      "Name": "Potion Al Bhede",
+      "Description": "Redonne 1000 HP \u0026 gu\u00E9rit Poison, Mutisme et Fossile (G).",
+      "Kind": "ItemCommand"
+    },
+    "2015": {
+      "Name": "Onde b\u00E9nite",
+      "Description": "Restaure les HP des alli\u00E9s.",
+      "Kind": "ItemCommand"
+    },
+    "2016": {
+      "Name": "T\u00E9tra-\u00E9l\u00E9ment",
+      "Description": "Restaure les HP d\u2019un alli\u00E9 et le prot\u00E8ge des 4 \u00E9l\u00E9ments.",
+      "Kind": "ItemCommand"
+    },
+    "2017": {
+      "Name": "Blizzard",
+      "Description": "Attaque \u00E9l\u00E9mentaire de Glace sur un ennemi.",
+      "Kind": "ItemCommand"
+    },
+    "2018": {
+      "Name": "Nunatak",
+      "Description": "Attaque \u00E9l\u00E9mentaire de Glace sur un ennemi.",
+      "Kind": "ItemCommand"
+    },
+    "2019": {
+      "Name": "Magikoroc Glace",
+      "Description": "Attaque \u00E9l\u00E9mentaire de Glace g\u00E9n\u00E9rale.",
+      "Kind": "ItemCommand"
+    },
+    "201A": {
+      "Name": "Bout de bombo",
+      "Description": "Attaque \u00E9l\u00E9mentaire de Feu sur un ennemi.",
+      "Kind": "ItemCommand"
+    },
+    "201B": {
+      "Name": "Esprit de bombo",
+      "Description": "Attaque \u00E9l\u00E9mentaire de Feu sur un ennemi.",
+      "Kind": "ItemCommand"
+    },
+    "201C": {
+      "Name": "Magikoroc Feu",
+      "Description": "Attaque \u00E9l\u00E9mentaire de Feu g\u00E9n\u00E9rale.",
+      "Kind": "ItemCommand"
+    },
+    "201D": {
+      "Name": "Globe \u00E9lectrique",
+      "Description": "Attaque \u00E9l\u00E9mentaire de Tonnerre sur un ennemi.",
+      "Kind": "ItemCommand"
+    },
+    "201E": {
+      "Name": "Globe de foudre",
+      "Description": "Attaque \u00E9l\u00E9mentaire de Tonnerre sur un ennemi.",
+      "Kind": "ItemCommand"
+    },
+    "201F": {
+      "Name": "Magikoroc Tonnerre",
+      "Description": "Attaque \u00E9l\u00E9mentaire de Tonnerre g\u00E9n\u00E9rale.",
+      "Kind": "ItemCommand"
+    },
+    "2020": {
+      "Name": "Ecaille de poisson",
+      "Description": "Attaque \u00E9l\u00E9mentaire d\u2019Eau sur un ennemi.",
+      "Kind": "ItemCommand"
+    },
+    "2021": {
+      "Name": "Ecaille de dragon",
+      "Description": "Attaque \u00E9l\u00E9mentaire d\u2019Eau sur un ennemi.",
+      "Kind": "ItemCommand"
+    },
+    "2022": {
+      "Name": "Magikoroc Eau",
+      "Description": "Attaque \u00E9l\u00E9mentaire d\u2019Eau g\u00E9n\u00E9rale.",
+      "Kind": "ItemCommand"
+    },
+    "2023": {
+      "Name": "Grenade",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 tous les ennemis.",
+      "Kind": "ItemCommand"
+    },
+    "2024": {
+      "Name": "Grenade antichar",
+      "Description": "Inflige des d\u00E9g\u00E2ts et Tr\u00E9pan \u00E0 tous les ennemis.",
+      "Kind": "ItemCommand"
+    },
+    "2025": {
+      "Name": "Poudre soporifique",
+      "Description": "Inflige des d\u00E9g\u00E2ts et Sommeil \u00E0 tous les ennemis.",
+      "Kind": "ItemCommand"
+    },
+    "2026": {
+      "Name": "Poudre onirique",
+      "Description": "Inflige des d\u00E9g\u00E2ts et Sommeil \u00E0 tous les ennemis.",
+      "Kind": "ItemCommand"
+    },
+    "2027": {
+      "Name": "Grenade motus",
+      "Description": "Inflige des d\u00E9g\u00E2ts et Mutisme \u00E0 tous les ennemis.",
+      "Kind": "ItemCommand"
+    },
+    "2028": {
+      "Name": "Grenade aveuglante",
+      "Description": "Inflige des d\u00E9g\u00E2ts et Obscurit\u00E9 \u00E0 tous les ennemis.",
+      "Kind": "ItemCommand"
+    },
+    "2029": {
+      "Name": "Magikoroc noir",
+      "Description": "Divise les HP de tous les ennemis par 2.",
+      "Kind": "ItemCommand"
+    },
+    "202A": {
+      "Name": "Magikoroc hyalin",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 un ennemi.",
+      "Kind": "ItemCommand"
+    },
+    "202B": {
+      "Name": "Magikoroc sacr\u00E9",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 un ennemi.",
+      "Kind": "ItemCommand"
+    },
+    "202C": {
+      "Name": "M\u00E9ga Magikoroc",
+      "Description": "Inflige des d\u00E9g\u00E2ts \u00E0 tous les ennemis.",
+      "Kind": "ItemCommand"
+    },
+    "202D": {
+      "Name": "Crochet venimeux",
+      "Description": "Inflige des d\u00E9g\u00E2ts et Poison \u00E0 un ennemi.",
+      "Kind": "ItemCommand"
+    },
+    "202E": {
+      "Name": "Sablier d\u2019argent",
+      "Description": "Inflige Somni \u00E0 tous les ennemis.",
+      "Kind": "ItemCommand"
+    },
+    "202F": {
+      "Name": "Sablier d\u2019or",
+      "Description": "Inflige des d\u00E9g\u00E2ts et Somni \u00E0 tous les ennemis.",
+      "Kind": "ItemCommand"
+    },
+    "2030": {
+      "Name": "Cierge de vie",
+      "Description": "Inflige Ch\u00E2timent \u00E0 un ennemi.",
+      "Kind": "ItemCommand"
+    },
+    "2031": {
+      "Name": "Grenade p\u00E9trifiante",
+      "Description": "Inflige Fossile \u00E0 tous les ennemis.",
+      "Kind": "ItemCommand"
+    },
+    "2032": {
+      "Name": "Ombre de l\u2019Au-del\u00E0",
+      "Description": "Inflige Mort \u00E0 un ennemi.",
+      "Kind": "ItemCommand"
+    },
+    "2033": {
+      "Name": "Souffle de l\u2019Au-del\u00E0",
+      "Description": "Inflige Mort \u00E0 tous les ennemis.",
+      "Kind": "ItemCommand"
+    },
+    "2034": {
+      "Name": "Portefeuille luxueux",
+      "Description": "Sert s\u00FBrement \u00E0 quelque chose...",
+      "Kind": "ItemCommand"
+    },
+    "2035": {
+      "Name": "H-Espace",
+      "Description": "Inflige d\u2019importants d\u00E9g\u00E2ts \u00E0 tous les ennemis.",
+      "Kind": "ItemCommand"
+    },
+    "2036": {
+      "Name": "Plume de chocobo",
+      "Description": "Lance Booster sur un alli\u00E9.",
+      "Kind": "ItemCommand"
+    },
+    "2037": {
+      "Name": "Aile de chocobo",
+      "Description": "Lance Booster sur les alli\u00E9s.",
+      "Kind": "ItemCommand"
+    },
+    "2038": {
+      "Name": "Rideau de lune",
+      "Description": "Lance Blindage sur un alli\u00E9.",
+      "Kind": "ItemCommand"
+    },
+    "2039": {
+      "Name": "Rideau de lumi\u00E8re",
+      "Description": "Lance Carapace sur un alli\u00E9.",
+      "Kind": "ItemCommand"
+    },
+    "203A": {
+      "Name": "Rideau d\u2019\u00E9toiles",
+      "Description": "Lance Boomerang sur un alli\u00E9.",
+      "Kind": "ItemCommand"
+    },
+    "203B": {
+      "Name": "Source r\u00E9g\u00E9n\u00E9rante",
+      "Description": "Lance R\u00E9cup sur un alli\u00E9.",
+      "Kind": "ItemCommand"
+    },
+    "203C": {
+      "Name": "Source magique",
+      "Description": "Aspire les MP d\u2019un ennemi.",
+      "Kind": "ItemCommand"
+    },
+    "203D": {
+      "Name": "Source vitale",
+      "Description": "Aspire les HP d\u2019un ennemi.",
+      "Kind": "ItemCommand"
+    },
+    "203E": {
+      "Name": "Source revigorante",
+      "Description": "Aspire les HP et les MP d\u2019un ennemi.",
+      "Kind": "ItemCommand"
+    },
+    "203F": {
+      "Name": "Sel purificateur",
+      "Description": "Inflige des d\u00E9g\u00E2ts et annule les effets magiques.",
+      "Kind": "ItemCommand"
+    },
+    "2040": {
+      "Name": "Onguent vital",
+      "Description": "Double les HP maximums d\u2019un alli\u00E9.",
+      "Kind": "ItemCommand"
+    },
+    "2041": {
+      "Name": "Onguent magique",
+      "Description": "Double les MP maximums d\u2019un alli\u00E9.",
+      "Kind": "ItemCommand"
+    },
+    "2042": {
+      "Name": "Bistella",
+      "Description": "R\u00E9duit \u00E0 0 la consommation de MP d\u2019un alli\u00E9.",
+      "Kind": "ItemCommand"
+    },
+    "2043": {
+      "Name": "Breuvage vital",
+      "Description": "Double les HP maximums des alli\u00E9s.",
+      "Kind": "ItemCommand"
+    },
+    "2044": {
+      "Name": "Breuvage magique",
+      "Description": "Double les MP maximums des alli\u00E9s.",
+      "Kind": "ItemCommand"
+    },
+    "2045": {
+      "Name": "Tristella",
+      "Description": "R\u00E9duit \u00E0 0 la consommation de MP des alli\u00E9s.",
+      "Kind": "ItemCommand"
+    },
+    "2046": {
+      "Name": "Sph\u00E8re Physique",
+      "Description": "Active une case Force, Constitution ou HP.",
+      "Kind": "ItemCommand"
+    },
+    "2047": {
+      "Name": "Sph\u00E8re Mentale",
+      "Description": "Active une case Magie, Esprit ou MP.",
+      "Kind": "ItemCommand"
+    },
+    "2048": {
+      "Name": "Sph\u00E8re Agilit\u00E9",
+      "Description": "Active une case Rapidit\u00E9, Pr\u00E9cision ou Esquive.",
+      "Kind": "ItemCommand"
+    },
+    "2049": {
+      "Name": "Sph\u00E8re Comp",
+      "Description": "Active une case Comp\u00E9tences.",
+      "Kind": "ItemCommand"
+    },
+    "204A": {
+      "Name": "Sph\u00E8re Etoile",
+      "Description": "Active une case Chance.",
+      "Kind": "ItemCommand"
+    },
+    "204B": {
+      "Name": "Sph\u00E8re Carac",
+      "Description": "Active une case Caract\u00E9ristiques acquise par un alli\u00E9.",
+      "Kind": "ItemCommand"
+    },
+    "204C": {
+      "Name": "Sph\u00E8re Tech",
+      "Description": "Active une case Techniques acquise par un alli\u00E9.",
+      "Kind": "ItemCommand"
+    },
+    "204D": {
+      "Name": "Sph\u00E8re Sp\u00E9c",
+      "Description": "Active une case Sp\u00E9ciaux acquise par un alli\u00E9.",
+      "Kind": "ItemCommand"
+    },
+    "204E": {
+      "Name": "Sph\u00E8re Mag Blanche",
+      "Description": "Active une case Magie Blanche acquise par un alli\u00E9.",
+      "Kind": "ItemCommand"
+    },
+    "204F": {
+      "Name": "Sph\u00E8re Mag Noire",
+      "Description": "Active une case Magie Noire acquise par un alli\u00E9.",
+      "Kind": "ItemCommand"
+    },
+    "2050": {
+      "Name": "Sph\u00E8re Joker",
+      "Description": "Active n\u2019importe quelle case.",
+      "Kind": "ItemCommand"
+    },
+    "2051": {
+      "Name": "Sph\u00E8re Cl\u00E9 Niv. 1",
+      "Description": "D\u00E9truit une Limitosph\u00E8re Niv. 1.",
+      "Kind": "ItemCommand"
+    },
+    "2052": {
+      "Name": "Sph\u00E8re Cl\u00E9 Niv. 2",
+      "Description": "D\u00E9truit une Limitosph\u00E8re Niv. 2.",
+      "Kind": "ItemCommand"
+    },
+    "2053": {
+      "Name": "Sph\u00E8re Cl\u00E9 Niv. 3",
+      "Description": "D\u00E9truit une Limitosph\u00E8re Niv. 3.",
+      "Kind": "ItemCommand"
+    },
+    "2054": {
+      "Name": "Sph\u00E8re Cl\u00E9 Niv. 4",
+      "Description": "D\u00E9truit une Limitosph\u00E8re Niv. 4.",
+      "Kind": "ItemCommand"
+    },
+    "2055": {
+      "Name": "Sph\u00E8re HP",
+      "Description": "Cr\u00E9e une case HP \u002B300 sur une case vide.",
+      "Kind": "ItemCommand"
+    },
+    "2056": {
+      "Name": "Sph\u00E8re MP",
+      "Description": "Cr\u00E9e une case MP \u002B40 sur une case vide.",
+      "Kind": "ItemCommand"
+    },
+    "2057": {
+      "Name": "Sph\u00E8re Force",
+      "Description": "Cr\u00E9e une case Force \u002B4 sur une case vide.",
+      "Kind": "ItemCommand"
+    },
+    "2058": {
+      "Name": "Sph\u00E8re Constitution",
+      "Description": "Cr\u00E9e une case Constitution \u002B4 sur une case vide.",
+      "Kind": "ItemCommand"
+    },
+    "2059": {
+      "Name": "Sph\u00E8re Magie",
+      "Description": "Cr\u00E9e une case Magie \u002B4 sur une case vide.",
+      "Kind": "ItemCommand"
+    },
+    "205A": {
+      "Name": "Sph\u00E8re Esprit",
+      "Description": "Cr\u00E9e une case Esprit \u002B4 sur une case vide.",
+      "Kind": "ItemCommand"
+    },
+    "205B": {
+      "Name": "Sph\u00E8re Rapidit\u00E9",
+      "Description": "Cr\u00E9e une case Rapidit\u00E9 \u002B4 sur une case vide.",
+      "Kind": "ItemCommand"
+    },
+    "205C": {
+      "Name": "Sph\u00E8re Esquive",
+      "Description": "Cr\u00E9e une case Esquive \u002B4 sur une case vide.",
+      "Kind": "ItemCommand"
+    },
+    "205D": {
+      "Name": "Sph\u00E8re Pr\u00E9cision",
+      "Description": "Cr\u00E9e une case Pr\u00E9cision \u002B4 sur une case vide.",
+      "Kind": "ItemCommand"
+    },
+    "205E": {
+      "Name": "Sph\u00E8re Chance",
+      "Description": "Cr\u00E9e une case Chance \u002B4 sur une case vide.",
+      "Kind": "ItemCommand"
+    },
+    "205F": {
+      "Name": "Sph\u00E8re Annulation",
+      "Description": "D\u00E9truit une Sph\u00E8re d\u2019Evolution.",
+      "Kind": "ItemCommand"
+    },
+    "2060": {
+      "Name": "Sph\u00E8re Retour",
+      "Description": "Transporte vers une case activ\u00E9e personnellement.",
+      "Kind": "ItemCommand"
+    },
+    "2061": {
+      "Name": "Sph\u00E8re R\u00E9union",
+      "Description": "Transporte vers une case occup\u00E9e par un alli\u00E9.",
+      "Kind": "ItemCommand"
+    },
+    "2062": {
+      "Name": "Sph\u00E8re Succession",
+      "Description": "Transporte vers une case activ\u00E9e par un alli\u00E9.",
+      "Kind": "ItemCommand"
+    },
+    "2063": {
+      "Name": "Sph\u00E8re T\u00E9l\u00E9port",
+      "Description": "Transporte vers n\u2019importe quelle case.",
+      "Kind": "ItemCommand"
+    },
+    "2064": {
+      "Name": "Carte",
+      "Description": "Carte de Spira.",
+      "Kind": "ItemCommand"
+    },
+    "2065": {
+      "Name": "Carte bapt\u00EAme",
+      "Description": "Permet de changer le nom d\u2019une Chim\u00E8re.",
+      "Kind": "ItemCommand"
+    },
+    "2066": {
+      "Name": "Remontant",
+      "Description": "Sert s\u00FBrement \u00E0 quelque chose...",
+      "Kind": "ItemCommand"
+    },
+    "2067": {
+      "Name": "Potion Hypello",
+      "Description": "Sert s\u00FBrement \u00E0 quelque chose...",
+      "Kind": "ItemCommand"
+    },
+    "2068": {
+      "Name": "Epingle vaudou",
+      "Description": "Sert s\u00FBrement \u00E0 quelque chose...",
+      "Kind": "ItemCommand"
+    },
+    "2069": {
+      "Name": "Pendule",
+      "Description": "Sert s\u00FBrement \u00E0 quelque chose...",
+      "Kind": "ItemCommand"
+    },
+    "206A": {
+      "Name": "Porte-bonheur",
+      "Description": "Sert s\u00FBrement \u00E0 quelque chose...",
+      "Kind": "ItemCommand"
+    },
+    "206B": {
+      "Name": "Graine de sagesse",
+      "Description": "Sert s\u00FBrement \u00E0 quelque chose...",
+      "Kind": "ItemCommand"
+    },
+    "206C": {
+      "Name": "Portes de l\u2019inconnu",
+      "Description": "Sert s\u00FBrement \u00E0 quelque chose...",
+      "Kind": "ItemCommand"
+    },
+    "206D": {
+      "Name": "Lueur d\u2019espoir",
+      "Description": "Sert s\u00FBrement \u00E0 quelque chose...",
+      "Kind": "ItemCommand"
+    },
+    "206E": {
+      "Name": "Oeil du tigre",
+      "Description": "Sert s\u00FBrement \u00E0 quelque chose...",
+      "Kind": "ItemCommand"
+    },
+    "206F": {
+      "Name": "Cl\u00E9 de la victoire",
+      "Description": "Sert s\u00FBrement \u00E0 quelque chose...",
+      "Kind": "ItemCommand"
+    }
+  }
+}

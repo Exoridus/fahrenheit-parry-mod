@@ -1,0 +1,1841 @@
+{
+  "SchemaVersion": 1,
+  "Domain": "monsters",
+  "Locale": "sp",
+  "GeneratedAtUtc": "2026-03-04T07:27:52.3141179Z",
+  "SourceFiles": [
+    "READ_MONSTER_LOCALIZATIONS__sp.txt"
+  ],
+  "Entries": {
+    "0": {
+      "Name": "Monstruo 0",
+      "Sensor": "Mensaje de la ventana de informaci\u00F3n",
+      "Scan": "Mensaje de la ventana de Libra"
+    },
+    "1": {
+      "Name": "Petro",
+      "Sensor": "Acorazado; at\u00E1calo con armas penetrantes.",
+      "Scan": "Est\u00E1 acorazado. Es lento, pero tiene{\\n}mucha Defensa f\u00EDsica y m\u00E1gica. Es{\\n}vulnerable al Fr\u00EDo y las armas{\\n}penetrantes pueden acabar con \u00E9l{\\n}de un golpe. Rival f\u00E1cil para Auron."
+    },
+    "2": {
+      "Name": "Lasca",
+      "Sensor": "Acorazado; at\u00E1calo con armas penetrantes.",
+      "Scan": "Est\u00E1 acorazado. Es lento, pero tiene{\\n}mucha Defensa f\u00EDsica y m\u00E1gica.{\\n}Es vulnerable al Fr\u00EDo y al Agua.{\\n}Utilizando un arma penetrante es{\\n}posible acabar con \u00E9l de un golpe."
+    },
+    "3": {
+      "Name": "Mulf\u00FA",
+      "Sensor": "Acorazado; at\u00E1calo con armas penetrantes. Cuidado con Freno.",
+      "Scan": "Est\u00E1 acorazado. Es lento, pero{\\n}tiene mucha Defensa f\u00EDsica y{\\n}m\u00E1gica. Es vulnerable a Rayo{\\n}y Fuego. Con sus topetadas a{\\n}veces causa el estado Freno."
+    },
+    "4": {
+      "Name": "Maf\u00FA",
+      "Sensor": "Acorazado; at\u00E1calo con armas penetrantes. Cuidado con Freno.",
+      "Scan": "Est\u00E1 acorazado. Es lento, pero{\\n}tiene mucha Defensa f\u00EDsica y{\\n}m\u00E1gica. Es vulnerable a Rayo{\\n}y Fr\u00EDo. Con sus topetadas a{\\n}veces causa el estado Freno."
+    },
+    "5": {
+      "Name": "Shred",
+      "Sensor": "Acorazado; at\u00E1calo con armas penetrantes. Cuidado con Freno.",
+      "Scan": "Est\u00E1 acorazado. Aunque es lento,{\\n}tiene gran Defensa f\u00EDsica y m\u00E1gica.{\\n}Es vulnerable al Fuego, pero los{\\n}otros tres elementos le causan la{\\n}mitad de da\u00F1o. Con sus topetadas{\\n}a veces causa el estado Freno."
+    },
+    "6": {
+      "Name": "Gandarva",
+      "Sensor": "Vuela. Resiste la magia.",
+      "Scan": "Usa Electro. Vuela y tiene gran{\\n}capacidad de evasi\u00F3n. Es vulnerable{\\n}al Agua, pero tiene mucha Defensa{\\n}m\u00E1gica. Acaba con \u00E9l con el bal\u00F3n{\\n}de Wakka."
+    },
+    "7": {
+      "Name": "Airos",
+      "Sensor": "Vuela. Resiste la magia.",
+      "Scan": "Vuela y tiene gran capacidad{\\n}de evasi\u00F3n. Es vulnerable al{\\n}Agua, pero tiene mucha Defensa{\\n}m\u00E1gica. S\u00F3lo ataca con Electro\u002B,{\\n}por lo que si lo enmudeces{\\n}es inofensivo."
+    },
+    "8": {
+      "Name": "Galkimasera",
+      "Sensor": "Vuela. Resiste la magia.",
+      "Scan": "Vuela y tiene gran capacidad{\\n}de evasi\u00F3n. Es vulnerable al{\\n}Agua, pero tiene mucha Defensa{\\n}m\u00E1gica. S\u00F3lo ataca con Electro\u002B\u002B,{\\n}por lo que si lo enmudeces{\\n}es inofensivo."
+    },
+    "9": {
+      "Name": "Dingo",
+      "Sensor": "Muy \u00E1gil. Resiste la magia.",
+      "Scan": "Es veloz y esquivo. Tambi\u00E9n tiene{\\n}mucha Defensa m\u00E1gica. Hay que{\\n}derribarlo pronto para no recibir{\\n}da\u00F1o. Que {PC:00:TIDUS} acabe con{\\n}\u00E9l con un ataque r\u00E1pido."
+    },
+    "10": {
+      "Name": "Fang de Miihen",
+      "Sensor": "Muy \u00E1gil. Resiste la magia.",
+      "Scan": "Es veloz y esquivo. Tambi\u00E9n tiene{\\n}mucha Defensa m\u00E1gica. Hay que{\\n}derribarlo pronto para no recibir{\\n}da\u00F1o. Es vulnerable a Fuego y Agua;{\\n}at\u00E1calo con armas elementales para{\\n}lograr un Exterminio."
+    },
+    "11": {
+      "Name": "Garm\u00FA",
+      "Sensor": "Muy \u00E1gil. Resiste la magia.",
+      "Scan": "Es veloz y esquivo. Tambi\u00E9n tiene{\\n}mucha Defensa m\u00E1gica. Hay que{\\n}derribarlo pronto para no recibir{\\n}da\u00F1o. Vulnerable a Rayo y Fuego."
+    },
+    "12": {
+      "Name": "Lobo de nieves",
+      "Sensor": "Muy \u00E1gil. Resiste la magia.",
+      "Scan": "Es veloz y esquivo. Tambi\u00E9n tiene{\\n}mucha Defensa m\u00E1gica. Hay que{\\n}derribarlo pronto para no recibir{\\n}da\u00F1o. Vulnerable al Fuego."
+    },
+    "13": {
+      "Name": "Lobo del desierto",
+      "Sensor": "Muy \u00E1gil. Resiste la magia. Cuidado con Sue\u00F1o y Mudez.",
+      "Scan": "Es veloz y esquivo. Tambi\u00E9n tiene{\\n}gran Defensa m\u00E1gica. Es vulnerable{\\n}a Fuego y Fr\u00EDo. Conviene derribarlo{\\n}lo antes posible, pues sus ataques{\\n}pueden causar Sue\u00F1o y Mudez."
+    },
+    "14": {
+      "Name": "Dole",
+      "Sensor": "Muy \u00E1gil. Resiste la magia. Cuidado con Sue\u00F1o y Mudez.",
+      "Scan": "Es veloz y esquivo. Tambi\u00E9n tiene{\\n}mucha Defensa m\u00E1gica. Hay que{\\n}derribarlo pronto para no recibir{\\n}da\u00F1o. Vulnerable a Fuego y Rayo. Al{\\n}atacar puede causar Sue\u00F1o y Mudez."
+    },
+    "15": {
+      "Name": "Mal Bernardo",
+      "Sensor": "Muy \u00E1gil. Resiste la magia. Cuidado con Sue\u00F1o y Mudez.",
+      "Scan": "Es veloz y esquivo. Tambi\u00E9n tiene{\\n}mucha Defensa m\u00E1gica. Hay que{\\n}derribarlo pronto para no recibir{\\n}da\u00F1o. Es vulnerable al Fuego. Al{\\n}atacar puede causar Sue\u00F1o y Mudez."
+    },
+    "16": {
+      "Name": "Flan de agua",
+      "Sensor": "Af\u00EDn al Agua, vulnerable a hechizos del elemento contrario. Resiste los ataques f\u00EDsicos.",
+      "Scan": "Es muy blando y los ataques{\\n}f\u00EDsicos le causan poco da\u00F1o.{\\n}Af\u00EDn al Agua y vulnerable al{\\n}elemento contrario, Rayo. Puedes{\\n}usar el hechizo Electro de Lulu{\\n}para liquidarlo. Absorbe Agua{\\n}y recupera VIT; no uses el{\\n}hechizo Aqua."
+    },
+    "17": {
+      "Name": "Flan el\u00E9ctrico",
+      "Sensor": "Af\u00EDn al Rayo, vulnerable a hechizos del elemento contrario. Resiste los ataques f\u00EDsicos.",
+      "Scan": "Es muy blando y los ataques{\\n}f\u00EDsicos le causan poco da\u00F1o.{\\n}Es af\u00EDn al Rayo; absorbe los{\\n}ataques de Rayo y recupera VIT,{\\n}pero es vulnerable al elemento{\\n}contrario, el Agua."
+    },
+    "18": {
+      "Name": "Flan de nieve",
+      "Sensor": "Af\u00EDn al Fr\u00EDo, vulnerable a hechizos del elemento contrario. Resiste los ataques f\u00EDsicos.",
+      "Scan": "Es muy blando y los ataques{\\n}f\u00EDsicos le causan poco da\u00F1o.{\\n}Es af\u00EDn al Fr\u00EDo; absorbe los{\\n}ataques de Fr\u00EDo y recupera VIT,{\\n}pero es vulnerable al elemento{\\n}contrario, el Fuego. Te ataca{\\n}con el hechizo Hielo."
+    },
+    "19": {
+      "Name": "Flan de hielo",
+      "Sensor": "Af\u00EDn al Fr\u00EDo, vulnerable a hechizos del elemento contrario. Resiste los ataques f\u00EDsicos.",
+      "Scan": "Es muy blando y los ataques{\\n}f\u00EDsicos le causan poco da\u00F1o.{\\n}Es af\u00EDn al Fr\u00EDo; absorbe los{\\n}ataques de Fr\u00EDo y recupera VIT,{\\n}pero es vulnerable al elemento{\\n}contrario, el Fuego."
+    },
+    "20": {
+      "Name": "Flan de llamas",
+      "Sensor": "Af\u00EDn al Fuego, vulnerable a hechizos del elemento contrario. Resiste los ataques f\u00EDsicos.",
+      "Scan": "Usa el hechizo Piro\u002B\u002B. Es muy{\\n}blando y los ataques f\u00EDsicos le{\\n}causan poco da\u00F1o. Es af\u00EDn al Fuego;{\\n}absorbe los ataques de Fuego y{\\n}recupera VIT, pero es vulnerable{\\n}al elemento contrario, el Fr\u00EDo."
+    },
+    "21": {
+      "Name": "Flan oscuro",
+      "Sensor": "No es vulnerable a ning\u00FAn elemento. Resiste los ataques f\u00EDsicos.",
+      "Scan": "Es resistente a los ataques f\u00EDsicos,{\\n}y los ataques elementales le causan{\\n}la mitad del da\u00F1o normal. Te ataca{\\n}con magia no elemental: Gravedad,{\\n}Bio, Fulgor, Aspir y Drenaje. {CLR:YELLOW}Puedes{\\n}robarle la t\u00E9cnica Viento blanco."
+    },
+    "22": {
+      "Name": "Dinonix",
+      "Sensor": "Muy \u00E1gil. Resiste la magia.",
+      "Scan": "Es veloz y esquivo. Tambi\u00E9n tiene{\\n}mucha Defensa m\u00E1gica. Hay que{\\n}derribarlo pronto para no recibir{\\n}da\u00F1o. Es vulnerable al Fr\u00EDo;{\\n}aprovecha esa debilidad para{\\n}causarle gran da\u00F1o."
+    },
+    "23": {
+      "Name": "Hiperia",
+      "Sensor": "Muy \u00E1gil. Resiste la magia.",
+      "Scan": "Es veloz y esquiva. Tambi\u00E9n tiene{\\n}mucha Defensa m\u00E1gica. Hay que{\\n}derribarla pronto para no recibir{\\n}da\u00F1o. Los ataques de Fuego le{\\n}causan la mitad de da\u00F1o, pero{\\n}es vulnerable al Fr\u00EDo."
+    },
+    "24": {
+      "Name": "Raptor",
+      "Sensor": "Muy \u00E1gil. Resiste la magia.",
+      "Scan": "Es veloz y esquivo. Tambi\u00E9n tiene{\\n}mucha Defensa m\u00E1gica. Hay que{\\n}derribarlo pronto para no recibir{\\n}da\u00F1o. Los ataques de Fuego y Rayo{\\n}le causan la mitad de da\u00F1o, pero{\\n}es vulnerable al Fr\u00EDo."
+    },
+    "25": {
+      "Name": "Gecko",
+      "Sensor": "Muy \u00E1gil. Resiste la magia. Cuidado con Piedra y Mudez.",
+      "Scan": "Es veloz y esquivo. Tambi\u00E9n tiene{\\n}mucha Defensa m\u00E1gica. Hay que{\\n}derribarlo pronto para no recibir{\\n}da\u00F1o. Los ataques de Fuego y{\\n}Rayo le causan la mitad de da\u00F1o.{\\n}Al atacar a veces causa los estados{\\n}Piedra y Mudez."
+    },
+    "26": {
+      "Name": "Iguion",
+      "Sensor": "Muy \u00E1gil. Resiste la magia. Cuidado con Piedra y Mudez.",
+      "Scan": "Es veloz y esquivo. Tambi\u00E9n tiene{\\n}mucha Defensa m\u00E1gica. Los ataques{\\n}de Fuego y Agua le causan la mitad{\\n}de da\u00F1o. Al atacar a veces causa{\\n}los estados Piedra y Mudez."
+    },
+    "27": {
+      "Name": "Yovi",
+      "Sensor": "Muy \u00E1gil. Resiste la magia. Cuidado con Piedra y Mudez.",
+      "Scan": "Es veloz y esquivo. Tambi\u00E9n tiene{\\n}mucha Defensa m\u00E1gica. Los ataques{\\n}de Fuego, Rayo y Agua le causan la{\\n}mitad de da\u00F1o. Al atacar a veces{\\n}causa los estados Piedra y Mudez."
+    },
+    "28": {
+      "Name": "C\u00F3ndor",
+      "Sensor": "Vuela. Lo afecta la magia.",
+      "Scan": "Vuela y tiene gran capacidad{\\n}de evasi\u00F3n, pero Wakka puede{\\n}derribarlo. Como es vulnerable{\\n}al Fuego, el hechizo Piro de{\\n}Lulu tambi\u00E9n es efectivo."
+    },
+    "29": {
+      "Name": "Quebrantahuesos",
+      "Sensor": "Vuela. Lo afecta la magia. Cuidado con Ceguera.",
+      "Scan": "Vuela y tiene gran capacidad de{\\n}evasi\u00F3n, pero lo afecta la magia.{\\n}Como es vulnerable a Fuego,{\\n}puedes atacarlo con Piro\u002B{\\n}para lograr un Exterminio.{\\n}Al atacar a veces causa Ceguera."
+    },
+    "30": {
+      "Name": "Halc\u00F3n",
+      "Sensor": "Vuela. Lo afecta la magia. Cuidado con Ceguera.",
+      "Scan": "Vuela y tiene gran capacidad de{\\n}evasi\u00F3n, pero lo afecta la magia.{\\n}Como es vulnerable a Fuego,{\\n}puedes atacarlo con Piro\u002B{\\n}para lograr un Exterminio.{\\n}Al atacar a veces causa Ceguera."
+    },
+    "31": {
+      "Name": "Abeja asesina",
+      "Sensor": "Vuela. Vulnerable al Fr\u00EDo. Cuidado con Veneno.",
+      "Scan": "Vuela y tiene gran capacidad{\\n}de evasi\u00F3n, pero Wakka puede{\\n}derribarla r\u00E1pidamente. Como es{\\n}vulnerable al Fr\u00EDo, el hechizo{\\n}Hielo de Lulu tambi\u00E9n es{\\n}efectivo. Sus ataques a veces{\\n}causan el estado Veneno."
+    },
+    "32": {
+      "Name": "Mosquito",
+      "Sensor": "Vuela. Vulnerable al Fr\u00EDo. Cuidado con Veneno.",
+      "Scan": "Vuela y tiene gran capacidad{\\n}de evasi\u00F3n, pero lo afecta la{\\n}magia. Como es vulnerable al{\\n}Fr\u00EDo, at\u00E1calo con Hielo para{\\n}lograr un Exterminio. Sus ataques{\\n}a veces causan el estado Veneno."
+    },
+    "33": {
+      "Name": "Avispa",
+      "Sensor": "Vuela. Vulnerable al Fr\u00EDo. Cuidado con Veneno.",
+      "Scan": "Vuela y tiene gran capacidad{\\n}de evasi\u00F3n, pero la afecta la{\\n}magia. Como es vulnerable al{\\n}Fr\u00EDo, at\u00E1cala con Hielo\u002B para{\\n}lograr un Exterminio. Sus ataques{\\n}a veces causan el estado Veneno."
+    },
+    "34": {
+      "Name": "V\u00E9spida",
+      "Sensor": "Vuela. Vulnerable al Fr\u00EDo. Cuidado con Veneno.",
+      "Scan": "Vuela y tiene gran capacidad{\\n}de evasi\u00F3n, pero la afecta la{\\n}magia. Como es vulnerable al{\\n}Fr\u00EDo, at\u00E1cala con Hielo\u002B\u002B para{\\n}lograr un Exterminio. Sus ataques{\\n}a veces causan el estado Veneno."
+    },
+    "35": {
+      "Name": "Ojo flotante",
+      "Sensor": "Vuela. Resiste la magia.",
+      "Scan": "Vuela y tiene gran capacidad de{\\n}evasi\u00F3n. Es vulnerable al Rayo,{\\n}pero tiene mucha Defensa m\u00E1gica.{\\n}Que lo derribe Wakka."
+    },
+    "36": {
+      "Name": "Buel",
+      "Sensor": "Vuela. Resiste la magia.",
+      "Scan": "Vuela y tiene gran capacidad de{\\n}evasi\u00F3n. Es vulnerable al Agua,{\\n}pero tiene mucha Defensa m\u00E1gica.{\\n}A veces causa Confusi\u00F3n con su{\\n}Mirada fija."
+    },
+    "37": {
+      "Name": "Ojo diab\u00F3lico",
+      "Sensor": "Vuela. Resiste la magia. Cuidado con Confusi\u00F3n.",
+      "Scan": "Vuela y tiene gran capacidad de{\\n}evasi\u00F3n. Es vulnerable al Fuego,{\\n}pero tiene mucha Defensa m\u00E1gica.{\\n}A veces causa Confusi\u00F3n con su{\\n}Mirada fija."
+    },
+    "38": {
+      "Name": "Arim\u00E1n",
+      "Sensor": "Vuela. Resiste la magia. Cuidado con Confusi\u00F3n.",
+      "Scan": "Vuela y tiene gran capacidad{\\n}de evasi\u00F3n. No tiene debilidad{\\n}elemental y posee gran Defensa{\\n}m\u00E1gica. A veces causa Confusi\u00F3n{\\n}con su Mirada fija. Adem\u00E1s lanza{\\n}el ataque total Onda ultras\u00F3nica."
+    },
+    "39": {
+      "Name": "Barsam",
+      "Sensor": "Vulnerable al Fuego.",
+      "Scan": "Cuidado con el Ca\u00F1\u00F3n de semillas:{\\n}te puede dejar K.O. de un golpe.{\\n}Los monstruos vegetales suelen{\\n}ser vulnerables al Fuego; at\u00E1calos{\\n}con el hechizo Piro\u002B de Lulu. {CLR:YELLOW}Puedes{\\n}robarle la t\u00E9cnica Ca\u00F1\u00F3n de semillas."
+    },
+    "40": {
+      "Name": "Grat",
+      "Sensor": "Vulnerable al Fuego.",
+      "Scan": "El Ca\u00F1\u00F3n de semillas es muy{\\n}da\u00F1ino. La Metralla de semillas{\\n}no tanto, pero a veces causa{\\n}Confusi\u00F3n. Es vulnerable al{\\n}Fuego. {CLR:YELLOW}Puedes robarle la{\\n}t\u00E9cnica Ca\u00F1\u00F3n de semillas."
+    },
+    "41": {
+      "Name": "Gurami",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "42": {
+      "Name": "Gurami",
+      "Sensor": "Vulnerable al Rayo. En tierra se mueve torpemente.",
+      "Scan": "Es veloz pero no muy fuerte.{\\n}Como no tiene mucha VIT, en{\\n}solitario no es un enemigo temible.{\\n}Es vulnerable al Rayo y le puedes{\\n}causar Ceguera y Sue\u00F1o."
+    },
+    "43": {
+      "Name": "Gurami",
+      "Sensor": "Vulnerable al Rayo. En tierra se mueve torpemente.",
+      "Scan": "Al estar en tierra le cuesta{\\n}moverse, pero su Ca\u00F1\u00F3n de agua{\\n}es potente. Es vulnerable al{\\n}Rayo y le puedes causar Ceguera{\\n}y Sue\u00F1o."
+    },
+    "44": {
+      "Name": "Garuda",
+      "Sensor": "La afecta la Ceguera.",
+      "Scan": "Tiene mucha Fuerza y VIT. Cuidado{\\n}con el ataque total Onda expansiva.{\\n}Si le causas Ceguera es f\u00E1cil esquivar{\\n}sus ataques."
+    },
+    "45": {
+      "Name": "Zu",
+      "Sensor": "Cuando le brillen las alas, cuidado con Onda expansiva.",
+      "Scan": "Es enorme y tiene mucha VIT.{\\n}Vuela pero es f\u00E1cil atinarle;{\\n}at\u00E1calo con t\u00E9cnicas fuertes.{\\n}Cuando le brillan las alas, en{\\n}el turno siguiente ataca con{\\n}Onda expansiva. Antes, ponte{\\n}en guardia o recupera VIT."
+    },
+    "46": {
+      "Name": "Gusano de arena",
+      "Sensor": "Cuidado con el ataque total Terremoto. Si le causas Ceguera, es f\u00E1cil esquivar sus cabezazos.",
+      "Scan": "Cuidado con el ataque total{\\n}Terremoto, que lanza en el turno{\\n}siguiente a Pre-terremoto. Los{\\n}guerreros que han sido tragados{\\n}no participan en la batalla hasta{\\n}que son escupidos. A veces{\\n}lo afectan Ceguera y Sue\u00F1o."
+    },
+    "47": {
+      "Name": "Gran gusano",
+      "Sensor": "Cuidado con el ataque total Terremoto. Derrotarlo lleva tiempo; observa tu VIT restante.",
+      "Scan": "Cuidado con el ataque total{\\n}Terremoto, que lanza en el turno{\\n}siguiente a Pre-terremoto. Lo{\\n}afectan Ceguera y Sue\u00F1o. Tiene{\\n}mucha Defensa f\u00EDsica y m\u00E1gica;{\\n}prep\u00E1rate para una lucha larga y{\\n}usa Rompecoraza y Rompeesp\u00EDritu."
+    },
+    "48": {
+      "Name": "Golem guardia",
+      "Sensor": "Tiene poca Defensa m\u00E1gica.",
+      "Scan": "Tiene mucha Fuerza y Defensa{\\n}f\u00EDsica. Hay un 50% de probabilidades{\\n}de que lance el destructivo Ataque{\\n}doble; prot\u00E9gete bien. Como tiene{\\n}poca Defensa m\u00E1gica, los hechizos{\\n}son efectivos."
+    },
+    "49": {
+      "Name": "Golem guardia X",
+      "Sensor": "Lo afecta Rompeesp\u00EDritu.",
+      "Scan": "Gran Fuerza, Defensa f\u00EDsica y{\\n}m\u00E1gica. Hay un 50% de posibilidades{\\n}de que lance el destructivo Ataque{\\n}doble. Al perder VIT ataca con su{\\n}Pu\u00F1o explosivo, que causa da\u00F1o y{\\n}tiene efecto rezagador.{\\n}Rompeesp\u00EDritu lo afecta."
+    },
+    "50": {
+      "Name": "Fantasma",
+      "Sensor": "Empieza la batalla con una Condena.",
+      "Scan": "Empieza la batalla con una Condena.{\\n}Si no le derribas antes de que la{\\n}cuenta atr\u00E1s llegue a 0, te deja K.O.{\\n}Su punto d\u00E9bil elemental cambia en{\\n}cada encuentro; no efect\u00FAes{\\n}ataques in\u00FAtiles. {CLR:YELLOW}Puedes robarle{\\n}la t\u00E9cnica Condena."
+    },
+    "51": {
+      "Name": "Fredia",
+      "Sensor": "Alerta cuando empiece a brillar. Tras el tercer resplandor emite una Onda s\u00F3nica.",
+      "Scan": "Al recibir da\u00F1o empieza a brillar.{\\n}Tras el tercer resplandor, emite{\\n}una Onda s\u00F3nica que da\u00F1a a todo el{\\n}grupo. Debes evitarlo caus\u00E1ndole{\\n}Sue\u00F1o. Los ataques de Agua le{\\n}causan la mitad de da\u00F1o, pero{\\n}es vulnerable al Rayo."
+    },
+    "52": {
+      "Name": "Aqueoros",
+      "Sensor": "Alerta cuando empiece a brillar. Tras el tercer resplandor emite una Onda s\u00F3nica.",
+      "Scan": "Al recibir da\u00F1o empieza a brillar.{\\n}Tras el tercer resplandor, emite{\\n}una Onda s\u00F3nica que da\u00F1a a todo el{\\n}grupo. Debes evitarlo caus\u00E1ndole{\\n}Sue\u00F1o. Los ataques de Agua no{\\n}le causan da\u00F1o alguno, pero es{\\n}vulnerable al Rayo."
+    },
+    "53": {
+      "Name": "R\u00E9mora",
+      "Sensor": "Cuidado con su ataque total El Ni\u00F1o.",
+      "Scan": "Cuanto m\u00E1s la atacas, antes lanza{\\n}el ataque total El Ni\u00F1o. Para evitarlo{\\n}derr\u00EDbala con el m\u00EDnimo n\u00FAmero{\\n}posible de ataques. Los ataques de{\\n}Agua le causan la mitad de da\u00F1o,{\\n}pero es vulnerable al Rayo.{\\n}La afectan Ceguera y Veneno."
+    },
+    "54": {
+      "Name": "Trit\u00F3n",
+      "Sensor": "Cuidado con su ataque total El Ni\u00F1o.",
+      "Scan": "Cuanto m\u00E1s lo atacas, antes lanza{\\n}el ataque total El Ni\u00F1o. Para evitarlo{\\n}derr\u00EDbalo con el m\u00EDnimo n\u00FAmero{\\n}posible de ataques. Los ataques de{\\n}Agua no le causan da\u00F1o alguno,{\\n}pero es vulnerable al Rayo.{\\n}Lo afectan Ceguera y Veneno."
+    },
+    "55": {
+      "Name": "Bicornio",
+      "Sensor": "Si le causas Ceguera es f\u00E1cil esquivar sus ataques.",
+      "Scan": "Su Cornada es muy destructiva,{\\n}pero si le causas Ceguera es{\\n}f\u00E1cil esquivarla. Tambi\u00E9n puedes{\\n}dormirlo con el Ataque Morfeo.{\\n}{CLR:YELLOW}Puedes robarle la t\u00E9cnica{\\n}Bola de fuego."
+    },
+    "56": {
+      "Name": "Vraha",
+      "Sensor": "Si le causas Ceguera es f\u00E1cil esquivar sus ataques.",
+      "Scan": "Si le causas Ceguera es f\u00E1cil{\\n}esquivar sus ataques. Antes de{\\n}lanzar el poderoso ataque total{\\n}Bola de fuego efect\u00FAa una Carga;{\\n}f\u00EDjate bien. {CLR:YELLOW}Puedes robarle la{\\n}t\u00E9cnica Bola de fuego."
+    },
+    "57": {
+      "Name": "Grendel",
+      "Sensor": "Si le causas Ceguera es f\u00E1cil esquivar sus ataques. At\u00E1calo con armas penetrantes.",
+      "Scan": "Si le causas Ceguera es f\u00E1cil{\\n}esquivar sus ataques. Antes de{\\n}lanzar el poderoso ataque total{\\n}Bola de fuego efect\u00FAa una Carga;{\\n}f\u00EDjate bien. Podr\u00E1s acabar con \u00E9l{\\n}f\u00E1cilmente si le causas Veneno.{\\n}{CLR:YELLOW}Puedes robarle la t\u00E9cnica{\\n}Bola de fuego."
+    },
+    "58": {
+      "Name": "Pulpo",
+      "Sensor": "Tiene la cabeza acorazada.",
+      "Scan": "Est\u00E1 acorazado y es dif\u00EDcil{\\n}da\u00F1arlo con armas no penetrantes.{\\n}Tiene poca Defensa m\u00E1gica y es{\\n}vulnerable al Rayo. Sus ataques a{\\n}veces causan Freno; ten cuidado."
+    },
+    "59": {
+      "Name": "Vihur",
+      "Sensor": "Est\u00E1 cubierto de escamas duras. At\u00E1calo con armas penetrantes.",
+      "Scan": "Est\u00E1 cubierto de escamas duras.{\\n}Es lento, pero con gran Defensa{\\n}f\u00EDsica y m\u00E1gica. Es vulnerable al{\\n}Fr\u00EDo y puedes derribarlo de un{\\n}golpe con armas penetrantes.{\\n}Emite un h\u00E1lito que da\u00F1a a todo{\\n}el grupo."
+    },
+    "60": {
+      "Name": "Ramashu",
+      "Sensor": "Est\u00E1 cubierto de escamas duras. At\u00E1calo con armas penetrantes.",
+      "Scan": "Est\u00E1 cubierto de escamas duras.{\\n}Es lento, pero con gran Defensa{\\n}f\u00EDsica y m\u00E1gica. Es vulnerable{\\n}al Fuego. Con su ataque normal{\\n}a veces causa Freno. Tambi\u00E9n{\\n}lanza un h\u00E1lito de elemento Fr\u00EDo{\\n}que da\u00F1a a todo el grupo."
+    },
+    "61": {
+      "Name": "Kusarik",
+      "Sensor": "Est\u00E1 cubierto de escamas duras. At\u00E1calo con armas penetrantes. Cuidado con Freno.",
+      "Scan": "Est\u00E1 cubierto de escamas duras.{\\n}Es lento, pero con gran Defensa{\\n}f\u00EDsica y m\u00E1gica. Es vulnerable{\\n}al Agua. Con su ataque normal a{\\n}veces causa Freno. Tambi\u00E9n lanza{\\n}un h\u00E1lito de elemento Rayo que{\\n}da\u00F1a a todo el grupo."
+    },
+    "62": {
+      "Name": "Mushufushu",
+      "Sensor": "Est\u00E1 cubierto de escamas duras. At\u00E1calo con armas penetrantes. Cuidado con Freno.",
+      "Scan": "Est\u00E1 cubierto de escamas duras.{\\n}Es lento, pero tiene gran Defensa{\\n}f\u00EDsica y m\u00E1gica. El Fuego le causa{\\n}la mitad del da\u00F1o normal, pero es{\\n}vulnerable al Fr\u00EDo. Con su ataque{\\n}normal a veces causa Freno.{\\n}Lanza un h\u00E1lito de elemento Fuego{\\n}que da\u00F1a a todo el grupo."
+    },
+    "63": {
+      "Name": "Sigurd",
+      "Sensor": "Est\u00E1 cubierto de escamas duras. At\u00E1calo con armas penetrantes. Cuidado con Freno.",
+      "Scan": "Est\u00E1 cubierto de escamas duras.{\\n}Es lento, pero tiene gran Defensa{\\n}f\u00EDsica y m\u00E1gica. El Fuego le causa{\\n}la mitad del da\u00F1o normal, pero es{\\n}vulnerable al Fr\u00EDo. Con su ataque{\\n}normal a veces causa Freno.{\\n}Lanza un h\u00E1lito de elemento Fuego{\\n}que da\u00F1a a todo el grupo."
+    },
+    "64": {
+      "Name": "Molbol",
+      "Sensor": "Su Aliento f\u00E9tido causa estados alterados. Derr\u00EDbalo antes de que lo lance.",
+      "Scan": "El ataque total Aliento f\u00E9tido{\\n}produce varios estados alterados.{\\n}Si te causa Veneno, Confusi\u00F3n y{\\n}Locura a la vez quiz\u00E1 no puedas{\\n}recuperarte y quedes K.O.{\\n}Prot\u00E9gete bien y ataca con Fuego.{\\n}{CLR:YELLOW}Puedes robarle la t\u00E9cnica{\\n}Aliento f\u00E9tido."
+    },
+    "65": {
+      "Name": "Gran molbol",
+      "Sensor": "Lanza Aliento f\u00E9tido una vez de cada tres. Prot\u00E9gete.",
+      "Scan": "Ataca con Aliento f\u00E9tido una vez{\\n}de cada tres. Si te ataca primero,{\\n}es posible que acabe con el grupo{\\n}sin que puedas hacer nada; debes{\\n}protegerte contra los estados{\\n}alterados. Al ser vegetal, es{\\n}vulnerable al Fuego. {CLR:YELLOW}Puedes robarle{\\n}la t\u00E9cnica Aliento f\u00E9tido."
+    },
+    "66": {
+      "Name": "Ogro",
+      "Sensor": "Cuando levanta los brazos en postura de lucha...",
+      "Scan": "Cuando levanta los brazos en{\\n}postura de lucha, si recibe{\\n}ataques f\u00EDsicos contraataca{\\n}con gran fuerza destructiva.{\\n}Lo afectan los ataques de Fuego."
+    },
+    "67": {
+      "Name": "Asur",
+      "Sensor": "Cuando levanta los brazos en postura de lucha...",
+      "Scan": "Cuando levanta los brazos en{\\n}postura de lucha, si recibe{\\n}ataques f\u00EDsicos contraataca{\\n}con gran fuerza. Es m\u00E1s f\u00E1cil{\\n}derribarlo usando ataques m\u00E1gicos{\\n}o bien caus\u00E1ndole el estado Veneno."
+    },
+    "68": {
+      "Name": "Pira\u00F1a",
+      "Sensor": "Tiene poca Fuerza y poca VIT.",
+      "Scan": "Ataca a mordiscos. Tiene poca{\\n}Fuerza y poca VIT, por lo que{\\n}no resulta un adversario temible."
+    },
+    "69": {
+      "Name": "Pira\u00F1as",
+      "Sensor": "Se mueven de dos en dos.",
+      "Scan": "Atacan a mordiscos. En pareja{\\n}tienen mayor Fuerza y VIT."
+    },
+    "70": {
+      "Name": "Pira\u00F1as",
+      "Sensor": "Se mueven de tres en tres.",
+      "Scan": "Atacan a mordiscos. En grupo de{\\n}tres tienen mayor Fuerza y VIT."
+    },
+    "71": {
+      "Name": "Pez luchador",
+      "Sensor": "Cuidado con Kamikaze.",
+      "Scan": "Al caer vencido a veces lanza{\\n}la t\u00E9cnica Kamikaze e inflige{\\n}da\u00F1o a quien lo derrib\u00F3."
+    },
+    "72": {
+      "Name": "Pez luchador",
+      "Sensor": "Cuidado con Veneno.",
+      "Scan": "Cuando atacan de dos en dos, a{\\n}veces causan el estado Veneno{\\n}al morder."
+    },
+    "73": {
+      "Name": "Pez luchador",
+      "Sensor": "Cuidado con Veneno.",
+      "Scan": "Cuando atacan de tres en tres,{\\n}a veces causan el estado Veneno{\\n}al morder."
+    },
+    "74": {
+      "Name": "Vepal",
+      "Sensor": "Cuidado con Kamikaze.",
+      "Scan": "Al caer vencido a veces lanza{\\n}la t\u00E9cnica Kamikaze e inflige{\\n}da\u00F1o a quien lo derrib\u00F3."
+    },
+    "75": {
+      "Name": "Vepal",
+      "Sensor": "Cuidado con Veneno.",
+      "Scan": "Cuando atacan de dos en dos, a{\\n}veces causan el estado Veneno{\\n}al morder."
+    },
+    "76": {
+      "Name": "Vepal",
+      "Sensor": "Cuidado con Veneno.",
+      "Scan": "Cuando atacan de tres en tres,{\\n}a veces causan el estado Veneno{\\n}al morder."
+    },
+    "77": {
+      "Name": "Ente amarillo",
+      "Sensor": "Af\u00EDn al Rayo, vulnerable a hechizos del elemento contrario.",
+      "Scan": "Usa Electro. Los ataques f\u00EDsicos{\\n}le causan poco da\u00F1o. Absorbe el{\\n}elemento Rayo y recupera VIT.{\\n}Como es vulnerable al elemento{\\n}contrario (el Agua), lo afecta{\\n}el hechizo Aqua."
+    },
+    "78": {
+      "Name": "Ente blanco",
+      "Sensor": "Af\u00EDn al Fr\u00EDo, vulnerable a hechizos del elemento contrario.",
+      "Scan": "Usa Hielo. Los ataques f\u00EDsicos{\\n}le causan poco da\u00F1o. Absorbe el{\\n}elemento Fr\u00EDo y recupera VIT.{\\n}Como es vulnerable al elemento{\\n}contrario (el Fuego), lo afecta{\\n}el hechizo Piro."
+    },
+    "79": {
+      "Name": "Ente rojo",
+      "Sensor": "Af\u00EDn al Fuego, vulnerable a hechizos del elemento contrario.",
+      "Scan": "Usa Piro. Los ataques f\u00EDsicos{\\n}le causan poco da\u00F1o. Absorbe el{\\n}elemento Fuego y recupera VIT.{\\n}Como es vulnerable al elemento{\\n}contrario (el Fr\u00EDo), lo afecta{\\n}el hechizo Hielo."
+    },
+    "80": {
+      "Name": "Ente dorado",
+      "Sensor": "Af\u00EDn al Rayo, vulnerable a hechizos del elemento contrario.",
+      "Scan": "Usa Electro. Los ataques f\u00EDsicos{\\n}le causan poco da\u00F1o. Absorbe el{\\n}elemento Rayo y recupera VIT.{\\n}Como es vulnerable al elemento{\\n}contrario (el Agua), con Aqua\u002B{\\n}puedes lograr un Exterminio."
+    },
+    "81": {
+      "Name": "Ente azul",
+      "Sensor": "Af\u00EDn al Agua, vulnerable a hechizos del elemento contrario.",
+      "Scan": "Usa Aqua\u002B. Los ataques f\u00EDsicos{\\n}le causan poco da\u00F1o. Absorbe el{\\n}elemento Agua y recupera VIT.{\\n}Como es vulnerable al elemento{\\n}contrario (el Rayo), lo afecta{\\n}el hechizo Electro\u002B."
+    },
+    "82": {
+      "Name": "Ente oscuro",
+      "Sensor": "No es vulnerable a ning\u00FAn elemento. Se aplica Espejo.",
+      "Scan": "Los ataques f\u00EDsicos le causan{\\n}poco da\u00F1o. No es vulnerable a{\\n}ning\u00FAn elemento. Se aplica Espejo{\\n}y ataca reflejando hechizos de{\\n}los 4 elementos. Si rompes su{\\n}Espejo con Antimagia, recurre{\\n}a hechizos como Bio, Aspir{\\n}y Drenaje."
+    },
+    "83": {
+      "Name": "Ente negro",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "En preparaci\u00F3n."
+    },
+    "84": {
+      "Name": "Everge",
+      "Sensor": "Cuidado con Veneno.",
+      "Scan": "Es veloz y con sus garras causa el{\\n}estado Veneno. De vez en cuando le{\\n}puedes causar Ceguera.{\\n}Es posible Intimidarlo."
+    },
+    "85": {
+      "Name": "B\u00E9gimo",
+      "Sensor": "Cuidado con sus Hocicazos.",
+      "Scan": "Adem\u00E1s de sus garras y del hechizo{\\n}Electro\u002B, dispone de un Hocicazo{\\n}que puede dejarte Fuera de combate{\\n}de un solo golpe. {CLR:YELLOW}Puedes robarle{\\n}la t\u00E9cnica Barrera total."
+    },
+    "86": {
+      "Name": "Rey B\u00E9gimo",
+      "Sensor": "Al derribarlo, contraataca con Meteo.",
+      "Scan": "Adem\u00E1s de sus garras y de hechizos{\\n}de Rayo, dispone de un Hocicazo que{\\n}causa tremendo da\u00F1o. Cuidado con{\\n}Meteo, que lanza justo antes de{\\n}morir. Meteo causa da\u00F1o f\u00EDsico;{\\n}prot\u00E9gete con Coraza o usa {CTRL:30:TRIANGLE}.{\\n}{CLR:YELLOW}Puedes robarle la t\u00E9cnica{\\n}Barrera total."
+    },
+    "87": {
+      "Name": "Quimera",
+      "Sensor": "La afectan Ceguera y Mudez. Es f\u00E1cil Intimidarla.",
+      "Scan": "Ataca en este orden: la serpiente,{\\n}Electro\u002B; el toro, Acometida; el{\\n}\u00E1guila, Vaho acu\u00E1tico (un ataque{\\n}total de elemento Agua); y el le\u00F3n,{\\n}Descarga s\u00EDsmica (un ataque de Fuego).{\\n}La afectan Intimidar, Mudez y Ceguera.{\\n}{CLR:YELLOW}Puedes robarle la t\u00E9cnica{\\n}Vaho acu\u00E1tico."
+    },
+    "88": {
+      "Name": "Quimera negra",
+      "Sensor": "La afectan Ceguera y Mudez. Es f\u00E1cil Intimidarla.",
+      "Scan": "Ataca en este orden: la serpiente,{\\n}magia de Rayo; el toro, Acometida;{\\n}el \u00E1guila, Vaho acu\u00E1tico (un ataque{\\n}total de elemento Agua); y el le\u00F3n,{\\n}Descarga s\u00EDsmica (un ataque de{\\n}Fuego). La afectan Intimidar, Mudez{\\n}y Ceguera. {CLR:YELLOW}Puedes robarle la t\u00E9cnica{\\n}Vaho acu\u00E1tico."
+    },
+    "89": {
+      "Name": "Bengal",
+      "Sensor": "Cuando tiene poca VIT ataca con Drenaje y Electroplasma.",
+      "Scan": "Tiene mucho Poder m\u00E1gico y Defensa{\\n}m\u00E1gica. Utiliza Electro\u002B y Hielo\u002B, y{\\n}cuando pierde VIT tambi\u00E9n Drenaje.{\\n}Puedes protegerte de su magia con{\\n}Ataque Mutis \u002B, pero no hay defensa{\\n}contra Electroplasma, que causa el{\\n}estado Piedra."
+    },
+    "90": {
+      "Name": "Gran bengal",
+      "Sensor": "Cuando tiene poca VIT ataca con Drenaje, Confu y Electroplasma.",
+      "Scan": "Tiene mucho Poder m\u00E1gico y Defensa{\\n}m\u00E1gica. Utiliza Electro\u002B\u002B y Hielo\u002B\u002B,{\\n}y cuando pierde VIT tambi\u00E9n Drenaje{\\n}y Confu. La t\u00E9cnica Electroplasma{\\n}causa Muerte s\u00FAbita, y no es posible{\\n}evitarla con Ataque Mutis \u002B."
+    },
+    "91": {
+      "Name": "Droid guardia",
+      "Sensor": "Con Robar lo puedes derribar de un golpe.",
+      "Scan": "Antigua m\u00E1quina similar al porteador{\\n}albhed con que luchaste en Luca.{\\n}Ha sido reparado varias veces.{\\n}Rikku puede acabar con \u00E9l de{\\n}un golpe extray\u00E9ndole piezas{\\n}con Robar. Es vulnerable al Rayo."
+    },
+    "92": {
+      "Name": "Droid vig\u00EDa",
+      "Sensor": "Con Robar lo puedes derribar de un golpe.",
+      "Scan": "Al estar menos da\u00F1ado que las{\\n}m\u00E1quinas del Desierto de Sanubia,{\\n}tiene m\u00E1s Fuerza y VIT. Puedes{\\n}acabar con \u00E9l de un golpe{\\n}extray\u00E9ndole piezas con Robar."
+    },
+    "93": {
+      "Name": "Droid vig\u00EDa",
+      "Sensor": "Con Robar lo puedes derribar de un golpe.",
+      "Scan": "Al estar menos da\u00F1ado que las{\\n}m\u00E1quinas del Desierto de Sanubia,{\\n}tiene m\u00E1s Fuerza y VIT. Puedes{\\n}acabar con \u00E9l de un golpe{\\n}extray\u00E9ndole piezas con Robar."
+    },
+    "94": {
+      "Name": "Droid jefe",
+      "Sensor": "Con Robar lo puedes derribar de un golpe.",
+      "Scan": "M\u00E1quina abandonada hace mil{\\n}a\u00F1os en el Monte Gagazet.{\\n}Con Electroshock causa da\u00F1o de{\\n}Rayo. Es muy veloz; conviene{\\n}derrotarlo pronto. Puedes acabar{\\n}con \u00E9l de un golpe extray\u00E9ndole{\\n}piezas con Robar."
+    },
+    "95": {
+      "Name": "Monolito diab\u00F3lico",
+      "Sensor": "Cuidado con el ataque total H\u00E1lito. Prot\u00E9gete contra Piedra.",
+      "Scan": "Contraataca con un Conjuro{\\n}fara\u00F3nico que causa Veneno,{\\n}Mudez, Ceguera y Maldici\u00F3n.{\\n}Si ataca a un aliado que est\u00E1{\\n}petrificado, este ser\u00E1 pulverizado y{\\n}no podr\u00E1 volver a la batalla.{\\n}A veces tambi\u00E9n causa el{\\n}estado Zombi."
+    },
+    "96": {
+      "Name": "Droid armado",
+      "Sensor": "Con Robar lo puedes derribar de un golpe.",
+      "Scan": "Antigua m\u00E1quina parcialmente{\\n}reparada. Tiene m\u00E1s VIT que el{\\n}droid guardia. Rikku puede acabar{\\n}con \u00E9l de un golpe extray\u00E9ndole{\\n}piezas con Robar. Tambi\u00E9n es{\\n}vulnerable al Rayo."
+    },
+    "97": {
+      "Name": "Droid cazador",
+      "Sensor": "Con Robar lo puedes derribar de un golpe.",
+      "Scan": "Al estar menos da\u00F1ado que las{\\n}m\u00E1quinas del Desierto de Sanubia,{\\n}tiene m\u00E1s VIT. Es m\u00E1s lento que el{\\n}droid vig\u00EDa, pero no lo subestimes,{\\n}pues tiene mucha Fuerza. Puedes{\\n}acabar con \u00E9l de un golpe{\\n}extray\u00E9ndole piezas con Robar."
+    },
+    "98": {
+      "Name": "Droid blindado",
+      "Sensor": "Con Robar lo puedes derribar de un golpe.",
+      "Scan": "M\u00E1quina abandonada hace mil a\u00F1os{\\n}en el Monte Gagazet. Tiene m\u00E1s VIT{\\n}y Defensa f\u00EDsica que el droid jefe.{\\n}Es posible acabar con \u00E9l de un golpe{\\n}extray\u00E9ndole piezas con Robar.{\\n}De paso puedes obtener objetos{\\n}de recuperaci\u00F3n."
+    },
+    "99": {
+      "Name": "Ente Artema",
+      "Sensor": "\u00A1Lucha con todas tus fuerzas!",
+      "Scan": "Inmune a Libra."
+    },
+    "100": {
+      "Name": "Ente Omega",
+      "Sensor": "\u00A1Lucha con todas tus fuerzas!",
+      "Scan": "Inmune a Libra."
+    },
+    "101": {
+      "Name": "Thros",
+      "Sensor": "Tras alejarse, da un Cabezazo.",
+      "Scan": "Al recibir un da\u00F1o determinado se{\\n}oculta tras los pilares y los ataques{\\n}no lo alcanzan. En el turno siguiente{\\n}efect\u00FAa un Cabezazo, un ataque{\\n}total muy destructivo. Debes usar{\\n}bien los comandos extra y acabar{\\n}con \u00E9l sin dejarlo dar Cabezazos."
+    },
+    "102": {
+      "Name": "Brote de Sinh: Guno",
+      "Sensor": "Vulnerable a la magia.",
+      "Scan": "Cuando se protege tras su concha{\\n}acorazada, los ataques f\u00EDsicos no{\\n}le hacen mucho da\u00F1o. Absorbe la{\\n}magia con los tent\u00E1culos. Despu\u00E9s{\\n}de acabar con estos, puedes hacer{\\n}que salga de la concha con hechizos{\\n}de Fuego. Absorbe los ataques de{\\n}elemento Agua y recupera VIT."
+    },
+    "103": {
+      "Name": "Tent\u00E1culo de Guno",
+      "Sensor": "Absorbe los ataques m\u00E1gicos lanzados a Guno.",
+      "Scan": "Absorbe los ataques m\u00E1gicos a Guno.{\\n}Es recomendable derrotar primero a{\\n}los tent\u00E1culos y despu\u00E9s atacar al{\\n}cuerpo con magia. Los tent\u00E1culos{\\n}tienen gran Defensa m\u00E1gica; los{\\n}afectan m\u00E1s los ataques f\u00EDsicos."
+    },
+    "104": {
+      "Name": "Comechocobos",
+      "Sensor": "Lo afecta la Ceguera.",
+      "Scan": "Cuando le causas un cierto da\u00F1o{\\n}y lo tiras al suelo, las armas no{\\n}penetrantes pasan a ser efectivas.{\\n}Tras decir \u201DLuego te toca a ti\u201D{\\n}lanza un poderoso ataque. Debes{\\n}usar protecci\u00F3n y recuperarte. Al{\\n}perder VIT lanza Hielo; prot\u00E9gete{\\n}con AntiFr\u00EDo."
+    },
+    "105": {
+      "Name": "Gastr\u00F3podo",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "106": {
+      "Name": "Rueda espectral",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "107": {
+      "Name": "Escoria",
+      "Sensor": "Aunque las derribes aparecen m\u00E1s.",
+      "Scan": "Las escorias se desprenden{\\n}continuamente de Sinh. Cuando{\\n}las alas empiezan a brillar,{\\n}en el turno siguiente lanzan{\\n}P\u00FAas. Derr\u00F3talas cuanto antes."
+    },
+    "108": {
+      "Name": "Escoria",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "109": {
+      "Name": "Josguein",
+      "Sensor": "Est\u00E1 cubierto de escamas duras. Vulnerable a la magia.",
+      "Scan": "Inmune a Libra."
+    },
+    "110": {
+      "Name": "Artillero albhed",
+      "Sensor": "Vulnerable al elemento Rayo.",
+      "Scan": "Al recibir da\u00F1o, se mueve cada{\\n}vez m\u00E1s r\u00E1pido. Es vulnerable al{\\n}Rayo y cuando le lanzan Electro{\\n}contraataca con Bola Mutis.{\\n}Aprovecha lo que tienes alrededor{\\n}y prot\u00E9gete de su destructiva{\\n}R\u00E1faga de balones."
+    },
+    "111": {
+      "Name": "Jaula albhed",
+      "Sensor": "Vulnerable al elemento Rayo. Si la atacas desde abajo...",
+      "Scan": "Tras ascender lanza Bombas de{\\n}profundidad muy destructivas{\\n}que causan da\u00F1o y Ceguera a{\\n}todo el grupo. Al infligirle un{\\n}determinado da\u00F1o se sumerge{\\n}y deja de lanzarlas. Cuando suba,{\\n}at\u00E1cala sin tregua para detener{\\n}las Bombas."
+    },
+    "112": {
+      "Name": "????",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "113": {
+      "Name": "Sinh",
+      "Sensor": "Vulnerable a la magia y al bal\u00F3n de Wakka.",
+      "Scan": "\u00A1Si no haces algo, Kilika ser\u00E1{\\n}destruida! Como est\u00E1 lejos del{\\n}barco, debes atacar con la magia{\\n}de Lulu, el bal\u00F3n de Wakka y el{\\n}e\u00F3n {PC:08:VALEFOR}."
+    },
+    "114": {
+      "Name": "Brote de Sinh: Ekyu",
+      "Sensor": "Si le causas Ceguera podr\u00E1s esquivar sus ataques.",
+      "Scan": "Su Golpe Drenaje absorbe VIT.{\\n}Tras usarlo dos veces seguidas{\\n}lanza el ataque total H\u00E9lice.{\\n}Si le causas Ceguera te ser\u00E1{\\n}f\u00E1cil esquivar el Golpe Drenaje,{\\n}pero no hay protecci\u00F3n contra{\\n}la H\u00E9lice. Presta atenci\u00F3n a tu{\\n}VIT restante."
+    },
+    "115": {
+      "Name": "Escoria",
+      "Sensor": "Aunque las derribes aparecen m\u00E1s.",
+      "Scan": "Abandona la batalla tras embestir a{\\n}uno de tus guerreros, pero despu\u00E9s{\\n}aparecen m\u00E1s."
+    },
+    "116": {
+      "Name": "Escoria",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "117": {
+      "Name": "Brote de Sinh: Guiu",
+      "Sensor": "Se protege con los brazos.",
+      "Scan": "Puedes derribarlo atac\u00E1ndole el{\\n}cuerpo, pero se defiende de ataques{\\n}f\u00EDsicos con sus brazos acorazados.{\\n}Primero debes acabar con ellos{\\n}usando armas penetrantes.{\\n}Tras mover la cabeza de forma{\\n}sospechosa, lanza un Fluido t\u00F3xico.{\\n}\u00C1tacalo en la cabeza para evitarlo."
+    },
+    "118": {
+      "Name": "Rueda espectral",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "119": {
+      "Name": "Efrey",
+      "Sensor": "Lanza Aliento t\u00F3xico despu\u00E9s de aspirar.",
+      "Scan": "Tiene gran Defensa m\u00E1gica y no es{\\n}vulnerable a ning\u00FAn elemento. Si te{\\n}acercas para atacarlo, lanza Aliento{\\n}t\u00F3xico. Cuando aspire, p\u00EDdele a Cid{\\n}que se aleje y entonces \u00E9l podr\u00E1{\\n}atacarlo con misiles."
+    },
+    "120": {
+      "Name": "Efrey Oltana",
+      "Sensor": "Vulnerable a los hechizos y objetos de recuperaci\u00F3n.",
+      "Scan": "Si en el agua te lanza una Mirada{\\n}petrificante y te convierte en{\\n}Piedra, desapareces de la batalla.{\\n}Al atacarlo contraataca. Para{\\n}protegerte abre el cerrojo de la{\\n}compuerta... Como es un zombi,{\\n}las magias y los objetos de{\\n}recuperaci\u00F3n lo da\u00F1an."
+    },
+    "121": {
+      "Name": "Esfera amorfa",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "122": {
+      "Name": "Ca\u00F1\u00F3n albhed",
+      "Sensor": "Vulnerable al Rayo. Al ser atacado, bloquea la magia y los eones con la sonda albhed.",
+      "Scan": "Tiene gran Defensa f\u00EDsica, pero es{\\n}vulnerable al Rayo. Lanza el ataque{\\n}total R\u00E1faga. Si derribas la Sonda,{\\n}empieza la cuenta atr\u00E1s de Rayo{\\n}m\u00E1gico. Durante ese per\u00EDodo,{\\n}contraataca sin falta a los hechizos{\\n}de Rayo, y tras recibir cuatro{\\n}ataques m\u00E1gicos, lanza otra Sonda."
+    },
+    "123": {
+      "Name": "Sonda albhed",
+      "Sensor": "Bloquea la magia y los eones. At\u00E1cala con balones y objetos.",
+      "Scan": "Inmune a Libra."
+    },
+    "124": {
+      "Name": "Seymour",
+      "Sensor": "Te ataca con magia en este orden: Fr\u00EDo, Rayo, Agua y Fuego.",
+      "Scan": "Ataca con hechizos de los cuatro{\\n}elementos, siempre en el orden:{\\n}Fr\u00EDo, Rayo, Agua, Fuego. Prot\u00E9gete{\\n}con AntiFr\u00EDo, AntiRayo, AntiAgua y{\\n}AntiFuego de Yuna. Al verse en{\\n}aprietos, llama a aquel e\u00F3n..."
+    },
+    "125": {
+      "Name": "\u00C1nima",
+      "Sensor": "Cuando se llena el medidor, entra en Turbo.",
+      "Scan": "Inmune a Libra."
+    },
+    "126": {
+      "Name": "NeoSeymour",
+      "Sensor": "Usa hechizos de los 4 elementos, adem\u00E1s de Petra y Fulgor.",
+      "Scan": "Lucha con hechizos elementales,{\\n}igual que en la batalla del Templo{\\n}de Macalania, aunque ahora usa{\\n}tambi\u00E9n Magia doble. Al perder{\\n}VIT lanza Petra y el poderoso{\\n}hechizo no elemental Fulgor."
+    },
+    "127": {
+      "Name": "G\u00E1rgola espectral",
+      "Sensor": "Cuidado con los ataques combinados con Seymour.",
+      "Scan": "Si en estado Piedra te ataca con{\\n}su Garra pulverizadora, te reduce{\\n}a polvo y desapareces de la batalla.{\\n}Su ataque total Desperado es muy{\\n}destructivo y anula el efecto de{\\n}los hechizos de apoyo."
+    },
+    "128": {
+      "Name": "Custodio sacro",
+      "Sensor": "Gran Defensa f\u00EDsica y m\u00E1gica. Empieza por ah\u00ED...",
+      "Scan": "Su t\u00E9cnica Alas fot\u00F3nicas causa{\\n}Confusi\u00F3n, Sue\u00F1o, Mudez, Ceguera{\\n}y Maldici\u00F3n. Su Coletazo somn\u00EDfero{\\n}anula el estado Prisa y retrasa el{\\n}turno siguiente. Tambi\u00E9n usa magia{\\n}de recuperaci\u00F3n y Espejo."
+    },
+    "129": {
+      "Name": "Custodio infernal",
+      "Sensor": "Contraataca a quien tiene enfrente. Trasl\u00E1date para evitarlo.",
+      "Scan": "Al ser atacado contraataca a{\\n}quien tiene delante. Si ilumina{\\n}una plataforma con la t\u00E9cnica{\\n}Mina m\u00E1gica, debes Trasladarte{\\n}para evitar que te deje Fuera{\\n}de combate al explotar."
+    },
+    "130": {
+      "Name": "Yunalesca",
+      "Sensor": "Como ser que controla la muerte, es vulnerable a lo sagrado.",
+      "Scan": "Si caes en el estado Zombi, hechizos{\\n}como Cura\u002B\u002B y Revitalia te har\u00E1n{\\n}da\u00F1o. C\u00FArate con Agua bendita.{\\n}El contraataque de Yunalesca anula{\\n}el efecto de las magias de apoyo.{\\n}La Descarga mental causa el estado{\\n}Maldici\u00F3n a los eones."
+    },
+    "131": {
+      "Name": "Seymour Omega",
+      "Sensor": "Recibe fuerza de las ruedas espectrales.",
+      "Scan": "Consigue energ\u00EDa de las cuatro{\\n}ruedas espectrales y usa magia.{\\n}Aparentemente la posici\u00F3n de las{\\n}ruedas influye sobre lo que hace{\\n}Seymour y su afinidad elemental.{\\n}Al recibir un ataque f\u00EDsico, las{\\n}ruedas giran a la izquierda; al{\\n}sufrir uno m\u00E1gico, a la derecha."
+    },
+    "132": {
+      "Name": "E\u00F3n de Braska",
+      "Sensor": "Si usas el comando extra Hablar...",
+      "Scan": "Recibe fuerza de las Pagodas Yu,{\\n}y cuando se llena el medidor{\\n}efect\u00FAa un ataque devastador.{\\n}Debes atacar las Pagodas para{\\n}evitarlo. {PC:00:TIDUS} puede{\\n}hacer bajar el medidor 2 veces{\\n}con el comando extra Hablar."
+    },
+    "133": {
+      "Name": "Gr\u00FAa",
+      "Sensor": "Funciona con electricidad.",
+      "Scan": "Inmune a Libra."
+    },
+    "134": {
+      "Name": "Biran Ronso",
+      "Sensor": "Protege a Yenke. Si se queda solo...",
+      "Scan": "Defiende a Yenke de los ataques{\\n}f\u00EDsicos con Proteger, pero cuando{\\n}hace un Placaje y se separa de \u00E9l,{\\n}deja de defenderle. Cuando recibe{\\n}un cierto da\u00F1o usa Barrera total{\\n}una sola vez. {CLR:YELLOW}Puedes robarle{\\n}varias t\u00E9cnicas."
+    },
+    "135": {
+      "Name": "Yenke Ronso",
+      "Sensor": "Protege a Biran. Si se queda solo...",
+      "Scan": "Defiende a Biran de los ataques{\\n}f\u00EDsicos con Proteger, pero cuando{\\n}hace un Placaje y se separa de \u00E9l,{\\n}deja de defenderlo. Cuando recibe{\\n}un cierto da\u00F1o usa Viento blanco{\\n}una sola vez. {CLR:YELLOW}Puedes robarle{\\n}varias t\u00E9cnicas."
+    },
+    "136": {
+      "Name": "Brazo izquierdo",
+      "Sensor": "Concentra energ\u00EDa y lanza Ultragravedad. Esqu\u00EDvalo con el comando extra Alejarse.",
+      "Scan": "Tras concentrar energ\u00EDa en el{\\n}n\u00FAcleo, en el turno siguiente lanza{\\n}Ultragravedad, que reduce la VIT a{\\n}1/4. Esqu\u00EDvalo pidi\u00E9ndole a Cid que{\\n}se aleje. En raras ocasiones efect\u00FAa{\\n}ataques f\u00EDsicos totales. Cuidado con{\\n}Aura cero, que anula el efecto de{\\n}todas las magias de apoyo."
+    },
+    "137": {
+      "Name": "Brazo derecho",
+      "Sensor": "Concentra energ\u00EDa y lanza Ultragravedad. Esqu\u00EDvalo con el comando extra Alejarse.",
+      "Scan": "Tras concentrar energ\u00EDa en el{\\n}n\u00FAcleo, en el turno siguiente lanza{\\n}Ultragravedad, que reduce la VIT a{\\n}1/4. Esqu\u00EDvalo pidi\u00E9ndole a Cid que{\\n}se aleje. En raras ocasiones efect\u00FAa{\\n}ataques f\u00EDsicos totales. Cuidado con{\\n}Aura cero, que anula el efecto de{\\n}todas las magias de apoyo."
+    },
+    "138": {
+      "Name": "Sinh",
+      "Sensor": "Gunai administra la fuerza de Sinh. Cuando entra en el caparaz\u00F3n, empieza a concentrar energ\u00EDa...",
+      "Scan": "Cuando Gunai se mete en el{\\n}caparaz\u00F3n, Sinh empieza a{\\n}acumular energ\u00EDa en el n\u00FAcleo{\\n}y lanza Ultragravedad, que{\\n}reduce la VIT a 1/4. Tambi\u00E9n{\\n}usa el hechizo Aura cero, que{\\n}anula el efecto de las magias{\\n}de apoyo."
+    },
+    "139": {
+      "Name": "Brote de Sinh: Gunai",
+      "Sensor": "Absorbe los ataques m\u00E1gicos lanzados a Sinh.",
+      "Scan": "Cuando su VIT se reduce a la mitad{\\n}o menos, en el turno siguiente se{\\n}esconde en el caparaz\u00F3n y al ser{\\n}atacado se aplica Cura\u002B. Tras{\\n}recuperar VIT sale del caparaz\u00F3n.{\\n}Mientras est\u00E1 dentro te salvas de{\\n}Ultragravedad, pero..."
+    },
+    "140": {
+      "Name": "Sinh",
+      "Sensor": "Liqu\u00EDdalo antes de que abra completamente la boca.",
+      "Scan": "Mientras atrae al barco volador{\\n}hacia \u00E9l, intenta lanzar con sus{\\n}\u00FAltimas fuerzas el hechizo{\\n}Gigagravedad. \u00A1Si no lo derribas{\\n}antes, te aniquilar\u00E1!"
+    },
+    "141": {
+      "Name": "Soldado guado",
+      "Sensor": "Protege a Seymour.",
+      "Scan": "Usa objetos de ataque como el Filtro{\\n}ofuscador, que causa Confusi\u00F3n, y{\\n}se defiende con Autopoci\u00F3n y otros.{\\n}Tambi\u00E9n devuelve VIT a Seymour.{\\n}Debes pensar la manera de impedir{\\n}que use objetos."
+    },
+    "142": {
+      "Name": "Seymour Beta",
+      "Sensor": "Cuidado con los ataques combinados con el Ente espectral.",
+      "Scan": "Tras Lanza devastadora, que causa{\\n}el estado Zombi, el Ente espectral{\\n}lanza L\u00E1zaro\u002B. Destrucci\u00F3n total{\\n}es otro ataque combinado y muy{\\n}fuerte. Si observas los movimientos{\\n}de Seymour podr\u00E1s anticipar los del{\\n}Ente espectral."
+    },
+    "143": {
+      "Name": "Ente espectral",
+      "Sensor": "Cuidado con los ataques combinados con Seymour.",
+      "Scan": "\u00A1Su combinaci\u00F3n con Seymour es{\\n}letal! Cuando Seymour te causa{\\n}el estado Zombi con su Lanza{\\n}devastadora, el Ente espectral{\\n}te deja Fuera de combate con{\\n}L\u00E1zaro\u002B. Puedes usar Coraza{\\n}para reducir el da\u00F1o del ataque{\\n}a todos Mandoble letal."
+    },
+    "144": {
+      "Name": "KIMAHRI BUKI",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "145": {
+      "Name": "Escoria",
+      "Sensor": "Derriba s\u00F3lo a la que tienes delante. Cuando le brillen las alas, cuidado con las P\u00FAas.",
+      "Scan": "Inmune a Libra."
+    },
+    "146": {
+      "Name": "Plataforma",
+      "Sensor": "Una persona puede trasladarse a cada plataforma m\u00E1gica.",
+      "Scan": "Inmune a Libra."
+    },
+    "147": {
+      "Name": "Escoria",
+      "Sensor": "Derriba s\u00F3lo a la que tienes delante. Cuando le brillen las alas, cuidado con las P\u00FAas.",
+      "Scan": "Inmune a Libra."
+    },
+    "148": {
+      "Name": "Escoria",
+      "Sensor": "Liqu\u00EDdalas en masa con el Turbo de Auron Sablazo s\u00EDsmico.",
+      "Scan": "Inmune a Libra."
+    },
+    "149": {
+      "Name": "Cid",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "150": {
+      "Name": "Rueda espectral",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "151": {
+      "Name": "Vihur",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "152": {
+      "Name": "Porteador albhed",
+      "Sensor": "Vulnerable al elemento Rayo.",
+      "Scan": "Antigua m\u00E1quina reparada por{\\n}los albhed. No fue dise\u00F1ado para{\\n}luchar, pero no hay que subestimar{\\n}la fuerza de su brazo utilitario.{\\n}Es vulnerable al Rayo, y Electro{\\n}le causa mucho da\u00F1o."
+    },
+    "153": {
+      "Name": "Och\u00FA extraviado",
+      "Sensor": "Vulnerable al elemento Fuego.",
+      "Scan": "Causa el estado Veneno con U\u00F1a{\\n}venenosa. Al perder VIT, duerme{\\n}y recupera energ\u00EDas. Si lo atacas{\\n}mientras duerme se despierta y{\\n}contraataca con Terremoto. Como{\\n}todos los monstruos vegetales,{\\n}es vulnerable al elemento Fuego."
+    },
+    "154": {
+      "Name": "Rueda espectral",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "155": {
+      "Name": "Gurami",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "156": {
+      "Name": "Gurami jefe",
+      "Sensor": "Vulnerable al elemento Rayo.",
+      "Scan": "Es veloz, pero tiene poca Fuerza{\\n}y VIT. Si aparece solo no es un{\\n}enemigo temible. Es vulnerable al{\\n}Rayo, y es posible causarle los{\\n}estados Ceguera y Sue\u00F1o."
+    },
+    "157": {
+      "Name": "Garuda",
+      "Sensor": "Si le causas Ceguera, es f\u00E1cil esquivar sus ataques.",
+      "Scan": "Tiene gran Fuerza y VIT.{\\n}Cuidado con el ataque total{\\n}Onda expansiva. Si le causas{\\n}Ceguera es f\u00E1cil esquivar{\\n}sus ataques."
+    },
+    "158": {
+      "Name": "Krik",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "159": {
+      "Name": "Brote de Sinh: Em\u00FAs",
+      "Sensor": "Lanza el hechizo Gravedad, que reduce la VIT a 3/4.",
+      "Scan": "Inmune a Libra."
+    },
+    "160": {
+      "Name": "Cabeza",
+      "Sensor": "Ataca la cabeza para evitar el Fluido t\u00F3xico.",
+      "Scan": "Puedes derribarlo atac\u00E1ndole el{\\n}cuerpo, pero se defiende de{\\n}ataques f\u00EDsicos con sus brazos{\\n}acorazados. Primero debes acabar{\\n}con ellos usando armas penetrantes.{\\n}Tras mover la cabeza de forma{\\n}sospechosa, lanza un Fluido t\u00F3xico.{\\n}At\u00E1calo en la cabeza para evitarlo."
+    },
+    "161": {
+      "Name": "Brazo",
+      "Sensor": "Protege el cuerpo.",
+      "Scan": "Puedes derribarlo atac\u00E1ndole el{\\n}cuerpo, pero se defiende de{\\n}ataques f\u00EDsicos con sus brazos{\\n}acorazados. Primero debes acabar{\\n}con ellos usando armas penetrantes.{\\n}Tras mover la cabeza de forma{\\n}sospechosa, lanza un Fluido t\u00F3xico.{\\n}At\u00E1calo en la cabeza para evitarlo."
+    },
+    "162": {
+      "Name": "Cerrojo",
+      "Sensor": "Permite abrir la compuerta y escapar.",
+      "Scan": "Inmune a Libra."
+    },
+    "163": {
+      "Name": "Valefor",
+      "Sensor": "Derr\u00F3tame...",
+      "Scan": "Inmune a Libra."
+    },
+    "164": {
+      "Name": "Ifrit",
+      "Sensor": "Ataca sin reparos...",
+      "Scan": "Inmune a Libra."
+    },
+    "165": {
+      "Name": "Ixion",
+      "Sensor": "Acaba de una vez...",
+      "Scan": "Inmune a Libra."
+    },
+    "166": {
+      "Name": "Shiva",
+      "Sensor": "Liqu\u00EDdame ya...",
+      "Scan": "Inmune a Libra."
+    },
+    "167": {
+      "Name": "Bahamut",
+      "Sensor": "Dame el reposo eterno...",
+      "Scan": "Inmune a Libra."
+    },
+    "168": {
+      "Name": "\u00C1nima",
+      "Sensor": "Debo rectificar mis errores...",
+      "Scan": "Inmune a Libra."
+    },
+    "169": {
+      "Name": "Yojimbo",
+      "Sensor": "Aniqu\u00EDlame...",
+      "Scan": "Inmune a Libra."
+    },
+    "170": {
+      "Name": "Cami\u00F3n blindado",
+      "Sensor": "Est\u00E1 por caerse de la autopista.",
+      "Scan": "Inmune a Libra."
+    },
+    "171": {
+      "Name": "Cerrojo",
+      "Sensor": "Permite abrir la compuerta y escapar.",
+      "Scan": "Inmune a Libra."
+    },
+    "172": {
+      "Name": "Monstruo 172",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "173": {
+      "Name": "Pagoda Yu",
+      "Sensor": "Si le causas da\u00F1o deja de moverse.",
+      "Scan": "Inmune a Libra."
+    },
+    "174": {
+      "Name": "Pagoda Yu",
+      "Sensor": "Si le causas da\u00F1o deja de moverse.",
+      "Scan": "Inmune a Libra."
+    },
+    "175": {
+      "Name": "Tent\u00E1culo",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "176": {
+      "Name": "Yu Yevon",
+      "Sensor": "Se apodera de los eones.",
+      "Scan": "Inmune a Libra."
+    },
+    "177": {
+      "Name": "Rueda espectral",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "178": {
+      "Name": "Mindy",
+      "Sensor": "Terminemos aqu\u00ED...",
+      "Scan": "Inmune a Libra."
+    },
+    "179": {
+      "Name": "Sandy",
+      "Sensor": "No llor\u00E9is...",
+      "Scan": "Inmune a Libra."
+    },
+    "180": {
+      "Name": "Cindy",
+      "Sensor": "Debemos decir adi\u00F3s...",
+      "Scan": "Inmune a Libra."
+    },
+    "181": {
+      "Name": "F\u00E9rreo",
+      "Sensor": "Lo afecta el Ataque Niebla \u002B. Cuidado con el Mazazo bestial.",
+      "Scan": "Ataca a los que tienen poca VIT,{\\n}y dispone del ataque total Mazazo{\\n}bestial. No tiene debilidad elemental{\\n}y los ataques de Rayo le causan la{\\n}mitad de da\u00F1o. At\u00E1calo con armas{\\n}penetrantes y Ataque Niebla \u002B."
+    },
+    "182": {
+      "Name": "Gigante",
+      "Sensor": "Atacan juntos con Doble mazazo bestial. Derriba a uno primero.",
+      "Scan": "Si cuando los dos gigantes est\u00E1n{\\n}en l\u00EDnea uno recibe un cierto da\u00F1o,{\\n}atacan con la devastadora t\u00E9cnica{\\n}Doble mazazo bestial.{\\n}Si uno absorbe Rayo y Fuego, el{\\n}otro absorbe Agua y Fr\u00EDo."
+    },
+    "183": {
+      "Name": "Gigante",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "184": {
+      "Name": "Gigante",
+      "Sensor": "Atacan juntos con Doble mazazo bestial. Derriba a uno primero.",
+      "Scan": "Si cuando los dos gigantes est\u00E1n{\\n}en l\u00EDnea uno recibe un cierto da\u00F1o,{\\n}atacan con la devastadora t\u00E9cnica{\\n}Doble mazazo bestial.{\\n}Si uno absorbe Rayo y Fuego, el{\\n}otro absorbe Agua y Fr\u00EDo."
+    },
+    "185": {
+      "Name": "Basilisco",
+      "Sensor": "Con su mirada causa el estado Piedra.",
+      "Scan": "A veces, cuando te lanza una{\\n}mirada con el tercer ojo, te{\\n}causa el estado Piedra.{\\n}Puedes recuperarte con Esna{\\n}o Aguja de oro. {CLR:YELLOW}Puedes robarle{\\n}la t\u00E9cnica Aliento petrificante."
+    },
+    "186": {
+      "Name": "Dracm\u00F3n",
+      "Sensor": "Con su mirada causa el estado Piedra.",
+      "Scan": "La mirada del tercer ojo a menudo{\\n}causa el estado Piedra. Tras recibir{\\n}varios ataques lanza el ataque total{\\n}Cola ultras\u00F3nica. {CLR:YELLOW}Puedes robarle la{\\n}t\u00E9cnica Aliento petrificante."
+    },
+    "187": {
+      "Name": "Adamantaimai",
+      "Sensor": "Tiene el cuerpo acorazado.",
+      "Scan": "Tiene el cuerpo acorazado.{\\n}Su H\u00E1lito causa da\u00F1o de{\\n}elemento Fuego a todos.{\\n}Tambi\u00E9n lanza el destructivo{\\n}ataque total Terremoto, que{\\n}tiene efecto rezagador. Es{\\n}vulnerable a Rompecoraza{\\n}y Rompeesp\u00EDritu."
+    },
+    "188": {
+      "Name": "Varn",
+      "Sensor": "Resistente a todos los hechizos elementales.",
+      "Scan": "Ataca con hechizos despu\u00E9s de{\\n}aplicarse Prisa; an\u00FAlasela con{\\n}Antimagia. Tras la Concentraci\u00F3n{\\n}de magia lanza Emblema del destino.{\\n}Con Escudo puedes reducir da\u00F1o,{\\n}aunque a veces te lo quita{\\n}con Antimagia\u002B."
+    },
+    "189": {
+      "Name": "Och\u00FA",
+      "Sensor": "Vulnerable al elemento Fuego.",
+      "Scan": "Al perder VIT ejecuta una Danza de{\\n}och\u00FA que causa a todos Ceguera,{\\n}Mudez y raramente Confusi\u00F3n y{\\n}Freno. Cuidado con su ataque U\u00F1a{\\n}venenosa. Como todos los monstruos{\\n}vegetales, es vulnerable al Fuego."
+    },
+    "190": {
+      "Name": "Mandr\u00E1gora",
+      "Sensor": "Vulnerable al elemento Fuego.",
+      "Scan": "Cuanto m\u00E1s la atacas, antes lanza{\\n}Terremoto. Al perder VIT ejecuta{\\n}una Danza de och\u00FA que causa a{\\n}todos Ceguera, Mudez y raramente{\\n}Confusi\u00F3n y Freno. Cuidado tambi\u00E9n{\\n}con Veneno. Es vulnerable al{\\n}elemento Fuego."
+    },
+    "191": {
+      "Name": "Unidad 99",
+      "Sensor": "Los ataques a corta distancia no la alcanzan. Derriba primero a los rivales que tienes delante.",
+      "Scan": "M\u00E1quina usada secretamente en{\\n}el Templo de Yevon, aunque el{\\n}Dogma no lo permite. Efect\u00FAa{\\n}ataques a todos, pero s\u00F3lo{\\n}cuando est\u00E1 lejos."
+    },
+    "192": {
+      "Name": "Unidad 97",
+      "Sensor": "Los ataques a corta distancia no la alcanzan. Derriba primero a los rivales que tienes delante.",
+      "Scan": "Efect\u00FAa ataques a todos, pero s\u00F3lo{\\n}cuando est\u00E1 lejos. Las t\u00E9cnicas{\\n}rezagadoras no la afectan."
+    },
+    "193": {
+      "Name": "Bom",
+      "Sensor": "Tras recibir tres ataques, efect\u00FAa Kamikaze.",
+      "Scan": "Tras recibir tres ataques,{\\n}contraataca a su \u00FAltimo asaltante{\\n}con Kamikaze. Si crees{\\n}que no podr\u00E1s derrotarlo en tres{\\n}ataques, prot\u00E9gete con AntiFuego.{\\n}Como es vulnerable al Fr\u00EDo, lo{\\n}afecta Hielo. {CLR:YELLOW}Kimahri puede aprender{\\n}la t\u00E9cnica Kamikaze."
+    },
+    "194": {
+      "Name": "Granada",
+      "Sensor": "Tras recibir tres ataques, efect\u00FAa Kamikaze.",
+      "Scan": "Tras recibir tres ataques,{\\n}contraataca a su \u00FAltimo asaltante{\\n}con Kamikaze.{\\n}La afecta el Fr\u00EDo, pero tiene gran{\\n}Defensa m\u00E1gica; por eso debes usar{\\n}Rompeesp\u00EDritu y magia de elemento{\\n}Fr\u00EDo para derribarla.{\\n}{CLR:YELLOW}Kimahri puede aprender {\\n}la t\u00E9cnica Kamikaze."
+    },
+    "195": {
+      "Name": "Unidad blindada 63",
+      "Sensor": "Cuando se queda sola, ataca con Patada circular.",
+      "Scan": "M\u00E1quina usada secretamente por el{\\n}Clero de Yevon, aunque el Dogma no{\\n}lo permite. Cuando solo queda una,{\\n}ataca con una Patada circular que{\\n}te lanza fuera de la batalla y no{\\n}puedes regresar. {CLR:YELLOW}Puedes robarle la{\\n}t\u00E9cnica Patada circular."
+    },
+    "196": {
+      "Name": "Unidad blindada 11",
+      "Sensor": "Cuando se queda sola, ataca con Patada circular.",
+      "Scan": "Cuando se queda sola, ataca con{\\n}una Patada circular que te{\\n}lanza fuera de la batalla y no{\\n}puedes regresar. Es inmune{\\n}a las t\u00E9cnicas rezagadoras.{\\n}{CLR:YELLOW}Puedes robarle la t\u00E9cnica{\\n}Patada circular."
+    },
+    "197": {
+      "Name": "Monje guerrero",
+      "Sensor": "Ataca con su rifle.",
+      "Scan": "Soldado de Yevon que protege el{\\n}Palacio de San Bevelle. Su rifle{\\n}causa da\u00F1o f\u00EDsico a una persona.{\\n}Le afecta Sue\u00F1o."
+    },
+    "198": {
+      "Name": "Monje redivivo",
+      "Sensor": "Est\u00E1 en estado Zombi. Lo da\u00F1a la recuperaci\u00F3n.",
+      "Scan": "Soldado que m\u00E1s all\u00E1 de la muerte{\\n}protege el Recinto de Yevon. Su{\\n}rifle causa da\u00F1o f\u00EDsico a una persona,{\\n}y a veces el estado Zombi."
+    },
+    "199": {
+      "Name": "Monje guerrero",
+      "Sensor": "Causa da\u00F1o de Fuego a todos con su lanzallamas.",
+      "Scan": "Soldado de Yevon que protege el{\\n}Palacio de San Bevelle. Causa da\u00F1o{\\n}de Fuego a todos con un lanzallamas.{\\n}Es vulnerable a Sue\u00F1o."
+    },
+    "200": {
+      "Name": "Monje redivivo",
+      "Sensor": "Est\u00E1 en estado Zombi. Lo da\u00F1a la recuperaci\u00F3n.",
+      "Scan": "Soldado que m\u00E1s all\u00E1 de la muerte{\\n}protege el Recinto de Yevon. Causa{\\n}da\u00F1o de elemento Fuego a todos{\\n}con un lanzallamas."
+    },
+    "201": {
+      "Name": "Koyokoyo",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "202": {
+      "Name": "Tinaja m\u00E1gica",
+      "Sensor": "Elige un ojo y ataca. Si es Correcto, ganas un objeto. Si es Incorrecto...",
+      "Scan": "Si el objetivo atacado es Correcto{\\n}recibes un objeto. Si es Incorrecto,{\\n}explota y termina la batalla. La{\\n}explosi\u00F3n causa mucho da\u00F1o; no{\\n}olvides recuperarte. En total puedes{\\n}obtener 8 tipos de objetos."
+    },
+    "203": {
+      "Name": "Tinaja m\u00E1gica",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "204": {
+      "Name": "Tinaja m\u00E1gica",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "205": {
+      "Name": "Tinaja m\u00E1gica",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "206": {
+      "Name": "Tinaja m\u00E1gica",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "207": {
+      "Name": "Cactilio X",
+      "Sensor": "Si lo derrotas antes de que huya te espera algo bueno...",
+      "Scan": "Su t\u00E9cnica Mil espinas causa{\\n}siempre un da\u00F1o de 1000 puntos.{\\n}Es dif\u00EDcil derrotarlo porque es{\\n}muy esquivo, resiste la magia y{\\n}huye al perder VIT. Sin embargo,{\\n}es posible intimidarlo."
+    },
+    "208": {
+      "Name": "Cactilio",
+      "Sensor": "Si lo derrotas antes de que huya te espera algo bueno...",
+      "Scan": "Su t\u00E9cnica Diez mil espinas causa{\\n}siempre un da\u00F1o de 10000 puntos.{\\n}Es dif\u00EDcil derrotarlo porque es{\\n}muy esquivo, resiste la magia y{\\n}huye al perder VIT, pero si lo{\\n}logras obtienes una gran cantidad{\\n}de PH."
+    },
+    "209": {
+      "Name": "M\u00E1scara",
+      "Sensor": "Recupera VIT aplic\u00E1ndose Electro\u002B y cada vez es m\u00E1s fuerte.",
+      "Scan": "Cuando le baja la VIT a la mitad{\\n}se recupera con Electro\u002B y gana{\\n}Poder m\u00E1gico. Para evitarlo,{\\n}c\u00E1usale Mudez con un Ataque{\\n}Mutis. Es vulnerable al Agua;{\\n}at\u00E1cala con Aqua\u002B."
+    },
+    "210": {
+      "Name": "Barbatos",
+      "Sensor": "Tiene el cuerpo blindado, pero si usas Rompecoraza...",
+      "Scan": "Tiene el cuerpo acorazado.{\\n}Rompecoraza lo afecta, pero{\\n}contraataca con gran fuerza.{\\n}Sus ataques son muy destructivos,{\\n}tanto el ataque total m\u00E1gico Fulgor{\\n}visceral como el f\u00EDsico Apisonadora."
+    },
+    "211": {
+      "Name": "????",
+      "Sensor": "Con Robar quiz\u00E1 obtengas lo que hay dentro.",
+      "Scan": "En preparaci\u00F3n."
+    },
+    "212": {
+      "Name": "Wendigo",
+      "Sensor": "S\u00F3lo efect\u00FAa ataques f\u00EDsicos. Cuando pierde la Locura disminuye su Fuerza, pero...",
+      "Scan": "S\u00F3lo efect\u00FAa ataques f\u00EDsicos.{\\n}Cuando tiene las manos levantadas{\\n}en postura de lucha, responde a{\\n}los ataques f\u00EDsicos con un{\\n}contraataque devastador."
+    },
+    "213": {
+      "Name": "Soldado guado",
+      "Sensor": "Se recupera con Autopoci\u00F3n. Imp\u00EDdele que use objetos.",
+      "Scan": "Se recupera con Autopoci\u00F3n;{\\n}debes pensar c\u00F3mo evitar que{\\n}use objetos. Cuando aparece con{\\n}otros monstruos, a veces los{\\n}fortalece con hechizos como Locura."
+    },
+    "214": {
+      "Name": "Fungo",
+      "Sensor": "Al sufrir ataques f\u00EDsicos contraataca con Polen y causa Sue\u00F1o.",
+      "Scan": "Usa Piro, pero puedes enmudecerlo.{\\n}Al sufrir ataques f\u00EDsicos{\\n}contraataca con Polen y a veces{\\n}causa Sue\u00F1o a todos. At\u00E1calo con{\\n}magia o du\u00E9rmelo. Como todos los{\\n}monstruos vegetales, es vulnerable{\\n}al Fuego."
+    },
+    "215": {
+      "Name": "Septa",
+      "Sensor": "Al sufrir ataques f\u00EDsicos contraataca con Polen y causa Sue\u00F1o y Ceguera.",
+      "Scan": "Usa Piro\u002B, pero puedes ponerla a{\\n}dormir. Al sufrir ataques f\u00EDsicos{\\n}contraataca con Polen y a veces{\\n}causa Sue\u00F1o y Ceguera a todos.{\\n}Como es un monstruo vegetal, es{\\n}vulnerable al Fuego."
+    },
+    "216": {
+      "Name": "Amanita",
+      "Sensor": "Al sufrir ataques f\u00EDsicos contraataca con Polen y causa Veneno, Mudez y Ceguera.",
+      "Scan": "Usa Piro\u002B\u002B, pero puedes{\\n}enmudecerla. A veces al sufrir ataques{\\n}f\u00EDsicos contraataca con Polen,{\\n}que puede causar Veneno, Mudez{\\n}y Ceguera a todos. Como todos{\\n}los monstruos vegetales, es{\\n}vulnerable al Fuego."
+    },
+    "217": {
+      "Name": "Kuspo",
+      "Sensor": "A veces puedes causarle Ceguera.",
+      "Scan": "Se mueve r\u00E1pido. A veces{\\n}puedes causarle Ceguera, y{\\n}tambi\u00E9n lo afecta Intimidar."
+    },
+    "218": {
+      "Name": "Ignitio",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra (para Omega)."
+    },
+    "219": {
+      "Name": "Esp\u00EDritu",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra (para Omega)."
+    },
+    "220": {
+      "Name": "Caronte",
+      "Sensor": "Empieza la batalla con una Condena.",
+      "Scan": "Presta atenci\u00F3n al luchar, ya que{\\n}cada vez que aparece cambia de{\\n}punto d\u00E9bil y de elementos que{\\n}absorbe. Lanza Condena, y cuando{\\n}no hay ning\u00FAn condenado, a veces,{\\n}usa el hechizo Muerte. {CLR:YELLOW}Puedes{\\n}robarle la t\u00E9cnica Condena."
+    },
+    "221": {
+      "Name": "Barsam de arena",
+      "Sensor": "Absorbe el elemento Agua.",
+      "Scan": "La Metralla de semillas no es{\\n}muy da\u00F1ina, pero a veces causa{\\n}Confusi\u00F3n. Como es una planta{\\n}del desierto, absorbe Agua, pero{\\n}es vulnerable al Fuego."
+    },
+    "222": {
+      "Name": "Soldado guado",
+      "Sensor": "Intenta bloquear la magia de Lulu.",
+      "Scan": "Controla a monstruos como boms{\\n}y quimeras. Al ver a Lulu intenta{\\n}bloquearle el uso de magia con{\\n}Mutis y Confu, pero si le lanzas{\\n}t\u00FA primero un Ataque Mutis le{\\n}neutralizar\u00E1s la magia y no podr\u00E1{\\n}hacer nada."
+    },
+    "223": {
+      "Name": "Tomberi",
+      "Sensor": "Se acerca en cuatro turnos. Si no lo derribas antes...",
+      "Scan": "Se acerca avanzando poco a{\\n}poco. A la cuarta vez ataca{\\n}con su cuchilla. Tambi\u00E9n{\\n}contraataca con el poderoso{\\n}Rencor de la raza, cuyo da\u00F1o{\\n}es mayor cuantos m\u00E1s monstruos{\\n}hayas derribado hasta el momento."
+    },
+    "224": {
+      "Name": "Maestro tomberi",
+      "Sensor": "Se acerca en cuatro turnos. Si no lo derribas antes...",
+      "Scan": "Se acerca avanzando poco a{\\n}poco. A la cuarta vez ataca{\\n}con su cuchilla. Tambi\u00E9n{\\n}contraataca con el poderoso{\\n}Rencor de la raza, cuyo da\u00F1o{\\n}es mayor cuantos m\u00E1s monstruos{\\n}hayas derribado hasta el momento."
+    },
+    "225": {
+      "Name": "Ojo diab\u00F3lico",
+      "Sensor": "Vuela. Resistente a la magia. Cuidado con Confusi\u00F3n.",
+      "Scan": "Vuela y tiene gran capacidad de{\\n}evasi\u00F3n. Es vulnerable al Fuego,{\\n}pero tiene mucha Defensa m\u00E1gica.{\\n}A veces causa Confusi\u00F3n con su{\\n}Mirada fija."
+    },
+    "226": {
+      "Name": "Bom",
+      "Sensor": "Tras recibir tres ataques, efect\u00FAa Kamikaze.",
+      "Scan": "Tras recibir tres ataques,{\\n}contraataca a su \u00FAltimo asaltante{\\n}con un Kamikaze de Fuego. Si crees{\\n}que no podr\u00E1s derrotarlo en tres{\\n}ataques, prot\u00E9gete con AntiFuego.{\\n}Como es vulnerable al Fr\u00EDo, lo{\\n}afecta Hielo\u002B. {CLR:YELLOW}Puedes robarle{\\n}la t\u00E9cnica Kamikaze."
+    },
+    "227": {
+      "Name": "Quimera",
+      "Sensor": "La afectan Ceguera, Mudez e Intimidar.",
+      "Scan": "Ataca en este orden: la serpiente,{\\n}Electro\u002B; el toro, Acometida; el{\\n}\u00E1guila, Vaho acu\u00E1tico (un ataque{\\n}total de elemento Agua); y el le\u00F3n,{\\n}Descarga s\u00EDsmica (un ataque de{\\n}Fuego). La afectan Intimidar, Mudez{\\n}y Ceguera. {CLR:YELLOW}Puedes robarle la{\\n}t\u00E9cnica Vaho acu\u00E1tico."
+    },
+    "228": {
+      "Name": "Bicornio",
+      "Sensor": "Si le causas Ceguera es f\u00E1cil esquivar sus ataques.",
+      "Scan": "Su Cornada es muy destructiva,{\\n}pero si le causas Ceguera es{\\n}f\u00E1cil esquivarla. Tambi\u00E9n puedes{\\n}dormirlo con el Ataque Morfeo. {\\n}{CLR:YELLOW}Puedes robarle la t\u00E9cnica{\\n}Bola de fuego."
+    },
+    "229": {
+      "Name": "Golem guerrero",
+      "Sensor": "Como es de piedra, es resistente a los ataques f\u00EDsicos.",
+      "Scan": "Como tiene mucha Fuerza y Defensa{\\n}f\u00EDsica, es un rival temible.{\\n}Contraataca con Pu\u00F1o explosivo,{\\n}que causa da\u00F1o y tiene efecto{\\n}rezagador. Tambi\u00E9n usa Barrera{\\n}total y el hechizo Freno\u002B\u002B."
+    },
+    "230": {
+      "Name": "Garuda",
+      "Sensor": "Si le causas Ceguera es f\u00E1cil esquivar sus ataques.",
+      "Scan": "Tiene mucha Fuerza y VIT. Cuidado{\\n}con el ataque total Onda expansiva.{\\n}Si le causas Ceguera es f\u00E1cil esquivar{\\n}sus ataques."
+    },
+    "231": {
+      "Name": "Dingo",
+      "Sensor": "Muy \u00E1gil. Resistente a la magia.",
+      "Scan": "Es veloz y esquivo. Tambi\u00E9n tiene{\\n}mucha Defensa m\u00E1gica. Derr\u00EDbalo{\\n}pronto para no recibir da\u00F1o. Que{\\n}{PC:00:TIDUS} acabe con \u00E9l con{\\n}un ataque r\u00E1pido."
+    },
+    "232": {
+      "Name": "Flan de agua",
+      "Sensor": "Af\u00EDn al Agua; at\u00E1calo con hechizos del elemento contrario. Resistente a los ataques f\u00EDsicos.",
+      "Scan": "Es muy blando y los ataques{\\n}f\u00EDsicos le causan poco da\u00F1o.{\\n}Af\u00EDn al Agua y vulnerable al{\\n}elemento contrario, Rayo. Puedes{\\n}usar el hechizo Electro de Lulu{\\n}para liquidarlo. Absorbe Agua{\\n}y recupera VIT; no uses el{\\n}hechizo Aqua."
+    },
+    "233": {
+      "Name": "C\u00F3ndor",
+      "Sensor": "Vuela. Lo afecta la magia.",
+      "Scan": "Vuela y tiene gran capacidad{\\n}de evasi\u00F3n, pero Wakka puede{\\n}derribarlo. Como es vulnerable{\\n}al Fuego, el hechizo Piro de{\\n}Lulu tambi\u00E9n es efectivo."
+    },
+    "234": {
+      "Name": "Barsam",
+      "Sensor": "Vulnerable al elemento Fuego.",
+      "Scan": "Cuidado con el Ca\u00F1\u00F3n de semillas:{\\n}te puede dejar K.O. de un golpe.{\\n}Los monstruos vegetales suelen{\\n}ser vulnerables al Fuego; at\u00E1calos{\\n}con el hechizo Piro\u002B de Lulu. {CLR:YELLOW}Puedes{\\n}robarle la t\u00E9cnica Ca\u00F1\u00F3n de semillas."
+    },
+    "235": {
+      "Name": "Petro",
+      "Sensor": "Est\u00E1 acorazado; at\u00E1calo con armas penetrantes.",
+      "Scan": "Est\u00E1 acorazado. Es lento, pero tiene{\\n}mucha Defensa f\u00EDsica y m\u00E1gica. Es{\\n}vulnerable al Fr\u00EDo y las armas{\\n}penetrantes pueden acabar con \u00E9l{\\n}de un golpe. Rival f\u00E1cil para Auron."
+    },
+    "236": {
+      "Name": "Lasca",
+      "Sensor": "Est\u00E1 acorazado; at\u00E1calo con armas penetrantes.",
+      "Scan": "Est\u00E1 acorazado. Es lento, pero tiene{\\n}mucha Defensa f\u00EDsica y m\u00E1gica.{\\n}Es vulnerable al Fr\u00EDo y las armas{\\n}penetrantes pueden acabar con \u00E9l{\\n}de un golpe."
+    },
+    "237": {
+      "Name": "????",
+      "Sensor": "\u00BF?",
+      "Scan": "En preparaci\u00F3n."
+    },
+    "238": {
+      "Name": "Zu",
+      "Sensor": "Cuando le brillen las alas prep\u00E1rate para una Onda expansiva.",
+      "Scan": "Es enorme y tiene mucha VIT.{\\n}Vuela pero es f\u00E1cil atinarle;{\\n}at\u00E1calo con t\u00E9cnicas fuertes.{\\n}Cuando le brillan las alas, en{\\n}el turno siguiente ataca con{\\n}Onda expansiva. Antes, ponte{\\n}en guardia o recupera VIT."
+    },
+    "239": {
+      "Name": "Saurio",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra (para Omega)."
+    },
+    "240": {
+      "Name": "Haruma",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra (para Omega)."
+    },
+    "241": {
+      "Name": "Flan h\u00EDdrico",
+      "Sensor": "Af\u00EDn al Agua; at\u00E1calo con hechizos del elemento contrario. Resistente a los ataques f\u00EDsicos.",
+      "Scan": "Es muy blando y resistente a los{\\n}ataques f\u00EDsicos. Es af\u00EDn al Agua{\\n}y vulnerable a los hechizos del{\\n}elemento contrario, Rayo. Absorbe{\\n}Agua y recupera VIT."
+    },
+    "242": {
+      "Name": "Desflot",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra (para Omega)."
+    },
+    "243": {
+      "Name": "M\u00E1scara B",
+      "Sensor": "Recupera VIT aplic\u00E1ndose Aqua\u002B y cada vez es m\u00E1s fuerte.",
+      "Scan": "Al reducirse su VIT a la mitad se{\\n}recupera con Aqua\u002B y aumenta su{\\n}poder m\u00E1gico. Antes de que eso{\\n}ocurra c\u00E1usale Mudez con Ataque{\\n}Mutis. Como es vulnerable al Rayo,{\\n}Electro\u002B\u002B le hace efecto."
+    },
+    "244": {
+      "Name": "Meich",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra (para Omega)."
+    },
+    "245": {
+      "Name": "Iguion albino",
+      "Sensor": "Muy \u00E1gil. Resistente a la magia.",
+      "Scan": "Es muy veloz y esquivo. Tambi\u00E9n{\\n}tiene gran Defensa m\u00E1gica. Los{\\n}ataques de Fuego y Agua le causan{\\n}la mitad del da\u00F1o."
+    },
+    "246": {
+      "Name": "Rocco",
+      "Sensor": "Est\u00E1 acorazado; at\u00E1calo con armas penetrantes.",
+      "Scan": "Est\u00E1 acorazado. Es lento, pero{\\n}tiene mucha Defensa f\u00EDsica y{\\n}m\u00E1gica. Es vulnerable a Rayo{\\n}y Fr\u00EDo."
+    },
+    "247": {
+      "Name": "Ojo malvado",
+      "Sensor": "Vuela. Resistente a la magia.",
+      "Scan": "Vuela y tiene gran capacidad de{\\n}evasi\u00F3n. Es vulnerable al Fuego,{\\n}pero tiene mucha Defensa m\u00E1gica.{\\n}Con su Mirada fija, a veces,{\\n}causa Confusi\u00F3n."
+    },
+    "248": {
+      "Name": "Isaaru",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "249": {
+      "Name": "Mayra",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "250": {
+      "Name": "Belgemine",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "251": {
+      "Name": "M\u00EDmico",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "252": {
+      "Name": "M\u00EDmico",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "253": {
+      "Name": "M\u00EDmico",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "254": {
+      "Name": "Ala",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "255": {
+      "Name": "Tinaja m\u00E1gica",
+      "Sensor": "Elige un ojo y ataca. Si es Correcto, ganas un objeto. Si es Incorrecto...",
+      "Scan": "Si el objetivo atacado es Correcto{\\n}recibes un objeto. Si es Incorrecto,{\\n}explota y termina la batalla.{\\n}La explosi\u00F3n causa mucho da\u00F1o; no{\\n}olvides recuperarte. En total puedes{\\n}obtener 8 tipos de objetos."
+    },
+    "256": {
+      "Name": "M\u00EDmico",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "257": {
+      "Name": "Parte del cofre",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "258": {
+      "Name": "Valefor",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "259": {
+      "Name": "Ifrit",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "260": {
+      "Name": "Parte del cofre",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "261": {
+      "Name": "Parte del cofre",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "262": {
+      "Name": "Parte del cofre",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "263": {
+      "Name": "Rifle",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "264": {
+      "Name": "Rifle Piro",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "265": {
+      "Name": "\u00C1nima",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "266": {
+      "Name": "Daigoro",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "267": {
+      "Name": "\u00C1nima",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "268": {
+      "Name": "\u00C1nima",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "269": {
+      "Name": "Katana",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "270": {
+      "Name": "Tres dagas",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "271": {
+      "Name": "Pu\u00F1al",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "272": {
+      "Name": "Cabeza",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "273": {
+      "Name": "Brazo",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "274": {
+      "Name": "NISHIDA-SAN",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "275": {
+      "Name": "Rex",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "276": {
+      "Name": "S\u00FAmmum",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "277": {
+      "Name": "Cat\u00E1strofe",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "278": {
+      "Name": "NASHI",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "279": {
+      "Name": "Cometierra",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "280": {
+      "Name": "Artema X",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "281": {
+      "Name": "Gran esfera",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "282": {
+      "Name": "Brakioleod\u00F3n",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "283": {
+      "Name": "Drag\u00F3n divino",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "284": {
+      "Name": "Pu\u00F1o",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "285": {
+      "Name": "Ixion",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "286": {
+      "Name": "Shiva",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "287": {
+      "Name": "Rex",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "288": {
+      "Name": "Yojimbo",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "289": {
+      "Name": "Sandy",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "290": {
+      "Name": "Cindy",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "291": {
+      "Name": "Mindy",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "292": {
+      "Name": "Tuncket",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "293": {
+      "Name": "Vyzar",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "294": {
+      "Name": "Fenril",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "295": {
+      "Name": "Gran flan",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "296": {
+      "Name": "Rexaurus",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "297": {
+      "Name": "Pterix",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "298": {
+      "Name": "Anofeles",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "299": {
+      "Name": "Un ojo",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "300": {
+      "Name": "Gerifalte",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "301": {
+      "Name": "Gusano Ebis",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "302": {
+      "Name": "Juggernaut",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "303": {
+      "Name": "Faunihr",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "304": {
+      "Name": "Rey molbol",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "305": {
+      "Name": "Coloso",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "306": {
+      "Name": "Ente negativo",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "307": {
+      "Name": "Catobeplas",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "308": {
+      "Name": "Quimera X",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "309": {
+      "Name": "Reina bengal",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "310": {
+      "Name": "Hombre de hierro",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "311": {
+      "Name": "Yormungand",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "312": {
+      "Name": "Abad\u00F3n",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "313": {
+      "Name": "Rey bom",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "314": {
+      "Name": "Kaktilio",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "315": {
+      "Name": "Vorban",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "316": {
+      "Name": "Rusula",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "317": {
+      "Name": "Don tomberi",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "318": {
+      "Name": "Cuchillas",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "319": {
+      "Name": "Bom",
+      "Sensor": "Tras recibir tres ataques, efect\u00FAa Kamikaze.",
+      "Scan": "Inmune a Libra."
+    },
+    "320": {
+      "Name": "Bicornio",
+      "Sensor": "Mientras sufre Ceguera sus ataques f\u00EDsicos son ineficaces.",
+      "Scan": "Inmune a Libra."
+    },
+    "321": {
+      "Name": "Buitre",
+      "Sensor": "Mientras sufre Ceguera, sus ataques f\u00EDsicos no dan en el blanco.",
+      "Scan": "Inmune a Libra."
+    },
+    "322": {
+      "Name": "Basilisco",
+      "Sensor": "Su mirada causa el estado Piedra.",
+      "Scan": "Inmune a Libra."
+    },
+    "323": {
+      "Name": "Och\u00FA",
+      "Sensor": "Vulnerable a los ataques de elemento Fuego.",
+      "Scan": "Inmune a Libra."
+    },
+    "324": {
+      "Name": "M\u00E1scara",
+      "Sensor": "Mensaje de la ventana de informaci\u00F3n",
+      "Scan": "Inmune a Libra."
+    },
+    "325": {
+      "Name": "F\u00E9rreo",
+      "Sensor": "Mensaje de la ventana de informaci\u00F3n",
+      "Scan": "Inmune a Libra."
+    },
+    "326": {
+      "Name": "Quimera",
+      "Sensor": "Mensaje de la ventana de informaci\u00F3n",
+      "Scan": "Inmune a Libra."
+    },
+    "327": {
+      "Name": "Monstruo 84",
+      "Sensor": "Mensaje de la ventana de informaci\u00F3n",
+      "Scan": "Inmune a Libra."
+    },
+    "328": {
+      "Name": "Cactilio X",
+      "Sensor": "Si lo derrotas antes de que huya te espera algo bueno...",
+      "Scan": "Inmune a Libra."
+    },
+    "329": {
+      "Name": "Zu",
+      "Sensor": "Mensaje de la ventana de informaci\u00F3n",
+      "Scan": "Inmune a Libra."
+    },
+    "330": {
+      "Name": "Gusano de arena",
+      "Sensor": "Mensaje de la ventana de informaci\u00F3n",
+      "Scan": "Inmune a Libra."
+    },
+    "331": {
+      "Name": "Fantasma",
+      "Sensor": "Mensaje de la ventana de informaci\u00F3n",
+      "Scan": "Inmune a Libra."
+    },
+    "332": {
+      "Name": "Molbol",
+      "Sensor": "Mensaje de la ventana de informaci\u00F3n",
+      "Scan": "Inmune a Libra."
+    },
+    "333": {
+      "Name": "Asur",
+      "Sensor": "Mensaje de la ventana de informaci\u00F3n",
+      "Scan": "Inmune a Libra."
+    },
+    "334": {
+      "Name": "Valefor oscuro",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "335": {
+      "Name": "Ifrit oscuro",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "336": {
+      "Name": "Ixion oscuro",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "337": {
+      "Name": "Shiva oscura",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "338": {
+      "Name": "Bahamut oscuro",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "339": {
+      "Name": "\u00C1nima oscura",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "340": {
+      "Name": "Yojimbo oscuro",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "341": {
+      "Name": "Cindy oscura",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "342": {
+      "Name": "Sandy oscura",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "343": {
+      "Name": "Mindy oscura",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "344": {
+      "Name": "Verdugo final",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "345": {
+      "Name": "Brazo derecho",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "346": {
+      "Name": "Brazo izquierdo",
+      "Sensor": "Datos inaccesibles.",
+      "Scan": "Inmune a Libra."
+    },
+    "347": {
+      "Name": "Desconocido",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "348": {
+      "Name": "Desconocido",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "349": {
+      "Name": "Desconocido",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "350": {
+      "Name": "Desconocido",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "351": {
+      "Name": "Desconocido",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "352": {
+      "Name": "Desconocido",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "353": {
+      "Name": "Desconocido",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "354": {
+      "Name": "Desconocido",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "355": {
+      "Name": "Desconocido",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "356": {
+      "Name": "Desconocido",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "357": {
+      "Name": "Desconocido",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "358": {
+      "Name": "Desconocido",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "359": {
+      "Name": "Desconocido",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "360": {
+      "Name": "Desconocido",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "361": {
+      "Name": "Desconocido",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "362": {
+      "Name": "Desconocido",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "363": {
+      "Name": "Desconocido",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "364": {
+      "Name": "Desconocido",
+      "Sensor": "?",
+      "Scan": "?"
+    },
+    "365": {
+      "Name": "Desconocido",
+      "Sensor": "?",
+      "Scan": "?"
+    }
+  }
+}

@@ -1,0 +1,331 @@
+{
+  "SchemaVersion": 1,
+  "Domain": "keyitems",
+  "Locale": "us",
+  "GeneratedAtUtc": "2026-03-04T10:54:18.7669382Z",
+  "SourceFiles": [
+    "READ_ALL_COMMANDS_LOCALIZED__us.txt"
+  ],
+  "Entries": {
+    "A000": {
+      "Name": "Withered Bouquet",
+      "Description": "Someone put heart and soul into making this.",
+      "Kind": "KeyItem"
+    },
+    "A001": {
+      "Name": "Flint",
+      "Description": "Used to start fires.",
+      "Kind": "KeyItem"
+    },
+    "A002": {
+      "Name": "Cloudy Mirror",
+      "Description": "The surface is dark and clouded.",
+      "Kind": "KeyItem"
+    },
+    "A003": {
+      "Name": "Celestial Mirror",
+      "Description": "The surface is shiny and bright.",
+      "Kind": "KeyItem"
+    },
+    "A004": {
+      "Name": "Al Bhed Primer I",
+      "Description": "Teaches the letter \u201DA\u201D in Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A005": {
+      "Name": "Al Bhed Primer II",
+      "Description": "Teaches the letter \u201DB\u201D in Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A006": {
+      "Name": "Al Bhed Primer III",
+      "Description": "Teaches the letter \u201DC\u201D in Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A007": {
+      "Name": "Al Bhed Primer IV",
+      "Description": "Teaches the letter \u201DD\u201D in Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A008": {
+      "Name": "Al Bhed Primer V",
+      "Description": "Teaches the letter \u201DE\u201D in Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A009": {
+      "Name": "Al Bhed Primer VI",
+      "Description": "Teaches the letter \u201DF\u201D in Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A00A": {
+      "Name": "Al Bhed Primer VII",
+      "Description": "Teaches the letter \u201DG\u201D in Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A00B": {
+      "Name": "Al Bhed Primer VIII",
+      "Description": "Teaches the letter \u201DH\u201D in Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A00C": {
+      "Name": "Al Bhed Primer IX",
+      "Description": "Teaches the letter \u201DI\u201D in Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A00D": {
+      "Name": "Al Bhed Primer X",
+      "Description": "Teaches the letter \u201DJ\u201D in Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A00E": {
+      "Name": "Al Bhed Primer XI",
+      "Description": "Teaches the letter \u201DK\u201D in Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A00F": {
+      "Name": "Al Bhed Primer XII",
+      "Description": "Teaches the letter \u201DL\u201D in Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A010": {
+      "Name": "Al Bhed Primer XIII",
+      "Description": "Teaches the letter \u201DM\u201D in Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A011": {
+      "Name": "Al Bhed Primer XIV",
+      "Description": "Teaches the letter \u201DN\u201D in Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A012": {
+      "Name": "Al Bhed Primer XV",
+      "Description": "Teaches the letter \u201DO\u201D in Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A013": {
+      "Name": "Al Bhed Primer XVI",
+      "Description": "Teaches the letter \u201DP\u201D in Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A014": {
+      "Name": "Al Bhed Primer XVII",
+      "Description": "Teaches the letter \u201DQ\u201D in Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A015": {
+      "Name": "Al Bhed Primer XVIII",
+      "Description": "Teaches the letter \u201DR\u201D in Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A016": {
+      "Name": "Al Bhed Primer XIX",
+      "Description": "Teaches the letter \u201DS\u201D in Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A017": {
+      "Name": "Al Bhed Primer XX",
+      "Description": "Teaches the letter \u201DT\u201D in Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A018": {
+      "Name": "Al Bhed Primer XXI",
+      "Description": "Teaches the letter \u201DU\u201D in Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A019": {
+      "Name": "Al Bhed Primer XXII",
+      "Description": "Teaches the letter \u201DV\u201D in Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A01A": {
+      "Name": "Al Bhed Primer XXIII",
+      "Description": "Teaches the letter \u201DW\u201D in Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A01B": {
+      "Name": "Al Bhed Primer XXIV",
+      "Description": "Teaches the letter \u201DX\u201D in Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A01C": {
+      "Name": "Al Bhed Primer XXV",
+      "Description": "Teaches the letter \u201DY\u201D in Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A01D": {
+      "Name": "Al Bhed Primer XXVI",
+      "Description": "Teaches the letter \u201DZ\u201D in Al Bhed.",
+      "Kind": "KeyItem"
+    },
+    "A01E": {
+      "Name": "Summoner\u2019s Soul",
+      "Description": "Allows the aeons to learn abilities.",
+      "Kind": "KeyItem"
+    },
+    "A01F": {
+      "Name": "Aeon\u2019s Soul",
+      "Description": "Allows you to raise aeons\u2019 attributes.",
+      "Kind": "KeyItem"
+    },
+    "A020": {
+      "Name": "Jecht\u2019s Sphere",
+      "Description": "A sphere recorded by Jecht ten years ago.",
+      "Kind": "KeyItem"
+    },
+    "A021": {
+      "Name": "Rusty Sword",
+      "Description": "An old, rusty sword.",
+      "Kind": "KeyItem"
+    },
+    "A022": {
+      "Name": "",
+      "Description": "",
+      "Kind": "KeyItem"
+    },
+    "A023": {
+      "Name": "Sun Crest",
+      "Description": "A Celestial Token, fashioned in the shape of the Sun.",
+      "Kind": "KeyItem"
+    },
+    "A024": {
+      "Name": "Sun Sigil",
+      "Description": "A Celestial Token, fashioned in the shape of the Sun.",
+      "Kind": "KeyItem"
+    },
+    "A025": {
+      "Name": "Moon Crest",
+      "Description": "A Celestial Token, fashioned in the shape of the Moon.",
+      "Kind": "KeyItem"
+    },
+    "A026": {
+      "Name": "Moon Sigil",
+      "Description": "A Celestial Token, fashioned in the shape of the Moon.",
+      "Kind": "KeyItem"
+    },
+    "A027": {
+      "Name": "Mars Crest",
+      "Description": "A Celestial Token, fashioned in the shape of Mars.",
+      "Kind": "KeyItem"
+    },
+    "A028": {
+      "Name": "Mars Sigil",
+      "Description": "A Celestial Token, fashioned in the shape of Mars.",
+      "Kind": "KeyItem"
+    },
+    "A029": {
+      "Name": "Mark of Conquest",
+      "Description": "Given to those who have surpassed mortal bounds.",
+      "Kind": "KeyItem"
+    },
+    "A02A": {
+      "Name": "Saturn Crest",
+      "Description": "A Celestial Token, fashioned in the shape of Saturn.",
+      "Kind": "KeyItem"
+    },
+    "A02B": {
+      "Name": "Saturn Sigil",
+      "Description": "A Celestial Token, fashioned in the shape of Saturn.",
+      "Kind": "KeyItem"
+    },
+    "A02C": {
+      "Name": "Jupiter Crest",
+      "Description": "A Celestial Token, fashioned in the shape of Jupiter.",
+      "Kind": "KeyItem"
+    },
+    "A02D": {
+      "Name": "Jupiter Sigil",
+      "Description": "A Celestial Token, fashioned in the shape of Jupiter.",
+      "Kind": "KeyItem"
+    },
+    "A02E": {
+      "Name": "Venus Crest",
+      "Description": "A Celestial Token, fashioned in the shape of Venus.",
+      "Kind": "KeyItem"
+    },
+    "A02F": {
+      "Name": "Venus Sigil",
+      "Description": "A Celestial Token, fashioned in the shape of Venus.",
+      "Kind": "KeyItem"
+    },
+    "A030": {
+      "Name": "Mercury Crest",
+      "Description": "A Celestial Token, fashioned in the shape of Mercury.",
+      "Kind": "KeyItem"
+    },
+    "A031": {
+      "Name": "Mercury Sigil",
+      "Description": "A Celestial Token, fashioned in the shape of Mercury.",
+      "Kind": "KeyItem"
+    },
+    "A032": {
+      "Name": "Blossom Crown",
+      "Description": "Seems to have some connection with a hidden aeon...",
+      "Kind": "KeyItem"
+    },
+    "A033": {
+      "Name": "Flower Scepter",
+      "Description": "Seems to have some connection with a hidden aeon...",
+      "Kind": "KeyItem"
+    },
+    "A034": {
+      "Name": "",
+      "Description": "",
+      "Kind": "KeyItem"
+    },
+    "A035": {
+      "Name": "",
+      "Description": "",
+      "Kind": "KeyItem"
+    },
+    "A036": {
+      "Name": "",
+      "Description": "",
+      "Kind": "KeyItem"
+    },
+    "A037": {
+      "Name": "",
+      "Description": "",
+      "Kind": "KeyItem"
+    },
+    "A038": {
+      "Name": "",
+      "Description": "",
+      "Kind": "KeyItem"
+    },
+    "A039": {
+      "Name": "",
+      "Description": "",
+      "Kind": "KeyItem"
+    },
+    "A03A": {
+      "Name": "",
+      "Description": "",
+      "Kind": "KeyItem"
+    },
+    "A03B": {
+      "Name": "",
+      "Description": "",
+      "Kind": "KeyItem"
+    },
+    "A03C": {
+      "Name": "",
+      "Description": "",
+      "Kind": "KeyItem"
+    },
+    "A03D": {
+      "Name": "",
+      "Description": "",
+      "Kind": "KeyItem"
+    },
+    "A03E": {
+      "Name": "",
+      "Description": "",
+      "Kind": "KeyItem"
+    },
+    "A03F": {
+      "Name": "",
+      "Description": "",
+      "Kind": "KeyItem"
+    }
+  }
+}
