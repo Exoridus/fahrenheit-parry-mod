@@ -105,12 +105,12 @@ public unsafe sealed partial class ParryModule {
         return texture;
     }
 
-    private void update_overlay_animation_state() {
+    private void update_overlay_animation_state(float deltaSeconds) {
         ParryOverlayState nextState = _runtime.ParryWindowActive
             ? ParryOverlayState.Parry
-            : (_runtime.SuccessIndicatorActive || _runtime.SuccessFlashFrames > 0)
+            : (_runtime.SuccessIndicatorActive || _runtime.SuccessFlashSeconds > 0f)
                 ? ParryOverlayState.Success
-                : _runtime.FailureFlashFrames > 0
+                : _runtime.FailureFlashSeconds > 0f
                     ? ParryOverlayState.Failure
                     : ParryOverlayState.Hidden;
 
@@ -123,14 +123,14 @@ public unsafe sealed partial class ParryModule {
         }
 
         float targetVisibility = _runtime.OverlayState == ParryOverlayState.Hidden ? 0f : 1f;
-        float visibilityDelta = FrameDurationSeconds / OverlayAnimDurationSeconds;
+        float visibilityDelta = deltaSeconds / OverlayAnimDurationSeconds;
         if (targetVisibility > _runtime.OverlayAnimProgress)
             _runtime.OverlayAnimProgress = MathF.Min(1f, _runtime.OverlayAnimProgress + visibilityDelta);
         else
             _runtime.OverlayAnimProgress = MathF.Max(0f, _runtime.OverlayAnimProgress - visibilityDelta);
 
         if (_runtime.OverlayState != ParryOverlayState.Hidden) {
-            float scaleDelta = FrameDurationSeconds / OverlayScaleDurationSeconds;
+            float scaleDelta = deltaSeconds / OverlayScaleDurationSeconds;
             _runtime.OverlayScaleProgress = MathF.Min(1f, _runtime.OverlayScaleProgress + scaleDelta);
         }
     }

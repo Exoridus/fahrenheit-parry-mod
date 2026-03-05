@@ -13,9 +13,7 @@ public unsafe sealed partial class ParryModule {
             bool hasDamage = chr->damage_hp != 0 || chr->damage_mp != 0;
             if (hasDamage && !_damageEventActive[i]) {
                 _damageEventActive[i] = true;
-                if (is_resolve_mode()) {
-                    on_damage_resolve_detected(i);
-                }
+                on_impact_detected(i, chr);
             }
             else if (!hasDamage && _damageEventActive[i]) {
                 _damageEventActive[i] = false;
@@ -23,157 +21,107 @@ public unsafe sealed partial class ParryModule {
         }
     }
 
-    private void on_damage_resolve_detected(int slotIndex) {
-        record_timing_hit(slotIndex);
+    private void on_impact_detected(int slotIndex, Chr* target) {
+        _turnRuntimeEvents.EmitDamageResolved(slotIndex, current_gameplay_timestamp(), _debugFrameIndex);
 
-        bool shouldClose = ParryDecisionPlanner.ShouldCloseOnDamageResolve(
-            parryWindowActive: _runtime.ParryWindowActive,
-            resolveMode: is_resolve_mode(),
-            currentPartyMask: _runtime.CurrentPartyTargetMask,
-            slotIndex: slotIndex,
-            fallbackPartyMask: PlayerTargetMask);
-
-        if (!shouldClose) {
+        if (!is_relevant_impact_slot(slotIndex)) {
             return;
-        }
-
-        log_debug($"Detected incoming damage on {format_actor_slot((byte)slotIndex)}; closing parry window.");
-        trigger_failure_feedback();
-        end_parry_window("damage_resolve");
-    }
-
-    private bool monitor_attack_cues() {
-        bool hasEnemyCue = try_get_enemy_attack_cue(out AttackCue cue, out byte cueIndex, out Chr* attacker);
-
-        if (hasEnemyCue) {
-            uint partyMask = extract_party_target_mask(cue);
-
-            if (should_clear_awaiting_turn_end_for_new_cue(cue, cueIndex, partyMask)) {
-                clear_awaiting_turn_end($"Detected next cue while awaiting turn end; switching from {format_actor_slot(_runtime.CurrentAttackerId)} to {format_actor_slot(cue.attacker_id)}.");
-            }
-
-            bool isMagic = is_magic_like_attack(attacker);
-
-            var action = ParryDecisionPlanner.PlanStartAction(
-                hasCue: true,
-                attackerId: cue.attacker_id,
-                cueIndex: cueIndex,
-                partyMask: partyMask,
-                isMagic: isMagic,
-                parryWindowActive: _runtime.ParryWindowActive,
-                leadPending: _runtime.LeadPending,
-                awaitingTurnEnd: _runtime.AwaitingTurnEnd,
-                debounceFrames: _runtime.ParryWindowDebounceFrames,
-                leadPhysicalFrames: compute_lead_frames(false),
-                leadMagicFrames: compute_lead_frames(true),
-                initialWindowFrames: compute_initial_window_frames());
-
-            switch (action.Kind) {
-                case ParryStartActionKind.IgnoreCueNoPartyTargets:
-                    log_debug($"{format_actor_slot(cue.attacker_id)} action ignored (no ally targets).");
-                    break;
-                case ParryStartActionKind.StartLead:
-                    start_lead(action);
-                    break;
-                case ParryStartActionKind.OpenWindow:
-                    _runtime.PendingLeadFramesApplied = 0;
-                    begin_parry_window(cue, cueIndex, partyMask, 0);
-                    break;
-                default:
-                    log_debug($"Cue blocked for {format_actor_slot(cue.attacker_id)} (q{cueIndex}): {get_gate_block_reason()}.");
-                    break;
-            }
-
-            return true;
         }
 
         if (_runtime.ParryWindowActive) {
-            log_debug("Enemy cue cleared without parry input; closing window.");
-            end_parry_window("cue_cleared");
-        }
+            if (_optionNegateDamage) {
+                negate_damage_on_impact(target);
+            }
 
-        if (_runtime.LeadPending) {
-            log_debug("Lead-in cancelled because cue disappeared.");
-            _runtime.LeadPending = false;
-            _runtime.PendingLeadFramesApplied = 0;
-        }
+            _runtime.ParryWindowSucceeded = true;
+            _runtime.SuccessIndicatorActive = true;
+            _runtime.SuccessFlashSeconds = MathF.Max(_runtime.SuccessFlashSeconds, IndicatorFlashSeconds);
+            _runtime.FailureFlashSeconds = 0f;
 
-        if (_runtime.AwaitingTurnEnd) {
-            clear_awaiting_turn_end("Enemy action resolved; parry ready.");
-        }
-
-        return false;
-    }
-
-    private void start_lead(ParryStartAction action) {
-        _runtime.LeadPending = true;
-        _runtime.LeadFramesRemaining = action.LeadFrames;
-        _runtime.PendingLeadFramesApplied = action.LeadFrames;
-        _runtime.LeadAttackerId = action.AttackerId;
-        _runtime.AwaitingTurnEnd = true;
-        _runtime.CurrentAttackerId = action.AttackerId;
-        _runtime.CurrentCueIndex = action.CueIndex;
-        _runtime.CurrentPartyTargetMask = action.PartyMask;
-        string damageType = action.IsMagic ? "Magic" : "Physical";
-        log_debug($"Lead delay started for {format_actor_slot(_runtime.LeadAttackerId)}: {action.LeadFrames}f ({damageType}, targets: {format_party_target_mask(action.PartyMask)}).");
-    }
-
-    private void process_lead_pending() {
-        if (!_runtime.LeadPending) return;
-
-        if (!try_get_enemy_attack_cue(_runtime.LeadAttackerId, out AttackCue cue, out byte cueIndex, out Chr* _)) {
-            _runtime.LeadPending = false;
-            _runtime.AwaitingTurnEnd = false;
-            _runtime.PendingLeadFramesApplied = 0;
-            log_debug("Lead-in cancelled because attacker left the cue list.");
+            mark_active_turn_parried();
+            log_debug($"Parry resolved on impact for {format_actor_slot((byte)slotIndex)}.");
+            apply_overdrive_boost(1u << slotIndex);
+            play_feedback_sound();
+            reset_spam_tier("success", logTransition: true);
+            end_parry_window("impact_parried");
             return;
         }
 
-        _runtime.LeadFramesRemaining--;
-        if (_runtime.LeadFramesRemaining > 0) return;
+        mark_active_turn_missed("impact outside active parry window");
+        trigger_failure_feedback();
+        log_debug($"Impact hit {format_actor_slot((byte)slotIndex)} outside parry window.");
+    }
+
+    private static void negate_damage_on_impact(Chr* chr) {
+        // Resolve-at-impact behavior: neutralize queued damage exactly when impact arrives.
+        chr->damage_hp = 0;
+        chr->damage_mp = 0;
+        chr->damage_ctb = 0;
+        chr->stat_avoid_flag = true;
+    }
+
+    private bool is_relevant_impact_slot(int slotIndex) {
+        if (slotIndex < 0 || slotIndex >= PartyActorCapacity) return false;
+        if (!_runtime.AwaitingTurnEnd) return false;
+
+        uint mask = _runtime.CurrentPartyTargetMask;
+        if (mask == 0) return false;
+        uint bit = 1u << slotIndex;
+        return (mask & bit) != 0;
+    }
+
+    private bool monitor_attack_cues() {
+        bool hasCue = try_get_enemy_attack_cue(out AttackCue cue, out byte cueIndex, out Chr* attacker);
+        if (!hasCue) {
+            if (_runtime.AwaitingTurnEnd) {
+                _turnRuntimeEvents.EmitDispatchConsumed(
+                    attackerId: _runtime.CurrentAttackerId,
+                    queueIndex: _runtime.CurrentCueIndex,
+                    timestampLocal: current_gameplay_timestamp(),
+                    frameIndex: _debugFrameIndex,
+                    reason: "cue list cleared");
+                clear_awaiting_turn_end("Enemy action resolved; parry context cleared.");
+            }
+
+            return false;
+        }
 
         uint partyMask = extract_party_target_mask(cue);
-        if (partyMask == 0) {
-            _runtime.LeadPending = false;
-            _runtime.AwaitingTurnEnd = false;
-            _runtime.PendingLeadFramesApplied = 0;
-            log_debug("Lead-in cancelled due to no remaining party targets.");
-            return;
+        bool actionable = partyMask != 0;
+        if (!actionable) {
+            return true;
         }
 
-        _runtime.LeadPending = false;
-        begin_parry_window(cue, cueIndex, partyMask, _runtime.PendingLeadFramesApplied);
-        _runtime.PendingLeadFramesApplied = 0;
-    }
+        bool changed =
+            !_runtime.AwaitingTurnEnd
+            || cue.attacker_id != _runtime.CurrentAttackerId
+            || cueIndex != _runtime.CurrentCueIndex
+            || partyMask != _runtime.CurrentPartyTargetMask;
 
-    private void begin_parry_window(AttackCue cue, byte cueIndex, uint partyMask, int leadFramesUsed) {
-        _runtime.LeadPending = false;
-        _runtime.ParryWindowActive = true;
-        _runtime.AwaitingTurnEnd = true;
-        _runtime.CurrentAttackerId = cue.attacker_id;
-        _runtime.CurrentCueIndex = cueIndex;
-        _runtime.CurrentPartyTargetMask = partyMask;
-        _runtime.ParryWindowFrames = compute_initial_window_frames();
-        _runtime.ParryWindowElapsedFrames = 0;
-        _runtime.FailureFlashFrames = 0;
-        _runtime.ParryWindowDebounceFrames = 0;
-        _runtime.ParryInputDebounced = false;
-        _runtime.ParryWindowSucceeded = false;
-        _runtime.SuccessIndicatorActive = false;
-        start_timing_session(cue, cueIndex, partyMask, leadFramesUsed);
-        string damageType = is_magic_like_attack(try_get_chr(cue.attacker_id)) ? "Magic" : "Physical";
-        log_debug($"{format_actor_slot(_runtime.CurrentAttackerId)} {damageType} command detected (q{cueIndex}) - parry window open for {_runtime.ParryWindowFrames}f, targets: {format_party_target_mask(partyMask)}.");
+        if (changed) {
+            _runtime.CurrentAttackerId = cue.attacker_id;
+            _runtime.CurrentCueIndex = cueIndex;
+            _runtime.CurrentPartyTargetMask = partyMask;
+            _runtime.AwaitingTurnEnd = true;
+            _runtime.ParryWindowSucceeded = false;
+            _runtime.SuccessIndicatorActive = false;
+
+            _turnRuntimeEvents.EmitDispatchStarted(
+                attackerId: cue.attacker_id,
+                queueIndex: cueIndex,
+                timestampLocal: current_gameplay_timestamp(),
+                frameIndex: _debugFrameIndex,
+                parryWindowActive: _runtime.ParryWindowActive);
+
+            string damageType = is_magic_like_attack(attacker) ? "Magic" : "Physical";
+            string commandHint = format_command_hint(resolve_command_for_cue(_battleAdapter.GetBattle(), cueIndex, cue), maxLabelLength: 24);
+            log_debug($"{format_actor_slot(cue.attacker_id)} {damageType} command{commandHint} active (q{cueIndex}), targets: {format_party_target_mask(partyMask)}.");
+        }
+
+        return true;
     }
 
     private bool try_get_enemy_attack_cue(out AttackCue cue, out byte cueIndex, out Chr* attacker) {
-        return try_get_enemy_attack_cue_internal(null, out cue, out cueIndex, out attacker);
-    }
-
-    private bool try_get_enemy_attack_cue(byte attackerFilter, out AttackCue cue, out byte cueIndex, out Chr* attacker) {
-        return try_get_enemy_attack_cue_internal(attackerFilter, out cue, out cueIndex, out attacker);
-    }
-
-    private bool try_get_enemy_attack_cue_internal(byte? attackerFilter, out AttackCue cue, out byte cueIndex, out Chr* attacker) {
         cueIndex = 0;
         cue = default;
         attacker = null;
@@ -186,22 +134,38 @@ public unsafe sealed partial class ParryModule {
         if (totalCues <= 0) return false;
 
         if (observedCues > totalCues && !_runtime.AttackCueClampWarned) {
-            // Defensive clamp: corrupted cue counts could otherwise walk invalid memory.
             _logger.Warning($"[Parry] attack_cues_size was {observedCues}; clamping scan to {totalCues} for safety.");
             _runtime.AttackCueClampWarned = true;
         }
+
+        int fallbackIndex = -1;
+        AttackCue fallbackCue = default;
+        Chr* fallbackChr = null;
 
         for (int i = 0; i < totalCues; i++) {
             AttackCue candidate = battle->attack_cues[i];
             Chr* candidateChr = try_get_chr(candidate.attacker_id);
             if (!should_flag_as_enemy(candidate.attacker_id, candidateChr))
                 continue;
-            if (attackerFilter.HasValue && candidate.attacker_id != attackerFilter.Value)
-                continue;
 
-            cueIndex = (byte)i;
-            cue = candidate;
-            attacker = candidateChr;
+            if (fallbackIndex < 0) {
+                fallbackIndex = i;
+                fallbackCue = candidate;
+                fallbackChr = candidateChr;
+            }
+
+            if (extract_party_target_mask(candidate) != 0) {
+                cueIndex = (byte)i;
+                cue = candidate;
+                attacker = candidateChr;
+                return true;
+            }
+        }
+
+        if (fallbackIndex >= 0) {
+            cueIndex = (byte)fallbackIndex;
+            cue = fallbackCue;
+            attacker = fallbackChr;
             return true;
         }
 
@@ -219,36 +183,88 @@ public unsafe sealed partial class ParryModule {
         return mask;
     }
 
-    private int compute_initial_window_frames() {
-        return is_resolve_mode() ? compute_resolve_window_frames() : compute_window_frames();
+    private ParryInputContext capture_parry_input_context() {
+        if (!try_get_parryable_enemy_cue(out AttackCue cue, out byte cueIndex, out _, out uint partyMask)) {
+            return ParryInputContext.None;
+        }
+
+        return new ParryInputContext(
+            hasParryableCue: true,
+            cue: cue,
+            cueIndex: cueIndex,
+            partyMask: partyMask);
     }
 
-    private int compute_negation_timeout_frames() {
-        return compute_initial_window_frames();
+    private void handle_parry_input_release(ParryInputContext context) {
+        if (!context.HasParryableCue) {
+            log_debug("Parry release ignored (no active parryable enemy cue).");
+            return;
+        }
+
+        _spamController.ArmOnQualifyingRelease();
     }
 
-    private int compute_resolve_window_frames() {
-        float clamped = Math.Clamp(_optionResolveWindowSeconds, ResolveWindowMinSeconds, ResolveWindowMaxSeconds);
-        return seconds_to_frames(clamped);
+    private void handle_parry_input_press(ParryInputContext context) {
+        if (!context.HasParryableCue) {
+            log_debug("Parry input ignored (no parryable enemy cue).");
+            return;
+        }
+
+        AttackCue cue = context.Cue;
+        byte cueIndex = context.CueIndex;
+        uint partyMask = context.PartyMask;
+
+        ParrySpamTransition spamTransition = _spamController.OnQualifyingPress();
+        if (spamTransition.TierChanged) {
+            int fromTier = spamTransition.PreviousTier + 1;
+            int toTier = spamTransition.CurrentTier + 1;
+            log_debug($"Anti-spam tier {fromTier} -> {toTier} (tap/re-engage).");
+        }
+
+        _runtime.AwaitingTurnEnd = true;
+        _runtime.CurrentAttackerId = cue.attacker_id;
+        _runtime.CurrentCueIndex = cueIndex;
+        _runtime.CurrentPartyTargetMask = partyMask;
+        _runtime.ParryWindowActive = true;
+        int spamTier = ParryDifficultyModel.ClampTierIndex(_spamController.TierIndex);
+        _runtime.ParryWindowRemainingSeconds = compute_window_seconds_for_tier(spamTier);
+        _runtime.ParryWindowElapsedSeconds = 0f;
+        _runtime.ParryWindowSucceeded = false;
+        _runtime.SuccessIndicatorActive = false;
+        _runtime.FailureFlashSeconds = 0f;
+
+        mark_active_turn_open();
+        float windowMs = _runtime.ParryWindowRemainingSeconds * 1000f;
+        log_debug($"Parry input armed for {format_actor_slot(cue.attacker_id)} (q{cueIndex}) for {windowMs:F0}ms [{ParryDifficultyModel.FormatName(_optionDifficulty)} T{spamTier + 1}].");
     }
 
-    private bool is_resolve_mode() {
-        return _optionTimingMode == ParryTimingMode.ApplyDamageClamp;
+    private float compute_window_seconds_for_tier(int tierIndex) {
+        return ParryDifficultyModel.GetWindowSeconds(_optionDifficulty, tierIndex);
     }
 
-    private int compute_window_frames() {
-        int minFrames = seconds_to_frames(WindowMinSeconds);
-        int maxFrames = seconds_to_frames(WindowMaxSeconds);
-        int target = seconds_to_frames(_optionWindowSeconds);
-        return Math.Clamp(target, minFrames, maxFrames);
+    private void advance_spam_penalty_timers(float deltaSeconds) {
+        ParrySpamTransition transition = _spamController.Tick(deltaSeconds);
+        if (transition.Reset && string.Equals(transition.Reason, "calm", StringComparison.Ordinal)) {
+            reset_spam_tier("calm", logTransition: true, alreadyReset: true);
+        }
     }
 
-    private int compute_lead_frames(bool isMagic) {
-        float minSeconds = isMagic ? LeadMagicMinSeconds : LeadPhysicalMinSeconds;
-        float maxSeconds = isMagic ? LeadMagicMaxSeconds : LeadPhysicalMaxSeconds;
-        float option = isMagic ? _optionLeadMagicSeconds : _optionLeadPhysicalSeconds;
-        float clamped = Math.Clamp(option, minSeconds, maxSeconds);
-        return seconds_to_frames(clamped);
+    private void reset_spam_tier(string reason, bool logTransition, bool alreadyReset = false) {
+        ParrySpamTransition transition = alreadyReset ? default : _spamController.Reset(reason);
+        bool changed = alreadyReset ? true : transition.Reset;
+        if (logTransition && changed) {
+            log_debug($"Anti-spam tier reset ({reason}).");
+        }
+    }
+
+    private bool try_get_parryable_enemy_cue(out AttackCue cue, out byte cueIndex, out Chr* attacker, out uint partyMask) {
+        partyMask = 0;
+        if (!try_get_enemy_attack_cue(out cue, out cueIndex, out attacker)) {
+            return false;
+        }
+
+        partyMask = extract_party_target_mask(cue);
+        return partyMask != 0;
     }
 
     private static bool is_magic_like_attack(Chr* attacker) {
@@ -273,8 +289,6 @@ public unsafe sealed partial class ParryModule {
 
     private static bool should_flag_as_enemy(byte slotIndex, Chr* chr) {
         if (chr != null) {
-            // Game memory quirk: some non-active entries may keep stale data.
-            // Treat non-existing or dead entries as enemies only by slot range fallback.
             if (chr->stat_group != 0) return true;
             if (!chr->stat_exist_flag || chr->ram.hp <= 0) return slotIndex >= PartyActorCapacity;
         }
@@ -284,119 +298,27 @@ public unsafe sealed partial class ParryModule {
 
     private void end_parry_window(string reason) {
         if (_runtime.ParryWindowActive)
-            log_debug($"Parry window closed for {format_actor_slot(_runtime.CurrentAttackerId)}.");
+            log_debug($"Parry window closed for {format_actor_slot(_runtime.CurrentAttackerId)} ({reason}).");
 
-        finalize_timing_capture(reason);
         _runtime.ParryWindowActive = false;
-        _runtime.ParryWindowFrames = 0;
-        _runtime.ParryWindowElapsedFrames = 0;
-        _runtime.ParryWindowDebounceFrames = 0;
-        _runtime.ParryInputDebounced = false;
+        _runtime.ParryWindowRemainingSeconds = 0f;
+        _runtime.ParryWindowElapsedSeconds = 0f;
         _runtime.ParryWindowSucceeded = false;
         _runtime.SuccessIndicatorActive = false;
     }
 
-    private bool should_clear_awaiting_turn_end_for_new_cue(AttackCue cue, byte cueIndex, uint partyMask) {
-        if (!_runtime.AwaitingTurnEnd) return false;
-        if (_runtime.ParryWindowActive || _runtime.LeadPending) return false;
-
-        if (cue.attacker_id != _runtime.CurrentAttackerId) return true;
-        if (cueIndex != _runtime.CurrentCueIndex) return true;
-        return partyMask != _runtime.CurrentPartyTargetMask;
-    }
-
     private void clear_awaiting_turn_end(string reason) {
         _runtime.AwaitingTurnEnd = false;
-        _runtime.ParryInputDebounced = false;
-        if (_runtime.SuccessIndicatorActive) {
-            _runtime.SuccessIndicatorActive = false;
-            _runtime.SuccessFlashFrames = Math.Max(_runtime.SuccessFlashFrames, IndicatorFlashFrames);
-        }
-
         _runtime.ParryWindowSucceeded = false;
+        _runtime.SuccessIndicatorActive = false;
+        _runtime.CurrentPartyTargetMask = 0;
         log_debug(reason);
     }
 
-    private void on_parry_success() {
-        int framesRemaining = Math.Max(_runtime.ParryWindowFrames, 0);
-        _runtime.ParryWindowActive = false;
-        _runtime.ParryWindowFrames = 0;
-        _runtime.AwaitingTurnEnd = true;
-        _runtime.ParryWindowDebounceFrames = Math.Max(_runtime.ParryWindowDebounceFrames, Math.Max(framesRemaining, 1));
-
-        _runtime.ParryWindowSucceeded = true;
-        _runtime.SuccessIndicatorActive = true;
-        _runtime.SuccessFlashFrames = Math.Max(_runtime.SuccessFlashFrames, IndicatorFlashFrames);
-        _runtime.FailureFlashFrames = 0;
-
-        log_debug($"Parry input detected against {format_actor_slot(_runtime.CurrentAttackerId)}.");
-        finalize_timing_capture("parry_success", true);
-        mark_pending_negation();
-        apply_overdrive_boost(_runtime.CurrentPartyTargetMask);
-        play_feedback_sound();
-    }
-
     private void trigger_failure_feedback() {
-        if (!_runtime.ParryWindowActive || _runtime.ParryWindowSucceeded) return;
-        log_debug($"Parry failed against {format_actor_slot(_runtime.CurrentAttackerId)}.");
         if (_optionIndicator)
-            _runtime.FailureFlashFrames = IndicatorFlashFrames;
-        _runtime.SuccessFlashFrames = 0;
-    }
-
-    private void mark_pending_negation() {
-        if (!_optionNegateDamage) return;
-
-        uint mask = _runtime.CurrentPartyTargetMask;
-        if (mask == 0) mask = PlayerTargetMask;
-
-        _runtime.PendingNegateMask = mask;
-        _runtime.PendingNegateTimeoutFrames = compute_negation_timeout_frames();
-        log_debug($"Queued damage negation for {format_party_target_mask(mask)}.");
-    }
-
-    private void process_pending_negation() {
-        if (_runtime.PendingNegateMask == 0 || !_optionNegateDamage) return;
-
-        Chr* party = _battleAdapter.GetPlayerCharacters();
-        if (party == null) {
-            _runtime.PendingNegateMask = 0;
-            return;
-        }
-
-        for (int i = 0; i < PartyActorCapacity; i++) {
-            uint bit = 1u << i;
-            if ((_runtime.PendingNegateMask & bit) == 0) continue;
-
-            Chr* chr = party + i;
-            if (!chr->stat_exist_flag || chr->ram.hp <= 0) {
-                _runtime.PendingNegateMask &= ~bit;
-                continue;
-            }
-
-            if (chr->damage_hp == 0 && chr->damage_mp == 0)
-                continue;
-
-            // Damage-negation hack: clear queued damage fields before the engine applies them.
-            // This intentionally relies on battle-frame timing around attack resolve.
-            chr->damage_hp = 0;
-            chr->damage_mp = 0;
-            chr->damage_ctb = 0;
-            chr->stat_avoid_flag = true;
-            _runtime.PendingNegateMask &= ~bit;
-            log_debug($"Negated pending damage for {format_actor_slot((byte)i)}.");
-        }
-
-        if (_runtime.PendingNegateMask == 0) {
-            _runtime.PendingNegateTimeoutFrames = 0;
-            return;
-        }
-
-        if (_runtime.PendingNegateTimeoutFrames > 0) {
-            _runtime.PendingNegateTimeoutFrames--;
-            if (_runtime.PendingNegateTimeoutFrames == 0)
-                _runtime.PendingNegateMask = 0;
-        }
+            _runtime.FailureFlashSeconds = IndicatorFlashSeconds;
+        _runtime.SuccessFlashSeconds = 0f;
     }
 
     private void apply_overdrive_boost(uint mask) {
@@ -435,15 +357,15 @@ public unsafe sealed partial class ParryModule {
         // Audio feedback hack: this flag asks the engine to play a hit confirmation sound once.
         player->stat_sound_hit_num = 3;
         _runtime.PendingSoundSlot = slotIndex;
-        _runtime.PendingSoundFrames = SoundResetFrames;
+        _runtime.PendingSoundSeconds = SoundResetSeconds;
         log_debug("Queued confirm-style hit sound for local player.");
     }
 
-    private void update_sound_flag() {
-        if (_runtime.PendingSoundSlot < 0 || _runtime.PendingSoundFrames <= 0) return;
+    private void update_sound_flag(float deltaSeconds) {
+        if (_runtime.PendingSoundSlot < 0 || _runtime.PendingSoundSeconds <= 0f) return;
 
-        _runtime.PendingSoundFrames--;
-        if (_runtime.PendingSoundFrames == 0) {
+        _runtime.PendingSoundSeconds = MathF.Max(0f, _runtime.PendingSoundSeconds - deltaSeconds);
+        if (_runtime.PendingSoundSeconds <= 0f) {
             end_pending_sound_feedback(forceResetSound: true);
             log_debug("Reset temporary hit sound flag.");
         }
@@ -458,7 +380,7 @@ public unsafe sealed partial class ParryModule {
         }
 
         _runtime.PendingSoundSlot = -1;
-        _runtime.PendingSoundFrames = 0;
+        _runtime.PendingSoundSeconds = 0f;
     }
 
     private bool try_find_first_active_player(out byte slotIndex, out Chr* player) {

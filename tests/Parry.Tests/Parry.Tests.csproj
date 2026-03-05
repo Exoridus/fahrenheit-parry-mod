@@ -13,7 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\src\logic\parry_decision_planner.cs" Link="logic\parry_decision_planner.cs" />
-    <Compile Include="..\..\src\logic\parry_simulation_harness.cs" Link="logic\parry_simulation_harness.cs" />
+    <Compile Include="..\..\src\combat\parry_decision_planner.cs" Link="combat\parry_decision_planner.cs" />
+    <Compile Include="..\..\src\combat\parry_difficulty_model.cs" Link="combat\parry_difficulty_model.cs" />
+    <Compile Include="..\..\src\combat\parry_spam_controller.cs" Link="combat\parry_spam_controller.cs" />
+    <Compile Include="..\..\src\combat\parry_time_source.cs" Link="combat\parry_time_source.cs" />
+    <Compile Include="..\..\src\combat\parry_turn_state_machine.cs" Link="combat\parry_turn_state_machine.cs" />
+    <Compile Include="..\..\src\debug\parry_turn_timeline_tracker.cs" Link="debug\parry_turn_timeline_tracker.cs" />
   </ItemGroup>
 </Project>

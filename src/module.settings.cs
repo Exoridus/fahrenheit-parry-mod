@@ -1,23 +1,6 @@
 namespace Fahrenheit.Mods.Parry;
 
 public unsafe sealed partial class ParryModule {
-    private void render_setting_timing_mode() {
-        ImGui.BeginGroup();
-        string legacyLabel = FhApi.Localization.localize("fhparry.timing_mode.legacy");
-        string resolveLabel = FhApi.Localization.localize("fhparry.timing_mode.resolve");
-        bool legacySelected = _optionTimingMode == ParryTimingMode.FixedWindow;
-        bool resolveSelected = _optionTimingMode == ParryTimingMode.ApplyDamageClamp;
-        if (ImGui.RadioButton($"{legacyLabel}##fhparry.timing_mode.legacy", legacySelected)) {
-            _optionTimingMode = ParryTimingMode.FixedWindow;
-        }
-
-        if (ImGui.RadioButton($"{resolveLabel}##fhparry.timing_mode.resolve", resolveSelected)) {
-            _optionTimingMode = ParryTimingMode.ApplyDamageClamp;
-        }
-
-        ImGui.EndGroup();
-    }
-
     private void render_setting_enabled() {
         if (ImGui.Checkbox("##fhparry.enabled", ref _optionEnabled)) {
             log_debug($"Master toggle changed: {_optionEnabled}.");
@@ -58,26 +41,17 @@ public unsafe sealed partial class ParryModule {
         }
     }
 
-    private void render_setting_window() {
-        bool disabled = _optionTimingMode != ParryTimingMode.FixedWindow;
-        if (disabled) ImGui.BeginDisabled();
-        ImGui.SliderFloat("##fhparry.window_seconds", ref _optionWindowSeconds, WindowMinSeconds, WindowMaxSeconds, "%.1f s");
-        if (disabled) ImGui.EndDisabled();
-    }
-
-    private void render_setting_resolve_window() {
-        bool disabled = _optionTimingMode != ParryTimingMode.ApplyDamageClamp;
-        if (disabled) ImGui.BeginDisabled();
-        ImGui.SliderFloat("##fhparry.resolve_window", ref _optionResolveWindowSeconds, ResolveWindowMinSeconds, ResolveWindowMaxSeconds, "%.1f s");
-        if (disabled) ImGui.EndDisabled();
-    }
-
-    private void render_setting_lead_physical() {
-        ImGui.SliderFloat("##fhparry.lead_physical", ref _optionLeadPhysicalSeconds, LeadPhysicalMinSeconds, LeadPhysicalMaxSeconds, "%.2f s");
-    }
-
-    private void render_setting_lead_magic() {
-        ImGui.SliderFloat("##fhparry.lead_magic", ref _optionLeadMagicSeconds, LeadMagicMinSeconds, LeadMagicMaxSeconds, "%.2f s");
+    private void render_setting_difficulty() {
+        int idx = Math.Clamp((int)_optionDifficulty, 0, 2);
+        if (ImGui.Combo("##fhparry.difficulty", ref idx, "Easy\0Normal\0Expert\0")) {
+            _optionDifficulty = idx switch {
+                0 => ParryDifficulty.Easy,
+                2 => ParryDifficulty.Expert,
+                _ => ParryDifficulty.Normal
+            };
+            reset_spam_tier("difficulty_changed", logTransition: true);
+            log_debug($"Difficulty changed to {ParryDifficultyModel.FormatName(_optionDifficulty)}.");
+        }
     }
 
     private void render_setting_future() {
