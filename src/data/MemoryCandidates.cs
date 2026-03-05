@@ -18,7 +18,7 @@ internal sealed record ValidatedOffsetCandidate(
     string Note);
 
 internal static class MemoryCandidates {
-    // Example candidates sourced from mappings/research/pointer-hook-references.curated-candidates.json.
+    // Example candidates sourced from local research/mining outputs.
     // Set State=Verified only after runtime checks pass in your battle/save/load scenarios.
     internal static readonly ValidatedOffsetCandidate[] Entries = [
         new(
