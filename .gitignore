@@ -40,3 +40,9 @@ Thumbs.db
 
 # Local downloaded / packaged archives
 fahrenheit_windows_x86_release_*.zip
+
+# Research mining outputs (track only curated set)
+mappings/research/*
+!mappings/research/pointer-hook-references.curated-candidates.csv
+!mappings/research/pointer-hook-references.curated-candidates.json
+!mappings/research/pointer-hook-references.summary.md
