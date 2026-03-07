@@ -17,6 +17,10 @@ Quick command discovery:
   - Runs Fahrenheit setup.
   - Runs interactive auto-deploy setup.
 
+- `.\build.cmd clean [--full]`
+  - Removes generated local outputs (`bin/`, `obj/`, Fahrenheit `artifacts`, preflight folders).
+  - `--full` also removes `.release` packaged outputs.
+
 - `.\build.cmd doctor [--full]`
   - Prints environment diagnostics.
   - Fails when required prerequisites are missing.
@@ -54,7 +58,7 @@ Quick command discovery:
 - `.\build.cmd ghidra-start [--ghidradir <path>]`
   - Starts `ghidraRun.bat` from the repo-local install.
 
-- `.\build.cmd data-extract [--vbfgamedatadir <path>] [--extractout <path>] [--extractmetamenu true|false]`
+- `.\build.cmd data-extract [--vbfgamedir <path>] [--extractout <path>] [--extractmetamenu true|false]`
   - Extracts `FFX_Data.vbf` and `FFX2_Data.vbf`.
 
 - `.\build.cmd data-parse [--datamode <MODE>] [--dataargs "..."] [--dataroot <path>] [--dataout <path>]`

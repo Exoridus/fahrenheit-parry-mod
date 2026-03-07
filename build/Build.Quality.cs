@@ -11,6 +11,44 @@ internal sealed partial class BuildScript
 
     Target Smoke => _ => _.Executes(() => RunSmokeCore(Payload, Config));
 
+    void RunCleanCore(bool full)
+    {
+        var directories = new List<string>
+        {
+            Path.Combine(RootDirectory, "bin"),
+            Path.Combine(RootDirectory, "obj"),
+            Path.Combine(RootDirectory, "build", "bin"),
+            Path.Combine(RootDirectory, "build", "obj"),
+            Path.Combine(RootDirectory, "tests", "Parry.Tests", "bin"),
+            Path.Combine(RootDirectory, "tests", "Parry.Tests", "obj"),
+            Path.Combine(ResolvePath(FahrenheitDir), "artifacts"),
+            Path.Combine(ResolvePath(".release"), "stage"),
+            Path.Combine(ResolvePath(".release"), "preflight")
+        };
+
+        if (full)
+        {
+            directories.Add(ResolvePath(".release"));
+        }
+
+        var removed = 0;
+        foreach (var path in directories.Distinct(StringComparer.OrdinalIgnoreCase))
+        {
+            if (!Directory.Exists(path))
+            {
+                continue;
+            }
+
+            Directory.Delete(path, recursive: true);
+            removed++;
+            Log.Information($"Removed: {path}");
+        }
+
+        Log.Information(removed == 0
+            ? "Clean completed: nothing to remove."
+            : $"Clean completed: removed {removed} director{(removed == 1 ? "y" : "ies")}.");
+    }
+
     void RunDoctorCore()
     {
         var requiredFailures = new List<string>();

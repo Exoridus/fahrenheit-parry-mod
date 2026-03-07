@@ -2,9 +2,9 @@
 
 <!----><a name="top"></a>
 # Fahrenheit Parry Mod
-[![Latest](https://img.shields.io/github/v/release/Exoridus/fahrenheit-parry-mod?style=for-the-badge&label=Latest&logo=github&color=44cc11)](https://github.com/Exoridus/fahrenheit-parry-mod/releases/latest)
-[![Builds: Passing](https://img.shields.io/github/actions/workflow/status/Exoridus/fahrenheit-parry-mod/ci.yml?style=for-the-badge&label=Builds%3A%20Passing&logo=githubactions&color=44cc11)](https://github.com/Exoridus/fahrenheit-parry-mod/actions/workflows/ci.yml)
-[![Release](https://img.shields.io/github/actions/workflow/status/Exoridus/fahrenheit-parry-mod/release.yml?style=for-the-badge&label=Release&logo=githubactions&color=44cc11)](https://github.com/Exoridus/fahrenheit-parry-mod/actions/workflows/release.yml)
+[![Latest](https://img.shields.io/github/v/release/Exoridus/fahrenheit-parry-mod?sort=semver&display_name=release&style=for-the-badge&logo=github&labelColor=1a1e23&color=#1a1e23)](https://github.com/Exoridus/fahrenheit-parry-mod/releases/latest)
+[![Builds](https://img.shields.io/github/actions/workflow/status/Exoridus/fahrenheit-parry-mod/ci.yml?style=for-the-badge&label=Builds&logo=githubactions&logoColor=ffffff&labelColor=1a1e23)](https://github.com/Exoridus/fahrenheit-parry-mod/actions/workflows/ci.yml)
+[![Sponsor](https://img.shields.io/badge/Sponsor-1a1e23?style=for-the-badge&logo=githubsponsors)](https://github.com/sponsors/Exoridus)
 ![Banner](https://github.com/Exoridus/fahrenheit-parry-mod/blob/main/resources/Banner.png?raw=true)
 
 </div>
@@ -22,7 +22,7 @@
 - [x] Deterministic build/deploy/release pipeline
 - [x] Difficulty-based parry timing model with anti-spam tiers
 - [x] Runtime localized mapping bundles (`mappings/runtime`)
-- [x] CI verify matrix (`Debug` + `Release`)
+- [x] CI verify jobs (`Verify` + `Verify (Release)`)
 - [x] Release packaging + release-note generation
 - [x] Quality workflows: `doctor`, `lint`, `smoke`, `verify`
 

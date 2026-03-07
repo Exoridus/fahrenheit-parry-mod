@@ -165,6 +165,8 @@ internal sealed partial class BuildScript : NukeBuild
             }
         });
 
+    Target Clean => _ => _.Executes(() => RunCleanCore(Full));
+
     void SetupHooksCore()
     {
         RequireGitRepository();
@@ -294,6 +296,7 @@ internal sealed partial class BuildScript : NukeBuild
         Log.Information("Core:");
         Log.Information("  install      Install/check prerequisites");
         Log.Information("  setup        Configure repo hooks + Fahrenheit setup + optional auto-deploy setup");
+        Log.Information("  clean        Remove local build/preflight outputs");
         Log.Information("  auto-deploy  Configure automatic post-build deploy");
         Log.Information("  doctor       Diagnose local toolchain/environment state");
         Log.Information("  lint         Run fast lint/compile checks");
@@ -370,6 +373,19 @@ internal sealed partial class BuildScript : NukeBuild
                     [
                         "build.cmd auto-deploy",
                         "build.cmd auto-deploy --gamedir \"C:\\Games\\Final Fantasy X-X2 - HD Remaster\" --mode mod-only"
+                    ]);
+                return;
+
+            case "clean":
+                PrintHelpBlock(
+                    "clean",
+                    "Remove generated local build outputs and preflight artifacts.",
+                    [
+                        "--full (optional, default false) -> also remove .release packaged outputs."
+                    ],
+                    [
+                        "build.cmd clean",
+                        "build.cmd clean --full"
                     ]);
                 return;
 

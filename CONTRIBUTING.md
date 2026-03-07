@@ -4,6 +4,7 @@
 
 - This repository is Windows-first for build/deploy workflows.
 - Keep automation changes in `build.cmd`, `build/`, and `.github/workflows/`.
+- Keep gameplay/runtime changes inside `src/`.
 
 ## Prerequisites
 
@@ -14,47 +15,66 @@
 Install prerequisites:
 
 ```cmd
-build.cmd install --full
+.\build.cmd install --full
 ```
 
-## Local Verification
-
-Run the standard local verification gate before pushing:
+## First-Time Setup
 
 ```cmd
-build.cmd verify --configuration Debug
+.\build.cmd setup
+.\build.cmd doctor
+.\build.cmd verify --config Debug
 ```
 
-Run setup once per clone to install local git hooks:
+`setup` configures local git hooks and Fahrenheit workspace setup.
+
+## Daily Workflow
 
 ```cmd
-build.cmd setup
+.\build.cmd lint --config Debug
+.\build.cmd verify --config Debug
+.\build.cmd build --payload mod --config Debug
+.\build.cmd deploy --payload mod --mode merge
 ```
 
-Configure or update automatic local deployment:
+Optional cleanup:
 
 ```cmd
-build.cmd setupautodeploy
+.\build.cmd clean
+.\build.cmd clean --full
 ```
 
-## Commit Style
+## Commit Conventions
 
-- Use Conventional Commits where possible:
+- Use Conventional Commits:
   - `feat: ...`
   - `fix: ...`
   - `docs: ...`
-  - `chore: ...`
+  - `refactor: ...`
+  - `build: ...`
   - `ci: ...`
-- Keep changes focused and avoid unrelated formatting churn.
-- Local `commit-msg` hook blocks invalid formats.
-- CI also validates PR commit subjects.
+  - `chore: ...`
+- Keep each commit focused (one concern per commit where possible).
+- Do not mix broad refactors with behavior changes unless inseparable.
+- Local `commit-msg` hook blocks invalid commit subjects.
+- CI validates commit subjects in PRs.
 
-Optional helper for creating conventional commit messages:
+Helpful command:
 
 ```cmd
-build.cmd commit
-build.cmd commit --committype feat --commitscope ui --commitmessage "add toggle"
+.\build.cmd commit
+.\build.cmd commit --type feat --scope ui --subject "add queue row grouping"
 ```
+
+## PR Expectations
+
+- Run `.\build.cmd verify --config Debug` before opening/updating PRs.
+- Include concise testing notes in the PR description:
+  - build config used
+  - whether in-game validation was performed
+  - any known limitations
+- Keep PRs small and reviewable when possible.
+- Update docs when command names, workflows, or user-facing behavior change.
 
 ## Release Flow
 
@@ -62,16 +82,9 @@ build.cmd commit --committype feat --commitscope ui --commitmessage "add toggle"
 2. Run:
 
 ```cmd
-build.cmd releaseready --repository "Exoridus/fahrenheit-parry-mod"
-build.cmd releaseversion --bump patch
-```
-
-This command updates version/changelog and writes `fahrenheit.release.ref` with the exact Fahrenheit commit hash that release builds must use.
-
-3. Push commit and tag:
-
-```cmd
+.\build.cmd release-ready --repo Exoridus/fahrenheit-parry-mod
+.\build.cmd release-bump --bump patch --repo Exoridus/fahrenheit-parry-mod
 git push origin main --follow-tags
 ```
 
-Tag pushes (`v*`) trigger `.github/workflows/release.yml`, which builds, packages, generates checksums/release notes, and publishes assets.
+`release-bump` updates version/changelog, pins `fahrenheit.release.ref`, creates the release commit, and creates an annotated tag.

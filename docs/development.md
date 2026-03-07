@@ -45,6 +45,7 @@ Quality:
 .\build.cmd lint [--config Debug|Release]
 .\build.cmd smoke [--payload mod|full] [--config Debug|Release]
 .\build.cmd verify [--config Debug|Release] [--repo owner/repo]
+.\build.cmd clean [--full]
 ```
 
 Build and deploy:
@@ -101,7 +102,7 @@ git push origin main --follow-tags
 
 - `push`/`pull_request` to `main`: `.github/workflows/ci.yml`
   - commit subject validation (PR)
-  - `verify` matrix for `Debug` and `Release`
+  - `Verify` job (`Debug`) + `Verify (Release)` job
 - tag push `v*`: `.github/workflows/release.yml`
   - full release build
   - release packaging (`full` and `mod-only` ZIP)

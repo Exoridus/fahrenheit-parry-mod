@@ -59,6 +59,7 @@ if /I "%CMD:~0,1%"=="-" (
 set "TARGET="
 if /I "%CMD%"=="install" set "TARGET=Install"
 if /I "%CMD%"=="setup" set "TARGET=Setup"
+if /I "%CMD%"=="clean" set "TARGET=Clean"
 if /I "%CMD%"=="auto-deploy" set "TARGET=AutoDeploy"
 if /I "%CMD%"=="doctor" set "TARGET=Doctor"
 if /I "%CMD%"=="lint" set "TARGET=Lint"
