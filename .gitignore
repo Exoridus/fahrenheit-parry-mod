@@ -21,9 +21,11 @@ TestResults/
 
 # Logs / temporary files
 *.log
+*.dmp
 *.tmp
 *.temp
 *.cache
+OUTPUT.TXT
 
 # Python leftovers
 __pycache__/

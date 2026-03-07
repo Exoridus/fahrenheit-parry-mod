@@ -299,6 +299,7 @@ internal sealed partial class BuildScript : NukeBuild
         Log.Information("  clean        Remove local build/preflight outputs");
         Log.Information("  auto-deploy  Configure automatic post-build deploy");
         Log.Information("  doctor       Diagnose local toolchain/environment state");
+        Log.Information("  format       Auto-fix code formatting/style");
         Log.Information("  lint         Run fast lint/compile checks");
         Log.Information("  smoke        Run quick end-to-end sanity checks");
         Log.Information("  verify       Build mod (Debug by default) + run tests");
@@ -449,6 +450,18 @@ internal sealed partial class BuildScript : NukeBuild
                     [
                         "build.cmd doctor",
                         "build.cmd doctor --full"
+                    ]);
+                return;
+
+            case "format":
+                PrintHelpBlock(
+                    "format",
+                    "Apply code formatting/style fixes using dotnet format.",
+                    [
+                        "No required parameters."
+                    ],
+                    [
+                        "build.cmd format"
                     ]);
                 return;
 

@@ -41,6 +41,7 @@ Discover workflows:
 Quality:
 
 ```bash
+.\build.cmd format
 .\build.cmd doctor [--full]
 .\build.cmd lint [--config Debug|Release]
 .\build.cmd smoke [--payload mod|full] [--config Debug|Release]

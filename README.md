@@ -75,6 +75,7 @@ Detailed docs:
 ```bash
 .\build.cmd help
 .\build.cmd -h build
+.\build.cmd format
 
 .\build.cmd build --payload mod --config Debug
 .\build.cmd deploy --gamedir "C:\\Games\\Final Fantasy X-X2 - HD Remaster"

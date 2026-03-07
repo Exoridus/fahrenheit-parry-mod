@@ -9,6 +9,8 @@ internal sealed partial class BuildScript
 {
     Target Doctor => _ => _.Executes(RunDoctorCore);
 
+    Target Format => _ => _.Executes(RunFormatFixCore);
+
     Target Lint => _ => _.Executes(() => RunLintCore(Config));
 
     Target Smoke => _ => _.Executes(() => RunSmokeCore(Payload, Config));
@@ -151,6 +153,20 @@ internal sealed partial class BuildScript
 
         ValidateCommitMessageString("feat: lint selftest");
         Log.Information("Lint checks passed.");
+    }
+
+    void RunFormatFixCore()
+    {
+        var modProject = Path.Combine(RootDirectory, "Fahrenheit.Mods.Parry.csproj");
+        if (!File.Exists(modProject))
+        {
+            Fail($"Missing mod project: {modProject}");
+        }
+
+        RunChecked(
+            "dotnet",
+            $"format {Quote(modProject)} --no-restore",
+            "Code style auto-fix (dotnet format)");
     }
 
     void ValidateJsonConfigsCore()

@@ -6,6 +6,11 @@
 - Keep automation changes in `build.cmd`, `build/`, and `.github/workflows/`.
 - Keep gameplay/runtime changes inside `src/`.
 
+## Language and Style
+
+- Follow the repository style guide: [docs/style-guide.md](docs/style-guide.md).
+- Conventional Commits are required for all commit subjects.
+
 ## Prerequisites
 
 - Git
