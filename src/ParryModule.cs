@@ -232,6 +232,7 @@ public unsafe sealed partial class ParryModule : FhModule
     private readonly List<TurnTimelineCueObservation> _debugTimelineCueScratch = new(MaxAttackCueScan);
     private readonly List<TurnTimelineEvent> _debugTimelineEventScratch = new(64);
     private readonly List<TurnTimelineRuntimeSignal> _debugRuntimeSignalScratch = new(128);
+    private readonly Dictionary<string, ulong> _debugMessageLastEmitFrame = new(StringComparer.Ordinal);
     private readonly ParrySpamController _spamController = new();
     private readonly Dictionary<string, int> _impactCorrelationRejectCounts = new(StringComparer.Ordinal);
     private int _impactCorrelationMatchedCount;

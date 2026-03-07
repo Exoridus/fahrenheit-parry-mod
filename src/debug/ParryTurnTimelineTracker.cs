@@ -118,6 +118,8 @@ internal readonly record struct TurnTimelineCueKey(
 
 public sealed class TurnTimelineTracker
 {
+    private const ulong IntegrityWarningThrottleFrames = 30;
+
     private readonly FixedRingBuffer<TurnTimelineRow> _rows;
     private readonly Dictionary<int, TurnTimelineRow> _rowsById = new();
     private readonly List<int> _activeRowOrder = new();
@@ -128,6 +130,8 @@ public sealed class TurnTimelineTracker
     private int _nextCueInstanceSequence = 1;
     private int _turnOrdinalInTurn;
     private int _currentTurnId;
+    private string _lastIntegrityWarningText = string.Empty;
+    private ulong _lastIntegrityWarningFrame;
 
     public TurnTimelineTracker(int rowCapacity)
     {
@@ -761,11 +765,20 @@ public sealed class TurnTimelineTracker
     private void validate_integrity(DateTime timestampLocal, ulong frameIndex)
     {
         int activeCount = 0;
-        for (int i = 0; i < _rows.Count; i++)
+        TurnTimelineRow? activeRow = null;
+
+        for (int i = 0; i < _activeRowOrder.Count; i++)
         {
-            TurnTimelineRow row = _rows[i];
+            int rowId = _activeRowOrder[i];
+            if (!_rowsById.TryGetValue(rowId, out TurnTimelineRow? row)) continue;
             if (row.IsFlushMarker || row.IsDiagnosticMarker) continue;
+            if (row.Lifecycle == TurnTimelineLifecycleState.Completed) continue;
+
             if (row.Lifecycle == TurnTimelineLifecycleState.Active) activeCount++;
+            if (activeRow == null && row.Lifecycle == TurnTimelineLifecycleState.Active)
+            {
+                activeRow = row;
+            }
         }
 
         if (activeCount > 1)
@@ -774,18 +787,28 @@ public sealed class TurnTimelineTracker
             return;
         }
 
-        if (activeCount == 1)
+        if (activeCount == 1 && activeRow != null)
         {
-            TurnTimelineRow? active = find_first_active_row();
-            if (active != null && active.Lifecycle == TurnTimelineLifecycleState.Active && active.QueuePosition > 1)
+            if (activeRow.QueuePosition > 1)
             {
-                append_integrity_warning($"Active row has queue position {active.QueuePosition} (>1).", timestampLocal, frameIndex);
+                append_integrity_warning($"Active row has queue position {activeRow.QueuePosition} (>1).", timestampLocal, frameIndex);
             }
         }
     }
 
     private void append_integrity_warning(string text, DateTime timestampLocal, ulong frameIndex)
     {
+        if (string.Equals(_lastIntegrityWarningText, text, StringComparison.Ordinal))
+        {
+            ulong delta = frameIndex >= _lastIntegrityWarningFrame
+                ? frameIndex - _lastIntegrityWarningFrame
+                : 0;
+            if (delta <= IntegrityWarningThrottleFrames)
+            {
+                return;
+            }
+        }
+
         if (_rows.Count > 0)
         {
             TurnTimelineRow last = _rows[_rows.Count - 1];
@@ -814,6 +837,8 @@ public sealed class TurnTimelineTracker
 
         append_row(row);
         emit_event(TurnTimelineEventKind.IntegrityWarning, row, timestampLocal, frameIndex, $"Timeline integrity warning: {text}");
+        _lastIntegrityWarningText = text;
+        _lastIntegrityWarningFrame = frameIndex;
     }
 
     private sealed class FixedRingBuffer<T> where T : class

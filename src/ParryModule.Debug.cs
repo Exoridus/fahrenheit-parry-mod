@@ -500,6 +500,11 @@ public unsafe sealed partial class ParryModule
 
     private bool append_debug_event(string message)
     {
+        if (is_debug_message_throttled(message))
+        {
+            return false;
+        }
+
         DateTime timestamp = current_gameplay_timestamp();
         double simulationSeconds = current_gameplay_seconds();
 
@@ -530,6 +535,34 @@ public unsafe sealed partial class ParryModule
         });
         write_session_debug_entry(_debugLog[^1]);
         return true;
+    }
+
+    private bool is_debug_message_throttled(string message)
+    {
+        ulong minFramesBetweenRepeats = message switch
+        {
+            "Parry input ignored (no parryable enemy cue)." => 20,
+            "Parry release ignored (no active parryable enemy cue)." => 20,
+            _ when message.StartsWith("Timeline integrity warning:", StringComparison.Ordinal) => 30,
+            _ => 0
+        };
+
+        if (minFramesBetweenRepeats == 0)
+        {
+            return false;
+        }
+
+        if (_debugMessageLastEmitFrame.TryGetValue(message, out ulong lastFrame))
+        {
+            ulong delta = _debugFrameIndex >= lastFrame ? _debugFrameIndex - lastFrame : 0;
+            if (delta <= minFramesBetweenRepeats)
+            {
+                return true;
+            }
+        }
+
+        _debugMessageLastEmitFrame[message] = _debugFrameIndex;
+        return false;
     }
 
     private void render_debug_overlay()
