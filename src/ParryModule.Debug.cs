@@ -1,7 +1,9 @@
 namespace Fahrenheit.Mods.Parry;
 
-public unsafe sealed partial class ParryModule {
-    private enum DebugCueCategory {
+public unsafe sealed partial class ParryModule
+{
+    private enum DebugCueCategory
+    {
         EnemyPhysicalParty,
         EnemyMagicParty,
         EnemyNonParty,
@@ -9,7 +11,8 @@ public unsafe sealed partial class ParryModule {
         Unknown
     }
 
-    private readonly struct DebugCueSnapshot {
+    private readonly struct DebugCueSnapshot
+    {
         public readonly byte QueueIndex;
         public readonly byte AttackerId;
         public readonly int CommandCount;
@@ -41,7 +44,8 @@ public unsafe sealed partial class ParryModule {
             bool isEnemy,
             bool isMagic,
             DebugCueCategory category,
-            int currentCtb) {
+            int currentCtb)
+        {
             QueueIndex = queueIndex;
             AttackerId = attackerId;
             CommandCount = commandCount;
@@ -59,7 +63,8 @@ public unsafe sealed partial class ParryModule {
             CurrentCtb = currentCtb;
         }
 
-        public bool EqualsSemantic(in DebugCueSnapshot other) {
+        public bool EqualsSemantic(in DebugCueSnapshot other)
+        {
             return AttackerId == other.AttackerId
                 && CommandCount == other.CommandCount
                 && CommandId == other.CommandId
@@ -72,7 +77,8 @@ public unsafe sealed partial class ParryModule {
         }
     }
 
-    private readonly struct DebugCueHistoryEntry {
+    private readonly struct DebugCueHistoryEntry
+    {
         public readonly DateTime TimestampLocal;
         public readonly ulong FrameIndex;
         public readonly int TurnId;
@@ -102,7 +108,8 @@ public unsafe sealed partial class ParryModule {
             string category,
             string targets,
             string decision,
-            string gate) {
+            string gate)
+        {
             TimestampLocal = timestampLocal;
             FrameIndex = frameIndex;
             TurnId = turnId;
@@ -120,20 +127,40 @@ public unsafe sealed partial class ParryModule {
         }
     }
 
-    private void update_debug_battle_session_state() {
-        bool active = _battleAdapter.GetBattle() != null;
-        if (active) {
-            if (!_debugBattleActive) {
+    private void update_debug_battle_session_state()
+    {
+        bool trackingEnabled = _debugGameSaveLoaded && _debugGameplayReady;
+        bool active = trackingEnabled && _battleAdapter.GetBattle() != null;
+
+        if (!trackingEnabled)
+        {
+            if (_debugBattleActive)
+            {
+                _debugBattleFrameIndex = 0;
+                _debugCueTurnId = 0;
+                _turnTimeline.EndBattle();
+            }
+
+            _debugBattleActive = false;
+            return;
+        }
+
+        if (active)
+        {
+            if (!_debugBattleActive)
+            {
                 _debugBattleFrameIndex = 0;
                 _debugCueTurnId = 0;
                 _turnTimeline.BeginBattle();
                 append_debug_event("Battle session detected.");
             }
-            else {
+            else
+            {
                 _debugBattleFrameIndex++;
             }
         }
-        else if (_debugBattleActive) {
+        else if (_debugBattleActive)
+        {
             append_debug_event("Battle session ended.");
             _debugBattleFrameIndex = 0;
             _debugCueTurnId = 0;
@@ -143,42 +170,63 @@ public unsafe sealed partial class ParryModule {
         _debugBattleActive = active;
     }
 
-    private void update_debug_save_loaded_state() {
+    private void update_debug_save_loaded_state()
+    {
         FhFfx.SaveData* save = FhFfx.Globals.save_data;
         bool loaded = is_game_save_loaded(save);
         bool gameplayReady = loaded && is_gameplay_ready_for_overlay(save);
-        if (loaded && !_debugGameSaveLoaded) {
+        if (loaded && !_debugGameSaveLoaded)
+        {
             append_debug_event("Game save detected.");
         }
 
-        if (gameplayReady && !_debugGameplayReady) {
+        if (gameplayReady && !_debugGameplayReady)
+        {
             append_debug_event("Gameplay ready. Debug overlay enabled.");
         }
-        else if (!gameplayReady && _debugGameplayReady) {
+        else if (!gameplayReady && _debugGameplayReady)
+        {
             append_debug_event("Gameplay not ready. Debug overlay hidden.");
         }
 
         _debugGameSaveLoaded = loaded;
         _debugGameplayReady = gameplayReady;
+
+        if (gameplayReady)
+        {
+            prune_old_session_logs_if_needed();
+        }
     }
 
-    private static bool is_game_save_loaded(FhFfx.SaveData* save) {
+    private static bool is_game_save_loaded(FhFfx.SaveData* save)
+    {
         if (save == null) return false;
 
         // Keep this check pragmatic: in title/boot these stay zeroed, while loaded saves quickly
-        // populate at least one of these routing/progression fields.
+        // populate at least one of these routing fields.
         if (save->saved_current_room_id != 0 || save->saved_now_eventjump_map_no != 0 || save->saved_now_eventjump_map_id != 0) return true;
         if (save->current_room_id != 0 || save->now_eventjump_map_no != 0 || save->now_eventjump_map_id != 0) return true;
-        if (save->story_progress != 0 || save->time != 0) return true;
 
         return false;
     }
 
-    private bool is_gameplay_ready_for_overlay(FhFfx.SaveData* save) {
+    private bool is_gameplay_ready_for_overlay(FhFfx.SaveData* save)
+    {
         if (save == null) return false;
 
         // Fahrenheit runtime identifies FFX main menu with event 0x17.
         if (*FhFfx.Globals.event_id == 0x17) return false;
+
+        int eventId = *FhFfx.Globals.event_id;
+        if (eventId > 0)
+        {
+            string eventName = get_current_event_name((uint)eventId);
+            if (string.Equals(eventName, "test20", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(eventName, "memochek", StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+        }
 
         // During map fades/transitions the player is not controllable.
         if (save->fade_mode != 0 || save->fade_time != 0) return false;
@@ -190,27 +238,32 @@ public unsafe sealed partial class ParryModule {
         return save->current_room_id != 0 || save->saved_current_room_id != 0;
     }
 
-    private void monitor_cue_transitions() {
+    private void monitor_cue_transitions()
+    {
         _debugCueScratch.Clear();
         collect_live_cues(_debugCueScratch, out _);
 
-        if (_debugCueSnapshots.Count == 0 && _debugCueScratch.Count > 0) {
+        if (_debugCueSnapshots.Count == 0 && _debugCueScratch.Count > 0)
+        {
             _debugCueTurnId++;
         }
 
         int maxCount = Math.Max(_debugCueSnapshots.Count, _debugCueScratch.Count);
-        for (int i = 0; i < maxCount; i++) {
+        for (int i = 0; i < maxCount; i++)
+        {
             bool hasPrev = i < _debugCueSnapshots.Count;
             bool hasCur = i < _debugCueScratch.Count;
 
-            if (!hasPrev && hasCur) {
+            if (!hasPrev && hasCur)
+            {
                 DebugCueSnapshot added = _debugCueScratch[i];
                 log_debug($"Cue+ q{added.QueueIndex}: {format_cue_brief(added)}");
                 append_cue_history("ADD", added);
                 continue;
             }
 
-            if (hasPrev && !hasCur) {
+            if (hasPrev && !hasCur)
+            {
                 DebugCueSnapshot removed = _debugCueSnapshots[i];
                 log_debug($"Cue- q{removed.QueueIndex}: {format_cue_brief(removed)}");
                 append_cue_history("DEL", removed, "Consumed", "-");
@@ -219,13 +272,15 @@ public unsafe sealed partial class ParryModule {
 
             DebugCueSnapshot previous = _debugCueSnapshots[i];
             DebugCueSnapshot current = _debugCueScratch[i];
-            if (!current.EqualsSemantic(previous)) {
+            if (!current.EqualsSemantic(previous))
+            {
                 log_debug($"Cue~ q{current.QueueIndex}: {format_cue_brief(previous)} -> {format_cue_brief(current)}");
                 append_cue_history("UPD", current);
             }
         }
 
-        if (_debugCueSnapshots.Count > 0 && _debugCueScratch.Count == 0) {
+        if (_debugCueSnapshots.Count > 0 && _debugCueScratch.Count == 0)
+        {
             log_debug("Cue queue flushed.");
             append_cue_flush_history();
             _turnRuntimeEvents.EmitQueueFlushed(_debugCueTurnId, current_gameplay_timestamp(), _debugFrameIndex);
@@ -237,9 +292,11 @@ public unsafe sealed partial class ParryModule {
         _debugCueSnapshots.AddRange(_debugCueScratch);
     }
 
-    private void sync_turn_timeline_from_cues() {
+    private void sync_turn_timeline_from_cues()
+    {
         _debugTimelineCueScratch.Clear();
-        for (int i = 0; i < _debugCueScratch.Count; i++) {
+        for (int i = 0; i < _debugCueScratch.Count; i++)
+        {
             DebugCueSnapshot cue = _debugCueScratch[i];
             _debugTimelineCueScratch.Add(new TurnTimelineCueObservation(
                 QueueIndex: cue.QueueIndex,
@@ -272,33 +329,48 @@ public unsafe sealed partial class ParryModule {
             parryWindowActive: _runtime.ParryWindowActive);
     }
 
-    private void flush_turn_timeline_events_to_log() {
+    private void flush_turn_timeline_events_to_log()
+    {
         _debugTimelineEventScratch.Clear();
         _turnTimeline.DrainEvents(_debugTimelineEventScratch);
-        for (int i = 0; i < _debugTimelineEventScratch.Count; i++) {
-            log_debug(_debugTimelineEventScratch[i].Message);
+        for (int i = 0; i < _debugTimelineEventScratch.Count; i++)
+        {
+            TurnTimelineEvent evt = _debugTimelineEventScratch[i];
+            if (evt.Kind == TurnTimelineEventKind.CueSnapshot)
+            {
+                continue;
+            }
+
+            write_session_timeline_event(evt);
+            log_debug(evt.Message);
         }
     }
 
-    private void mark_active_turn_open() {
+    private void mark_active_turn_open()
+    {
         _turnRuntimeEvents.EmitParryWindowOpened(current_gameplay_timestamp(), _debugFrameIndex);
     }
 
-    private void mark_active_turn_parried() {
+    private void mark_active_turn_parried()
+    {
         _turnRuntimeEvents.EmitParrySucceeded(current_gameplay_timestamp(), _debugFrameIndex);
     }
 
-    private void mark_active_turn_missed(string reason) {
+    private void mark_active_turn_missed(string reason)
+    {
         _turnRuntimeEvents.EmitParryMissed(current_gameplay_timestamp(), _debugFrameIndex, reason);
     }
 
-    private void process_turn_runtime_events() {
+    private void process_turn_runtime_events()
+    {
         _debugRuntimeSignalScratch.Clear();
         _turnRuntimeEvents.Drain(_debugRuntimeSignalScratch);
 
-        for (int i = 0; i < _debugRuntimeSignalScratch.Count; i++) {
+        for (int i = 0; i < _debugRuntimeSignalScratch.Count; i++)
+        {
             TurnTimelineRuntimeSignal signal = _debugRuntimeSignalScratch[i];
-            switch (signal.Kind) {
+            switch (signal.Kind)
+            {
                 case TurnTimelineRuntimeSignalKind.CueSnapshot:
                     _turnTimeline.UpdateCues(
                         cues: signal.Cues ?? Array.Empty<TurnTimelineCueObservation>(),
@@ -324,10 +396,19 @@ public unsafe sealed partial class ParryModule {
                         reason: string.IsNullOrWhiteSpace(signal.Reason) ? "consumed" : signal.Reason);
                     break;
                 case TurnTimelineRuntimeSignalKind.DamageResolved:
+                    string targetLabel = signal.TargetSlot >= 0
+                        ? format_actor_slot((byte)signal.TargetSlot)
+                        : "Unknown target";
                     _turnTimeline.CorrelateDamageResolved(
                         targetSlot: signal.TargetSlot,
                         timestampLocal: signal.TimestampLocal,
-                        frameIndex: signal.FrameIndex);
+                        frameIndex: signal.FrameIndex,
+                        attackerId: signal.AttackerId,
+                        queueIndex: signal.QueueIndex,
+                        commandId: signal.CommandId,
+                        commandLabel: signal.CommandLabel,
+                        sourceStage: signal.SourceStage,
+                        targetLabel: targetLabel);
                     break;
                 case TurnTimelineRuntimeSignalKind.ParryWindowOpened:
                     _turnTimeline.MarkActiveParryOpen(signal.TimestampLocal, signal.FrameIndex);
@@ -347,13 +428,15 @@ public unsafe sealed partial class ParryModule {
         flush_turn_timeline_events_to_log();
     }
 
-    private static TurnTimelineParryability classify_turn_parryability(DebugCueSnapshot cue) {
+    private static TurnTimelineParryability classify_turn_parryability(DebugCueSnapshot cue)
+    {
         if (!cue.IsEnemy) return TurnTimelineParryability.NonParryable;
         if (cue.PartyMask != 0) return TurnTimelineParryability.Parryable;
         return TurnTimelineParryability.Unknown;
     }
 
-    private string format_turn_action(DebugCueSnapshot cue) {
+    private string format_turn_action(DebugCueSnapshot cue)
+    {
         string baseAction = !cue.IsEnemy
             ? "System"
             : cue.PartyMask != 0
@@ -362,25 +445,30 @@ public unsafe sealed partial class ParryModule {
                     ? "Special"
                     : "System";
 
-        if (cue.CommandId != 0 && !string.IsNullOrWhiteSpace(cue.CommandLabel)) {
+        if (cue.CommandId != 0 && !string.IsNullOrWhiteSpace(cue.CommandLabel))
+        {
             return $"{baseAction}: {truncate_display(cue.CommandLabel, 28)}";
         }
 
         return baseAction;
     }
 
-    private string format_turn_targets(DebugCueSnapshot cue) {
+    private string format_turn_targets(DebugCueSnapshot cue)
+    {
         if (cue.PartyMask != 0) return format_party_target_mask(cue.PartyMask);
         if (cue.NonPartyMask != 0) return "Non-party";
         return "-";
     }
 
-    private static string format_turn_id(TurnTimelineRow row) {
+    private static string format_turn_id(TurnTimelineRow row)
+    {
         return $"T{row.TurnId:D3}.{row.TurnOrdinal:D2}";
     }
 
-    private static string format_parry_state(TurnTimelineParryState state) {
-        return state switch {
+    private static string format_parry_state(TurnTimelineParryState state)
+    {
+        return state switch
+        {
             TurnTimelineParryState.Pending => "Pending",
             TurnTimelineParryState.Waiting => "Waiting",
             TurnTimelineParryState.Open => "Open",
@@ -390,29 +478,36 @@ public unsafe sealed partial class ParryModule {
         };
     }
 
-    private static string format_parryability(TurnTimelineParryability parryability) {
-        return parryability switch {
+    private static string format_parryability(TurnTimelineParryability parryability)
+    {
+        return parryability switch
+        {
             TurnTimelineParryability.Parryable => "Yes",
             TurnTimelineParryability.Unknown => "Unknown",
             _ => "No"
         };
     }
 
-    private static string format_lifecycle(TurnTimelineLifecycleState state, TurnTimelineRow row) {
-        return state switch {
+    private static string format_lifecycle(TurnTimelineLifecycleState state, TurnTimelineRow row)
+    {
+        return state switch
+        {
             TurnTimelineLifecycleState.Pending => "Pending",
             TurnTimelineLifecycleState.Active => row.QueueTotal > 0 ? $"Active ({row.QueuePosition}/{row.QueueTotal})" : "Active",
             _ => "Completed"
         };
     }
 
-    private bool append_debug_event(string message) {
+    private bool append_debug_event(string message)
+    {
         DateTime timestamp = current_gameplay_timestamp();
         double simulationSeconds = current_gameplay_seconds();
 
-        if (_debugLog.Count > 0) {
+        if (_debugLog.Count > 0)
+        {
             DebugLogEntry last = _debugLog[^1];
-            if (string.Equals(last.Message, message, StringComparison.Ordinal)) {
+            if (string.Equals(last.Message, message, StringComparison.Ordinal))
+            {
                 last.RepeatCount++;
                 last.TimestampLocal = timestamp;
                 last.SimulationSeconds = simulationSeconds;
@@ -421,20 +516,24 @@ public unsafe sealed partial class ParryModule {
             }
         }
 
-        if (_debugLog.Count >= DebugLogRingCapacity) {
+        if (_debugLog.Count >= DebugLogRingCapacity)
+        {
             _debugLog.RemoveAt(0);
         }
 
-        _debugLog.Add(new DebugLogEntry {
+        _debugLog.Add(new DebugLogEntry
+        {
             TimestampLocal = timestamp,
             SimulationSeconds = simulationSeconds,
             FrameIndex = _debugFrameIndex,
             Message = message
         });
+        write_session_debug_entry(_debugLog[^1]);
         return true;
     }
 
-    private void render_debug_overlay() {
+    private void render_debug_overlay()
+    {
         if (!_optionDebugOverlay) return;
         if (!_debugGameSaveLoaded) return;
         if (!_debugGameplayReady) return;
@@ -449,7 +548,8 @@ public unsafe sealed partial class ParryModule {
             | ImGuiWindowFlags.NoBringToFrontOnFocus
             | ImGuiWindowFlags.NoNavInputs
             | ImGuiWindowFlags.NoNavFocus;
-        if (ImGui.Begin("Parry Debug Overlay###fhparry.debug.overlay", overlayFlags)) {
+        if (ImGui.Begin("Parry Debug Overlay###fhparry.debug.overlay", overlayFlags))
+        {
             render_debug_activity_panels(MathF.Max(0f, ImGui.GetContentRegionAvail().Y));
         }
 
@@ -457,10 +557,12 @@ public unsafe sealed partial class ParryModule {
         ImGui.PopStyleColor();
     }
 
-    private void render_debug_state_panel(float panelHeight) {
+    private void render_debug_state_panel(float panelHeight)
+    {
         float stateHeight = MathF.Max(120f, panelHeight);
         const ImGuiWindowFlags stateFlags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse;
-        if (!ImGui.BeginChild("###fhparry.debug.state", new Vector2(0f, stateHeight), ImGuiChildFlags.Borders, stateFlags)) {
+        if (!ImGui.BeginChild("###fhparry.debug.state", new Vector2(0f, stateHeight), ImGuiChildFlags.Borders, stateFlags))
+        {
             ImGui.EndChild();
             return;
         }
@@ -480,7 +582,8 @@ public unsafe sealed partial class ParryModule {
         string lastCommandSummary = format_last_command_summary();
 
         const ImGuiTableFlags tableFlags = ImGuiTableFlags.BordersInnerV | ImGuiTableFlags.RowBg | ImGuiTableFlags.SizingStretchProp;
-        if (ImGui.BeginTable("###fhparry.debug.state.table", 4, tableFlags)) {
+        if (ImGui.BeginTable("###fhparry.debug.state.table", 4, tableFlags))
+        {
             ImGui.TableSetupColumn("label1", ImGuiTableColumnFlags.WidthFixed, 170f);
             ImGui.TableSetupColumn("value1", ImGuiTableColumnFlags.WidthStretch, 1f);
             ImGui.TableSetupColumn("label2", ImGuiTableColumnFlags.WidthFixed, 170f);
@@ -488,7 +591,7 @@ public unsafe sealed partial class ParryModule {
 
             render_state_row_pair(
                 "Window", bool_to_on_off(_runtime.ParryWindowActive),
-                "Overlay", format_overlay_state(_runtime.OverlayState));
+                "Parried Text", _runtime.ParriedTextRemainingSeconds > 0f ? "Visible" : "Hidden");
             render_state_row_pair(
                 "Impact Context", bool_to_yes_no(_runtime.AwaitingTurnEnd),
                 "Parry Success", bool_to_yes_no(_runtime.ParryWindowSucceeded));
@@ -517,6 +620,12 @@ public unsafe sealed partial class ParryModule {
                 "Battle", battleSummary,
                 "Last Cmd", lastCommandSummary);
             render_state_row_pair(
+                "Impact Corr", truncate_display(format_correlation_stats(), 44),
+                "Reject Top", truncate_display(format_top_correlation_reject(), 44));
+            render_state_row_pair(
+                "Last Parried", _runtime.LastParriedTargetSlot >= 0 ? format_actor_slot((byte)_runtime.LastParriedTargetSlot) : "-",
+                "Parried Time", _runtime.ParriedTextRemainingSeconds > 0f ? $"{_runtime.ParriedTextRemainingSeconds:F2}s" : "0.00s");
+            render_state_row_pair(
                 "Since Flush", sinceFlush.ToString(CultureInfo.InvariantCulture),
                 "Mode", "Input -> Active Window -> Impact Resolve");
             render_state_row_pair(
@@ -532,7 +641,8 @@ public unsafe sealed partial class ParryModule {
         ImGui.EndChild();
     }
 
-    private static void render_state_row_pair(string label1, string value1, string label2, string value2) {
+    private static void render_state_row_pair(string label1, string value1, string label2, string value2)
+    {
         ImGui.TableNextRow();
         ImGui.TableSetColumnIndex(0);
         ImGui.TextUnformatted(label1);
@@ -544,8 +654,10 @@ public unsafe sealed partial class ParryModule {
         ImGui.TextUnformatted(value2);
     }
 
-    private void render_debug_activity_panels(float panelHeight) {
-        if (!ImGui.BeginChild("###fhparry.debug.activity", new Vector2(0f, panelHeight), ImGuiChildFlags.None, ImGuiWindowFlags.None)) {
+    private void render_debug_activity_panels(float panelHeight)
+    {
+        if (!ImGui.BeginChild("###fhparry.debug.activity", new Vector2(0f, panelHeight), ImGuiChildFlags.None, ImGuiWindowFlags.None))
+        {
             ImGui.EndChild();
             return;
         }
@@ -555,7 +667,8 @@ public unsafe sealed partial class ParryModule {
         const float minLogHeight = 110f;
 
         float availableHeight = ImGui.GetContentRegionAvail().Y;
-        if (availableHeight <= (minCueHeight + minLogHeight + splitterHeight)) {
+        if (availableHeight <= (minCueHeight + minLogHeight + splitterHeight))
+        {
             render_debug_cue_preview_panel(Math.Max(minCueHeight, availableHeight * 0.6f));
             ImGui.Separator();
             render_debug_log_panel(Math.Max(minLogHeight, ImGui.GetContentRegionAvail().Y));
@@ -579,7 +692,8 @@ public unsafe sealed partial class ParryModule {
         ImGui.PushStyleColor(ImGuiCol.ButtonActive, new Vector4(0.5f, 0.5f, 0.5f, 1f));
         ImGui.Button("###fhparry.debug.splitter", splitterSize);
         bool splitterActive = ImGui.IsItemActive();
-        if (splitterActive) {
+        if (splitterActive)
+        {
             float delta = ImGui.GetIO().MouseDelta.Y;
             _debugCuePanelRatio = Math.Clamp(_debugCuePanelRatio + (delta / movableHeight), minRatio, maxRatio);
         }
@@ -589,15 +703,18 @@ public unsafe sealed partial class ParryModule {
         ImGui.EndChild();
     }
 
-    private void render_debug_cue_preview_panel(float panelHeight) {
-        if (!ImGui.BeginChild("###fhparry.debug.cues", new Vector2(0f, panelHeight), ImGuiChildFlags.Borders, ImGuiWindowFlags.None)) {
+    private void render_debug_cue_preview_panel(float panelHeight)
+    {
+        if (!ImGui.BeginChild("###fhparry.debug.cues", new Vector2(0f, panelHeight), ImGuiChildFlags.Borders, ImGuiWindowFlags.None))
+        {
             ImGui.EndChild();
             return;
         }
 
         int liveCount = 0;
         int completedCount = 0;
-        for (int i = 0; i < _turnTimeline.RowCount; i++) {
+        for (int i = 0; i < _turnTimeline.RowCount; i++)
+        {
             TurnTimelineRow row = _turnTimeline.GetRowAt(i);
             if (row.IsFlushMarker) continue;
             if (row.Lifecycle == TurnTimelineLifecycleState.Completed) completedCount++;
@@ -613,7 +730,8 @@ public unsafe sealed partial class ParryModule {
             | ImGuiTableFlags.SizingStretchProp
             | ImGuiTableFlags.Resizable;
 
-        if (ImGui.BeginTable("###fhparry.debug.cue.table", 8, tableFlags, tableSize)) {
+        if (ImGui.BeginTable("###fhparry.debug.cue.table", 8, tableFlags, tableSize))
+        {
             float scrollY = ImGui.GetScrollY();
             float maxScrollY = ImGui.GetScrollMaxY();
             bool wasAtBottom = maxScrollY <= 0f || scrollY >= maxScrollY - 2f;
@@ -629,15 +747,18 @@ public unsafe sealed partial class ParryModule {
             ImGui.TableSetupScrollFreeze(0, 1);
             ImGui.TableHeadersRow();
 
-            for (int i = 0; i < _turnTimeline.RowCount; i++) {
+            for (int i = 0; i < _turnTimeline.RowCount; i++)
+            {
                 TurnTimelineRow row = _turnTimeline.GetRowAt(i);
                 ImGui.TableNextRow();
                 bool isMarker = row.IsFlushMarker || row.IsDiagnosticMarker;
-                if (row.IsFlushMarker) {
+                if (row.IsFlushMarker)
+                {
                     uint rowColor = ImGui.ColorConvertFloat4ToU32(new Vector4(0.35f, 0.3f, 0.15f, 0.2f));
                     ImGui.TableSetBgColor(ImGuiTableBgTarget.RowBg0, rowColor);
                 }
-                else if (row.IsDiagnosticMarker) {
+                else if (row.IsDiagnosticMarker)
+                {
                     uint rowColor = ImGui.ColorConvertFloat4ToU32(new Vector4(0.4f, 0.12f, 0.12f, 0.22f));
                     ImGui.TableSetBgColor(ImGuiTableBgTarget.RowBg0, rowColor);
                 }
@@ -648,26 +769,32 @@ public unsafe sealed partial class ParryModule {
                 ImGui.TextUnformatted(isMarker ? "-" : format_turn_id(row));
                 ImGui.TableSetColumnIndex(2);
                 ImGui.TextUnformatted(row.IsFlushMarker ? "Queue Flush" : (row.IsDiagnosticMarker ? "Warning" : row.Actor));
-                if (!isMarker && ImGui.IsItemHovered()) {
+                if (!isMarker && ImGui.IsItemHovered())
+                {
                     ImGui.BeginTooltip();
                     ImGui.TextUnformatted($"slot={row.AttackerId} rowId={row.RowId}");
                     ImGui.TextUnformatted($"queue={row.QueuePosition}/{row.QueueTotal}");
-                    if (row.Command.CommandId != 0) {
+                    if (row.Command.CommandId != 0)
+                    {
                         string commandKind = string.IsNullOrWhiteSpace(row.Command.Kind) ? "command" : row.Command.Kind;
                         string commandLabel = !string.IsNullOrWhiteSpace(row.Command.Label) ? row.Command.Label : "(unmapped)";
                         ImGui.TextUnformatted($"cmd=0x{row.Command.CommandId:X4} ({commandKind})");
                         ImGui.TextWrapped($"label={truncate_display(commandLabel, 180)}");
                         ImGui.TextUnformatted($"source={row.Command.Source}, confidence={row.Command.Confidence}");
                     }
-                    if (row.AttackerId >= PartyActorCapacity) {
+                    if (row.AttackerId >= PartyActorCapacity)
+                    {
                         Chr* enemy = try_get_chr(row.AttackerId);
-                        if (enemy != null) {
-                            if (_dataMappings.TryResolveMonsterSensor(enemy->chr_id, out string sensor)) {
+                        if (enemy != null)
+                        {
+                            if (_dataMappings.TryResolveMonsterSensor(enemy->chr_id, out string sensor))
+                            {
                                 ImGui.Separator();
                                 ImGui.TextWrapped($"Sensor: {truncate_display(sensor, 180)}");
                             }
 
-                            if (_dataMappings.TryResolveMonsterScan(enemy->chr_id, out string scan)) {
+                            if (_dataMappings.TryResolveMonsterScan(enemy->chr_id, out string scan))
+                            {
                                 ImGui.TextWrapped($"Scan: {truncate_display(scan, 180)}");
                             }
                         }
@@ -686,7 +813,8 @@ public unsafe sealed partial class ParryModule {
                 ImGui.TextUnformatted(isMarker ? "Completed" : format_lifecycle(row.Lifecycle, row));
             }
 
-            if (_debugCueAutoScroll && wasAtBottom && _turnTimeline.RowCount > 0) {
+            if (_debugCueAutoScroll && wasAtBottom && _turnTimeline.RowCount > 0)
+            {
                 ImGui.SetScrollHereY(1f);
             }
 
@@ -696,26 +824,31 @@ public unsafe sealed partial class ParryModule {
         ImGui.EndChild();
     }
 
-    private void render_debug_log_panel(float panelHeight) {
+    private void render_debug_log_panel(float panelHeight)
+    {
         ImGui.PushStyleColor(ImGuiCol.ChildBg, new Vector4(0f, 0f, 0f, 0.45f));
-        if (ImGui.BeginChild("###fhparry.debug.log", new Vector2(0f, panelHeight), ImGuiChildFlags.Borders, ImGuiWindowFlags.AlwaysVerticalScrollbar)) {
+        if (ImGui.BeginChild("###fhparry.debug.log", new Vector2(0f, panelHeight), ImGuiChildFlags.Borders, ImGuiWindowFlags.AlwaysVerticalScrollbar))
+        {
             float scrollY = ImGui.GetScrollY();
             float maxScrollY = ImGui.GetScrollMaxY();
             bool wasAtBottom = maxScrollY <= 0f || scrollY >= maxScrollY - 2f;
 
-            for (int i = 0; i < _debugLog.Count; i++) {
+            for (int i = 0; i < _debugLog.Count; i++)
+            {
                 DebugLogEntry entry = _debugLog[i];
                 bool isCueFlush = entry.Message.StartsWith("Cue queue flushed.", StringComparison.Ordinal);
                 string prefix = format_log_prefix(entry);
                 string suffix = entry.RepeatCount > 1 ? $" (x{entry.RepeatCount})" : string.Empty;
 
-                if (isCueFlush) {
+                if (isCueFlush)
+                {
                     ImGui.SeparatorText("Cue Flush");
                     ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(0.95f, 0.85f, 0.35f, 1f));
                 }
 
                 Vector4? logColor = get_log_color(entry.Message);
-                if (logColor.HasValue) {
+                if (logColor.HasValue)
+                {
                     ImGui.PushStyleColor(ImGuiCol.Text, logColor.Value);
                 }
 
@@ -727,16 +860,19 @@ public unsafe sealed partial class ParryModule {
                 ImGui.TextWrapped(entry.Message + suffix);
                 ImGui.PopTextWrapPos();
 
-                if (logColor.HasValue) {
+                if (logColor.HasValue)
+                {
                     ImGui.PopStyleColor();
                 }
 
-                if (isCueFlush) {
+                if (isCueFlush)
+                {
                     ImGui.PopStyleColor();
                 }
             }
 
-            if (_debugAutoScroll && wasAtBottom) {
+            if (_debugAutoScroll && wasAtBottom)
+            {
                 ImGui.SetScrollHereY(1f);
             }
         }
@@ -745,23 +881,27 @@ public unsafe sealed partial class ParryModule {
         ImGui.PopStyleColor();
     }
 
-    private string format_log_prefix(DebugLogEntry entry) {
+    private string format_log_prefix(DebugLogEntry entry)
+    {
         string time = format_simulation_clock(entry.SimulationSeconds);
         return $"[{time} F{entry.FrameIndex:D7}]";
     }
 
-    private static string format_gameplay_timestamp(DateTime timestamp) {
+    private static string format_gameplay_timestamp(DateTime timestamp)
+    {
         double seconds = (timestamp - DateTime.UnixEpoch).TotalSeconds;
         return format_simulation_clock(seconds);
     }
 
-    private static string format_simulation_clock(double seconds) {
+    private static string format_simulation_clock(double seconds)
+    {
         double safe = Math.Max(0d, seconds);
         TimeSpan span = TimeSpan.FromSeconds(safe);
         return $"{(int)span.TotalHours:D2}:{span.Minutes:D2}:{span.Seconds:D2}";
     }
 
-    private static string format_battle_time(ulong battleFrames) {
+    private static string format_battle_time(ulong battleFrames)
+    {
         double totalSeconds = battleFrames * FrameDurationSeconds;
         int minutes = (int)(totalSeconds / 60d);
         int seconds = (int)(totalSeconds % 60d);
@@ -772,17 +912,20 @@ public unsafe sealed partial class ParryModule {
     private static string bool_to_on_off(bool value) => value ? "On" : "Off";
     private static string bool_to_yes_no(bool value) => value ? "Yes" : "No";
 
-    private string format_spam_state() {
+    private string format_spam_state()
+    {
         int tier = ParryDifficultyModel.ClampTierIndex(_runtime.SpamTierIndex) + 1;
         float resetMs = MathF.Max(0f, _runtime.SpamTierResetRemainingSeconds) * 1000f;
-        if (_runtime.SpamTierResetRemainingSeconds <= 0f) {
+        if (_runtime.SpamTierResetRemainingSeconds <= 0f)
+        {
             return $"T{tier} (idle)";
         }
 
         return $"T{tier} (reset {resetMs:F0}ms)";
     }
 
-    private string format_window_status_summary() {
+    private string format_window_status_summary()
+    {
         if (!_runtime.ParryWindowActive) return "Closed";
 
         float remainingSeconds = Math.Max(_runtime.ParryWindowRemainingSeconds, 0f);
@@ -790,18 +933,10 @@ public unsafe sealed partial class ParryModule {
         return $"Open ({remainingSeconds:F2}s left, elapsed {elapsedSeconds:F2}s)";
     }
 
-    private static string format_overlay_state(ParryOverlayState state) {
-        return state switch {
-            ParryOverlayState.Hidden => "Hidden",
-            ParryOverlayState.Parry => "Parry Prompt",
-            ParryOverlayState.Success => "Success Flash",
-            ParryOverlayState.Failure => "Failure Flash",
-            _ => "Unknown"
-        };
-    }
-
-    private static string format_window_type(BtlWindowType type) {
-        return type switch {
+    private static string format_window_type(BtlWindowType type)
+    {
+        return type switch
+        {
             BtlWindowType.Main => "Main Command",
             BtlWindowType.BlackMagic => "Black Magic",
             BtlWindowType.WhiteMagic => "White Magic",
@@ -823,20 +958,22 @@ public unsafe sealed partial class ParryModule {
         };
     }
 
-    private void collect_live_cues(List<DebugCueSnapshot> output, out int rawCueCount) {
+    private void collect_live_cues(List<DebugCueSnapshot> output, out int rawCueCount)
+    {
         rawCueCount = 0;
-        Btl* battle = _battleAdapter.GetBattle();
-        if (battle == null) return;
+        if (!try_get_live_battle_context(out Btl* battle)) return;
 
         rawCueCount = battle->attack_cues_size;
         int totalCues = ParryDecisionPlanner.ClampCueCount(rawCueCount, MaxAttackCueScan);
-        for (int i = 0; i < totalCues; i++) {
+        for (int i = 0; i < totalCues; i++)
+        {
             AttackCue cue = battle->attack_cues[i];
             output.Add(create_cue_snapshot(battle, (byte)i, cue));
         }
     }
 
-    private DebugCueSnapshot create_cue_snapshot(Btl* battle, byte queueIndex, AttackCue cue) {
+    private DebugCueSnapshot create_cue_snapshot(Btl* battle, byte queueIndex, AttackCue cue)
+    {
         int commandCount = Math.Clamp((int)cue.command_count, 0, 4);
         ResolvedCommandInfo resolvedCommand = resolve_command_for_cue(battle, queueIndex, cue);
         uint commandSignature = compute_command_signature(cue, commandCount);
@@ -867,10 +1004,13 @@ public unsafe sealed partial class ParryModule {
             ctb);
     }
 
-    private static uint compute_command_signature(AttackCue cue, int commandCount) {
-        unchecked {
+    private static uint compute_command_signature(AttackCue cue, int commandCount)
+    {
+        unchecked
+        {
             uint hash = 2166136261u; // FNV-1a seed
-            for (int i = 0; i < commandCount; i++) {
+            for (int i = 0; i < commandCount; i++)
+            {
                 uint targets = cue.command_list[i].targets;
                 hash ^= targets;
                 hash *= 16777619u;
@@ -884,18 +1024,22 @@ public unsafe sealed partial class ParryModule {
         }
     }
 
-    private static DebugCueCategory classify_cue_category(bool isEnemy, bool isMagic, uint partyMask) {
+    private static DebugCueCategory classify_cue_category(bool isEnemy, bool isMagic, uint partyMask)
+    {
         if (!isEnemy) return DebugCueCategory.PartyOrSystem;
         if (partyMask == 0) return DebugCueCategory.EnemyNonParty;
         return isMagic ? DebugCueCategory.EnemyMagicParty : DebugCueCategory.EnemyPhysicalParty;
     }
 
-    private string format_cue_brief(DebugCueSnapshot cue) {
+    private string format_cue_brief(DebugCueSnapshot cue)
+    {
         return $"{format_actor_slot(cue.AttackerId)} {format_turn_action(cue)} | cmds={cue.CommandCount} | targets={format_cue_targets(cue)}";
     }
 
-    private static string format_cue_category(DebugCueCategory category) {
-        return category switch {
+    private static string format_cue_category(DebugCueCategory category)
+    {
+        return category switch
+        {
             DebugCueCategory.EnemyPhysicalParty => "Physical",
             DebugCueCategory.EnemyMagicParty => "Magic",
             DebugCueCategory.EnemyNonParty => "Non-party",
@@ -904,17 +1048,20 @@ public unsafe sealed partial class ParryModule {
         };
     }
 
-    private string format_cue_targets(DebugCueSnapshot cue) {
+    private string format_cue_targets(DebugCueSnapshot cue)
+    {
         if (cue.PartyMask == 0 && cue.NonPartyMask == 0) return "None";
         if (cue.NonPartyMask == 0) return format_party_target_mask(cue.PartyMask);
         if (cue.PartyMask == 0) return format_non_party_target_mask(cue.NonPartyMask);
         return $"{format_party_target_mask(cue.PartyMask)} + {format_non_party_target_mask(cue.NonPartyMask)}";
     }
 
-    private static string format_non_party_target_mask(uint mask) {
+    private static string format_non_party_target_mask(uint mask)
+    {
         int bitCount = 0;
         uint cursor = mask;
-        while (cursor != 0) {
+        while (cursor != 0)
+        {
             bitCount += (int)(cursor & 1u);
             cursor >>= 1;
         }
@@ -922,18 +1069,22 @@ public unsafe sealed partial class ParryModule {
         return bitCount > 0 ? $"Other targets ({bitCount})" : "Other targets";
     }
 
-    private string describe_cue_decision(DebugCueSnapshot cue, out string gateReason) {
-        if (!cue.IsEnemy) {
+    private string describe_cue_decision(DebugCueSnapshot cue, out string gateReason)
+    {
+        if (!cue.IsEnemy)
+        {
             gateReason = "Not an enemy action";
             return "Ignore";
         }
 
-        if (cue.PartyMask == 0) {
+        if (cue.PartyMask == 0)
+        {
             gateReason = "No ally targets";
             return "Ignore";
         }
 
-        if (_runtime.ParryWindowActive) {
+        if (_runtime.ParryWindowActive)
+        {
             gateReason = "Window currently active";
             return "Active";
         }
@@ -942,20 +1093,24 @@ public unsafe sealed partial class ParryModule {
         return "Ready";
     }
 
-    private string get_gate_block_reason() {
+    private string get_gate_block_reason()
+    {
         if (_runtime.ParryWindowActive) return "Parry window already open";
         if (!_runtime.AwaitingTurnEnd) return "No active enemy impact context";
         return "Ready";
     }
 
-    private void append_cue_history(string eventTag, DebugCueSnapshot cue, string? decisionOverride = null, string? gateOverride = null) {
+    private void append_cue_history(string eventTag, DebugCueSnapshot cue, string? decisionOverride = null, string? gateOverride = null)
+    {
         string decision;
         string gate;
-        if (decisionOverride != null && gateOverride != null) {
+        if (decisionOverride != null && gateOverride != null)
+        {
             decision = decisionOverride;
             gate = gateOverride;
         }
-        else {
+        else
+        {
             decision = describe_cue_decision(cue, out gate);
         }
 
@@ -976,7 +1131,8 @@ public unsafe sealed partial class ParryModule {
             gate: gate));
     }
 
-    private void append_cue_flush_history() {
+    private void append_cue_flush_history()
+    {
         append_cue_history(new DebugCueHistoryEntry(
             timestampLocal: current_gameplay_timestamp(),
             frameIndex: _debugFrameIndex,
@@ -994,21 +1150,27 @@ public unsafe sealed partial class ParryModule {
             gate: "Queue empty"));
     }
 
-    private static string compute_cue_id(DebugCueSnapshot cue) {
+    private static string compute_cue_id(DebugCueSnapshot cue)
+    {
         return $"{cue.QueueIndex + 1:D2}-{cue.AttackerId:D2}-{cue.CommandCount:D1}";
     }
 
-    private void append_cue_history(DebugCueHistoryEntry entry) {
-        if (_debugCueHistory.Count >= CueHistoryRingCapacity) {
+    private void append_cue_history(DebugCueHistoryEntry entry)
+    {
+        if (_debugCueHistory.Count >= CueHistoryRingCapacity)
+        {
             _debugCueHistory.RemoveAt(0);
         }
 
         _debugCueHistory.Add(entry);
     }
 
-    private int find_last_flush_index() {
-        for (int i = _debugCueHistory.Count - 1; i >= 0; i--) {
-            if (string.Equals(_debugCueHistory[i].Event, "FLUSH", StringComparison.Ordinal)) {
+    private int find_last_flush_index()
+    {
+        for (int i = _debugCueHistory.Count - 1; i >= 0; i--)
+        {
+            if (string.Equals(_debugCueHistory[i].Event, "FLUSH", StringComparison.Ordinal))
+            {
                 return i;
             }
         }
@@ -1016,15 +1178,18 @@ public unsafe sealed partial class ParryModule {
         return -1;
     }
 
-    private static void render_colored_event_tag(string eventTag) {
-        Vector4 color = eventTag switch {
+    private static void render_colored_event_tag(string eventTag)
+    {
+        Vector4 color = eventTag switch
+        {
             "ADD" => new Vector4(0.35f, 0.95f, 0.35f, 1f),
             "UPD" => new Vector4(0.35f, 0.8f, 1f, 1f),
             "DEL" => new Vector4(0.98f, 0.7f, 0.35f, 1f),
             "FLUSH" => new Vector4(0.95f, 0.85f, 0.35f, 1f),
             _ => new Vector4(0.85f, 0.85f, 0.85f, 1f)
         };
-        string label = eventTag switch {
+        string label = eventTag switch
+        {
             "ADD" => "Added",
             "UPD" => "Changed",
             "DEL" => "Consumed",
@@ -1037,8 +1202,10 @@ public unsafe sealed partial class ParryModule {
         ImGui.PopStyleColor();
     }
 
-    private static void render_colored_decision(string decision) {
-        Vector4 color = decision switch {
+    private static void render_colored_decision(string decision)
+    {
+        Vector4 color = decision switch
+        {
             "Open" => new Vector4(0.35f, 0.95f, 0.35f, 1f),
             "Blocked" => new Vector4(0.98f, 0.7f, 0.35f, 1f),
             "Ignore" => new Vector4(0.75f, 0.75f, 0.75f, 1f),
@@ -1052,10 +1219,14 @@ public unsafe sealed partial class ParryModule {
         ImGui.PopStyleColor();
     }
 
-    private static Vector4? get_log_color(string message) {
+    private static Vector4? get_log_color(string message)
+    {
         if (message.StartsWith("Cue+ ", StringComparison.Ordinal)) return new Vector4(0.35f, 0.95f, 0.35f, 1f);
         if (message.StartsWith("Cue~ ", StringComparison.Ordinal)) return new Vector4(0.35f, 0.8f, 1f, 1f);
         if (message.StartsWith("Cue- ", StringComparison.Ordinal)) return new Vector4(0.98f, 0.7f, 0.35f, 1f);
+        if (message.StartsWith("Impact correlation matched", StringComparison.Ordinal)) return new Vector4(0.40f, 0.95f, 0.45f, 1f);
+        if (message.StartsWith("Impact correlation rejected", StringComparison.Ordinal)) return new Vector4(0.98f, 0.55f, 0.35f, 1f);
+        if (message.StartsWith("Impact correlation summary", StringComparison.Ordinal)) return new Vector4(0.75f, 0.85f, 1f, 1f);
         if (message.Contains("Parry input armed", StringComparison.Ordinal)) return new Vector4(0.35f, 0.95f, 0.35f, 1f);
         if (message.Contains("Parry resolved on impact", StringComparison.Ordinal)) return new Vector4(0.35f, 0.95f, 0.35f, 1f);
         if (message.Contains("Parry failed", StringComparison.Ordinal)) return new Vector4(0.98f, 0.4f, 0.4f, 1f);
@@ -1064,12 +1235,15 @@ public unsafe sealed partial class ParryModule {
         return null;
     }
 
-    private string format_next_cue_summary() {
-        if (_debugCueSnapshots.Count == 0) {
+    private string format_next_cue_summary()
+    {
+        if (_debugCueSnapshots.Count == 0)
+        {
             return "None";
         }
 
-        for (int i = 0; i < _debugCueSnapshots.Count; i++) {
+        for (int i = 0; i < _debugCueSnapshots.Count; i++)
+        {
             DebugCueSnapshot cue = _debugCueSnapshots[i];
             if (!cue.IsEnemy || cue.PartyMask == 0) continue;
 
@@ -1081,8 +1255,10 @@ public unsafe sealed partial class ParryModule {
         return $"q{first.QueueIndex} {format_actor_slot(first.AttackerId)} | {format_cue_category(first.Category)} | Targets: {format_cue_targets(first)}";
     }
 
-    private bool try_get_next_enemy_party_cue(out DebugCueSnapshot cue, out string decision, out string reason) {
-        for (int i = 0; i < _debugCueSnapshots.Count; i++) {
+    private bool try_get_next_enemy_party_cue(out DebugCueSnapshot cue, out string decision, out string reason)
+    {
+        for (int i = 0; i < _debugCueSnapshots.Count; i++)
+        {
             var candidate = _debugCueSnapshots[i];
             if (!candidate.IsEnemy || candidate.PartyMask == 0) continue;
 
@@ -1097,10 +1273,13 @@ public unsafe sealed partial class ParryModule {
         return false;
     }
 
-    private static int count_actionable_cues(List<DebugCueSnapshot> cues) {
+    private static int count_actionable_cues(List<DebugCueSnapshot> cues)
+    {
         int count = 0;
-        for (int i = 0; i < cues.Count; i++) {
-            if (cues[i].IsEnemy && cues[i].PartyMask != 0) {
+        for (int i = 0; i < cues.Count; i++)
+        {
+            if (cues[i].IsEnemy && cues[i].PartyMask != 0)
+            {
                 count++;
             }
         }
@@ -1108,12 +1287,14 @@ public unsafe sealed partial class ParryModule {
         return count;
     }
 
-    private string format_party_target_mask(uint mask) {
+    private string format_party_target_mask(uint mask)
+    {
         if (mask == 0) return "None";
         if ((mask & PlayerTargetMask) == PlayerTargetMask) return "All allies";
 
         var labels = new List<string>(PartyActorCapacity);
-        for (int i = 0; i < PartyActorCapacity; i++) {
+        for (int i = 0; i < PartyActorCapacity; i++)
+        {
             uint bit = 1u << i;
             if ((mask & bit) == 0) continue;
 
@@ -1123,13 +1304,16 @@ public unsafe sealed partial class ParryModule {
         return labels.Count == 0 ? "None" : string.Join(", ", labels);
     }
 
-    private string format_actor_slot(byte slot) {
-        if (slot < PartyActorCapacity) {
+    private string format_actor_slot(byte slot)
+    {
+        if (slot < PartyActorCapacity)
+        {
             return format_party_slot_label(slot);
         }
 
         Chr* enemy = try_get_chr(slot);
-        if (enemy != null && try_map_enemy_chr_id_to_name(enemy->chr_id, out string enemyName)) {
+        if (enemy != null && try_map_enemy_chr_id_to_name(enemy->chr_id, out string enemyName))
+        {
             return enemyName;
         }
 
@@ -1137,17 +1321,21 @@ public unsafe sealed partial class ParryModule {
         return $"E{enemySlot}";
     }
 
-    private string format_party_slot_label(int slot) {
+    private string format_party_slot_label(int slot)
+    {
         Chr* chr = try_get_chr((byte)slot);
-        if (chr != null && try_map_party_chr_id_to_name(chr->chr_id, out string name)) {
+        if (chr != null && try_map_party_chr_id_to_name(chr->chr_id, out string name))
+        {
             return name;
         }
 
         return $"P{slot + 1}";
     }
 
-    private static bool try_map_party_chr_id_to_name(int chrId, out string name) {
-        name = chrId switch {
+    private static bool try_map_party_chr_id_to_name(int chrId, out string name)
+    {
+        name = chrId switch
+        {
             0 => "Tidus",
             1 => "Yuna",
             2 => "Auron",
@@ -1172,10 +1360,12 @@ public unsafe sealed partial class ParryModule {
         return !string.IsNullOrWhiteSpace(name);
     }
 
-    private static uint extract_non_party_target_mask(AttackCue cue) {
+    private static uint extract_non_party_target_mask(AttackCue cue)
+    {
         uint mask = 0;
         int commandCount = Math.Clamp((int)cue.command_count, 0, 4);
-        for (int i = 0; i < commandCount; i++) {
+        for (int i = 0; i < commandCount; i++)
+        {
             mask |= cue.command_list[i].targets;
         }
 

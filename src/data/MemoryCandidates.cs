@@ -4,7 +4,8 @@ namespace Fahrenheit.Mods.Parry;
 /// Review queue for externally mined offsets before they are promoted into <see cref="ExternalMemoryOffsetMap"/>.
 /// Keep this list small and focused. Promote validated entries and remove them from here.
 /// </summary>
-internal enum OffsetValidationState {
+internal enum OffsetValidationState
+{
     Unverified,
     Verified,
     Rejected,
@@ -17,7 +18,8 @@ internal sealed record ValidatedOffsetCandidate(
     string Source,
     string Note);
 
-internal static class MemoryCandidates {
+internal static class MemoryCandidates
+{
     // Example candidates sourced from local research/mining outputs.
     // Set State=Verified only after runtime checks pass in your battle/save/load scenarios.
     internal static readonly ValidatedOffsetCandidate[] Entries = [

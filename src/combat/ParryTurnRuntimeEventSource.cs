@@ -1,6 +1,7 @@
 namespace Fahrenheit.Mods.Parry;
 
-public enum TurnTimelineRuntimeSignalKind {
+public enum TurnTimelineRuntimeSignalKind
+{
     CueSnapshot,
     DispatchStarted,
     DispatchConsumed,
@@ -21,9 +22,13 @@ public readonly record struct TurnTimelineRuntimeSignal(
     byte AttackerId = 0,
     int QueueIndex = -1,
     int TargetSlot = -1,
+    ushort CommandId = 0,
+    string CommandLabel = "",
+    string SourceStage = "",
     string Reason = "");
 
-public sealed class TurnTimelineRuntimeEventSource {
+public sealed class TurnTimelineRuntimeEventSource
+{
     private readonly List<TurnTimelineRuntimeSignal> _pending = new(128);
 
     public int PendingCount => _pending.Count;
@@ -33,10 +38,12 @@ public sealed class TurnTimelineRuntimeEventSource {
         int cueTurnId,
         bool parryWindowActive,
         DateTime timestampLocal,
-        ulong frameIndex) {
+        ulong frameIndex)
+    {
         // Copy snapshot now so later frame mutations don't affect queued signal payload.
         var copy = new List<TurnTimelineCueObservation>(cues.Count);
-        for (int i = 0; i < cues.Count; i++) {
+        for (int i = 0; i < cues.Count; i++)
+        {
             copy.Add(cues[i]);
         }
 
@@ -49,8 +56,10 @@ public sealed class TurnTimelineRuntimeEventSource {
             ParryWindowActive: parryWindowActive));
     }
 
-    public void EmitDispatchStarted(byte attackerId, int queueIndex, DateTime timestampLocal, ulong frameIndex, bool parryWindowActive) {
-        if (is_duplicate_dispatch_signal(TurnTimelineRuntimeSignalKind.DispatchStarted, attackerId, queueIndex, frameIndex)) {
+    public void EmitDispatchStarted(byte attackerId, int queueIndex, DateTime timestampLocal, ulong frameIndex, bool parryWindowActive)
+    {
+        if (is_duplicate_dispatch_signal(TurnTimelineRuntimeSignalKind.DispatchStarted, attackerId, queueIndex, frameIndex))
+        {
             return;
         }
 
@@ -63,8 +72,10 @@ public sealed class TurnTimelineRuntimeEventSource {
             ParryWindowActive: parryWindowActive));
     }
 
-    public void EmitDispatchConsumed(byte attackerId, int queueIndex, DateTime timestampLocal, ulong frameIndex, string reason) {
-        if (is_duplicate_dispatch_signal(TurnTimelineRuntimeSignalKind.DispatchConsumed, attackerId, queueIndex, frameIndex)) {
+    public void EmitDispatchConsumed(byte attackerId, int queueIndex, DateTime timestampLocal, ulong frameIndex, string reason)
+    {
+        if (is_duplicate_dispatch_signal(TurnTimelineRuntimeSignalKind.DispatchConsumed, attackerId, queueIndex, frameIndex))
+        {
             return;
         }
 
@@ -77,29 +88,46 @@ public sealed class TurnTimelineRuntimeEventSource {
             Reason: reason ?? string.Empty));
     }
 
-    public void EmitDamageResolved(int targetSlot, DateTime timestampLocal, ulong frameIndex) {
+    public void EmitDamageResolved(
+        int targetSlot,
+        DateTime timestampLocal,
+        ulong frameIndex,
+        byte attackerId = 0,
+        int queueIndex = -1,
+        ushort commandId = 0,
+        string commandLabel = "",
+        string sourceStage = "")
+    {
         _pending.Add(new TurnTimelineRuntimeSignal(
             Kind: TurnTimelineRuntimeSignalKind.DamageResolved,
             TimestampLocal: timestampLocal,
             FrameIndex: frameIndex,
-            TargetSlot: targetSlot));
+            AttackerId: attackerId,
+            QueueIndex: queueIndex,
+            TargetSlot: targetSlot,
+            CommandId: commandId,
+            CommandLabel: commandLabel ?? string.Empty,
+            SourceStage: sourceStage ?? string.Empty));
     }
 
-    public void EmitParryWindowOpened(DateTime timestampLocal, ulong frameIndex) {
+    public void EmitParryWindowOpened(DateTime timestampLocal, ulong frameIndex)
+    {
         _pending.Add(new TurnTimelineRuntimeSignal(
             Kind: TurnTimelineRuntimeSignalKind.ParryWindowOpened,
             TimestampLocal: timestampLocal,
             FrameIndex: frameIndex));
     }
 
-    public void EmitParrySucceeded(DateTime timestampLocal, ulong frameIndex) {
+    public void EmitParrySucceeded(DateTime timestampLocal, ulong frameIndex)
+    {
         _pending.Add(new TurnTimelineRuntimeSignal(
             Kind: TurnTimelineRuntimeSignalKind.ParrySucceeded,
             TimestampLocal: timestampLocal,
             FrameIndex: frameIndex));
     }
 
-    public void EmitParryMissed(DateTime timestampLocal, ulong frameIndex, string reason) {
+    public void EmitParryMissed(DateTime timestampLocal, ulong frameIndex, string reason)
+    {
         _pending.Add(new TurnTimelineRuntimeSignal(
             Kind: TurnTimelineRuntimeSignalKind.ParryMissed,
             TimestampLocal: timestampLocal,
@@ -107,7 +135,8 @@ public sealed class TurnTimelineRuntimeEventSource {
             Reason: reason ?? string.Empty));
     }
 
-    public void EmitQueueFlushed(int cueTurnId, DateTime timestampLocal, ulong frameIndex) {
+    public void EmitQueueFlushed(int cueTurnId, DateTime timestampLocal, ulong frameIndex)
+    {
         _pending.Add(new TurnTimelineRuntimeSignal(
             Kind: TurnTimelineRuntimeSignalKind.QueueFlushed,
             TimestampLocal: timestampLocal,
@@ -115,12 +144,14 @@ public sealed class TurnTimelineRuntimeEventSource {
             CueTurnId: cueTurnId));
     }
 
-    public void Drain(List<TurnTimelineRuntimeSignal> destination) {
+    public void Drain(List<TurnTimelineRuntimeSignal> destination)
+    {
         destination.AddRange(_pending);
         _pending.Clear();
     }
 
-    private bool is_duplicate_dispatch_signal(TurnTimelineRuntimeSignalKind kind, byte attackerId, int queueIndex, ulong frameIndex) {
+    private bool is_duplicate_dispatch_signal(TurnTimelineRuntimeSignalKind kind, byte attackerId, int queueIndex, ulong frameIndex)
+    {
         if (_pending.Count == 0) return false;
         TurnTimelineRuntimeSignal last = _pending[^1];
         return last.Kind == kind

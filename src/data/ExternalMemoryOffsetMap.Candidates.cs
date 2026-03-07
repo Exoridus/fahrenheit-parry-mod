@@ -1,11 +1,13 @@
 namespace Fahrenheit.Mods.Parry;
 
-public static partial class ExternalMemoryOffsetMap {
+public static partial class ExternalMemoryOffsetMap
+{
     /// <summary>
     /// Candidate offsets/functions mentioned in Discord reverse-engineering threads.
     /// Treat as unverified until validated against runtime behavior in this project.
     /// </summary>
-    public static class DiscordCandidates {
+    public static class DiscordCandidates
+    {
         // Mentioned as queued/active command id in battle context: *(T_XCommandId*)((byte*)btl + 0x3A8)
         public const int BtlOffsetLikelyQueuedCommandId = 0x03A8;
 

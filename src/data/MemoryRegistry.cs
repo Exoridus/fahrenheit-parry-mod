@@ -4,8 +4,10 @@ namespace Fahrenheit.Mods.Parry;
 /// Immutable registry wrappers for offset constants.
 /// This gives named descriptors for tooling/diagnostics without changing the stable offset map API.
 /// </summary>
-internal static class MemoryRegistry {
-    internal static class Battle {
+internal static class MemoryRegistry
+{
+    internal static class Battle
+    {
         public static readonly MemoryLocation BattleActive =
             new(nameof(BattleActive), ExternalMemoryOffsetMap.BattleFlags.BattleActive);
         public static readonly MemoryLocation BattleState =
@@ -18,7 +20,8 @@ internal static class MemoryRegistry {
             new(nameof(BattlerArrayPointer), ExternalMemoryOffsetMap.BattlerStruct.BattlerArrayPointer);
     }
 
-    internal static class Ui {
+    internal static class Ui
+    {
         public static readonly MemoryLocation MainBattleMenu =
             new(nameof(MainBattleMenu), ExternalMemoryOffsetMap.BattleUi.MainBattleMenu);
         public static readonly MemoryLocation BattleMenuCursor =
@@ -35,7 +38,8 @@ internal static class MemoryRegistry {
             new(nameof(ActiveFormationSlot3), ExternalMemoryOffsetMap.Formation.ActiveFormationSlot3);
     }
 
-    internal static class Actor {
+    internal static class Actor
+    {
         public static readonly MemoryLocation ActorArraySize =
             new(nameof(ActorArraySize), ExternalMemoryOffsetMap.ActorArray.ActorArraySize);
         public static readonly MemoryLocation ActorArrayPointer =
@@ -52,14 +56,16 @@ internal static class MemoryRegistry {
             new(nameof(PositionZ), ExternalMemoryOffsetMap.ActorArray.ActorArrayPointer, ExternalMemoryOffsetMap.ActorArray.OffsetPosZ);
     }
 
-    internal static class Runtime {
+    internal static class Runtime
+    {
         public static readonly MemoryLocation FrameCounter =
             new(nameof(FrameCounter), ExternalMemoryOffsetMap.FrameAndRng.FrameCounter);
         public static readonly MemoryLocation RngBase =
             new(nameof(RngBase), ExternalMemoryOffsetMap.FrameAndRng.RngBase);
     }
 
-    internal static class Candidates {
+    internal static class Candidates
+    {
         public static readonly MemoryLocation QueuedCommandOffset =
             new(nameof(QueuedCommandOffset), ExternalMemoryOffsetMap.DiscordCandidates.BtlOffsetLikelyQueuedCommandId);
         public static readonly MemoryLocation ArenaContextFlag =

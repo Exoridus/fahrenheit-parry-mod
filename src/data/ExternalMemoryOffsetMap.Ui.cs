@@ -1,7 +1,9 @@
 namespace Fahrenheit.Mods.Parry;
 
-public static partial class ExternalMemoryOffsetMap {
-    public static class BattleUi {
+public static partial class ExternalMemoryOffsetMap
+{
+    public static class BattleUi
+    {
         // Main battle menu active flag.
         public const int MainBattleMenu = 0x00F3C911;
 
@@ -15,7 +17,8 @@ public static partial class ExternalMemoryOffsetMap {
         public const int BattleLineTarget = 0x00F3CA42;
     }
 
-    public static class Formation {
+    public static class Formation
+    {
         // Active battle formation slots.
         public const int ActiveFormationSlot1 = 0x00F3F76C;
         public const int ActiveFormationSlot2 = 0x00F3F76E;

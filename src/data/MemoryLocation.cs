@@ -4,12 +4,14 @@ namespace Fahrenheit.Mods.Parry;
 /// Immutable descriptor for a memory location relative to the game module base.
 /// Optional pointer offsets represent a pointer chain dereference path.
 /// </summary>
-internal readonly struct MemoryLocation {
+internal readonly struct MemoryLocation
+{
     public string Name { get; }
     public int BaseOffset { get; }
     public IReadOnlyList<int> PointerOffsets { get; }
 
-    public MemoryLocation(string name, int baseOffset, params int[] pointerOffsets) {
+    public MemoryLocation(string name, int baseOffset, params int[] pointerOffsets)
+    {
         Name = string.IsNullOrWhiteSpace(name) ? "Unnamed" : name.Trim();
         BaseOffset = baseOffset;
         PointerOffsets = pointerOffsets is { Length: > 0 } ? [.. pointerOffsets] : Array.Empty<int>();

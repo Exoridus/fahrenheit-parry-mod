@@ -8,7 +8,8 @@ public readonly record struct ParrySpamTransition(
     string Reason
 );
 
-public sealed class ParrySpamController {
+public sealed class ParrySpamController
+{
     private int _tierIndex;
     private bool _releaseArmed;
     private float _calmResetRemainingSeconds;
@@ -17,14 +18,17 @@ public sealed class ParrySpamController {
     public bool ReleaseArmed => _releaseArmed;
     public float CalmResetRemainingSeconds => MathF.Max(0f, _calmResetRemainingSeconds);
 
-    public void ArmOnQualifyingRelease() {
+    public void ArmOnQualifyingRelease()
+    {
         _releaseArmed = true;
         mark_spam_activity();
     }
 
-    public ParrySpamTransition OnQualifyingPress() {
+    public ParrySpamTransition OnQualifyingPress()
+    {
         int before = TierIndex;
-        if (_releaseArmed) {
+        if (_releaseArmed)
+        {
             _tierIndex = ParryDifficultyModel.IncreaseSpamTier(_tierIndex);
             mark_spam_activity();
         }
@@ -40,20 +44,24 @@ public sealed class ParrySpamController {
             Reason: string.Empty);
     }
 
-    public ParrySpamTransition Tick(float deltaSeconds) {
-        if (_calmResetRemainingSeconds <= 0f) {
+    public ParrySpamTransition Tick(float deltaSeconds)
+    {
+        if (_calmResetRemainingSeconds <= 0f)
+        {
             return default;
         }
 
         _calmResetRemainingSeconds = MathF.Max(0f, _calmResetRemainingSeconds - MathF.Max(0f, deltaSeconds));
-        if (_calmResetRemainingSeconds > 0f) {
+        if (_calmResetRemainingSeconds > 0f)
+        {
             return default;
         }
 
         return Reset("calm");
     }
 
-    public ParrySpamTransition Reset(string reason) {
+    public ParrySpamTransition Reset(string reason)
+    {
         int before = TierIndex;
         bool hadState = before != 0 || _releaseArmed || _calmResetRemainingSeconds > 0f;
 
@@ -69,7 +77,8 @@ public sealed class ParrySpamController {
             Reason: reason ?? string.Empty);
     }
 
-    private void mark_spam_activity() {
+    private void mark_spam_activity()
+    {
         _calmResetRemainingSeconds = ParryDifficultyModel.SpamTierResetCooldownSeconds;
     }
 }

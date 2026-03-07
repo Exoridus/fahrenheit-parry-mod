@@ -1,7 +1,9 @@
 namespace Fahrenheit.Mods.Parry;
 
-public static partial class ExternalMemoryOffsetMap {
-    public static class ActorArray {
+public static partial class ExternalMemoryOffsetMap
+{
+    public static class ActorArray
+    {
         // Actor array root data used for world actor ids/coords in many tooling projects.
         public const int ActorArraySize = 0x01FC44E0;
         public const int ActorArrayPointer = 0x01FC44E4;

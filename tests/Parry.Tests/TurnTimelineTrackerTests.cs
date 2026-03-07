@@ -155,6 +155,66 @@ public sealed class TurnTimelineTrackerTests {
         Assert.Equal(baselineCueRows, count_rows(tracker, r => !r.IsFlushMarker && !r.IsDiagnosticMarker));
     }
 
+    [Fact]
+    public void Tracker_ShouldCorrelateDamageResolvedToContextualRowWhenAttackerAndQueueAreProvided() {
+        var tracker = new TurnTimelineTracker(64);
+        tracker.BeginBattle();
+
+        DateTime now = new(2026, 3, 7, 10, 0, 0, DateTimeKind.Local);
+        ulong frame = 6000;
+        int turnId = 666;
+
+        var first = create_cue(queueIndex: 0, attackerId: 10, actor: "E1", action: "Attack", targets: "Tidus");
+        var second = create_cue(queueIndex: 1, attackerId: 11, actor: "E2", action: "Spell", targets: "Yuna");
+        tracker.UpdateCues([first, second], turnId, now, frame++, parryWindowActive: false);
+
+        tracker.CorrelateDamageResolved(
+            targetSlot: 1,
+            timestampLocal: now.AddMilliseconds(16),
+            frameIndex: frame++,
+            attackerId: 11,
+            queueIndex: 1,
+            commandId: 0x4010,
+            commandLabel: "Flame Ball",
+            sourceStage: "hook_setdamage_pre");
+
+        var events = new List<TurnTimelineEvent>();
+        tracker.DrainEvents(events);
+        TurnTimelineEvent damageEvent = events.Last(e => e.Kind == TurnTimelineEventKind.DamageResolved);
+        TurnTimelineRow e2 = find_latest_row(tracker, "E2");
+
+        Assert.Equal(e2.RowId, damageEvent.RowId);
+        Assert.Contains("hook_setdamage_pre", damageEvent.Message, StringComparison.Ordinal);
+        Assert.Contains("0x4010", damageEvent.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Tracker_ShouldFallbackDamageResolvedToActiveRowWithoutContext() {
+        var tracker = new TurnTimelineTracker(64);
+        tracker.BeginBattle();
+
+        DateTime now = new(2026, 3, 7, 10, 15, 0, DateTimeKind.Local);
+        ulong frame = 7000;
+        int turnId = 777;
+
+        var first = create_cue(queueIndex: 0, attackerId: 10, actor: "E1", action: "Attack", targets: "Tidus");
+        var second = create_cue(queueIndex: 1, attackerId: 11, actor: "E2", action: "Attack", targets: "Yuna");
+        tracker.UpdateCues([first, second], turnId, now, frame++, parryWindowActive: false);
+
+        tracker.CorrelateDamageResolved(
+            targetSlot: 0,
+            timestampLocal: now.AddMilliseconds(16),
+            frameIndex: frame++);
+
+        var events = new List<TurnTimelineEvent>();
+        tracker.DrainEvents(events);
+        TurnTimelineEvent damageEvent = events.Last(e => e.Kind == TurnTimelineEventKind.DamageResolved);
+        TurnTimelineRow e1 = find_latest_row(tracker, "E1");
+
+        Assert.Equal(e1.RowId, damageEvent.RowId);
+        Assert.Contains("impact", damageEvent.Message, StringComparison.Ordinal);
+    }
+
     private static TurnTimelineCueObservation create_cue(
         int queueIndex,
         byte attackerId,

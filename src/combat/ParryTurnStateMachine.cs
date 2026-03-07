@@ -1,11 +1,14 @@
 namespace Fahrenheit.Mods.Parry;
 
-public static class TurnTimelineStateMachine {
-    public static bool CanTransitionLifecycle(TurnTimelineLifecycleState from, TurnTimelineLifecycleState to) {
+public static class TurnTimelineStateMachine
+{
+    public static bool CanTransitionLifecycle(TurnTimelineLifecycleState from, TurnTimelineLifecycleState to)
+    {
         if (from == to) return true;
         if (from == TurnTimelineLifecycleState.Completed) return false;
 
-        return (from, to) switch {
+        return (from, to) switch
+        {
             (TurnTimelineLifecycleState.Pending, TurnTimelineLifecycleState.Active) => true,
             (TurnTimelineLifecycleState.Pending, TurnTimelineLifecycleState.Completed) => true,
             (TurnTimelineLifecycleState.Active, TurnTimelineLifecycleState.Pending) => true,
@@ -17,18 +20,22 @@ public static class TurnTimelineStateMachine {
     public static bool CanTransitionParry(
         TurnTimelineParryability parryability,
         TurnTimelineParryState from,
-        TurnTimelineParryState to) {
+        TurnTimelineParryState to)
+    {
         if (from == to) return true;
 
-        if (parryability == TurnTimelineParryability.NonParryable) {
+        if (parryability == TurnTimelineParryability.NonParryable)
+        {
             return to == TurnTimelineParryState.None;
         }
 
-        if (from == TurnTimelineParryState.Parried || from == TurnTimelineParryState.Missed) {
+        if (from == TurnTimelineParryState.Parried || from == TurnTimelineParryState.Missed)
+        {
             return false;
         }
 
-        return (from, to) switch {
+        return (from, to) switch
+        {
             (TurnTimelineParryState.Pending, TurnTimelineParryState.Waiting) => true,
             (TurnTimelineParryState.Pending, TurnTimelineParryState.Open) => true,
             (TurnTimelineParryState.Pending, TurnTimelineParryState.Missed) => true,

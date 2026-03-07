@@ -1,7 +1,9 @@
 namespace Fahrenheit.Mods.Parry;
 
-public static partial class ExternalMemoryOffsetMap {
-    public static class BattleFlags {
+public static partial class ExternalMemoryOffsetMap
+{
+    public static class BattleFlags
+    {
         // 1 == battle active
         public const int BattleActive = 0x00D2A8E0;
 
@@ -9,7 +11,8 @@ public static partial class ExternalMemoryOffsetMap {
         public const int BattleState = 0x00D2C9F1;
     }
 
-    public static class TurnQueue {
+    public static class TurnQueue
+    {
         // Turn queue entries: queue[i] at TurnQueueBase + i * 4 (byte actor id at each slot).
         public const int TurnQueueBase = 0x00D2AA00;
 
@@ -17,7 +20,8 @@ public static partial class ExternalMemoryOffsetMap {
         public const int CurrentTurnActor = 0x00D36A68;
     }
 
-    public static class BattlerStruct {
+    public static class BattlerStruct
+    {
         // Pointer to battler array base. Per-battler stride is 0xF90.
         public const int BattlerArrayPointer = 0x00D334CC;
         public const int BattlerStride = 0x0F90;

@@ -1,156 +1,283 @@
 namespace Fahrenheit.Mods.Parry;
 
-public unsafe sealed partial class ParryModule {
-    private void render_parry_window_overlay() {
-        if (!_optionIndicator) return;
+public unsafe sealed partial class ParryModule
+{
+    private static readonly Vector4 OverlayTextColor = new(0.93f, 0.95f, 0.82f, 1.0f);
+    private static readonly Vector4 OverlayShadowColor = new(0f, 0f, 0f, 0.75f);
+    private static readonly Vector4 OverlayBackgroundColor = new(0f, 0f, 0f, 0.42f);
+    private const ulong OverlayProjectionRetryFrames = 120;
 
-        float visibility = compute_overlay_animation_progress();
-        bool showWindow = _runtime.OverlayState != ParryOverlayState.Hidden;
-        if (!showWindow && visibility <= 0.01f) return;
+    private enum OverlayProjectionMode
+    {
+        Unknown = 0,
+        CameraScreen,
+        ScreenCamera,
+        CameraScreenTransposed,
+        ScreenCameraTransposed,
+        CameraBackup,
+        BackupCamera,
+        CameraBackupTransposed,
+        BackupCameraTransposed
+    }
 
-        ensure_banner_textures();
+    private OverlayProjectionMode _overlayProjectionMode = OverlayProjectionMode.Unknown;
+    private ulong _overlayProjectionLastSuccessFrame;
 
-        ParryOverlayState displayState = showWindow ? _runtime.OverlayState : _runtime.LastOverlayState;
-        if (displayState == ParryOverlayState.Hidden) return;
-
-        FhTexture? texture = displayState switch {
-            ParryOverlayState.Parry => _bannerTextureParry,
-            ParryOverlayState.Success => _bannerTextureSuccess,
-            _ => _bannerTextureFail
-        };
-
-        Vector2 imageSize = texture != null
-            ? new Vector2((float)texture.Metadata.width, (float)texture.Metadata.height)
-            : new Vector2(640f, 260f);
-
-        Vector2 windowSize = texture != null ? imageSize : imageSize + new Vector2(120f, 80f);
-        float scale = compute_eased_scale(_runtime.OverlayScaleProgress);
+    private void render_parry_window_overlay()
+    {
+        if (_runtime.ParriedTextRemainingSeconds <= 0f) return;
+        if (_runtime.LastParriedTargetSlot < 0) return;
 
         Vector2 displaySize = ImGui.GetIO().DisplaySize;
-        Vector2 anchor = new(displaySize.X * 0.5f, displaySize.Y * 0.32f);
+        if (displaySize.X <= 1f || displaySize.Y <= 1f) return;
 
-        ImGui.SetNextWindowPos(anchor, ImGuiCond.Always, new Vector2(0.5f, 0.5f));
-        ImGui.SetNextWindowSize(windowSize, ImGuiCond.Always);
-        ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);
-        ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 0f);
-        ImGui.PushStyleColor(ImGuiCol.WindowBg, texture != null ? new Vector4(0f, 0f, 0f, 0f) : new Vector4(0f, 0f, 0f, 0.65f));
-        ImGui.PushStyleColor(ImGuiCol.Border, Vector4.Zero);
-
-        const ImGuiWindowFlags flags = ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoInputs | ImGuiWindowFlags.AlwaysAutoResize;
-        if (ImGui.Begin("ParryOverlay", flags)) {
-            if (texture != null) {
-                Vector2 drawSize = imageSize * scale;
-                Vector2 cursor = (windowSize - drawSize) * 0.5f;
-                ImGui.SetCursorPos(cursor);
-                ImGui.Image(texture.TextureRef, drawSize);
-            }
-            else {
-                // Fallback text overlay if external PNG resources are missing.
-                Vector4 color = displayState switch {
-                    ParryOverlayState.Parry => new Vector4(1f, 1f, 0.2f, 1f),
-                    ParryOverlayState.Success => new Vector4(0.2f, 0.95f, 0.2f, 1f),
-                    _ => new Vector4(0.95f, 0.2f, 0.2f, 1f)
-                };
-
-                ImGui.SetCursorPos(new Vector2(40f, windowSize.Y * 0.35f));
-                ImGuiNativeExtra.igSetWindowFontScale(2.4f * scale);
-                ImGui.PushStyleColor(ImGuiCol.Text, color);
-                string label = displayState switch {
-                    ParryOverlayState.Parry => "PARRY",
-                    ParryOverlayState.Success => "SUCCESS",
-                    _ => "MISSED"
-                };
-                ImGui.Text(label);
-                ImGui.PopStyleColor();
-                ImGuiNativeExtra.igSetWindowFontScale(1f);
-            }
+        bool hasCustomFont = try_get_selected_overlay_font(out ImFontPtr customFont);
+        if (hasCustomFont)
+        {
+            ImGui.PushFont(customFont, OverlayFontSizePx);
         }
 
-        ImGui.End();
-        ImGui.PopStyleColor(2);
-        ImGui.PopStyleVar(2);
-    }
-
-    private void ensure_banner_textures() {
-        if (_bannerTextureParry == null)
-            _bannerTextureParry = try_load_banner_texture(_bannerPathParry, "parry.png", ref _bannerParryWarned);
-        if (_bannerTextureSuccess == null)
-            _bannerTextureSuccess = try_load_banner_texture(_bannerPathSuccess, "success.png", ref _bannerSuccessWarned);
-        if (_bannerTextureFail == null)
-            _bannerTextureFail = try_load_banner_texture(_bannerPathFail, "toobad.png", ref _bannerFailWarned);
-    }
-
-    private FhTexture? try_load_banner_texture(string? path, string label, ref bool warned) {
-        if (string.IsNullOrWhiteSpace(path)) return null;
-
-        if (!File.Exists(path)) {
-            if (!warned) {
-                _logger.Warning($"Banner image '{label}' was not found at {path}.");
-                warned = true;
-            }
-
-            return null;
+        Vector2 textSize = ImGui.CalcTextSize("PARRIED");
+        if (hasCustomFont)
+        {
+            ImGui.PopFont();
         }
 
-        if (!FhApi.Resources.load_png_from_disk(path, out FhTexture? texture)) {
-            if (!warned) {
-                _logger.Warning($"Failed to load banner image '{label}' from {path}.");
-                warned = true;
-            }
+        Vector2 anchor = try_get_parried_overlay_anchor((byte)_runtime.LastParriedTargetSlot, displaySize)
+            ?? get_fallback_overlay_anchor(_runtime.LastParriedTargetSlot, displaySize);
 
-            return null;
+        Vector2 textPos = anchor - textSize * 0.5f;
+        ImDrawListPtr draw = ImGui.GetForegroundDrawList();
+
+        Vector2 pad = new(14f, 10f);
+        Vector2 bgMin = textPos - pad;
+        Vector2 bgMax = textPos + textSize + pad;
+        draw.AddRectFilled(bgMin, bgMax, ImGui.ColorConvertFloat4ToU32(OverlayBackgroundColor), 8f);
+
+        Vector2 shadowOffset = new(2f, 2f);
+        if (hasCustomFont)
+        {
+            draw.AddText(customFont, OverlayFontSizePx, textPos + shadowOffset, ImGui.ColorConvertFloat4ToU32(OverlayShadowColor), "PARRIED");
+            draw.AddText(customFont, OverlayFontSizePx, textPos, ImGui.ColorConvertFloat4ToU32(OverlayTextColor), "PARRIED");
         }
-
-        warned = false;
-        return texture;
-    }
-
-    private void update_overlay_animation_state(float deltaSeconds) {
-        ParryOverlayState nextState = _runtime.ParryWindowActive
-            ? ParryOverlayState.Parry
-            : (_runtime.SuccessIndicatorActive || _runtime.SuccessFlashSeconds > 0f)
-                ? ParryOverlayState.Success
-                : _runtime.FailureFlashSeconds > 0f
-                    ? ParryOverlayState.Failure
-                    : ParryOverlayState.Hidden;
-
-        if (nextState != _runtime.OverlayState) {
-            _runtime.OverlayState = nextState;
-            if (_runtime.OverlayState != ParryOverlayState.Hidden) {
-                _runtime.LastOverlayState = _runtime.OverlayState;
-                _runtime.OverlayScaleProgress = 0f;
-            }
-        }
-
-        float targetVisibility = _runtime.OverlayState == ParryOverlayState.Hidden ? 0f : 1f;
-        float visibilityDelta = deltaSeconds / OverlayAnimDurationSeconds;
-        if (targetVisibility > _runtime.OverlayAnimProgress)
-            _runtime.OverlayAnimProgress = MathF.Min(1f, _runtime.OverlayAnimProgress + visibilityDelta);
         else
-            _runtime.OverlayAnimProgress = MathF.Max(0f, _runtime.OverlayAnimProgress - visibilityDelta);
-
-        if (_runtime.OverlayState != ParryOverlayState.Hidden) {
-            float scaleDelta = deltaSeconds / OverlayScaleDurationSeconds;
-            _runtime.OverlayScaleProgress = MathF.Min(1f, _runtime.OverlayScaleProgress + scaleDelta);
+        {
+            draw.AddText(textPos + shadowOffset, ImGui.ColorConvertFloat4ToU32(OverlayShadowColor), "PARRIED");
+            draw.AddText(textPos, ImGui.ColorConvertFloat4ToU32(OverlayTextColor), "PARRIED");
         }
     }
 
-    private float compute_overlay_animation_progress() {
-        return _runtime.OverlayAnimProgress;
+    private Vector2? try_get_parried_overlay_anchor(byte slotIndex, Vector2 displaySize)
+    {
+        if (!try_get_live_battle_context(out _)) return null;
+
+        Chr* chr = try_get_chr(slotIndex);
+        if (chr == null || chr->actor == null) return null;
+        if (!chr->stat_exist_flag || chr->ram.hp <= 0) return null;
+
+        Vector3 worldPos = new(
+            chr->actor->chr_pos_vec.X,
+            chr->actor->chr_pos_vec.Y + 18f,
+            chr->actor->chr_pos_vec.Z);
+
+        if (try_project_world_to_screen(worldPos, displaySize, out Vector2 projected))
+        {
+            return projected;
+        }
+
+        return null;
     }
 
-    private float compute_eased_scale(float progress) {
-        float eased = evaluate_cubic_bezier(progress, 1.6f, 0.8f);
-        return 0.5f + 0.5f * Math.Clamp(eased, 0f, 1.2f);
+    private static Vector2 get_fallback_overlay_anchor(int slotIndex, Vector2 displaySize)
+    {
+        int clamped = Math.Clamp(slotIndex, 0, 2);
+        float x = displaySize.X * (0.34f + clamped * 0.085f);
+        float y = displaySize.Y * (0.56f - clamped * 0.035f);
+        return new Vector2(x, y);
     }
 
-    private static float evaluate_cubic_bezier(float t, float p1y, float p2y) {
-        float clamped = Math.Clamp(t, 0f, 1f);
-        float inv = 1f - clamped;
-        return inv * inv * inv * 0f
-             + 3f * inv * inv * clamped * p1y
-             + 3f * inv * clamped * clamped * p2y
-             + clamped * clamped * clamped;
+    private bool try_project_world_to_screen(Vector3 worldPos, Vector2 displaySize, out Vector2 screenPos)
+    {
+        screenPos = default;
+
+        if (!try_read_projection_matrices(out Matrix4x4 camera, out Matrix4x4 screen, out Matrix4x4 cameraBackup, out Matrix4x4 screenBackup))
+        {
+            return false;
+        }
+
+        // Use the last successful mode first to keep projection stable frame-to-frame.
+        if (_overlayProjectionMode != OverlayProjectionMode.Unknown
+            && try_project_with_mode(_overlayProjectionMode, worldPos, displaySize, camera, screen, cameraBackup, screenBackup, out screenPos))
+        {
+            _overlayProjectionLastSuccessFrame = _debugFrameIndex;
+            return true;
+        }
+
+        // Avoid expensive fallback scanning every frame if we already have a known-good mode.
+        bool allowRescan = _overlayProjectionMode == OverlayProjectionMode.Unknown
+            || _debugFrameIndex - _overlayProjectionLastSuccessFrame >= OverlayProjectionRetryFrames;
+        if (!allowRescan)
+        {
+            return false;
+        }
+
+        OverlayProjectionMode[] candidates = [
+            OverlayProjectionMode.CameraScreen,
+            OverlayProjectionMode.ScreenCamera,
+            OverlayProjectionMode.CameraScreenTransposed,
+            OverlayProjectionMode.ScreenCameraTransposed,
+            OverlayProjectionMode.CameraBackup,
+            OverlayProjectionMode.BackupCamera,
+            OverlayProjectionMode.CameraBackupTransposed,
+            OverlayProjectionMode.BackupCameraTransposed
+        ];
+
+        for (int i = 0; i < candidates.Length; i++)
+        {
+            OverlayProjectionMode mode = candidates[i];
+            if (!try_project_with_mode(mode, worldPos, displaySize, camera, screen, cameraBackup, screenBackup, out screenPos))
+            {
+                continue;
+            }
+
+            _overlayProjectionMode = mode;
+            _overlayProjectionLastSuccessFrame = _debugFrameIndex;
+            return true;
+        }
+
+        return false;
+    }
+
+    private static bool try_read_projection_matrices(
+        out Matrix4x4 camera,
+        out Matrix4x4 screen,
+        out Matrix4x4 cameraBackup,
+        out Matrix4x4 screenBackup)
+    {
+        camera = default;
+        screen = default;
+        cameraBackup = default;
+        screenBackup = default;
+
+        uint* rawCamera = FhFfx.FhCall.ms_camera_matrix;
+        uint* rawScreen = FhFfx.FhCall.ms_screen_matrix;
+        uint* rawCameraBackup = FhFfx.FhCall.ms_camera_matrix_backup;
+        uint* rawScreenBackup = FhFfx.FhCall.ms_screen_matrix_backup;
+        if (rawCamera == null || rawScreen == null)
+        {
+            return false;
+        }
+
+        camera = read_matrix((float*)rawCamera);
+        screen = read_matrix((float*)rawScreen);
+        cameraBackup = rawCameraBackup != null ? read_matrix((float*)rawCameraBackup) : camera;
+        screenBackup = rawScreenBackup != null ? read_matrix((float*)rawScreenBackup) : screen;
+        return true;
+    }
+
+    private static bool try_project_with_mode(
+        OverlayProjectionMode mode,
+        Vector3 worldPos,
+        Vector2 displaySize,
+        Matrix4x4 camera,
+        Matrix4x4 screen,
+        Matrix4x4 cameraBackup,
+        Matrix4x4 screenBackup,
+        out Vector2 screenPos)
+    {
+        Matrix4x4 first;
+        Matrix4x4 second;
+
+        switch (mode)
+        {
+            case OverlayProjectionMode.CameraScreen:
+                first = camera;
+                second = screen;
+                break;
+            case OverlayProjectionMode.ScreenCamera:
+                first = screen;
+                second = camera;
+                break;
+            case OverlayProjectionMode.CameraScreenTransposed:
+                first = Matrix4x4.Transpose(camera);
+                second = Matrix4x4.Transpose(screen);
+                break;
+            case OverlayProjectionMode.ScreenCameraTransposed:
+                first = Matrix4x4.Transpose(screen);
+                second = Matrix4x4.Transpose(camera);
+                break;
+            case OverlayProjectionMode.CameraBackup:
+                first = camera;
+                second = screenBackup;
+                break;
+            case OverlayProjectionMode.BackupCamera:
+                first = screenBackup;
+                second = camera;
+                break;
+            case OverlayProjectionMode.CameraBackupTransposed:
+                first = Matrix4x4.Transpose(camera);
+                second = Matrix4x4.Transpose(screenBackup);
+                break;
+            case OverlayProjectionMode.BackupCameraTransposed:
+                first = Matrix4x4.Transpose(screenBackup);
+                second = Matrix4x4.Transpose(camera);
+                break;
+            default:
+                first = cameraBackup;
+                second = screenBackup;
+                break;
+        }
+
+        return try_project_variant(worldPos, displaySize, first, second, out screenPos);
+    }
+
+    private static bool try_project_variant(
+        Vector3 worldPos,
+        Vector2 displaySize,
+        Matrix4x4 first,
+        Matrix4x4 second,
+        out Vector2 screenPos)
+    {
+        screenPos = default;
+
+        Vector4 v = new(worldPos, 1f);
+        Vector4 clip = Vector4.Transform(v, first);
+        clip = Vector4.Transform(clip, second);
+
+        if (MathF.Abs(clip.W) < 0.0001f)
+        {
+            return false;
+        }
+        if (clip.W <= 0f) return false;
+
+        float ndcX = clip.X / clip.W;
+        float ndcY = clip.Y / clip.W;
+
+        if (!float.IsFinite(ndcX) || !float.IsFinite(ndcY))
+        {
+            return false;
+        }
+
+        float screenX = (ndcX * 0.5f + 0.5f) * displaySize.X;
+        float screenY = (1f - (ndcY * 0.5f + 0.5f)) * displaySize.Y;
+        if (!float.IsFinite(screenX) || !float.IsFinite(screenY))
+        {
+            return false;
+        }
+
+        if (screenX < -displaySize.X * 0.25f || screenX > displaySize.X * 1.25f) return false;
+        if (screenY < -displaySize.Y * 0.25f || screenY > displaySize.Y * 1.25f) return false;
+
+        screenPos = new Vector2(screenX, screenY);
+        return true;
+    }
+
+    private static Matrix4x4 read_matrix(float* raw)
+    {
+        return new Matrix4x4(
+            raw[0], raw[1], raw[2], raw[3],
+            raw[4], raw[5], raw[6], raw[7],
+            raw[8], raw[9], raw[10], raw[11],
+            raw[12], raw[13], raw[14], raw[15]);
     }
 }
-
