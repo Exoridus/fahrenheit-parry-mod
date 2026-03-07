@@ -65,6 +65,7 @@ Detailed docs:
 
 - Development and workflows: [docs/development.md](docs/development.md)
 - Data extraction and mappings pipeline: [docs/data-pipeline.md](docs/data-pipeline.md)
+- Localization strategy: [docs/localization.md](docs/localization.md)
 - Target/command reference: [docs/automation.md](docs/automation.md)
 - Pointer/hook primer for Fahrenheit modding: [docs/pointers-hooks-guide.md](docs/pointers-hooks-guide.md)
 - Local config schema: [docs/dev-local.schema.json](docs/dev-local.schema.json)

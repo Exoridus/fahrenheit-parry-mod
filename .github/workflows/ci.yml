@@ -34,7 +34,7 @@ jobs:
       - name: Validate commit messages (PR)
         if: github.event_name == 'pull_request'
         shell: cmd
-        run: build.cmd commitrange --range "${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}"
+        run: build.cmd commit-range --range "${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}"
 
       - name: Verify
         shell: cmd

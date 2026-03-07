@@ -1,3 +1,5 @@
+using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Runtime.InteropServices;
 using Nuke.Common;
 using Serilog;
@@ -119,6 +121,8 @@ internal sealed partial class BuildScript
 
     void RunLintCore(string configuration)
     {
+        ValidateJsonConfigsCore();
+
         var buildProject = Path.Combine(RootDirectory, "build", "Build.csproj");
         if (!File.Exists(buildProject))
         {
@@ -147,6 +151,138 @@ internal sealed partial class BuildScript
 
         ValidateCommitMessageString("feat: lint selftest");
         Log.Information("Lint checks passed.");
+    }
+
+    void ValidateJsonConfigsCore()
+    {
+        ValidateManifestJson();
+        ValidateLanguageJson();
+        Log.Information("JSON configuration checks passed.");
+    }
+
+    void ValidateManifestJson()
+    {
+        var manifest = ManifestPath.ToString();
+        if (!File.Exists(manifest))
+        {
+            Fail($"Missing manifest file: {manifest}");
+        }
+
+        using var doc = JsonDocument.Parse(File.ReadAllText(manifest));
+        var root = doc.RootElement;
+        if (root.ValueKind != JsonValueKind.Object)
+        {
+            Fail("Manifest root must be a JSON object.");
+        }
+
+        string[] requiredStringFields = ["Id", "Name", "Desc", "Authors", "Version", "Link", "Flags"];
+        foreach (var field in requiredStringFields)
+        {
+            if (!root.TryGetProperty(field, out var value) || value.ValueKind != JsonValueKind.String || string.IsNullOrWhiteSpace(value.GetString()))
+            {
+                Fail($"Manifest validation failed: '{field}' must be a non-empty string.");
+            }
+        }
+
+        var version = root.GetProperty("Version").GetString() ?? string.Empty;
+        if (!Regex.IsMatch(version, @"^\d+\.\d+\.\d+(?:[-+][0-9A-Za-z\.-]+)?$"))
+        {
+            Fail($"Manifest validation failed: Version '{version}' is not SemVer-like.");
+        }
+
+        ValidateManifestStringArray(root, "Dependencies");
+        ValidateManifestStringArray(root, "LoadAfter");
+    }
+
+    static void ValidateManifestStringArray(JsonElement root, string propertyName)
+    {
+        if (!root.TryGetProperty(propertyName, out var value))
+        {
+            return;
+        }
+
+        if (value.ValueKind != JsonValueKind.Array)
+        {
+            Fail($"Manifest validation failed: '{propertyName}' must be an array.");
+        }
+
+        foreach (var item in value.EnumerateArray())
+        {
+            if (item.ValueKind != JsonValueKind.String)
+            {
+                Fail($"Manifest validation failed: '{propertyName}' entries must be strings.");
+            }
+        }
+    }
+
+    void ValidateLanguageJson()
+    {
+        var langDir = Path.Combine(RootDirectory, "lang");
+        if (!Directory.Exists(langDir))
+        {
+            Fail($"Missing lang directory: {langDir}");
+        }
+
+        var requiredFiles = new[]
+        {
+            "en-US.json",
+            "de-DE.json"
+        };
+
+        foreach (var file in requiredFiles)
+        {
+            var path = Path.Combine(langDir, file);
+            if (!File.Exists(path))
+            {
+                Fail($"Missing required language file: {path}");
+            }
+        }
+
+        var baselinePath = Path.Combine(langDir, "en-US.json");
+        var baseline = ReadStringMap(baselinePath, allowEmptyValues: false);
+        if (baseline.Count == 0)
+        {
+            Fail("Language validation failed: lang/en-US.json must contain at least one entry.");
+        }
+
+        var langFiles = Directory.GetFiles(langDir, "*.json", SearchOption.TopDirectoryOnly);
+        foreach (var file in langFiles)
+        {
+            var map = ReadStringMap(file, allowEmptyValues: false);
+            var missingKeys = baseline.Keys.Where(k => !map.ContainsKey(k)).ToList();
+            if (missingKeys.Count > 0)
+            {
+                Fail($"Language validation failed: {Path.GetFileName(file)} is missing keys: {string.Join(", ", missingKeys.Take(10))}{(missingKeys.Count > 10 ? " ..." : string.Empty)}");
+            }
+        }
+    }
+
+    static Dictionary<string, string> ReadStringMap(string path, bool allowEmptyValues)
+    {
+        using var doc = JsonDocument.Parse(File.ReadAllText(path));
+        if (doc.RootElement.ValueKind != JsonValueKind.Object)
+        {
+            Fail($"Language validation failed: {Path.GetFileName(path)} must contain a JSON object.");
+        }
+
+        var map = new Dictionary<string, string>(StringComparer.Ordinal);
+        foreach (var prop in doc.RootElement.EnumerateObject())
+        {
+            if (prop.Value.ValueKind != JsonValueKind.String)
+            {
+                Fail($"Language validation failed: key '{prop.Name}' in {Path.GetFileName(path)} must map to a string.");
+            }
+
+            var value = prop.Value.GetString() ?? string.Empty;
+            if (!allowEmptyValues && string.IsNullOrWhiteSpace(value))
+            {
+                Fail($"Language validation failed: key '{prop.Name}' in {Path.GetFileName(path)} must not be empty.");
+            }
+
+            map[prop.Name] = value;
+        }
+
+        return map;
     }
 
     void RunSmokeCore(string payload, string configuration)

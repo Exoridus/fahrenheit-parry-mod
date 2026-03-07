@@ -62,11 +62,36 @@ jobs:
 
       - name: Package release archives
         shell: cmd
-        run: build.cmd releasepack --tag "${{ github.ref_name }}" --deploydir ".workspace\fahrenheit\artifacts\deploy\rel" --outdir ".release"
+        run: build.cmd release-pack --tag "${{ github.ref_name }}" --deploydir ".workspace\fahrenheit\artifacts\deploy\rel" --outdir ".release"
+
+      - name: Validate release asset sizes
+        shell: pwsh
+        env:
+          MAX_FULL_ZIP_MB: "200"
+          MAX_MOD_ZIP_MB: "64"
+        run: |
+          $full = ".release/fahrenheit-full-${{ github.ref_name }}.zip"
+          $mod = ".release/fhparry-mod-${{ github.ref_name }}.zip"
+          if (!(Test-Path $full)) { throw "Missing release asset: $full" }
+          if (!(Test-Path $mod)) { throw "Missing release asset: $mod" }
+
+          $fullBytes = (Get-Item $full).Length
+          $modBytes = (Get-Item $mod).Length
+          $fullMax = [int]$env:MAX_FULL_ZIP_MB * 1MB
+          $modMax = [int]$env:MAX_MOD_ZIP_MB * 1MB
+
+          if ($fullBytes -gt $fullMax) {
+            throw "Full asset too large: $([math]::Round($fullBytes / 1MB, 2)) MB > $env:MAX_FULL_ZIP_MB MB"
+          }
+          if ($modBytes -gt $modMax) {
+            throw "Mod asset too large: $([math]::Round($modBytes / 1MB, 2)) MB > $env:MAX_MOD_ZIP_MB MB"
+          }
+
+          Write-Host "Asset size check passed. full=$([math]::Round($fullBytes / 1MB, 2))MB mod=$([math]::Round($modBytes / 1MB, 2))MB"
 
       - name: Generate release notes
         shell: cmd
-        run: build.cmd releasenotes --tag "${{ github.ref_name }}" --repo "${{ github.repository }}" --out ".release\release-notes.txt"
+        run: build.cmd release-notes --tag "${{ github.ref_name }}" --repo "${{ github.repository }}" --out ".release\release-notes.txt"
 
       - name: Upload release assets
         uses: softprops/action-gh-release@v2

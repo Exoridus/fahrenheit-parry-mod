@@ -4,6 +4,7 @@ internal sealed partial class BuildScript
 {
     void RunVerifyCore(string configuration)
     {
+        ValidateJsonConfigsCore();
         BuildCore("mod", configuration, useReleaseRef: false, allowAutoDeploy: false);
         RunTestsIfAny(configuration);
     }

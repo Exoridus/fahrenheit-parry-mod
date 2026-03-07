@@ -6,7 +6,7 @@ This project uses external game data exports to build localized mapping bundles 
 
 ```bash
 .\build.cmd data-setup
-.\build.cmd data-extract --vbfgamedatadir "C:\\Games\\Final Fantasy X-X2 - HD Remaster\\data"
+.\build.cmd data-extract --vbfgamedir "C:\\Games\\Final Fantasy X-X2 - HD Remaster\\data"
 .\build.cmd data-parse-all --dataroot ".workspace/data"
 .\build.cmd map-import --locales us,de,fr,it,sp,jp,ch,kr
 .\build.cmd map-build --locales us,de,fr,it,sp,jp,ch,kr
@@ -23,7 +23,7 @@ Tooling setup:
 VBF extraction:
 
 ```bash
-.\build.cmd data-extract --vbfgamedatadir "<GAME_DIR>\\data" --extractout ".workspace/data"
+.\build.cmd data-extract --vbfgamedir "<GAME_DIR>\\data" --extractout ".workspace/data"
 ```
 
 Single parser mode:

@@ -306,18 +306,6 @@ internal sealed partial class BuildScript : NukeBuild
         Log.Information("  deploy       Deploy artifacts to game directory");
         Log.Information("  start        Launch fhstage0.exe");
         Log.Information(string.Empty);
-        Log.Information("Data:");
-        Log.Information("  data-setup    Setup parser + VBF extractor tools");
-        Log.Information("  ghidra-setup  Setup Ghidra reverse-engineering tool");
-        Log.Information("  ghidra-start  Start Ghidra from repo-local tooling directory");
-        Log.Information("  data-extract  Extract FFX/FFX-2 game data");
-        Log.Information("  data-parse    Run one parser mode");
-        Log.Information("  data-parse-all Run parser mode batch");
-        Log.Information("  map-import    Import parser outputs into canonical mapping JSON");
-        Log.Information("  map-build     Build runtime mapping bundles");
-        Log.Information("  data-inventory Generate DATA_TREE.txt reports");
-        Log.Information("  data-offload  Move/copy exported data to NAS");
-        Log.Information(string.Empty);
         Log.Information("Release:");
         Log.Information("  release-bump  Bump version + changelog + tag");
         Log.Information("  release-ready Preflight checks/build/package/notes");
@@ -328,6 +316,10 @@ internal sealed partial class BuildScript : NukeBuild
         Log.Information("  commit       Interactive/non-interactive Conventional Commit");
         Log.Information("  commit-check Validate one commit message");
         Log.Information("  commit-range Validate commit subjects in a range");
+        Log.Information(string.Empty);
+        Log.Information("Advanced:");
+        Log.Information("  data-* / map-* / ghidra-* workflows are available.");
+        Log.Information("  Use: build.cmd -h <workflow> for detailed parameters and examples.");
     }
 
     void ShowHelpWorkflow(string workflowRaw)

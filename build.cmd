@@ -19,10 +19,6 @@ shift
 goto :collect_rest
 :rest_done
 if defined REST set "REST=!REST:~1!"
-if defined REST (
-    set "REST=!REST:--target =--payload !"
-    set "REST=!REST:--target=--payload=!"
-)
 
 if /I "%CMD%"=="help" (
     if "%REST%"=="" (
