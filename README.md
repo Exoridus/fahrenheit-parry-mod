@@ -45,7 +45,7 @@ Download the latest release assets:
 1. Open your game install directory (contains `FFX.exe`).
 2. Extract `fahrenheit-full-<tag>.zip` there.
 3. Ensure `.NET Runtime 10` is installed (if not, run `install-dotnet-runtime-x86.cmd` once).
-4. Start with `start-fahrenheit.cmd` (recommended).
+4. Start with `fahrenheit/start-fahrenheit.cmd` (recommended).
 
 ### Mod-Only Package
 

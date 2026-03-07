@@ -1217,12 +1217,12 @@ internal sealed partial class BuildScript : NukeBuild
         content.AppendLine();
         content.AppendLine("## Installation");
         content.AppendLine();
-        content.AppendLine("Prerequisite: Microsoft .NET Runtime 10 (x86).");
-        content.AppendLine("If missing, run `install-dotnet-runtime-x86.cmd` from the full package root.");
+        content.AppendLine("Prerequisite: Microsoft .NET Runtime 10 (x86 recommended).");
+        content.AppendLine("If missing, run `fahrenheit/install-dotnet-runtime-x86.cmd` once.");
         content.AppendLine();
         content.AppendLine("1. Download one of the ZIP packages above.");
         content.AppendLine("2. Extract into your game directory (folder containing `FFX.exe`).");
-        content.AppendLine("3. For the full package, start via `start-fahrenheit.cmd` (recommended).");
+        content.AppendLine("3. For the full package, start via `fahrenheit/start-fahrenheit.cmd` (recommended).");
         content.AppendLine("4. Alternatively run `fahrenheit\\bin\\fhstage0.exe ..\\..\\FFX.exe` from `fahrenheit\\bin`.");
         content.AppendLine();
         content.AppendLine("## Changes in This Release");
@@ -2238,8 +2238,13 @@ internal sealed partial class BuildScript : NukeBuild
         var installRuntimeScript = """
 @echo off
 setlocal
-echo Installing Microsoft .NET Runtime 10 (x86)...
+echo Installing Microsoft .NET Runtime 10 (x86 preferred)...
 winget install --id Microsoft.DotNet.Runtime.10 --exact --architecture x86 --accept-package-agreements --accept-source-agreements
+if errorlevel 1 (
+  echo.
+  echo x86 install failed or unavailable. Retrying default architecture...
+  winget install --id Microsoft.DotNet.Runtime.10 --exact --accept-package-agreements --accept-source-agreements
+)
 if errorlevel 1 (
   echo.
   echo [ERROR] Runtime installation failed.
@@ -2256,12 +2261,18 @@ exit /b 0
 @echo off
 setlocal
 
-set "GAME_EXE=%~dp0FFX.exe"
-set "STAGE0=%~dp0fahrenheit\bin\fhstage0.exe"
+set "GAME_EXE=%~dp0..\FFX.exe"
+set "STAGE0=%~dp0bin\fhstage0.exe"
+set "_DOTNET_ROOT_X86=%DOTNET_ROOT(x86)%"
 
 if not exist "%GAME_EXE%" (
-  echo [ERROR] FFX.exe not found next to this script: "%GAME_EXE%"
-  exit /b 1
+  set "GAME_EXE=%~dp0FFX.exe"
+  if not exist "%GAME_EXE%" (
+    echo [ERROR] FFX.exe not found. Expected either:
+    echo   "%~dp0..\FFX.exe"
+    echo   "%~dp0FFX.exe"
+    exit /b 1
+  )
 )
 
 if not exist "%STAGE0%" (
@@ -2270,10 +2281,10 @@ if not exist "%STAGE0%" (
 )
 
 set "_HAS_FXR10="
-dir /b "%ProgramFiles(x86)%\dotnet\host\fxr\10.*\hostfxr.dll" >nul 2>&1 && set "_HAS_FXR10=1"
-if not defined _HAS_FXR10 (
-  dir /b "%ProgramFiles%\dotnet\host\fxr\10.*\hostfxr.dll" >nul 2>&1 && set "_HAS_FXR10=1"
-)
+call :check_fxr10 "%ProgramFiles(x86)%\dotnet\host\fxr"
+call :check_fxr10 "%ProgramFiles%\dotnet\host\fxr"
+call :check_fxr10 "%DOTNET_ROOT%\host\fxr"
+call :check_fxr10 "%_DOTNET_ROOT_X86%\host\fxr"
 if not defined _HAS_FXR10 (
   echo.
   echo [ERROR] Microsoft .NET Runtime 10 is missing.
@@ -2281,7 +2292,7 @@ if not defined _HAS_FXR10 (
   exit /b 1
 )
 
-pushd "%~dp0fahrenheit\bin"
+pushd "%~dp0bin"
 .\fhstage0.exe ..\..\FFX.exe
 set "RC=%ERRORLEVEL%"
 popd
@@ -2295,6 +2306,14 @@ if not "%RC%"=="0" (
 )
 
 exit /b 0
+
+:check_fxr10
+if "%~1"=="" goto :eof
+if not exist "%~1" goto :eof
+for /d %%D in ("%~1\10.*") do (
+  if exist "%%~fD\hostfxr.dll" set "_HAS_FXR10=1"
+)
+goto :eof
 """;
 
         File.WriteAllText(installRuntimePath, installRuntimeScript.Replace("\n", Environment.NewLine), new UTF8Encoding(false));
