@@ -791,6 +791,8 @@ internal sealed partial class BuildScript : NukeBuild
 
     void StartCore()
     {
+        EnsureStageRuntimePrerequisites();
+
         var gameDir = ResolveGameDir(promptIfMissing: true, persist: false);
         var binDir = Path.Combine(gameDir, "fahrenheit", "bin");
         var stage0Exe = Path.Combine(binDir, "fhstage0.exe");
@@ -827,6 +829,62 @@ internal sealed partial class BuildScript : NukeBuild
             Fail($"Failed to start fhstage0.exe: {ex.Message}");
         }
     }
+
+    void EnsureStageRuntimePrerequisites()
+    {
+        if (HasDotNetRuntime10HostFxr())
+        {
+            return;
+        }
+
+        Fail(
+            "Missing Microsoft .NET Runtime 10, required by Fahrenheit stage1 loader."
+            + Environment.NewLine
+            + "Install with:"
+            + Environment.NewLine
+            + "  winget install --id Microsoft.DotNet.Runtime.10 --exact --accept-package-agreements --accept-source-agreements");
+    }
+
+    static bool HasDotNetRuntime10HostFxr()
+    {
+        return EnumerateHostFxrCandidates(major: 10).Any();
+    }
+
+    static IEnumerable<string> EnumerateHostFxrCandidates(int major)
+    {
+        var roots = new[]
+        {
+            Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
+            Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles)
+        }
+        .Where(x => !string.IsNullOrWhiteSpace(x))
+        .Distinct(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var root in roots)
+        {
+            var fxrRoot = Path.Combine(root, "dotnet", "host", "fxr");
+            if (!Directory.Exists(fxrRoot))
+            {
+                continue;
+            }
+
+            foreach (var dir in Directory.EnumerateDirectories(fxrRoot))
+            {
+                var name = Path.GetFileName(dir);
+                if (string.IsNullOrWhiteSpace(name) || !name.StartsWith(major + ".", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                var dll = Path.Combine(dir, "hostfxr.dll");
+                if (File.Exists(dll))
+                {
+                    yield return dll;
+                }
+            }
+        }
+    }
+
 
     void RunBuildProjTarget(string target, string configuration, bool includeNativeMsbuild, string fahrenheitRef)
     {
@@ -1159,9 +1217,13 @@ internal sealed partial class BuildScript : NukeBuild
         content.AppendLine();
         content.AppendLine("## Installation");
         content.AppendLine();
+        content.AppendLine("Prerequisite: Microsoft .NET Runtime 10 (x86).");
+        content.AppendLine("If missing, run `install-dotnet-runtime-x86.cmd` from the full package root.");
+        content.AppendLine();
         content.AppendLine("1. Download one of the ZIP packages above.");
         content.AppendLine("2. Extract into your game directory (folder containing `FFX.exe`).");
-        content.AppendLine("3. Launch through your normal Fahrenheit flow.");
+        content.AppendLine("3. For the full package, start via `start-fahrenheit.cmd` (recommended).");
+        content.AppendLine("4. Alternatively run `fahrenheit\\bin\\fhstage0.exe ..\\..\\FFX.exe` from `fahrenheit\\bin`.");
         content.AppendLine();
         content.AppendLine("## Changes in This Release");
         content.AppendLine();
@@ -2149,6 +2211,7 @@ internal sealed partial class BuildScript : NukeBuild
 
         CopyDirectoryRecursive(deployRoot, fullPayload);
         CopyDirectoryRecursive(modSource, modPayload);
+        WriteFullPackageHelperScripts(fullPayload);
 
         EnsureDir(outRoot);
         var fullZip = Path.Combine(outRoot, $"fahrenheit-full-{tag}.zip");
@@ -2165,6 +2228,77 @@ internal sealed partial class BuildScript : NukeBuild
         RecreateDir(stage);
 
         Log.Information($"Package output:{Environment.NewLine}  {fullZip}{Environment.NewLine}  {modZip}{Environment.NewLine}  {fullZip}.sha256{Environment.NewLine}  {modZip}.sha256");
+    }
+
+    static void WriteFullPackageHelperScripts(string fullPayload)
+    {
+        var installRuntimePath = Path.Combine(fullPayload, "install-dotnet-runtime-x86.cmd");
+        var startPath = Path.Combine(fullPayload, "start-fahrenheit.cmd");
+
+        var installRuntimeScript = """
+@echo off
+setlocal
+echo Installing Microsoft .NET Runtime 10 (x86)...
+winget install --id Microsoft.DotNet.Runtime.10 --exact --architecture x86 --accept-package-agreements --accept-source-agreements
+if errorlevel 1 (
+  echo.
+  echo [ERROR] Runtime installation failed.
+  echo Install manually from:
+  echo https://dotnet.microsoft.com/en-us/download/dotnet/10.0
+  exit /b 1
+)
+echo.
+echo Runtime installation complete.
+exit /b 0
+""";
+
+        var startScript = """
+@echo off
+setlocal
+
+set "GAME_EXE=%~dp0FFX.exe"
+set "STAGE0=%~dp0fahrenheit\bin\fhstage0.exe"
+
+if not exist "%GAME_EXE%" (
+  echo [ERROR] FFX.exe not found next to this script: "%GAME_EXE%"
+  exit /b 1
+)
+
+if not exist "%STAGE0%" (
+  echo [ERROR] fhstage0.exe not found: "%STAGE0%"
+  exit /b 1
+)
+
+set "_HAS_FXR10="
+dir /b "%ProgramFiles(x86)%\dotnet\host\fxr\10.*\hostfxr.dll" >nul 2>&1 && set "_HAS_FXR10=1"
+if not defined _HAS_FXR10 (
+  dir /b "%ProgramFiles%\dotnet\host\fxr\10.*\hostfxr.dll" >nul 2>&1 && set "_HAS_FXR10=1"
+)
+if not defined _HAS_FXR10 (
+  echo.
+  echo [ERROR] Microsoft .NET Runtime 10 is missing.
+  echo Run install-dotnet-runtime-x86.cmd once, then start again.
+  exit /b 1
+)
+
+pushd "%~dp0fahrenheit\bin"
+.\fhstage0.exe ..\..\FFX.exe
+set "RC=%ERRORLEVEL%"
+popd
+
+if not "%RC%"=="0" (
+  echo.
+  echo [ERROR] Fahrenheit startup failed with exit code %RC%.
+  echo If output contains "load_hostfxr() failed", install .NET Runtime 10 (x86):
+  echo   install-dotnet-runtime-x86.cmd
+  exit /b %RC%
+)
+
+exit /b 0
+""";
+
+        File.WriteAllText(installRuntimePath, installRuntimeScript.Replace("\n", Environment.NewLine), new UTF8Encoding(false));
+        File.WriteAllText(startPath, startScript.Replace("\n", Environment.NewLine), new UTF8Encoding(false));
     }
 
     void RunTestsIfAny(string configuration)

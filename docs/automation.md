@@ -46,6 +46,7 @@ Quick command discovery:
 
 - `.\build.cmd start [--gamedir <path>] [--elevated]`
   - Launches `GAME_DIR\fahrenheit\bin\fhstage0.exe ..\..\FFX.exe`.
+  - Fails early with guidance if .NET Runtime 10 host components are missing.
 
 ## Data + Mappings
 
