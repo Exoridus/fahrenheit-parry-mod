@@ -541,9 +541,9 @@ public unsafe sealed partial class ParryModule
     {
         ulong minFramesBetweenRepeats = message switch
         {
-            "Parry input ignored (no parryable enemy cue)." => 20,
-            "Parry release ignored (no active parryable enemy cue)." => 20,
-            _ when message.StartsWith("Timeline integrity warning:", StringComparison.Ordinal) => 30,
+            "Parry input ignored (no parryable enemy cue)." => 120,
+            "Parry release ignored (no active parryable enemy cue)." => 120,
+            _ when message.StartsWith("Timeline integrity warning:", StringComparison.Ordinal) => 180,
             _ => 0
         };
 

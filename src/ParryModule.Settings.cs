@@ -6,6 +6,7 @@ public unsafe sealed partial class ParryModule
     {
         if (ImGui.Checkbox("##fhparry.enabled", ref _optionEnabled))
         {
+            persist_settings();
             log_debug($"Master toggle changed: {_optionEnabled}.");
             if (!_optionEnabled)
             {
@@ -17,9 +18,13 @@ public unsafe sealed partial class ParryModule
 
     private void render_setting_audio()
     {
-        if (ImGui.Checkbox("##fhparry.audio", ref _optionSound) && !_optionSound)
+        if (ImGui.Checkbox("##fhparry.audio", ref _optionSound))
         {
-            stop_audio_playback();
+            persist_settings();
+            if (!_optionSound)
+            {
+                stop_audio_playback();
+            }
         }
     }
 
@@ -30,7 +35,12 @@ public unsafe sealed partial class ParryModule
             ImGui.BeginDisabled(true);
         }
 
-        ImGui.SliderFloat("##fhparry.audio_volume", ref _optionAudioVolume, 0f, 1f, "%.2f");
+        bool changed = ImGui.SliderFloat("##fhparry.audio_volume", ref _optionAudioVolume, 0f, 1f, "%.2f");
+        _optionAudioVolume = Math.Clamp(_optionAudioVolume, 0f, 1f);
+        if (changed && ImGui.IsItemDeactivatedAfterEdit())
+        {
+            persist_settings();
+        }
 
         if (!_optionSound)
         {
@@ -38,10 +48,19 @@ public unsafe sealed partial class ParryModule
         }
     }
 
+    private void render_setting_parry_state_hud()
+    {
+        if (ImGui.Checkbox("##fhparry.parry_state_hud", ref _optionParryStateHud))
+        {
+            persist_settings();
+        }
+    }
+
     private void render_setting_startup_skip()
     {
         if (ImGui.Checkbox("##fhparry.startup_skip", ref _optionStartupSkipForceTitle))
         {
+            persist_settings();
             _startupForceAttemptCount = 0;
             _startupForceLastAttemptFrame = 0;
             _startupTest20PatchApplied = false;
@@ -59,18 +78,25 @@ public unsafe sealed partial class ParryModule
 
     private void render_setting_overdrive_boost()
     {
-        ImGui.Checkbox("##fhparry.ctb", ref _optionOverdriveBoost);
+        if (ImGui.Checkbox("##fhparry.ctb", ref _optionOverdriveBoost))
+        {
+            persist_settings();
+        }
     }
 
     private void render_setting_negate()
     {
-        ImGui.Checkbox("##fhparry.negate", ref _optionNegateDamage);
+        if (ImGui.Checkbox("##fhparry.negate", ref _optionNegateDamage))
+        {
+            persist_settings();
+        }
     }
 
     private void render_setting_logging()
     {
         if (ImGui.Checkbox("##fhparry.logging", ref _optionLogging))
         {
+            persist_settings();
             string state = _optionLogging ? "enabled" : "disabled";
             _logger.Info($"[Parry] Debug logging {state} via settings.");
         }
@@ -80,6 +106,7 @@ public unsafe sealed partial class ParryModule
     {
         if (ImGui.Checkbox("##fhparry.debug_overlay", ref _optionDebugOverlay))
         {
+            persist_settings();
             string state = _optionDebugOverlay ? "enabled" : "disabled";
             log_debug($"Debug overlay {state}.");
         }
@@ -87,15 +114,17 @@ public unsafe sealed partial class ParryModule
 
     private void render_setting_difficulty()
     {
-        int idx = Math.Clamp((int)_optionDifficulty, 0, 2);
-        if (ImGui.Combo("##fhparry.difficulty", ref idx, "Easy\0Normal\0Expert\0"))
+        int idx = Math.Clamp((int)_optionDifficulty, 0, 3);
+        if (ImGui.Combo("##fhparry.difficulty", ref idx, "Easy\0Normal\0Expert\0Debug\0"))
         {
             _optionDifficulty = idx switch
             {
                 0 => ParryDifficulty.Easy,
                 2 => ParryDifficulty.Expert,
+                3 => ParryDifficulty.Debug,
                 _ => ParryDifficulty.Normal
             };
+            persist_settings();
             reset_spam_tier("difficulty_changed", logTransition: true);
             log_debug($"Difficulty changed to {ParryDifficultyModel.FormatName(_optionDifficulty)}.");
         }

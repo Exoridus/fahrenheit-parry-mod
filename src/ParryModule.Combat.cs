@@ -372,6 +372,7 @@ public unsafe sealed partial class ParryModule
     private void trigger_failure_feedback()
     {
         _runtime.ParriedTextRemainingSeconds = 0f;
+        _runtime.ParryMissedTextRemainingSeconds = ParryMissedTextSeconds;
     }
 
     private void apply_overdrive_boost(uint mask)
@@ -406,16 +407,26 @@ public unsafe sealed partial class ParryModule
 
     private void update_parried_text_timer(float deltaSeconds)
     {
-        if (_runtime.ParriedTextRemainingSeconds <= 0f)
+        if (_runtime.ParriedTextRemainingSeconds > 0f)
+        {
+            _runtime.ParriedTextRemainingSeconds = MathF.Max(0f, _runtime.ParriedTextRemainingSeconds - deltaSeconds);
+            if (_runtime.ParriedTextRemainingSeconds <= 0f)
+            {
+                _runtime.LastParriedTargetSlot = -1;
+            }
+        }
+        else
         {
             _runtime.ParriedTextRemainingSeconds = 0f;
-            return;
         }
 
-        _runtime.ParriedTextRemainingSeconds = MathF.Max(0f, _runtime.ParriedTextRemainingSeconds - deltaSeconds);
-        if (_runtime.ParriedTextRemainingSeconds <= 0f)
+        if (_runtime.ParryMissedTextRemainingSeconds > 0f)
         {
-            _runtime.LastParriedTargetSlot = -1;
+            _runtime.ParryMissedTextRemainingSeconds = MathF.Max(0f, _runtime.ParryMissedTextRemainingSeconds - deltaSeconds);
+        }
+        else
+        {
+            _runtime.ParryMissedTextRemainingSeconds = 0f;
         }
     }
 
@@ -429,6 +440,7 @@ public unsafe sealed partial class ParryModule
         _runtime.ParryWindowSucceeded = true;
         _runtime.SuccessIndicatorActive = true;
         _runtime.ParriedTextRemainingSeconds = ParriedTextSeconds;
+        _runtime.ParryMissedTextRemainingSeconds = 0f;
         _runtime.LastParriedTargetSlot = slotIndex;
 
         mark_active_turn_parried();

@@ -12,6 +12,7 @@ public unsafe sealed partial class ParryModule : FhModule
     private const float BattleFrameRate = 30f;
     private const float FrameDurationSeconds = 1f / BattleFrameRate;
     private const float ParriedTextSeconds = 1.0f;
+    private const float ParryMissedTextSeconds = 1.0f;
     private const float OverdriveBoostPercent = 0.05f;
     private const int DebugLogRingCapacity = 500;
     private const int CueHistoryRingCapacity = 64;
@@ -183,6 +184,7 @@ public unsafe sealed partial class ParryModule : FhModule
 
         public bool AttackCueClampWarned;
         public float ParriedTextRemainingSeconds;
+        public float ParryMissedTextRemainingSeconds;
         public int LastParriedTargetSlot;
         public ulong LastHookImpactFrame;
         public int LastHookImpactSlot;
@@ -203,14 +205,10 @@ public unsafe sealed partial class ParryModule : FhModule
     private bool _optionSound = true;
     private float _optionAudioVolume = 1.0f;
     private bool _optionLogging = true;
+    private bool _optionParryStateHud = true;
     private bool _optionOverdriveBoost = true;
     private bool _optionNegateDamage = true;
-    private bool _optionStartupSkipForceTitle =
-#if DEBUG
-        true;
-#else
-        false;
-#endif
+    private bool _optionStartupSkipForceTitle = true;
     private bool _optionStartupProbeMode = false;
     private bool _optionDebugOverlay =
 #if DEBUG
@@ -269,6 +267,7 @@ public unsafe sealed partial class ParryModule : FhModule
     private string _dataMappingStatus = "No data mappings loaded.";
     private readonly Random _rng = new();
     private readonly List<WavClip> _parryAudioClips = new(8);
+    private string _settingsFilePath = string.Empty;
     private StreamWriter? _sessionDebugLogWriter;
     private StreamWriter? _sessionTimelineLogWriter;
     private StreamWriter? _sessionStartupProbeWriter;
@@ -333,6 +332,7 @@ public unsafe sealed partial class ParryModule : FhModule
             new FhSettingCustomRenderer("difficulty", render_setting_difficulty),
             new FhSettingCustomRenderer("audio", render_setting_audio),
             new FhSettingCustomRenderer("audio_volume", render_setting_audio_volume),
+            new FhSettingCustomRenderer("parry_state_hud", render_setting_parry_state_hud),
             new FhSettingCustomRenderer("startup_skip", render_setting_startup_skip),
             new FhSettingCustomRenderer("ctb", render_setting_overdrive_boost),
             new FhSettingCustomRenderer("logging", render_setting_logging),
@@ -344,6 +344,8 @@ public unsafe sealed partial class ParryModule : FhModule
 
     public override bool init(FhModContext mod_context, FileStream global_state_file)
     {
+        _settingsFilePath = mod_context.Paths.SettingsPath;
+        load_persistent_settings();
         initialize_session_logging(mod_context);
         _audioResourcesDir = Path.Combine(mod_context.Paths.ResourcesDir.FullName, "audio");
         _fontResourcesDir = Path.Combine(mod_context.Paths.ResourcesDir.FullName, "fonts");
@@ -489,6 +491,7 @@ public unsafe sealed partial class ParryModule : FhModule
 
     public override void render_imgui()
     {
+        render_parry_state_hud();
         render_parry_window_overlay();
         render_debug_overlay();
     }
@@ -512,6 +515,7 @@ public unsafe sealed partial class ParryModule : FhModule
         _runtime.SpamTierResetRemainingSeconds = 0f;
         _runtime.SpamReleaseArmed = false;
         _runtime.ParriedTextRemainingSeconds = 0f;
+        _runtime.ParryMissedTextRemainingSeconds = 0f;
         _runtime.LastParriedTargetSlot = -1;
         _runtime.LastHookImpactFrame = 0;
         _runtime.LastHookImpactSlot = -1;
@@ -528,6 +532,7 @@ public unsafe sealed partial class ParryModule : FhModule
         if (clearFeedbackFlashes)
         {
             _runtime.ParriedTextRemainingSeconds = 0f;
+            _runtime.ParryMissedTextRemainingSeconds = 0f;
             _runtime.LastParriedTargetSlot = -1;
         }
 
@@ -541,10 +546,21 @@ public unsafe sealed partial class ParryModule : FhModule
     {
         bool appended = append_debug_event(message);
 
-        if (_optionLogging && appended)
+        if (_optionLogging && appended && !is_low_signal_log_message(message))
         {
             _logger.Info($"[Parry] {message}");
         }
+    }
+
+    private static bool is_low_signal_log_message(string message)
+    {
+        return message switch
+        {
+            "Parry input ignored (no parryable enemy cue)." => true,
+            "Parry release ignored (no active parryable enemy cue)." => true,
+            _ when message.StartsWith("Timeline integrity warning:", StringComparison.Ordinal) => true,
+            _ => false
+        };
     }
 
     private void h_main_loop_timing(float delta)
@@ -571,6 +587,7 @@ public unsafe sealed partial class ParryModule : FhModule
         _runtime.ParryWindowRemainingSeconds = MathF.Max(0f, _runtime.ParryWindowRemainingSeconds);
         _runtime.ParryWindowElapsedSeconds = MathF.Max(0f, _runtime.ParryWindowElapsedSeconds);
         _runtime.ParriedTextRemainingSeconds = MathF.Max(0f, _runtime.ParriedTextRemainingSeconds);
+        _runtime.ParryMissedTextRemainingSeconds = MathF.Max(0f, _runtime.ParryMissedTextRemainingSeconds);
 
         if (!_runtime.ParryWindowActive && (_runtime.ParryWindowRemainingSeconds > 0f || _runtime.ParryWindowElapsedSeconds > 0f))
         {

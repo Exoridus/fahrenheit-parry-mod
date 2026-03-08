@@ -7,6 +7,8 @@
     "fhparry.audio.desc": "Play random custom Parry_0x.wav clips on successful parries.",
     "fhparry.audio_volume.name": "Parry Audio Volume",
     "fhparry.audio_volume.desc": "Volume for custom parry WAV playback.",
+    "fhparry.parry_state_hud.name": "Parry State HUD",
+    "fhparry.parry_state_hud.desc": "Show a top-center text indicator for current parry state (-, Waiting, Open, Succeeded, Missed).",
     "fhparry.startup_skip.name": "Startup Skip (Experimental)",
     "fhparry.startup_skip.desc": "One-shot force-load shortcut to jump to title/menu faster on startup.",
     "fhparry.ctb.name": "Boost Overdrive Gauge",
@@ -18,7 +20,7 @@
     "fhparry.debug_overlay.name": "Debug Overlay",
     "fhparry.debug_overlay.desc": "Display a live event feed and mapped runtime state panel in-game.",
     "fhparry.difficulty.name": "Parry Difficulty",
-    "fhparry.difficulty.desc": "Select preset parry timing windows and anti-spam behavior (Easy, Normal, Expert).",
+    "fhparry.difficulty.desc": "Select preset parry timing windows and anti-spam behavior (Easy, Normal, Expert, Debug).",
     "fhparry.future.name": "Future Features",
     "fhparry.future.desc": "Reserved for upcoming auto-counter options."
 }

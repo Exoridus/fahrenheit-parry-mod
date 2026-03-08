@@ -118,7 +118,7 @@ internal readonly record struct TurnTimelineCueKey(
 
 public sealed class TurnTimelineTracker
 {
-    private const ulong IntegrityWarningThrottleFrames = 30;
+    private const ulong IntegrityWarningThrottleFrames = 180;
 
     private readonly FixedRingBuffer<TurnTimelineRow> _rows;
     private readonly Dictionary<int, TurnTimelineRow> _rowsById = new();
@@ -267,6 +267,10 @@ public sealed class TurnTimelineTracker
         TurnTimelineRow? row = find_best_row_for_dispatch(attackerId, queueIndex);
         if (row == null)
         {
+            if (!has_live_rows())
+            {
+                return;
+            }
             append_integrity_warning($"Dispatch started could not be correlated (attacker={attackerId}, q={queueIndex}).", timestampLocal, frameIndex);
             return;
         }
@@ -315,6 +319,10 @@ public sealed class TurnTimelineTracker
         TurnTimelineRow? row = find_consumed_row(attackerId, queueIndex);
         if (row == null)
         {
+            if (!has_live_rows())
+            {
+                return;
+            }
             append_integrity_warning($"Dispatch consumed could not be correlated (attacker={attackerId}, q={queueIndex}).", timestampLocal, frameIndex);
             return;
         }
@@ -365,14 +373,14 @@ public sealed class TurnTimelineTracker
     public void MarkActiveParryOpen(DateTime timestampLocal, ulong frameIndex)
     {
         TurnTimelineRow? active = find_first_active_row();
-        if (active == null || active.Parryability == TurnTimelineParryability.NonParryable) return;
+        if (active == null || active.Parryability != TurnTimelineParryability.Parryable) return;
         set_parry(active, TurnTimelineParryState.Open, timestampLocal, frameIndex);
     }
 
     public void MarkActiveParried(DateTime timestampLocal, ulong frameIndex)
     {
         TurnTimelineRow? active = find_first_active_row();
-        if (active == null || active.Parryability == TurnTimelineParryability.NonParryable) return;
+        if (active == null || active.Parryability != TurnTimelineParryability.Parryable) return;
 
         set_parry(active, TurnTimelineParryState.Parried, timestampLocal, frameIndex);
         set_lifecycle(active, TurnTimelineLifecycleState.Completed, timestampLocal, frameIndex);
@@ -383,7 +391,7 @@ public sealed class TurnTimelineTracker
     public void MarkActiveMissed(string reason, DateTime timestampLocal, ulong frameIndex)
     {
         TurnTimelineRow? active = find_first_active_row();
-        if (active == null || active.Parryability == TurnTimelineParryability.NonParryable) return;
+        if (active == null || active.Parryability != TurnTimelineParryability.Parryable) return;
 
         set_parry(active, TurnTimelineParryState.Missed, timestampLocal, frameIndex);
         set_lifecycle(active, TurnTimelineLifecycleState.Completed, timestampLocal, frameIndex);
@@ -668,9 +676,24 @@ public sealed class TurnTimelineTracker
     private static TurnTimelineParryState compute_desired_parry_state(TurnTimelineRow row, bool parryWindowActive)
     {
         if (row.Parryability == TurnTimelineParryability.NonParryable) return TurnTimelineParryState.None;
+        if (row.Parryability == TurnTimelineParryability.Unknown) return TurnTimelineParryState.None;
         if (row.Lifecycle == TurnTimelineLifecycleState.Pending) return TurnTimelineParryState.Pending;
         if (row.ParryState == TurnTimelineParryState.Parried || row.ParryState == TurnTimelineParryState.Missed) return row.ParryState;
         return parryWindowActive ? TurnTimelineParryState.Open : TurnTimelineParryState.Waiting;
+    }
+
+    private bool has_live_rows()
+    {
+        for (int i = 0; i < _activeRowOrder.Count; i++)
+        {
+            int rowId = _activeRowOrder[i];
+            if (!_rowsById.TryGetValue(rowId, out TurnTimelineRow? row)) continue;
+            if (row.IsFlushMarker || row.IsDiagnosticMarker) continue;
+            if (row.Lifecycle == TurnTimelineLifecycleState.Completed) continue;
+            return true;
+        }
+
+        return false;
     }
 
     private void set_lifecycle(
@@ -773,6 +796,7 @@ public sealed class TurnTimelineTracker
             if (!_rowsById.TryGetValue(rowId, out TurnTimelineRow? row)) continue;
             if (row.IsFlushMarker || row.IsDiagnosticMarker) continue;
             if (row.Lifecycle == TurnTimelineLifecycleState.Completed) continue;
+            if (!is_integrity_relevant(row)) continue;
 
             if (row.Lifecycle == TurnTimelineLifecycleState.Active) activeCount++;
             if (activeRow == null && row.Lifecycle == TurnTimelineLifecycleState.Active)
@@ -794,6 +818,14 @@ public sealed class TurnTimelineTracker
                 append_integrity_warning($"Active row has queue position {activeRow.QueuePosition} (>1).", timestampLocal, frameIndex);
             }
         }
+    }
+
+    private static bool is_integrity_relevant(TurnTimelineRow row)
+    {
+        // Prioritize warning noise reduction for party/system-only queue churn.
+        // Enemy slots start at 10 in FFX; these rows are still useful for integrity checks.
+        if (row.Parryability != TurnTimelineParryability.NonParryable) return true;
+        return row.AttackerId >= 10;
     }
 
     private void append_integrity_warning(string text, DateTime timestampLocal, ulong frameIndex)

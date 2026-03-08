@@ -5,6 +5,12 @@ public unsafe sealed partial class ParryModule
     private static readonly Vector4 OverlayTextColor = new(0.93f, 0.95f, 0.82f, 1.0f);
     private static readonly Vector4 OverlayShadowColor = new(0f, 0f, 0f, 0.75f);
     private static readonly Vector4 OverlayBackgroundColor = new(0f, 0f, 0f, 0.42f);
+    private static readonly Vector4 StateTextDashColor = new(0.70f, 0.70f, 0.70f, 1.0f);
+    private static readonly Vector4 StateTextWaitingColor = new(0.92f, 0.92f, 0.92f, 1.0f);
+    private static readonly Vector4 StateTextOpenColor = new(1.0f, 1.0f, 1.0f, 1.0f);
+    private static readonly Vector4 StateTextSucceededColor = new(0.28f, 0.92f, 0.42f, 1.0f);
+    private static readonly Vector4 StateTextMissedColor = new(0.96f, 0.34f, 0.34f, 1.0f);
+    private static readonly Vector4 StateBackgroundColor = new(0f, 0f, 0f, 0.45f);
     private const ulong OverlayProjectionRetryFrames = 120;
 
     private enum OverlayProjectionMode
@@ -22,6 +28,85 @@ public unsafe sealed partial class ParryModule
 
     private OverlayProjectionMode _overlayProjectionMode = OverlayProjectionMode.Unknown;
     private ulong _overlayProjectionLastSuccessFrame;
+
+    private void render_parry_state_hud()
+    {
+        if (!_optionParryStateHud) return;
+        if (!_debugGameplayReady) return;
+
+        Vector2 displaySize = ImGui.GetIO().DisplaySize;
+        if (displaySize.X <= 1f || displaySize.Y <= 1f) return;
+
+        (string label, Vector4 color) = resolve_parry_state_hud_display();
+
+        bool hasCustomFont = try_get_selected_overlay_font(out ImFontPtr customFont);
+        if (hasCustomFont)
+        {
+            ImGui.PushFont(customFont, OverlayFontSizePx);
+        }
+
+        Vector2 textSize = ImGui.CalcTextSize(label);
+        if (hasCustomFont)
+        {
+            ImGui.PopFont();
+        }
+
+        Vector2 anchor = new(displaySize.X * 0.5f, displaySize.Y * 0.18f);
+        Vector2 textPos = anchor - textSize * 0.5f;
+        ImDrawListPtr draw = ImGui.GetForegroundDrawList();
+
+        Vector2 pad = new(16f, 10f);
+        Vector2 bgMin = textPos - pad;
+        Vector2 bgMax = textPos + textSize + pad;
+        draw.AddRectFilled(bgMin, bgMax, ImGui.ColorConvertFloat4ToU32(StateBackgroundColor), 8f);
+
+        Vector2 shadowOffset = new(2f, 2f);
+        if (hasCustomFont)
+        {
+            draw.AddText(customFont, OverlayFontSizePx, textPos + shadowOffset, ImGui.ColorConvertFloat4ToU32(OverlayShadowColor), label);
+            draw.AddText(customFont, OverlayFontSizePx, textPos, ImGui.ColorConvertFloat4ToU32(color), label);
+        }
+        else
+        {
+            draw.AddText(textPos + shadowOffset, ImGui.ColorConvertFloat4ToU32(OverlayShadowColor), label);
+            draw.AddText(textPos, ImGui.ColorConvertFloat4ToU32(color), label);
+        }
+    }
+
+    private (string Label, Vector4 Color) resolve_parry_state_hud_display()
+    {
+        if (!_optionEnabled)
+        {
+            return ("Disabled", StateTextDashColor);
+        }
+
+        if (!try_get_live_battle_context(out _))
+        {
+            return ("-", StateTextDashColor);
+        }
+
+        if (_runtime.ParriedTextRemainingSeconds > 0f)
+        {
+            return ("Succeeded", StateTextSucceededColor);
+        }
+
+        if (_runtime.ParryMissedTextRemainingSeconds > 0f)
+        {
+            return ("Missed", StateTextMissedColor);
+        }
+
+        if (_runtime.ParryWindowActive)
+        {
+            return ("Open", StateTextOpenColor);
+        }
+
+        if (_runtime.AwaitingTurnEnd && _runtime.CurrentPartyTargetMask != 0)
+        {
+            return ("Waiting", StateTextWaitingColor);
+        }
+
+        return ("-", StateTextDashColor);
+    }
 
     private void render_parry_window_overlay()
     {
