@@ -185,8 +185,6 @@ public unsafe sealed partial class ParryModule : FhModule
         public float ParriedTextRemainingSeconds;
         public float ParryMissedTextRemainingSeconds;
         public int LastParriedTargetSlot;
-        public ulong LastHookImpactFrame;
-        public int LastHookImpactSlot;
         public ulong LastDispatchConsumedFrame;
         public byte LastDispatchConsumedAttackerId;
         public byte LastDispatchConsumedQueueIndex;
@@ -195,7 +193,6 @@ public unsafe sealed partial class ParryModule : FhModule
         public static ParryRuntimeState CreateDefault() => new()
         {
             LastParriedTargetSlot = -1,
-            LastHookImpactSlot = -1,
             LastDispatchConsumedQueueIndex = 0xFF
         };
     }
@@ -289,9 +286,6 @@ public unsafe sealed partial class ParryModule : FhModule
     private readonly IParryTimeSource _timeSource = new SimulationDeltaTimeSource(FrameDurationSeconds);
     private readonly FhMethodHandle<SgMainLoop> _hMainLoop;
     private readonly FhMethodHandle<FhFfx.FhCall.MsExeInputCue> _hMsExeInputCue;
-    private readonly FhMethodHandle<FhFfx.FhCall.MsSetDamage> _hMsSetDamage;
-    private readonly FhMethodHandle<FhFfx.FhCall.MsSubHP> _hMsSubHp;
-    private readonly FhMethodHandle<FhFfx.FhCall.MsBtlReadSetScene> _hMsBtlReadSetScene;
     private readonly FhMethodHandle<AtelEventSetUp> _hAtelEventSetUp;
     private readonly FhMethodHandle<MovieStartProg> _hMovieStartProg;
     private readonly FhMethodHandle<MoviePlayProg> _hMoviePlayProg;
@@ -314,9 +308,6 @@ public unsafe sealed partial class ParryModule : FhModule
     {
         _hMainLoop = new FhMethodHandle<SgMainLoop>(this, "FFX.exe", 0x420C00, h_main_loop_timing);
         _hMsExeInputCue = new FhMethodHandle<FhFfx.FhCall.MsExeInputCue>(this, "FFX.exe", FhFfx.FhCall.__addr_MsExeInputCue, h_ms_exe_input_cue);
-        _hMsSetDamage = new FhMethodHandle<FhFfx.FhCall.MsSetDamage>(this, "FFX.exe", FhFfx.FhCall.__addr_MsSetDamage, h_ms_set_damage);
-        _hMsSubHp = new FhMethodHandle<FhFfx.FhCall.MsSubHP>(this, "FFX.exe", FhFfx.FhCall.__addr_MsSubHP, h_ms_sub_hp);
-        _hMsBtlReadSetScene = new FhMethodHandle<FhFfx.FhCall.MsBtlReadSetScene>(this, "FFX.exe", FhFfx.FhCall.__addr_MsBtlReadSetScene, h_ms_btl_read_set_scene);
         _hAtelEventSetUp = new FhMethodHandle<AtelEventSetUp>(this, "FFX.exe", 0x472e90, h_startup_event_setup);
         _hMovieStartProg = new FhMethodHandle<MovieStartProg>(this, "FFX.exe", 0x36F190, h_movie_start_prog);
         _hMoviePlayProg = new FhMethodHandle<MoviePlayProg>(this, "FFX.exe", 0x36F150, h_movie_play_prog);
@@ -482,8 +473,6 @@ public unsafe sealed partial class ParryModule : FhModule
         _runtime.ParriedTextRemainingSeconds = 0f;
         _runtime.ParryMissedTextRemainingSeconds = 0f;
         _runtime.LastParriedTargetSlot = -1;
-        _runtime.LastHookImpactFrame = 0;
-        _runtime.LastHookImpactSlot = -1;
         _runtime.LastDispatchConsumedFrame = 0;
         _runtime.LastDispatchConsumedAttackerId = 0;
         _runtime.LastDispatchConsumedQueueIndex = 0xFF;
