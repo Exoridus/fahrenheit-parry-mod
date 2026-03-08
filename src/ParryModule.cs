@@ -48,18 +48,6 @@ public unsafe sealed partial class ParryModule : FhModule
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate int NeedShowJapanLogo();
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    private delegate void MovieStartProg();
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    private delegate void MoviePlayProg();
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    private delegate void MovieErr();
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    private delegate void MovieFrameProg();
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    private delegate void MovieSyncProg();
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    private delegate void MovieDisp2();
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate void MovieStopProg();
     [UnmanagedFunctionPointer(CallingConvention.StdCall)]
     private delegate void CommonSetSplashSpriteExec(Fahrenheit.Atel.AtelBasicWorker* work, nint* storage, Fahrenheit.Atel.AtelStack* stack);
@@ -244,7 +232,6 @@ public unsafe sealed partial class ParryModule : FhModule
     private int _startupForceAttemptCount;
     private ulong _startupForceLastAttemptFrame;
     private int _startupEventTraceCount;
-    private int _startupMovieTraceCount;
     private int _startupLayerTraceCount;
     private int _startupLayerHookProbeTraceCount;
     private int _startupLayerArgTraceCount;
@@ -287,12 +274,6 @@ public unsafe sealed partial class ParryModule : FhModule
     private readonly FhMethodHandle<SgMainLoop> _hMainLoop;
     private readonly FhMethodHandle<FhFfx.FhCall.MsExeInputCue> _hMsExeInputCue;
     private readonly FhMethodHandle<AtelEventSetUp> _hAtelEventSetUp;
-    private readonly FhMethodHandle<MovieStartProg> _hMovieStartProg;
-    private readonly FhMethodHandle<MoviePlayProg> _hMoviePlayProg;
-    private readonly FhMethodHandle<MovieErr> _hMovieErr;
-    private readonly FhMethodHandle<MovieFrameProg> _hMovieFrameProg;
-    private readonly FhMethodHandle<MovieSyncProg> _hMovieSyncProg;
-    private readonly FhMethodHandle<MovieDisp2> _hMovieDisp2;
     private readonly FhMethodHandle<NeedShowJapanLogo> _hNeedShowJapanLogo;
     private FhMethodHandle<MapShow2DLayerExec>? _hMapShow2DLayerExec;
     private FhMethodHandle<MapShow2DLayerRetInt>? _hMapShow2DLayerRetInt;
@@ -309,12 +290,6 @@ public unsafe sealed partial class ParryModule : FhModule
         _hMainLoop = new FhMethodHandle<SgMainLoop>(this, "FFX.exe", 0x420C00, h_main_loop_timing);
         _hMsExeInputCue = new FhMethodHandle<FhFfx.FhCall.MsExeInputCue>(this, "FFX.exe", FhFfx.FhCall.__addr_MsExeInputCue, h_ms_exe_input_cue);
         _hAtelEventSetUp = new FhMethodHandle<AtelEventSetUp>(this, "FFX.exe", 0x472e90, h_startup_event_setup);
-        _hMovieStartProg = new FhMethodHandle<MovieStartProg>(this, "FFX.exe", 0x36F190, h_movie_start_prog);
-        _hMoviePlayProg = new FhMethodHandle<MoviePlayProg>(this, "FFX.exe", 0x36F150, h_movie_play_prog);
-        _hMovieErr = new FhMethodHandle<MovieErr>(this, "FFX.exe", 0x36F0B0, h_movie_err);
-        _hMovieFrameProg = new FhMethodHandle<MovieFrameProg>(this, "FFX.exe", 0x36F0C0, h_movie_frame_prog);
-        _hMovieSyncProg = new FhMethodHandle<MovieSyncProg>(this, "FFX.exe", 0x36F1B0, h_movie_sync_prog);
-        _hMovieDisp2 = new FhMethodHandle<MovieDisp2>(this, "FFX.exe", 0x36F090, h_movie_disp2);
         _hNeedShowJapanLogo = new FhMethodHandle<NeedShowJapanLogo>(this, "FFX.exe", 0x387450, h_need_show_japan_logo);
 
         settings = new FhSettingsCategory("fhparry", [
@@ -1359,54 +1334,6 @@ public unsafe sealed partial class ParryModule : FhModule
         return menuState != null && *menuState != 0;
     }
 
-    private void h_movie_start_prog()
-    {
-        trace_startup_movie_hook("movie_start_prog");
-        try_apply_startup_movie_skip("movie_start_prog:pre");
-        _hMovieStartProg.orig_fptr();
-        try_apply_startup_movie_skip("movie_start_prog:post");
-    }
-
-    private void h_movie_play_prog()
-    {
-        trace_startup_movie_hook("movie_play_prog");
-        try_apply_startup_movie_skip("movie_play_prog:pre");
-        _hMoviePlayProg.orig_fptr();
-        try_apply_startup_movie_skip("movie_play_prog:post");
-    }
-
-    private void h_movie_err()
-    {
-        trace_startup_movie_hook("movie_err");
-        try_apply_startup_movie_skip("movie_err:pre");
-        _hMovieErr.orig_fptr();
-        try_apply_startup_movie_skip("movie_err:post");
-    }
-
-    private void h_movie_frame_prog()
-    {
-        trace_startup_movie_hook("movie_frame_prog");
-        try_apply_startup_movie_skip("movie_frame_prog:pre");
-        _hMovieFrameProg.orig_fptr();
-        try_apply_startup_movie_skip("movie_frame_prog:post");
-    }
-
-    private void h_movie_sync_prog()
-    {
-        trace_startup_movie_hook("movie_sync_prog");
-        try_apply_startup_movie_skip("movie_sync_prog:pre");
-        _hMovieSyncProg.orig_fptr();
-        try_apply_startup_movie_skip("movie_sync_prog:post");
-    }
-
-    private void h_movie_disp2()
-    {
-        trace_startup_movie_hook("movie_disp2");
-        try_apply_startup_movie_skip("movie_disp2:pre");
-        _hMovieDisp2.orig_fptr();
-        try_apply_startup_movie_skip("movie_disp2:post");
-    }
-
     private void try_apply_startup_movie_skip(string source)
     {
         if (_startupMovieSkipApplied || !startup_skip_mutations_enabled())
@@ -1441,19 +1368,6 @@ public unsafe sealed partial class ParryModule : FhModule
         {
             _logger.Warning($"[Parry] Startup movie skip failed: {ex.Message}");
         }
-    }
-
-    private void trace_startup_movie_hook(string source)
-    {
-        if (_startupMovieTraceCount >= 16)
-        {
-            return;
-        }
-
-        _startupMovieTraceCount++;
-        int eventId = *FhFfx.Globals.event_id;
-        string eventName = eventId > 0 ? get_current_event_name((uint)eventId) : string.Empty;
-        _logger.Info($"[Parry] Startup movie hook #{_startupMovieTraceCount}: {source}, event={eventId}, name={eventName}.");
     }
 
     private static bool is_startup_title_event(uint eventId, string eventName)
