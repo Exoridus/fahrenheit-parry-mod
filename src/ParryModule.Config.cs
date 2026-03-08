@@ -97,8 +97,7 @@ public unsafe sealed partial class ParryModule
             string json = JsonSerializer.Serialize(payload, PersistedSettingsJsonOptions);
             string tempPath = _settingsFilePath + ".tmp";
             File.WriteAllText(tempPath, json + Environment.NewLine, Encoding.UTF8);
-            File.Copy(tempPath, _settingsFilePath, overwrite: true);
-            File.Delete(tempPath);
+            File.Move(tempPath, _settingsFilePath, overwrite: true);
         }
         catch (Exception ex)
         {
