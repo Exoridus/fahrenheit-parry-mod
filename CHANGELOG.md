@@ -1,9 +1,10 @@
 # Changelog
 
-## [v0.1.1](https://github.com/Exoridus/fahrenheit-parry-mod/releases/tag/v0.1.1) (2026-03-08)
-[Full Changelog](https://github.com/Exoridus/fahrenheit-parry-mod/compare/v0.1.0...v0.1.1) | [Previous Releases](https://github.com/Exoridus/fahrenheit-parry-mod/releases)
+## [v0.1.2](https://github.com/Exoridus/fahrenheit-parry-mod/releases/tag/v0.1.2) (2026-03-08)
+[Full Changelog](https://github.com/Exoridus/fahrenheit-parry-mod/compare/v0.1.1...v0.1.2) | [Previous Releases](https://github.com/Exoridus/fahrenheit-parry-mod/releases)
 
-- refactor: remove IParryBattleAdapter single-implementation interface ([eb32618](https://github.com/Exoridus/fahrenheit-parry-mod/commit/eb326185c48be6563cefe7a6eb4de507f013caf9))
-- docs: annotate raw hook addresses and remove stale comment ([698acde](https://github.com/Exoridus/fahrenheit-parry-mod/commit/698acde71780c829172816211cd631d812c58010))
-- refactor: remove dead movie hook infrastructure ([ca447c7](https://github.com/Exoridus/fahrenheit-parry-mod/commit/ca447c78d020ef61fcc1c32811cb8c4a64a82d4f))
-- ci: pin all GitHub Action references to SHA digests ([1e12243](https://github.com/Exoridus/fahrenheit-parry-mod/commit/1e12243b05ae71cba10d4f2fed27c336a2f2163b))
+- refactor(state): read spam controller state directly, remove shadow copies from ParryRuntimeState ([f040e77](https://github.com/Exoridus/fahrenheit-parry-mod/commit/f040e77294c9afedba199eeb64650c5011116a6c))
+- fix(config): use File.Move for atomic settings file replacement ([5de85b9](https://github.com/Exoridus/fahrenheit-parry-mod/commit/5de85b9d1455ed6aa910b564f44e969c96940565))
+- fix(combat): guard try_get_chr against returning pointers to unoccupied slots ([6818ee0](https://github.com/Exoridus/fahrenheit-parry-mod/commit/6818ee0bf77b3984c07de15520e2a0c59c5b71af))
+- fix: preserve feedback overlay state when clearFeedbackFlashes is false ([ff89fe1](https://github.com/Exoridus/fahrenheit-parry-mod/commit/ff89fe17e52369b686ffb1a8fd86d74708bd11bd))
+- fix(audio): use SND_PURGE to prevent GCHandle use-after-free ([fb44bc6](https://github.com/Exoridus/fahrenheit-parry-mod/commit/fb44bc692769bb0592f0de8a3493769c7107037f))
