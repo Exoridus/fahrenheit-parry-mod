@@ -85,27 +85,57 @@ public unsafe sealed partial class ParryModule
             return ("-", StateTextDashColor);
         }
 
+        string tierLine = format_spam_tier_line();
+
         if (_runtime.ParriedTextRemainingSeconds > 0f)
         {
-            return ("Succeeded", StateTextSucceededColor);
+            return ("Succeeded" + tierLine, StateTextSucceededColor);
         }
 
         if (_runtime.ParryMissedTextRemainingSeconds > 0f)
         {
-            return ("Missed", StateTextMissedColor);
+            return ("Missed" + tierLine, StateTextMissedColor);
         }
 
         if (_runtime.ParryWindowActive)
         {
-            return ("Open", StateTextOpenColor);
+            return ("Open" + tierLine, StateTextOpenColor);
         }
 
         if (_runtime.AwaitingTurnEnd && _runtime.CurrentPartyTargetMask != 0)
         {
-            return ("Waiting", StateTextWaitingColor);
+            return ("Waiting" + tierLine, StateTextWaitingColor);
         }
 
-        return ("-", StateTextDashColor);
+        return ("-" + tierLine, StateTextDashColor);
+    }
+
+    private string format_spam_tier_line()
+    {
+        if (!_optionPenaltyEnabled)
+        {
+            return "\nPenalty Off";
+        }
+
+        int tierIndex = _spamController.TierIndex;
+
+        if (tierIndex >= ParryDifficultyModel.MaxSpamTierIndex)
+        {
+            return "\nPENALTY";
+        }
+
+        if (tierIndex == 0)
+        {
+            return string.Empty;
+        }
+
+        float remaining = _spamController.CalmResetRemainingSeconds;
+        if (remaining > 0f)
+        {
+            return $"\nT{tierIndex + 1} {remaining:F1}s";
+        }
+
+        return string.Empty;
     }
 
     private void render_parry_window_overlay()
