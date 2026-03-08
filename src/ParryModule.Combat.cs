@@ -156,7 +156,7 @@ public unsafe sealed partial class ParryModule
         if (!try_get_live_battle_context(out Btl* battle)) return false;
 
         int observedCues = battle->attack_cues_size;
-        int totalCues = ParryDecisionPlanner.ClampCueCount(observedCues, MaxAttackCueScan);
+        int totalCues = Math.Clamp(observedCues, 0, MaxAttackCueScan);
         if (totalCues <= 0) return false;
 
         if (observedCues > totalCues && !_runtime.AttackCueClampWarned)

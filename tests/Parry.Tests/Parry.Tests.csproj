@@ -13,7 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\src\combat\ParryDecisionPlanner.cs" Link="combat\ParryDecisionPlanner.cs" />
     <Compile Include="..\..\src\combat\ParryDifficultyModel.cs" Link="combat\ParryDifficultyModel.cs" />
     <Compile Include="..\..\src\combat\ParrySpamController.cs" Link="combat\ParrySpamController.cs" />
     <Compile Include="..\..\src\combat\ParryTimeSource.cs" Link="combat\ParryTimeSource.cs" />

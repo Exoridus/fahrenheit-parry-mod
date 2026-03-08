@@ -32,7 +32,6 @@ public unsafe sealed partial class ParryModule : FhModule
     private const float StartupProbeWindowSeconds = 30.0f;
     private const int StartupProbePeriodicFrames = 5;
     private static readonly bool StartupTest20ScriptPatchEnabled = false;
-    private static bool experimental_native_damage_hooks_enabled() => false;
     private static readonly byte[] StartupPatchWait0Call = new byte[] { 0xAE, 0x00, 0x00, 0xD8, 0x00, 0x00 };
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -390,40 +389,6 @@ public unsafe sealed partial class ParryModule : FhModule
         catch (Exception ex)
         {
             _logger.Warning($"[Parry] Could not hook isNeedShowJapanLogo (startup logo skip reduced): {ex.Message}");
-        }
-
-        if (experimental_native_damage_hooks_enabled())
-        {
-            try
-            {
-                _hMsSetDamage.hook();
-            }
-            catch (Exception ex)
-            {
-                _logger.Warning($"[Parry] Could not hook MsSetDamage (Phase B pre-impact signal reduced): {ex.Message}");
-            }
-
-            try
-            {
-                _hMsSubHp.hook();
-            }
-            catch (Exception ex)
-            {
-                _logger.Warning($"[Parry] Could not hook MsSubHP (Phase B negation fallback disabled): {ex.Message}");
-            }
-
-            try
-            {
-                _hMsBtlReadSetScene.hook();
-            }
-            catch (Exception ex)
-            {
-                _logger.Warning($"[Parry] Could not hook MsBtlReadSetScene (battle lifecycle hardening reduced): {ex.Message}");
-            }
-        }
-        else
-        {
-            _logger.Warning("[Parry] Experimental native damage hooks disabled for startup stability.");
         }
 
         _logger.Info("ParryPrototype ready. Adjust options via Mod Config (F7).");
