@@ -287,10 +287,10 @@ public unsafe sealed partial class ParryModule : FhModule
 
     public ParryModule()
     {
-        _hMainLoop = new FhMethodHandle<SgMainLoop>(this, "FFX.exe", 0x420C00, h_main_loop_timing);
+        _hMainLoop = new FhMethodHandle<SgMainLoop>(this, "FFX.exe", 0x420C00, h_main_loop_timing);           // Sg_MainLoop — game update tick; used for simulation delta timing
         _hMsExeInputCue = new FhMethodHandle<FhFfx.FhCall.MsExeInputCue>(this, "FFX.exe", FhFfx.FhCall.__addr_MsExeInputCue, h_ms_exe_input_cue);
-        _hAtelEventSetUp = new FhMethodHandle<AtelEventSetUp>(this, "FFX.exe", 0x472e90, h_startup_event_setup);
-        _hNeedShowJapanLogo = new FhMethodHandle<NeedShowJapanLogo>(this, "FFX.exe", 0x387450, h_need_show_japan_logo);
+        _hAtelEventSetUp = new FhMethodHandle<AtelEventSetUp>(this, "FFX.exe", 0x472e90, h_startup_event_setup); // AtelEventSetUp — Atel scripting event dispatch; intercepted for startup skip
+        _hNeedShowJapanLogo = new FhMethodHandle<NeedShowJapanLogo>(this, "FFX.exe", 0x387450, h_need_show_japan_logo); // isNeedShowJapanLogo — suppresses Japan logo display during startup skip
 
         settings = new FhSettingsCategory("fhparry", [
             new FhSettingCustomRenderer("enabled", render_setting_enabled),
