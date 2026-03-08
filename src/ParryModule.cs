@@ -165,9 +165,6 @@ public unsafe sealed partial class ParryModule : FhModule
         public float ParryWindowElapsedSeconds;
         public bool ParryWindowSucceeded;
         public bool SuccessIndicatorActive;
-        public int SpamTierIndex;
-        public float SpamTierResetRemainingSeconds;
-        public bool SpamReleaseArmed;
 
         public bool AttackCueClampWarned;
         public float ParriedTextRemainingSeconds;
@@ -442,9 +439,6 @@ public unsafe sealed partial class ParryModule : FhModule
         _runtime.ParryWindowElapsedSeconds = 0f;
         _runtime.ParryWindowSucceeded = false;
         _runtime.SuccessIndicatorActive = false;
-        _runtime.SpamTierIndex = 0;
-        _runtime.SpamTierResetRemainingSeconds = 0f;
-        _runtime.SpamReleaseArmed = false;
         _runtime.LastDispatchConsumedFrame = 0;
         _runtime.LastDispatchConsumedAttackerId = 0;
         _runtime.LastDispatchConsumedQueueIndex = 0xFF;
@@ -507,9 +501,6 @@ public unsafe sealed partial class ParryModule : FhModule
 
     private void validate_runtime_state()
     {
-        _runtime.SpamTierIndex = ParryDifficultyModel.ClampTierIndex(_spamController.TierIndex);
-        _runtime.SpamTierResetRemainingSeconds = MathF.Max(0f, _spamController.CalmResetRemainingSeconds);
-        _runtime.SpamReleaseArmed = _spamController.ReleaseArmed;
         _runtime.ParryWindowRemainingSeconds = MathF.Max(0f, _runtime.ParryWindowRemainingSeconds);
         _runtime.ParryWindowElapsedSeconds = MathF.Max(0f, _runtime.ParryWindowElapsedSeconds);
         _runtime.ParriedTextRemainingSeconds = MathF.Max(0f, _runtime.ParriedTextRemainingSeconds);

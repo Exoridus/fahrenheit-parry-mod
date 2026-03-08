@@ -644,8 +644,8 @@ public unsafe sealed partial class ParryModule
                 "Difficulty", ParryDifficultyModel.FormatName(_optionDifficulty),
                 "Spam Tier", format_spam_state());
             render_state_row_pair(
-                "Spam Armed", bool_to_yes_no(_runtime.SpamReleaseArmed),
-                "Spam Calm", _runtime.SpamTierResetRemainingSeconds > 0f ? "Active" : "Idle");
+                "Spam Armed", bool_to_yes_no(_spamController.ReleaseArmed),
+                "Spam Calm", _spamController.CalmResetRemainingSeconds > 0f ? "Active" : "Idle");
             render_state_row_pair(
                 "Battle Time", battleTime,
                 "Queue", $"Engine {attackCueSize} / Tracked {_debugCueSnapshots.Count}");
@@ -947,9 +947,9 @@ public unsafe sealed partial class ParryModule
 
     private string format_spam_state()
     {
-        int tier = ParryDifficultyModel.ClampTierIndex(_runtime.SpamTierIndex) + 1;
-        float resetMs = MathF.Max(0f, _runtime.SpamTierResetRemainingSeconds) * 1000f;
-        if (_runtime.SpamTierResetRemainingSeconds <= 0f)
+        int tier = _spamController.TierIndex + 1;
+        float resetMs = _spamController.CalmResetRemainingSeconds * 1000f;
+        if (_spamController.CalmResetRemainingSeconds <= 0f)
         {
             return $"T{tier} (idle)";
         }
