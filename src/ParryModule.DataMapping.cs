@@ -16,6 +16,11 @@ public unsafe sealed partial class ParryModule
 
     private void initialize_data_mappings(FhModContext modContext)
     {
+        if (!string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("FHPARRY_DATA_MAP_DIR")))
+        {
+            log_debug("FHPARRY_DATA_MAP_DIR is deprecated; use FH_PARRY_DATA_MAP_DIR instead.");
+        }
+
         string preferredLocale = CultureInfo.CurrentUICulture.Name;
         List<string> candidates = build_mapping_directory_candidates(modContext);
         _dataMappings.LoadFromDirectories(
@@ -57,10 +62,13 @@ public unsafe sealed partial class ParryModule
         add_if_not_blank(modContext.Paths.ResourcesDir.FullName);
 
         string cwd = Environment.CurrentDirectory;
+#if DEBUG
+        // Local dev fallbacks — .workspace is research infrastructure, not available in release builds.
         add_if_not_blank(Path.Combine(cwd, ".workspace", "data", "ffx-dataparser"));
         add_if_not_blank(Path.Combine(cwd, ".workspace", "data", "ffx_parser"));
         add_if_not_blank(Path.Combine(cwd, ".workspace", "data", "exports"));
         add_if_not_blank(Path.Combine(cwd, ".workspace", "data"));
+#endif
         add_if_not_blank(Path.Combine(cwd, "mappings", "runtime"));
 
         foreach (string discovered in discover_mapping_dirs(cwd))
@@ -80,8 +88,11 @@ public unsafe sealed partial class ParryModule
         if (string.IsNullOrWhiteSpace(cwd)) yield break;
 
         string[] roots = [
+#if DEBUG
+            // Local dev roots — .workspace is research infrastructure, not available in release builds.
             Path.Combine(cwd, ".workspace", "data"),
             Path.Combine(cwd, ".workspace", "exports"),
+#endif
             Path.Combine(cwd, "resources"),
             Path.Combine(cwd, "mappings")
         ];
@@ -97,8 +108,9 @@ public unsafe sealed partial class ParryModule
             {
                 files = Directory.EnumerateFiles(root, "*.json", SearchOption.AllDirectories);
             }
-            catch
+            catch (Exception)
             {
+                // Silently skip roots that cannot be enumerated (missing mounts, permission errors, etc.).
                 continue;
             }
 
