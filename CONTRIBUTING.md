@@ -93,3 +93,17 @@ git push origin main --follow-tags
 ```
 
 `release-bump` updates version/changelog, pins `fahrenheit.release.ref`, creates the release commit, and creates an annotated tag.
+
+## Local Development Notes
+
+### Data Mapping Directory
+
+The canonical environment variable for the runtime data mapping directory is `FH_PARRY_DATA_MAP_DIR`. Set this to a directory containing locale mapping bundles (e.g. `ffx-mappings.us.json`).
+
+`FHPARRY_DATA_MAP_DIR` is a deprecated alias. It still works but logs a warning at startup. Migrate to `FH_PARRY_DATA_MAP_DIR`.
+
+### `.workspace/` Directory
+
+`.workspace/` is intentional local research infrastructure. It contains local toolchain copies, NAS-backed dataset symlinks, extracted data, logs, private notes, and machine-specific configuration. It is not runtime architecture and not the public source of truth.
+
+Do not commit `.workspace/` content to PRs. Do not modify or clean `.workspace/` contents in automated tooling or refactor PRs. Its contents are machine-specific and may include large datasets or symlinks that do not exist on other machines.
