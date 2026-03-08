@@ -425,6 +425,14 @@ public unsafe sealed partial class ParryModule
     private void clear_awaiting_turn_end(string reason)
     {
         _runtime.AwaitingTurnEnd = false;
+        if (_runtime.ParryWindowActive)
+        {
+            // Turn context ended; silently cancel any lingering open window.
+            _runtime.ParryWindowActive = false;
+            _runtime.ParryWindowRemainingSeconds = 0f;
+            _runtime.ParryWindowElapsedSeconds = 0f;
+        }
+
         _runtime.ParryWindowSucceeded = false;
         _runtime.SuccessIndicatorActive = false;
         _runtime.CurrentPartyTargetMask = 0;
