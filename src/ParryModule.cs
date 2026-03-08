@@ -445,9 +445,6 @@ public unsafe sealed partial class ParryModule : FhModule
         _runtime.SpamTierIndex = 0;
         _runtime.SpamTierResetRemainingSeconds = 0f;
         _runtime.SpamReleaseArmed = false;
-        _runtime.ParriedTextRemainingSeconds = 0f;
-        _runtime.ParryMissedTextRemainingSeconds = 0f;
-        _runtime.LastParriedTargetSlot = -1;
         _runtime.LastDispatchConsumedFrame = 0;
         _runtime.LastDispatchConsumedAttackerId = 0;
         _runtime.LastDispatchConsumedQueueIndex = 0xFF;
