@@ -393,7 +393,6 @@ public unsafe sealed partial class ParryModule : FhModule
         }
 
         bool hasEnemyCue = monitor_attack_cues();
-        monitor_damage_resolves();
         update_parried_text_timer(deltaSeconds);
         advance_spam_penalty_timers(deltaSeconds);
 
@@ -410,6 +409,10 @@ public unsafe sealed partial class ParryModule : FhModule
         {
             handle_parry_input_press(parryInput);
         }
+
+        // Poll damage after input so that a pre-held R1 window (armed inside
+        // monitor_attack_cues on cue identity change) is visible here.
+        monitor_damage_resolves();
 
         if (_runtime.ParryWindowActive)
         {

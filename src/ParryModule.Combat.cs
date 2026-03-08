@@ -177,6 +177,19 @@ public unsafe sealed partial class ParryModule
             string damageType = is_magic_like_attack(attacker) ? "Magic" : "Physical";
             string commandHint = format_command_hint(resolve_command_for_cue(_battleAdapter.GetBattle(), cueIndex, cue), maxLabelLength: 24);
             log_debug($"{format_actor_slot(cue.attacker_id)} {damageType} command{commandHint} active (q{cueIndex}), targets: {format_party_target_mask(partyMask)}.");
+
+            // If R1 is already held when a new cue identity appears, arm the window
+            // immediately. This handles zero-latency attacks where cue and damage land
+            // in the same frame — without pre-arming the player has no opportunity to
+            // press R1 in time. Damage is polled after this returns (see pre_update).
+            if (cueIdentityChanged && FhApi.Input.r1.held && !_runtime.ParryWindowActive)
+            {
+                handle_parry_input_press(new ParryInputContext(
+                    hasParryableCue: true,
+                    cue: cue,
+                    cueIndex: cueIndex,
+                    partyMask: partyMask));
+            }
         }
 
         return true;
