@@ -64,9 +64,17 @@ public unsafe sealed partial class ParryModule
         long windowOpenToImpactFrames = _runtime.WindowOpenFrame > 0
             ? (long)(_debugFrameIndex - _runtime.WindowOpenFrame)
             : -1;
-        float windowRemainingAtImpactMs = _runtime.ParryWindowActive
-            ? _runtime.ParryWindowRemainingSeconds * 1000f
-            : -(_runtime.ParryWindowRemainingSeconds < 0 ? Math.Abs(_runtime.ParryWindowRemainingSeconds) * 1000f : 0f);
+        float windowRemainingAtImpactMs = -1f;
+        if (_runtime.WindowOpenFrame > 0 && _runtime.WindowDurationSecondsAtOpen > 0f)
+        {
+            float impactTimestampSeconds = (float)_simulationClockSeconds;
+            float windowCloseTimestampSeconds = _runtime.WindowOpenTimestampSeconds + _runtime.WindowDurationSecondsAtOpen;
+            windowRemainingAtImpactMs = (windowCloseTimestampSeconds - impactTimestampSeconds) * 1000f;
+        }
+        else if (_runtime.ParryWindowActive)
+        {
+            windowRemainingAtImpactMs = _runtime.ParryWindowRemainingSeconds * 1000f;
+        }
         string timingTag = $"[cue+{cueToImpactFrames}F win+{windowOpenToImpactFrames}F rem={windowRemainingAtImpactMs:F0}ms]";
 
         if (_runtime.ParryWindowActive)
@@ -135,6 +143,11 @@ public unsafe sealed partial class ParryModule
 
         if (changed)
         {
+            bool cueIdentityChanged =
+                !_runtime.AwaitingTurnEnd
+                || cue.attacker_id != _runtime.CurrentAttackerId
+                || cueIndex != _runtime.CurrentCueIndex;
+
             if (_debugBattleActive && !_debugBattleSessionFirstCueSeen)
             {
                 _debugBattleSessionFirstCueSeen = true;
@@ -146,7 +159,10 @@ public unsafe sealed partial class ParryModule
             _runtime.CurrentCueIndex = cueIndex;
             _runtime.CurrentPartyTargetMask = partyMask;
             _runtime.CurrentCueSignature = compute_command_signature(cue, commandCount);
-            _runtime.CueFirstSeenFrame = _debugFrameIndex;
+            if (cueIdentityChanged || _runtime.CueFirstSeenFrame == 0)
+            {
+                _runtime.CueFirstSeenFrame = _debugFrameIndex;
+            }
             _runtime.AwaitingTurnEnd = true;
             _runtime.ParryWindowSucceeded = false;
             _runtime.SuccessIndicatorActive = false;
@@ -299,6 +315,7 @@ public unsafe sealed partial class ParryModule
         _runtime.ParriedTextRemainingSeconds = 0f;
         _runtime.WindowOpenFrame = _debugFrameIndex;
         _runtime.WindowOpenTimestampSeconds = (float)_simulationClockSeconds;
+        _runtime.WindowDurationSecondsAtOpen = _runtime.ParryWindowRemainingSeconds;
 
         mark_active_turn_open();
         float windowMs = _runtime.ParryWindowRemainingSeconds * 1000f;
@@ -390,8 +407,6 @@ public unsafe sealed partial class ParryModule
         _runtime.ParryWindowElapsedSeconds = 0f;
         _runtime.ParryWindowSucceeded = false;
         _runtime.SuccessIndicatorActive = false;
-        _runtime.WindowOpenFrame = 0;
-        _runtime.WindowOpenTimestampSeconds = 0f;
     }
 
     private void clear_awaiting_turn_end(string reason)
@@ -402,6 +417,9 @@ public unsafe sealed partial class ParryModule
         _runtime.CurrentPartyTargetMask = 0;
         _runtime.CurrentCueSignature = 0;
         _runtime.CueFirstSeenFrame = 0;
+        _runtime.WindowOpenFrame = 0;
+        _runtime.WindowOpenTimestampSeconds = 0f;
+        _runtime.WindowDurationSecondsAtOpen = 0f;
         log_debug(reason);
     }
 

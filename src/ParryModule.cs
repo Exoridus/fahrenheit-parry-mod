@@ -182,6 +182,7 @@ public unsafe sealed partial class ParryModule : FhModule
         public ulong CueFirstSeenFrame;
         public ulong WindowOpenFrame;
         public float WindowOpenTimestampSeconds;
+        public float WindowDurationSecondsAtOpen;
 
         public static ParryRuntimeState CreateDefault() => new()
         {
@@ -457,6 +458,7 @@ public unsafe sealed partial class ParryModule : FhModule
         _runtime.CueFirstSeenFrame = 0;
         _runtime.WindowOpenFrame = 0;
         _runtime.WindowOpenTimestampSeconds = 0f;
+        _runtime.WindowDurationSecondsAtOpen = 0f;
         _impactCorrelationMatchedCount = 0;
         _impactCorrelationRejectedCount = 0;
         _impactCorrelationLastRejectReason = "None";
