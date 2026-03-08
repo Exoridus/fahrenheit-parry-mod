@@ -556,7 +556,7 @@ internal sealed class FfxDataMappings
             using JsonDocument document = JsonDocument.Parse(stream);
 
             JsonElement root = document.RootElement;
-            if (root.TryGetProperty("domains", out JsonElement domains) && domains.ValueKind == JsonValueKind.Object)
+            if (root.TryGetProperty("Domains", out JsonElement domains) && domains.ValueKind == JsonValueKind.Object)
             {
                 mapped += merge_runtime_bundle_domains(domains);
                 return mapped;
@@ -605,27 +605,27 @@ internal sealed class FfxDataMappings
     private int merge_runtime_bundle_domains(JsonElement domains)
     {
         int mapped = 0;
-        if (domains.TryGetProperty("commands", out JsonElement commands) && commands.ValueKind == JsonValueKind.Object)
+        if (domains.TryGetProperty("Commands", out JsonElement commands) && commands.ValueKind == JsonValueKind.Object)
         {
             mapped += merge_command_domain_object(commands, _commands);
         }
-        if (domains.TryGetProperty("autoabilities", out JsonElement autoAbilities) && autoAbilities.ValueKind == JsonValueKind.Object)
+        if (domains.TryGetProperty("AutoAbilities", out JsonElement autoAbilities) && autoAbilities.ValueKind == JsonValueKind.Object)
         {
             mapped += merge_command_domain_object(autoAbilities, _autoAbilities);
         }
-        if (domains.TryGetProperty("keyitems", out JsonElement keyItems) && keyItems.ValueKind == JsonValueKind.Object)
+        if (domains.TryGetProperty("KeyItems", out JsonElement keyItems) && keyItems.ValueKind == JsonValueKind.Object)
         {
             mapped += merge_command_domain_object(keyItems, _keyItems);
         }
-        if (domains.TryGetProperty("monsters", out JsonElement monsters) && monsters.ValueKind == JsonValueKind.Object)
+        if (domains.TryGetProperty("Monsters", out JsonElement monsters) && monsters.ValueKind == JsonValueKind.Object)
         {
             mapped += merge_monster_domain_object(monsters);
         }
-        if (domains.TryGetProperty("battles", out JsonElement battles) && battles.ValueKind == JsonValueKind.Object)
+        if (domains.TryGetProperty("Battles", out JsonElement battles) && battles.ValueKind == JsonValueKind.Object)
         {
             mapped += merge_script_domain_object(battles, _battles);
         }
-        if (domains.TryGetProperty("events", out JsonElement eventsNode) && eventsNode.ValueKind == JsonValueKind.Object)
+        if (domains.TryGetProperty("Events", out JsonElement eventsNode) && eventsNode.ValueKind == JsonValueKind.Object)
         {
             mapped += merge_script_domain_object(eventsNode, _events);
         }
@@ -657,13 +657,13 @@ internal sealed class FfxDataMappings
             if (prop.Value.ValueKind != JsonValueKind.Object) continue;
 
             string name = string.Empty;
-            if (prop.Value.TryGetProperty("name", out JsonElement nameNode) && nameNode.ValueKind == JsonValueKind.String)
+            if (prop.Value.TryGetProperty("Name", out JsonElement nameNode) && nameNode.ValueKind == JsonValueKind.String)
             {
                 name = nameNode.GetString() ?? string.Empty;
             }
 
             string description = string.Empty;
-            if (prop.Value.TryGetProperty("description", out JsonElement descNode) && descNode.ValueKind == JsonValueKind.String)
+            if (prop.Value.TryGetProperty("Description", out JsonElement descNode) && descNode.ValueKind == JsonValueKind.String)
             {
                 description = descNode.GetString() ?? string.Empty;
             }
@@ -713,7 +713,7 @@ internal sealed class FfxDataMappings
             MonsterRecord record = get_or_create(_monsters, id);
             bool changed = false;
 
-            if (prop.Value.TryGetProperty("name", out JsonElement nameNode) && nameNode.ValueKind == JsonValueKind.String)
+            if (prop.Value.TryGetProperty("Name", out JsonElement nameNode) && nameNode.ValueKind == JsonValueKind.String)
             {
                 string name = nameNode.GetString() ?? string.Empty;
                 if (!string.IsNullOrWhiteSpace(name) && string.IsNullOrWhiteSpace(record.Name))
@@ -723,7 +723,7 @@ internal sealed class FfxDataMappings
                 }
             }
 
-            if (prop.Value.TryGetProperty("sensor", out JsonElement sensorNode) && sensorNode.ValueKind == JsonValueKind.String)
+            if (prop.Value.TryGetProperty("Sensor", out JsonElement sensorNode) && sensorNode.ValueKind == JsonValueKind.String)
             {
                 string sensor = sensorNode.GetString() ?? string.Empty;
                 if (!string.IsNullOrWhiteSpace(sensor) && string.IsNullOrWhiteSpace(record.Sensor))
@@ -733,7 +733,7 @@ internal sealed class FfxDataMappings
                 }
             }
 
-            if (prop.Value.TryGetProperty("scan", out JsonElement scanNode) && scanNode.ValueKind == JsonValueKind.String)
+            if (prop.Value.TryGetProperty("Scan", out JsonElement scanNode) && scanNode.ValueKind == JsonValueKind.String)
             {
                 string scan = scanNode.GetString() ?? string.Empty;
                 if (!string.IsNullOrWhiteSpace(scan) && string.IsNullOrWhiteSpace(record.Scan))
