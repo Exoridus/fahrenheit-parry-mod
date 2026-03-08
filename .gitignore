@@ -10,10 +10,11 @@ obj/
 TestResults/
 .tmp-game/
 
-# IDE / editor
+# IDE / editor and local AI tooling state
 .vs/
 .vscode/
 .idea/
+.claude/
 *.suo
 *.user
 *.userosscache
