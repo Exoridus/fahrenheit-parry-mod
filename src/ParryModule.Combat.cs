@@ -327,11 +327,17 @@ public unsafe sealed partial class ParryModule
         Chr* enemies = _battleAdapter.GetMonsterCharacters();
 
         if (party != null && slotIndex < PartyActorCapacity)
-            return party + slotIndex;
+        {
+            Chr* chr = party + slotIndex;
+            return chr->stat_exist_flag ? chr : null;
+        }
 
         int enemyIdx = slotIndex - PartyActorCapacity;
         if (enemies != null && enemyIdx >= 0 && enemyIdx < EnemyActorCapacity)
-            return enemies + enemyIdx;
+        {
+            Chr* chr = enemies + enemyIdx;
+            return chr->stat_exist_flag ? chr : null;
+        }
 
         return null;
     }
