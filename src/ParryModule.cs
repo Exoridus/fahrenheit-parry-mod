@@ -227,6 +227,7 @@ public unsafe sealed partial class ParryModule : FhModule
     private ulong _debugFrameIndex;
     private ulong _debugBattleFrameIndex;
     private bool _debugBattleActive;
+    private bool _debugBattleSessionFirstCueSeen;
     private bool _debugGameSaveLoaded;
     private bool _debugGameplayReady;
     private bool _startupSkipStatusLogged;

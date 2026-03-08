@@ -154,8 +154,11 @@ public unsafe sealed partial class ParryModule
             {
                 _debugBattleFrameIndex = 0;
                 _debugCueTurnId = 0;
+                _debugBattleSessionFirstCueSeen = false;
                 _turnTimeline.BeginBattle();
-                append_debug_event("Battle session detected.");
+                // "Battle session detected." log is deferred to monitor_attack_cues()
+                // so that it fires only when the first actionable cue is observed,
+                // not at the earlier gameplay-ready/battle-context transition.
             }
             else
             {
@@ -167,6 +170,7 @@ public unsafe sealed partial class ParryModule
             append_debug_event("Battle session ended.");
             _debugBattleFrameIndex = 0;
             _debugCueTurnId = 0;
+            _debugBattleSessionFirstCueSeen = false;
             _turnTimeline.EndBattle();
         }
 

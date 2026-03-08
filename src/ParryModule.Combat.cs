@@ -123,6 +123,12 @@ public unsafe sealed partial class ParryModule
 
         if (changed)
         {
+            if (_debugBattleActive && !_debugBattleSessionFirstCueSeen)
+            {
+                _debugBattleSessionFirstCueSeen = true;
+                append_debug_event("Battle session detected.");
+            }
+
             int commandCount = Math.Clamp((int)cue.command_count, 0, 4);
             _runtime.CurrentAttackerId = cue.attacker_id;
             _runtime.CurrentCueIndex = cueIndex;
