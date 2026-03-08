@@ -4,8 +4,7 @@ public enum ParryDifficulty
 {
     Easy = 0,
     Normal = 1,
-    Expert = 2,
-    Debug = 3
+    Expert = 2
 }
 
 public static class ParryDifficultyModel
@@ -13,16 +12,14 @@ public static class ParryDifficultyModel
     public const int MaxSpamTierIndex = 3;
     public const float SpamTierResetCooldownSeconds = 0.50f;
 
-    private static readonly float[] EasyTierDurationsMs = [260f, 180f, 120f, 80f];
-    private static readonly float[] NormalTierDurationsMs = [200f, 150f, 100f, 67f];
-    private static readonly float[] ExpertTierDurationsMs = [150f, 75f, 50f, 33f];
-    private static readonly float[] DebugTierDurationsMs = [500f, 500f, 500f, 500f];
+    private static readonly float[] EasyTierDurationsMs = [350f, 200f, 100f, 0f];
+    private static readonly float[] NormalTierDurationsMs = [200f, 100f, 67f, 0f];
+    private static readonly float[] ExpertTierDurationsMs = [150f, 75f, 33f, 0f];
 
     public static string FormatName(ParryDifficulty difficulty) => difficulty switch
     {
         ParryDifficulty.Easy => "Easy",
         ParryDifficulty.Expert => "Expert",
-        ParryDifficulty.Debug => "Debug",
         _ => "Normal"
     };
 
@@ -52,7 +49,6 @@ public static class ParryDifficultyModel
     {
         ParryDifficulty.Easy => EasyTierDurationsMs,
         ParryDifficulty.Expert => ExpertTierDurationsMs,
-        ParryDifficulty.Debug => DebugTierDurationsMs,
         _ => NormalTierDurationsMs
     };
 }

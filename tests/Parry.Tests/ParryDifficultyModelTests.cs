@@ -5,12 +5,15 @@ namespace Fahrenheit.Mods.Parry.Tests;
 
 public sealed class ParryDifficultyModelTests {
     [Theory]
-    [InlineData(ParryDifficulty.Easy, 0, 0.260f)]
-    [InlineData(ParryDifficulty.Easy, 1, 0.180f)]
+    [InlineData(ParryDifficulty.Easy,   0, 0.350f)]
+    [InlineData(ParryDifficulty.Easy,   1, 0.200f)]
+    [InlineData(ParryDifficulty.Easy,   3, 0.000f)]
     [InlineData(ParryDifficulty.Normal, 0, 0.200f)]
-    [InlineData(ParryDifficulty.Normal, 3, 0.067f)]
+    [InlineData(ParryDifficulty.Normal, 1, 0.100f)]
+    [InlineData(ParryDifficulty.Normal, 3, 0.000f)]
     [InlineData(ParryDifficulty.Expert, 0, 0.150f)]
-    [InlineData(ParryDifficulty.Expert, 2, 0.050f)]
+    [InlineData(ParryDifficulty.Expert, 2, 0.033f)]
+    [InlineData(ParryDifficulty.Expert, 3, 0.000f)]
     public void GetWindowSeconds_ShouldReturnExpectedPresetValues(ParryDifficulty difficulty, int tierIndex, float expectedSeconds) {
         float actual = ParryDifficultyModel.GetWindowSeconds(difficulty, tierIndex);
         Assert.Equal(expectedSeconds, actual, precision: 3);
