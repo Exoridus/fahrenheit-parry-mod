@@ -11,6 +11,7 @@ public unsafe sealed partial class ParryModule
         public bool? Logging { get; set; }
         public bool? OverdriveBoost { get; set; }
         public bool? NegateDamage { get; set; }
+        public bool? Penalty { get; set; }
         public bool? StartupSkipForceTitle { get; set; }
         public bool? DebugOverlay { get; set; }
         public string? Difficulty { get; set; }
@@ -50,6 +51,7 @@ public unsafe sealed partial class ParryModule
             if (persisted.Logging.HasValue) _optionLogging = persisted.Logging.Value;
             if (persisted.OverdriveBoost.HasValue) _optionOverdriveBoost = persisted.OverdriveBoost.Value;
             if (persisted.NegateDamage.HasValue) _optionNegateDamage = persisted.NegateDamage.Value;
+            if (persisted.Penalty.HasValue) _optionPenaltyEnabled = persisted.Penalty.Value;
             if (persisted.StartupSkipForceTitle.HasValue) _optionStartupSkipForceTitle = persisted.StartupSkipForceTitle.Value;
             if (persisted.DebugOverlay.HasValue) _optionDebugOverlay = persisted.DebugOverlay.Value;
 
@@ -89,6 +91,7 @@ public unsafe sealed partial class ParryModule
                 Logging = _optionLogging,
                 OverdriveBoost = _optionOverdriveBoost,
                 NegateDamage = _optionNegateDamage,
+                Penalty = _optionPenaltyEnabled,
                 StartupSkipForceTitle = _optionStartupSkipForceTitle,
                 DebugOverlay = _optionDebugOverlay,
                 Difficulty = _optionDifficulty.ToString()

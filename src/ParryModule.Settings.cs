@@ -92,6 +92,18 @@ public unsafe sealed partial class ParryModule
         }
     }
 
+    private void render_setting_penalty()
+    {
+        if (ImGui.Checkbox("##fhparry.penalty", ref _optionPenaltyEnabled))
+        {
+            persist_settings();
+            if (!_optionPenaltyEnabled)
+            {
+                reset_spam_tier("penalty_disabled", logTransition: true);
+            }
+        }
+    }
+
     private void render_setting_logging()
     {
         if (ImGui.Checkbox("##fhparry.logging", ref _optionLogging))

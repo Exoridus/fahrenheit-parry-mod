@@ -189,6 +189,7 @@ public unsafe sealed partial class ParryModule : FhModule
     private bool _optionParryStateHud = true;
     private bool _optionOverdriveBoost = true;
     private bool _optionNegateDamage = true;
+    private bool _optionPenaltyEnabled = true;
     private bool _optionStartupSkipForceTitle = true;
     private bool _optionStartupProbeMode = false;
     private bool _optionDebugOverlay =
@@ -300,6 +301,7 @@ public unsafe sealed partial class ParryModule : FhModule
             new FhSettingCustomRenderer("logging", render_setting_logging),
             new FhSettingCustomRenderer("debug_overlay", render_setting_debug_overlay),
             new FhSettingCustomRenderer("negate", render_setting_negate),
+            new FhSettingCustomRenderer("penalty", render_setting_penalty),
             new FhSettingCustomRenderer("future", render_setting_future)
         ]);
     }

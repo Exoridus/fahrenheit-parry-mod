@@ -238,7 +238,10 @@ public unsafe sealed partial class ParryModule
             return;
         }
 
-        _spamController.ArmOnQualifyingRelease();
+        if (_optionPenaltyEnabled)
+        {
+            _spamController.ArmOnQualifyingRelease();
+        }
     }
 
     private void handle_parry_input_press(ParryInputContext context)
@@ -253,12 +256,15 @@ public unsafe sealed partial class ParryModule
         byte cueIndex = context.CueIndex;
         uint partyMask = context.PartyMask;
 
-        ParrySpamTransition spamTransition = _spamController.OnQualifyingPress();
-        if (spamTransition.TierChanged)
+        if (_optionPenaltyEnabled)
         {
-            int fromTier = spamTransition.PreviousTier + 1;
-            int toTier = spamTransition.CurrentTier + 1;
-            log_debug($"Anti-spam tier {fromTier} -> {toTier} (tap/re-engage).");
+            ParrySpamTransition spamTransition = _spamController.OnQualifyingPress();
+            if (spamTransition.TierChanged)
+            {
+                int fromTier = spamTransition.PreviousTier + 1;
+                int toTier = spamTransition.CurrentTier + 1;
+                log_debug($"Anti-spam tier {fromTier} -> {toTier} (tap/re-engage).");
+            }
         }
 
         _runtime.AwaitingTurnEnd = true;
