@@ -5,8 +5,9 @@ public unsafe sealed partial class ParryModule
     private const float OverlayFontSizePx = 62f;
 
     private const uint SndAsync = 0x0001;
-    private const uint SndMemory = 0x0004;
     private const uint SndNoDefault = 0x0002;
+    private const uint SndMemory = 0x0004;
+    private const uint SndPurge = 0x0040;
 
     [DllImport("winmm.dll", CharSet = CharSet.Unicode, SetLastError = true)]
     private static extern bool PlaySoundW(nint pszSound, nint hmod, uint fdwSound);
@@ -215,7 +216,11 @@ public unsafe sealed partial class ParryModule
 
     private void stop_audio_playback()
     {
-        PlaySoundW(0, 0, 0);
+        // SND_PURGE synchronously stops the current sound and waits for the
+        // audio thread to finish, ensuring the old buffer is no longer accessed
+        // before we free the GCHandle. PlaySoundW(0, 0, 0) does not carry this
+        // guarantee and could leave the audio thread reading freed memory.
+        PlaySoundW(0, 0, SndPurge);
         if (_activeAudioBufferPinned)
         {
             _activeAudioBufferHandle.Free();
