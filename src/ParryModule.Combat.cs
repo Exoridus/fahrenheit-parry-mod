@@ -58,15 +58,27 @@ public unsafe sealed partial class ParryModule
             commandLabel: command.Label,
             sourceStage: "impact_poll");
 
+        long cueToImpactFrames = _runtime.CueFirstSeenFrame > 0
+            ? (long)(_debugFrameIndex - _runtime.CueFirstSeenFrame)
+            : -1;
+        long windowOpenToImpactFrames = _runtime.WindowOpenFrame > 0
+            ? (long)(_debugFrameIndex - _runtime.WindowOpenFrame)
+            : -1;
+        float windowRemainingAtImpactMs = _runtime.ParryWindowActive
+            ? _runtime.ParryWindowRemainingSeconds * 1000f
+            : -(_runtime.ParryWindowRemainingSeconds < 0 ? Math.Abs(_runtime.ParryWindowRemainingSeconds) * 1000f : 0f);
+        string timingTag = $"[cue+{cueToImpactFrames}F win+{windowOpenToImpactFrames}F rem={windowRemainingAtImpactMs:F0}ms]";
+
         if (_runtime.ParryWindowActive)
         {
+            log_debug($"Parry window active at impact for {format_actor_slot((byte)slotIndex)}. {timingTag}");
             resolve_successful_parry(slotIndex, target, "impact_poll");
             return;
         }
 
         mark_active_turn_missed("impact outside active parry window");
         trigger_failure_feedback();
-        log_debug($"Impact hit {format_actor_slot((byte)slotIndex)} outside parry window.");
+        log_debug($"Impact hit {format_actor_slot((byte)slotIndex)} outside parry window. {timingTag}");
     }
 
     private static void negate_damage_on_impact(Chr* chr)
@@ -134,6 +146,7 @@ public unsafe sealed partial class ParryModule
             _runtime.CurrentCueIndex = cueIndex;
             _runtime.CurrentPartyTargetMask = partyMask;
             _runtime.CurrentCueSignature = compute_command_signature(cue, commandCount);
+            _runtime.CueFirstSeenFrame = _debugFrameIndex;
             _runtime.AwaitingTurnEnd = true;
             _runtime.ParryWindowSucceeded = false;
             _runtime.SuccessIndicatorActive = false;
@@ -284,6 +297,8 @@ public unsafe sealed partial class ParryModule
         _runtime.ParryWindowSucceeded = false;
         _runtime.SuccessIndicatorActive = false;
         _runtime.ParriedTextRemainingSeconds = 0f;
+        _runtime.WindowOpenFrame = _debugFrameIndex;
+        _runtime.WindowOpenTimestampSeconds = (float)_simulationClockSeconds;
 
         mark_active_turn_open();
         float windowMs = _runtime.ParryWindowRemainingSeconds * 1000f;
@@ -375,6 +390,8 @@ public unsafe sealed partial class ParryModule
         _runtime.ParryWindowElapsedSeconds = 0f;
         _runtime.ParryWindowSucceeded = false;
         _runtime.SuccessIndicatorActive = false;
+        _runtime.WindowOpenFrame = 0;
+        _runtime.WindowOpenTimestampSeconds = 0f;
     }
 
     private void clear_awaiting_turn_end(string reason)
@@ -384,6 +401,7 @@ public unsafe sealed partial class ParryModule
         _runtime.SuccessIndicatorActive = false;
         _runtime.CurrentPartyTargetMask = 0;
         _runtime.CurrentCueSignature = 0;
+        _runtime.CueFirstSeenFrame = 0;
         log_debug(reason);
     }
 

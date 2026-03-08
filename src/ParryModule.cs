@@ -179,6 +179,10 @@ public unsafe sealed partial class ParryModule : FhModule
         public byte LastDispatchConsumedQueueIndex;
         public ulong LastCorrelationSkipFrame;
 
+        public ulong CueFirstSeenFrame;
+        public ulong WindowOpenFrame;
+        public float WindowOpenTimestampSeconds;
+
         public static ParryRuntimeState CreateDefault() => new()
         {
             LastParriedTargetSlot = -1,
@@ -450,6 +454,9 @@ public unsafe sealed partial class ParryModule : FhModule
         _runtime.LastDispatchConsumedAttackerId = 0;
         _runtime.LastDispatchConsumedQueueIndex = 0xFF;
         _runtime.LastCorrelationSkipFrame = 0;
+        _runtime.CueFirstSeenFrame = 0;
+        _runtime.WindowOpenFrame = 0;
+        _runtime.WindowOpenTimestampSeconds = 0f;
         _impactCorrelationMatchedCount = 0;
         _impactCorrelationRejectedCount = 0;
         _impactCorrelationLastRejectReason = "None";
