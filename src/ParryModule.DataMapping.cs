@@ -284,12 +284,14 @@ public unsafe sealed partial class ParryModule
     {
         if (commandId == 0) return ResolvedCommandInfo.None;
 
+        _dataMappings.TryResolveCommandDamageType(commandId, out string damageType);
+
         if (_dataMappings.TryResolveCommandDisplay(commandId, out string label, out string kind))
         {
-            return new ResolvedCommandInfo(commandId, label, kind, source, confidence);
+            return new ResolvedCommandInfo(commandId, label, kind, damageType, source, confidence);
         }
 
-        return new ResolvedCommandInfo(commandId, string.Empty, string.Empty, source, confidence);
+        return new ResolvedCommandInfo(commandId, string.Empty, string.Empty, damageType, source, confidence);
     }
 
     private static string format_command_source(CommandIdSource source)

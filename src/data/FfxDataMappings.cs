@@ -21,6 +21,7 @@ internal sealed class FfxDataMappings
     {
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
+        public string DamageType { get; set; } = string.Empty;
     }
 
     private sealed class MonsterRecord
@@ -118,6 +119,19 @@ internal sealed class FfxDataMappings
         {
             label = symbol;
             kind = "Symbol";
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool TryResolveCommandDamageType(ushort commandId, out string damageType)
+    {
+        damageType = string.Empty;
+        if (commandId == 0) return false;
+        if (_commands.TryGetValue(commandId, out CommandLikeRecord? cmd) && !string.IsNullOrWhiteSpace(cmd.DamageType))
+        {
+            damageType = cmd.DamageType;
             return true;
         }
 
@@ -654,7 +668,13 @@ internal sealed class FfxDataMappings
                 description = descNode.GetString() ?? string.Empty;
             }
 
-            if (string.IsNullOrWhiteSpace(name) && string.IsNullOrWhiteSpace(description))
+            string damageType = string.Empty;
+            if (prop.Value.TryGetProperty("DamageType", out JsonElement damageTypeNode) && damageTypeNode.ValueKind == JsonValueKind.String)
+            {
+                damageType = damageTypeNode.GetString() ?? string.Empty;
+            }
+
+            if (string.IsNullOrWhiteSpace(name) && string.IsNullOrWhiteSpace(description) && string.IsNullOrWhiteSpace(damageType))
             {
                 continue;
             }
@@ -669,6 +689,11 @@ internal sealed class FfxDataMappings
             if (!string.IsNullOrWhiteSpace(description) && string.IsNullOrWhiteSpace(record.Description))
             {
                 record.Description = description;
+                changed = true;
+            }
+            if (!string.IsNullOrWhiteSpace(damageType) && string.IsNullOrWhiteSpace(record.DamageType))
+            {
+                record.DamageType = damageType;
                 changed = true;
             }
             if (changed) mapped++;

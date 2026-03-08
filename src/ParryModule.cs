@@ -83,6 +83,7 @@ public unsafe sealed partial class ParryModule : FhModule
         public readonly ushort CommandId;
         public readonly string Label;
         public readonly string Kind;
+        public readonly string DamageType;
         public readonly CommandIdSource Source;
         public readonly CommandIdConfidence Confidence;
 
@@ -93,12 +94,14 @@ public unsafe sealed partial class ParryModule : FhModule
             ushort commandId,
             string label,
             string kind,
+            string damageType,
             CommandIdSource source,
             CommandIdConfidence confidence)
         {
             CommandId = commandId;
             Label = label ?? string.Empty;
             Kind = kind ?? string.Empty;
+            DamageType = damageType ?? string.Empty;
             Source = source;
             Confidence = confidence;
         }
@@ -107,6 +110,7 @@ public unsafe sealed partial class ParryModule : FhModule
             commandId: 0,
             label: string.Empty,
             kind: string.Empty,
+            damageType: string.Empty,
             source: CommandIdSource.None,
             confidence: CommandIdConfidence.None);
     }

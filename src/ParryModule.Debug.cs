@@ -19,6 +19,7 @@ public unsafe sealed partial class ParryModule
         public readonly ushort CommandId;
         public readonly string CommandLabel;
         public readonly string CommandKind;
+        public readonly string CommandDamageType;
         public readonly CommandIdSource CommandSource;
         public readonly CommandIdConfidence CommandConfidence;
         public readonly uint CommandSignature;
@@ -36,6 +37,7 @@ public unsafe sealed partial class ParryModule
             ushort commandId,
             string commandLabel,
             string commandKind,
+            string commandDamageType,
             CommandIdSource commandSource,
             CommandIdConfidence commandConfidence,
             uint commandSignature,
@@ -52,6 +54,7 @@ public unsafe sealed partial class ParryModule
             CommandId = commandId;
             CommandLabel = commandLabel ?? string.Empty;
             CommandKind = commandKind ?? string.Empty;
+            CommandDamageType = commandDamageType ?? string.Empty;
             CommandSource = commandSource;
             CommandConfidence = commandConfidence;
             CommandSignature = commandSignature;
@@ -447,7 +450,11 @@ public unsafe sealed partial class ParryModule
 
         if (cue.CommandId != 0 && !string.IsNullOrWhiteSpace(cue.CommandLabel))
         {
-            return $"{baseAction}: {truncate_display(cue.CommandLabel, 28)}";
+            string label = truncate_display(cue.CommandLabel, 28);
+            bool hasDamageType = !string.IsNullOrWhiteSpace(cue.CommandDamageType)
+                && !cue.CommandDamageType.Equals("Unknown", StringComparison.OrdinalIgnoreCase);
+            string suffix = hasDamageType ? $" [{cue.CommandDamageType}]" : string.Empty;
+            return $"{baseAction}: {label}{suffix}";
         }
 
         return baseAction;
@@ -1026,6 +1033,7 @@ public unsafe sealed partial class ParryModule
             resolvedCommand.CommandId,
             resolvedCommand.Label,
             resolvedCommand.Kind,
+            resolvedCommand.DamageType,
             resolvedCommand.Source,
             resolvedCommand.Confidence,
             commandSignature,
