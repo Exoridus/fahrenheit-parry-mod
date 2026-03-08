@@ -2,7 +2,7 @@
   "SchemaVersion": 1,
   "Domain": "keyitems",
   "Locale": "us",
-  "GeneratedAtUtc": "2026-03-04T10:54:18.7669382Z",
+  "GeneratedAtUtc": "2026-03-08T15:08:33.6367195Z",
   "SourceFiles": [
     "READ_ALL_COMMANDS_LOCALIZED__us.txt"
   ],
@@ -10,322 +10,386 @@
     "A000": {
       "Name": "Withered Bouquet",
       "Description": "Someone put heart and soul into making this.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A001": {
       "Name": "Flint",
       "Description": "Used to start fires.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A002": {
       "Name": "Cloudy Mirror",
       "Description": "The surface is dark and clouded.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A003": {
       "Name": "Celestial Mirror",
       "Description": "The surface is shiny and bright.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A004": {
       "Name": "Al Bhed Primer I",
       "Description": "Teaches the letter \u201DA\u201D in Al Bhed.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A005": {
       "Name": "Al Bhed Primer II",
       "Description": "Teaches the letter \u201DB\u201D in Al Bhed.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A006": {
       "Name": "Al Bhed Primer III",
       "Description": "Teaches the letter \u201DC\u201D in Al Bhed.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A007": {
       "Name": "Al Bhed Primer IV",
       "Description": "Teaches the letter \u201DD\u201D in Al Bhed.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A008": {
       "Name": "Al Bhed Primer V",
       "Description": "Teaches the letter \u201DE\u201D in Al Bhed.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A009": {
       "Name": "Al Bhed Primer VI",
       "Description": "Teaches the letter \u201DF\u201D in Al Bhed.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A00A": {
       "Name": "Al Bhed Primer VII",
       "Description": "Teaches the letter \u201DG\u201D in Al Bhed.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A00B": {
       "Name": "Al Bhed Primer VIII",
       "Description": "Teaches the letter \u201DH\u201D in Al Bhed.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A00C": {
       "Name": "Al Bhed Primer IX",
       "Description": "Teaches the letter \u201DI\u201D in Al Bhed.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A00D": {
       "Name": "Al Bhed Primer X",
       "Description": "Teaches the letter \u201DJ\u201D in Al Bhed.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A00E": {
       "Name": "Al Bhed Primer XI",
       "Description": "Teaches the letter \u201DK\u201D in Al Bhed.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A00F": {
       "Name": "Al Bhed Primer XII",
       "Description": "Teaches the letter \u201DL\u201D in Al Bhed.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A010": {
       "Name": "Al Bhed Primer XIII",
       "Description": "Teaches the letter \u201DM\u201D in Al Bhed.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A011": {
       "Name": "Al Bhed Primer XIV",
       "Description": "Teaches the letter \u201DN\u201D in Al Bhed.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A012": {
       "Name": "Al Bhed Primer XV",
       "Description": "Teaches the letter \u201DO\u201D in Al Bhed.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A013": {
       "Name": "Al Bhed Primer XVI",
       "Description": "Teaches the letter \u201DP\u201D in Al Bhed.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A014": {
       "Name": "Al Bhed Primer XVII",
       "Description": "Teaches the letter \u201DQ\u201D in Al Bhed.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A015": {
       "Name": "Al Bhed Primer XVIII",
       "Description": "Teaches the letter \u201DR\u201D in Al Bhed.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A016": {
       "Name": "Al Bhed Primer XIX",
       "Description": "Teaches the letter \u201DS\u201D in Al Bhed.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A017": {
       "Name": "Al Bhed Primer XX",
       "Description": "Teaches the letter \u201DT\u201D in Al Bhed.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A018": {
       "Name": "Al Bhed Primer XXI",
       "Description": "Teaches the letter \u201DU\u201D in Al Bhed.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A019": {
       "Name": "Al Bhed Primer XXII",
       "Description": "Teaches the letter \u201DV\u201D in Al Bhed.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A01A": {
       "Name": "Al Bhed Primer XXIII",
       "Description": "Teaches the letter \u201DW\u201D in Al Bhed.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A01B": {
       "Name": "Al Bhed Primer XXIV",
       "Description": "Teaches the letter \u201DX\u201D in Al Bhed.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A01C": {
       "Name": "Al Bhed Primer XXV",
       "Description": "Teaches the letter \u201DY\u201D in Al Bhed.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A01D": {
       "Name": "Al Bhed Primer XXVI",
       "Description": "Teaches the letter \u201DZ\u201D in Al Bhed.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A01E": {
       "Name": "Summoner\u2019s Soul",
       "Description": "Allows the aeons to learn abilities.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A01F": {
       "Name": "Aeon\u2019s Soul",
       "Description": "Allows you to raise aeons\u2019 attributes.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A020": {
       "Name": "Jecht\u2019s Sphere",
       "Description": "A sphere recorded by Jecht ten years ago.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A021": {
       "Name": "Rusty Sword",
       "Description": "An old, rusty sword.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A022": {
       "Name": "",
       "Description": "",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A023": {
       "Name": "Sun Crest",
       "Description": "A Celestial Token, fashioned in the shape of the Sun.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A024": {
       "Name": "Sun Sigil",
       "Description": "A Celestial Token, fashioned in the shape of the Sun.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A025": {
       "Name": "Moon Crest",
       "Description": "A Celestial Token, fashioned in the shape of the Moon.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A026": {
       "Name": "Moon Sigil",
       "Description": "A Celestial Token, fashioned in the shape of the Moon.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A027": {
       "Name": "Mars Crest",
       "Description": "A Celestial Token, fashioned in the shape of Mars.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A028": {
       "Name": "Mars Sigil",
       "Description": "A Celestial Token, fashioned in the shape of Mars.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A029": {
       "Name": "Mark of Conquest",
       "Description": "Given to those who have surpassed mortal bounds.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A02A": {
       "Name": "Saturn Crest",
       "Description": "A Celestial Token, fashioned in the shape of Saturn.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A02B": {
       "Name": "Saturn Sigil",
       "Description": "A Celestial Token, fashioned in the shape of Saturn.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A02C": {
       "Name": "Jupiter Crest",
       "Description": "A Celestial Token, fashioned in the shape of Jupiter.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A02D": {
       "Name": "Jupiter Sigil",
       "Description": "A Celestial Token, fashioned in the shape of Jupiter.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A02E": {
       "Name": "Venus Crest",
       "Description": "A Celestial Token, fashioned in the shape of Venus.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A02F": {
       "Name": "Venus Sigil",
       "Description": "A Celestial Token, fashioned in the shape of Venus.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A030": {
       "Name": "Mercury Crest",
       "Description": "A Celestial Token, fashioned in the shape of Mercury.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A031": {
       "Name": "Mercury Sigil",
       "Description": "A Celestial Token, fashioned in the shape of Mercury.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A032": {
       "Name": "Blossom Crown",
       "Description": "Seems to have some connection with a hidden aeon...",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A033": {
       "Name": "Flower Scepter",
       "Description": "Seems to have some connection with a hidden aeon...",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A034": {
       "Name": "",
       "Description": "",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A035": {
       "Name": "",
       "Description": "",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A036": {
       "Name": "",
       "Description": "",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A037": {
       "Name": "",
       "Description": "",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A038": {
       "Name": "",
       "Description": "",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A039": {
       "Name": "",
       "Description": "",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A03A": {
       "Name": "",
       "Description": "",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A03B": {
       "Name": "",
       "Description": "",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A03C": {
       "Name": "",
       "Description": "",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A03D": {
       "Name": "",
       "Description": "",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A03E": {
       "Name": "",
       "Description": "",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A03F": {
       "Name": "",
       "Description": "",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     }
   }
 }

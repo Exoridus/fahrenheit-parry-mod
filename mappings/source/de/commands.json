@@ -2,7 +2,7 @@
   "SchemaVersion": 1,
   "Domain": "commands",
   "Locale": "de",
-  "GeneratedAtUtc": "2026-03-04T10:54:18.8016308Z",
+  "GeneratedAtUtc": "2026-03-08T15:08:33.6832849Z",
   "SourceFiles": [
     "READ_ALL_COMMANDS_LOCALIZED__de.txt"
   ],
@@ -10,4897 +10,5876 @@
     "3000": {
       "Name": "Angriff",
       "Description": "Gegner angreifen.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "3001": {
       "Name": "Item",
       "Description": "Items anwenden.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3002": {
       "Name": "Wechsel",
       "Description": "Kampfteilnehmer auswechseln.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3003": {
       "Name": "T\u00FCrmen",
       "Description": "Aus dem Kampfgeschehen fl\u00FCchten.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3004": {
       "Name": "Waffen",
       "Description": "Waffen auswechseln.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3005": {
       "Name": "R\u00FCstungen",
       "Description": "R\u00FCstung auswechseln.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3006": {
       "Name": "Retard-Hieb",
       "Description": "Verlangsamt 1 Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "3007": {
       "Name": "Retard-Schock",
       "Description": "Verlangsamt 1 Gegner extrem.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "3008": {
       "Name": "Schlaf-Hieb",
       "Description": "Versetzt f\u00FCr 3 Runden in [Schlaf].",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "3009": {
       "Name": "Stumm-Hieb",
       "Description": "Versetzt f\u00FCr 3 Runden in [Stumm].",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "300A": {
       "Name": "Blind-Hieb",
       "Description": "Versetzt f\u00FCr 3 Runden in [Blind].",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "300B": {
       "Name": "Zombie-Hieb",
       "Description": "Versetzt in [Zombie].",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "300C": {
       "Name": "Schlaf-Schock",
       "Description": "Versetzt fast immer f\u00FCr 1 Runde in [Schlaf].",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "300D": {
       "Name": "Stumm-Schock",
       "Description": "Versetzt fast immer f\u00FCr 1 Runde in [Stumm].",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "300E": {
       "Name": "Blind-Schock",
       "Description": "Versetzt fast immer f\u00FCr 1 Runde in [Blind].",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "300F": {
       "Name": "Trisaster",
       "Description": "Versetzt f\u00FCr 1 Runde in [Schlaf]\u002B[Stumm]\u002B[Blind].",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "3010": {
       "Name": "Kraftbrecher",
       "Description": "Senkt Angriffskraft.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "3011": {
       "Name": "Magiebrecher",
       "Description": "Senkt Magie.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "3012": {
       "Name": "Panzerbrecher",
       "Description": "Senkt Abwehrkraft und hebt [Panzer] auf.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "3013": {
       "Name": "Geistbrecher",
       "Description": "Senkt Zauberabwehr.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "3014": {
       "Name": "Rauben",
       "Description": "[Angriff] und [Klauen] zugleich.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "3015": {
       "Name": "Rapidschlag",
       "Description": "\u00DCberrascht Gegner mit flinkem Hieb.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "3016": {
       "Name": "Klauen",
       "Description": "Klaut vom Gegner Items.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3017": {
       "Name": "Benutzen",
       "Description": "Spezielle Items verwenden.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3018": {
       "Name": "Und Tsch\u00FCss...",
       "Description": "Gemeinsame Flucht aus dem Kampf.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3019": {
       "Name": "Beten",
       "Description": "Regeneriert die HP der Gruppe.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "301A": {
       "Name": "Anfeuern",
       "Description": "Steigert die Angriffs- und Abwehrkraft der Gruppe.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "301B": {
       "Name": "Anpeilen",
       "Description": "Steigert [Treffer] der Gruppe.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "301C": {
       "Name": "Sammeln",
       "Description": "Steigert [Magie] und [Zauberabwehr] der Gruppe.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "301D": {
       "Name": "Ahnen",
       "Description": "Steigert [Reflex] der Gruppe.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "301E": {
       "Name": "Fortuna",
       "Description": "Steigert [Gl\u00FCck] der Gruppe.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "301F": {
       "Name": "Unheil",
       "Description": "Senkt [Gl\u00FCck] aller Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3020": {
       "Name": "Dragonik",
       "Description": "Entzieht 1 Gegner HP und MP.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3021": {
       "Name": "Abwehr",
       "Description": "Schadensverringerung in dieser Haltung.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3022": {
       "Name": "Bodyguard",
       "Description": "Nimmt Verb\u00FCndete in Schutz.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3023": {
       "Name": "Schutzwall",
       "Description": "[Bodyguard] in [Abwehr]-Haltung.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3024": {
       "Name": "Almosen",
       "Description": "Greift Gegner mit Gil an.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3025": {
       "Name": "Drohen",
       "Description": "Aufhalten durch Einsch\u00FCchtern.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3026": {
       "Name": "Reizen",
       "Description": "Zieht die Aufmerksamkeit der Gegner auf sich.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3027": {
       "Name": "Abgeben",
       "Description": "Gibt die eigene Ekstase-Energie an Mitstreiter ab.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3028": {
       "Name": "Imitieren",
       "Description": "Ahmt die letzte Aktion eines Mitstreiters nach.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3029": {
       "Name": "Hades-Magie",
       "Description": "2x Zauber in 1 Runde.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "302A": {
       "Name": "Bestechen",
       "Description": "Umgehung des Kampfes durch Bestechung.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "302B": {
       "Name": "Vita",
       "Description": "Regeneriert HP.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "302C": {
       "Name": "Vitra",
       "Description": "Regeneriert HP.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "302D": {
       "Name": "Vigra",
       "Description": "Regeneriert HP.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "302E": {
       "Name": "Exeis",
       "Description": "Schutz vor K\u00E4lte-elementarem Angriff.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "302F": {
       "Name": "Exfeu",
       "Description": "Schutz vor Hitze-elementarem Angriff.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "3030": {
       "Name": "Exblitz",
       "Description": "Schutz vor Strom-elementarem Angriff.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "3031": {
       "Name": "Exwass",
       "Description": "Schutz vor N\u00E4sse-elementarem Angriff.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "3032": {
       "Name": "Analyse",
       "Description": "Einsicht in die Daten des Zielobjekts.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "3033": {
       "Name": "Medica",
       "Description": "Heilt Zustandsver\u00E4nderungen eines Mitstreiters.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "3034": {
       "Name": "Engel",
       "Description": "Kuriert Kampfunf\u00E4higkeit.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "3035": {
       "Name": "Erzengel",
       "Description": "Kuriert Kampfunf\u00E4higkeit und regeneriert HP.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "3036": {
       "Name": "Hast",
       "Description": "Versetzt 1 Mitstreiter in [Hast].",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "3037": {
       "Name": "Hastga",
       "Description": "Versetzt alle Mitstreiter in [Hast].",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "3038": {
       "Name": "Gemach",
       "Description": "Verlangsamt 1 Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "3039": {
       "Name": "Gemachga",
       "Description": "Verlangsamt alle Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "303A": {
       "Name": "Shell",
       "Description": "Zauberabwehr wird erh\u00F6ht.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "303B": {
       "Name": "Protes",
       "Description": "Abwehrkraft wird erh\u00F6ht.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "303C": {
       "Name": "Reflek",
       "Description": "Reflektiert Zauberspr\u00FCche.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "303D": {
       "Name": "Anti-Z",
       "Description": "Neutralisiert durch Zauber hervorgerufene Zust\u00E4nde.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "303E": {
       "Name": "Regena",
       "Description": "HP 1 Mitstreiters regenerieren sich stufenweise.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "303F": {
       "Name": "Sanctus",
       "Description": "Himmels-Schaden im Einzelvisier.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "3040": {
       "Name": "Schutzengel",
       "Description": "Kampfunf\u00E4higkeit wird 1 Mal verhindert.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "3041": {
       "Name": "Eis",
       "Description": "K\u00E4lte-elementarer Zauberangriff.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "3042": {
       "Name": "Feuer",
       "Description": "Hitze-elementarer Zauberangriff.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "3043": {
       "Name": "Blitz",
       "Description": "Strom-elementarer Zauberangriff.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "3044": {
       "Name": "Wasser",
       "Description": "N\u00E4sse-elementarer Zauberangriff.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "3045": {
       "Name": "Feura",
       "Description": "Hitze-elementarer Zauberangriff.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "3046": {
       "Name": "Eisra",
       "Description": "K\u00E4lte-elementarer Zauberangriff.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "3047": {
       "Name": "Blitzra",
       "Description": "Strom-elementarer Zauberangriff.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "3048": {
       "Name": "Wassra",
       "Description": "N\u00E4sse-elementarer Zauberangriff.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "3049": {
       "Name": "Feuga",
       "Description": "Hitze-elementarer Zauberangriff.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "304A": {
       "Name": "Eisga",
       "Description": "K\u00E4lte-elementarer Zauberangriff.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "304B": {
       "Name": "Blitzga",
       "Description": "Strom-elementarer Zauberangriff.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "304C": {
       "Name": "Wassga",
       "Description": "N\u00E4sse-elementarer Zauberangriff.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "304D": {
       "Name": "Bio",
       "Description": "[Gift]-Zauberangriff.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "304E": {
       "Name": "Gravitas",
       "Description": "Reduziert HP aller Gegner auf 3/4.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "304F": {
       "Name": "Tod",
       "Description": "Zauber mit sofortiger t\u00F6dlicher Wirkung.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "3050": {
       "Name": "Subvita",
       "Description": "Entzieht HP.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "3051": {
       "Name": "Subspirit",
       "Description": "Entzieht MP.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "3052": {
       "Name": "Flare",
       "Description": "Neutral-elementarer Zauberangriff.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "3053": {
       "Name": "Ultima",
       "Description": "Neutral-elementarer Zauberangriff auf alle Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "3054": {
       "Name": "Sanfte Tour",
       "Description": "Nimmt weniger Schaden, Ekstase steigt nicht.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3055": {
       "Name": "Harte Tour",
       "Description": "Nimmt mehr Schaden, Ekstase steigt schneller.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3056": {
       "Name": "Zur\u00FCckrufen",
       "Description": "Ruft die anwesende Bestia zur\u00FCck.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3057": {
       "Name": "Zur\u00FCckrufen",
       "Description": "Ruft die anwesende Bestia zur\u00FCck.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3058": {
       "Name": "Gil-Klau",
       "Description": "Klaut Gil vom Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3059": {
       "Name": "Allesbrecher",
       "Description": "Senkt Angriff, Magie, Abwehr und Z-Abwehr.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "305A": {
       "Name": "Kraft-Hieb",
       "Description": "1 Gegner hinterl\u00E4sst [Kraft-Sph\u00E4roiden].",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "305B": {
       "Name": "Wunder-Hieb",
       "Description": "1 Gegner hinterl\u00E4sst [Wunder-Sph\u00E4roiden].",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "305C": {
       "Name": "Zeit-Hieb",
       "Description": "1 Gegner hinterl\u00E4sst [Zeit-Sph\u00E4roiden].",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "305D": {
       "Name": "Ability-Hieb",
       "Description": "1 Gegner hinterl\u00E4sst [Ability-Sph\u00E4roiden].",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "305E": {
       "Name": "Gil-Raub",
       "Description": "[Angriff] und [Gil-Klau] zugleich.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "305F": {
       "Name": "Jonglieren",
       "Description": "Wendet geschwind Items an.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3060": {
       "Name": "Saltohieb",
       "Description": "F\u00FCgt 1 Gegner Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3061": {
       "Name": "Gemetzel",
       "Description": "F\u00FCgt allen Gegnern Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3062": {
       "Name": "Energieregen",
       "Description": "F\u00FCgt allen Gegnern Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3063": {
       "Name": "Blitzballgott",
       "Description": "F\u00FCgt 1 Gegner Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3064": {
       "Name": "Holosiderit",
       "Description": "F\u00FCgt 1 Gegner Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3065": {
       "Name": "Seisma",
       "Description": "F\u00FCgt allen Gegnern Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3066": {
       "Name": "Suppression",
       "Description": "F\u00FCgt 1 Gegner Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3067": {
       "Name": "Zephyr",
       "Description": "F\u00FCgt allen Gegnern Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3068": {
       "Name": "Sprung",
       "Description": "F\u00FCgt 1 Gegner Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3069": {
       "Name": "Flammen",
       "Description": "Hitze-elementarer Schaden auf alle Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "306A": {
       "Name": "Kernspucken",
       "Description": "F\u00FCgt 1 Gegner Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "306B": {
       "Name": "Explodieren",
       "Description": "F\u00FCgt Schaden zu und verschwindet.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "306C": {
       "Name": "Wirbelkick",
       "Description": "F\u00FCgt 1 Gegner Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "306D": {
       "Name": "Perseus-Atem",
       "Description": "Versetzt alle Gegner in [Stein].",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "306E": {
       "Name": "Nasshauch",
       "Description": "N\u00E4sse-elementarer Schaden auf alle Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "306F": {
       "Name": "Todesurteil",
       "Description": "[Todesurteil]-Effekt.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3070": {
       "Name": "Himmelswind",
       "Description": "Heilt HP der gesamten Gruppe.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3071": {
       "Name": "Mundgeruch",
       "Description": "Zustandsver\u00E4nderungen bei allen Gegnern.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3072": {
       "Name": "Totalabwehr",
       "Description": "Schutzzauber auf die gesamte Gruppe.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3073": {
       "Name": "Supernova",
       "Description": "F\u00FCgt allen Gegnern Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3074": {
       "Name": "Element-T",
       "Description": "Am Elementangriff-Rad drehen.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3075": {
       "Name": "Angriffs-T",
       "Description": "Am Kombo-Rad drehen.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3076": {
       "Name": "Zustands-T",
       "Description": "Am Statusver\u00E4nderungs-Rad drehen.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3077": {
       "Name": "Aurochs-T",
       "Description": "Am Besaid Aurochs-Rad drehen.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3078": {
       "Name": "Eis-Wut",
       "Description": "Herumw\u00FCten mit K\u00E4lte-elementarem Zauber.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3079": {
       "Name": "Feuer-Wut",
       "Description": "Herumw\u00FCten mit Hitze-elementarem Zauber.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "307A": {
       "Name": "Blitz-Wut",
       "Description": "Herumw\u00FCten mit Strom-elementarem Zauber.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "307B": {
       "Name": "Wasser-Wut",
       "Description": "Herumw\u00FCten mit N\u00E4sse-elementarem Zauber.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "307C": {
       "Name": "Feura-Wut",
       "Description": "Herumw\u00FCten mit Hitze-elementarem Zauber.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "307D": {
       "Name": "Eisra-Wut",
       "Description": "Herumw\u00FCten mit K\u00E4lte-elementarem Zauber.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "307E": {
       "Name": "Blitzra-Wut",
       "Description": "Herumw\u00FCten mit Strom-elementarem Zauber.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "307F": {
       "Name": "Wassra-Wut",
       "Description": "Herumw\u00FCten mit N\u00E4sse-elementarem Zauber.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3080": {
       "Name": "Feuga-Wut",
       "Description": "Herumw\u00FCten mit Hitze-elementarem Zauber.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3081": {
       "Name": "Eisga-Wut",
       "Description": "Herumw\u00FCten mit K\u00E4lte-elementarem Zauber.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3082": {
       "Name": "Blitzga-Wut",
       "Description": "Herumw\u00FCten mit Strom-elementarem Zauber.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3083": {
       "Name": "Wassga-Wut",
       "Description": "Herumw\u00FCten mit N\u00E4sse-elementarem Zauber.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3084": {
       "Name": "Bio-Wut",
       "Description": "Herumw\u00FCten mit [Gift].",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3085": {
       "Name": "Gravitas-Wut",
       "Description": "Herumw\u00FCten mit [Gravitas].",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3086": {
       "Name": "Tod-Wut",
       "Description": "Herumw\u00FCten mit [Tod].",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3087": {
       "Name": "Subvita-Wut",
       "Description": "Herumw\u00FCten mit [Subvita].",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3088": {
       "Name": "Subspirit-Wut",
       "Description": "Herumw\u00FCten mit [Subspirit].",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3089": {
       "Name": "Flare-Wut",
       "Description": "Herumw\u00FCten mit [Flare].",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "308A": {
       "Name": "Ultima-Wut",
       "Description": "Herumw\u00FCten mit [Ultima].",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "308B": {
       "Name": "Handgranate",
       "Description": "F\u00FCgt allen Gegnern Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "308C": {
       "Name": "Panzergranate",
       "Description": "Schaden\u002B[Panzerbrecher] auf alle Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "308D": {
       "Name": "Hypergranate",
       "Description": "F\u00FCgt allen Gegnern Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "308E": {
       "Name": "Granatwerfer",
       "Description": "F\u00FCgt allen Gegnern Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "308F": {
       "Name": "M\u00F6rser",
       "Description": "F\u00FCgt allen Gegnern Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3090": {
       "Name": "Sprengladung",
       "Description": "F\u00FCgt allen Gegnern Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3091": {
       "Name": "Dicke Berta",
       "Description": "Schaden\u002BZustandsver\u00E4nderungen auf alle Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3092": {
       "Name": "Risikohaubitze",
       "Description": "Schaden\u002BZustandsver\u00E4nderungen auf alle Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3093": {
       "Name": "Panikbombe",
       "Description": "Schaden\u002BZustandsver\u00E4nderungen auf alle Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3094": {
       "Name": "Chaosgranate",
       "Description": "Schaden\u002BZustandsver\u00E4nderungen auf alle Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3095": {
       "Name": "Hei\u00DFes Eisen",
       "Description": "Hitze-Schaden auf alle Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3096": {
       "Name": "Feuersturm",
       "Description": "Hitze-Schaden auf alle Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3097": {
       "Name": "Flammenseele",
       "Description": "Hitze-Schaden auf alle Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3098": {
       "Name": "H\u00F6llenfeuer",
       "Description": "Hitze-Schaden\u002BZustandsver\u00E4nderungen auf alle Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3099": {
       "Name": "Utgardlodern",
       "Description": "Hitze-Schaden\u002BZustandsver\u00E4nderungen auf alle Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "309A": {
       "Name": "Kalter Schnee",
       "Description": "K\u00E4lte-Schaden auf alle Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "309B": {
       "Name": "Eisiger Wind",
       "Description": "K\u00E4lte-Schaden auf alle Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "309C": {
       "Name": "Wintersturm",
       "Description": "K\u00E4lte-Schaden auf alle Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "309D": {
       "Name": "Eis Kontamina",
       "Description": "K\u00E4lte-Schaden\u002BZustandsver\u00E4nderungen auf alle Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "309E": {
       "Name": "Kokytos",
       "Description": "K\u00E4lte-Schaden\u002BZustandsver\u00E4nderungen auf alle Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "309F": {
       "Name": "Gewitterfront",
       "Description": "Strom-Schaden auf alle Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30A0": {
       "Name": "Donnerschlag",
       "Description": "Strom-Schaden auf alle Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30A1": {
       "Name": "Blitzeinschlag",
       "Description": "Strom-Schaden auf alle Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30A2": {
       "Name": "Elektroschock",
       "Description": "Strom-Schaden\u002BZustandsver\u00E4nderungen auf alle Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30A3": {
       "Name": "Taifun",
       "Description": "Strom-Schaden\u002BZustandsver\u00E4nderungen auf alle Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30A4": {
       "Name": "Str\u00F6mung",
       "Description": "N\u00E4sse-Schaden auf alle Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30A5": {
       "Name": "Wasserfall",
       "Description": "N\u00E4sse-Schaden auf alle Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30A6": {
       "Name": "Flutwelle",
       "Description": "N\u00E4sse-Schaden auf alle Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30A7": {
       "Name": "Aquatoxin",
       "Description": "N\u00E4sse-Schaden\u002BZustandsver\u00E4nderungen auf alle Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30A8": {
       "Name": "Dunkler Regen",
       "Description": "N\u00E4sse-Schaden\u002BZustandsver\u00E4nderungen auf alle Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30A9": {
       "Name": "Lebensloch",
       "Description": "Reduziert HP aller Gegner auf 1/4.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30AA": {
       "Name": "Wurmloch",
       "Description": "Reduziert HP aller Gegner auf 1/16.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30AB": {
       "Name": "Supernova",
       "Description": "F\u00FCgt allen Gegnern Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30AC": {
       "Name": "Ultra-Potion",
       "Description": "Regeneriert gesamte HP der Gruppe.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30AD": {
       "Name": "Allesheiler",
       "Description": "Heilt Zustandsver\u00E4nderungen der Gruppe.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30AE": {
       "Name": "Ultraheiler",
       "Description": "Regeneriert HP und heilt Zustandsver\u00E4nderungen der Gruppe.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30AF": {
       "Name": "Mega-Ph\u00F6nix",
       "Description": "Kuriert Kampfunf\u00E4higkeit der Gruppe.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30B0": {
       "Name": "Final-Ph\u00F6nix",
       "Description": "Kuriert Kampfunf\u00E4higkeit\u002BHP Regenerierung der Gruppe.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30B1": {
       "Name": "Elixier",
       "Description": "Regeneriert HP\u002BMP eines Mitstreiters.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30B2": {
       "Name": "Endelixier",
       "Description": "Regeneriert HP\u002BMP der Gruppe.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30B3": {
       "Name": "Superelixier",
       "Description": "Regeneriert HP\u002BMP, heilt Zustandsver\u00E4nderungen der Gruppe.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30B4": {
       "Name": "Final-Elixier",
       "Description": "Heilt\u002Bregeneriert die gesamte Gruppe vollst\u00E4ndig.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30B5": {
       "Name": "Exall",
       "Description": "Sch\u00FCtzt einen Mitstreiter vor den 4 Elementen.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30B6": {
       "Name": "Super-Exall",
       "Description": "Sch\u00FCtzt die Gruppe vor den 4 Elementen.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30B7": {
       "Name": "Mega-Exall",
       "Description": "Sch\u00FCtzt die Gruppe vor den 4 Elementen\u002B[Anfeuern]\u002B[Sammeln].",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30B8": {
       "Name": "Ultra-Exall",
       "Description": "Sch\u00FCtzt die Gruppe vor den 4 Elementen\u002BStatuswerterh\u00F6hung.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30B9": {
       "Name": "Gesamtabwehr",
       "Description": "[Shell]\u002B[Protes] auf Gruppe.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30BA": {
       "Name": "Impetus",
       "Description": "[Shell]\u002B[Protes]\u002B[Hast] auf Gruppe.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30BB": {
       "Name": "Infusion",
       "Description": "[Impetus]\u002B[Regena] auf Gruppe.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30BC": {
       "Name": "Unfallschutz",
       "Description": "[Impetus]\u002B[Regena]\u002B[Schutzengel] auf Gruppe.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30BD": {
       "Name": "Vital",
       "Description": "HP Verdopplung eines Mitstreiters.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30BE": {
       "Name": "Super-Vital",
       "Description": "HP Verdopplung der Gruppe.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30BF": {
       "Name": "Mega-Vital",
       "Description": "HP Verdopplung der Gruppe\u002B[Anfeuern].",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30C0": {
       "Name": "Mental",
       "Description": "MP Verdopplung eines Mitstreiters.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30C1": {
       "Name": "Super-Mental",
       "Description": "MP Verdopplung der Gruppe.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30C2": {
       "Name": "Mega-Mental",
       "Description": "MP Verdopplung der Gruppe\u002B[Sammeln].",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30C3": {
       "Name": "MP-Freiheit",
       "Description": "0 MP-Verbrauch bei Abilityanwendung.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30C4": {
       "Name": "MP-Freiheit EX",
       "Description": "0 MP-Verbrauch bei Abilityanwendung der Gruppe.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30C5": {
       "Name": "Quartett 9",
       "Description": "9999 Schadenspunkte.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30C6": {
       "Name": "Quartett 99",
       "Description": "9999 Schadenspunkte f\u00FCr alle.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30C7": {
       "Name": "Heldentrank",
       "Description": "Verursacht kritischen Schaden.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30C8": {
       "Name": "Heerestrank",
       "Description": "Gesamte Gruppe verursacht kritischen Schaden.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30C9": {
       "Name": "Anspornmittel",
       "Description": "Ekstase-Leisten f\u00FCllen sich schnell auf.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30CA": {
       "Name": "Exzentrequilla",
       "Description": "Ekstase-Leisten f\u00FCllen sich rapide auf.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30CB": {
       "Name": "Angriff",
       "Description": "F\u00FCgt 1 Gegner Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "30CC": {
       "Name": "Schallschwinge",
       "Description": "Schaden\u002BVerlangsamung.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "30CD": {
       "Name": "Solaris-Strahl",
       "Description": "Neutral-elementarer Schaden auf alle Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30CE": {
       "Name": "Laserstrahl",
       "Description": "Neutral-elementarer Schaden auf alle Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30CF": {
       "Name": "Angriff",
       "Description": "F\u00FCgt 1 Gegner Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "30D0": {
       "Name": "Meteorit",
       "Description": "F\u00FCgt 1 Gegner Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30D1": {
       "Name": "Inferno",
       "Description": "Hitze-elementarer Schaden auf alle Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30D2": {
       "Name": "Angriff",
       "Description": "F\u00FCgt 1 Gegner Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "30D3": {
       "Name": "Aero-Funken",
       "Description": "Schaden\u002BNeutralisation von Zauberwirkung.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "30D4": {
       "Name": "Mj\u00F6llnir",
       "Description": "Strom-elementarer Schaden auf alle Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30D5": {
       "Name": "Angriff",
       "Description": "F\u00FCgt 1 Gegner Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "30D6": {
       "Name": "Himmelszorn",
       "Description": "K\u00E4lte-elementarer Schaden\u002BAufhalten.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "30D7": {
       "Name": "Diamantstaub",
       "Description": "F\u00FCgt allen Gegnern K\u00E4lte-Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30D8": {
       "Name": "Angriff",
       "Description": "F\u00FCgt 1 Gegner Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "30D9": {
       "Name": "Impuls",
       "Description": "F\u00FCgt allen Gegnern Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "30DA": {
       "Name": "Megaflare",
       "Description": "Neutral-elementarer Schaden auf alle Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30DB": {
       "Name": "Angriff",
       "Description": "F\u00FCgt 1 Gegner Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "30DC": {
       "Name": "Weltschmerz",
       "Description": "Schaden mit sofortigem [Tod].",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "30DD": {
       "Name": "Chaos-D",
       "Description": "Neutral-elementarer Schaden auf alle Gegner.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30DE": {
       "Name": "Daigoro",
       "Description": "Nichts.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "30DF": {
       "Name": "Kozuka",
       "Description": "Nichts.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "30E0": {
       "Name": "Wakizashi",
       "Description": "Nichts.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "30E1": {
       "Name": "Wakizashi",
       "Description": "Nichts.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "30E2": {
       "Name": "Zanmatou",
       "Description": "Nichts.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30E3": {
       "Name": "Requiem",
       "Description": "F\u00FCgt allen Gegnern Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "30E4": {
       "Name": "Angriff",
       "Description": "Nichts.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "30E5": {
       "Name": "Wasserrutsche",
       "Description": "Nichts.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "30E6": {
       "Name": "Angriff",
       "Description": "Nichts.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "30E7": {
       "Name": "Schmelzklinge",
       "Description": "Nichts.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "30E8": {
       "Name": "Angriff",
       "Description": "Nichts.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "30E9": {
       "Name": "Nadelspr\u00FCher",
       "Description": "Nichts.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "30EA": {
       "Name": "Dreiecksbeziehung",
       "Description": "Kombo-Attacke des Magus-Trios.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30EB": {
       "Name": "nichts",
       "Description": "F\u00FCgt 1 Gegner Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30EC": {
       "Name": "nichts",
       "Description": "F\u00FCgt allen Gegnern Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30ED": {
       "Name": "nichts",
       "Description": "F\u00FCgt allen Gegnern Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30EE": {
       "Name": "nichts",
       "Description": "F\u00FCgt 1 Gegner Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30EF": {
       "Name": "Feuerschuss",
       "Description": "Wakkas Tech 1.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30F0": {
       "Name": "Feuerschuss",
       "Description": "Wakkas Tech 2.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30F1": {
       "Name": "Eisschuss",
       "Description": "Wakkas Tech 3.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30F2": {
       "Name": "Eisschuss",
       "Description": "Wakkas Tech 4.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30F3": {
       "Name": "Wasserschuss",
       "Description": "Wakkas Tech 5.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30F4": {
       "Name": "Wasserschuss",
       "Description": "Wakkas Tech 6.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30F5": {
       "Name": "Blitzschuss",
       "Description": "Wakkas Tech 7.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30F6": {
       "Name": "Blitzschuss",
       "Description": "Wakkas Tech 8.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30F7": {
       "Name": "Desaster-SP",
       "Description": "Wakkas Tech 9.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30F8": {
       "Name": "Desaster-SP",
       "Description": "Wakkas Tech 10.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30F9": {
       "Name": "Chrono-SP",
       "Description": "Wakkas Tech 11.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30FA": {
       "Name": "Chrono-SP",
       "Description": "Wakkas Tech 12.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30FB": {
       "Name": "Perseus-SP",
       "Description": "Wakkas Tech 13.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30FC": {
       "Name": "Perseus-SP",
       "Description": "Wakkas Tech 14.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30FD": {
       "Name": "Auroch-SP",
       "Description": "Wakkas Tech 15.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30FE": {
       "Name": "Powerschuss",
       "Description": "Wakkas Tech 16.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "30FF": {
       "Name": "Magus-Trio",
       "Description": "Ruft das Magus-Trio herbei.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Unknown"
     },
     "3100": {
       "Name": "Beschw\u00F6ren",
       "Description": "Beschw\u00F6ren.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Unknown"
     },
     "3101": {
       "Name": "Einkreisen",
       "Description": "Gegner einkreisen.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3102": {
       "Name": "Kran",
       "Description": "Kran zum Laufen bringen.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3103": {
       "Name": "Position",
       "Description": "Positionswechsel.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3104": {
       "Name": "Schutzhaltung",
       "Description": "HP heilen und Lage beobachten.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3105": {
       "Name": "Ansprechen",
       "Description": "Gegner ansprechen.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3106": {
       "Name": "Sich n\u00E4hern",
       "Description": "Cid bitten, sich dem Gegner zu n\u00E4hern.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3107": {
       "Name": "Sich entfernen",
       "Description": "Cid bitten, sich vom Gegner zu entfernen.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3108": {
       "Name": "Doch nicht",
       "Description": "Bitte an Cid r\u00FCckg\u00E4ngig machen.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3109": {
       "Name": "Zappeln",
       "Description": "Greift den Gegner aus dessem K\u00F6rperinneren an.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Physical"
     },
     "310A": {
       "Name": "nichts",
       "Description": "F\u00FCgt 1 Gegner Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "310B": {
       "Name": "nichts",
       "Description": "F\u00FCgt allen Gegnern Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "310C": {
       "Name": "nichts",
       "Description": "F\u00FCgt 1 Gegner Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "310D": {
       "Name": "nichts",
       "Description": "F\u00FCgt allen Gegnern Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "310E": {
       "Name": "nichts",
       "Description": "F\u00FCgt 1 Gegner Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "310F": {
       "Name": "nichts",
       "Description": "F\u00FCgt allen Gegnern Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3110": {
       "Name": "nichts",
       "Description": "F\u00FCgt 1 Gegner Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3111": {
       "Name": "nichts",
       "Description": "F\u00FCgt allen Gegnern Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3112": {
       "Name": "nichts",
       "Description": "F\u00FCgt 1 Gegner Schaden zu.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3113": {
       "Name": "Techs",
       "Description": "Technik-Abilitys anwenden.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3114": {
       "Name": "Spezial",
       "Description": "Spezial-Techniken anwenden.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3115": {
       "Name": "Schwarzmagie",
       "Description": "Schwarzmagie anwenden.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3116": {
       "Name": "Wei\u00DFmagie",
       "Description": "Wei\u00DFmagie anwenden.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3117": {
       "Name": "Beschw\u00F6ren",
       "Description": "Beschw\u00F6rt Bestia.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3118": {
       "Name": "Meister-Ruf",
       "Description": "Beschw\u00F6rt Bestia im Ekstase-Zustand.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3119": {
       "Name": "Schwert-Tech",
       "Description": "Ein Hieb zum richtigen Zeitpunkt!",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "311A": {
       "Name": "Feind-Tech",
       "Description": "Angriff mit erlernter Feindestechnik!",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "311B": {
       "Name": "Tradition",
       "Description": "Tastenkombination f\u00FCr Ekstase-Techs eingeben!",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "311C": {
       "Name": "Tombola",
       "Description": "Gleiche Symbole anhalten und schie\u00DFen!",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "311D": {
       "Name": "Wut",
       "Description": "Angestaute Zauberkraft wird freigesetzt!",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "311E": {
       "Name": "Basteln",
       "Description": "Items kombinieren und staunen!",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "311F": {
       "Name": "Schutzengel",
       "Description": "Nichts.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "3120": {
       "Name": "Tod",
       "Description": "Nichts.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Magical"
     },
     "3121": {
       "Name": "Knete",
       "Description": "Nichts.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Unknown"
     },
     "3122": {
       "Name": "Knete",
       "Description": "Nichts.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Unknown"
     },
     "3123": {
       "Name": "Douceur",
       "Description": "Gil zahlen.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3124": {
       "Name": "Freie Hand",
       "Description": "Mach was du willst!",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3125": {
       "Name": "Bitte weiter",
       "Description": "Die letzte Aktion wiederholen, bitte!",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3126": {
       "Name": "Bitte k\u00E4mpfen",
       "Description": "Physischen Angriff, bitte!",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3127": {
       "Name": "Na los!",
       "Description": "Zauber und Extratechs anwenden, bitte!",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3128": {
       "Name": "Liebet euch!",
       "Description": "Heilzauber anwenden, bitte!",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3129": {
       "Name": "Vereint euch!",
       "Description": "Kr\u00E4fte vereinen, bitte!",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "312A": {
       "Name": "Sch\u00FCtzt euch!",
       "Description": "Abwehr- und Hilfszauber anwenden, bitte!",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "312B": {
       "Name": "Alles OK?",
       "Description": "HP und MP des Gegners saugen, bitte!",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "312C": {
       "Name": "Langweilen",
       "Description": "Nichts.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "312D": {
       "Name": "Exall",
       "Description": "Nichts.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "312E": {
       "Name": "Angriffs-T",
       "Description": "Wakkas Tech 16.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "312F": {
       "Name": "Tor \u00F6ffnen",
       "Description": "\u00D6ffnet das Torschloss.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3130": {
       "Name": "Ersatz24",
       "Description": "Nichts.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3131": {
       "Name": "Ersatz25",
       "Description": "Nichts.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3132": {
       "Name": "Ersatz26",
       "Description": "Nichts.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3133": {
       "Name": "Ersatz27",
       "Description": "Nichts.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3134": {
       "Name": "Ersatz28",
       "Description": "Nichts.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3135": {
       "Name": "Ersatz29",
       "Description": "Nichts.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3136": {
       "Name": "Ersatz30",
       "Description": "Nichts.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3137": {
       "Name": "Ersatz31",
       "Description": "Nichts.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3138": {
       "Name": "Ersatz32",
       "Description": "Nichts.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "3139": {
       "Name": "Ersatz33",
       "Description": "Nichts.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "313A": {
       "Name": "Ersatz34",
       "Description": "Nichts.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "313B": {
       "Name": "Ersatz35",
       "Description": "Nichts.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "313C": {
       "Name": "Ersatz36",
       "Description": "Nichts.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "313D": {
       "Name": "Ersatz37",
       "Description": "Nichts.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "313E": {
       "Name": "Ersatz38",
       "Description": "Nichts.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "313F": {
       "Name": "Ersatz39",
       "Description": "Nichts.",
-      "Kind": "PlayerCommand"
+      "Kind": "PlayerCommand",
+      "DamageType": "Special"
     },
     "4000": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4001": {
       "Name": "Befehl 2",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4002": {
       "Name": "Befehl 3",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4003": {
       "Name": "Kernspucken",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4004": {
       "Name": "Kerndauerspucken",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4005": {
       "Name": "Einsaugen",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4006": {
       "Name": "Rausw\u00FCrgen",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4007": {
       "Name": "Erdbeben vorbereiten",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4008": {
       "Name": "Erdbeben",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "4009": {
       "Name": "Explodieren",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "400A": {
       "Name": "Anfunkeln",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "400B": {
       "Name": "Schallwelle",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "400C": {
       "Name": "Schockwelle",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "400D": {
       "Name": "Giftstachel",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "400E": {
       "Name": "Befehl",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "400F": {
       "Name": "Tobsucht",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "4010": {
       "Name": "Auto-Potion",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4011": {
       "Name": "Gewehr",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4012": {
       "Name": "Gewehr",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4013": {
       "Name": "Flammenwerfer",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "4014": {
       "Name": "Wirbelkick",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4015": {
       "Name": "Wasserpistole",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "4016": {
       "Name": "Schockwelle",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4017": {
       "Name": "Befehl",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4018": {
       "Name": "Vorbereitung",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4019": {
       "Name": "Aufkommen",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "401A": {
       "Name": "Kriechen",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "401B": {
       "Name": "Hauch",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "401C": {
       "Name": "Hauch",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "401D": {
       "Name": "Hauch",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "401E": {
       "Name": "Hauch",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "401F": {
       "Name": "Einzelvisier",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4020": {
       "Name": "Fl\u00E4chenvisier",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "4021": {
       "Name": "Ultraschallwelle",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "4022": {
       "Name": "Nukleonen-Energie",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "4023": {
       "Name": "Lichterregen",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4024": {
       "Name": "Horn",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4025": {
       "Name": "Hauch",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "4026": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4027": {
       "Name": "Niederm\u00E4hen",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4028": {
       "Name": "Sprunghieb",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4029": {
       "Name": "Elektroschock",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "402A": {
       "Name": "Erdbeben",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "402B": {
       "Name": "K\u00FCsschentanz",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "402C": {
       "Name": "Pollen",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "402D": {
       "Name": "Pollen",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "402E": {
       "Name": "Pollen",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "402F": {
       "Name": "El Nino",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "4030": {
       "Name": "St\u00FCrmen",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4031": {
       "Name": "1000 Stacheln",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4032": {
       "Name": "10.000 Stacheln",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4033": {
       "Name": "Fliehen",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4034": {
       "Name": "Sprengfaust",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4035": {
       "Name": "Doppelattacke",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4036": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4037": {
       "Name": "Aufgehen",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4038": {
       "Name": "Perseusblick",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4039": {
       "Name": "Schallfeger",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "403A": {
       "Name": "Schicksalsemblem",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "403B": {
       "Name": "Konter",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "403C": {
       "Name": "Kampflust",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "403D": {
       "Name": "Laserstrahl",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "403E": {
       "Name": "Brennen",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "403F": {
       "Name": "Vergr\u00F6sserung2",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4040": {
       "Name": "Vergr\u00F6sserung3",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4041": {
       "Name": "Vergr\u00F6sserung4",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4042": {
       "Name": "Explodieren",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4043": {
       "Name": "St\u00FCrmen",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4044": {
       "Name": "Fluch des Pharao",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4045": {
       "Name": "Anstauen",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4046": {
       "Name": "Feuerball",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "4047": {
       "Name": "Feuerball",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "4048": {
       "Name": "Explodieren",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4049": {
       "Name": "Explodieren",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "404A": {
       "Name": "Explodieren",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "404B": {
       "Name": "Tod",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "404C": {
       "Name": "Todesurteil",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "404D": {
       "Name": "Nasshauch",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "404E": {
       "Name": "Megiddoflamme",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "404F": {
       "Name": "Schweigen",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4050": {
       "Name": "Klinge",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4051": {
       "Name": "Giftnebel",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "4052": {
       "Name": "Anknabbern",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4053": {
       "Name": "Mundgeruch",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4054": {
       "Name": "Magens\u00E4ure",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4055": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4056": {
       "Name": "Verspeisen",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4057": {
       "Name": "Amokschie\u00DFen",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "4058": {
       "Name": "Kombo-Feger",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4059": {
       "Name": "St\u00FCrmen",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "405A": {
       "Name": "Himmelswind",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "405B": {
       "Name": "Totalabwehr",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "405C": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "405D": {
       "Name": "Schallschwinge",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "405E": {
       "Name": "Inferno",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "405F": {
       "Name": "Megaflare",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4060": {
       "Name": "Fluch aller",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4061": {
       "Name": "Voodoo",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4062": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4063": {
       "Name": "Konter einstellen",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4064": {
       "Name": "Aero-Funken",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4065": {
       "Name": "Mj\u00F6llnir",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4066": {
       "Name": "Aufspie\u00DFen",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4067": {
       "Name": "Sonnenstrahlen",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4068": {
       "Name": "Erdbeben",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4069": {
       "Name": "Meteo",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "406A": {
       "Name": "Schwanzhieb",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "406B": {
       "Name": "Hauch",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "406C": {
       "Name": "Bauchplatscher",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "406D": {
       "Name": "Sturmflamme",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "406E": {
       "Name": "Magiekonzentration",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "406F": {
       "Name": "Erdbeben",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4070": {
       "Name": "Blaster",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4071": {
       "Name": "Blaster",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4072": {
       "Name": "Kralle",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4073": {
       "Name": "Sterben",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4074": {
       "Name": "Sterben",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4075": {
       "Name": "Sterben",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4076": {
       "Name": "Sterben",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4077": {
       "Name": "Sterben",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4078": {
       "Name": "Sterben",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4079": {
       "Name": "Sterben",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "407A": {
       "Name": "Sterben",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "407B": {
       "Name": "Sterben",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "407C": {
       "Name": "Sterben",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "407D": {
       "Name": "Sterben",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "407E": {
       "Name": "Sterben",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "407F": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4080": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4081": {
       "Name": "Vorw\u00E4rts",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4082": {
       "Name": "Kozuka",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4083": {
       "Name": "Wakizashi",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4084": {
       "Name": "Wakizashi",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "4085": {
       "Name": "Zanmatou",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4086": {
       "Name": "Daigoro",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4087": {
       "Name": "Daneben!!",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "4088": {
       "Name": "Volltreffer!!",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4089": {
       "Name": "Meteorit",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "408A": {
       "Name": "Beschw\u00F6ren",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "408B": {
       "Name": "Beschw\u00F6ren",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "408C": {
       "Name": "Beschw\u00F6ren",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "408D": {
       "Name": "Beschw\u00F6ren",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "408E": {
       "Name": "Beschw\u00F6ren",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "408F": {
       "Name": "Beschw\u00F6ren",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4090": {
       "Name": "Beschw\u00F6ren",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4091": {
       "Name": "Beschw\u00F6ren",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4092": {
       "Name": "Beschw\u00F6ren",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4093": {
       "Name": "Erdbeben",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4094": {
       "Name": "Reaktion",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4095": {
       "Name": "Himmelszorn",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4096": {
       "Name": "Diamantenstaub",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4097": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4098": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4099": {
       "Name": "Anfunkeln",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "409A": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "409B": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "409C": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "409D": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "409E": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "409F": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40A0": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40A1": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40A2": {
       "Name": "Mimik 1",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "40A3": {
       "Name": "Mimik 2",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "40A4": {
       "Name": "Mimik 3",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "40A5": {
       "Name": "Mimik 4",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "40A6": {
       "Name": "Solaris-Strahl",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "40A7": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40A8": {
       "Name": "Anknabbern",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40A9": {
       "Name": "Perseusblick",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "40AA": {
       "Name": "Anstauen",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "40AB": {
       "Name": "Anstauen",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "40AC": {
       "Name": "Himmelszorn",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40AD": {
       "Name": "Impuls",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "40AE": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40AF": {
       "Name": "Schmerz",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "40B0": {
       "Name": "Chaos-Dimension",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "40B1": {
       "Name": "Daigoro",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40B2": {
       "Name": "Triumphgesang",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40B3": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40B4": {
       "Name": "Super-Mundgeruch",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40B5": {
       "Name": "Super-Magens\u00E4ure",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "40B6": {
       "Name": "Lecker, lecker!!",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40B7": {
       "Name": "Amoks\u00E4ure",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40B8": {
       "Name": "Anarchie",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "40B9": {
       "Name": "Hyperblaster",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "40BA": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40BB": {
       "Name": "Der starre Blick",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "40BC": {
       "Name": "10.000 Stacheln",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "40BD": {
       "Name": "Sensemannkrallen",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40BE": {
       "Name": "Tanz der Klingen",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40BF": {
       "Name": "Absolute Helligkeit",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "40C0": {
       "Name": "Todesbiss",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40C1": {
       "Name": "Konfusbiss",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40C2": {
       "Name": "H\u00F6llenbiss",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40C3": {
       "Name": "Augenschmalz",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40C4": {
       "Name": "Augenschmaus",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "40C5": {
       "Name": "Saugtatscher",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40C6": {
       "Name": "Gifttatscher",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40C7": {
       "Name": "Attacke",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40C8": {
       "Name": "80 Sachen-Attacke",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40C9": {
       "Name": "Nichts",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40CA": {
       "Name": "Nichts",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "40CB": {
       "Name": "Nichts",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40CC": {
       "Name": "Rapustich",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40CD": {
       "Name": "Toxinstich",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40CE": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40CF": {
       "Name": "Metzelhorn",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40D0": {
       "Name": "Flammensalve",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "40D1": {
       "Name": "Schnabelhieb",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40D2": {
       "Name": "Trauerschnabel",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "40D3": {
       "Name": "Gigantenschlag",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40D4": {
       "Name": "Gigantenfeger",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40D5": {
       "Name": "Gigantensprung",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40D6": {
       "Name": "Gute Nacht",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "40D7": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40D8": {
       "Name": "Canones Eternalis",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "40D9": {
       "Name": "Megafunke",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "40DA": {
       "Name": "Feuerklinge",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40DB": {
       "Name": "Wasserrutsche",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40DC": {
       "Name": "Nadelspr\u00FCher",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40DD": {
       "Name": "Dreiecksbeziehung",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "40DE": {
       "Name": "Totalabwehr",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "40DF": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40E0": {
       "Name": "Hauch",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "40E1": {
       "Name": "Hauch",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "40E2": {
       "Name": "Dimensionsbeben",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "40E3": {
       "Name": "Dreischlag",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "40E4": {
       "Name": "Angriff3",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40E5": {
       "Name": "Sterben",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "40E6": {
       "Name": "Inferno",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "40E7": {
       "Name": "Mj\u00F6llnir",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "40E8": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "40E9": {
       "Name": "Explodieren",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "40EA": {
       "Name": "Voodoo",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "40EB": {
       "Name": "Rausw\u00FCrgen",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40EC": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40ED": {
       "Name": "Gemachga",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "40EE": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40EF": {
       "Name": "Hochjagen",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40F0": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40F1": {
       "Name": "Kosmosemblem",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "40F2": {
       "Name": "99999 Stacheln",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "40F3": {
       "Name": "Ultima",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "40F4": {
       "Name": "Der letzte Tag",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "40F5": {
       "Name": "Megatonnenschlag",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "40F6": {
       "Name": "Ausl\u00F6scher",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "40F7": {
       "Name": "Toxinwolke",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "40F8": {
       "Name": "Antispirits\u00E4ure",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40F9": {
       "Name": "Tentakelschauer",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40FA": {
       "Name": "Himmelsring",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "40FB": {
       "Name": "Magiering",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "40FC": {
       "Name": "Urteil: Schuldig",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40FD": {
       "Name": "Nasspresse",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "40FE": {
       "Name": "Drecklauge",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "40FF": {
       "Name": "Fluch aller",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4100": {
       "Name": "Feuerklinge",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4101": {
       "Name": "Wasserrutsche",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4102": {
       "Name": "Nadelspr\u00FCher",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4103": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4104": {
       "Name": "Fluch des Pharao",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4105": {
       "Name": "Mega-Graviton",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "4106": {
       "Name": "Dreiecksbeziehung",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4107": {
       "Name": "Kozuka",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4108": {
       "Name": "Wakizashi",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4109": {
       "Name": "Wakizashi",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "410A": {
       "Name": "Zanmatou",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "410B": {
       "Name": "Daigoro",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "410C": {
       "Name": "Inferno",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "410D": {
       "Name": "Inferno",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "410E": {
       "Name": "Meteorit",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "410F": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4110": {
       "Name": "Aero-Funken",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4111": {
       "Name": "Mj\u00F6llnir",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4112": {
       "Name": "Mj\u00F6llnir",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4113": {
       "Name": "Blitzja",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "4114": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4115": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4116": {
       "Name": "Aero-Funken",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4117": {
       "Name": "Himmelszorn",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4118": {
       "Name": "Diamantenstaub",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4119": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "411A": {
       "Name": "Megaflare",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "411B": {
       "Name": "Impuls",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "411C": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "411D": {
       "Name": "Schmerz",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "411E": {
       "Name": "Chaos-Dimension",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "411F": {
       "Name": "Licht des Untergangs",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4120": {
       "Name": "Verdammnis",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4121": {
       "Name": "Der J\u00FCngste Tag",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4122": {
       "Name": "Separation",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4123": {
       "Name": "Auftritt",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4124": {
       "Name": "Tod",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4125": {
       "Name": "Erscheinen",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4126": {
       "Name": "Erl\u00F6schen",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4127": {
       "Name": "Stonehenge",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "4128": {
       "Name": "Lunaris-Strahl",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "4129": {
       "Name": "Mega-Graviton",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Magical"
     },
     "412A": {
       "Name": "Absolute Abwehr",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Special"
     },
     "412B": {
       "Name": "Erl\u00F6ser",
       "Description": "Angriff",
-      "Kind": "MonsterCommand"
+      "Kind": "MonsterCommand",
+      "DamageType": "Physical"
     },
     "6000": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "6001": {
       "Name": "Spezial 1",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6002": {
       "Name": "Spezial 2",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6003": {
       "Name": "Erscheinen",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "6004": {
       "Name": "Seufzer",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "6005": {
       "Name": "Giftsekret",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "6006": {
       "Name": "Herumw\u00FCten",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "6007": {
       "Name": "Verwandeln",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6008": {
       "Name": "Tod",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6009": {
       "Name": "Tenktakel absorbiert Zauber!",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "600A": {
       "Name": "Dornen",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "600B": {
       "Name": "Schraube",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "600C": {
       "Name": "Blitzball-Rush",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "600D": {
       "Name": "Schlaf-Ball",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "600E": {
       "Name": "Blind-Ball",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "600F": {
       "Name": "Stumm-Ball",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6010": {
       "Name": "Vollekanne",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "6011": {
       "Name": "Vollekanne",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6012": {
       "Name": "Kran",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "6013": {
       "Name": "Tod",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6014": {
       "Name": "Tod",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6015": {
       "Name": "Kran bewegt sich.",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6016": {
       "Name": "Krakententakel",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "6017": {
       "Name": "Verdr\u00E4ngt werden",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6018": {
       "Name": "Aufstehen",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6019": {
       "Name": "Anstauen",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "601A": {
       "Name": "Gleich bist du dran...",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "601B": {
       "Name": "Schlag mit voller Wucht",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "601C": {
       "Name": "Tod",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "601D": {
       "Name": "Tod",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "601E": {
       "Name": "Schockwelle",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "601F": {
       "Name": "K\u00F6pper",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "6020": {
       "Name": "Einkreisen",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6021": {
       "Name": "Magie-Strahl",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "6022": {
       "Name": "Dauerfeuer",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "6023": {
       "Name": "Bit",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6024": {
       "Name": "Aqua Shooter",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "6025": {
       "Name": "Detonator",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6026": {
       "Name": "Auftauchen",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6027": {
       "Name": "Untertauchen",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6028": {
       "Name": "Z\u00E4hlen",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6029": {
       "Name": "Von [Sin] angezogen!",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "602A": {
       "Name": "Tod",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "602B": {
       "Name": "Standort wechseln.",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "602C": {
       "Name": "Tod",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "602D": {
       "Name": "Tod",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "602E": {
       "Name": "Einsaugen",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "602F": {
       "Name": "Rausw\u00FCrgen",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6030": {
       "Name": "Tod",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6031": {
       "Name": "Giftsekret",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6032": {
       "Name": "Perseusschlag",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "6033": {
       "Name": "Todesschlag",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "6034": {
       "Name": "Giftkralle",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "6035": {
       "Name": "K\u00FCsschen nickt ein.",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "6036": {
       "Name": "Anf\u00E4lligkeitswechsel",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6037": {
       "Name": "HP halbieren.",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6038": {
       "Name": "HP 1",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6039": {
       "Name": "Feuer",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "603A": {
       "Name": "Eis",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "603B": {
       "Name": "Blitz",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "603C": {
       "Name": "Wasser",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "603D": {
       "Name": "St\u00FCrmen",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "603E": {
       "Name": "Hi-Potion",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "603F": {
       "Name": "Presse",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "6040": {
       "Name": "Allheilmittel",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "6041": {
       "Name": "Unheilmittel",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "6042": {
       "Name": "Photonenstrahlen",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6043": {
       "Name": "Magischer Hauch",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "6044": {
       "Name": "Unkrautj\u00E4ter",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "6045": {
       "Name": "Berserkerfeger",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "6046": {
       "Name": "Konter",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6047": {
       "Name": "Angriff im Fl\u00E4chenvisier",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "6048": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6049": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "604A": {
       "Name": "Erdbeben",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "604B": {
       "Name": "Blendbombe",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "604C": {
       "Name": "Perseusblick",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "604D": {
       "Name": "Necroma-Mine",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "604E": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "604F": {
       "Name": "Stein",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6050": {
       "Name": "Gnadensto\u00DF",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6051": {
       "Name": "Seymor ruft Anima zur\u00FCck!",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6052": {
       "Name": "Schmerz",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6053": {
       "Name": "Befehl 93",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6054": {
       "Name": "Befehl 94",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6055": {
       "Name": "Befehl 95",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6056": {
       "Name": "Befehl 96",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6057": {
       "Name": "K\u00E4mpfen",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "6058": {
       "Name": "K\u00E4mpfen",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "6059": {
       "Name": "K\u00E4mpfen",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "605A": {
       "Name": "Krakenkopf",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "605B": {
       "Name": "Lufttanz",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "605C": {
       "Name": "Saugtatscher",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "605D": {
       "Name": "Angriff",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "605E": {
       "Name": "Desperado",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "605F": {
       "Name": "Reflek",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "6060": {
       "Name": "Test",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "6061": {
       "Name": "Gifthauch",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "6062": {
       "Name": "Perseusblick",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "6063": {
       "Name": "Blendbombe",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "6064": {
       "Name": "Einatmen",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6065": {
       "Name": "Hauch ausser Reichweite!",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6066": {
       "Name": "Volltreffer enthalten.",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "6067": {
       "Name": "Tod",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6068": {
       "Name": "Magie wiederhergestellt.",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6069": {
       "Name": "Rausw\u00FCrgen",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "606A": {
       "Name": "Rausw\u00FCrgen",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "606B": {
       "Name": "Blendbombe",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "606C": {
       "Name": "Warp",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "606D": {
       "Name": "Einsaugen",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "606E": {
       "Name": "Stumm",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "606F": {
       "Name": "Richtung",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6070": {
       "Name": "Blind",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6071": {
       "Name": "Schlaf",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6072": {
       "Name": "Konfus",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6073": {
       "Name": "Raketen",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6074": {
       "Name": "Kreuzen der Todesklingen",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "6075": {
       "Name": "Die absolute Zerst\u00F6rung",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "6076": {
       "Name": "Demolierkralle",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "6077": {
       "Name": "Biora",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6078": {
       "Name": "Destruktionsspeer",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "6079": {
       "Name": "Flare",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "607A": {
       "Name": "Espria",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "607B": {
       "Name": "Fl\u00FCche",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "607C": {
       "Name": "Anti-Z-Schlag",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "607D": {
       "Name": "Befehl 135",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "607E": {
       "Name": "Transformation",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "607F": {
       "Name": "Transformation",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6080": {
       "Name": "H\u00F6llenbei\u00DFer",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "6081": {
       "Name": "Mindblaster",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "6082": {
       "Name": "Vernichtet",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "6083": {
       "Name": "Gravija",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "6084": {
       "Name": "Jekkt-Strahl",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "6085": {
       "Name": "Jekkt-Finger",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6086": {
       "Name": "Original Jekkt-Special",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6087": {
       "Name": "Jekkt-Bombe",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6088": {
       "Name": "Schwert ziehen",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6089": {
       "Name": "Metzeln im Fl\u00E4chenvisier.",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "608A": {
       "Name": "Jekkt-Strahl",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "608B": {
       "Name": "Kraftwelle",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "608C": {
       "Name": "Befehl 150",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "608D": {
       "Name": "Gemachga",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "608E": {
       "Name": "Shin entfernt sich.",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "608F": {
       "Name": "Shin n\u00E4hert sich.",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6090": {
       "Name": "Gravija",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "6091": {
       "Name": "Neutralisations-Aura",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "6092": {
       "Name": "Abstand anpassen",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "6093": {
       "Name": "Armschlag",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "6094": {
       "Name": "Gravija",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "6095": {
       "Name": "Befehl 159",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "6096": {
       "Name": "Seufzer",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "6097": {
       "Name": "Giftsekret",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "6098": {
       "Name": "Um sich schlagen",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "6099": {
       "Name": "Herauskommen",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "609A": {
       "Name": "Verkriechen",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "609B": {
       "Name": "Zauber wird absorbiert!",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "609C": {
       "Name": "Giga-Graviton",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "609D": {
       "Name": "Anfunkeln",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "609E": {
       "Name": "Anfunkeln",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "609F": {
       "Name": "Anfunkeln",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60A0": {
       "Name": "Anfunkeln",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60A1": {
       "Name": "Himmelswind",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60A2": {
       "Name": "Flammen",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60A3": {
       "Name": "Nasshauch",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60A4": {
       "Name": "Totalabwehr",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60A5": {
       "Name": "Tackle",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "60A6": {
       "Name": "Gravija",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60A7": {
       "Name": "Neutralisations-Aura",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "60A8": {
       "Name": "Energie sammelt sich im Kern.",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60A9": {
       "Name": "Illumi einsaugen.",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60AA": {
       "Name": "St\u00FCrmen",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "60AB": {
       "Name": "Hades-Magie: Feura",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "60AC": {
       "Name": "Befehl 182",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "60AD": {
       "Name": "Hades-Magie: Eisra",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "60AE": {
       "Name": "Befehl 184",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "60AF": {
       "Name": "Hades-Magie: Blitzra",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "60B0": {
       "Name": "Befehl 186",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "60B1": {
       "Name": "Hades-Magie: Wassga",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "60B2": {
       "Name": "Befehl 188",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "60B3": {
       "Name": "Kran r\u00FChrt sich ein wenig.",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60B4": {
       "Name": "Tod",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60B5": {
       "Name": "Anima beschw\u00F6ren.",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60B6": {
       "Name": "Gravija",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "60B7": {
       "Name": "Neutralisations-Aura",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "60B8": {
       "Name": "Gravija",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60B9": {
       "Name": "Neutralisations-Aura",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "60BA": {
       "Name": "Energie sammelt sich im Kern.",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60BB": {
       "Name": "Neutralisations-Aura",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "60BC": {
       "Name": "Sin zeigt keine Regung.",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60BD": {
       "Name": "Kern zeigt keine Regung.",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60BE": {
       "Name": "Millionen Tonnen",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "60BF": {
       "Name": "Klebrige Masse",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60C0": {
       "Name": "H\u00FClle zerst\u00F6rt.",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60C1": {
       "Name": "Sich in die H\u00FClle verkriechen.",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60C2": {
       "Name": "Die H\u00FClle verlassen.",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60C3": {
       "Name": "Tod",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60C4": {
       "Name": "Energie sammelt sich im Kern.",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60C5": {
       "Name": "Neutralisations-Aura",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "60C6": {
       "Name": "Angriff linke Hand",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "60C7": {
       "Name": "Angriff linke Hand 2",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "60C8": {
       "Name": "Jekkt-Bombe",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60C9": {
       "Name": "Jekkt-Finger",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60CA": {
       "Name": "Tod",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60CB": {
       "Name": "Tod",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60CC": {
       "Name": "Tod",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60CD": {
       "Name": "Tod",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60CE": {
       "Name": "Tod",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60CF": {
       "Name": "Tod",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60D0": {
       "Name": "Tod",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60D1": {
       "Name": "H\u00F6llenbei\u00DFer",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "60D2": {
       "Name": "Kraftwelle",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60D3": {
       "Name": "Ultraschallwelle",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "60D4": {
       "Name": "Solaris-Strahl",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60D5": {
       "Name": "Laserstrahl",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60D6": {
       "Name": "Meteorit",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60D7": {
       "Name": "Inferno",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60D8": {
       "Name": "Aerofunken",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "60D9": {
       "Name": "Thoriumhammer",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60DA": {
       "Name": "Himmelszorn",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "60DB": {
       "Name": "Diamantenstaub",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60DC": {
       "Name": "Impuls",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "60DD": {
       "Name": "Megaflare",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60DE": {
       "Name": "Schmerz",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "60DF": {
       "Name": "Chaos-Dimension",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60E0": {
       "Name": "Kozuka",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "60E1": {
       "Name": "Wakizashi",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "60E2": {
       "Name": "Zanmatou",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60E3": {
       "Name": "Wasserrutsche",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "60E4": {
       "Name": "Schmelzschneide",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "60E5": {
       "Name": "Nadelspr\u00FCher",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Physical"
     },
     "60E6": {
       "Name": "Dreiecksbeziehung",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60E7": {
       "Name": "Ju-Yevon ergreift die Kontrolle!",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60E8": {
       "Name": "Ju-Yevon ergreift die Kontrolle!",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60E9": {
       "Name": "Ju-Yevon ergreift die Kontrolle!",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60EA": {
       "Name": "Ju-Yevon ergreift die Kontrolle!",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60EB": {
       "Name": "Ju-Yevon ergreift die Kontrolle!",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60EC": {
       "Name": "Ju-Yevon ergreift die Kontrolle!",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60ED": {
       "Name": "Ju-Yevon ergreift die Kontrolle!",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60EE": {
       "Name": "Ju-Yevon ergreift die Kontrolle!",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60EF": {
       "Name": "Tod",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60F0": {
       "Name": "Ultima",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60F1": {
       "Name": "Fl\u00FCgel fangen an zu gl\u00FChen.",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60F2": {
       "Name": "Tod",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60F3": {
       "Name": "Anti-Z Original",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Unknown"
     },
     "60F4": {
       "Name": "Befehl 254",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Special"
     },
     "60F5": {
       "Name": "Erzengel",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "60F6": {
       "Name": "Mindblaster",
       "Description": "Angriff",
-      "Kind": "BossCommand"
+      "Kind": "BossCommand",
+      "DamageType": "Magical"
     },
     "2000": {
       "Name": "Potion",
       "Description": "Heilt HP um 200.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2001": {
       "Name": "Hi-Potion",
       "Description": "Heilt HP um 1000.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2002": {
       "Name": "X-Potion",
       "Description": "Heilt die gesamten HP.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2003": {
       "Name": "Mega-Potion",
       "Description": "Heilt HP der Gruppe um 2000.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2004": {
       "Name": "\u00C4ther",
       "Description": "Heilt MP um 100.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2005": {
       "Name": "Turbo-\u00C4ther",
       "Description": "Heilt MP um 500.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2006": {
       "Name": "Ph\u00F6nixfeder",
       "Description": "Kuriert [Kampfunf\u00E4higkeit].",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2007": {
       "Name": "Mega-Ph\u00F6nix",
       "Description": "Kuriert [Kampfunf\u00E4higkeit] der Gruppe.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2008": {
       "Name": "Elixir",
       "Description": "Heilt die gesamten HP und MP.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2009": {
       "Name": "Final-Elixir",
       "Description": "Heilt die gesamten HP und MP der Gruppe.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "200A": {
       "Name": "Antidot",
       "Description": "Kuriert [Gift]-Zustand.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "200B": {
       "Name": "Goldnadel",
       "Description": "Kuriert [Stein]-Zustand.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "200C": {
       "Name": "Augentropfen",
       "Description": "Kuriert [Blind]-Zustand.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "200D": {
       "Name": "Echokraut",
       "Description": "Kuriert [Stumm]-Zustand.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "200E": {
       "Name": "Weihwasser",
       "Description": "Kuriert [Zombie]\u002B[Fluch].",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "200F": {
       "Name": "Allheilmittel",
       "Description": "Kuriert alle Zustandsver\u00E4nderungen.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2010": {
       "Name": "Kraftzettel",
       "Description": "Gegner hinterl\u00E4sst [Kraft-Sph\u00E4roiden].",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2011": {
       "Name": "Wunderzettel",
       "Description": "Gegner hinterl\u00E4sst [Wunder-Sph\u00E4roiden].",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2012": {
       "Name": "Zeitzettel",
       "Description": "Gegner hinterl\u00E4sst [Zeit-Sph\u00E4roiden].",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2013": {
       "Name": "Ability-Zettel",
       "Description": "Gegner hinterl\u00E4sst [Ability-Sph\u00E4roiden].",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2014": {
       "Name": "Al Bhed-Medizin",
       "Description": "Heilt 1000 HP\u002B[Gift]\u002B[Stumm]\u002B[Stein] der Gruppe.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2015": {
       "Name": "Heilwasser",
       "Description": "Komplettheilung der Gruppe.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2016": {
       "Name": "Tetra-Element",
       "Description": "Komplettheilung\u002B[Element-Schutz].",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2017": {
       "Name": "Antarktis-Wind",
       "Description": "K\u00E4lte-elementarer Schaden.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2018": {
       "Name": "Polar-Wind",
       "Description": "K\u00E4lte-elementarer Schaden.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2019": {
       "Name": "K\u00E4ltestein",
       "Description": "K\u00E4lte-elementarer Fl\u00E4chenschaden.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "201A": {
       "Name": "Bomber-Splitter",
       "Description": "Hitze-elementarer Schaden.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "201B": {
       "Name": "Bomber-Seele",
       "Description": "Hitze-elementarer Schaden.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "201C": {
       "Name": "Hitzestein",
       "Description": "Hitze-elementarer Fl\u00E4chenschaden.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "201D": {
       "Name": "Elektrokugel",
       "Description": "Strom-elementarer Schaden.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "201E": {
       "Name": "Blitzkugel",
       "Description": "Strom-elementarer Schaden.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "201F": {
       "Name": "Donnerstein",
       "Description": "Strom-elementarer Fl\u00E4chenschaden.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2020": {
       "Name": "Fischschuppe",
       "Description": "N\u00E4sse-elementarer Schaden.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2021": {
       "Name": "Drachenschuppe",
       "Description": "N\u00E4sse-elementarer Schaden.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2022": {
       "Name": "N\u00E4ssestein",
       "Description": "N\u00E4sse-elementarer Fl\u00E4chenschaden.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2023": {
       "Name": "Handgranate",
       "Description": "Erteilt Fl\u00E4chenschaden.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2024": {
       "Name": "Panzergranate",
       "Description": "Fl\u00E4chenschaden\u002B[Panzerbrecher].",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2025": {
       "Name": "Schlafpuder",
       "Description": "Fl\u00E4chenschaden\u002B[Schlaf].",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2026": {
       "Name": "Traumpuder",
       "Description": "Fl\u00E4chenschaden\u002B[Schlaf].",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2027": {
       "Name": "Silentium-Mine",
       "Description": "Fl\u00E4chenschaden\u002B[Stumm].",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2028": {
       "Name": "Rauchbombe",
       "Description": "Fl\u00E4chenschaden\u002B[Blind].",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2029": {
       "Name": "Schwarzer Stein",
       "Description": "Verringert HP aller Gegner um die H\u00E4lfte.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "202A": {
       "Name": "Lichtstein",
       "Description": "Erteilt Schaden.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "202B": {
       "Name": "Heiliger Stein",
       "Description": "Erteilt Schaden.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "202C": {
       "Name": "Himmelsstein",
       "Description": "Erteilt Fl\u00E4chenschaden.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "202D": {
       "Name": "Giftkralle",
       "Description": "Schaden\u002B[Gift].",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "202E": {
       "Name": "Silberne Sanduhr",
       "Description": "Verlangsamt alle Gegner.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "202F": {
       "Name": "Goldene Sanduhr",
       "Description": "Verlangsamt alle Gegner\u002BFl\u00E4chenschaden.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2030": {
       "Name": "Todeskerze",
       "Description": "[Todesurteil].",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2031": {
       "Name": "Perseus-Granate",
       "Description": "[Stein] auf alle Gegner.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2032": {
       "Name": "Todesschatten",
       "Description": "[Tod].",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2033": {
       "Name": "Wind des Jenseits",
       "Description": "[Tod] auf alle Gegner.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2034": {
       "Name": "Bonzenmesser",
       "Description": "Verwendungszweck ist unbekannt...",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "2035": {
       "Name": "Dunkelkristall",
       "Description": "Erheblicher Fl\u00E4chenschaden.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2036": {
       "Name": "Chocobo-Feder",
       "Description": "Erteilt [Hast].",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2037": {
       "Name": "Chocobo-Daune",
       "Description": "Erteilt der Gruppe [Hast].",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2038": {
       "Name": "Mondschleier",
       "Description": "Erteilt [Shell].",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2039": {
       "Name": "Lichtschleier",
       "Description": "Erteilt [Protes].",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "203A": {
       "Name": "Sternenschleier",
       "Description": "Erteilt [Reflek].",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "203B": {
       "Name": "Heilquelle",
       "Description": "Erteilt [Regena].",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "203C": {
       "Name": "Magiequelle",
       "Description": "Absorbiert gegnerische MP.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "203D": {
       "Name": "Kraftquelle",
       "Description": "Absorbiert gegnerische HP.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "203E": {
       "Name": "Lebensquelle",
       "Description": "Absorbiert gegnerische HP\u002BMP.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "203F": {
       "Name": "Ablutionssalz",
       "Description": "Schaden\u002BAufhebung von Zauber-Zust\u00E4nden.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2040": {
       "Name": "HP-Pille",
       "Description": "Maximal-HP werden verdoppelt.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2041": {
       "Name": "MP-Pille",
       "Description": "Maximal-MP werden verdoppelt.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2042": {
       "Name": "Zweigestirn",
       "Description": "MP-Verbrauch wird auf 0 reduziert.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2043": {
       "Name": "HP-Wundermittel",
       "Description": "Maximal-HP der Gruppe werden verdoppelt.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2044": {
       "Name": "MP-Wundermittel",
       "Description": "Maximal-MP der Gruppe werden verdoppelt.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2045": {
       "Name": "Dreigestirn",
       "Description": "MP-Verbrauch der Gruppe wird auf 0 reduziert.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Special"
     },
     "2046": {
       "Name": "Kraft-Sph\u00E4roid",
       "Description": "Aktiviert [Angriffskraft], [Abwehrkraft] und [HP].",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "2047": {
       "Name": "Wunder-Sph\u00E4roid",
       "Description": "Aktiviert [Magie], [Zauberabwehr] und [MP].",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "2048": {
       "Name": "Zeit-Sph\u00E4roid",
       "Description": "Aktiviert [Geschick], [Treffer] und [Reflex].",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "2049": {
       "Name": "Ability-Sph\u00E4roid",
       "Description": "Aktiviert [Abilitys].",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "204A": {
       "Name": "Gl\u00FCcks-Sph\u00E4roid",
       "Description": "Aktiviert [Gl\u00FCck].",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "204B": {
       "Name": "Para-Sph\u00E4roid",
       "Description": "Aktiviert die von anderen aktivierten [Parameter].",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "204C": {
       "Name": "Spezial-Sph\u00E4roid",
       "Description": "Aktiviert die von anderen aktivierten [Spezial]-Felder.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "204D": {
       "Name": "Tech-Sph\u00E4roid",
       "Description": "Aktiviert die von anderen aktivierten [Techs].",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "204E": {
       "Name": "Wei\u00DF-Sph\u00E4roid",
       "Description": "Aktiviert die von anderen aktivierte [Wei\u00DFmagie].",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "204F": {
       "Name": "Schwarz-Sph\u00E4roid",
       "Description": "Aktiviert die von anderen aktivierte [Schwarzmagie].",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "2050": {
       "Name": "Super-Sph\u00E4roid",
       "Description": "Aktiviert ein beliebiges Aufbaufeld.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "2051": {
       "Name": "Lv. 1 Sph\u00E4ropass",
       "Description": "L\u00F6scht einen [Lv. 1 Sph\u00E4rostopp].",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "2052": {
       "Name": "Lv. 2 Sph\u00E4ropass",
       "Description": "L\u00F6scht einen [Lv. 2 Sph\u00E4rostopp].",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "2053": {
       "Name": "Lv. 3 Sph\u00E4ropass",
       "Description": "L\u00F6scht einen [Lv. 3 Sph\u00E4rostopp].",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "2054": {
       "Name": "Lv. 4 Sph\u00E4ropass",
       "Description": "L\u00F6scht einen [Lv. 4 Sph\u00E4rostopp].",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "2055": {
       "Name": "HP-Sph\u00E4roid",
       "Description": "Wandelt ein leeres Feld in [HP] um.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "2056": {
       "Name": "MP-Sph\u00E4roid",
       "Description": "Wandelt ein leeres Feld in [MP] um.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "2057": {
       "Name": "Angriffs-Sph\u00E4roid",
       "Description": "Wandelt ein leeres Feld in [Angriffskraft] um.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "2058": {
       "Name": "Abwehr-Sph\u00E4roid",
       "Description": "Wandelt ein leeres Feld in [Abwehrkraft] um.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "2059": {
       "Name": "Magie-Sph\u00E4roid",
       "Description": "Wandelt ein leeres Feld in [Magie] um.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "205A": {
       "Name": "Z-Abwehr-Sph\u00E4roid",
       "Description": "Wandelt ein leeres Feld in [Zauberabwehr] um.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "205B": {
       "Name": "Geschick-Sph\u00E4roid",
       "Description": "Wandelt ein leeres Feld in [Geschick] um.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "205C": {
       "Name": "Reflex-Sph\u00E4roid",
       "Description": "Wandelt ein leeres Feld in [Reflex] um.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "205D": {
       "Name": "Treffer-Sph\u00E4roid",
       "Description": "Wandelt ein leeres Feld in [Treffer] um.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "205E": {
       "Name": "Fortuna-Sph\u00E4roid",
       "Description": "Wandelt ein leeres Feld in [Gl\u00FCck] um.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "205F": {
       "Name": "Spreng-Sph\u00E4roid",
       "Description": "L\u00F6scht ein Aufbaufeld.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "2060": {
       "Name": "R\u00FCck-Sph\u00E4roid",
       "Description": "Springt auf ein freigesetztes Feld.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "2061": {
       "Name": "Freund-Sph\u00E4roid",
       "Description": "Springt auf ein Feld, auf dem sich Mitstreiter befinden.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "2062": {
       "Name": "Teleport-Sph\u00E4roid",
       "Description": "Springt auf ein von Mitstreitern freigesetztes Feld.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "2063": {
       "Name": "Warp-Sph\u00E4roid",
       "Description": "Springt auf ein beliebiges Feld.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "2064": {
       "Name": "Weltkarte",
       "Description": "\u00DCberblick \u00FCber Spira.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "2065": {
       "Name": "Tintenkiller",
       "Description": "Bestia wird umbenannt.",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "2066": {
       "Name": "Aufputschmittel",
       "Description": "Verwendungszweck ist unbekannt...",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "2067": {
       "Name": "Hypello-Medizin",
       "Description": "Verwendungszweck ist unbekannt...",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "2068": {
       "Name": "Exorzistendorne",
       "Description": "Verwendungszweck ist unbekannt...",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "2069": {
       "Name": "Pendel",
       "Description": "Verwendungszweck ist unbekannt...",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "206A": {
       "Name": "Amulett",
       "Description": "Verwendungszweck ist unbekannt...",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "206B": {
       "Name": "Tor der Zukunft",
       "Description": "Verwendungszweck ist unbekannt...",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "206C": {
       "Name": "Gigantenfl\u00FCgel",
       "Description": "Verwendungszweck ist unbekannt...",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "206D": {
       "Name": "Zockerseele",
       "Description": "Verwendungszweck ist unbekannt...",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "206E": {
       "Name": "Wendeblatt",
       "Description": "Verwendungszweck ist unbekannt...",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     },
     "206F": {
       "Name": "Siegesrausch",
       "Description": "Verwendungszweck ist unbekannt...",
-      "Kind": "ItemCommand"
+      "Kind": "ItemCommand",
+      "DamageType": "Unknown"
     }
   }
 }

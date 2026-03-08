@@ -2,7 +2,7 @@
   "SchemaVersion": 1,
   "Domain": "battles",
   "Locale": "us",
-  "GeneratedAtUtc": "2026-03-04T10:54:18.7697396Z",
+  "GeneratedAtUtc": "2026-03-08T15:08:33.6398156Z",
   "SourceFiles": [
     "PARSE_ALL_BATTLES.txt",
     "READ_STRING_FILE_LOCALIZED__ffx_ps2-ffx-master-new_uspc-battle-btl_us.txt"

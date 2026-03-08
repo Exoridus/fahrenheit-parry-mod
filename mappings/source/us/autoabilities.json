@@ -2,7 +2,7 @@
   "SchemaVersion": 1,
   "Domain": "autoabilities",
   "Locale": "us",
-  "GeneratedAtUtc": "2026-03-04T10:54:18.7662351Z",
+  "GeneratedAtUtc": "2026-03-08T15:08:33.6359412Z",
   "SourceFiles": [
     "READ_ALL_COMMANDS_LOCALIZED__us.txt"
   ],
@@ -10,672 +10,806 @@
     "8000": {
       "Name": "Sensor",
       "Description": "View enemy data during battle.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8001": {
       "Name": "First Strike",
       "Description": "Act first at beginning of battle.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8002": {
       "Name": "Initiative",
       "Description": "Raises party\u2019s chances for a preemptive strike.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8003": {
       "Name": "Counterattack",
       "Description": "Strike back after being physically attacked.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8004": {
       "Name": "Evade \u0026 Counter",
       "Description": "Evade physical attack and strike back.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8005": {
       "Name": "Magic Counter",
       "Description": "Strike back after being attacked with magic.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8006": {
       "Name": "Magic Booster",
       "Description": "Use more MP to heighten spell power.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8007": {
       "Name": "Alchemy",
       "Description": "Doubles the potency of recovery items.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8008": {
       "Name": "Auto-Potion",
       "Description": "Automatically use items to recover HP when damaged.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8009": {
       "Name": "Auto-Med",
       "Description": "Automatically use items to cure status ailments.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "800A": {
       "Name": "Auto-Phoenix",
       "Description": "Automatically use Phoenix Down on {CLR:OL_CYAN}KO\u2019d{CLR:WHITE} character.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "800B": {
       "Name": "Piercing",
       "Description": "Deal normal damage to {CLR:OL_CYAN}armored{CLR:WHITE} enemies.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "800C": {
       "Name": "Half MP Cost",
       "Description": "Reduces MP cost of spells by half.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "800D": {
       "Name": "One MP Cost",
       "Description": "Reduces MP cost of spells to 1.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "800E": {
       "Name": "Double Overdrive",
       "Description": "Charges Overdrive at double speed.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "800F": {
       "Name": "Triple Overdrive",
       "Description": "Charges Overdrive at triple speed.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8010": {
       "Name": "SOS Overdrive",
       "Description": "Charges Overdrive at double speed when HP is low.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8011": {
       "Name": "Overdrive \u2192 AP",
       "Description": "Earn more AP instead of charging Overdrive gauge.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8012": {
       "Name": "Double AP",
       "Description": "Doubles amount of AP earned.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8013": {
       "Name": "Triple AP",
       "Description": "Triples amount of AP earned.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8014": {
       "Name": "No AP",
       "Description": "No AP earned after battles.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8015": {
       "Name": "Pickpocket",
       "Description": "Improves odds of stealing rare items.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8016": {
       "Name": "Master Thief",
       "Description": "Steal only rare items.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8017": {
       "Name": "Break HP Limit",
       "Description": "Allows max HP to exceed 9999.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8018": {
       "Name": "Break MP Limit",
       "Description": "Allows max MP to exceed 999.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8019": {
       "Name": "Break Damage Limit",
       "Description": "Allows max damage to exceed 9999.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "801A": {
       "Name": "Gillionaire",
       "Description": "Doubles amount of gil earned.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "801B": {
       "Name": "HP Stroll",
       "Description": "Automatically recover HP while walking.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "801C": {
       "Name": "MP Stroll",
       "Description": "Automatically recover MP while walking.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "801D": {
       "Name": "No Encounters",
       "Description": "No random enemy encounters.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "801E": {
       "Name": "Firestrike",
       "Description": "Adds fire element to attacks and skills.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "801F": {
       "Name": "Fire Ward",
       "Description": "Reduces fire damage by half.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8020": {
       "Name": "Fireproof",
       "Description": "Grants immunity to fire attacks.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8021": {
       "Name": "Fire Eater",
       "Description": "Converts fire damage to HP.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8022": {
       "Name": "Icestrike",
       "Description": "Adds ice element to attacks and skills.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8023": {
       "Name": "Ice Ward",
       "Description": "Reduces ice damage by half.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8024": {
       "Name": "Iceproof",
       "Description": "Grants immunity to ice attacks.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8025": {
       "Name": "Ice Eater",
       "Description": "Converts ice damage to HP.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8026": {
       "Name": "Lightningstrike",
       "Description": "Adds lightning element to attacks and skills.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8027": {
       "Name": "Lightning Ward",
       "Description": "Reduces lightning damage by half.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8028": {
       "Name": "Lightningproof",
       "Description": "Grants immunity to lightning attacks.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8029": {
       "Name": "Lightning Eater",
       "Description": "Converts lightning damage to HP.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "802A": {
       "Name": "Waterstrike",
       "Description": "Adds water element to attacks and skills.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "802B": {
       "Name": "Water Ward",
       "Description": "Reduces water damage by half.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "802C": {
       "Name": "Waterproof",
       "Description": "Grants immunity to water attacks.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "802D": {
       "Name": "Water Eater",
       "Description": "Converts water damage to HP.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "802E": {
       "Name": "Deathstrike",
       "Description": "Almost always adds {CLR:OL_CYAN}death{CLR:WHITE} to attacks and skills.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "802F": {
       "Name": "Deathtouch",
       "Description": "Sometimes adds {CLR:OL_CYAN}death{CLR:WHITE} to attacks and skills.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8030": {
       "Name": "Deathproof",
       "Description": "Almost completely protects against {CLR:OL_CYAN}death{CLR:WHITE}.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8031": {
       "Name": "Death Ward",
       "Description": "Sometimes protects against {CLR:OL_CYAN}death{CLR:WHITE}.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8032": {
       "Name": "Zombiestrike",
       "Description": "Almost always adds {CLR:OL_CYAN}zombie{CLR:WHITE} to attacks and skills.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8033": {
       "Name": "Zombietouch",
       "Description": "Sometimes adds {CLR:OL_CYAN}zombie{CLR:WHITE} to attacks and skills.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8034": {
       "Name": "Zombieproof",
       "Description": "Almost completely protects against {CLR:OL_CYAN}zombie{CLR:WHITE}.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8035": {
       "Name": "Zombie Ward",
       "Description": "Sometimes protects against {CLR:OL_CYAN}zombie{CLR:WHITE}.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8036": {
       "Name": "Stonestrike",
       "Description": "Almost always adds {CLR:OL_CYAN}petrification{CLR:WHITE} to attacks and skills.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8037": {
       "Name": "Stonetouch",
       "Description": "Sometimes adds {CLR:OL_CYAN}petrification{CLR:WHITE} to attacks and skills.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8038": {
       "Name": "Stoneproof",
       "Description": "Almost completely protects against {CLR:OL_CYAN}petrification{CLR:WHITE}.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8039": {
       "Name": "Stone Ward",
       "Description": "Sometimes protects against {CLR:OL_CYAN}petrification{CLR:WHITE}.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "803A": {
       "Name": "Poisonstrike",
       "Description": "Almost always adds {CLR:OL_CYAN}poison{CLR:WHITE} to attacks and skills.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "803B": {
       "Name": "Poisontouch",
       "Description": "Sometimes adds {CLR:OL_CYAN}poison{CLR:WHITE} to attacks and skills.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "803C": {
       "Name": "Poisonproof",
       "Description": "Almost completely protects against {CLR:OL_CYAN}poison{CLR:WHITE}.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "803D": {
       "Name": "Poison Ward",
       "Description": "Sometimes protects against {CLR:OL_CYAN}poison{CLR:WHITE}.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "803E": {
       "Name": "Sleepstrike",
       "Description": "Almost always adds {CLR:OL_CYAN}sleep{CLR:WHITE} to attacks and skills.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "803F": {
       "Name": "Sleeptouch",
       "Description": "Sometimes adds {CLR:OL_CYAN}sleep{CLR:WHITE} to attacks and skills.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8040": {
       "Name": "Sleepproof",
       "Description": "Almost completely protects against {CLR:OL_CYAN}sleep{CLR:WHITE}.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8041": {
       "Name": "Sleep Ward",
       "Description": "Sometimes protects against {CLR:OL_CYAN}sleep{CLR:WHITE}.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8042": {
       "Name": "Silencestrike",
       "Description": "Almost always adds {CLR:OL_CYAN}silence{CLR:WHITE} to attacks and skills.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8043": {
       "Name": "Silencetouch",
       "Description": "Sometimes adds {CLR:OL_CYAN}silence{CLR:WHITE} to attacks and skills.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8044": {
       "Name": "Silenceproof",
       "Description": "Almost completely protects against {CLR:OL_CYAN}silence{CLR:WHITE}.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8045": {
       "Name": "Silence Ward",
       "Description": "Sometimes protects against {CLR:OL_CYAN}silence{CLR:WHITE}.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8046": {
       "Name": "Darkstrike",
       "Description": "Almost always adds {CLR:OL_CYAN}darkness{CLR:WHITE} to attacks and skills.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8047": {
       "Name": "Darktouch",
       "Description": "Sometimes adds {CLR:OL_CYAN}darkness{CLR:WHITE} to attacks and skills.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8048": {
       "Name": "Darkproof",
       "Description": "Almost completely protects against {CLR:OL_CYAN}darkness{CLR:WHITE}.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8049": {
       "Name": "Dark Ward",
       "Description": "Sometimes protects against {CLR:OL_CYAN}darkness{CLR:WHITE}.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "804A": {
       "Name": "Slowstrike",
       "Description": "Almost always adds {CLR:OL_CYAN}slow{CLR:WHITE} to attacks and skills.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "804B": {
       "Name": "Slowtouch",
       "Description": "Sometimes adds {CLR:OL_CYAN}slow{CLR:WHITE} to attacks and skills.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "804C": {
       "Name": "Slowproof",
       "Description": "Almost completely protects against {CLR:OL_CYAN}slow{CLR:WHITE}.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "804D": {
       "Name": "Slow Ward",
       "Description": "Sometimes protects against {CLR:OL_CYAN}slow{CLR:WHITE}.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "804E": {
       "Name": "Confuseproof",
       "Description": "Almost completely protects against {CLR:OL_CYAN}confusion{CLR:WHITE}.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "804F": {
       "Name": "Confuse Ward",
       "Description": "Sometimes protects against {CLR:OL_CYAN}confusion{CLR:WHITE}.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8050": {
       "Name": "Berserkproof",
       "Description": "Almost completely protects against {CLR:OL_CYAN}berserk{CLR:WHITE}.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8051": {
       "Name": "Berserk Ward",
       "Description": "Sometimes protects against {CLR:OL_CYAN}berserk{CLR:WHITE}.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8052": {
       "Name": "Curseproof",
       "Description": "Almost completely protects against {CLR:OL_CYAN}curse{CLR:WHITE}.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8053": {
       "Name": "Curse Ward",
       "Description": "Sometimes protects against {CLR:OL_CYAN}curse{CLR:WHITE}.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8054": {
       "Name": "Auto-Shell",
       "Description": "Automatically casts {CLR:OL_CYAN}Shell{CLR:WHITE} on user.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8055": {
       "Name": "Auto-Protect",
       "Description": "Automatically casts {CLR:OL_CYAN}Protect{CLR:WHITE} on user.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8056": {
       "Name": "Auto-Haste",
       "Description": "Automatically casts {CLR:OL_CYAN}Haste{CLR:WHITE} on user.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8057": {
       "Name": "Auto-Regen",
       "Description": "Automatically casts {CLR:OL_CYAN}Regen{CLR:WHITE} on user.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8058": {
       "Name": "Auto-Reflect",
       "Description": "Automatically casts {CLR:OL_CYAN}Reflect{CLR:WHITE} on user.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8059": {
       "Name": "SOS Shell",
       "Description": "Casts {CLR:OL_CYAN}Shell{CLR:WHITE} when HP is low.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "805A": {
       "Name": "SOS Protect",
       "Description": "Casts {CLR:OL_CYAN}Protect{CLR:WHITE} when HP is low.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "805B": {
       "Name": "SOS Haste",
       "Description": "Casts {CLR:OL_CYAN}Haste{CLR:WHITE} when HP is low.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "805C": {
       "Name": "SOS Regen",
       "Description": "Casts {CLR:OL_CYAN}Regen{CLR:WHITE} when HP is low.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "805D": {
       "Name": "SOS Reflect",
       "Description": "Casts {CLR:OL_CYAN}Reflect{CLR:WHITE} when HP is low.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "805E": {
       "Name": "SOS NulTide",
       "Description": "Casts {CLR:OL_CYAN}NulTide{CLR:WHITE} when HP is low.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "805F": {
       "Name": "SOS NulFrost",
       "Description": "Casts {CLR:OL_CYAN}NulFrost{CLR:WHITE} when HP is low.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8060": {
       "Name": "SOS NulShock",
       "Description": "Casts {CLR:OL_CYAN}NulShock{CLR:WHITE} when HP is low.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8061": {
       "Name": "SOS NulBlaze",
       "Description": "Casts {CLR:OL_CYAN}NulBlaze{CLR:WHITE} when HP is low.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8062": {
       "Name": "Strength \u002B3%",
       "Description": "Enhances physical attack power by 3%.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8063": {
       "Name": "Strength \u002B5%",
       "Description": "Enhances physical attack power by 5%.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8064": {
       "Name": "Strength \u002B10%",
       "Description": "Enhances physical attack power by 10%.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8065": {
       "Name": "Strength \u002B20%",
       "Description": "Enhances physical attack power by 20%.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8066": {
       "Name": "Magic \u002B3%",
       "Description": "Enhances magic attack power by 3%.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8067": {
       "Name": "Magic \u002B5%",
       "Description": "Enhances magic attack power by 5%.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8068": {
       "Name": "Magic \u002B10%",
       "Description": "Enhances magic attack power by 10%.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8069": {
       "Name": "Magic \u002B20%",
       "Description": "Enhances magic attack power by 20%.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "806A": {
       "Name": "Defense \u002B3%",
       "Description": "Reduces damage from physical attacks by 3%.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "806B": {
       "Name": "Defense \u002B5%",
       "Description": "Reduces damage from physical attacks by 5%.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "806C": {
       "Name": "Defense \u002B10%",
       "Description": "Reduces damage from physical attacks by 10%.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "806D": {
       "Name": "Defense \u002B20%",
       "Description": "Reduces damage from physical attacks by 20%.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "806E": {
       "Name": "Magic Def \u002B3%",
       "Description": "Reduces damage from magical attacks by 3%.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "806F": {
       "Name": "Magic Def \u002B5%",
       "Description": "Reduces damage from magical attacks by 5%.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8070": {
       "Name": "Magic Def \u002B10%",
       "Description": "Reduces damage from magical attacks by 10%.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8071": {
       "Name": "Magic Def \u002B20%",
       "Description": "Reduces damage from magical attacks by 20%.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8072": {
       "Name": "HP \u002B5%",
       "Description": "Raises max HP by 5%.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8073": {
       "Name": "HP \u002B10%",
       "Description": "Raises max HP by 10%.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8074": {
       "Name": "HP \u002B20%",
       "Description": "Raises max HP by 20%.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8075": {
       "Name": "HP \u002B30%",
       "Description": "Raises max HP by 30%.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8076": {
       "Name": "MP \u002B5%",
       "Description": "Raises max MP by 5%.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8077": {
       "Name": "MP \u002B10%",
       "Description": "Raises max MP by 10%.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8078": {
       "Name": "MP \u002B20%",
       "Description": "Raises max MP by 20%.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8079": {
       "Name": "MP \u002B30%",
       "Description": "Raises max MP by 30%.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "807A": {
       "Name": "Capture",
       "Description": "",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "807B": {
       "Name": "",
       "Description": "",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "807C": {
       "Name": "Distill Power",
       "Description": "Adds Power Distiller effect to attacks and skills.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "807D": {
       "Name": "Distill Mana",
       "Description": "Adds Mana Distiller effect to attacks and skills.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "807E": {
       "Name": "Distill Speed",
       "Description": "Adds Speed Distiller effect to attacks and skills.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "807F": {
       "Name": "Distill Ability",
       "Description": "Adds Ability Distiller effect to attacks and skills.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8080": {
       "Name": "Ribbon",
       "Description": "Almost completely protects against {CLR:OL_CYAN}all status ailments{CLR:WHITE}.",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8081": {
       "Name": "Extra 1",
       "Description": "-",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8082": {
       "Name": "Extra 2",
       "Description": "-",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8083": {
       "Name": "Extra 3",
       "Description": "-",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8084": {
       "Name": "Extra 4",
       "Description": "-",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     },
     "8085": {
       "Name": "Extra 5",
       "Description": "-",
-      "Kind": "AutoAbility"
+      "Kind": "AutoAbility",
+      "DamageType": "Unknown"
     }
   }
 }

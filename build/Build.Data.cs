@@ -39,6 +39,7 @@ internal sealed partial class BuildScript
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string Kind { get; set; } = string.Empty;
+        public string? DamageType { get; set; }
     }
 
     sealed class LocalizedMonsterEntry
@@ -404,6 +405,10 @@ internal sealed partial class BuildScript
                 ? localizedCommandSources
                 : [Path.GetFileName(commandsPath)];
 
+            backfill_damage_type(localeCommands, commands);
+            backfill_damage_type(localeAutoAbilities, autoAbilities);
+            backfill_damage_type(localeKeyItems, keyItems);
+
             var eventsMap = clone_script_domain(parsedEvents);
             var battlesMap = clone_script_domain(parsedBattles);
             var eventSources = new List<string>();
@@ -685,6 +690,7 @@ internal sealed partial class BuildScript
             var kind = string.IsNullOrWhiteSpace(forcedKind)
                 ? ClassifyCommandKind(id, section)
                 : forcedKind;
+            var damageType = extract_damage_type(payload);
 
             if (!result.TryGetValue(key, out var entry))
             {
@@ -706,6 +712,11 @@ internal sealed partial class BuildScript
             {
                 entry.Kind = kind;
             }
+
+            if (entry.DamageType is null)
+            {
+                entry.DamageType = damageType;
+            }
         }
 
         return result;
@@ -725,6 +736,70 @@ internal sealed partial class BuildScript
         }
 
         return string.Empty;
+    }
+
+    static string extract_damage_type(string payload)
+    {
+        var braceOpen = payload.IndexOf('{');
+        if (braceOpen < 0)
+        {
+            return "Unknown";
+        }
+
+        var contentStart = braceOpen + 1;
+        var commaPos = payload.IndexOf(',', contentStart);
+        var braceClose = payload.IndexOf('}', contentStart);
+
+        int tokenEnd;
+        if (commaPos >= 0 && (braceClose < 0 || commaPos < braceClose))
+        {
+            tokenEnd = commaPos;
+        }
+        else if (braceClose >= 0)
+        {
+            tokenEnd = braceClose;
+        }
+        else
+        {
+            return "Unknown";
+        }
+
+        var token = payload[contentStart..tokenEnd].Trim();
+
+        if (token.StartsWith("Physical", StringComparison.OrdinalIgnoreCase))
+        {
+            return "Physical";
+        }
+
+        if (token.StartsWith("Magical", StringComparison.OrdinalIgnoreCase))
+        {
+            return "Magical";
+        }
+
+        if (token.StartsWith("Special", StringComparison.OrdinalIgnoreCase))
+        {
+            return "Special";
+        }
+
+        return "Unknown";
+    }
+
+    static void backfill_damage_type(
+        Dictionary<string, LocalizedCommandEntry> target,
+        Dictionary<string, LocalizedCommandEntry> source)
+    {
+        foreach (var (key, entry) in target)
+        {
+            if (entry.DamageType is not null && entry.DamageType != "Unknown")
+            {
+                continue;
+            }
+
+            if (source.TryGetValue(key, out var sourceEntry) && sourceEntry.DamageType is not null)
+            {
+                entry.DamageType = sourceEntry.DamageType;
+            }
+        }
     }
 
     static int find_metadata_closing_brace(string payload)

@@ -2,7 +2,7 @@
   "SchemaVersion": 1,
   "Domain": "monsters",
   "Locale": "de",
-  "GeneratedAtUtc": "2026-03-04T10:54:18.8045305Z",
+  "GeneratedAtUtc": "2026-03-08T15:08:33.6872975Z",
   "SourceFiles": [
     "READ_MONSTER_LOCALIZATIONS__de.txt"
   ],

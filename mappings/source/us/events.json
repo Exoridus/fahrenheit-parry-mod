@@ -2,7 +2,7 @@
   "SchemaVersion": 1,
   "Domain": "events",
   "Locale": "us",
-  "GeneratedAtUtc": "2026-03-04T10:54:18.7726559Z",
+  "GeneratedAtUtc": "2026-03-08T15:08:33.6434177Z",
   "SourceFiles": [
     "PARSE_ALL_EVENTS.txt",
     "READ_STRING_FILE_LOCALIZED__ffx_ps2-ffx-master-new_uspc-event-obj_ps3_us.txt"

@@ -2,7 +2,7 @@
   "SchemaVersion": 1,
   "Domain": "keyitems",
   "Locale": "de",
-  "GeneratedAtUtc": "2026-03-04T10:54:18.8039805Z",
+  "GeneratedAtUtc": "2026-03-08T15:08:33.6867690Z",
   "SourceFiles": [
     "READ_ALL_COMMANDS_LOCALIZED__de.txt"
   ],
@@ -10,322 +10,386 @@
     "A000": {
       "Name": "Verwelkte Blumen",
       "Description": "Mit viel Liebe geflochtener Blumenstrau\u00DF.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A001": {
       "Name": "Feuersteine",
       "Description": "Zum Entfachen von Feuer.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A002": {
       "Name": "Nebelspiegel",
       "Description": "Dieser Spiegel hat sein Licht verloren.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A003": {
       "Name": "Solaris-Spiegel",
       "Description": "Dieser Spiegel leuchtet in vollem Licht.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A004": {
       "Name": "Al Bhed-Lexikon 1",
       "Description": "Al Bhed-W\u00F6rterbuch f\u00FCr [A] \u0026 [a].",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A005": {
       "Name": "Al Bhed-Lexikon 2",
       "Description": "Al Bhed-W\u00F6rterbuch f\u00FCr [B] \u0026 [b].",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A006": {
       "Name": "Al Bhed-Lexikon 3",
       "Description": "Al Bhed-W\u00F6rterbuch f\u00FCr [C] \u0026 [c].",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A007": {
       "Name": "Al Bhed-Lexikon 4",
       "Description": "Al Bhed-W\u00F6rterbuch f\u00FCr [D] \u0026 [d].",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A008": {
       "Name": "Al Bhed-Lexikon 5",
       "Description": "Al Bhed-W\u00F6rterbuch f\u00FCr [E] \u0026 [e].",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A009": {
       "Name": "Al Bhed-Lexikon 6",
       "Description": "Al Bhed-W\u00F6rterbuch f\u00FCr [F] \u0026 [f].",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A00A": {
       "Name": "Al Bhed-Lexikon 7",
       "Description": "Al Bhed-W\u00F6rterbuch f\u00FCr [G] \u0026 [g].",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A00B": {
       "Name": "Al Bhed-Lexikon 8",
       "Description": "Al Bhed-W\u00F6rterbuch f\u00FCr [H] \u0026 [h].",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A00C": {
       "Name": "Al Bhed-Lexikon 9",
       "Description": "Al Bhed-W\u00F6rterbuch f\u00FCr [I] \u0026 [i].",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A00D": {
       "Name": "Al Bhed-Lexikon 10",
       "Description": "Al Bhed-W\u00F6rterbuch f\u00FCr [J] \u0026 [j].",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A00E": {
       "Name": "Al Bhed-Lexikon 11",
       "Description": "Al Bhed-W\u00F6rterbuch f\u00FCr [K] \u0026 [k].",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A00F": {
       "Name": "Al Bhed-Lexikon 12",
       "Description": "Al Bhed-W\u00F6rterbuch f\u00FCr [L] \u0026 [l].",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A010": {
       "Name": "Al Bhed-Lexikon 13",
       "Description": "Al Bhed-W\u00F6rterbuch f\u00FCr [M] \u0026 [m].",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A011": {
       "Name": "Al Bhed-Lexikon 14",
       "Description": "Al Bhed-W\u00F6rterbuch f\u00FCr [N] \u0026 [n].",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A012": {
       "Name": "Al Bhed-Lexikon 15",
       "Description": "Al Bhed-W\u00F6rterbuch f\u00FCr [O] \u0026 [o].",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A013": {
       "Name": "Al Bhed-Lexikon 16",
       "Description": "Al Bhed-W\u00F6rterbuch f\u00FCr [P] \u0026 [p].",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A014": {
       "Name": "Al Bhed-Lexikon 17",
       "Description": "Al Bhed-W\u00F6rterbuch f\u00FCr [Q] \u0026 [q].",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A015": {
       "Name": "Al Bhed-Lexikon 18",
       "Description": "Al Bhed-W\u00F6rterbuch f\u00FCr [R] \u0026 [r].",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A016": {
       "Name": "Al Bhed-Lexikon 19",
       "Description": "Al Bhed-W\u00F6rterbuch f\u00FCr [S] \u0026 [s].",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A017": {
       "Name": "Al Bhed-Lexikon 20",
       "Description": "Al Bhed-W\u00F6rterbuch f\u00FCr [T] \u0026 [t].",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A018": {
       "Name": "Al Bhed-Lexikon 21",
       "Description": "Al Bhed-W\u00F6rterbuch f\u00FCr [U] \u0026 [u].",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A019": {
       "Name": "Al Bhed-Lexikon 22",
       "Description": "Al Bhed-W\u00F6rterbuch f\u00FCr [V] \u0026 [v].",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A01A": {
       "Name": "Al Bhed-Lexikon 23",
       "Description": "Al Bhed-W\u00F6rterbuch f\u00FCr [W] \u0026 [w].",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A01B": {
       "Name": "Al Bhed-Lexikon 24",
       "Description": "Al Bhed-W\u00F6rterbuch f\u00FCr [X] \u0026 [x].",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A01C": {
       "Name": "Al Bhed-Lexikon 25",
       "Description": "Al Bhed-W\u00F6rterbuch f\u00FCr [Y] \u0026 [y].",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A01D": {
       "Name": "Al Bhed-Lexikon 26",
       "Description": "Al Bhed-W\u00F6rterbuch f\u00FCr [Z] \u0026 [z].",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A01E": {
       "Name": "Medium-Seele",
       "Description": "Damit k\u00F6nnen Bestia Abilitys erlernen.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A01F": {
       "Name": "Bestia-Seele",
       "Description": "Erh\u00F6ht die Statuswerte der Bestia.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A020": {
       "Name": "Jekkts Sph\u00E4roid",
       "Description": "Aufnahmen von Jekkt von vor 10 Jahren.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A021": {
       "Name": "Altes Schwert",
       "Description": "Ein veraltetes Schwert.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A022": {
       "Name": "Unbenutzt",
       "Description": "?",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A023": {
       "Name": "Solar-Marke",
       "Description": "Eine Marke in Form des Sol.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A024": {
       "Name": "Solar-Siegel",
       "Description": "Ein Siegel in Form des Sol.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A025": {
       "Name": "Lunar-Marke",
       "Description": "Eine Marke in Form der Luna.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A026": {
       "Name": "Lunar-Siegel",
       "Description": "Ein Siegel in Form der Luna.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A027": {
       "Name": "Saturn-Marke",
       "Description": "Eine Marke in Form des Saturns.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A028": {
       "Name": "Saturn-Siegel",
       "Description": "Ein Siegel in Form des Saturns.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A029": {
       "Name": "Heldenzertifikat",
       "Description": "Der Held... Der K\u00E4mpfer aller K\u00E4mpfer.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A02A": {
       "Name": "Jupiter-Marke",
       "Description": "Eine Marke in Form des Jupiters.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A02B": {
       "Name": "Jupiter-Siegel",
       "Description": "Ein Siegel in Form des Jupiters.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A02C": {
       "Name": "Merkur-Marke",
       "Description": "Eine Marke in Form des Merkurs.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A02D": {
       "Name": "Merkur-Siegel",
       "Description": "Ein Siegel in Form des Merkurs.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A02E": {
       "Name": "Mars-Marke",
       "Description": "Eine Marke in Form des Mars.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A02F": {
       "Name": "Mars-Siegel",
       "Description": "Ein Siegel in Form des Mars.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A030": {
       "Name": "Venus-Marke",
       "Description": "Eine Marke in Form der Venus.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A031": {
       "Name": "Venus-Siegel",
       "Description": "Ein Siegel in Form der Venus.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A032": {
       "Name": "Knospelkrone",
       "Description": "Birgt das Geheimnis einer unbekannten Bestia.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A033": {
       "Name": "Blumenkrone",
       "Description": "Birgt das Geheimnis einer unbekannten Bestia.",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A034": {
       "Name": "Wichtiges Item 53",
       "Description": "?",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A035": {
       "Name": "Wichtiges Item 54",
       "Description": "?",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A036": {
       "Name": "Wichtiges Item 55",
       "Description": "?",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A037": {
       "Name": "Wichtiges Item 56",
       "Description": "?",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A038": {
       "Name": "Wichtiges Item 57",
       "Description": "?",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A039": {
       "Name": "Wichtiges Item 58",
       "Description": "?",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A03A": {
       "Name": "Wichtiges Item 59",
       "Description": "?",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A03B": {
       "Name": "Wichtiges Item 60",
       "Description": "?",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A03C": {
       "Name": "Wichtiges Item 61",
       "Description": "?",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A03D": {
       "Name": "Wichtiges Item 62",
       "Description": "?",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A03E": {
       "Name": "Wichtiges Item 63",
       "Description": "?",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     },
     "A03F": {
       "Name": "Wichtiges Item 64",
       "Description": "?",
-      "Kind": "KeyItem"
+      "Kind": "KeyItem",
+      "DamageType": "Unknown"
     }
   }
 }
