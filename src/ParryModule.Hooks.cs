@@ -48,6 +48,30 @@ public unsafe sealed partial class ParryModule
         }
     }
 
+    /// <summary>
+    ///     Experimental Phase 0.5 spike: pass-through hook on MsSetDamage using hypothesized
+    ///     int __cdecl MsSetDamage(void* a1, int a2, int a3) signature.
+    ///     Logs parameter values and return value for signature validation.
+    ///     Does NOT modify any damage values or affect gameplay behavior.
+    /// </summary>
+    private int h_ms_set_damage(void* a1, int a2, int a3)
+    {
+        int result = _hMsSetDamage.orig_fptr.Invoke(a1, a2, a3);
+
+        if (!_optionDebugOverlay && !_optionLogging)
+            return result;
+
+        ulong frame = _debugFrameIndex;
+        nint a1Addr = (nint)a1;
+        bool parryWindowActive = _runtime.ParryWindowActive;
+        byte currentAttackerId = _runtime.CurrentAttackerId;
+        bool awaitingTurnEnd = _runtime.AwaitingTurnEnd;
+
+        log_debug($"[MsSetDamage] f={frame} a1=0x{a1Addr:X8} a2={a2} a3={a3} ret={result} parry={parryWindowActive} atk={currentAttackerId} await={awaitingTurnEnd}");
+
+        return result;
+    }
+
     private bool try_get_head_cue_snapshot(List<DebugCueSnapshot> scratch, out DebugCueSnapshot head)
     {
         scratch.Clear();
