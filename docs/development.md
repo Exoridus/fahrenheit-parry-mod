@@ -63,6 +63,7 @@ Reverse engineering tooling:
 ```bash
 .\build.cmd ghidra-setup
 .\build.cmd ghidra-start
+.\build.cmd discord-sync --guild 612363389003366405
 ```
 
 ## Parry Timing Determinism Checks
@@ -79,6 +80,31 @@ The test suite includes simulation-time pacing checks for 1x/2x/4x-equivalent de
 
 - `GAME_DIR`
 - `DEPLOY_MODE` (`none`, `update`, `mod-only`)
+
+`.\build.cmd discord-sync` reads a Discord token from one of these local-only files:
+
+- `.workspace/Discord/config.local.json`
+- `.workspace/dev.local.json`
+
+Recommended shape for `.workspace/Discord/config.local.json`:
+
+```json
+{
+  "token": "...",
+  "defaults": {
+    "includeVc": true,
+    "includeThreads": "All",
+    "media": true,
+    "reuseMedia": true,
+    "respectRateLimits": true
+  },
+  "blacklist": [
+    "123456789012345678"
+  ]
+}
+```
+
+The Discord sync workflow exports JSON into `.workspace/Discord`, discovers channels and threads automatically, and defaults to full-or-delta behavior per channel. Voice channels are included by default because they can also contain text chat. If you do not set `defaults.mediaDir`, the build workflow now resolves a server-local media directory at `<Guild Root>\\Media` and keeps each guild's downloaded assets there by default. A local `blacklist` array can exclude known inaccessible or unsupported channel/thread IDs before sync starts, and future inaccessible IDs are persisted back into that same local config automatically. Use `.\build.cmd discord-sync --guild <serverId> --full` periodically to reconcile edits/deletions that delta mode cannot recover.
 
 ## Commit Workflows
 
@@ -117,3 +143,5 @@ git push origin main --follow-tags
 - Localization strategy: `docs/localization.md`
 - Pointer/hook primer: `docs/pointers-hooks-guide.md`
 - Local config schema: `docs/dev-local.schema.json`
+
+

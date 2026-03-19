@@ -50,6 +50,22 @@ Quick command discovery:
 
 ## Data + Mappings
 
+- `.\build.cmd discord-sync --guild <serverId> [--full]`
+  - Enumerates all accessible text channels and threads in the specified guild.
+  - Voice channels are included by default because Discord voice channels can also contain chat messages.
+  - `--channels <id1,id2,...>` restricts the run to specific channel/thread IDs.
+  - Default behavior is auto mode:
+  - if no prior channel export exists, do a full export
+  - if a prior channel export exists, export only messages after the newest stored message ID and merge by message ID
+  - Writes JSON exports into `.workspace/Discord`.
+  - Reads the token and optional default CLI settings from local-only config (`.workspace/Discord/config.local.json`) or fallback `.workspace/dev.local.json`.
+  - `config.local.json` can also contain a `blacklist` array of channel/thread IDs; blacklisted IDs are filtered before sync starts.
+  - If a run still encounters an inaccessible or unsupported channel, its ID is appended back into that local blacklist automatically.
+  - By default, downloaded assets go into `<Guild Root>\\Media`, so each server keeps its own shared media folder.
+  - `--discordmediadir <path>` or config `defaults.mediaDir` is only needed if you want to override that server-local default.
+  - Successful runs automatically remove `.workspace/Discord/_staging/<guildId>` unless `--discordcleanupstaging false` is used.
+  - Use `--full` periodically because delta mode does not reconcile deleted messages, older edits, or older reaction changes.
+
 - `.\build.cmd data-setup`
   - Installs/updates `VBFTool` + `FFXDataParser`.
 
@@ -116,3 +132,5 @@ Quick command discovery:
 
 - `.\build.cmd commit-range --range BASE..HEAD`
   - Validates commit subjects in a range.
+
+

@@ -319,6 +319,7 @@ internal sealed partial class BuildScript : NukeBuild
         Log.Information("  commit-range Validate commit subjects in a range");
         Log.Information(string.Empty);
         Log.Information("Advanced:");
+        Log.Information("  discord-sync Incremental Discord JSON export into .workspace/Discord");
         Log.Information("  data-* / map-* / ghidra-* workflows are available.");
         Log.Information("  Use: build.cmd -h <workflow> for detailed parameters and examples.");
     }
@@ -506,6 +507,29 @@ internal sealed partial class BuildScript : NukeBuild
                     [
                         "build.cmd data-setup",
                         "build.cmd data-setup --parserref main"
+                    ]);
+                return;
+
+            case "discord-sync":
+                PrintHelpBlock(
+                    "discord-sync",
+                    "Export Discord channels/threads into .workspace/Discord with auto full-or-delta behavior and a per-server Media folder by default.",
+                    [
+                        "--guild <serverId> (required).",
+                        "--channels <id1,id2,...> (optional) -> restrict export to explicit channel/thread IDs.",
+                        "--full (optional, default false) -> force full refresh for every discovered channel/thread.",
+                        "--discordconfig <path> (optional, default .workspace/Discord/config.local.json).",
+                        "--discordoutdir <path> (optional, default .workspace/Discord).",
+                        "--discordincludethreads none|active|all (optional, default config/all).",
+                        "--discordincludevc true|false (optional, default config/true).",
+                        "--discordmedia true|false (optional, default config/true).",
+                        "config blacklist[] (optional, local-only) -> filter known inaccessible/unsupported channel IDs before sync.",
+                        "--discordmediadir <path> (optional, advanced) -> override the default server-local Media directory."
+                    ],
+                    [
+                        "build.cmd discord-sync --guild 612363389003366405",
+                        "build.cmd discord-sync --guild 1328407223528853598 --channels 1328424139832168572",
+                        "build.cmd discord-sync --guild 612363389003366405 --full"
                     ]);
                 return;
 
@@ -2618,6 +2642,8 @@ goto :eof
 
     readonly record struct ProcessResult(int ExitCode, string StdOut, string StdErr);
 }
+
+
 
 
 
