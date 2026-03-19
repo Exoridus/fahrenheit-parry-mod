@@ -49,25 +49,45 @@ public unsafe sealed partial class ParryModule
     }
 
     /// <summary>
-    ///     Experimental Phase 0.5 spike: pass-through hook on MsSetDamage using hypothesized
-    ///     int __cdecl MsSetDamage(void* a1, int a2, int a3) signature.
+    ///     Experimental Phase 0 spike: pass-through hook on MsSetDamage using the
+    ///     confirmed int __cdecl MsSetDamage(byte param_1, int param_2, int param_3) signature.
     ///     Logs parameter values and return value for signature validation.
     ///     Does NOT modify any damage values or affect gameplay behavior.
     /// </summary>
-    private int h_ms_set_damage(void* a1, int a2, int a3)
+    private int h_ms_set_damage(byte param_1, int param_2, int param_3)
     {
-        int result = _hMsSetDamage.orig_fptr.Invoke(a1, a2, a3);
+        int result = _hMsSetDamage.orig_fptr.Invoke(param_1, param_2, param_3);
 
         if (!_optionDebugOverlay && !_optionLogging)
             return result;
 
         ulong frame = _debugFrameIndex;
-        nint a1Addr = (nint)a1;
         bool parryWindowActive = _runtime.ParryWindowActive;
         byte currentAttackerId = _runtime.CurrentAttackerId;
         bool awaitingTurnEnd = _runtime.AwaitingTurnEnd;
+        bool sameAsLast =
+            _msSetDamageLogLastFrame != 0
+            && _msSetDamageLogLastP1 == param_1
+            && _msSetDamageLogLastP2 == param_2
+            && _msSetDamageLogLastP3 == param_3
+            && _msSetDamageLogLastResult == result
+            && _msSetDamageLogLastParryWindowActive == parryWindowActive
+            && _msSetDamageLogLastAttackerId == currentAttackerId
+            && _msSetDamageLogLastAwaitingTurnEnd == awaitingTurnEnd;
 
-        log_debug($"[MsSetDamage] f={frame} a1=0x{a1Addr:X8} a2={a2} a3={a3} ret={result} parry={parryWindowActive} atk={currentAttackerId} await={awaitingTurnEnd}");
+        if (sameAsLast && frame - _msSetDamageLogLastFrame < 30)
+            return result;
+
+        _msSetDamageLogLastFrame = frame;
+        _msSetDamageLogLastP1 = param_1;
+        _msSetDamageLogLastP2 = param_2;
+        _msSetDamageLogLastP3 = param_3;
+        _msSetDamageLogLastResult = result;
+        _msSetDamageLogLastParryWindowActive = parryWindowActive;
+        _msSetDamageLogLastAttackerId = currentAttackerId;
+        _msSetDamageLogLastAwaitingTurnEnd = awaitingTurnEnd;
+
+        log_debug($"[MsSetDamage] f={frame} p1={param_1} p2={param_2} p3={param_3} ret={result} parry={parryWindowActive} atk={currentAttackerId} await={awaitingTurnEnd}");
 
         return result;
     }

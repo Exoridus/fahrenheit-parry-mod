@@ -47,12 +47,10 @@ public unsafe sealed partial class ParryModule : FhModule
     private delegate float MapShow2DLayerRetFloat(Fahrenheit.Atel.AtelBasicWorker* work, nint* storage, Fahrenheit.Atel.AtelStack* stack);
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate int NeedShowJapanLogo();
-    // Experimental MsSetDamage signature based on manual debugger inspection.
-    // Hypothesis: int __cdecl MsSetDamage(void* a1, int a2, int a3)
-    // a1 appears to be a context/target pointer; a2 stable as 1; a3 stable as 0 in simple damage cases.
-    // If this is wrong, the hook will still be safe as long as parameter count and convention are correct.
+    // Community-confirmed Phase 0 spike signature for pass-through diagnostics.
+    // param_1 is likely a battler/target slot index.
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    private delegate int MsSetDamageHypothesis(void* a1, int a2, int a3);
+    private delegate int MsSetDamageProbe(byte param_1, int param_2, int param_3);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate void MovieStopProg();
@@ -235,6 +233,14 @@ public unsafe sealed partial class ParryModule : FhModule
     private int _impactCorrelationRejectedCount;
     private string _impactCorrelationLastRejectReason = "None";
     private ulong _impactCorrelationLastSummaryFrame;
+    private ulong _msSetDamageLogLastFrame;
+    private byte _msSetDamageLogLastP1;
+    private int _msSetDamageLogLastP2;
+    private int _msSetDamageLogLastP3;
+    private int _msSetDamageLogLastResult;
+    private bool _msSetDamageLogLastParryWindowActive;
+    private byte _msSetDamageLogLastAttackerId;
+    private bool _msSetDamageLogLastAwaitingTurnEnd;
     private double _simulationClockSeconds;
     private ulong _debugFrameIndex;
     private ulong _debugBattleFrameIndex;
@@ -288,7 +294,7 @@ public unsafe sealed partial class ParryModule : FhModule
     private readonly IParryTimeSource _timeSource = new SimulationDeltaTimeSource(FrameDurationSeconds);
     private readonly FhMethodHandle<SgMainLoop> _hMainLoop;
     private readonly FhMethodHandle<FhFfx.FhCall.MsExeInputCue> _hMsExeInputCue;
-    private readonly FhMethodHandle<MsSetDamageHypothesis> _hMsSetDamage;
+    private readonly FhMethodHandle<MsSetDamageProbe> _hMsSetDamage;
     private readonly FhMethodHandle<AtelEventSetUp> _hAtelEventSetUp;
     private readonly FhMethodHandle<NeedShowJapanLogo> _hNeedShowJapanLogo;
     private FhMethodHandle<MapShow2DLayerExec>? _hMapShow2DLayerExec;
@@ -305,7 +311,7 @@ public unsafe sealed partial class ParryModule : FhModule
     {
         _hMainLoop = new FhMethodHandle<SgMainLoop>(this, "FFX.exe", 0x420C00, h_main_loop_timing);           // Sg_MainLoop — game update tick; used for simulation delta timing
         _hMsExeInputCue = new FhMethodHandle<FhFfx.FhCall.MsExeInputCue>(this, "FFX.exe", FhFfx.FhCall.__addr_MsExeInputCue, h_ms_exe_input_cue);
-        _hMsSetDamage = new FhMethodHandle<MsSetDamageHypothesis>(this, "FFX.exe", FhFfx.FhCall.__addr_MsSetDamage, h_ms_set_damage);
+        _hMsSetDamage = new FhMethodHandle<MsSetDamageProbe>(this, "FFX.exe", FhFfx.FhCall.__addr_MsSetDamage, h_ms_set_damage);
         _hAtelEventSetUp = new FhMethodHandle<AtelEventSetUp>(this, "FFX.exe", 0x472e90, h_startup_event_setup); // AtelEventSetUp — Atel scripting event dispatch; intercepted for startup skip
         _hNeedShowJapanLogo = new FhMethodHandle<NeedShowJapanLogo>(this, "FFX.exe", 0x387450, h_need_show_japan_logo); // isNeedShowJapanLogo — suppresses Japan logo display during startup skip
 
