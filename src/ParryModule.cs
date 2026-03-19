@@ -35,8 +35,6 @@ public unsafe sealed partial class ParryModule : FhModule
     private static readonly byte[] StartupPatchWait0Call = new byte[] { 0xAE, 0x00, 0x00, 0xD8, 0x00, 0x00 };
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    private delegate void SgMainLoop(float delta);
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate void AtelEventSetUp(uint eventId);
     private delegate char* AtelGetEventName(uint eventId);
     [UnmanagedFunctionPointer(CallingConvention.StdCall)]
@@ -291,8 +289,6 @@ public unsafe sealed partial class ParryModule : FhModule
     private bool _overlayFontWarningIssued;
     private uint _battleSceneRevision;
     private ulong _lastBattleSceneRefreshFrame;
-    private readonly IParryTimeSource _timeSource = new SimulationDeltaTimeSource(FrameDurationSeconds);
-    private readonly FhMethodHandle<SgMainLoop> _hMainLoop;
     private readonly FhMethodHandle<FhFfx.FhCall.MsExeInputCue> _hMsExeInputCue;
     private readonly FhMethodHandle<MsSetDamageProbe> _hMsSetDamage;
     private readonly FhMethodHandle<AtelEventSetUp> _hAtelEventSetUp;
@@ -309,7 +305,6 @@ public unsafe sealed partial class ParryModule : FhModule
 
     public ParryModule()
     {
-        _hMainLoop = new FhMethodHandle<SgMainLoop>(this, "FFX.exe", 0x420C00, h_main_loop_timing);           // Sg_MainLoop — game update tick; used for simulation delta timing
         _hMsExeInputCue = new FhMethodHandle<FhFfx.FhCall.MsExeInputCue>(this, "FFX.exe", FhFfx.FhCall.__addr_MsExeInputCue, h_ms_exe_input_cue);
         _hMsSetDamage = new FhMethodHandle<MsSetDamageProbe>(this, "FFX.exe", FhFfx.FhCall.__addr_MsSetDamage, h_ms_set_damage);
         _hAtelEventSetUp = new FhMethodHandle<AtelEventSetUp>(this, "FFX.exe", 0x472e90, h_startup_event_setup); // AtelEventSetUp — Atel scripting event dispatch; intercepted for startup skip
@@ -342,14 +337,7 @@ public unsafe sealed partial class ParryModule : FhModule
         initialize_audio_resources();
         initialize_data_mappings(mod_context);
 
-        try
-        {
-            _hMainLoop.hook();
-        }
-        catch (Exception ex)
-        {
-            _logger.Warning($"[Parry] Could not hook Sg_MainLoop for simulation delta timing (falling back to fixed timestep): {ex.Message}");
-        }
+        FhApi.Events.Common.GameLoop.PreUpdate.subscribe(on_pre_update);
 
         try
         {
@@ -394,10 +382,10 @@ public unsafe sealed partial class ParryModule : FhModule
         return true;
     }
 
-    public override void pre_update()
+    private void on_pre_update(Fahrenheit.Events.UpdateLoopEventArgs e)
     {
         _debugFrameIndex++;
-        float deltaSeconds = _timeSource.GetDeltaSeconds();
+        float deltaSeconds = e.delta;
         _simulationClockSeconds += deltaSeconds;
         update_debug_save_loaded_state();
         try_run_startup_force_title_skip();
@@ -524,12 +512,6 @@ public unsafe sealed partial class ParryModule : FhModule
             _ when message.StartsWith("Timeline integrity warning:", StringComparison.Ordinal) => true,
             _ => false
         };
-    }
-
-    private void h_main_loop_timing(float delta)
-    {
-        _timeSource.CaptureSimulationDelta(delta);
-        _hMainLoop.orig_fptr(delta);
     }
 
     private DateTime current_gameplay_timestamp()
