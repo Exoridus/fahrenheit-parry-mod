@@ -53,32 +53,59 @@ public unsafe sealed partial class ParryModule
     ///
     ///     Call semantics confirmed from session log analysis (2026-03-22):
     ///       param_1 = attacker battler slot
-    ///       param_2 = target party slot (>= 0) for the damage-to-party call;
+    ///       param_2 = target party slot (>= 0) for the actual damage-to-party call;
     ///                 -5 for setup (p3=0) and finalization (p3=0x400) calls
     ///       param_3 = 0 for setup/target calls; 0x400 for finalization (triggers MsAfterDamageProcess)
     ///
-    ///     When the parry window is active and param_2 identifies the party target, the impact
-    ///     is handled immediately via on_impact_detected: damage is zeroed before p3=0x400
-    ///     finalization can apply it to chr->ram.hp. The polling path (monitor_damage_resolves)
-    ///     handles missed-parry detection for attacks where no parry window is open.
+    ///     The p2=target call applies HP damage synchronously inside orig — damage_hp is only for display.
+    ///     On a successful parry we therefore snapshot HP before calling orig and restore it after,
+    ///     guaranteeing the character takes no actual damage regardless of how orig applies it.
+    ///     The polling path (monitor_damage_resolves) still handles missed-parry detection.
     /// </summary>
     private int h_ms_set_damage(byte param_1, int param_2, int param_3)
     {
-        int result = _hMsSetDamage.orig_fptr.Invoke(param_1, param_2, param_3);
-
-        // Active interception: p2 >= 0 is the actual damage-to-party call for a specific slot.
-        // Intercept here (before the p3=0x400 finalization) so damage is zeroed before
-        // MsAfterDamageProcess reads it. Polling detects missed parries for non-intercepted hits.
+        // For the actual damage-to-party call with an active parry window, snapshot HP fields
+        // before orig runs so we can restore them afterward. Orig applies HP damage directly
+        // (not only through damage_hp), so we must undo at the source.
         bool isPartyTargetCall = param_2 >= 0 && param_2 < PartyActorCapacity;
-        if (isPartyTargetCall && _optionEnabled && _runtime.ParryWindowActive
-            && param_1 == _runtime.CurrentAttackerId)
+        bool isActiveParry = isPartyTargetCall
+            && _optionEnabled
+            && _runtime.ParryWindowActive
+            && param_1 == _runtime.CurrentAttackerId;
+
+        Chr* parryTarget = null;
+        int snapHp = 0, snapCurrentHp = 0, snapMp = 0, snapCurrentMp = 0, snapCurrentCtb = 0;
+
+        if (isActiveParry)
         {
             Chr* party = _battleAdapter.GetPlayerCharacters();
-            Chr* target = party != null ? party + param_2 : null;
-            if (target != null && target->stat_exist_flag)
+            Chr* candidate = party != null ? party + param_2 : null;
+            if (candidate != null && candidate->stat_exist_flag && !is_target_non_parryable(candidate))
             {
-                on_impact_detected(param_2, target, "ms_set_damage");
+                parryTarget    = candidate;
+                snapHp         = parryTarget->ram.hp;
+                snapCurrentHp  = parryTarget->ram.current_hp;
+                snapMp         = parryTarget->ram.mp;
+                snapCurrentMp  = parryTarget->ram.current_mp;
+                snapCurrentCtb = parryTarget->ram.current_ctb;
             }
+        }
+
+        int result = _hMsSetDamage.orig_fptr.Invoke(param_1, param_2, param_3);
+
+        if (parryTarget != null)
+        {
+            // Restore HP to pre-call values to undo direct damage applied by orig.
+            // negate_damage_on_impact inside resolve_successful_parry will zero damage_hp/mp/ctb.
+            if (_optionNegateDamage)
+            {
+                parryTarget->ram.hp          = snapHp;
+                parryTarget->ram.current_hp  = snapCurrentHp;
+                parryTarget->ram.mp          = snapMp;
+                parryTarget->ram.current_mp  = snapCurrentMp;
+                parryTarget->ram.current_ctb = snapCurrentCtb;
+            }
+            on_impact_detected(param_2, parryTarget, "ms_set_damage");
         }
 
         if (!_optionDebugOverlay && !_optionLogging)
