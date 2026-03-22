@@ -33,21 +33,41 @@ public unsafe sealed partial class ParryModule
         }
     }
 
-    private void on_impact_detected(int slotIndex, Chr* target)
+    /// <summary>
+    ///     Returns true if the target's current battle status prevents them from being parried.
+    ///     KO, Petrification, and Sleep are clear non-parryable conditions: the target cannot
+    ///     react, and the player should not be penalised for failing to parry on their behalf.
+    /// </summary>
+    private static bool is_target_non_parryable(Chr* target)
+    {
+        if (target == null || !target->stat_exist_flag) return true;
+        if (target->stat_death != 0) return true;                        // KO'd
+        if (target->stat_stone != 0) return true;                        // Petrified
+        if (target->ram.status_suffer_turns_left.sleep > 0) return true; // Sleeping
+        return false;
+    }
+
+    private void on_impact_detected(int slotIndex, Chr* target, string source = "impact_poll")
     {
         if (!is_relevant_impact_slot(slotIndex))
         {
             return;
         }
 
+        if (is_target_non_parryable(target))
+        {
+            log_debug($"Impact on {format_actor_slot((byte)slotIndex)} skipped (target non-parryable: KO/Petrify/Sleep).");
+            return;
+        }
+
         if (!is_impact_correlated_to_active_action(out string correlationReason))
         {
-            on_correlation_rejected((byte)slotIndex, "impact_poll", correlationReason);
+            on_correlation_rejected((byte)slotIndex, source, correlationReason);
             return;
         }
 
         try_capture_current_impact_command_context(out byte attackerId, out int queueIndex, out ResolvedCommandInfo command);
-        on_correlation_matched((byte)slotIndex, "impact_poll", command);
+        on_correlation_matched((byte)slotIndex, source, command);
         _turnRuntimeEvents.EmitDamageResolved(
             targetSlot: slotIndex,
             timestampLocal: current_gameplay_timestamp(),
@@ -56,7 +76,7 @@ public unsafe sealed partial class ParryModule
             queueIndex: queueIndex,
             commandId: command.CommandId,
             commandLabel: command.Label,
-            sourceStage: "impact_poll");
+            sourceStage: source);
 
         long cueToImpactFrames = _runtime.CueFirstSeenFrame > 0
             ? (long)(_debugFrameIndex - _runtime.CueFirstSeenFrame)
@@ -80,7 +100,7 @@ public unsafe sealed partial class ParryModule
         if (_runtime.ParryWindowActive)
         {
             log_debug($"Parry window active at impact for {format_actor_slot((byte)slotIndex)}. {timingTag}");
-            resolve_successful_parry(slotIndex, target, "impact_poll");
+            resolve_successful_parry(slotIndex, target, source);
             return;
         }
 

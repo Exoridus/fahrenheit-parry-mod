@@ -45,12 +45,14 @@ public unsafe sealed partial class ParryModule : FhModule
     private delegate float MapShow2DLayerRetFloat(Fahrenheit.Atel.AtelBasicWorker* work, nint* storage, Fahrenheit.Atel.AtelStack* stack);
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate int NeedShowJapanLogo();
-    // Community-confirmed Phase 0 spike signature for pass-through diagnostics.
-    // param_1 is likely a battler/target slot index.
+    // Community-confirmed signature: int __cdecl MsSetDamage(byte param_1, int param_2, int param_3)
+    // param_1 = attacker battler slot
+    // param_2 = target party slot (>= 0) for the actual damage call, or -5 for setup/finalization
+    // param_3 = 0 for setup/target calls, 0x400 (1024) for finalization (triggers MsAfterDamageProcess)
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate int MsSetDamageProbe(byte param_1, int param_2, int param_3);
     // Community-confirmed signature for MsCalcDamage (March 2026 Discord findings).
-    // Pointer params use nint — probe does not dereference them.
+    // Pointer params use nint — hook does not dereference them.
     // p11 = hit count per target.
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate int MsCalcDamageProbe(
@@ -301,8 +303,6 @@ public unsafe sealed partial class ParryModule : FhModule
     private ImFontPtr _overlayFont;
     private bool _overlayFontsInitialized;
     private bool _overlayFontWarningIssued;
-    private uint _battleSceneRevision;
-    private ulong _lastBattleSceneRefreshFrame;
     private readonly FhMethodHandle<FhFfx.FhCall.MsExeInputCue> _hMsExeInputCue;
     private readonly FhMethodHandle<MsSetDamageProbe> _hMsSetDamage;
     private readonly FhMethodHandle<MsCalcDamageProbe> _hMsCalcDamage;

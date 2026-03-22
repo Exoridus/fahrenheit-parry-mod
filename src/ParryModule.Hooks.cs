@@ -49,14 +49,37 @@ public unsafe sealed partial class ParryModule
     }
 
     /// <summary>
-    ///     Experimental Phase 0 spike: pass-through hook on MsSetDamage using the
-    ///     confirmed int __cdecl MsSetDamage(byte param_1, int param_2, int param_3) signature.
-    ///     Logs parameter values and return value for signature validation.
-    ///     Does NOT modify any damage values or affect gameplay behavior.
+    ///     Active hook on MsSetDamage (int __cdecl MsSetDamage(byte param_1, int param_2, int param_3)).
+    ///
+    ///     Call semantics confirmed from session log analysis (2026-03-22):
+    ///       param_1 = attacker battler slot
+    ///       param_2 = target party slot (>= 0) for the damage-to-party call;
+    ///                 -5 for setup (p3=0) and finalization (p3=0x400) calls
+    ///       param_3 = 0 for setup/target calls; 0x400 for finalization (triggers MsAfterDamageProcess)
+    ///
+    ///     When the parry window is active and param_2 identifies the party target, the impact
+    ///     is handled immediately via on_impact_detected: damage is zeroed before p3=0x400
+    ///     finalization can apply it to chr->ram.hp. The polling path (monitor_damage_resolves)
+    ///     handles missed-parry detection for attacks where no parry window is open.
     /// </summary>
     private int h_ms_set_damage(byte param_1, int param_2, int param_3)
     {
         int result = _hMsSetDamage.orig_fptr.Invoke(param_1, param_2, param_3);
+
+        // Active interception: p2 >= 0 is the actual damage-to-party call for a specific slot.
+        // Intercept here (before the p3=0x400 finalization) so damage is zeroed before
+        // MsAfterDamageProcess reads it. Polling detects missed parries for non-intercepted hits.
+        bool isPartyTargetCall = param_2 >= 0 && param_2 < PartyActorCapacity;
+        if (isPartyTargetCall && _optionEnabled && _runtime.ParryWindowActive
+            && param_1 == _runtime.CurrentAttackerId)
+        {
+            Chr* party = _battleAdapter.GetPlayerCharacters();
+            Chr* target = party != null ? party + param_2 : null;
+            if (target != null && target->stat_exist_flag)
+            {
+                on_impact_detected(param_2, target, "ms_set_damage");
+            }
+        }
 
         if (!_optionDebugOverlay && !_optionLogging)
             return result;
@@ -93,10 +116,10 @@ public unsafe sealed partial class ParryModule
     }
 
     /// <summary>
-    ///     Experimental probe: pass-through hook on MsCalcDamage using the
-    ///     community-confirmed 11-param signature (March 2026 Discord findings).
-    ///     Logs user_id, target_id, command_id, p11 (hit count), and return value.
-    ///     Does NOT modify any values or affect gameplay behavior.
+    ///     Pass-through diagnostic hook on MsCalcDamage using the community-confirmed
+    ///     11-param signature (March 2026 Discord findings). Fires before MsSetDamage
+    ///     for each attack. Logs user_id, target_id, command_id, p11 (hit count), and return value.
+    ///     Used for attack identification and coverage gap diagnosis (e.g., 0x80cd60 path).
     /// </summary>
     private int h_ms_calc_damage(
         int user_id, nint user_chr, int target_id, nint target_chr,
