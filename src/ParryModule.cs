@@ -49,6 +49,14 @@ public unsafe sealed partial class ParryModule : FhModule
     // param_1 is likely a battler/target slot index.
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate int MsSetDamageProbe(byte param_1, int param_2, int param_3);
+    // Community-confirmed signature for MsCalcDamage (March 2026 Discord findings).
+    // Pointer params use nint — probe does not dereference them.
+    // p11 = hit count per target.
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate int MsCalcDamageProbe(
+        int user_id, nint user_chr, int target_id, nint target_chr,
+        nint command, int command_id,
+        nint p7, nint p8, nint p9, nint p10, int p11);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate void MovieStopProg();
@@ -239,6 +247,12 @@ public unsafe sealed partial class ParryModule : FhModule
     private bool _msSetDamageLogLastParryWindowActive;
     private byte _msSetDamageLogLastAttackerId;
     private bool _msSetDamageLogLastAwaitingTurnEnd;
+    private ulong _msCalcDamageLogLastFrame;
+    private int _msCalcDamageLogLastUserId;
+    private int _msCalcDamageLogLastTargetId;
+    private int _msCalcDamageLogLastCommandId;
+    private int _msCalcDamageLogLastHitCount;
+    private int _msCalcDamageLogLastResult;
     private double _simulationClockSeconds;
     private ulong _debugFrameIndex;
     private ulong _debugBattleFrameIndex;
@@ -291,6 +305,7 @@ public unsafe sealed partial class ParryModule : FhModule
     private ulong _lastBattleSceneRefreshFrame;
     private readonly FhMethodHandle<FhFfx.FhCall.MsExeInputCue> _hMsExeInputCue;
     private readonly FhMethodHandle<MsSetDamageProbe> _hMsSetDamage;
+    private readonly FhMethodHandle<MsCalcDamageProbe> _hMsCalcDamage;
     private readonly FhMethodHandle<AtelEventSetUp> _hAtelEventSetUp;
     private readonly FhMethodHandle<NeedShowJapanLogo> _hNeedShowJapanLogo;
     private FhMethodHandle<MapShow2DLayerExec>? _hMapShow2DLayerExec;
@@ -307,6 +322,7 @@ public unsafe sealed partial class ParryModule : FhModule
     {
         _hMsExeInputCue = new FhMethodHandle<FhFfx.FhCall.MsExeInputCue>(this, "FFX.exe", FhFfx.FhCall.__addr_MsExeInputCue, h_ms_exe_input_cue);
         _hMsSetDamage = new FhMethodHandle<MsSetDamageProbe>(this, "FFX.exe", FhFfx.FhCall.__addr_MsSetDamage, h_ms_set_damage);
+        _hMsCalcDamage = new FhMethodHandle<MsCalcDamageProbe>(this, "FFX.exe", FhFfx.FhCall.__addr_MsCalcDamage, h_ms_calc_damage);
         _hAtelEventSetUp = new FhMethodHandle<AtelEventSetUp>(this, "FFX.exe", 0x472e90, h_startup_event_setup); // AtelEventSetUp — Atel scripting event dispatch; intercepted for startup skip
         _hNeedShowJapanLogo = new FhMethodHandle<NeedShowJapanLogo>(this, "FFX.exe", 0x387450, h_need_show_japan_logo); // isNeedShowJapanLogo — suppresses Japan logo display during startup skip
 
@@ -355,6 +371,15 @@ public unsafe sealed partial class ParryModule : FhModule
         catch (Exception ex)
         {
             _logger.Warning($"[Parry] Could not hook MsSetDamage (experimental spike inactive): {ex.Message}");
+        }
+
+        try
+        {
+            _hMsCalcDamage.hook();
+        }
+        catch (Exception ex)
+        {
+            _logger.Warning($"[Parry] Could not hook MsCalcDamage (hit-count probe inactive): {ex.Message}");
         }
 
         try

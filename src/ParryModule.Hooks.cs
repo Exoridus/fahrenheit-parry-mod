@@ -92,6 +92,49 @@ public unsafe sealed partial class ParryModule
         return result;
     }
 
+    /// <summary>
+    ///     Experimental probe: pass-through hook on MsCalcDamage using the
+    ///     community-confirmed 11-param signature (March 2026 Discord findings).
+    ///     Logs user_id, target_id, command_id, p11 (hit count), and return value.
+    ///     Does NOT modify any values or affect gameplay behavior.
+    /// </summary>
+    private int h_ms_calc_damage(
+        int user_id, nint user_chr, int target_id, nint target_chr,
+        nint command, int command_id,
+        nint p7, nint p8, nint p9, nint p10, int p11)
+    {
+        int result = _hMsCalcDamage.orig_fptr.Invoke(
+            user_id, user_chr, target_id, target_chr,
+            command, command_id,
+            p7, p8, p9, p10, p11);
+
+        if (!_optionDebugOverlay && !_optionLogging)
+            return result;
+
+        ulong frame = _debugFrameIndex;
+        bool sameAsLast =
+            _msCalcDamageLogLastFrame != 0
+            && _msCalcDamageLogLastUserId == user_id
+            && _msCalcDamageLogLastTargetId == target_id
+            && _msCalcDamageLogLastCommandId == command_id
+            && _msCalcDamageLogLastHitCount == p11
+            && _msCalcDamageLogLastResult == result;
+
+        if (sameAsLast && frame - _msCalcDamageLogLastFrame < 30)
+            return result;
+
+        _msCalcDamageLogLastFrame = frame;
+        _msCalcDamageLogLastUserId = user_id;
+        _msCalcDamageLogLastTargetId = target_id;
+        _msCalcDamageLogLastCommandId = command_id;
+        _msCalcDamageLogLastHitCount = p11;
+        _msCalcDamageLogLastResult = result;
+
+        log_debug($"[MsCalcDamage] f={frame} user={user_id} target={target_id} cmd={command_id} hits={p11} ret={result} cmd_ptr=0x{command:X}");
+
+        return result;
+    }
+
     private bool try_get_head_cue_snapshot(List<DebugCueSnapshot> scratch, out DebugCueSnapshot head)
     {
         scratch.Clear();
