@@ -667,7 +667,7 @@ public unsafe sealed partial class ParryModule
                 "Impact Corr", truncate_display(format_correlation_stats(), 44),
                 "Reject Top", truncate_display(format_top_correlation_reject(), 44));
             render_state_row_pair(
-                "Last Parried", _runtime.LastParriedTargetSlot >= 0 ? format_actor_slot((byte)_runtime.LastParriedTargetSlot) : "-",
+                "Last Parried", _runtime.LastParriedTargetMask != 0 ? format_party_target_mask(_runtime.LastParriedTargetMask) : "-",
                 "Parried Time", _runtime.ParriedTextRemainingSeconds > 0f ? $"{_runtime.ParriedTextRemainingSeconds:F2}s" : "0.00s");
             render_state_row_pair(
                 "Since Flush", sinceFlush.ToString(CultureInfo.InvariantCulture),
@@ -972,9 +972,8 @@ public unsafe sealed partial class ParryModule
     {
         if (!_runtime.ParryWindowActive) return "Closed";
 
-        float remainingSeconds = Math.Max(_runtime.ParryWindowRemainingSeconds, 0f);
         float elapsedSeconds = Math.Max(_runtime.ParryWindowElapsedSeconds, 0f);
-        return $"Open ({remainingSeconds:F2}s left, elapsed {elapsedSeconds:F2}s)";
+        return $"Open (lifecycle, elapsed {elapsedSeconds:F2}s)";
     }
 
     private static string format_window_type(BtlWindowType type)
@@ -1266,17 +1265,44 @@ public unsafe sealed partial class ParryModule
 
     private static Vector4? get_log_color(string message)
     {
-        if (message.StartsWith("Cue+ ", StringComparison.Ordinal)) return new Vector4(0.35f, 0.95f, 0.35f, 1f);
-        if (message.StartsWith("Cue~ ", StringComparison.Ordinal)) return new Vector4(0.35f, 0.8f, 1f, 1f);
-        if (message.StartsWith("Cue- ", StringComparison.Ordinal)) return new Vector4(0.98f, 0.7f, 0.35f, 1f);
+        // Green: parry success / HP negated / parry window open
+        if (message.Contains("Parry resolved on", StringComparison.Ordinal)) return new Vector4(0.28f, 0.95f, 0.42f, 1f);
+        if (message.Contains("HP negated on finalization", StringComparison.Ordinal)) return new Vector4(0.28f, 0.95f, 0.42f, 1f);
+        if (message.Contains("resolving parry at impact", StringComparison.Ordinal)) return new Vector4(0.28f, 0.95f, 0.42f, 1f);
+        if (message.Contains("Parry window active at impact", StringComparison.Ordinal)) return new Vector4(0.28f, 0.95f, 0.42f, 1f);
+
+        // Red: impact missed / window expired / target KO'd
+        if (message.Contains("Impact hit", StringComparison.Ordinal)) return new Vector4(0.98f, 0.4f, 0.4f, 1f);
+        if (message.Contains("outside parry window", StringComparison.Ordinal)) return new Vector4(0.98f, 0.4f, 0.4f, 1f);
+        if (message.Contains("Parry failed", StringComparison.Ordinal)) return new Vector4(0.98f, 0.4f, 0.4f, 1f);
+        if (message.Contains("expired without", StringComparison.Ordinal)) return new Vector4(0.98f, 0.4f, 0.4f, 1f);
+
+        // Yellow/amber: status block / non-parryable target / window armed but missed
+        if (message.Contains("status block", StringComparison.Ordinal)) return new Vector4(0.95f, 0.75f, 0.30f, 1f);
+        if (message.Contains("non-parryable", StringComparison.Ordinal)) return new Vector4(0.95f, 0.75f, 0.30f, 1f);
+        if (message.Contains("Berserk", StringComparison.Ordinal) && message.Contains("parry skipped", StringComparison.Ordinal)) return new Vector4(0.95f, 0.75f, 0.30f, 1f);
+        if (message.Contains("Blind", StringComparison.Ordinal) && message.Contains("parry skipped", StringComparison.Ordinal)) return new Vector4(0.95f, 0.75f, 0.30f, 1f);
+
+        // Cyan: parry window opened (armed) / cue appeared
+        if (message.Contains("Parry input armed", StringComparison.Ordinal)) return new Vector4(0.55f, 0.9f, 1f, 1f);
+        if (message.StartsWith("Cue+ ", StringComparison.Ordinal)) return new Vector4(0.55f, 0.9f, 1f, 1f);
+        if (message.StartsWith("Cue~ ", StringComparison.Ordinal)) return new Vector4(0.55f, 0.9f, 1f, 1f);
+
+        // Correlation
         if (message.StartsWith("Impact correlation matched", StringComparison.Ordinal)) return new Vector4(0.40f, 0.95f, 0.45f, 1f);
         if (message.StartsWith("Impact correlation rejected", StringComparison.Ordinal)) return new Vector4(0.98f, 0.55f, 0.35f, 1f);
         if (message.StartsWith("Impact correlation summary", StringComparison.Ordinal)) return new Vector4(0.75f, 0.85f, 1f, 1f);
-        if (message.Contains("Parry input armed", StringComparison.Ordinal)) return new Vector4(0.35f, 0.95f, 0.35f, 1f);
-        if (message.Contains("Parry resolved on impact", StringComparison.Ordinal)) return new Vector4(0.35f, 0.95f, 0.35f, 1f);
-        if (message.Contains("Parry failed", StringComparison.Ordinal)) return new Vector4(0.98f, 0.4f, 0.4f, 1f);
-        if (message.Contains("blocked", StringComparison.Ordinal)) return new Vector4(0.95f, 0.8f, 0.35f, 1f);
-        if (message.Contains("window open", StringComparison.Ordinal)) return new Vector4(0.55f, 0.9f, 1f, 1f);
+
+        // Hook impact detection
+        if (message.Contains("Hook impact:", StringComparison.Ordinal)) return new Vector4(0.28f, 0.95f, 0.42f, 1f);
+
+        // Gray/dim: routine state transitions (cue cleared, awaiting cleared, window closed)
+        if (message.StartsWith("Cue- ", StringComparison.Ordinal)) return new Vector4(0.70f, 0.70f, 0.70f, 0.9f);
+        if (message.Contains("Parry window closed", StringComparison.Ordinal)) return new Vector4(0.70f, 0.70f, 0.70f, 0.9f);
+        if (message.Contains("parry context cleared", StringComparison.Ordinal)) return new Vector4(0.70f, 0.70f, 0.70f, 0.9f);
+        if (message.Contains("Awaiting turn end cleared", StringComparison.Ordinal)) return new Vector4(0.70f, 0.70f, 0.70f, 0.9f);
+        if (message.Contains("Cue queue flushed", StringComparison.Ordinal)) return new Vector4(0.70f, 0.70f, 0.70f, 0.9f);
+
         return null;
     }
 

@@ -35,8 +35,8 @@ public unsafe sealed partial class ParryModule
 
     /// <summary>
     ///     Returns true if the target's current battle status prevents them from being parried.
-    ///     KO, Petrification, and Sleep are clear non-parryable conditions: the target cannot
-    ///     react, and the player should not be penalised for failing to parry on their behalf.
+    ///     KO, Petrification, Sleep, and Confusion are non-parryable: the target cannot react,
+    ///     and the player should not be penalised for failing to parry on their behalf.
     /// </summary>
     private static bool is_target_non_parryable(Chr* target)
     {
@@ -44,7 +44,19 @@ public unsafe sealed partial class ParryModule
         if (target->stat_death != 0) return true;                        // KO'd
         if (target->stat_stone != 0) return true;                        // Petrified
         if (target->ram.status_suffer_turns_left.sleep > 0) return true; // Sleeping
+        if (target->ram.status_suffer.HasFlag(StatusPermanentFlags.CONFUSE)) return true; // Confused
+        if (target->ram.status_suffer.HasFlag(StatusPermanentFlags.BERSERK)) return true; // Berserk
         return false;
+    }
+
+    private static string get_non_parryable_label(Chr* target)
+    {
+        if (target->stat_death != 0) return "KO";
+        if (target->stat_stone != 0) return "Petrified";
+        if (target->ram.status_suffer_turns_left.sleep > 0) return "Sleeping";
+        if (target->ram.status_suffer.HasFlag(StatusPermanentFlags.CONFUSE)) return "Confused";
+        if (target->ram.status_suffer.HasFlag(StatusPermanentFlags.BERSERK)) return "Berserk";
+        return "Status";
     }
 
     private void on_impact_detected(int slotIndex, Chr* target, string source = "impact_poll")
@@ -56,7 +68,10 @@ public unsafe sealed partial class ParryModule
 
         if (is_target_non_parryable(target))
         {
-            log_debug($"Impact on {format_actor_slot((byte)slotIndex)} skipped (target non-parryable: KO/Petrify/Sleep).");
+            string statusLabel = get_non_parryable_label(target);
+            _runtime.StatusBlockTextRemainingSeconds = ParriedTextSeconds;
+            _runtime.StatusBlockLabel = statusLabel;
+            log_debug($"Impact on {format_actor_slot((byte)slotIndex)} — {statusLabel} (status block, parry skipped).");
             return;
         }
 
@@ -106,16 +121,136 @@ public unsafe sealed partial class ParryModule
 
         mark_active_turn_missed("impact outside active parry window");
         trigger_failure_feedback();
+        _runtime.TurnImpactMissedSeen = true;
         log_debug($"Impact hit {format_actor_slot((byte)slotIndex)} outside parry window. {timingTag}");
     }
 
     private static void negate_damage_on_impact(Chr* chr)
     {
-        // Resolve-at-impact behavior: neutralize queued damage exactly when impact arrives.
+        // Clear staged display damage values. Actual HP protection is handled upstream
+        // by apply_parry_protection (IMMUNITY_HP_DAMAGE or the active test flag), which
+        // is set when the parry window opens so it covers all attack paths including
+        // Anfunkeln's internal MsCalcDamage bypass.
         chr->damage_hp = 0;
         chr->damage_mp = 0;
         chr->damage_ctb = 0;
-        chr->stat_avoid_flag = true;
+    }
+
+    /// <summary>
+    ///     Sets a native Chr flag on all targeted party members to prevent HP reduction for
+    ///     the duration of the parry window. Called when the parry window opens so the flag
+    ///     is in place before any MsCalcDamage or MsAfterDamageProcess call fires.
+    ///
+    ///     In production mode: sets IMMUNITY_HP_DAMAGE (ChrResistFlags bit 7), which is
+    ///     checked by MsCalcDamage for ALL attack paths including Anfunkeln's internal bypass.
+    ///
+    ///     In test rotation mode (_debugFlagTestEnabled): cycles through IMMUNITY_HP_DAMAGE,
+    ///     stat_avoid_flag, and stat_appear_invisible_flag one per parry attempt so their
+    ///     behaviors can be observed in a single session.
+    /// </summary>
+    private void apply_parry_protection(uint mask)
+    {
+        if (!_optionNegateDamage) return;
+
+        Chr* party = _battleAdapter.GetPlayerCharacters();
+        if (party == null) return;
+
+        _immunityActiveMask = 0;
+        _immunityPresetMask = 0;
+
+        ParryProtectionFlag flag = ParryProtectionFlag.ImmunityHp;
+        if (_debugFlagTestEnabled)
+        {
+            flag = (ParryProtectionFlag)(_debugFlagTestIndex % ParryProtectionFlagCount);
+            _debugFlagTestIndex++;
+            log_debug($"[FlagTest] Rotating to flag [{_debugFlagTestIndex - 1}]: {flag}.");
+        }
+        _immunityActiveFlag = flag;
+
+        for (int i = 0; i < PartyActorCapacity; i++)
+        {
+            uint bit = 1u << i;
+            if ((mask & bit) == 0) continue;
+            Chr* chr = party + i;
+            if (!chr->stat_exist_flag) continue;
+
+            string label = format_actor_slot((byte)i);
+            switch (flag)
+            {
+                case ParryProtectionFlag.ImmunityHp:
+                    bool wasSet = (chr->ram.special_resistances & ChrResistFlags.IMMUNITY_HP_DAMAGE) != 0;
+                    if (wasSet) _immunityPresetMask |= bit;
+                    // TEST: Disable IMMUNITY_HP_DAMAGE to test post-calc annullation
+                    // chr->ram.special_resistances |= ChrResistFlags.IMMUNITY_HP_DAMAGE;
+                    _immunityActiveMask |= bit;
+                    log_debug($"IMMUNITY_HP_DAMAGE bypassed for test on {label}{(wasSet ? " (was already set)" : "")}.");
+                    break;
+
+                case ParryProtectionFlag.AvoidFlag:
+                    chr->stat_avoid_flag = true;
+                    _immunityActiveMask |= bit;
+                    log_debug($"stat_avoid_flag set on {label}.");
+                    break;
+
+                case ParryProtectionFlag.AppearInvisible:
+                    chr->stat_appear_invisible_flag = true;
+                    _immunityActiveMask |= bit;
+                    log_debug($"stat_appear_invisible_flag set on {label}.");
+                    break;
+            }
+        }
+    }
+
+    /// <summary>
+    ///     Clears the protection flag set by apply_parry_protection. Called when the parry
+    ///     window closes (end_parry_window, clear_awaiting_turn_end). Idempotent — safe to
+    ///     call when no protection is active. Does not clear IMMUNITY_HP_DAMAGE if it was
+    ///     already set by the game before we applied it.
+    /// </summary>
+    private void clear_parry_protection()
+    {
+        if (_immunityActiveMask == 0) return;
+
+        Chr* party = _battleAdapter.GetPlayerCharacters();
+        uint mask = _immunityActiveMask;
+
+        if (party != null)
+        {
+            while (mask != 0)
+            {
+                int slot = BitOperations.TrailingZeroCount(mask);
+                mask &= mask - 1;
+                uint bit = 1u << slot;
+                Chr* chr = party + slot;
+                if (!chr->stat_exist_flag) continue;
+
+                string label = format_actor_slot((byte)slot);
+                switch (_immunityActiveFlag)
+                {
+                    case ParryProtectionFlag.ImmunityHp:
+                        // Only clear the flag if we set it — don't remove a native immunity.
+                        if ((_immunityPresetMask & bit) == 0)
+                        {
+                            chr->ram.special_resistances &= ~ChrResistFlags.IMMUNITY_HP_DAMAGE;
+                            log_debug($"IMMUNITY_HP_DAMAGE cleared on {label}.");
+                        }
+                        break;
+
+                    case ParryProtectionFlag.AvoidFlag:
+                        chr->stat_avoid_flag = false;
+                        log_debug($"stat_avoid_flag cleared on {label}.");
+                        break;
+
+                    case ParryProtectionFlag.AppearInvisible:
+                        chr->stat_appear_invisible_flag = false;
+                        log_debug($"stat_appear_invisible_flag cleared on {label}.");
+                        break;
+                }
+            }
+        }
+
+        _immunityActiveMask = 0;
+        _immunityPresetMask = 0;
     }
 
     private bool is_relevant_impact_slot(int slotIndex)
@@ -148,7 +283,10 @@ public unsafe sealed partial class ParryModule
             return false;
         }
 
-        uint partyMask = extract_party_target_mask(cue);
+        int selfExclude = is_confused_party_attacker(cue.attacker_id, attacker)
+            ? (int)cue.attacker_id
+            : -1;
+        uint partyMask = extract_party_target_mask(cue, selfExclude);
         bool actionable = partyMask != 0;
         if (!actionable)
         {
@@ -167,6 +305,16 @@ public unsafe sealed partial class ParryModule
                 !_runtime.AwaitingTurnEnd
                 || cue.attacker_id != _runtime.CurrentAttackerId
                 || cueIndex != _runtime.CurrentCueIndex;
+
+            // If the window was open for a previous attacker and a different attacker's cue
+            // is now active, close the window before setting up the new context. A window
+            // opened for E12's lingering post-hit cue must not carry over to E11's attack.
+            if (_runtime.ParryWindowActive
+                && _runtime.AwaitingTurnEnd
+                && cue.attacker_id != _runtime.CurrentAttackerId)
+            {
+                end_parry_window("attacker changed");
+            }
 
             if (_debugBattleActive && !_debugBattleSessionFirstCueSeen)
             {
@@ -251,7 +399,10 @@ public unsafe sealed partial class ParryModule
                 fallbackChr = candidateChr;
             }
 
-            if (extract_party_target_mask(candidate) != 0)
+            int selfExclude = is_confused_party_attacker(candidate.attacker_id, candidateChr)
+                ? (int)candidate.attacker_id
+                : -1;
+            if (extract_party_target_mask(candidate, selfExclude) != 0)
             {
                 cueIndex = (byte)i;
                 cue = candidate;
@@ -271,7 +422,30 @@ public unsafe sealed partial class ParryModule
         return false;
     }
 
+    /// <summary>
+    ///     Returns true if the attacker is a party member (slot &lt; PartyActorCapacity,
+    ///     stat_group == 0) who is currently confused. Such attackers are treated as enemies
+    ///     for parry purposes when hitting other party members, but self-hits are excluded.
+    /// </summary>
+    private static bool is_confused_party_attacker(byte slotIndex, Chr* chr)
+    {
+        if (chr == null) return false;
+        if (slotIndex >= PartyActorCapacity) return false;
+        if (chr->stat_group != 0) return false;
+        return chr->ram.status_suffer.HasFlag(StatusPermanentFlags.CONFUSE);
+    }
+
     private static uint extract_party_target_mask(AttackCue cue)
+    {
+        return extract_party_target_mask(cue, excludeSelfSlot: -1);
+    }
+
+    /// <summary>
+    ///     Extracts the party target mask from a cue's command list, optionally excluding
+    ///     a specific slot. Used to exclude a confused party member's self-hit from the
+    ///     parryable target set (hitting yourself while confused is not parryable).
+    /// </summary>
+    private static uint extract_party_target_mask(AttackCue cue, int excludeSelfSlot)
     {
         uint mask = 0;
         int commandCount = Math.Clamp((int)cue.command_count, 0, 4);
@@ -279,6 +453,12 @@ public unsafe sealed partial class ParryModule
         {
             ref AttackCommandInfo info = ref cue.command_list[i];
             mask |= info.targets & PlayerTargetMask;
+        }
+
+        // Exclude the attacker's own slot when a confused party member targets themselves.
+        if (excludeSelfSlot >= 0 && excludeSelfSlot < PartyActorCapacity)
+        {
+            mask &= ~(1u << excludeSelfSlot);
         }
 
         return mask;
@@ -341,16 +521,17 @@ public unsafe sealed partial class ParryModule
         _runtime.CurrentPartyTargetMask = partyMask;
         _runtime.ParryWindowActive = true;
         int spamTier = ParryDifficultyModel.ClampTierIndex(_spamController.TierIndex);
-        _runtime.ParryWindowRemainingSeconds = compute_window_seconds_for_tier(spamTier);
+        _runtime.ParryWindowRemainingSeconds = ParryWindowBackstopSeconds;
         _runtime.ParryWindowElapsedSeconds = 0f;
         _runtime.ParryWindowSucceeded = false;
         _runtime.SuccessIndicatorActive = false;
         _runtime.ParriedTextRemainingSeconds = 0f;
         _runtime.WindowOpenFrame = _debugFrameIndex;
         _runtime.WindowOpenTimestampSeconds = (float)_simulationClockSeconds;
-        _runtime.WindowDurationSecondsAtOpen = _runtime.ParryWindowRemainingSeconds;
+        _runtime.WindowDurationSecondsAtOpen = compute_window_seconds_for_tier(spamTier);
 
         mark_active_turn_open();
+        apply_parry_protection(partyMask);
         float windowMs = _runtime.ParryWindowRemainingSeconds * 1000f;
         log_debug($"Parry input armed for {format_actor_slot(cue.attacker_id)} (q{cueIndex}) for {windowMs:F0}ms [{ParryDifficultyModel.FormatName(_optionDifficulty)} T{spamTier + 1}].");
     }
@@ -387,7 +568,10 @@ public unsafe sealed partial class ParryModule
             return false;
         }
 
-        partyMask = extract_party_target_mask(cue);
+        int selfExclude = is_confused_party_attacker(cue.attacker_id, attacker)
+            ? (int)cue.attacker_id
+            : -1;
+        partyMask = extract_party_target_mask(cue, selfExclude);
         return partyMask != 0;
     }
 
@@ -425,6 +609,14 @@ public unsafe sealed partial class ParryModule
         {
             if (chr->stat_group != 0) return true;
             if (!chr->stat_exist_flag || chr->ram.hp <= 0) return slotIndex >= PartyActorCapacity;
+
+            // A confused party member attacking other party members counts as an enemy action
+            // for parry purposes. The target-side self-hit exclusion is handled separately in
+            // extract_party_target_mask_excluding_self.
+            if (slotIndex < PartyActorCapacity && chr->ram.status_suffer.HasFlag(StatusPermanentFlags.CONFUSE))
+            {
+                return true;
+            }
         }
 
         return slotIndex >= PartyActorCapacity;
@@ -435,16 +627,19 @@ public unsafe sealed partial class ParryModule
         if (_runtime.ParryWindowActive)
             log_debug($"Parry window closed for {format_actor_slot(_runtime.CurrentAttackerId)} ({reason}).");
 
+        clear_parry_protection();
         _runtime.ParryWindowActive = false;
         _runtime.ParryWindowRemainingSeconds = 0f;
         _runtime.ParryWindowElapsedSeconds = 0f;
         _runtime.ParryWindowSucceeded = false;
         _runtime.SuccessIndicatorActive = false;
+        _runtime.LastParriedTargetMask = 0;
     }
 
     private void clear_awaiting_turn_end(string reason)
     {
         _runtime.AwaitingTurnEnd = false;
+        clear_parry_protection();
         if (_runtime.ParryWindowActive)
         {
             // Turn context ended; silently cancel any lingering open window.
@@ -455,12 +650,15 @@ public unsafe sealed partial class ParryModule
 
         _runtime.ParryWindowSucceeded = false;
         _runtime.SuccessIndicatorActive = false;
+        _runtime.CurrentAttackerId = 0;
         _runtime.CurrentPartyTargetMask = 0;
+        _runtime.LastParriedTargetMask = 0;
         _runtime.CurrentCueSignature = 0;
         _runtime.CueFirstSeenFrame = 0;
         _runtime.WindowOpenFrame = 0;
         _runtime.WindowOpenTimestampSeconds = 0f;
         _runtime.WindowDurationSecondsAtOpen = 0f;
+        _runtime.TurnImpactMissedSeen = false;
         log_debug(reason);
     }
 
@@ -505,10 +703,10 @@ public unsafe sealed partial class ParryModule
         if (_runtime.ParriedTextRemainingSeconds > 0f)
         {
             _runtime.ParriedTextRemainingSeconds = MathF.Max(0f, _runtime.ParriedTextRemainingSeconds - deltaSeconds);
-            if (_runtime.ParriedTextRemainingSeconds <= 0f)
-            {
-                _runtime.LastParriedTargetSlot = -1;
-            }
+            // Do NOT clear LastParriedTargetMask here — it must survive until the
+            // finalization call (p3=0x400) restores HP. Some attacks delay finalization
+            // beyond the 1s display window (e.g. Niedermähen: ~1.27s). The mask is
+            // cleared by end_parry_window (on finalization) or clear_awaiting_turn_end.
         }
         else
         {
@@ -523,9 +721,18 @@ public unsafe sealed partial class ParryModule
         {
             _runtime.ParryMissedTextRemainingSeconds = 0f;
         }
+
+        if (_runtime.StatusBlockTextRemainingSeconds > 0f)
+        {
+            _runtime.StatusBlockTextRemainingSeconds = MathF.Max(0f, _runtime.StatusBlockTextRemainingSeconds - deltaSeconds);
+            if (_runtime.StatusBlockTextRemainingSeconds <= 0f)
+            {
+                _runtime.StatusBlockLabel = string.Empty;
+            }
+        }
     }
 
-    private void resolve_successful_parry(int slotIndex, Chr* target, string source)
+    private void resolve_successful_parry(int slotIndex, Chr* target, string source, bool closeWindow = true)
     {
         if (_optionNegateDamage)
         {
@@ -536,14 +743,22 @@ public unsafe sealed partial class ParryModule
         _runtime.SuccessIndicatorActive = true;
         _runtime.ParriedTextRemainingSeconds = ParriedTextSeconds;
         _runtime.ParryMissedTextRemainingSeconds = 0f;
-        _runtime.LastParriedTargetSlot = slotIndex;
+        _runtime.LastParriedTargetMask |= 1u << slotIndex;
 
         mark_active_turn_parried();
         log_debug($"Parry resolved on {source} for {format_actor_slot((byte)slotIndex)}.");
         apply_overdrive_boost(1u << slotIndex);
-        play_feedback_sound();
-        reset_spam_tier("success", logTransition: true);
-        end_parry_window("impact_parried");
+
+        if (BitOperations.PopCount(_runtime.LastParriedTargetMask) == 1)
+        {
+            play_feedback_sound();
+            reset_spam_tier("success", logTransition: true);
+        }
+
+        if (closeWindow)
+        {
+            end_parry_window("impact_parried");
+        }
     }
 
     private bool try_get_live_battle_context(out Btl* battle)
@@ -571,7 +786,7 @@ public unsafe sealed partial class ParryModule
             return false;
         }
 
-        if (try_get_enemy_attack_cue(out AttackCue cue, out byte cueIndex, out _))
+        if (try_get_enemy_attack_cue(out AttackCue cue, out byte cueIndex, out Chr* attacker))
         {
             if (cue.attacker_id != _runtime.CurrentAttackerId)
             {
@@ -585,7 +800,10 @@ public unsafe sealed partial class ParryModule
                 return false;
             }
 
-            uint partyMask = extract_party_target_mask(cue);
+            int selfExclude = is_confused_party_attacker(cue.attacker_id, attacker)
+                ? (int)cue.attacker_id
+                : -1;
+            uint partyMask = extract_party_target_mask(cue, selfExclude);
             if ((partyMask & _runtime.CurrentPartyTargetMask) == 0)
             {
                 reason = "Target mask mismatch";

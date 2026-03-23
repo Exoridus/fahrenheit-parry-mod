@@ -11,6 +11,7 @@ global using System.Text;
 global using System.Text.Json;
 global using System.Text.RegularExpressions;
 global using Fahrenheit;
+global using Fahrenheit.FFX;
 global using Fahrenheit.FFX.Battle;
 global using Hexa.NET.ImGui;
 global using FhFfx = Fahrenheit.FFX;

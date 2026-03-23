@@ -1,0 +1,578 @@
+I'm going to give you full context for a C# game modding project before asking questions.
+Read this carefully — it includes the architecture, current known problems, and a
+step-by-step
+reanalysis process you should follow when I ask you to investigate something.
+
+# Project Context — fahrenheit-parry-mod
+
+> **Purpose of this file:** Feed any AI assistant (Gemini, Claude, GPT, etc.) with enough context
+> to be immediately useful on this project without re-reading the entire codebase.
+> The file is intentionally written in a generalised way so the patterns and reasoning
+> transfer to other game-mod and reverse-engineering projects.
+
+---
+
+## 1. What This Project Is
+
+A **gameplay mod for Final Fantasy X (PC/HD Remaster)** that adds a real-time parry mechanic to
+turn-based combat. The mod is built on top of **Fahrenheit**, a .NET 10 modding framework that
+injects managed code into the game process at runtime.
+
+The mod is written in **C# 13, unsafe, win-x86**. All game memory is accessed via raw pointers
+through Fahrenheit's typed struct wrappers. There is no scripting layer — the mod runs inside the
+game process on every frame update.
+
+**Player-facing feature:** Press R1 at the right moment when an enemy attacks to parry it. A
+successful parry negates the damage, plays audio feedback, shows "PARRIED" overlay text, and grants
+bonus overdrive charge. A missed parry shows "MISSED". Window timing scales with a difficulty/
+anti-spam tier system.
+
+---
+
+## 2. Repository Structure (Quick Map)
+
+```
+src/                    Runtime C# source (the mod itself, 28 files ~6000 lines)
+  ParryModule.cs          Constants, enums, structs, field declarations, constructor, init
+  ParryModule.Combat.cs   Core combat logic: window management, impact detection, parry resolution
+  ParryModule.Hooks.cs    Native function hooks (MsExeInputCue, MsSetDamage, MsCalcDamage)
+  ParryModule.Overlay.cs  ImGui HUD rendering (PARRIED/MISSED text, debug overlay)
+  ParryModule.Debug.cs    Debug panel, turn timeline, cue history
+  ParryModule.SessionLogging.cs  Session log writer (debug-window.log, turn-timeline.tsv)
+  combat/                 Sub-types: difficulty model, spam controller, state machine, event source
+  data/                   Memory offset maps, memory locations, data mappings loader
+  debug/                  Turn timeline tracker
+
+resources/              Shipped art assets (parry.png, success.png, toobad.png, Banner.png)
+lang/                   Localisation (en-US.json, de-DE.json)
+mappings/runtime/       FFX command/ability name lookup bundles (~25 MB, 9 languages)
+build/                  NUKE build system (build.cmd is the entry point)
+docs/                   Contributor docs (dev-local, external-memory-offsets, style guide, etc.)
+tests/                  Validation tests
+
+.workspace/             LOCAL ONLY — development infrastructure, not shipped
+  fahrenheit/             Full Fahrenheit framework source (reference + build)
+  Discord/                Exported Discord JSON from FFX modding community servers
+  analysis/               Mined analysis artefacts (scored CSV/JSON from Discord/GitHub)
+  private-notes/          THIS DIRECTORY — research notes, findings, this file
+  research/               Reference reverse-engineering repos (FFX_TAS_Python, FFXSpeedrunMod, UnX)
+  logs/                   Runtime session logs written by the mod
+  tools/                  Dev tooling (Ghidra, DiscordChatExporter, FFXDataParser, VBFTool)
+  data/                   Processed data artefacts
+```
+
+---
+
+## 3. Key Technical Concepts
+
+### 3.1 The Game's Battle Memory Model
+
+The game exposes a `Btl*` (battle context pointer) and arrays of `Chr*` (character structs).
+Party members occupy slots 0–9; enemies occupy slots 10–19. All field access is via typed C# structs
+with `[FieldOffset]` attributes matching the native binary layout.
+
+Key fields used by the mod:
+
+| Field | Offset | Type | Meaning |
+|---|---|---|---|
+| `chr->damage_hp` | Chr+0xD34 | int | Staged display damage (visible float number), set by MsCalcDamage |
+| `chr->ram.current_hp` | Chr+0x540+0x1A4 | int | Actual current HP, reduced at finalization |
+| `chr->ram.special_resistances` | Chr+0x540+0x78 | ChrResistFlags | Bitmask of immunities |
+| `chr->stat_avoid_flag` | Chr+0x425 | bool | Causes a hit to register as "miss" |
+| `chr->stat_appear_invisible_flag` | Chr+0x423 | bool | Makes character invisible |
+| `chr->stat_exist_flag` | Chr+0xDD2 | bool | Character slot is active |
+| `chr->stat_death` | Chr+0xDCC | byte | Character is KO'd |
+| `chr->ram.status_suffer` | Chr+0x540+0xC6 | StatusPermanentFlags | Active status effects |
+| `btl->attack_cues` | Btl+offset | AttackCue[64] | Queue of pending enemy actions |
+| `btl->attack_cues_size` | Btl+offset | int | Number of active cues |
+
+### 3.2 The Damage Pipeline (Critical for Understanding the Mod)
+
+Enemy damage in FFX goes through several native functions in this order:
+
+```
+MsCalcDamage(user_id, user_chr, target_id, target_chr, command, command_id, ...)
+  → Calculates damage value, writes chr->damage_hp (display staging)
+  → Checks ChrResistFlags.IMMUNITY_HP_DAMAGE — if set, damage = 0
+
+MsSetDamage(attacker_slot, param_2, param_3)
+  → param_2 >= 0: per-target staging call (physical attacks only — magic SKIPS this)
+  → param_2 = -5, param_3 = 0: setup call (magic attacks stage damage_hp here)
+  → param_2 = -5, param_3 = 0x400: FINALIZATION — calls MsAfterDamageProcess
+      → MsAfterDamageProcess reads internal buffer, applies actual HP reduction to ram.current_hp
+```
+
+**Critical insight:** Magic attacks (Thunder, Blizzard, etc.) NEVER emit a `p2=target` MsSetDamage
+call. They only emit `p2=-5` calls. This means any hook that only watches `p2=target` is blind to
+all magic damage.
+
+**IMMUNITY_HP_DAMAGE** (ChrResistFlags bit 7, `chr->ram.special_resistances` at Chr+0x5B8):
+If this flag is set before MsCalcDamage runs, the damage calculation produces 0 and MsAfterDamage
+Process applies nothing. This is the native "IMMUNE" mechanism the game uses. **Setting it after
+MsCalcDamage has already run does not retroactively prevent the damage.**
+
+### 3.3 The Attack Cue System
+
+The game maintains a queue of `AttackCue` structs on `Btl->attack_cues`. Each cue has:
+- `attacker_id`: which enemy slot is acting
+- `command_count`: how many commands in this cue
+- `command_list[4]`: per-target command info (includes a `targets` bitmask)
+
+The mod polls this queue every frame to detect when an enemy attack is incoming, determine which
+party slots are targeted, and set up the parry context.
+
+### 3.4 Two-Pass Attack Pattern
+
+Many attacks in FFX have two distinct phases:
+- **First pass** (~cue registration time): instant, unparryable — used for animation setup
+- **Second pass** (50–60 frames later): the actual hit, which goes through MsCalcDamage/MsSetDamage
+
+The player's reaction window is between cue registration and the second pass.
+
+However, **some attacks** (e.g., Anfunkeln/Shinryu multi-target) have **no p2=target MsSetDamage
+call at all** in either pass. Their damage is calculated entirely inside MsCalcDamage during the
+setup call, with no per-target hook opportunity. These are called "Anfunkeln-style" in the codebase.
+
+### 3.5 The Parry Window Lifecycle
+
+```
+[Cue registered] → _runtime.AwaitingTurnEnd = true, CurrentAttackerId set
+       ↓
+[Player presses R1] → handle_parry_input_press()
+       ↓ opens window
+   ParryWindowActive = true
+   IMMUNITY_HP_DAMAGE set on all CurrentPartyTargetMask slots (apply_parry_protection)
+   ParryWindowRemainingSeconds = 10s backstop
+       ↓
+[Impact detected] — three possible detection paths:
+   A) MsCalcDamage hook fires with matching user_id + party target_id while window open
+      → resolve_successful_parry (source: "ms_calc_damage")
+   B) MsSetDamage p2=target hook fires while window open  [physical attacks only]
+      → resolve_successful_parry (source: "ms_set_damage")
+   C) Poll path: monitor_damage_resolves sees damage_hp != 0 on a party slot
+      → on_impact_detected → resolve_successful_parry (source: "impact_poll")
+       ↓
+[resolve_successful_parry] → plays sound, shows PARRIED text, boosts overdrive, sets LastParriedTargetMask
+       ↓
+[Finalization: MsSetDamage p2=-5, p3=0x400]
+   If LastParriedTargetMask != 0 → regular: end_parry_window("finalization_complete")
+   If LastParriedTargetMask == 0 and NOT TurnImpactMissedSeen → Anfunkeln path: resolve now
+   If LastParriedTargetMask == 0 and TurnImpactMissedSeen → skip (false positive guard)
+       ↓
+[end_parry_window] → clears IMMUNITY_HP_DAMAGE (clear_parry_protection), resets all window state
+       ↓
+[clear_awaiting_turn_end] → clears all turn context when cue list empties
+```
+
+---
+
+## 4. Current State (as of 2026-03-23)
+
+### 4.1 What Works
+
+- Physical attack parries via MsSetDamage p2=target hook — instant feedback ✓
+- Magic attack parries via poll path (when window pre-armed before impact) — correct timing ✓
+- AoE multi-target parry via `LastParriedTargetMask` bitmask — all slots handled ✓
+- Attacker-changed window close — prevents carry-over between back-to-back enemies ✓
+- Anti-spam tier escalation (difficulty increases if player spams R1) ✓
+- Backstop timer (10s failsafe window close) ✓
+- Pre-arm on cue detection (if R1 already held when cue appears) ✓
+- Session logging with debug-window.log and turn-timeline.tsv ✓
+- Overlay HUD rendering (PARRIED/MISSED/status block text) ✓
+
+### 4.2 Known Open Problems
+
+**A) IMMUNITY_HP_DAMAGE timing gap for magic attacks:**
+MsCalcDamage fires 30–40 frames before the player can react and press R1. By the time the window
+opens, MsCalcDamage has already run and damage_hp is already staged. IMMUNITY_HP_DAMAGE set at
+window-open cannot retroactively prevent the already-calculated damage. Result: for magic attacks
+where the player reacts to the visual hit (not pre-armed), the damage_hp staging happened before
+the window existed.
+
+The poll path (`monitor_damage_resolves`) sees damage_hp != 0 at MsCalcDamage time. If the window
+isn't open yet, this becomes a Missed. If the player then presses R1, they get the window open but
+no new damage event fires → the Anfunkeln fallback at finalization would previously give a false
+PARRIED. This is now guarded by `TurnImpactMissedSeen`.
+
+**B) Anfunkeln HP negation incomplete:**
+For true Anfunkeln-style attacks, IMMUNITY_HP_DAMAGE only works if the window is open BEFORE the
+internal MsCalcDamage fires (during the setup call). If the player pre-arms R1, it works. If they
+react after seeing the attack start, the internal MsCalcDamage has already run with damage values.
+There is no hook-level mechanism to intercept MsAfterDamageProcess directly with a post-hoc HP
+restore (the snapshot/restore approach was removed as too fragile).
+
+**C) "IMMUNE" floating text:**
+Setting IMMUNITY_HP_DAMAGE may cause the game's native "IMMUNE" text to appear alongside the mod's
+"PARRIED" overlay. Not yet confirmed visually whether STAT_VISIBLE_EFF or another flag suppresses it.
+
+### 4.3 Recent Regression History
+
+Several approaches to damage negation were tried in sequence. Understanding the regression chain
+is important for not re-introducing already-discarded approaches:
+
+| Approach | Problem |
+|---|---|
+| Poll + stat_avoid_flag only | Worked for feedback, no actual HP negation |
+| Snapshot/restore at MsSetDamage p2=target | Only worked for physical; magic has no p2=target |
+| IMMUNITY_HP_DAMAGE at window open | Kills poll path (damage_hp stays 0 after immunity blocks calc); Anfunkeln fallback fires for everything |
+| MsCalcDamage resolve (current) | Fires too early for player-reactive R1 (window not open yet at calc time) |
+| TurnImpactMissedSeen guard (current) | Fixes false PARRIED but doesn't solve timing for Anfunkeln HP negation |
+
+The **pre-arm path** (R1 held when cue registers) remains the most reliable path for all attack
+types. When pre-armed, MsCalcDamage fires with the window already open → IMMUNITY_HP_DAMAGE is
+set → no damage → MsCalcDamage hook resolves the parry immediately.
+
+---
+
+## 5. Runtime State Machine
+
+`ParryRuntimeState` (a plain struct, zeroed on init) tracks all transient combat state:
+
+```csharp
+bool  ParryWindowActive          // Window is currently open
+byte  CurrentAttackerId          // Enemy slot of the current attacker
+byte  CurrentCueIndex            // Queue slot of the current cue
+uint  CurrentPartyTargetMask     // Bitmask of party slots targeted by current attack
+uint  CurrentCueSignature        // Hash of current cue's command list (change detection)
+float ParryWindowRemainingSeconds // Backstop countdown
+bool  AwaitingTurnEnd            // Turn context is active (cue seen, not yet resolved)
+bool  ParryWindowSucceeded       // Parry was successful this window
+bool  SuccessIndicatorActive     // Visual success state
+uint  LastParriedTargetMask      // Bitmask of slots that have been resolved as parried
+bool  TurnImpactMissedSeen       // An impact was detected this turn with window closed
+float ParriedTextRemainingSeconds
+float ParryMissedTextRemainingSeconds
+float StatusBlockTextRemainingSeconds
+string StatusBlockLabel
+ulong CueFirstSeenFrame
+ulong WindowOpenFrame
+float WindowOpenTimestampSeconds
+float WindowDurationSecondsAtOpen
+// ... correlation tracking fields
+```
+
+State resets:
+- `end_parry_window(reason)` → clears window state + IMMUNITY flags, keeps turn context
+- `clear_awaiting_turn_end(reason)` → clears full turn context including TurnImpactMissedSeen
+
+---
+
+## 6. The Damage Negation Flag System
+
+When the parry window opens, `apply_parry_protection(partyMask)` sets a Chr flag on all targeted
+party members. In production mode this is `IMMUNITY_HP_DAMAGE`. A debug test-rotation mode cycles
+through three flags:
+
+```
+ParryProtectionFlag.ImmunityHp      → chr->ram.special_resistances |= ChrResistFlags.IMMUNITY_HP_DAMAGE
+ParryProtectionFlag.AvoidFlag       → chr->stat_avoid_flag = true
+ParryProtectionFlag.AppearInvisible → chr->stat_appear_invisible_flag = true
+```
+
+The flag is tracked in `_immunityActiveMask` (which slots we set) and `_immunityPresetMask`
+(which slots had the flag before us, so we don't incorrectly clear a native immunity).
+
+`clear_parry_protection()` reverses only what we set. Called from `end_parry_window` and
+`clear_awaiting_turn_end`.
+
+---
+
+## 7. Hooks Active
+
+| Hook | Native function | Purpose |
+|---|---|---|
+| `h_ms_exe_input_cue` | `MsExeInputCue` | Tracks when attack cues are dispatched/consumed |
+| `h_ms_set_damage` | `MsSetDamage` | Parry resolve for physical (p2=target), finalization handling |
+| `h_ms_calc_damage` | `MsCalcDamage` | Parry resolve for ALL attack types when window pre-armed |
+
+---
+
+## 8. Workspace Assets Available for Research
+
+The `.workspace/` directory contains significant reverse-engineering resources. These are
+**local-only** and not shipped with the mod. An AI assistant should know they exist and where
+to look.
+
+### 8.1 Fahrenheit Framework Source (`.workspace/fahrenheit/`)
+
+The full source of the Fahrenheit modding framework is cloned here. Key locations:
+
+- `core/fh/FFX/Battle/chr.cs` — Full `Chr` struct layout with all field offsets
+- `core/fh/FFX/Battle/btl.cs` — Full `Btl` battle context struct
+- `core/fh/FFX/status.cs` — `ChrResistFlags`, `StatusPermanentFlags`, `StatusTemporalFlags` enums
+- `core/fh/FFX/FhCall.cs` — Named function address constants (`__addr_MsSetDamage`, etc.)
+- `core/fh/` — All other typed struct wrappers for game memory
+
+### 8.2 Discord Export (`.workspace/Discord/`)
+
+48 JSON files exported from two FFX modding Discord servers:
+- `Cid's Salvage Ship` — primary FFX modding technical server
+- `Blitzball Haters Club Headquarters` — secondary community
+
+58,990 messages scanned. High-value findings are pre-extracted into:
+- `.workspace/analysis/discord_top_scored.csv` — Top-scored messages by pointer/hook keyword density
+- `.workspace/analysis/discord_messages_compact.csv` — All messages normalised (one row per message)
+- `.workspace/analysis/discord_recheck_hits.csv` — Recheck pass with stricter keywords
+- `.workspace/private-notes/discord-export-findings.md` — Human-curated summary of findings
+
+### 8.3 Research Repositories (`.workspace/research/`)
+
+| Repo | Value | Key Files |
+|---|---|---|
+| `FFX_TAS_Python` | High | `memory/main.py` — offset/pointer cross-check, battle/RNG state automation |
+| `FFXSpeedrunMod` | High | `MemoryLocations.cs` — large static offset map, deep pointers, encounter/state flags |
+| `ffx-x-2-hd-external-file-loader` | Medium | `hook.cpp` — VBF file redirection patterns |
+| `UnX` | Medium | `hook.cpp` — injection/compatibility patterns |
+
+### 8.4 Data Pipeline (`.workspace/data/`)
+
+- `FFXDataParser/` — Extracts command/ability names from game data files
+- `VBFTool/` — VBF archive extraction
+
+### 8.5 Session Logs (`.workspace/logs/` and game directory)
+
+Runtime logs are written to `C:\Games\Final Fantasy X-X2 - HD Remaster\fahrenheit\logs\fhparry\`.
+Each session gets its own timestamped subdirectory:
+
+```
+session_YYYYMMDD_HHmmss/
+  debug-window.log      — Frame-by-frame debug events (ring buffer of last 500 entries)
+  turn-timeline.tsv     — Structured turn/event log with columns:
+                          Time, Frame, Event, RowId, Turn, Actor, Action, Targets,
+                          Parryable, Parry, Lifecycle, Queue, Attacker, Command,
+                          CommandMeta, Message
+  startup-probe.tsv     — Startup probe events (only in probe mode)
+```
+
+Hook telemetry is appended inline:
+- `[MsSetDamage] f=<frame> p1=<attacker> p2=<target|-5> p3=<0|0x400> ret=<result> parry=<bool> atk=<id> await=<bool>`
+- `[MsCalcDamage] f=<frame> user=<id> target=<id> cmd=<id> hits=<n> ret=<result> cmd_ptr=0x<addr>`
+
+---
+
+## 9. Build and Deploy Workflow
+
+```
+.\build.cmd lint        # Fast compile-only check (no tests)
+.\build.cmd verify      # Build + tests
+.\build.cmd build       # Build mod (produces bin/Debug/net10.0/win-x86/fhparry.dll)
+.\build.cmd deploy      # Copy built artefacts to game mod directory
+.\build.cmd start       # Launch the game
+```
+
+Direct build alternative (faster for iteration):
+```
+dotnet build Fahrenheit.Mods.Parry.csproj --no-incremental
+```
+
+The game mod directory is: `C:\Games\Final Fantasy X-X2 - HD Remaster\fahrenheit\mods\fhparry\`
+
+---
+
+## 10. Design Constraints and Principles
+
+1. **No scripting layer.** Everything runs as compiled managed code inside the game process.
+2. **Pointer-first, Fahrenheit-second.** Use typed Fahrenheit struct wrappers when possible.
+   Custom raw offsets go into `ExternalMemoryOffsetMap*` classes, never scattered in gameplay code.
+3. **Deterministic, minimal surface.** The mod touches only what it needs to. No experimental
+   code in active runtime paths.
+4. **Staged offset promotion.** Uncertain offsets live in `MemoryCandidates`. Validated offsets
+   graduate to production `MemoryRegistry` entries.
+5. **Session logs as ground truth.** All timing and sequencing questions should be answered from
+   logs first, then from code. Logs include exact frame numbers.
+
+---
+
+## 11. Reanalysis Process for AI Assistants
+
+Use this process when given this file and asked to understand or extend the project.
+Follow the steps in order. Each step tells you what to read, what to extract, and what to verify.
+
+> **Why this process exists:** The codebase is split across ~30 files. `.workspace/` contains
+> large datasets. Jumping straight to code without the right context produces wrong answers.
+> This process ensures you build an accurate mental model before proposing changes.
+
+---
+
+### Step 1 — Establish Ground Truth from Logs
+
+Read the **most recent session log** before reading any code.
+Logs are at: `C:\Games\Final Fantasy X-X2 - HD Remaster\fahrenheit\logs\fhparry\`
+Find the most recent `session_*/debug-window.log`.
+
+Extract:
+- Which resolve source fired last: `ms_calc_damage`, `ms_set_damage`, `impact_poll`, or `anfunkeln_final`
+- Whether `TurnImpactMissedSeen` guard triggered (`"turn already missed"` in log)
+- Frame numbers for: cue registered → window open → MsCalcDamage → MsSetDamage → poll detect → resolve → finalization
+- Whether `IMMUNITY_HP_DAMAGE set` / `IMMUNITY_HP_DAMAGE cleared` appear correctly paired
+- Any `Parry resolved on <source>` entries — what source and what target slot
+
+**What to verify:** Frame delta between MsCalcDamage and window open. If MsCalcDamage fires
+>10 frames before window open, the `ms_calc_damage` resolve path is dead for that attack pattern.
+
+---
+
+### Step 2 — Read the Runtime State Struct
+
+Read `src/ParryModule.cs` lines 173–240 (the `ParryRuntimeState` struct and the options fields).
+
+Extract every field name and its semantic meaning. This struct is the central shared state — every
+combat decision reads from or writes to it. You cannot reason about the control flow without knowing
+what state each step leaves behind.
+
+---
+
+### Step 3 — Read the Three Hook Methods
+
+Read `src/ParryModule.Hooks.cs` in full (≈290 lines).
+
+For each hook, extract:
+- When it fires in the native call sequence
+- What conditions gate the resolve path
+- What it writes to `_runtime`
+- What it calls on `resolve_successful_parry`
+- What early-return paths exist
+
+Cross-check: does the hook check `_runtime.ParryWindowActive`? If so, any attack where MsCalcDamage
+fires before window-open is a gap in that hook's coverage.
+
+---
+
+### Step 4 — Read the Combat Resolution Methods
+
+Read `src/ParryModule.Combat.cs` focusing on these methods (use line search, not sequential read):
+
+- `monitor_damage_resolves()` — the poll path
+- `on_impact_detected()` — central dispatch: is it a parry or a miss?
+- `resolve_successful_parry()` — what it does on success
+- `handle_parry_input_press()` — what happens when R1 is pressed
+- `end_parry_window()` — what is cleaned up
+- `clear_awaiting_turn_end()` — full turn reset
+- `apply_parry_protection()` / `clear_parry_protection()` — flag management
+
+Map the full event chain: R1 press → protection set → impact → resolve → finalization → cleanup.
+Note every field written at each step.
+
+---
+
+### Step 5 — Check the Attack Cue Monitor
+
+In `src/ParryModule.Combat.cs`, read `monitor_attack_cues()`.
+
+This method runs every frame and is responsible for:
+- Detecting new enemy actions
+- Setting `CurrentAttackerId`, `CurrentCueIndex`, `CurrentPartyTargetMask`
+- Closing the window when the attacker changes
+- Emitting dispatch started/consumed events
+
+Verify: when does `AwaitingTurnEnd` get set vs. cleared? Does it correctly handle
+the transition from one cue to the next without creating stale context?
+
+---
+
+### Step 6 — Consult the Fahrenheit Struct Definitions
+
+For any question about native game memory layout, go to:
+`.workspace/fahrenheit/core/fh/FFX/Battle/chr.cs` — Chr struct
+`.workspace/fahrenheit/core/fh/FFX/Battle/btl.cs` — Btl struct
+`.workspace/fahrenheit/core/fh/FFX/status.cs` — ChrResistFlags, StatusPermanentFlags
+`.workspace/fahrenheit/core/fh/FFX/FhCall.cs` — Named hook addresses
+
+Do not guess offsets. They are precisely defined in these files with `[FieldOffset]` attributes.
+
+---
+
+### Step 7 — Cross-Check Against Discord Findings
+
+For any offset, function name, or game behaviour you are uncertain about:
+
+1. Read `.workspace/private-notes/discord-export-findings.md` (curated summary)
+2. Grep `.workspace/analysis/discord_messages_compact.csv` for the term
+3. Read the raw Discord JSON file identified by the `SourceFile` column if needed
+
+Discord is the best source for: function naming conventions, community-confirmed hook signatures,
+undocumented field semantics, and "what does this flag actually do" questions.
+
+---
+
+### Step 8 — Check Research Repos for Offset Validation
+
+For any offset you want to validate independently:
+
+- `grep -r "0x<hex>" .workspace/research/FFXSpeedrunMod/` — large static offset map
+- `grep -r "0x<hex>" .workspace/research/FFX_TAS_Python/` — memory automation helpers
+
+If an offset appears in both FFX_TAS_Python and FFXSpeedrunMod, treat it as high-confidence.
+If it appears in only one, treat as medium. Discord-only = low confidence.
+
+---
+
+### Step 9 — Formulate Changes Against the State Machine
+
+Before writing any code, write out the full event sequence your change affects:
+
+```
+[Trigger] → [State before] → [What your change does] → [State after] → [Cleanup path]
+```
+
+Verify:
+- Does every code path that can open the window also call `apply_parry_protection`?
+- Does every code path that closes the window call `clear_parry_protection`?
+- Is `TurnImpactMissedSeen` set in all genuine-miss paths and cleared in `clear_awaiting_turn_end`?
+- Does your change have a safe fallback if the native function signature is different from expected?
+
+---
+
+### Step 10 — Build and Read the Next Log
+
+After any change:
+```
+dotnet build Fahrenheit.Mods.Parry.csproj --no-incremental
+.\build.cmd deploy
+```
+
+Run the game, trigger the scenario you changed, then read the new session log.
+Verify the expected source string appears in `Parry resolved on <source>` entries.
+Verify frame deltas match expectations.
+
+Do not iterate on code without reading the log. The log is always the fastest way to determine
+whether a change had the intended effect.
+
+---
+
+## 12. Generalised Lessons (Applicable Beyond This Project)
+
+These are patterns that emerged from this project's development history. They apply broadly to
+game modding, reverse-engineering, and hook-based runtime patching.
+
+**Timing before hooks:** Any hook that checks a runtime condition (e.g., "is window open?") can
+only see what is true at the moment the hook fires. If the condition becomes true after the hook,
+the hook is dead for that scenario. Always determine the exact frame order of native calls vs.
+player input vs. state changes before designing a hook-based solution.
+
+**Display vs. actual state:** Games often separate staged/display values from applied values.
+A field like `damage_hp` (what the floating number shows) is not the same as `current_hp`
+(the actual HP bar). Hooks on display-staging events fire at a different time than the actual
+state change. Identify which field you actually need to intercept.
+
+**Flag-based immunity is pre-calc, not post-calc:** Native immunity flags (like IMMUNITY_HP_DAMAGE)
+are checked during damage calculation. Setting them after the calculation has run does nothing. If
+you cannot set the flag before the calculation, you need a post-hoc correction (snapshot/restore).
+
+**Poll paths and immunity interactions:** If a native immunity zeroes out a display-staging field
+(damage_hp → 0), any poll path checking "is damage staged?" becomes blind. Setting immunity
+preemptively kills the poll path. This creates a coupling between the protection mechanism and the
+detection mechanism — design them together.
+
+**Multi-path fallbacks need ordering guards:** When you have multiple resolve paths (hook A, hook B,
+finalization fallback), ensure they are mutually exclusive or ordered. Without guards, a fallback
+path can fire for scenarios it was not designed for (e.g., "Anfunkeln fallback" firing for regular
+missed attacks when the player opens the window after impact).
+
+**Logs are cheaper than another iteration:** Every code change that is not verified in logs costs
+at least two more iterations. Read the log before writing the next fix.
+
+---
+
+Confirm you've read this and summarise what the current open problems are before we
+continue.

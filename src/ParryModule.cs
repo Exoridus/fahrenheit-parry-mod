@@ -14,6 +14,7 @@ public unsafe sealed partial class ParryModule : FhModule
     private const float ParriedTextSeconds = 1.0f;
     private const float ParryMissedTextSeconds = 1.0f;
     private const float OverdriveBoostPercent = 0.05f;
+    private const float ParryWindowBackstopSeconds = 10f;
     private const int DebugLogRingCapacity = 500;
     private const int CueHistoryRingCapacity = 64;
     private const int DebugTurnRowCapacity = 500;
@@ -90,6 +91,14 @@ public unsafe sealed partial class ParryModule : FhModule
         Medium,
         High
     }
+
+    /// <summary>
+    ///     Controls which native Chr flag is used to prevent HP reduction during a parry.
+    ///     ImmunityHp is the production mode. AvoidFlag and AppearInvisible are test rotation
+    ///     modes for observing alternative flag behaviors in a single session.
+    /// </summary>
+    private enum ParryProtectionFlag { ImmunityHp = 0, AvoidFlag = 1, AppearInvisible = 2 }
+    private const int ParryProtectionFlagCount = 3;
 
     private readonly struct ResolvedCommandInfo
     {
@@ -186,7 +195,7 @@ public unsafe sealed partial class ParryModule : FhModule
         public bool AttackCueClampWarned;
         public float ParriedTextRemainingSeconds;
         public float ParryMissedTextRemainingSeconds;
-        public int LastParriedTargetSlot;
+        public uint LastParriedTargetMask;
         public ulong LastDispatchConsumedFrame;
         public byte LastDispatchConsumedAttackerId;
         public byte LastDispatchConsumedQueueIndex;
@@ -197,10 +206,21 @@ public unsafe sealed partial class ParryModule : FhModule
         public float WindowOpenTimestampSeconds;
         public float WindowDurationSecondsAtOpen;
 
+        // Set when an impact is detected for this turn but the parry window was not open.
+        // Prevents the Anfunkeln finalization fallback from resolving as PARRIED when the
+        // player opens the window after damage was already dealt and the poll missed it.
+        public bool TurnImpactMissedSeen;
+
+        // Status-block display: shown where "Parried" would appear when a hit is silently
+        // skipped because the target's battle status prevents them from being parried.
+        public float StatusBlockTextRemainingSeconds;
+        public string StatusBlockLabel;
+
         public static ParryRuntimeState CreateDefault() => new()
         {
-            LastParriedTargetSlot = -1,
-            LastDispatchConsumedQueueIndex = 0xFF
+            LastParriedTargetMask = 0,
+            LastDispatchConsumedQueueIndex = 0xFF,
+            StatusBlockLabel = string.Empty
         };
     }
 
@@ -222,6 +242,11 @@ public unsafe sealed partial class ParryModule : FhModule
 #endif
     private ParryDifficulty _optionDifficulty = ParryDifficulty.Normal;
     private readonly bool[] _damageEventActive = new bool[PartyActorCapacity];
+    private uint _immunityActiveMask;   // party slot bits where we have an active protection flag set
+    private uint _immunityPresetMask;   // party slot bits where IMMUNITY_HP_DAMAGE was already set before us (must not clear)
+    private ParryProtectionFlag _immunityActiveFlag = ParryProtectionFlag.ImmunityHp;
+    private bool _debugFlagTestEnabled = false;
+    private int  _debugFlagTestIndex   = 0;
     private ParryRuntimeState _runtime = ParryRuntimeState.CreateDefault();
     private readonly List<DebugLogEntry> _debugLog = new(DebugLogRingCapacity);
     private readonly List<DebugCueSnapshot> _debugCueSnapshots = new(MaxAttackCueScan);
@@ -453,14 +478,21 @@ public unsafe sealed partial class ParryModule : FhModule
 
         if (_runtime.ParryWindowActive)
         {
+            // Window stays open until the attack resolves (cue clears via clear_awaiting_turn_end
+            // or damage lands via on_impact_detected). Track elapsed time for telemetry only.
             _runtime.ParryWindowElapsedSeconds += deltaSeconds;
-            _runtime.ParryWindowRemainingSeconds = MathF.Max(0f, _runtime.ParryWindowRemainingSeconds - deltaSeconds);
+
+            _runtime.ParryWindowRemainingSeconds -= deltaSeconds;
             if (_runtime.ParryWindowRemainingSeconds <= 0f)
             {
-                end_parry_window("input_window_expired");
+                end_parry_window("backstop_expired");
             }
         }
-        else if (_runtime.AwaitingTurnEnd && !hasEnemyCue)
+
+        // Cue-cleared cleanup must run regardless of window state. If the cue disappears while
+        // the window is still open (e.g., attack animation completed without a damage event),
+        // clear_awaiting_turn_end also closes the window to prevent it staying open permanently.
+        if (_runtime.AwaitingTurnEnd && !hasEnemyCue)
         {
             clear_awaiting_turn_end("Awaiting turn end cleared after no-cue update.");
         }
@@ -509,7 +541,9 @@ public unsafe sealed partial class ParryModule : FhModule
         {
             _runtime.ParriedTextRemainingSeconds = 0f;
             _runtime.ParryMissedTextRemainingSeconds = 0f;
-            _runtime.LastParriedTargetSlot = -1;
+            _runtime.StatusBlockTextRemainingSeconds = 0f;
+            _runtime.StatusBlockLabel = string.Empty;
+            _runtime.LastParriedTargetMask = 0;
         }
 
         if (clearDamageFlags)
@@ -555,6 +589,7 @@ public unsafe sealed partial class ParryModule : FhModule
         _runtime.ParryWindowElapsedSeconds = MathF.Max(0f, _runtime.ParryWindowElapsedSeconds);
         _runtime.ParriedTextRemainingSeconds = MathF.Max(0f, _runtime.ParriedTextRemainingSeconds);
         _runtime.ParryMissedTextRemainingSeconds = MathF.Max(0f, _runtime.ParryMissedTextRemainingSeconds);
+        _runtime.StatusBlockTextRemainingSeconds = MathF.Max(0f, _runtime.StatusBlockTextRemainingSeconds);
 
         if (!_runtime.ParryWindowActive && (_runtime.ParryWindowRemainingSeconds > 0f || _runtime.ParryWindowElapsedSeconds > 0f))
         {

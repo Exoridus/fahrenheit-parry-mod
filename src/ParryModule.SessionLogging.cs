@@ -101,6 +101,27 @@ public unsafe sealed partial class ParryModule
         }
     }
 
+    /// <summary>
+    ///     Writes a hook telemetry line directly to the session debug log file without
+    ///     adding it to the overlay ring buffer. Used for high-frequency hook data
+    ///     (MsSetDamage, MsCalcDamage) that is valuable for post-session analysis but
+    ///     would drown out actionable messages in the real-time debug overlay.
+    /// </summary>
+    private void write_session_hook_entry(string message)
+    {
+        if (_sessionLogDisabled || _sessionDebugLogWriter == null) return;
+
+        try
+        {
+            string time = format_simulation_clock(_simulationClockSeconds);
+            _sessionDebugLogWriter.WriteLine($"[{time} F{_debugFrameIndex:D7}] {message}");
+        }
+        catch (Exception ex)
+        {
+            disable_session_logging($"hook write failed: {ex.Message}");
+        }
+    }
+
     private void write_session_timeline_event(in TurnTimelineEvent evt)
     {
         if (_sessionLogDisabled || _sessionTimelineLogWriter == null) return;

@@ -10,6 +10,7 @@ public unsafe sealed partial class ParryModule
     private static readonly Vector4 StateTextOpenColor = new(1.0f, 1.0f, 1.0f, 1.0f);
     private static readonly Vector4 StateTextSucceededColor = new(0.28f, 0.92f, 0.42f, 1.0f);
     private static readonly Vector4 StateTextMissedColor = new(0.96f, 0.34f, 0.34f, 1.0f);
+    private static readonly Vector4 StateTextStatusBlockColor = new(0.95f, 0.75f, 0.30f, 1.0f);
     private static readonly Vector4 StateBackgroundColor = new(0f, 0f, 0f, 0.45f);
     private const ulong OverlayProjectionRetryFrames = 120;
 
@@ -92,6 +93,11 @@ public unsafe sealed partial class ParryModule
             return ("Succeeded" + tierLine, StateTextSucceededColor);
         }
 
+        if (_runtime.StatusBlockTextRemainingSeconds > 0f && !string.IsNullOrEmpty(_runtime.StatusBlockLabel))
+        {
+            return (_runtime.StatusBlockLabel + tierLine, StateTextStatusBlockColor);
+        }
+
         if (_runtime.ParryMissedTextRemainingSeconds > 0f)
         {
             return ("Missed" + tierLine, StateTextMissedColor);
@@ -141,7 +147,7 @@ public unsafe sealed partial class ParryModule
     private void render_parry_window_overlay()
     {
         if (_runtime.ParriedTextRemainingSeconds <= 0f) return;
-        if (_runtime.LastParriedTargetSlot < 0) return;
+        if (_runtime.LastParriedTargetMask == 0) return;
 
         Vector2 displaySize = ImGui.GetIO().DisplaySize;
         if (displaySize.X <= 1f || displaySize.Y <= 1f) return;
@@ -158,27 +164,34 @@ public unsafe sealed partial class ParryModule
             ImGui.PopFont();
         }
 
-        Vector2 anchor = try_get_parried_overlay_anchor((byte)_runtime.LastParriedTargetSlot, displaySize)
-            ?? get_fallback_overlay_anchor(_runtime.LastParriedTargetSlot, displaySize);
-
-        Vector2 textPos = anchor - textSize * 0.5f;
         ImDrawListPtr draw = ImGui.GetForegroundDrawList();
-
-        Vector2 pad = new(14f, 10f);
-        Vector2 bgMin = textPos - pad;
-        Vector2 bgMax = textPos + textSize + pad;
-        draw.AddRectFilled(bgMin, bgMax, ImGui.ColorConvertFloat4ToU32(OverlayBackgroundColor), 8f);
-
         Vector2 shadowOffset = new(2f, 2f);
-        if (hasCustomFont)
+        Vector2 pad = new(14f, 10f);
+
+        uint mask = _runtime.LastParriedTargetMask;
+        while (mask != 0)
         {
-            draw.AddText(customFont, OverlayFontSizePx, textPos + shadowOffset, ImGui.ColorConvertFloat4ToU32(OverlayShadowColor), "PARRIED");
-            draw.AddText(customFont, OverlayFontSizePx, textPos, ImGui.ColorConvertFloat4ToU32(OverlayTextColor), "PARRIED");
-        }
-        else
-        {
-            draw.AddText(textPos + shadowOffset, ImGui.ColorConvertFloat4ToU32(OverlayShadowColor), "PARRIED");
-            draw.AddText(textPos, ImGui.ColorConvertFloat4ToU32(OverlayTextColor), "PARRIED");
+            int slot = BitOperations.TrailingZeroCount(mask);
+            mask &= mask - 1;
+
+            Vector2 anchor = try_get_parried_overlay_anchor((byte)slot, displaySize)
+                ?? get_fallback_overlay_anchor(slot, displaySize);
+
+            Vector2 textPos = anchor - textSize * 0.5f;
+            Vector2 bgMin = textPos - pad;
+            Vector2 bgMax = textPos + textSize + pad;
+            draw.AddRectFilled(bgMin, bgMax, ImGui.ColorConvertFloat4ToU32(OverlayBackgroundColor), 8f);
+
+            if (hasCustomFont)
+            {
+                draw.AddText(customFont, OverlayFontSizePx, textPos + shadowOffset, ImGui.ColorConvertFloat4ToU32(OverlayShadowColor), "PARRIED");
+                draw.AddText(customFont, OverlayFontSizePx, textPos, ImGui.ColorConvertFloat4ToU32(OverlayTextColor), "PARRIED");
+            }
+            else
+            {
+                draw.AddText(textPos + shadowOffset, ImGui.ColorConvertFloat4ToU32(OverlayShadowColor), "PARRIED");
+                draw.AddText(textPos, ImGui.ColorConvertFloat4ToU32(OverlayTextColor), "PARRIED");
+            }
         }
     }
 
