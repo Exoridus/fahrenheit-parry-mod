@@ -51,10 +51,9 @@ public unsafe sealed partial class ParryModule
     ///     The p3=0x400 finalization call is where MsAfterDamageProcess reads from its internal buffer
     ///     and applies the actual HP reduction.
     ///
-    ///     Damage negation strategy: IMMUNITY_HP_DAMAGE (ChrResistFlags bit 7) is set on targeted
-    ///     characters when the parry window opens (see apply_parry_protection). This is checked by
-    ///     MsCalcDamage for ALL attack paths, including Anfunkeln's internal bypass which has no
-    ///     p2=target call. The flag is cleared when the parry window closes (clear_parry_protection).
+    ///     Damage negation strategy: h_ms_calc_damage returns 0 (skipping the native call) when
+    ///     a party slot has an active parry expiry timestamp. This prevents damage from entering
+    ///     the native pipeline for ALL attack paths.
     ///
     ///     Anfunkeln-style attacks (no p2=target call): the hook never fires for a per-target resolve.
     ///     These are detected at finalization (p3=0x400) when the parry window is still open but
@@ -88,35 +87,12 @@ public unsafe sealed partial class ParryModule
 
         // p3=0x400 finalization: if the parry window is still open, close it and handle
         // Anfunkeln-style attacks (no p2=target calls) that need feedback resolved here.
-        // IMMUNITY_HP_DAMAGE (set at window open) has already prevented the HP reduction
-        // natively — no snapshot/restore needed.
+        // h_ms_calc_damage return-0 has already prevented the HP reduction — no
+        // snapshot/restore needed.
         bool isFinalizationWithParry = param_3 == 0x400
             && _optionEnabled
             && _runtime.ParryWindowActive
             && param_1 == _runtime.CurrentAttackerId;
-
-        // TEST: clear damage_hp before finalization to see if MsAfterDamageProcess uses it to determine HP loss
-        if (isFinalizationWithParry)
-        {
-            Chr* party = _battleAdapter.GetPlayerCharacters();
-            if (party != null)
-            {
-                uint mask = _runtime.CurrentPartyTargetMask;
-                while (mask != 0)
-                {
-                    int slot = BitOperations.TrailingZeroCount(mask);
-                    mask &= mask - 1;
-                    Chr* candidate = party + slot;
-                    if (candidate->stat_exist_flag)
-                    {
-                        candidate->damage_hp = 0;
-                        candidate->damage_mp = 0;
-                        candidate->damage_ctb = 0;
-                        log_debug($"[Test] Zeroed damage on {format_actor_slot((byte)slot)} before finalization.");
-                    }
-                }
-            }
-        }
 
         int result = _hMsSetDamage.orig_fptr.Invoke(param_1, param_2, param_3);
 
@@ -140,8 +116,8 @@ public unsafe sealed partial class ParryModule
         {
             if (_runtime.LastParriedTargetMask != 0)
             {
-                // Regular attack: each target was already resolved by the p2=target hook path.
-                // IMMUNITY_HP_DAMAGE prevented the HP reduction natively — nothing to restore.
+                // Regular attack: each target was already resolved by the h_ms_calc_damage
+                // return-0 path or the p2=target hook path — nothing to restore.
                 log_debug($"Finalization complete for {format_actor_slot(param_1)} ({BitOperations.PopCount(_runtime.LastParriedTargetMask)} target(s) parried).");
                 end_parry_window("finalization_complete");
             }
@@ -156,8 +132,8 @@ public unsafe sealed partial class ParryModule
             else
             {
                 // Anfunkeln-style: no p2=target calls fired and no prior missed detection.
-                // IMMUNITY_HP_DAMAGE blocked the internal MsCalcDamage. Resolve parry
-                // feedback now for all targeted party members.
+                // h_ms_calc_damage return-0 blocked the damage. Resolve parry feedback
+                // now for all targeted party members.
                 Chr* party = _battleAdapter.GetPlayerCharacters();
                 if (party != null)
                 {
@@ -225,54 +201,59 @@ public unsafe sealed partial class ParryModule
     /// <summary>
     ///     Active hook on MsCalcDamage (community-confirmed 11-param signature, March 2026).
     ///     Fires with per-target info for ALL attack types — physical and magic alike — making
-    ///     it the authoritative impact detection point for parry resolution.
+    ///     it the authoritative damage interception point for parry resolution.
     ///
-    ///     Magic attacks (Thunder, Blitzra, etc.) never emit a MsSetDamage p2=target call, so
-    ///     the MsSetDamage hook-based resolve path is dead for them. MsCalcDamage is the only
-    ///     hook that reliably fires per-target for both physical and magic in the same frame as
-    ///     impact, ensuring feedback (sound, PARRIED text, overdrive) fires at calculation time
-    ///     rather than at the end of the casting animation.
+    ///     When a party slot has an active parry expiry timestamp, the hook skips the native
+    ///     MsCalcDamage call entirely and returns 0 — preventing damage from entering the
+    ///     native pipeline. This replaces the previous IMMUNITY_HP_DAMAGE flag mechanism.
     ///
-    ///     The MsSetDamage p2=target path remains as a secondary path for physical attacks and
-    ///     is harmless for magic (it never fires). The Anfunkeln finalization fallback remains
-    ///     as a safety net for attacks that bypass MsCalcDamage entirely.
+    ///     The check MUST happen BEFORE orig is called. If orig runs, damage enters the
+    ///     native buffer and cannot be recalled.
+    ///
+    ///     The MsSetDamage p2=target path remains as a secondary feedback path for physical
+    ///     attacks. The Anfunkeln finalization fallback remains as a safety net for attacks
+    ///     that bypass MsCalcDamage entirely.
     /// </summary>
     private int h_ms_calc_damage(
         int user_id, nint user_chr, int target_id, nint target_chr,
         nint command, int command_id,
         nint p7, nint p8, nint p9, nint p10, int p11)
     {
-        int result = _hMsCalcDamage.orig_fptr.Invoke(
-            user_id, user_chr, target_id, target_chr,
-            command, command_id,
-            p7, p8, p9, p10, p11);
-
-        // Resolve the parry at MsCalcDamage time (before MsSetDamage staging).
-        // Gated on LastParriedTargetMask so a multi-hit attack does not double-resolve
-        // the same slot, and so the MsSetDamage p2=target path (physical attacks) does
-        // not re-resolve a slot already handled here.
+        // Check parry expiry BEFORE calling orig — skipping orig is how we prevent damage
+        // from entering the native buffer. Once orig runs, damage cannot be recalled.
         bool isPartyTarget = target_id >= 0 && target_id < PartyActorCapacity;
-        bool isActiveParry = isPartyTarget
+        bool shouldIntercept = isPartyTarget
             && _optionEnabled
-            && _runtime.ParryWindowActive
-            && user_id == _runtime.CurrentAttackerId
-            && (_runtime.CurrentPartyTargetMask & (1u << target_id)) != 0
-            && (_runtime.LastParriedTargetMask  & (1u << target_id)) == 0;
+            && DateTime.UtcNow.Ticks < _parryExpiry[target_id]
+            && (_runtime.LastParriedTargetMask & (1u << target_id)) == 0;
 
-        if (isActiveParry)
+        if (shouldIntercept)
         {
             Chr* party = _battleAdapter.GetPlayerCharacters();
             Chr* candidate = party != null ? party + target_id : null;
             if (candidate != null && candidate->stat_exist_flag && !is_target_non_parryable(candidate))
             {
-                log_debug($"MsCalcDamage parry: {format_actor_slot((byte)user_id)} -> {format_actor_slot((byte)target_id)} (cmd={command_id}).");
+                log_debug($"MsCalcDamage intercepted: {format_actor_slot((byte)user_id)} -> {format_actor_slot((byte)target_id)} (cmd={command_id}), returning 0.");
                 resolve_successful_parry(target_id, candidate, "ms_calc_damage", closeWindow: false);
                 _damageEventActive[target_id] = true;
+                log_hook_ms_calc_damage(user_id, target_id, command_id, p11, 0, command);
+                return 0;
             }
         }
 
+        int result = _hMsCalcDamage.orig_fptr.Invoke(
+            user_id, user_chr, target_id, target_chr,
+            command, command_id,
+            p7, p8, p9, p10, p11);
+
+        log_hook_ms_calc_damage(user_id, target_id, command_id, p11, result, command);
+        return result;
+    }
+
+    private void log_hook_ms_calc_damage(int user_id, int target_id, int command_id, int p11, int result, nint command)
+    {
         if (!_optionLogging)
-            return result;
+            return;
 
         ulong frame = _debugFrameIndex;
         bool sameAsLast =
@@ -284,7 +265,7 @@ public unsafe sealed partial class ParryModule
             && _msCalcDamageLogLastResult == result;
 
         if (sameAsLast && frame - _msCalcDamageLogLastFrame < 30)
-            return result;
+            return;
 
         _msCalcDamageLogLastFrame = frame;
         _msCalcDamageLogLastUserId = user_id;
@@ -295,6 +276,26 @@ public unsafe sealed partial class ParryModule
 
         // Route to session file log only — high-frequency hook data clutters the overlay.
         write_session_hook_entry($"[MsCalcDamage] f={frame} user={user_id} target={target_id} cmd={command_id} hits={p11} ret={result} cmd_ptr=0x{command:X}");
+    }
+
+    private void h_ms_damage_set_motion(byte target, int p2, int p3)
+    {
+        _hMsDamageSetMotion.orig_fptr.Invoke(target, p2, p3);
+
+        if (_optionLogging)
+        {
+            write_session_hook_entry($"[MsDamageSetMotion] f={_debugFrameIndex} target={target} p2={p2} p3={p3} parry={_runtime.ParryWindowActive}");
+        }
+    }
+
+    private int h_dmg_calc_armored(Chr* user, Chr* target, Command* command, int p4, int* p5, int damage)
+    {
+        int result = _hDmgCalcArmored.orig_fptr.Invoke(user, target, command, p4, p5, damage);
+
+        if (_optionLogging)
+        {
+            write_session_hook_entry($"[DmgCalcArmored] f={_debugFrameIndex} damage_in={damage} damage_out={result} parry={_runtime.ParryWindowActive}");
+        }
 
         return result;
     }

@@ -128,129 +128,11 @@ public unsafe sealed partial class ParryModule
     private static void negate_damage_on_impact(Chr* chr)
     {
         // Clear staged display damage values. Actual HP protection is handled upstream
-        // by apply_parry_protection (IMMUNITY_HP_DAMAGE or the active test flag), which
-        // is set when the parry window opens so it covers all attack paths including
-        // Anfunkeln's internal MsCalcDamage bypass.
+        // by h_ms_calc_damage returning 0 when a party slot has an active parry expiry
+        // timestamp, preventing damage from entering the native pipeline.
         chr->damage_hp = 0;
         chr->damage_mp = 0;
         chr->damage_ctb = 0;
-    }
-
-    /// <summary>
-    ///     Sets a native Chr flag on all targeted party members to prevent HP reduction for
-    ///     the duration of the parry window. Called when the parry window opens so the flag
-    ///     is in place before any MsCalcDamage or MsAfterDamageProcess call fires.
-    ///
-    ///     In production mode: sets IMMUNITY_HP_DAMAGE (ChrResistFlags bit 7), which is
-    ///     checked by MsCalcDamage for ALL attack paths including Anfunkeln's internal bypass.
-    ///
-    ///     In test rotation mode (_debugFlagTestEnabled): cycles through IMMUNITY_HP_DAMAGE,
-    ///     stat_avoid_flag, and stat_appear_invisible_flag one per parry attempt so their
-    ///     behaviors can be observed in a single session.
-    /// </summary>
-    private void apply_parry_protection(uint mask)
-    {
-        if (!_optionNegateDamage) return;
-
-        Chr* party = _battleAdapter.GetPlayerCharacters();
-        if (party == null) return;
-
-        _immunityActiveMask = 0;
-        _immunityPresetMask = 0;
-
-        ParryProtectionFlag flag = ParryProtectionFlag.ImmunityHp;
-        if (_debugFlagTestEnabled)
-        {
-            flag = (ParryProtectionFlag)(_debugFlagTestIndex % ParryProtectionFlagCount);
-            _debugFlagTestIndex++;
-            log_debug($"[FlagTest] Rotating to flag [{_debugFlagTestIndex - 1}]: {flag}.");
-        }
-        _immunityActiveFlag = flag;
-
-        for (int i = 0; i < PartyActorCapacity; i++)
-        {
-            uint bit = 1u << i;
-            if ((mask & bit) == 0) continue;
-            Chr* chr = party + i;
-            if (!chr->stat_exist_flag) continue;
-
-            string label = format_actor_slot((byte)i);
-            switch (flag)
-            {
-                case ParryProtectionFlag.ImmunityHp:
-                    bool wasSet = (chr->ram.special_resistances & ChrResistFlags.IMMUNITY_HP_DAMAGE) != 0;
-                    if (wasSet) _immunityPresetMask |= bit;
-                    // TEST: Disable IMMUNITY_HP_DAMAGE to test post-calc annullation
-                    // chr->ram.special_resistances |= ChrResistFlags.IMMUNITY_HP_DAMAGE;
-                    _immunityActiveMask |= bit;
-                    log_debug($"IMMUNITY_HP_DAMAGE bypassed for test on {label}{(wasSet ? " (was already set)" : "")}.");
-                    break;
-
-                case ParryProtectionFlag.AvoidFlag:
-                    chr->stat_avoid_flag = true;
-                    _immunityActiveMask |= bit;
-                    log_debug($"stat_avoid_flag set on {label}.");
-                    break;
-
-                case ParryProtectionFlag.AppearInvisible:
-                    chr->stat_appear_invisible_flag = true;
-                    _immunityActiveMask |= bit;
-                    log_debug($"stat_appear_invisible_flag set on {label}.");
-                    break;
-            }
-        }
-    }
-
-    /// <summary>
-    ///     Clears the protection flag set by apply_parry_protection. Called when the parry
-    ///     window closes (end_parry_window, clear_awaiting_turn_end). Idempotent — safe to
-    ///     call when no protection is active. Does not clear IMMUNITY_HP_DAMAGE if it was
-    ///     already set by the game before we applied it.
-    /// </summary>
-    private void clear_parry_protection()
-    {
-        if (_immunityActiveMask == 0) return;
-
-        Chr* party = _battleAdapter.GetPlayerCharacters();
-        uint mask = _immunityActiveMask;
-
-        if (party != null)
-        {
-            while (mask != 0)
-            {
-                int slot = BitOperations.TrailingZeroCount(mask);
-                mask &= mask - 1;
-                uint bit = 1u << slot;
-                Chr* chr = party + slot;
-                if (!chr->stat_exist_flag) continue;
-
-                string label = format_actor_slot((byte)slot);
-                switch (_immunityActiveFlag)
-                {
-                    case ParryProtectionFlag.ImmunityHp:
-                        // Only clear the flag if we set it — don't remove a native immunity.
-                        if ((_immunityPresetMask & bit) == 0)
-                        {
-                            chr->ram.special_resistances &= ~ChrResistFlags.IMMUNITY_HP_DAMAGE;
-                            log_debug($"IMMUNITY_HP_DAMAGE cleared on {label}.");
-                        }
-                        break;
-
-                    case ParryProtectionFlag.AvoidFlag:
-                        chr->stat_avoid_flag = false;
-                        log_debug($"stat_avoid_flag cleared on {label}.");
-                        break;
-
-                    case ParryProtectionFlag.AppearInvisible:
-                        chr->stat_appear_invisible_flag = false;
-                        log_debug($"stat_appear_invisible_flag cleared on {label}.");
-                        break;
-                }
-            }
-        }
-
-        _immunityActiveMask = 0;
-        _immunityPresetMask = 0;
     }
 
     private bool is_relevant_impact_slot(int slotIndex)
@@ -531,7 +413,15 @@ public unsafe sealed partial class ParryModule
         _runtime.WindowDurationSecondsAtOpen = compute_window_seconds_for_tier(spamTier);
 
         mark_active_turn_open();
-        apply_parry_protection(partyMask);
+
+        float windowDurationSeconds = compute_window_seconds_for_tier(spamTier);
+        long expiry = DateTime.UtcNow.Ticks + (long)(windowDurationSeconds * TimeSpan.TicksPerSecond);
+        for (int i = 0; i < PartyActorCapacity; i++)
+        {
+            if ((partyMask & (1u << i)) != 0)
+                _parryExpiry[i] = expiry;
+        }
+
         float windowMs = _runtime.ParryWindowRemainingSeconds * 1000f;
         log_debug($"Parry input armed for {format_actor_slot(cue.attacker_id)} (q{cueIndex}) for {windowMs:F0}ms [{ParryDifficultyModel.FormatName(_optionDifficulty)} T{spamTier + 1}].");
     }
@@ -627,7 +517,7 @@ public unsafe sealed partial class ParryModule
         if (_runtime.ParryWindowActive)
             log_debug($"Parry window closed for {format_actor_slot(_runtime.CurrentAttackerId)} ({reason}).");
 
-        clear_parry_protection();
+        Array.Clear(_parryExpiry);
         _runtime.ParryWindowActive = false;
         _runtime.ParryWindowRemainingSeconds = 0f;
         _runtime.ParryWindowElapsedSeconds = 0f;
@@ -639,7 +529,7 @@ public unsafe sealed partial class ParryModule
     private void clear_awaiting_turn_end(string reason)
     {
         _runtime.AwaitingTurnEnd = false;
-        clear_parry_protection();
+        Array.Clear(_parryExpiry);
         if (_runtime.ParryWindowActive)
         {
             // Turn context ended; silently cancel any lingering open window.

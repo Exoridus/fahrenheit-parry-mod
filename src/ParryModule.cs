@@ -52,6 +52,9 @@ public unsafe sealed partial class ParryModule : FhModule
     // param_3 = 0 for setup/target calls, 0x400 (1024) for finalization (triggers MsAfterDamageProcess)
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate int MsSetDamageProbe(byte param_1, int param_2, int param_3);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate void MsDamageSetMotionProbe(byte target, int p2, int p3);
     // Community-confirmed signature for MsCalcDamage (March 2026 Discord findings).
     // Pointer params use nint — hook does not dereference them.
     // p11 = hit count per target.
@@ -60,6 +63,9 @@ public unsafe sealed partial class ParryModule : FhModule
         int user_id, nint user_chr, int target_id, nint target_chr,
         nint command, int command_id,
         nint p7, nint p8, nint p9, nint p10, int p11);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate int DmgCalcArmoredProbe(Chr* user, Chr* target, Command* command, int p4, int* p5, int damage);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate void MovieStopProg();
@@ -92,13 +98,6 @@ public unsafe sealed partial class ParryModule : FhModule
         High
     }
 
-    /// <summary>
-    ///     Controls which native Chr flag is used to prevent HP reduction during a parry.
-    ///     ImmunityHp is the production mode. AvoidFlag and AppearInvisible are test rotation
-    ///     modes for observing alternative flag behaviors in a single session.
-    /// </summary>
-    private enum ParryProtectionFlag { ImmunityHp = 0, AvoidFlag = 1, AppearInvisible = 2 }
-    private const int ParryProtectionFlagCount = 3;
 
     private readonly struct ResolvedCommandInfo
     {
@@ -242,11 +241,7 @@ public unsafe sealed partial class ParryModule : FhModule
 #endif
     private ParryDifficulty _optionDifficulty = ParryDifficulty.Normal;
     private readonly bool[] _damageEventActive = new bool[PartyActorCapacity];
-    private uint _immunityActiveMask;   // party slot bits where we have an active protection flag set
-    private uint _immunityPresetMask;   // party slot bits where IMMUNITY_HP_DAMAGE was already set before us (must not clear)
-    private ParryProtectionFlag _immunityActiveFlag = ParryProtectionFlag.ImmunityHp;
-    private bool _debugFlagTestEnabled = false;
-    private int  _debugFlagTestIndex   = 0;
+    private readonly long[] _parryExpiry = new long[PartyActorCapacity];
     private ParryRuntimeState _runtime = ParryRuntimeState.CreateDefault();
     private readonly List<DebugLogEntry> _debugLog = new(DebugLogRingCapacity);
     private readonly List<DebugCueSnapshot> _debugCueSnapshots = new(MaxAttackCueScan);
@@ -330,7 +325,9 @@ public unsafe sealed partial class ParryModule : FhModule
     private bool _overlayFontWarningIssued;
     private readonly FhMethodHandle<FhFfx.FhCall.MsExeInputCue> _hMsExeInputCue;
     private readonly FhMethodHandle<MsSetDamageProbe> _hMsSetDamage;
+    private readonly FhMethodHandle<MsDamageSetMotionProbe> _hMsDamageSetMotion;
     private readonly FhMethodHandle<MsCalcDamageProbe> _hMsCalcDamage;
+    private readonly FhMethodHandle<DmgCalcArmoredProbe> _hDmgCalcArmored;
     private readonly FhMethodHandle<AtelEventSetUp> _hAtelEventSetUp;
     private readonly FhMethodHandle<NeedShowJapanLogo> _hNeedShowJapanLogo;
     private FhMethodHandle<MapShow2DLayerExec>? _hMapShow2DLayerExec;
@@ -347,7 +344,9 @@ public unsafe sealed partial class ParryModule : FhModule
     {
         _hMsExeInputCue = new FhMethodHandle<FhFfx.FhCall.MsExeInputCue>(this, "FFX.exe", FhFfx.FhCall.__addr_MsExeInputCue, h_ms_exe_input_cue);
         _hMsSetDamage = new FhMethodHandle<MsSetDamageProbe>(this, "FFX.exe", FhFfx.FhCall.__addr_MsSetDamage, h_ms_set_damage);
+        _hMsDamageSetMotion = new FhMethodHandle<MsDamageSetMotionProbe>(this, "FFX.exe", 0x38CAE0, h_ms_damage_set_motion);
         _hMsCalcDamage = new FhMethodHandle<MsCalcDamageProbe>(this, "FFX.exe", FhFfx.FhCall.__addr_MsCalcDamage, h_ms_calc_damage);
+        _hDmgCalcArmored = new FhMethodHandle<DmgCalcArmoredProbe>(this, "FFX.exe", 0x38AB80, h_dmg_calc_armored);
         _hAtelEventSetUp = new FhMethodHandle<AtelEventSetUp>(this, "FFX.exe", 0x472e90, h_startup_event_setup); // AtelEventSetUp — Atel scripting event dispatch; intercepted for startup skip
         _hNeedShowJapanLogo = new FhMethodHandle<NeedShowJapanLogo>(this, "FFX.exe", 0x387450, h_need_show_japan_logo); // isNeedShowJapanLogo — suppresses Japan logo display during startup skip
 
@@ -396,6 +395,24 @@ public unsafe sealed partial class ParryModule : FhModule
         catch (Exception ex)
         {
             _logger.Warning($"[Parry] Could not hook MsSetDamage (experimental spike inactive): {ex.Message}");
+        }
+
+        try
+        {
+            _hMsDamageSetMotion.hook();
+        }
+        catch (Exception ex)
+        {
+            _logger.Warning($"[Parry] Could not hook MsDamageSetMotion: {ex.Message}");
+        }
+
+        try
+        {
+            _hDmgCalcArmored.hook();
+        }
+        catch (Exception ex)
+        {
+            _logger.Warning($"[Parry] Could not hook DmgCalcArmored Probe: {ex.Message}");
         }
 
         try
