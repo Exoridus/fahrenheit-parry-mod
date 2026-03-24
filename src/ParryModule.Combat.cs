@@ -24,7 +24,7 @@ public unsafe sealed partial class ParryModule
             if (hasDamage && !_damageEventActive[i])
             {
                 _damageEventActive[i] = true;
-                on_impact_detected(i, chr);
+                write_session_hook_entry($"[PollDetect] slot={i} damage_hp staged, hooks are authoritative");
             }
             else if (!hasDamage && _damageEventActive[i])
             {
@@ -407,6 +407,7 @@ public unsafe sealed partial class ParryModule
         _runtime.ParryWindowElapsedSeconds = 0f;
         _runtime.ParryWindowSucceeded = false;
         _runtime.SuccessIndicatorActive = false;
+        _runtime.TurnImpactMissedSeen = false;
         _runtime.ParriedTextRemainingSeconds = 0f;
         _runtime.WindowOpenFrame = _debugFrameIndex;
         _runtime.WindowOpenTimestampSeconds = (float)_simulationClockSeconds;
