@@ -31,6 +31,50 @@ internal sealed partial class BuildScript
     Target DiscordSync => _ => _
         .Executes(DiscordSyncCore);
 
+    Target FixDiscordExtensions => _ => _
+        .Executes(() =>
+        {
+            var outputRoot = ResolvePath(DiscordOutDir);
+            if (!Directory.Exists(outputRoot))
+            {
+                Log.Warning($"Discord output directory not found: {outputRoot}");
+                return;
+            }
+
+            Log.Information($"Fixing Discord asset extensions in {outputRoot}...");
+
+            var jsonFiles = Directory.GetFiles(outputRoot, "*.json", SearchOption.AllDirectories)
+                .Where(path => !IsDiscordHousekeepingPath(outputRoot, path) && !IsDiscordAssetPath(outputRoot, path))
+                .ToList();
+
+            var assetDirs = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var jsonPath in jsonFiles)
+            {
+                var assetDir = GetDiscordAssetDirectory(jsonPath);
+                if (Directory.Exists(assetDir))
+                {
+                    assetDirs.Add(assetDir);
+                }
+            }
+
+            foreach (var guildDir in Directory.GetDirectories(outputRoot, "* (*)", SearchOption.TopDirectoryOnly))
+            {
+                var mediaDir = Path.Combine(guildDir, "Media");
+                if (Directory.Exists(mediaDir))
+                {
+                    assetDirs.Add(mediaDir);
+                }
+            }
+
+            foreach (var assetDir in assetDirs)
+            {
+                FixAssetExtensionsInDirectory(outputRoot, assetDir, jsonFiles);
+            }
+
+            Log.Information("Finished fixing Discord asset extensions.");
+        });
+
     void DiscordSyncCore()
     {
         if (string.IsNullOrWhiteSpace(Guild))
@@ -67,6 +111,10 @@ internal sealed partial class BuildScript
         var unchanged = 0;
         var skipped = 0;
         var syncSucceeded = false;
+
+        var jsonFiles = Directory.GetFiles(outputRoot, "*.json", SearchOption.AllDirectories)
+            .Where(path => !IsDiscordHousekeepingPath(outputRoot, path) && !IsDiscordAssetPath(outputRoot, path))
+            .ToList();
 
         try
         {
@@ -136,6 +184,7 @@ internal sealed partial class BuildScript
                 if (string.IsNullOrWhiteSpace(finalPath))
                 {
                     finalPath = Path.Combine(outputRoot, Path.GetRelativePath(stagingRoot, stagePath));
+                    if (!jsonFiles.Contains(finalPath)) jsonFiles.Add(finalPath);
                 }
 
                 EnsureDir(Path.GetDirectoryName(finalPath) ?? string.Empty);
@@ -151,26 +200,34 @@ internal sealed partial class BuildScript
                     {
                         updated++;
                     }
-
-                    continue;
-                }
-
-                var mergeChanged = MergeDiscordExport(existingPath, stagePath, finalPath);
-                CopyStageAssets(stagePath, finalPath, replaceExisting: false);
-
-                if (mergeChanged)
-                {
-                    updated++;
                 }
                 else
                 {
-                    unchanged++;
+                    var mergeChanged = MergeDiscordExport(existingPath, stagePath, finalPath);
+                    CopyStageAssets(stagePath, finalPath, replaceExisting: false);
+
+                    if (mergeChanged)
+                    {
+                        updated++;
+                    }
+                    else
+                    {
+                        unchanged++;
+                    }
                 }
+
+                FixAssetExtensionsInDirectory(outputRoot, GetDiscordAssetDirectory(finalPath), jsonFiles);
             }
 
             syncSucceeded = true;
             Log.Information(
                 $"Discord sync finished for guild {Guild.Trim()}: {processed} targets, {created} created, {updated} updated, {unchanged} unchanged, {skipped} skipped.");
+
+            if (!string.IsNullOrWhiteSpace(settings.MediaDirectory))
+            {
+                FixAssetExtensionsInDirectory(outputRoot, settings.MediaDirectory, jsonFiles);
+            }
+
             if (!Full)
             {
                 Log.Information("Delta mode only captures new messages after the newest stored message ID. Use --full periodically to reconcile edits, deletions, and older reaction changes.");
@@ -183,6 +240,13 @@ internal sealed partial class BuildScript
                 CleanupDiscordStaging(outputRoot, stagingRoot);
             }
         }
+    }
+
+    static bool IsDiscordAssetPath(string outputRoot, string candidatePath)
+    {
+        var relativePath = Path.GetRelativePath(outputRoot, candidatePath);
+        var segments = relativePath.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
+        return segments.Any(s => s.EndsWith("_Files", StringComparison.OrdinalIgnoreCase) || s.Equals("Media", StringComparison.OrdinalIgnoreCase));
     }
 
     List<DiscordChannelTarget> ResolveDiscordTargets(string cliPath, string guildId, DiscordSyncSettings settings)
@@ -879,6 +943,145 @@ internal sealed partial class BuildScript
     }
 
     static string GetDiscordAssetDirectory(string exportPath) => exportPath + "_Files";
+
+    static void FixAssetExtensionsInDirectory(string outputRoot, string assetDir, List<string> jsonFiles)
+    {
+        if (!Directory.Exists(assetDir)) return;
+
+        var renames = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var file in Directory.GetFiles(assetDir, "*", SearchOption.AllDirectories))
+        {
+            var currentExt = Path.GetExtension(file);
+            var detectedExt = DetectDiscordExtension(file);
+
+            if (detectedExt != null && !string.Equals(currentExt, detectedExt, StringComparison.OrdinalIgnoreCase))
+            {
+                var newPath = string.IsNullOrEmpty(currentExt)
+                    ? file + detectedExt
+                    : Path.ChangeExtension(file, detectedExt);
+
+                if (File.Exists(newPath))
+                {
+                    File.Delete(file);
+                }
+                else
+                {
+                    File.Move(file, newPath);
+                }
+                renames[file] = newPath;
+            }
+            else if (!string.IsNullOrEmpty(currentExt))
+            {
+                // Recovery: file already has an extension, add to renames so we can fix JSONs that weren't updated
+                var pathWithoutExt = file.Substring(0, file.Length - currentExt.Length);
+                renames[pathWithoutExt] = file;
+            }
+        }
+
+        if (renames.Count == 0) return;
+
+        Log.Information($"Checking {renames.Count} potential path updates in {jsonFiles.Count} JSON files for {Path.GetRelativePath(outputRoot, assetDir)}...");
+
+        foreach (var jsonPath in jsonFiles)
+        {
+            if (!File.Exists(jsonPath)) continue;
+
+            try
+            {
+                var jsonText = File.ReadAllText(jsonPath);
+                var json = JsonNode.Parse(jsonText);
+                if (json is null) continue;
+
+                bool changed = false;
+                UpdateJsonPaths(json, renames, ref changed);
+
+                if (changed)
+                {
+                    var options = new JsonSerializerOptions { WriteIndented = true };
+                    File.WriteAllText(jsonPath, json.ToJsonString(options) + Environment.NewLine, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+                    Log.Information($"Updated references in {Path.GetFileName(jsonPath)}.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Warning($"Failed to parse or update JSON file {jsonPath}: {ex.Message}");
+            }
+        }
+    }
+
+    static string? DetectDiscordExtension(string path)
+    {
+        try
+        {
+            if (!File.Exists(path)) return null;
+            var bytes = File.ReadAllBytes(path);
+            if (bytes.Length < 4) return null;
+
+            if (bytes.Length >= 8 && bytes[0] == 0x89 && bytes[1] == 0x50 && bytes[2] == 0x4E && bytes[3] == 0x47) return ".png";
+            if (bytes.Length >= 3 && bytes[0] == 0xFF && bytes[1] == 0xD8 && bytes[2] == 0xFF) return ".jpg";
+            if (bytes.Length >= 4 && bytes[0] == 0x47 && bytes[1] == 0x49 && bytes[2] == 0x46 && bytes[3] == 0x38) return ".gif";
+            if (bytes.Length >= 12 && bytes[0] == 0x52 && bytes[1] == 0x49 && bytes[2] == 0x46 && bytes[3] == 0x46 &&
+                bytes[8] == 0x57 && bytes[9] == 0x45 && bytes[10] == 0x42 && bytes[11] == 0x50) return ".webp";
+            if (bytes.Length >= 4 && bytes[0] == 0x25 && bytes[1] == 0x50 && bytes[2] == 0x44 && bytes[3] == 0x46) return ".pdf";
+            if (bytes.Length >= 12 && bytes[4] == 0x66 && bytes[5] == 0x74 && bytes[6] == 0x79 && bytes[7] == 0x70) return ".mp4";
+            if (bytes.Length >= 3 && bytes[0] == 0x49 && bytes[1] == 0x44 && bytes[2] == 0x33) return ".mp3";
+            if (bytes.Length >= 12 && bytes[0] == 0x52 && bytes[1] == 0x49 && bytes[2] == 0x46 && bytes[3] == 0x46 &&
+                bytes[8] == 0x57 && bytes[9] == 0x41 && bytes[10] == 0x56 && bytes[11] == 0x45) return ".wav";
+            if (bytes.Length >= 4 && bytes[0] == 0x4F && bytes[1] == 0x67 && bytes[2] == 0x67 && bytes[3] == 0x53) return ".ogg";
+
+            var text = Encoding.UTF8.GetString(bytes, 0, Math.Min(bytes.Length, 1024));
+            if (text.Contains("<!DOCTYPE html", StringComparison.OrdinalIgnoreCase) ||
+                text.Contains("<html", StringComparison.OrdinalIgnoreCase)) return ".html";
+            if (text.TrimStart().StartsWith("{") || text.TrimStart().StartsWith("[")) return ".json";
+            if (text.Contains("<?xml", StringComparison.OrdinalIgnoreCase) || text.Contains("<svg", StringComparison.OrdinalIgnoreCase)) return ".svg";
+        }
+        catch { }
+
+        return null;
+    }
+
+    static void UpdateJsonPaths(JsonNode? node, Dictionary<string, string> renames, ref bool changed)
+    {
+        if (node is JsonObject obj)
+        {
+            var keys = obj.Select(x => x.Key).ToList();
+            foreach (var key in keys)
+            {
+                var value = obj[key];
+                if (value is JsonValue val && val.TryGetValue<string>(out var str))
+                {
+                    if (renames.TryGetValue(str, out var newPath))
+                    {
+                        obj[key] = JsonValue.Create(newPath);
+                        changed = true;
+                    }
+                }
+                else if (value is not null)
+                {
+                    UpdateJsonPaths(value, renames, ref changed);
+                }
+            }
+        }
+        else if (node is JsonArray arr)
+        {
+            for (int i = 0; i < arr.Count; i++)
+            {
+                var value = arr[i];
+                if (value is JsonValue val && val.TryGetValue<string>(out var str))
+                {
+                    if (renames.TryGetValue(str, out var newPath))
+                    {
+                        arr[i] = JsonValue.Create(newPath);
+                        changed = true;
+                    }
+                }
+                else if (value is not null)
+                {
+                    UpdateJsonPaths(value, renames, ref changed);
+                }
+            }
+        }
+    }
 
     ProcessResult RunDiscordCli(string cliPath, string args, string description, string token, bool silent)
     {
