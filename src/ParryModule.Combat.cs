@@ -122,6 +122,7 @@ public unsafe sealed partial class ParryModule
         mark_active_turn_missed("impact outside active parry window");
         trigger_failure_feedback();
         _runtime.TurnImpactMissedSeen = true;
+        _runtime.TurnImpactMissedAttackerId = _runtime.CurrentAttackerId;
         log_debug($"Impact hit {format_actor_slot((byte)slotIndex)} outside parry window. {timingTag}");
     }
 
@@ -407,7 +408,8 @@ public unsafe sealed partial class ParryModule
         _runtime.ParryWindowElapsedSeconds = 0f;
         _runtime.ParryWindowSucceeded = false;
         _runtime.SuccessIndicatorActive = false;
-        _runtime.TurnImpactMissedSeen = false;
+        if (_runtime.TurnImpactMissedSeen && _runtime.TurnImpactMissedAttackerId != _runtime.CurrentAttackerId)
+            _runtime.TurnImpactMissedSeen = false;
         _runtime.ParriedTextRemainingSeconds = 0f;
         _runtime.WindowOpenFrame = _debugFrameIndex;
         _runtime.WindowOpenTimestampSeconds = (float)_simulationClockSeconds;
@@ -592,6 +594,7 @@ public unsafe sealed partial class ParryModule
         _runtime.WindowOpenTimestampSeconds = 0f;
         _runtime.WindowDurationSecondsAtOpen = 0f;
         _runtime.TurnImpactMissedSeen = false;
+        _runtime.TurnImpactMissedAttackerId = 0;
         log_debug(reason);
     }
 

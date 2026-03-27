@@ -224,6 +224,9 @@ public unsafe sealed partial class ParryModule : FhModule
         // Prevents the Anfunkeln finalization fallback from resolving as PARRIED when the
         // player opens the window after damage was already dealt and the poll missed it.
         public bool TurnImpactMissedSeen;
+        // Attacker ID recorded when TurnImpactMissedSeen was set. Used to avoid clearing
+        // the flag when the window opens for the same attacker that already dealt damage.
+        public byte TurnImpactMissedAttackerId;
 
         // Status-block display: shown where "Parried" would appear when a hit is silently
         // skipped because the target's battle status prevents them from being parried.
