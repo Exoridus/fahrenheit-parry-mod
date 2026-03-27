@@ -85,6 +85,9 @@ public unsafe sealed partial class ParryModule
             }
         }
 
+        if (isPartyTargetCall)
+            _attackTelemetry[param_2].SetDamageTargetFired = true;
+
         // p3=0x400 finalization: if the parry window is still open, close it and handle
         // Anfunkeln-style attacks (no p2=target calls) that need feedback resolved here.
         // h_ms_calc_damage return-0 has already prevented the HP reduction — no
@@ -94,7 +97,38 @@ public unsafe sealed partial class ParryModule
             && _runtime.ParryWindowActive
             && param_1 == _runtime.CurrentAttackerId;
 
+        // Telemetry: snapshot HP for all targeted party slots before finalization.
+        bool isFinalization = param_3 == 0x400;
+        if (isFinalization)
+        {
+            Chr* party = _battleAdapter.GetPlayerCharacters();
+            if (party != null)
+            {
+                uint mask = _runtime.CurrentPartyTargetMask;
+                for (int i = 0; i < PartyActorCapacity; i++)
+                {
+                    if ((mask & (1u << i)) != 0 && (party + i)->stat_exist_flag)
+                        _attackTelemetry[i].HpBeforeFinalization = (uint)(party + i)->ram.hp;
+                }
+            }
+        }
+
         int result = _hMsSetDamage.orig_fptr.Invoke(param_1, param_2, param_3);
+
+        // Telemetry: snapshot HP after finalization.
+        if (isFinalization)
+        {
+            Chr* party = _battleAdapter.GetPlayerCharacters();
+            if (party != null)
+            {
+                uint mask = _runtime.CurrentPartyTargetMask;
+                for (int i = 0; i < PartyActorCapacity; i++)
+                {
+                    if ((mask & (1u << i)) != 0 && (party + i)->stat_exist_flag)
+                        _attackTelemetry[i].HpAfterFinalization = (uint)(party + i)->ram.hp;
+                }
+            }
+        }
 
         // p2=target with active parry: resolve the parry directly from the hook.
         // This bypasses the poll-based on_impact_detected path (which may fire a frame late
@@ -110,12 +144,31 @@ public unsafe sealed partial class ParryModule
             // Mark the slot as handled so the poll path (monitor_damage_resolves) does not
             // re-detect this impact and fire a spurious "missed" or double-resolve.
             _damageEventActive[param_2] = true;
+            _parryFeedbackPending[param_2] = false;  // prevent double-resolve if MsDamageSetMotion fires after
         }
 
         if (isFinalizationWithParry)
         {
             if (_runtime.LastParriedTargetMask != 0)
             {
+                // Safety net: resolve any remaining deferred feedback that MsDamageSetMotion
+                // did not consume (e.g. magic.dll attacks where MsDamageSetMotion may not fire).
+                Chr* partyFallback = _battleAdapter.GetPlayerCharacters();
+                if (partyFallback != null)
+                {
+                    for (int i = 0; i < PartyActorCapacity; i++)
+                    {
+                        if (!_parryFeedbackPending[i]) continue;
+                        Chr* fb = partyFallback + i;
+                        if (fb->stat_exist_flag && !is_target_non_parryable(fb))
+                        {
+                            log_debug($"Finalization fallback: deferred feedback for {format_actor_slot((byte)i)}.");
+                            resolve_successful_parry(i, fb, "finalization_deferred_fallback", closeWindow: false);
+                        }
+                        _parryFeedbackPending[i] = false;
+                    }
+                }
+
                 // Regular attack: each target was already resolved by the h_ms_calc_damage
                 // return-0 path or the p2=target hook path — nothing to restore.
                 log_debug($"Finalization complete for {format_actor_slot(param_1)} ({BitOperations.PopCount(_runtime.LastParriedTargetMask)} target(s) parried).");
@@ -227,15 +280,24 @@ public unsafe sealed partial class ParryModule
             && DateTime.UtcNow.Ticks < _parryExpiry[target_id]
             && (_runtime.LastParriedTargetMask & (1u << target_id)) == 0;
 
+        if (isPartyTarget)
+        {
+            _attackTelemetry[target_id].CalcDamageFired = true;
+            if (_attackTelemetry[target_id].CommandId == 0)
+                _attackTelemetry[target_id].CommandId = command_id;
+        }
+
         if (shouldIntercept)
         {
             Chr* party = _battleAdapter.GetPlayerCharacters();
             Chr* candidate = party != null ? party + target_id : null;
             if (candidate != null && candidate->stat_exist_flag && !is_target_non_parryable(candidate))
             {
-                log_debug($"MsCalcDamage intercepted: {format_actor_slot((byte)user_id)} -> {format_actor_slot((byte)target_id)} (cmd={command_id}), returning 0.");
-                resolve_successful_parry(target_id, candidate, "ms_calc_damage", closeWindow: false);
+                _attackTelemetry[target_id].CalcDamageIntercepted = true;
+                _runtime.LastParriedTargetMask |= 1u << target_id;
+                _parryFeedbackPending[target_id] = true;
                 _damageEventActive[target_id] = true;
+                log_debug($"MsCalcDamage intercepted: {format_actor_slot((byte)user_id)} -> {format_actor_slot((byte)target_id)} (cmd={command_id}), damage blocked, feedback deferred.");
                 log_hook_ms_calc_damage(user_id, target_id, command_id, p11, 0, command);
                 return 0;
             }
@@ -281,6 +343,21 @@ public unsafe sealed partial class ParryModule
     private void h_ms_damage_set_motion(byte target, int p2, int p3)
     {
         _hMsDamageSetMotion.orig_fptr.Invoke(target, p2, p3);
+
+        if (p2 == 5 && target < PartyActorCapacity)
+            _attackTelemetry[target].SetMotionFired = true;
+
+        if (p2 == 5 && target < PartyActorCapacity && _parryFeedbackPending[target])
+        {
+            Chr* party = _battleAdapter.GetPlayerCharacters();
+            Chr* candidate = party != null ? party + target : null;
+            if (candidate != null && candidate->stat_exist_flag && !is_target_non_parryable(candidate))
+            {
+                log_debug($"Deferred feedback resolved at MsDamageSetMotion for {format_actor_slot(target)}.");
+                resolve_successful_parry(target, candidate, "ms_damage_set_motion", closeWindow: false);
+            }
+            _parryFeedbackPending[target] = false;
+        }
 
         if (_optionLogging)
         {

@@ -513,12 +513,52 @@ public unsafe sealed partial class ParryModule
         return slotIndex >= PartyActorCapacity;
     }
 
+    private void flush_attack_telemetry(string reason)
+    {
+        if (!_optionLogging) goto reset;
+
+        for (int i = 0; i < PartyActorCapacity; i++)
+        {
+            ref AttackTelemetry t = ref _attackTelemetry[i];
+            bool anyActivity = t.CalcDamageFired || t.SetMotionFired || t.SetDamageTargetFired
+                || t.HpBeforeFinalization != 0 || t.HpAfterFinalization != 0;
+            if (!anyActivity) continue;
+
+            bool hpChanged = t.HpAfterFinalization < t.HpBeforeFinalization;
+            string leakTag;
+            if (t.CalcDamageIntercepted)
+                leakTag = hpChanged ? "LEAK=YES" : "LEAK=NO";
+            else if (!t.CalcDamageFired && hpChanged)
+                leakTag = "BYPASSED";
+            else
+                leakTag = "-";
+
+            int hpDelta = (int)t.HpAfterFinalization - (int)t.HpBeforeFinalization;
+            string cmdStr = t.CommandId != 0 ? $"0x{t.CommandId:X4}" : "-";
+            write_session_hook_entry(
+                $"[AttackTelemetry] reason={reason} slot={i} cmd={cmdStr}" +
+                $" calc={(t.CalcDamageFired ? "Y" : "N")}" +
+                $" intercepted={(t.CalcDamageIntercepted ? "Y" : "N")}" +
+                $" setmotion={(t.SetMotionFired ? "Y" : "N")}" +
+                $" settarget={(t.SetDamageTargetFired ? "Y" : "N")}" +
+                $" hp_before={t.HpBeforeFinalization}" +
+                $" hp_after={t.HpAfterFinalization}" +
+                $" hp_delta={hpDelta:+#;-#;0}" +
+                $" {leakTag}");
+        }
+
+        reset:
+        Array.Clear(_attackTelemetry);
+    }
+
     private void end_parry_window(string reason)
     {
         if (_runtime.ParryWindowActive)
             log_debug($"Parry window closed for {format_actor_slot(_runtime.CurrentAttackerId)} ({reason}).");
 
+        flush_attack_telemetry(reason);
         Array.Clear(_parryExpiry);
+        Array.Clear(_parryFeedbackPending);
         _runtime.ParryWindowActive = false;
         _runtime.ParryWindowRemainingSeconds = 0f;
         _runtime.ParryWindowElapsedSeconds = 0f;
@@ -529,8 +569,10 @@ public unsafe sealed partial class ParryModule
 
     private void clear_awaiting_turn_end(string reason)
     {
+        flush_attack_telemetry(reason);
         _runtime.AwaitingTurnEnd = false;
         Array.Clear(_parryExpiry);
+        Array.Clear(_parryFeedbackPending);
         if (_runtime.ParryWindowActive)
         {
             // Turn context ended; silently cancel any lingering open window.

@@ -154,6 +154,21 @@ public unsafe sealed partial class ParryModule : FhModule
         public static ParryInputContext None => new(false, default, 0, 0);
     }
 
+    /// <summary>
+    ///     Per-slot telemetry record for one attack turn.
+    ///     Reset after flush at turn end. Written unconditionally; flush output is gated on _optionLogging.
+    /// </summary>
+    private struct AttackTelemetry
+    {
+        public bool CalcDamageFired;
+        public bool CalcDamageIntercepted;
+        public bool SetMotionFired;        // MsDamageSetMotion p2=5 (party flinch)
+        public bool SetDamageTargetFired;  // MsSetDamage p2=target
+        public uint HpBeforeFinalization;
+        public uint HpAfterFinalization;
+        public int  CommandId;
+    }
+
     private readonly struct StartupScriptPatch
     {
         public readonly int Offset;
@@ -241,7 +256,9 @@ public unsafe sealed partial class ParryModule : FhModule
 #endif
     private ParryDifficulty _optionDifficulty = ParryDifficulty.Normal;
     private readonly bool[] _damageEventActive = new bool[PartyActorCapacity];
+    private readonly bool[] _parryFeedbackPending = new bool[PartyActorCapacity];
     private readonly long[] _parryExpiry = new long[PartyActorCapacity];
+    private readonly AttackTelemetry[] _attackTelemetry = new AttackTelemetry[PartyActorCapacity];
     private ParryRuntimeState _runtime = ParryRuntimeState.CreateDefault();
     private readonly List<DebugLogEntry> _debugLog = new(DebugLogRingCapacity);
     private readonly List<DebugCueSnapshot> _debugCueSnapshots = new(MaxAttackCueScan);
