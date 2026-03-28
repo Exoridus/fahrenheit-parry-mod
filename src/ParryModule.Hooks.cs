@@ -97,6 +97,15 @@ public unsafe sealed partial class ParryModule
             && _runtime.ParryWindowActive
             && param_1 == _runtime.CurrentAttackerId;
 
+        // MagicProbe: snapshot HP before orig for per-target call.
+        uint setDamageHpBefore = 0;
+        if (isPartyTargetCall && _optionLogging)
+        {
+            Chr* probeParty = _battleAdapter.GetPlayerCharacters();
+            if (probeParty != null)
+                setDamageHpBefore = (uint)(probeParty + param_2)->ram.hp;
+        }
+
         // Telemetry: snapshot HP for all targeted party slots before finalization.
         bool isFinalization = param_3 == 0x400;
         if (isFinalization)
@@ -114,6 +123,15 @@ public unsafe sealed partial class ParryModule
         }
 
         int result = _hMsSetDamage.orig_fptr.Invoke(param_1, param_2, param_3);
+
+        // MagicProbe: emit per-target HP probe after orig.
+        if (isPartyTargetCall && _optionLogging)
+        {
+            Chr* probeParty = _battleAdapter.GetPlayerCharacters();
+            uint setDamageHpAfter = probeParty != null ? (uint)(probeParty + param_2)->ram.hp : 0;
+            int setDamageHpDelta = (int)setDamageHpAfter - (int)setDamageHpBefore;
+            write_session_hook_entry($"[MagicProbe/SetDamage] frame={_debugFrameIndex} p1={param_1} p2={param_2} p3={param_3} hp_before={setDamageHpBefore} hp_after={setDamageHpAfter} hp_delta={setDamageHpDelta}");
+        }
 
         // Telemetry: snapshot HP after finalization.
         if (isFinalization)
@@ -292,6 +310,9 @@ public unsafe sealed partial class ParryModule
                 _attackTelemetry[target_id].CommandId = command_id;
         }
 
+        Chr* targetChrPtr = isPartyTarget && target_chr != 0 ? (Chr*)target_chr : null;
+        uint calcHpBefore = targetChrPtr != null ? (uint)targetChrPtr->ram.hp : 0;
+
         if (shouldIntercept)
         {
             Chr* party = _battleAdapter.GetPlayerCharacters();
@@ -312,6 +333,13 @@ public unsafe sealed partial class ParryModule
             user_id, user_chr, target_id, target_chr,
             command, command_id,
             p7, p8, p9, p10, p11);
+
+        if (isPartyTarget && _optionLogging)
+        {
+            uint calcHpAfter = targetChrPtr != null ? (uint)targetChrPtr->ram.hp : 0;
+            int calcHpDelta = (int)calcHpAfter - (int)calcHpBefore;
+            write_session_hook_entry($"[MagicProbe/CalcDamage] frame={_debugFrameIndex} user={user_id} target={target_id} cmd=0x{command_id:X4} result={result} hp_before={calcHpBefore} hp_after={calcHpAfter} hp_delta={calcHpDelta}");
+        }
 
         log_hook_ms_calc_damage(user_id, target_id, command_id, p11, result, command);
         return result;
@@ -382,6 +410,13 @@ public unsafe sealed partial class ParryModule
         if (_optionLogging)
         {
             write_session_hook_entry($"[MsDamageSetMotion] f={_debugFrameIndex} target={target} p2={p2} p3={p3} parry={_runtime.ParryWindowActive}");
+
+            if (target < PartyActorCapacity)
+            {
+                Chr* motionParty = _battleAdapter.GetPlayerCharacters();
+                uint motionHp = motionParty != null ? (uint)(motionParty + target)->ram.hp : 0;
+                write_session_hook_entry($"[MagicProbe/SetMotion] frame={_debugFrameIndex} target={target} p2={p2} p3={p3} hp={motionHp}");
+            }
         }
     }
 
