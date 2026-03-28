@@ -375,12 +375,44 @@ public unsafe sealed partial class ParryModule
 
     private void h_ms_damage_set_motion(byte target, int p2, int p3)
     {
-        _hMsDamageSetMotion.orig_fptr.Invoke(target, p2, p3);
+        // Skip orig when a parry expiry is active and this is a damage motion (p3=1).
+        // MsDamageSetMotion orig reads damage_hp and reduces ram.hp for some attack commands
+        // (e.g. 0x4026) before our negate logic runs. Skipping orig prevents both the HP
+        // reduction and the flinch animation — correct, since a parried hit should not flinch.
+        bool targetIsParty = target < PartyActorCapacity;
+        bool parryActive   = targetIsParty
+                             && _optionEnabled
+                             && DateTime.UtcNow.Ticks < _parryExpiry[target]
+                             && p3 == 1;
+
+        if (!parryActive)
+        {
+            _hMsDamageSetMotion.orig_fptr.Invoke(target, p2, p3);
+        }
+        else
+        {
+            log_debug($"Parry suppressed flinch for {format_actor_slot(target)} (MsDamageSetMotion skipped).");
+
+            // Restore ram.hp before resolve_successful_parry -> negate_damage_on_impact zeros damage_hp.
+            // An unhooked native function between MsCalcDamage and MsDamageSetMotion reduces ram.hp
+            // by exactly damage_hp. Restoring the exact amount undoes that reduction.
+            if (_optionNegateDamage)
+            {
+                Chr* party = _battleAdapter.GetPlayerCharacters();
+                Chr* targetChr = party != null ? party + target : null;
+                if (targetChr != null && targetChr->stat_exist_flag && targetChr->damage_hp > 0)
+                {
+                    int restoredHp = targetChr->damage_hp;
+                    targetChr->ram.hp += restoredHp;
+                    log_debug($"Parry restored {restoredHp} HP for {format_actor_slot(target)} (hp now={(uint)targetChr->ram.hp}).");
+                }
+            }
+        }
 
         // p3=1 signals a damage-involved motion for party targets (confirmed from session log
         // analysis: p2=5 for standard physical attacks, p2=1 for ramming attacks — both with p3=1).
         // p3=0 calls are cosmetic/non-damage motions and must not trigger parry resolution.
-        bool isDamageMotion = p3 == 1 && target < PartyActorCapacity;
+        bool isDamageMotion = p3 == 1 && targetIsParty;
 
         if (isDamageMotion)
             _attackTelemetry[target].SetMotionFired = true;
