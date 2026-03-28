@@ -8,6 +8,26 @@ public unsafe sealed partial class ParryModule
         ulong frame = _debugFrameIndex;
         DateTime now = current_gameplay_timestamp();
 
+        // Pre-arm _parryExpiry BEFORE orig so that h_ms_calc_damage (which fires during
+        // orig) sees active timestamps and can return 0 to block damage. Without this,
+        // _parryExpiry is always 0 when MsCalcDamage runs because R1 press handling
+        // comes after cue dispatch.
+        if (hadBefore && _optionEnabled && before.IsEnemy && before.PartyMask != 0
+            && (_runtime.ParryWindowActive || FhApi.Input.r1.held))
+        {
+            int spamTier = ParryDifficultyModel.ClampTierIndex(_spamController.TierIndex);
+            float windowSeconds = compute_window_seconds_for_tier(spamTier);
+            long expiry = DateTime.UtcNow.Ticks + (long)(windowSeconds * TimeSpan.TicksPerSecond);
+            uint mask = before.PartyMask;
+            while (mask != 0)
+            {
+                int slot = BitOperations.TrailingZeroCount(mask);
+                mask &= mask - 1;
+                _parryExpiry[slot] = expiry;
+                log_debug($"Pre-arming _parryExpiry for slot {slot} before MsExeInputCue orig (cue dispatch window).");
+            }
+        }
+
         _hMsExeInputCue.orig_fptr.Invoke();
 
         bool hasAfter = try_get_head_cue_snapshot(_debugHookCueScratch, out DebugCueSnapshot after);
