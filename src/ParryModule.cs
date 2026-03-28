@@ -522,6 +522,7 @@ public unsafe sealed partial class ParryModule : FhModule
             _runtime.ParryWindowRemainingSeconds -= deltaSeconds;
             if (_runtime.ParryWindowRemainingSeconds <= 0f)
             {
+                log_debug($"Parry window expired ({format_actor_slot(_runtime.CurrentAttackerId)}, no hit).");
                 end_parry_window("backstop_expired");
             }
         }

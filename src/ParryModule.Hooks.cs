@@ -134,12 +134,19 @@ public unsafe sealed partial class ParryModule
         // This bypasses the poll-based on_impact_detected path (which may fire a frame late
         // or reject via correlation if the cue was consumed before MsSetDamage ran).
         // The hook is authoritative: the game is literally processing this damage right now.
-        if (parryTarget != null && _runtime.ParryWindowActive)
+        //
+        // Re-check LastParriedTargetMask after orig: MsDamageSetMotion can fire from within the
+        // native call and resolve this slot first (h_ms_damage_set_motion runs synchronously).
+        // If it did, the bit will already be set — skip here to avoid double-resolve.
+        bool alreadyResolvedByMotionHook = parryTarget != null
+            && (_runtime.LastParriedTargetMask & (1u << param_2)) != 0;
+
+        if (parryTarget != null && _runtime.ParryWindowActive && !alreadyResolvedByMotionHook)
         {
             string attackerLabel = format_actor_slot(param_1);
             string targetLabel = format_actor_slot((byte)param_2);
             log_debug($"Hook impact: {attackerLabel} -> {targetLabel}, resolving parry at impact time.");
-            resolve_successful_parry(param_2, parryTarget, "ms_set_damage", closeWindow: false);
+            resolve_successful_parry(param_2, parryTarget, "physical", closeWindow: false);
 
             // Mark the slot as handled so the poll path (monitor_damage_resolves) does not
             // re-detect this impact and fire a spurious "missed" or double-resolve.
@@ -162,8 +169,7 @@ public unsafe sealed partial class ParryModule
                         Chr* fb = partyFallback + i;
                         if (fb->stat_exist_flag && !is_target_non_parryable(fb))
                         {
-                            log_debug($"Finalization fallback: deferred feedback for {format_actor_slot((byte)i)}.");
-                            resolve_successful_parry(i, fb, "finalization_deferred_fallback", closeWindow: false);
+                            resolve_successful_parry(i, fb, "fallback", closeWindow: false);
                         }
                         _parryFeedbackPending[i] = false;
                     }
@@ -171,7 +177,7 @@ public unsafe sealed partial class ParryModule
 
                 // Regular attack: each target was already resolved by the h_ms_calc_damage
                 // return-0 path or the p2=target hook path — nothing to restore.
-                log_debug($"Finalization complete for {format_actor_slot(param_1)} ({BitOperations.PopCount(_runtime.LastParriedTargetMask)} target(s) parried).");
+                log_debug($"Turn complete — {BitOperations.PopCount(_runtime.LastParriedTargetMask)} target(s) parried.");
                 end_parry_window("finalization_complete");
             }
             else if (_runtime.TurnImpactMissedSeen)
@@ -179,8 +185,8 @@ public unsafe sealed partial class ParryModule
                 // A poll-detected impact for this turn was already marked as missed (window was
                 // closed when it hit). The player opened the window after the fact — that is not
                 // a successful parry. Skip the Anfunkeln fallback to avoid a false PARRIED.
-                log_debug($"Anfunkeln-style finalization skipped for {format_actor_slot(param_1)}: turn already missed.");
-                end_parry_window("anfunkeln_missed_turn");
+                log_debug($"Magic/special finalization skipped for {format_actor_slot(param_1)}: turn already missed.");
+                end_parry_window("missed_turn");
             }
             else
             {
@@ -198,12 +204,11 @@ public unsafe sealed partial class ParryModule
                         Chr* candidate = party + slot;
                         if (candidate->stat_exist_flag && !is_target_non_parryable(candidate))
                         {
-                            log_debug($"Anfunkeln-style finalization: resolving parry for {format_actor_slot((byte)slot)}.");
-                            resolve_successful_parry(slot, candidate, "anfunkeln_final", closeWindow: false);
+                            resolve_successful_parry(slot, candidate, "magic_impact", closeWindow: false);
                         }
                     }
                 }
-                end_parry_window("anfunkeln_finalization_complete");
+                end_parry_window("magic_finalization");
             }
         }
 
@@ -344,10 +349,15 @@ public unsafe sealed partial class ParryModule
     {
         _hMsDamageSetMotion.orig_fptr.Invoke(target, p2, p3);
 
-        if (p2 == 5 && target < PartyActorCapacity)
+        // p3=1 signals a damage-involved motion for party targets (confirmed from session log
+        // analysis: p2=5 for standard physical attacks, p2=1 for ramming attacks — both with p3=1).
+        // p3=0 calls are cosmetic/non-damage motions and must not trigger parry resolution.
+        bool isDamageMotion = p3 == 1 && target < PartyActorCapacity;
+
+        if (isDamageMotion)
             _attackTelemetry[target].SetMotionFired = true;
 
-        if (p2 == 5 && target < PartyActorCapacity)
+        if (isDamageMotion)
         {
             bool pendingDeferred = _parryFeedbackPending[target];
             bool reactiveParry   = !pendingDeferred
@@ -362,8 +372,7 @@ public unsafe sealed partial class ParryModule
                 Chr* candidate = party != null ? party + target : null;
                 if (candidate != null && candidate->stat_exist_flag && !is_target_non_parryable(candidate))
                 {
-                    string source = pendingDeferred ? "ms_damage_set_motion_deferred" : "ms_damage_set_motion";
-                    log_debug($"Feedback resolved at MsDamageSetMotion ({source}) for {format_actor_slot(target)}.");
+                    string source = pendingDeferred ? "deferred" : "visual";
                     resolve_successful_parry(target, candidate, source, closeWindow: false);
                 }
                 _parryFeedbackPending[target] = false;

@@ -1266,18 +1266,24 @@ public unsafe sealed partial class ParryModule
     private static Vector4? get_log_color(string message)
     {
         // Green: parry success / HP negated / parry window open
-        if (message.Contains("Parry resolved on", StringComparison.Ordinal)) return new Vector4(0.28f, 0.95f, 0.42f, 1f);
+        if (message.Contains("Parry resolved", StringComparison.Ordinal)) return new Vector4(0.28f, 0.95f, 0.42f, 1f);
+        if (message.Contains("Turn complete —", StringComparison.Ordinal)) return new Vector4(0.28f, 0.95f, 0.42f, 1f);
         if (message.Contains("HP negated on finalization", StringComparison.Ordinal)) return new Vector4(0.28f, 0.95f, 0.42f, 1f);
         if (message.Contains("resolving parry at impact", StringComparison.Ordinal)) return new Vector4(0.28f, 0.95f, 0.42f, 1f);
         if (message.Contains("Parry window active at impact", StringComparison.Ordinal)) return new Vector4(0.28f, 0.95f, 0.42f, 1f);
 
-        // Red: impact missed / window expired / target KO'd
+        // Orange: window expired without hit
+        if (message.Contains("Parry window expired", StringComparison.Ordinal)) return new Vector4(1.0f, 0.63f, 0.25f, 1f);
+
+        // Red: impact missed / damage received / target KO'd
+        if (message.Contains("Hit taken:", StringComparison.Ordinal)) return new Vector4(0.98f, 0.4f, 0.4f, 1f);
         if (message.Contains("Impact hit", StringComparison.Ordinal)) return new Vector4(0.98f, 0.4f, 0.4f, 1f);
         if (message.Contains("outside parry window", StringComparison.Ordinal)) return new Vector4(0.98f, 0.4f, 0.4f, 1f);
         if (message.Contains("Parry failed", StringComparison.Ordinal)) return new Vector4(0.98f, 0.4f, 0.4f, 1f);
         if (message.Contains("expired without", StringComparison.Ordinal)) return new Vector4(0.98f, 0.4f, 0.4f, 1f);
 
-        // Yellow/amber: status block / non-parryable target / window armed but missed
+        // Yellow/amber: status block / non-parryable target / window armed but missed / finalization skipped
+        if (message.Contains("Magic/special finalization skipped", StringComparison.Ordinal)) return new Vector4(0.95f, 0.75f, 0.30f, 1f);
         if (message.Contains("status block", StringComparison.Ordinal)) return new Vector4(0.95f, 0.75f, 0.30f, 1f);
         if (message.Contains("non-parryable", StringComparison.Ordinal)) return new Vector4(0.95f, 0.75f, 0.30f, 1f);
         if (message.Contains("Berserk", StringComparison.Ordinal) && message.Contains("parry skipped", StringComparison.Ordinal)) return new Vector4(0.95f, 0.75f, 0.30f, 1f);

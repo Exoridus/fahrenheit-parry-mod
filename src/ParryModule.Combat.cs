@@ -517,14 +517,23 @@ public unsafe sealed partial class ParryModule
 
     private void flush_attack_telemetry(string reason)
     {
-        if (!_optionLogging) goto reset;
-
         for (int i = 0; i < PartyActorCapacity; i++)
         {
             ref AttackTelemetry t = ref _attackTelemetry[i];
             bool anyActivity = t.CalcDamageFired || t.SetMotionFired || t.SetDamageTargetFired
                 || t.HpBeforeFinalization != 0 || t.HpAfterFinalization != 0;
             if (!anyActivity) continue;
+
+            int hpDelta = (int)t.HpAfterFinalization - (int)t.HpBeforeFinalization;
+
+            // Emit a user-visible "Hit taken" event when HP dropped and the attack was not parried.
+            if (hpDelta < 0 && !t.CalcDamageIntercepted && t.HpBeforeFinalization != 0)
+            {
+                string targetSlotLabel = format_actor_slot((byte)i);
+                log_debug($"Hit taken: {targetSlotLabel} | HP {t.HpBeforeFinalization} → {t.HpAfterFinalization} (−{-hpDelta})");
+            }
+
+            if (!_optionLogging) continue;
 
             bool hpChanged = t.HpAfterFinalization < t.HpBeforeFinalization;
             string leakTag;
@@ -535,7 +544,6 @@ public unsafe sealed partial class ParryModule
             else
                 leakTag = "-";
 
-            int hpDelta = (int)t.HpAfterFinalization - (int)t.HpBeforeFinalization;
             string cmdStr = t.CommandId != 0 ? $"0x{t.CommandId:X4}" : "-";
             write_session_hook_entry(
                 $"[AttackTelemetry] reason={reason} slot={i} cmd={cmdStr}" +
@@ -549,7 +557,6 @@ public unsafe sealed partial class ParryModule
                 $" {leakTag}");
         }
 
-        reset:
         Array.Clear(_attackTelemetry);
     }
 
@@ -682,7 +689,17 @@ public unsafe sealed partial class ParryModule
         _runtime.LastParriedTargetMask |= 1u << slotIndex;
 
         mark_active_turn_parried();
-        log_debug($"Parry resolved on {source} for {format_actor_slot((byte)slotIndex)}.");
+        string sourceLabel = source switch
+        {
+            "physical"    => "physical impact",
+            "visual"      => "visual impact",
+            "deferred"    => "deferred impact",
+            "magic_impact" => "magic/special impact",
+            "fallback"    => "fallback",
+            "impact_poll" => "poll detection",
+            _             => source
+        };
+        log_debug($"Parry resolved ({sourceLabel}) for {format_actor_slot((byte)slotIndex)}.");
         apply_overdrive_boost(1u << slotIndex);
 
         if (BitOperations.PopCount(_runtime.LastParriedTargetMask) == 1)
