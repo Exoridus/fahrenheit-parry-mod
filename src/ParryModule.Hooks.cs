@@ -432,6 +432,94 @@ public unsafe sealed partial class ParryModule
         return result;
     }
 
+    private int h_ms_calc_damage_internal(
+        int user_id, nint user_chr, int target_id, nint target_chr,
+        nint command, int command_id,
+        nint p7, nint p8, nint p9, nint p10, int p11)
+    {
+        // Inner interception: check parry expiry BEFORE calling orig.
+        // This is the safety net for attacks where the outer h_ms_calc_damage interception
+        // fails because LastParriedTargetMask was already set by MsDamageSetMotion.
+        // Do NOT check LastParriedTargetMask here — that is the entire reason this inner
+        // hook exists. The outer already checks it; when outer passes through, inner must
+        // still fire based on expiry alone.
+        bool isPartyTarget = target_id >= 0 && target_id < PartyActorCapacity;
+        bool innerShouldIntercept = isPartyTarget
+            && _optionEnabled
+            && DateTime.UtcNow.Ticks < _parryExpiry[target_id];
+
+        if (innerShouldIntercept)
+        {
+            _parryFeedbackPending[target_id] = true;
+            _runtime.LastParriedTargetMask |= 1u << target_id;
+            _damageEventActive[target_id] = true;
+            write_session_hook_entry(
+                $"[DmgCalcInternal] INTERCEPTED frame={_debugFrameIndex} user={user_id} target={target_id} cmd=0x{command_id:X4}");
+            return 0;
+        }
+
+        int damageHpBefore = 0;
+        int ramHpBefore = 0;
+        bool readOk = false;
+
+        if (_optionLogging && target_chr != nint.Zero)
+        {
+            try
+            {
+                Chr* tgt = (Chr*)target_chr;
+                damageHpBefore = tgt->damage_hp;
+                ramHpBefore = tgt->ram.hp;
+                readOk = true;
+            }
+            catch
+            {
+                // target_chr may not be a valid Chr* — swallow and log what we can
+            }
+        }
+
+        int result = _hMsCalcDamageInternal.orig_fptr.Invoke(
+            user_id, user_chr, target_id, target_chr,
+            command, command_id,
+            p7, p8, p9, p10, p11);
+
+        if (_optionLogging)
+        {
+            int damageHpAfter = 0;
+            int ramHpAfter = 0;
+
+            if (readOk && target_chr != nint.Zero)
+            {
+                try
+                {
+                    Chr* tgt = (Chr*)target_chr;
+                    damageHpAfter = tgt->damage_hp;
+                    ramHpAfter = tgt->ram.hp;
+                }
+                catch
+                {
+                    readOk = false;
+                }
+            }
+
+            if (readOk)
+            {
+                write_session_hook_entry(
+                    $"[DmgCalcInternal] f={_debugFrameIndex} user={user_id} target={target_id} cmd=0x{command_id:X4} result={result}" +
+                    $" ramHp_before={ramHpBefore} ramHp_after={ramHpAfter}" +
+                    $" damageHp_before={damageHpBefore} damageHp_after={damageHpAfter}" +
+                    $" hits={p11}");
+            }
+            else
+            {
+                write_session_hook_entry(
+                    $"[DmgCalcInternal] f={_debugFrameIndex} user={user_id} target={target_id} cmd=0x{command_id:X4} result={result}" +
+                    $" (target_chr read failed) hits={p11}");
+            }
+        }
+
+        return result;
+    }
+
     private bool try_get_head_cue_snapshot(List<DebugCueSnapshot> scratch, out DebugCueSnapshot head)
     {
         scratch.Clear();

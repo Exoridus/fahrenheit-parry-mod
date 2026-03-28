@@ -67,6 +67,17 @@ public unsafe sealed partial class ParryModule : FhModule
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate int DmgCalcArmoredProbe(Chr* user, Chr* target, Command* command, int p4, int* p5, int damage);
 
+    // Community name: MsCalcDamageInternal / FUN_0078e680 at FFX.exe+0x38e680.
+    // Inner per-hit damage calculator called from within MsCalcDamage.
+    // Ghidra signature: 11 params matching MsCalcDamage forwarding shape.
+    // Active interception hook: returns 0 (skipping orig) when a parry expiry is active,
+    // preventing both damage_hp and native DamageInfo buffer writes per hit.
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate int MsCalcDamageInternalProbe(
+        int user_id, nint user_chr, int target_id, nint target_chr,
+        nint command, int command_id,
+        nint p7, nint p8, nint p9, nint p10, int p11);
+
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate void MovieStopProg();
     [UnmanagedFunctionPointer(CallingConvention.StdCall)]
@@ -348,6 +359,7 @@ public unsafe sealed partial class ParryModule : FhModule
     private readonly FhMethodHandle<MsDamageSetMotionProbe> _hMsDamageSetMotion;
     private readonly FhMethodHandle<MsCalcDamageProbe> _hMsCalcDamage;
     private readonly FhMethodHandle<DmgCalcArmoredProbe> _hDmgCalcArmored;
+    private readonly FhMethodHandle<MsCalcDamageInternalProbe> _hMsCalcDamageInternal;
     private readonly FhMethodHandle<AtelEventSetUp> _hAtelEventSetUp;
     private readonly FhMethodHandle<NeedShowJapanLogo> _hNeedShowJapanLogo;
     private FhMethodHandle<MapShow2DLayerExec>? _hMapShow2DLayerExec;
@@ -367,6 +379,7 @@ public unsafe sealed partial class ParryModule : FhModule
         _hMsDamageSetMotion = new FhMethodHandle<MsDamageSetMotionProbe>(this, "FFX.exe", 0x38CAE0, h_ms_damage_set_motion);
         _hMsCalcDamage = new FhMethodHandle<MsCalcDamageProbe>(this, "FFX.exe", FhFfx.FhCall.__addr_MsCalcDamage, h_ms_calc_damage);
         _hDmgCalcArmored = new FhMethodHandle<DmgCalcArmoredProbe>(this, "FFX.exe", 0x38AB80, h_dmg_calc_armored);
+        _hMsCalcDamageInternal = new FhMethodHandle<MsCalcDamageInternalProbe>(this, "FFX.exe", 0x38E680, h_ms_calc_damage_internal);
         _hAtelEventSetUp = new FhMethodHandle<AtelEventSetUp>(this, "FFX.exe", 0x472e90, h_startup_event_setup); // AtelEventSetUp — Atel scripting event dispatch; intercepted for startup skip
         _hNeedShowJapanLogo = new FhMethodHandle<NeedShowJapanLogo>(this, "FFX.exe", 0x387450, h_need_show_japan_logo); // isNeedShowJapanLogo — suppresses Japan logo display during startup skip
 
@@ -433,6 +446,15 @@ public unsafe sealed partial class ParryModule : FhModule
         catch (Exception ex)
         {
             _logger.Warning($"[Parry] Could not hook DmgCalcArmored Probe: {ex.Message}");
+        }
+
+        try
+        {
+            _hMsCalcDamageInternal.hook();
+        }
+        catch (Exception ex)
+        {
+            _logger.Warning($"[Parry] Could not hook MsCalcDamageInternal Probe: {ex.Message}");
         }
 
         try
