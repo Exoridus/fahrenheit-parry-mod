@@ -1919,13 +1919,15 @@ internal sealed partial class BuildScript : NukeBuild
             return false;
         }
 
+        var deployBlocklist = LoadLocalConfig().DeployBlocklist;
+
         try
         {
             var preservedLoadOrder = normalizedTarget == "full"
                 ? ReadLoadOrderLines(targetLoadOrderPath)
                 : new List<string>();
 
-            CopyDirectoryRecursive(sourcePath, destinationPath);
+            CopyDirectoryRecursiveWithBlocklist(sourcePath, destinationPath, targetRoot, deployBlocklist);
 
             if (normalizedTarget == "full")
             {
@@ -2134,7 +2136,8 @@ internal sealed partial class BuildScript : NukeBuild
             var cfg = new LocalConfig
             {
                 GameDir = ReadJsonString(root, "GAME_DIR", "GameDir"),
-                DeployMode = NormalizeAutoDeployModeOrEmpty(ReadJsonString(root, "DEPLOY_MODE", "DeployMode"))
+                DeployMode = NormalizeAutoDeployModeOrEmpty(ReadJsonString(root, "DEPLOY_MODE", "DeployMode")),
+                DeployBlocklist = ReadJsonStringArray(root, "DEPLOY_BLOCKLIST", "DeployBlocklist")
             };
 
             if (string.IsNullOrWhiteSpace(cfg.DeployMode))
@@ -2590,6 +2593,53 @@ goto :eof
         }
     }
 
+    void CopyDirectoryRecursiveWithBlocklist(string source, string destination, string blocklistRoot, IReadOnlyList<string> blocklist)
+    {
+        if (blocklist.Count == 0)
+        {
+            CopyDirectoryRecursive(source, destination);
+            return;
+        }
+
+        foreach (var dir in Directory.GetDirectories(source, "*", SearchOption.AllDirectories))
+        {
+            var relativeToRoot = Path.GetRelativePath(blocklistRoot, dir).Replace('\\', '/');
+            if (is_blocklisted(relativeToRoot))
+            {
+                Log.Information($"Deploy blocklist: skipping directory {relativeToRoot}");
+                continue;
+            }
+            var relative = Path.GetRelativePath(source, dir);
+            Directory.CreateDirectory(Path.Combine(destination, relative));
+        }
+
+        foreach (var file in Directory.GetFiles(source, "*", SearchOption.AllDirectories))
+        {
+            var relativeToRoot = Path.GetRelativePath(blocklistRoot, file).Replace('\\', '/');
+            if (is_blocklisted(relativeToRoot))
+            {
+                Log.Information($"Deploy blocklist: skipping file {relativeToRoot}");
+                continue;
+            }
+            var relative = Path.GetRelativePath(source, file);
+            var target = Path.Combine(destination, relative);
+            var parent = Path.GetDirectoryName(target);
+            if (!string.IsNullOrWhiteSpace(parent)) Directory.CreateDirectory(parent);
+            File.Copy(file, target, overwrite: true);
+        }
+
+        bool is_blocklisted(string relativeToRoot)
+        {
+            foreach (var entry in blocklist)
+            {
+                var normalized = entry.Replace('\\', '/').Trim('/');
+                if (relativeToRoot.Equals(normalized, StringComparison.OrdinalIgnoreCase)) return true;
+                if (relativeToRoot.StartsWith(normalized + "/", StringComparison.OrdinalIgnoreCase)) return true;
+            }
+            return false;
+        }
+    }
+
     static void WriteSha256(string path)
     {
         using var sha = SHA256.Create();
@@ -2631,6 +2681,7 @@ goto :eof
     {
         public string GameDir { get; set; } = string.Empty;
         public string DeployMode { get; set; } = "none";
+        public List<string> DeployBlocklist { get; set; } = new();
     }
 
     readonly record struct SemVersion(int Major, int Minor, int Patch)
