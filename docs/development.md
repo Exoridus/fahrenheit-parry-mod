@@ -38,6 +38,10 @@ Discover workflows:
 .\build.cmd -h <workflow>
 ```
 
+Bool flags use this style:
+- `--flag` to enable
+- `--no-flag` to disable
+
 Quality:
 
 ```bash
@@ -53,9 +57,9 @@ Build and deploy:
 
 ```bash
 .\build.cmd build [--payload mod|full] [--config Debug|Release]
-.\build.cmd deploy [--payload mod|full] [--mode merge] [--gamedir "C:\\Path\\To\\Game"]
-.\build.cmd auto-deploy [--gamedir "C:\\Path\\To\\Game"] [--mode none|update|mod-only]
-.\build.cmd start [--gamedir "C:\\Path\\To\\Game"] [--elevated]
+.\build.cmd deploy [--payload mod|full] [--game-dir "C:\\Path\\To\\Game"]
+.\build.cmd auto-deploy [--game-dir "C:\\Path\\To\\Game"]
+.\build.cmd start [--game-dir "C:\\Path\\To\\Game"] [--elevated|--no-elevated]
 ```
 
 Reverse engineering tooling:
@@ -78,15 +82,28 @@ The test suite includes simulation-time pacing checks for 1x/2x/4x-equivalent de
 
 `.\build.cmd auto-deploy` stores settings in `.workspace/dev.local.json`:
 
-- `GAME_DIR`
-- `DEPLOY_MODE` (`none`, `update`, `mod-only`)
+- `GameDir`
+- `AutoDeploy` (`true`/`false`/`null`, default `null`) -> global default for auto-deploy in `build` workflow. If `null`, the first local build asks once and stores the choice.
+- `DeployBlocklist` (array of paths to preserve/skip during deploy; supports relative paths under `GameDir\fahrenheit` and absolute paths; default `["mods/loadorder", "saves"]`).
 
-`.\build.cmd discord-sync` reads a Discord token from one of these local-only files:
+`.\build.cmd build` can override `AutoDeploy` per run:
 
-- `.workspace/Discord/config.local.json`
-- `.workspace/dev.local.json`
+- `--deploy` forces deploy for this run even if `AutoDeploy` is `false`.
+- `--no-deploy` disables deploy for this run even if `AutoDeploy` is `true`.
 
-Recommended shape for `.workspace/Discord/config.local.json`:
+Auto-deploy target follows the build target:
+- `--payload mod` -> deploy `mod`
+- `--payload full` -> deploy `full`
+
+Deploy behavior mirrors artifact state into the selected deploy target and preserves entries from `DeployBlocklist`.
+
+Use `--dry-run` with `build` or `deploy` to preview sync actions without writing files.
+
+`.\build.cmd discord-sync` reads a Discord token from this local-only file:
+
+- `.workspace/discord/config.local.json`
+
+Recommended shape for `.workspace/discord/config.local.json`:
 
 ```json
 {
@@ -104,7 +121,7 @@ Recommended shape for `.workspace/Discord/config.local.json`:
 }
 ```
 
-The Discord sync workflow exports JSON into `.workspace/Discord`, discovers channels and threads automatically, and defaults to full-or-delta behavior per channel. Voice channels are included by default because they can also contain text chat. If you do not set `defaults.mediaDir`, the build workflow now resolves a server-local media directory at `<Guild Root>\\Media` and keeps each guild's downloaded assets there by default. A local `blacklist` array can exclude known inaccessible or unsupported channel/thread IDs before sync starts, and future inaccessible IDs are persisted back into that same local config automatically. Use `.\build.cmd discord-sync --guild <serverId> --full` periodically to reconcile edits/deletions that delta mode cannot recover.
+The Discord sync workflow exports JSON into `.workspace/discord`, discovers channels and threads automatically, and defaults to full-or-delta behavior per channel. Voice channels are included by default because they can also contain text chat. If you do not set `defaults.mediaDir`, the build workflow now resolves a server-local media directory at `<Guild Root>\\Media` and keeps each guild's downloaded assets there by default. A local `blacklist` array can exclude known inaccessible or unsupported channel/thread IDs before sync starts, and future inaccessible IDs are persisted back into that same local config automatically. Use `.\build.cmd discord-sync --guild <serverId> --full` periodically to reconcile edits/deletions that delta mode cannot recover.
 
 ## Commit Workflows
 

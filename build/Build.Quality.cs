@@ -347,7 +347,22 @@ internal sealed partial class BuildScript
             }
         }
 
+        RunBuildCliSmokeCore();
         Log.Information($"Smoke checks passed for payload={normalizedPayload}, config={normalizedConfig}.");
+    }
+
+    void RunBuildCliSmokeCore()
+    {
+        var scriptPath = Path.Combine(RootDirectory, "tests", "build-cli-smoke.ps1");
+        if (!File.Exists(scriptPath))
+        {
+            Fail($"Missing CLI smoke script: {scriptPath}");
+        }
+
+        RunChecked(
+            "powershell",
+            $"-NoProfile -ExecutionPolicy Bypass -File {Quote(scriptPath)}",
+            "Run build CLI smoke checks");
     }
 
     static void AssertFilesExist(string rootPath, params string[] relativeFiles)

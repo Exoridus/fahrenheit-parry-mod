@@ -225,7 +225,7 @@ internal sealed partial class BuildScript
 
         if (invocations.Count == 0)
         {
-            Fail("No valid parser mode found in --databatch.");
+            Fail("No valid parser mode found in --data-batch.");
         }
 
         RunParserInvocationsCore(invocations, failIfMissingDataRoot: !DryRun);
@@ -510,12 +510,12 @@ internal sealed partial class BuildScript
 
         if (parsedEvents.Count == 0)
         {
-            Log.Warning("No event string mappings found. Generate parser outputs with `build.cmd dataparse --datamode PARSE_ALL_EVENTS`.");
+            Log.Warning("No event string mappings found. Generate parser outputs with `build.cmd data-parse --data-mode PARSE_ALL_EVENTS`.");
         }
 
         if (parsedBattles.Count == 0)
         {
-            Log.Warning("No battle string mappings found. Generate parser outputs with `build.cmd dataparse --datamode PARSE_ALL_BATTLES`.");
+            Log.Warning("No battle string mappings found. Generate parser outputs with `build.cmd data-parse --data-mode PARSE_ALL_BATTLES`.");
         }
 
         Log.Information($"Imported canonical locale mappings for: {string.Join(", ", locales)}");
@@ -1810,7 +1810,7 @@ public final class LocalizedCommandDump {
         {
             if (string.IsNullOrWhiteSpace(inputRoot))
             {
-                Log.Warning("[DRY-RUN] No extracted data root detected yet. Pass --dataroot or extract FFX_Data.vbf first.");
+                Log.Warning("[DRY-RUN] No extracted data root detected yet. Pass --data-root or extract FFX_Data.vbf first.");
                 parserInputRoot = "<path-containing-ffx_ps2>/";
             }
 
@@ -2019,7 +2019,7 @@ public final class LocalizedCommandDump {
         var targetDir = Path.Combine(parserDir, "target");
         if (!Directory.Exists(targetDir))
         {
-            Fail($"FFXDataParser target directory not found: {targetDir}. Run build.cmd datasetup first.");
+            Fail($"FFXDataParser target directory not found: {targetDir}. Run build.cmd data-setup first.");
         }
 
         var candidates = Directory.EnumerateFiles(targetDir, "*.jar", SearchOption.TopDirectoryOnly)
@@ -2043,7 +2043,7 @@ public final class LocalizedCommandDump {
         var explicitSource = NormalizeExtractedDataRoot(DataRoot);
         if (!string.IsNullOrWhiteSpace(DataRoot) && string.IsNullOrWhiteSpace(explicitSource))
         {
-            Fail($"Invalid --dataroot '{DataRoot}'. Expected a directory containing ffx_ps2.");
+            Fail($"Invalid --data-root '{DataRoot}'. Expected a directory containing ffx_ps2.");
         }
 
         if (!string.IsNullOrWhiteSpace(explicitSource))
@@ -2094,7 +2094,7 @@ public final class LocalizedCommandDump {
             Fail(
                 "Could not locate extracted game data for FFXDataParser.\n" +
                 "Expected a folder containing 'ffx_ps2'.\n" +
-                "Use --dataroot <path> or place extracted data under .workspace/data.\n" +
+                "Use --data-root <path> or place extracted data under .workspace/data.\n" +
                 "If you only have FFX_Data.vbf, extract it first (for example with vbfextract).");
         }
 
@@ -2152,7 +2152,7 @@ public final class LocalizedCommandDump {
         }
 
         Fail(
-            $"Invalid --datamode '{mode}'. Supported values:{Environment.NewLine}" +
+            $"Invalid --data-mode '{mode}'. Supported values:{Environment.NewLine}" +
             string.Join(Environment.NewLine, DataParserModes.Select(x => $"  - {x}")));
         return string.Empty;
     }
@@ -2619,7 +2619,7 @@ public final class LocalizedCommandDump {
 
         Fail(
             "Could not locate game data directory with VBF files.\n" +
-            "Pass --vbfgamedatadir <path-to-game-data-folder> or configure GAME_DIR.\n" +
+            "Pass --vbf-game-dir <path-to-game-data-folder> or configure GameDir.\n" +
             "Expected files: FFX_Data.vbf and FFX2_Data.vbf.");
         return string.Empty;
     }
@@ -2759,7 +2759,7 @@ public final class LocalizedCommandDump {
         var nasDir = NormalizePathOrEmpty(NasDir);
         if (string.IsNullOrWhiteSpace(nasDir))
         {
-            Fail("Missing --nasdir <path>.");
+            Fail("Missing --nas-dir <path>.");
         }
 
         var mode = NormalizeOffloadMode(OffloadMode);
@@ -2843,7 +2843,7 @@ public final class LocalizedCommandDump {
         {
             "move" => "move",
             "copy" => "copy",
-            _ => FailWithReturn<string>($"Invalid --offloadmode '{mode}'. Use 'move' or 'copy'.")
+            _ => FailWithReturn<string>($"Invalid --offload-mode '{mode}'. Use 'move' or 'copy'.")
         };
     }
 
@@ -2997,4 +2997,3 @@ public final class LocalizedCommandDump {
         return "Mixed resource/data content.";
     }
 }
-

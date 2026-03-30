@@ -5,6 +5,8 @@ using System.IO.Compression;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
+using Microsoft.Win32;
 using Nuke.Common;
 using Nuke.Common.IO;
 using Serilog;
@@ -12,65 +14,65 @@ using static Nuke.Common.Assert;
 
 internal sealed partial class BuildScript : NukeBuild
 {
-    [Parameter] readonly string Config = IsServerBuild ? "Release" : "Debug";
-    [Parameter] readonly string FahrenheitRepo = "https://github.com/peppy-enterprises/fahrenheit.git";
-    [Parameter] readonly string FahrenheitDir = ".workspace/fahrenheit";
-    [Parameter] readonly string FahrenheitRef = string.Empty;
-    [Parameter] readonly string NativeMSBuildExe = string.Empty;
-    [Parameter] readonly string Toolset = string.Empty;
-    [Parameter] readonly string ModId = "fhparry";
+    [Parameter(Name = "config")] readonly string Config = IsServerBuild ? "Release" : "Debug";
+    [Parameter(Name = "fahrenheit-repo")] readonly string FahrenheitRepo = "https://github.com/peppy-enterprises/fahrenheit.git";
+    [Parameter(Name = "fahrenheit-dir")] readonly string FahrenheitDir = ".workspace/fahrenheit";
+    [Parameter(Name = "fahrenheit-ref")] readonly string FahrenheitRef = string.Empty;
+    [Parameter(Name = "native-msbuild-exe")] readonly string NativeMSBuildExe = string.Empty;
+    [Parameter(Name = "toolset")] readonly string Toolset = string.Empty;
+    [Parameter(Name = "mod-id")] readonly string ModId = "fhparry";
 
-    [Parameter] readonly string Payload = "mod";
-    [Parameter] readonly string Mode = "merge";
-    [Parameter] readonly string AutoMode = string.Empty;
+    [Parameter(Name = "payload")] readonly string Payload = "mod";
 
-    [Parameter] readonly string GameDir = string.Empty;
-    [Parameter] readonly string Repo = string.Empty;
-    [Parameter] readonly string Bump = "patch";
-    [Parameter] readonly string Workflow = string.Empty;
+    [Parameter(Name = "game-dir")] readonly string GameDir = string.Empty;
+    [Parameter(Name = "repo")] readonly string Repo = string.Empty;
+    [Parameter(Name = "bump")] readonly string Bump = "patch";
+    [Parameter(Name = "workflow")] readonly string Workflow = string.Empty;
 
-    [Parameter] readonly bool Full;
-    [Parameter] readonly bool DryRun;
-    [Parameter] readonly bool NonInteractive;
-    [Parameter] readonly bool Elevated;
+    [Parameter(Name = "full")] readonly bool Full;
+    [Parameter(Name = "dry-run")] readonly bool DryRun;
+    [Parameter(Name = "non-interactive")] readonly bool NonInteractive;
+    [Parameter(Name = "elevated")] readonly bool Elevated;
+    [Parameter(Name = "deploy")] readonly bool? DeployOverride;
+    [Parameter(Name = "refresh-game-dir")] readonly bool RefreshGameDir;
 
-    [Parameter] readonly string Type = "chore";
-    [Parameter] readonly string Scope = string.Empty;
-    [Parameter] readonly string Subject = string.Empty;
-    [Parameter] readonly bool Breaking;
+    [Parameter(Name = "type")] readonly string Type = "chore";
+    [Parameter(Name = "scope")] readonly string Scope = string.Empty;
+    [Parameter(Name = "subject")] readonly string Subject = string.Empty;
+    [Parameter(Name = "breaking")] readonly bool Breaking;
 
-    [Parameter] readonly string Range = string.Empty;
-    [Parameter] readonly string CommitFile = string.Empty;
-    [Parameter] readonly string Message = string.Empty;
+    [Parameter(Name = "range")] readonly string Range = string.Empty;
+    [Parameter(Name = "commit-file")] readonly string CommitFile = string.Empty;
+    [Parameter(Name = "message")] readonly string Message = string.Empty;
 
-    [Parameter] readonly string Tag = string.Empty;
-    [Parameter] readonly string Out = ".release/release-notes.txt";
-    [Parameter] readonly string DeployDir = ".workspace/fahrenheit/artifacts/deploy/rel";
-    [Parameter] readonly string OutDir = ".release";
-    [Parameter] readonly string ParserRepo = "https://github.com/Karifean/FFXDataParser.git";
-    [Parameter] readonly string ParserDir = ".workspace/tools/FFXDataParser";
-    [Parameter] readonly string ParserRef = string.Empty;
-    [Parameter] readonly string DataRoot = string.Empty;
-    [Parameter] readonly string DataMode = "READ_ALL_COMMANDS";
-    [Parameter] readonly string DataArgs = string.Empty;
-    [Parameter] readonly string DataBatch = "READ_ALL_COMMANDS;READ_GEAR_ABILITIES;READ_KEY_ITEMS;READ_MONSTER_LOCALIZATIONS us;READ_MONSTER_LOCALIZATIONS de";
-    [Parameter] readonly string DataOut = ".workspace/data/ffx-dataparser";
-    [Parameter] readonly string MapSource = "mappings/source";
-    [Parameter] readonly string[] Locales = ["us", "de"];
-    [Parameter] readonly string MapOut = "mappings/runtime";
-    [Parameter] readonly string MapPublish = "mappings/runtime";
-    [Parameter] readonly string VbfApi = "https://api.github.com/repos/topher-au/VBFTool/releases/latest";
-    [Parameter] readonly string VbfDir = ".workspace/tools/VBFTool";
-    [Parameter] readonly string GhidraApi = "https://api.github.com/repos/NationalSecurityAgency/ghidra/releases/latest";
-    [Parameter] readonly string GhidraDir = ".workspace/tools/ghidra";
-    [Parameter] readonly string VbfGameDir = string.Empty;
-    [Parameter] readonly string ExtractOut = ".workspace/data";
-    [Parameter] readonly bool ExtractMetaMenu = true;
-    [Parameter] readonly string DataRootDir = ".workspace/data";
-    [Parameter] readonly string Folders = string.Empty;
-    [Parameter] readonly string NasDir = string.Empty;
-    [Parameter] readonly string OffloadMode = "move";
-    [Parameter] readonly bool KeepDataJunction;
+    [Parameter(Name = "tag")] readonly string Tag = string.Empty;
+    [Parameter(Name = "out")] readonly string Out = ".release/release-notes.txt";
+    [Parameter(Name = "deploy-dir")] readonly string DeployDir = ".workspace/fahrenheit/artifacts/deploy/rel";
+    [Parameter(Name = "out-dir")] readonly string OutDir = ".release";
+    [Parameter(Name = "parser-repo")] readonly string ParserRepo = "https://github.com/Karifean/FFXDataParser.git";
+    [Parameter(Name = "parser-dir")] readonly string ParserDir = ".workspace/tools/FFXDataParser";
+    [Parameter(Name = "parser-ref")] readonly string ParserRef = string.Empty;
+    [Parameter(Name = "data-root")] readonly string DataRoot = string.Empty;
+    [Parameter(Name = "data-mode")] readonly string DataMode = "READ_ALL_COMMANDS";
+    [Parameter(Name = "data-args")] readonly string DataArgs = string.Empty;
+    [Parameter(Name = "data-batch")] readonly string DataBatch = "READ_ALL_COMMANDS;READ_GEAR_ABILITIES;READ_KEY_ITEMS;READ_MONSTER_LOCALIZATIONS us;READ_MONSTER_LOCALIZATIONS de";
+    [Parameter(Name = "data-out")] readonly string DataOut = ".workspace/data/ffx-dataparser";
+    [Parameter(Name = "map-source")] readonly string MapSource = "mappings/source";
+    [Parameter(Name = "locales")] readonly string[] Locales = ["us", "de"];
+    [Parameter(Name = "map-out")] readonly string MapOut = "mappings/runtime";
+    [Parameter(Name = "map-publish")] readonly string MapPublish = "mappings/runtime";
+    [Parameter(Name = "vbf-api")] readonly string VbfApi = "https://api.github.com/repos/topher-au/VBFTool/releases/latest";
+    [Parameter(Name = "vbf-dir")] readonly string VbfDir = ".workspace/tools/VBFTool";
+    [Parameter(Name = "ghidra-api")] readonly string GhidraApi = "https://api.github.com/repos/NationalSecurityAgency/ghidra/releases/latest";
+    [Parameter(Name = "ghidra-dir")] readonly string GhidraDir = ".workspace/tools/ghidra";
+    [Parameter(Name = "vbf-game-dir")] readonly string VbfGameDir = string.Empty;
+    [Parameter(Name = "extract-out")] readonly string ExtractOut = ".workspace/data";
+    [Parameter(Name = "extract-meta-menu")] readonly bool ExtractMetaMenu = true;
+    [Parameter(Name = "data-root-dir")] readonly string DataRootDir = ".workspace/data";
+    [Parameter(Name = "folders")] readonly string Folders = string.Empty;
+    [Parameter(Name = "nas-dir")] readonly string NasDir = string.Empty;
+    [Parameter(Name = "offload-mode")] readonly string OffloadMode = "move";
+    [Parameter(Name = "keep-data-junction")] readonly bool KeepDataJunction;
 
     public static int Main() => Execute<BuildScript>(x => x.Help);
 
@@ -79,6 +81,22 @@ internal sealed partial class BuildScript : NukeBuild
     AbsolutePath LocalConfigPath => WorkspaceDir / "dev.local.json";
     AbsolutePath ReleaseFahrenheitRefPath => RootDirectory / "fahrenheit.release.ref";
     AbsolutePath ManifestPath => RootDirectory / "fhparry.manifest.json";
+    static readonly Regex GameInstallDirNamePattern = new(
+        @"^Final Fantasy X[-_ ]X-?2(?:\s*-\s*)?HD Remaster$",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled);
+    static readonly Regex SteamLibraryPathRegex = new(
+        "\"path\"\\s*\"(?<path>[^\"]+)\"",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled);
+    static readonly Regex SteamLibraryLegacyPathRegex = new(
+        "^\\s*\"\\d+\"\\s*\"(?<path>[^\"]+)\"\\s*$",
+        RegexOptions.Multiline | RegexOptions.Compiled);
+    static readonly Regex SteamAppManifestInstallDirRegex = new(
+        "\"installdir\"\\s*\"(?<dir>[^\"]+)\"",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled);
+    const string SteamAppIdFfx = "359870";
+    static readonly string[] DefaultDeployBlocklist = ["mods/loadorder", "saves"];
+    bool _isCapturingWorkflowHelp;
+    WorkflowHelpBlock? _capturedWorkflowHelp;
 
     Target Help => _ => _
         .Executes(() =>
@@ -92,6 +110,9 @@ internal sealed partial class BuildScript : NukeBuild
                 ShowHelpWorkflow(Workflow);
             }
         });
+
+    Target Cli => _ => _
+        .Executes(RunCliWorkflow);
 
     Target Install => _ => _
         .Executes(() =>
@@ -151,6 +172,9 @@ internal sealed partial class BuildScript : NukeBuild
         .DependsOn(DataInventory)
         .Executes(OffloadDataCore);
 
+    Target DocsSync => _ => _
+        .Executes(SyncAutomationDocsCore);
+
     Target Setup => _ => _
         .Executes(() =>
         {
@@ -191,7 +215,7 @@ internal sealed partial class BuildScript : NukeBuild
 
     Target Build => _ => _.Executes(() => BuildCore(Payload, Config, useReleaseRef: false));
 
-    Target Deploy => _ => _.Executes(() => DeployCore(Payload, Mode, Config));
+    Target Deploy => _ => _.Executes(() => DeployCore(Payload, Config));
     Target Start => _ => _.Executes(StartCore);
 
     Target ReleaseNotes => _ => _.Executes(() =>
@@ -272,7 +296,7 @@ internal sealed partial class BuildScript : NukeBuild
 
         if (string.IsNullOrWhiteSpace(Message))
         {
-            Fail("Missing --commitfile or --message.");
+            Fail("Missing --commit-file or --message.");
         }
 
         ValidateCommitMessageString(Message);
@@ -288,10 +312,212 @@ internal sealed partial class BuildScript : NukeBuild
         ValidateCommitRangeCore(Range);
     });
 
+    void RunCliWorkflow()
+    {
+        var workflow = (Workflow ?? string.Empty).Trim().ToLowerInvariant();
+        if (string.IsNullOrWhiteSpace(workflow))
+        {
+            ShowHelpSummary();
+            return;
+        }
+
+        switch (workflow)
+        {
+            case "help":
+                if (string.IsNullOrWhiteSpace(Workflow))
+                {
+                    ShowHelpSummary();
+                }
+                else
+                {
+                    ShowHelpWorkflow(Workflow);
+                }
+                return;
+            case "install":
+                EnsureWingetAvailable();
+                EnsureGitInstalled();
+                EnsureDotNetSdk10Installed();
+                if (Full)
+                {
+                    EnsureMsbuildInstalled();
+                    EnsureVcpkgInstalledAndIntegrated();
+                }
+                Log.Information("Prerequisite check/install finished.");
+                return;
+            case "setup":
+                SetupHooksCore();
+                RunBuildProjTarget("Setup", Config, includeNativeMsbuild: false, fahrenheitRef: ResolveFahrenheitRef(useReleaseRef: false));
+                SetupAutoDeployCore();
+                if (InteractiveSession && AskYesNo("Run first full build now? (Recommended)", defaultYes: true))
+                {
+                    RunBuildProjTarget("Build", Config, includeNativeMsbuild: true, fahrenheitRef: ResolveFahrenheitRef(useReleaseRef: false));
+                }
+                return;
+            case "clean":
+                RunCleanCore(Full);
+                return;
+            case "auto-deploy":
+                SetupAutoDeployCore();
+                return;
+            case "doctor":
+                RunDoctorCore();
+                return;
+            case "format":
+                RunFormatFixCore();
+                return;
+            case "docs-sync":
+                SyncAutomationDocsCore();
+                return;
+            case "lint":
+                RunLintCore(Config);
+                return;
+            case "smoke":
+                RunSmokeCore(Payload, Config);
+                return;
+            case "verify":
+                if (!IsValidConventionalCommit("feat: selftest commit format") || IsValidConventionalCommit("invalid message"))
+                {
+                    Fail("Commit validator selftest failed.");
+                }
+                RunVerifyCore(Config);
+                return;
+            case "build":
+                BuildCore(Payload, Config, useReleaseRef: false);
+                return;
+            case "deploy":
+                DeployCore(Payload, Config);
+                return;
+            case "start":
+                StartCore();
+                return;
+            case "data-setup":
+                SetupVbfExtractorCore();
+                SetupDataParserCore();
+                return;
+            case "ghidra-setup":
+                SetupGhidraCore();
+                return;
+            case "ghidra-start":
+                StartGhidraCore();
+                return;
+            case "discord-sync":
+                DiscordSyncCore();
+                return;
+            case "data-extract":
+                SetupVbfExtractorCore();
+                ExtractGameDataCore();
+                return;
+            case "data-parse":
+                SetupVbfExtractorCore();
+                SetupDataParserCore();
+                ParseDataCore();
+                return;
+            case "data-parse-all":
+                SetupVbfExtractorCore();
+                SetupDataParserCore();
+                ParseDataAllCore();
+                return;
+            case "map-import":
+                SetupVbfExtractorCore();
+                SetupDataParserCore();
+                ImportLocalizedMappingsCore();
+                return;
+            case "map-build":
+                BuildLocalizedBundlesCore();
+                return;
+            case "data-inventory":
+                DataInventoryCore();
+                return;
+            case "data-offload":
+                DataInventoryCore();
+                OffloadDataCore();
+                return;
+            case "release-bump":
+                ReleaseVersionCore();
+                return;
+            case "release-ready":
+                ReleaseReadyCore();
+                return;
+            case "release-pack":
+                if (string.IsNullOrWhiteSpace(Tag))
+                {
+                    Fail("Missing --tag.");
+                }
+                PackageReleaseCore(Tag, ResolvePath(DeployDir), ResolvePath(OutDir), ModId);
+                return;
+            case "release-notes":
+                if (string.IsNullOrWhiteSpace(Tag))
+                {
+                    Fail("Missing --tag.");
+                }
+                var repoSlug = ResolveRepositorySlug(Repo);
+                if (string.IsNullOrWhiteSpace(repoSlug))
+                {
+                    Fail("Missing --repo owner/repo.");
+                }
+                GenerateReleaseNotesCore(
+                    tag: Tag,
+                    repositorySlug: repoSlug,
+                    outputPath: ResolvePath(Out));
+                return;
+            case "commit":
+                var requestedMessage = Subject;
+                var requestedType = Type;
+                var requestedScope = Scope;
+                var requestedBreaking = Breaking;
+                if (string.IsNullOrWhiteSpace(requestedMessage))
+                {
+                    if (!InteractiveSession)
+                    {
+                        Fail("Missing --subject. In interactive mode, you can run build.cmd commit without arguments.");
+                    }
+                    var wizard = RunCommitWizard();
+                    if (!wizard.Confirmed)
+                    {
+                        Fail("Commit canceled.");
+                    }
+                    requestedType = wizard.Type;
+                    requestedScope = wizard.Scope;
+                    requestedMessage = wizard.Message;
+                    requestedBreaking = wizard.Breaking;
+                }
+                var subject = BuildCommitSubject(requestedType, requestedScope, requestedMessage, requestedBreaking);
+                if (!IsValidConventionalCommit(subject))
+                {
+                    Fail($"Invalid Conventional Commit subject: {subject}");
+                }
+                RunChecked("git", $"commit -m {Quote(subject)}", "Create commit");
+                return;
+            case "commit-check":
+                if (!string.IsNullOrWhiteSpace(CommitFile))
+                {
+                    ValidateCommitMessageFromFile(ResolvePath(CommitFile));
+                    return;
+                }
+                if (string.IsNullOrWhiteSpace(Message))
+                {
+                    Fail("Missing --commit-file or --message.");
+                }
+                ValidateCommitMessageString(Message);
+                return;
+            case "commit-range":
+                if (string.IsNullOrWhiteSpace(Range))
+                {
+                    Fail("Missing --range BASE..HEAD.");
+                }
+                ValidateCommitRangeCore(Range);
+                return;
+            default:
+                Fail($"Unknown workflow '{workflow}'. Use: build.cmd help");
+                return;
+        }
+    }
+
     void ShowHelpSummary()
     {
         Log.Information("Usage: build.cmd <workflow> [options]");
         Log.Information("Detailed help: build.cmd -h <workflow>");
+        Log.Information("Bool options: --flag (true), --no-flag (false)");
         Log.Information(string.Empty);
         Log.Information("Core:");
         Log.Information("  install      Install/check prerequisites");
@@ -319,7 +545,8 @@ internal sealed partial class BuildScript : NukeBuild
         Log.Information("  commit-range Validate commit subjects in a range");
         Log.Information(string.Empty);
         Log.Information("Advanced:");
-        Log.Information("  discord-sync Incremental Discord JSON export into .workspace/Discord");
+        Log.Information("  discord-sync Incremental Discord JSON export into .workspace/discord");
+        Log.Information("  docs-sync    Regenerate docs/automation.md from build help metadata");
         Log.Information("  data-* / map-* / ghidra-* workflows are available.");
         Log.Information("  Use: build.cmd -h <workflow> for detailed parameters and examples.");
     }
@@ -336,7 +563,7 @@ internal sealed partial class BuildScript : NukeBuild
                     "Install/check local prerequisites.",
                     [
                         "--full (optional, default false) -> also install native build deps (MSBuild + vcpkg).",
-                        "--dryrun (optional, default false) -> only print intended actions."
+                        "--dry-run (optional, default false) -> only print intended actions."
                     ],
                     [
                         "build.cmd install",
@@ -361,12 +588,12 @@ internal sealed partial class BuildScript : NukeBuild
                     "auto-deploy",
                     "Configure automatic post-build deployment.",
                     [
-                        "--gamedir <path> (optional) -> game install directory (must contain FFX.exe).",
-                        "--mode none|update|mod-only (optional, default interactive/autodetected)."
+                        "--game-dir <path> (optional) -> game install directory (must contain FFX.exe).",
+                        "--refresh-game-dir (optional, default false) -> ignore saved GameDir and force detection/prompt flow."
                     ],
                     [
                         "build.cmd auto-deploy",
-                        "build.cmd auto-deploy --gamedir \"C:\\Games\\Final Fantasy X-X2 - HD Remaster\" --mode mod-only"
+                        "build.cmd auto-deploy --game-dir \"C:\\Games\\Final Fantasy X-X2 - HD Remaster\""
                     ]);
                 return;
 
@@ -389,7 +616,9 @@ internal sealed partial class BuildScript : NukeBuild
                     "Build mod-only or full Fahrenheit payload.",
                     [
                         "--payload mod|full (optional, default mod).",
-                        "--config Debug|Release (optional, default Debug local / Release CI)."
+                        "--config Debug|Release (optional, default Debug local / Release CI).",
+                        "--deploy or --no-deploy (optional) -> override AutoDeploy from settings for this run.",
+                        "--dry-run (optional, default false) -> simulate deploy sync actions without writing files."
                     ],
                     [
                         "build.cmd build",
@@ -400,16 +629,17 @@ internal sealed partial class BuildScript : NukeBuild
             case "deploy":
                 PrintHelpBlock(
                     "deploy",
-                    "Deploy build artifacts into GAME_DIR.",
+                    "Deploy build artifacts into GameDir.",
                     [
                         "--payload mod|full (optional, default mod).",
-                        "--mode merge (optional, default merge).",
-                        "--gamedir <path> (optional if configured in dev.local.json).",
-                        "--config Debug|Release (optional, default Debug)."
+                        "--game-dir <path> (optional if configured in dev.local.json).",
+                        "--refresh-game-dir (optional, default false) -> ignore saved GameDir and force re-detection.",
+                        "--config Debug|Release (optional, default Debug).",
+                        "--dry-run (optional, default false) -> simulate deploy sync actions without writing files."
                     ],
                     [
                         "build.cmd deploy",
-                        "build.cmd deploy --payload full --gamedir \"C:\\Games\\Final Fantasy X-X2 - HD Remaster\""
+                        "build.cmd deploy --payload full --game-dir \"C:\\Games\\Final Fantasy X-X2 - HD Remaster\""
                     ]);
                 return;
 
@@ -418,12 +648,13 @@ internal sealed partial class BuildScript : NukeBuild
                     "start",
                     "Launch the game via deployed Fahrenheit stage0 loader.",
                     [
-                        "--gamedir <path> (optional if configured).",
-                        "--elevated true|false (optional, default false)."
+                        "--game-dir <path> (optional if configured).",
+                        "--refresh-game-dir (optional, default false) -> ignore saved GameDir and force re-detection.",
+                        "--elevated or --no-elevated (optional, default false)."
                     ],
                     [
-                        "build.cmd start --gamedir \"C:\\Games\\Final Fantasy X-X2 - HD Remaster\"",
-                        "build.cmd start --gamedir \"C:\\Games\\Final Fantasy X-X2 - HD Remaster\" --elevated"
+                        "build.cmd start --game-dir \"C:\\Games\\Final Fantasy X-X2 - HD Remaster\"",
+                        "build.cmd start --game-dir \"C:\\Games\\Final Fantasy X-X2 - HD Remaster\" --elevated"
                     ]);
                 return;
 
@@ -466,6 +697,18 @@ internal sealed partial class BuildScript : NukeBuild
                     ]);
                 return;
 
+            case "docs-sync":
+                PrintHelpBlock(
+                    "docs-sync",
+                    "Regenerate docs/automation.md from build help metadata.",
+                    [
+                        "No required parameters."
+                    ],
+                    [
+                        "build.cmd docs-sync"
+                    ]);
+                return;
+
             case "lint":
                 PrintHelpBlock(
                     "lint",
@@ -498,33 +741,33 @@ internal sealed partial class BuildScript : NukeBuild
                     "data-setup",
                     "Install/update data tooling (VBFTool + FFXDataParser).",
                     [
-                        "--parserrepo <url> (optional).",
-                        "--parserdir <path> (optional).",
-                        "--parserref <git-ref> (optional).",
-                        "--vbfapi <url> (optional).",
-                        "--vbfdir <path> (optional)."
+                        "--parser-repo <url> (optional).",
+                        "--parser-dir <path> (optional).",
+                        "--parser-ref <git-ref> (optional).",
+                        "--vbf-api <url> (optional).",
+                        "--vbf-dir <path> (optional)."
                     ],
                     [
                         "build.cmd data-setup",
-                        "build.cmd data-setup --parserref main"
+                        "build.cmd data-setup --parser-ref main"
                     ]);
                 return;
 
             case "discord-sync":
                 PrintHelpBlock(
                     "discord-sync",
-                    "Export Discord channels/threads into .workspace/Discord with auto full-or-delta behavior and a per-server Media folder by default.",
+                    "Export Discord channels/threads into .workspace/discord with auto full-or-delta behavior and a per-server Media folder by default.",
                     [
                         "--guild <serverId> (required).",
                         "--channels <id1,id2,...> (optional) -> restrict export to explicit channel/thread IDs.",
                         "--full (optional, default false) -> force full refresh for every discovered channel/thread.",
-                        "--discordconfig <path> (optional, default .workspace/Discord/config.local.json).",
-                        "--discordoutdir <path> (optional, default .workspace/Discord).",
-                        "--discordincludethreads none|active|all (optional, default config/all).",
-                        "--discordincludevc true|false (optional, default config/true).",
-                        "--discordmedia true|false (optional, default config/true).",
+                        "--discord-config <path> (optional, default .workspace/discord/config.local.json).",
+                        "--discord-out-dir <path> (optional, default .workspace/discord).",
+                        "--discord-include-threads none|active|all (optional, default config/all).",
+                        "--discord-include-vc or --no-discord-include-vc (optional, default config/true).",
+                        "--discord-media or --no-discord-media (optional, default config/true).",
                         "config blacklist[] (optional, local-only) -> filter known inaccessible/unsupported channel IDs before sync.",
-                        "--discordmediadir <path> (optional, advanced) -> override the default server-local Media directory."
+                        "--discord-media-dir <path> (optional, advanced) -> override the default server-local Media directory."
                     ],
                     [
                         "build.cmd discord-sync --guild 612363389003366405",
@@ -538,12 +781,12 @@ internal sealed partial class BuildScript : NukeBuild
                     "ghidra-setup",
                     "Install/update Ghidra into a repo-local tools directory.",
                     [
-                        "--ghidraapi <url> (optional, default latest NSA release API).",
-                        "--ghidradir <path> (optional, default .workspace/tools/ghidra)."
+                        "--ghidra-api <url> (optional, default latest NSA release API).",
+                        "--ghidra-dir <path> (optional, default .workspace/tools/ghidra)."
                     ],
                     [
                         "build.cmd ghidra-setup",
-                        "build.cmd ghidra-setup --ghidradir .workspace/tools/ghidra"
+                        "build.cmd ghidra-setup --ghidra-dir .workspace/tools/ghidra"
                     ]);
                 return;
 
@@ -552,11 +795,11 @@ internal sealed partial class BuildScript : NukeBuild
                     "ghidra-start",
                     "Start the repo-local Ghidra launcher.",
                     [
-                        "--ghidradir <path> (optional, default .workspace/tools/ghidra)."
+                        "--ghidra-dir <path> (optional, default .workspace/tools/ghidra)."
                     ],
                     [
                         "build.cmd ghidra-start",
-                        "build.cmd ghidra-start --ghidradir .workspace/tools/ghidra"
+                        "build.cmd ghidra-start --ghidra-dir .workspace/tools/ghidra"
                     ]);
                 return;
 
@@ -565,13 +808,13 @@ internal sealed partial class BuildScript : NukeBuild
                     "data-extract",
                     "Extract FFX/FFX-2 data archives with VBFTool.",
                     [
-                        "--vbfgamedir <path> (optional, defaults to detected GAME_DIR\\\\data).",
-                        "--extractout <path> (optional, default .workspace/data).",
-                        "--extractmetamenu true|false (optional, default true)."
+                        "--vbf-game-dir <path> (optional, defaults to detected GameDir\\\\data).",
+                        "--extract-out <path> (optional, default .workspace/data).",
+                        "--extract-meta-menu or --no-extract-meta-menu (optional, default true)."
                     ],
                     [
-                        "build.cmd data-extract --vbfgamedir \"C:\\Games\\Final Fantasy X-X2 - HD Remaster\\data\"",
-                        "build.cmd data-extract --extractout .workspace/data"
+                        "build.cmd data-extract --vbf-game-dir \"C:\\Games\\Final Fantasy X-X2 - HD Remaster\\data\"",
+                        "build.cmd data-extract --extract-out .workspace/data"
                     ]);
                 return;
 
@@ -580,14 +823,14 @@ internal sealed partial class BuildScript : NukeBuild
                     "data-parse",
                     "Run one parser mode and capture output as txt.",
                     [
-                        "--datamode <MODE> (optional, default READ_ALL_COMMANDS).",
-                        "--dataargs \"<arg1> <arg2>\" (optional).",
-                        "--dataroot <path> (optional, must contain ffx_ps2).",
-                        "--dataout <path> (optional, default .workspace/data/ffx-dataparser)."
+                        "--data-mode <MODE> (optional, default READ_ALL_COMMANDS).",
+                        "--data-args \"<arg1> <arg2>\" (optional).",
+                        "--data-root <path> (optional, must contain ffx_ps2).",
+                        "--data-out <path> (optional, default .workspace/data/ffx-dataparser)."
                     ],
                     [
-                        "build.cmd data-parse --datamode READ_MONSTER_LOCALIZATIONS --dataargs \"de\"",
-                        "build.cmd data-parse --datamode PARSE_ALL_BATTLES"
+                        "build.cmd data-parse --data-mode READ_MONSTER_LOCALIZATIONS --data-args \"de\"",
+                        "build.cmd data-parse --data-mode PARSE_ALL_BATTLES"
                     ]);
                 return;
 
@@ -596,13 +839,13 @@ internal sealed partial class BuildScript : NukeBuild
                     "data-parse-all",
                     "Run the configured parser mode batch and capture all outputs.",
                     [
-                        "--databatch \"MODE1;MODE2 arg\" (optional, default built-in batch).",
-                        "--dataroot <path> (optional, must contain ffx_ps2).",
-                        "--dataout <path> (optional, default .workspace/data/ffx-dataparser)."
+                        "--data-batch \"MODE1;MODE2 arg\" (optional, default built-in batch).",
+                        "--data-root <path> (optional, must contain ffx_ps2).",
+                        "--data-out <path> (optional, default .workspace/data/ffx-dataparser)."
                     ],
                     [
-                        "build.cmd data-parse-all --dataroot .workspace/data",
-                        "build.cmd data-parse-all --databatch \"READ_ALL_COMMANDS;READ_MONSTER_LOCALIZATIONS de\""
+                        "build.cmd data-parse-all --data-root .workspace/data",
+                        "build.cmd data-parse-all --data-batch \"READ_ALL_COMMANDS;READ_MONSTER_LOCALIZATIONS de\""
                     ]);
                 return;
 
@@ -611,13 +854,13 @@ internal sealed partial class BuildScript : NukeBuild
                     "map-import",
                     "Generate canonical locale/domain mapping JSON from parser outputs.",
                     [
-                        "--mapsource <path> (optional, default mappings/source).",
+                        "--map-source <path> (optional, default mappings/source).",
                         "--locales us,de,... (optional, default us,de).",
-                        "--dataout <path> (optional parser output root)."
+                        "--data-out <path> (optional parser output root)."
                     ],
                     [
                         "build.cmd map-import --locales us,de,fr,it,sp,jp,ch,kr",
-                        "build.cmd map-import --mapsource mappings/source"
+                        "build.cmd map-import --map-source mappings/source"
                     ]);
                 return;
 
@@ -626,14 +869,14 @@ internal sealed partial class BuildScript : NukeBuild
                     "map-build",
                     "Build runtime mapping bundles from canonical mapping JSON.",
                     [
-                        "--mapsource <path> (optional, default mappings/source).",
-                        "--mapout <path> (optional, default mappings/runtime).",
-                        "--mappublish <path> (optional, default mappings/runtime).",
+                        "--map-source <path> (optional, default mappings/source).",
+                        "--map-out <path> (optional, default mappings/runtime).",
+                        "--map-publish <path> (optional, default mappings/runtime).",
                         "--locales us,de,... (optional, default us,de)."
                     ],
                     [
                         "build.cmd map-build --locales us,de,fr,it,sp,jp,ch,kr",
-                        "build.cmd map-build --mapout mappings/runtime --mappublish mappings/runtime"
+                        "build.cmd map-build --map-out mappings/runtime --map-publish mappings/runtime"
                     ]);
                 return;
 
@@ -642,12 +885,12 @@ internal sealed partial class BuildScript : NukeBuild
                     "data-inventory",
                     "Generate DATA_TREE.txt summaries for extracted data folders.",
                     [
-                        "--datarootdir <path> (optional, default .workspace/data).",
+                        "--data-root-dir <path> (optional, default .workspace/data).",
                         "--folders \"name1;name2\" (optional, default auto-detect under data root)."
                     ],
                     [
                         "build.cmd data-inventory",
-                        "build.cmd data-inventory --datarootdir .workspace/data --folders \"ffx_data;ffx-2_data\""
+                        "build.cmd data-inventory --data-root-dir .workspace/data --folders \"ffx_data;ffx-2_data\""
                     ]);
                 return;
 
@@ -656,15 +899,15 @@ internal sealed partial class BuildScript : NukeBuild
                     "data-offload",
                     "Move or copy large extracted data folders to NAS and optionally keep junctions.",
                     [
-                        "--nasdir <unc-path> (required).",
-                        "--offloadmode move|copy (optional, default move).",
-                        "--keepdatajunction true|false (optional, default false).",
-                        "--datarootdir <path> (optional, default .workspace/data).",
+                        "--nas-dir <unc-path> (required).",
+                        "--offload-mode move|copy (optional, default move).",
+                        "--keep-data-junction or --no-keep-data-junction (optional, default false).",
+                        "--data-root-dir <path> (optional, default .workspace/data).",
                         "--folders \"name1;name2\" (optional)."
                     ],
                     [
-                        "build.cmd data-offload --nasdir \"\\\\10.0.10.50\\data\\archive\\final-fantasy-assets\"",
-                        "build.cmd data-offload --nasdir \"\\\\10.0.10.50\\data\\archive\\final-fantasy-assets\" --offloadmode move --keepdatajunction true"
+                        "build.cmd data-offload --nas-dir \"\\\\10.0.10.50\\data\\archive\\final-fantasy-assets\"",
+                        "build.cmd data-offload --nas-dir \"\\\\10.0.10.50\\data\\archive\\final-fantasy-assets\" --offload-mode move --keep-data-junction"
                     ]);
                 return;
 
@@ -703,12 +946,12 @@ internal sealed partial class BuildScript : NukeBuild
                     "Package built release payloads into ZIP archives + SHA256 files.",
                     [
                         "--tag vX.Y.Z (required).",
-                        "--deploydir <path> (optional, default .workspace/fahrenheit/artifacts/deploy/rel).",
-                        "--outdir <path> (optional, default .release)."
+                        "--deploy-dir <path> (optional, default .workspace/fahrenheit/artifacts/deploy/rel).",
+                        "--out-dir <path> (optional, default .release)."
                     ],
                     [
                         "build.cmd release-pack --tag v0.0.1",
-                        "build.cmd release-pack --tag v0.0.1 --outdir .release"
+                        "build.cmd release-pack --tag v0.0.1 --out-dir .release"
                     ]);
                 return;
 
@@ -735,7 +978,7 @@ internal sealed partial class BuildScript : NukeBuild
                         "--type feat|fix|... (optional, default chore).",
                         "--scope <scope> (optional).",
                         "--subject \"message\" (required in non-interactive mode).",
-                        "--breaking true|false (optional, default false)."
+                        "--breaking or --no-breaking (optional, default false)."
                     ],
                     [
                         "build.cmd commit",
@@ -748,10 +991,10 @@ internal sealed partial class BuildScript : NukeBuild
                     "commit-check",
                     "Validate one commit message.",
                     [
-                        "--commitfile <path> or --message \"...\" (one is required)."
+                        "--commit-file <path> or --message \"...\" (one is required)."
                     ],
                     [
-                        "build.cmd commit-check --commitfile .git/COMMIT_EDITMSG",
+                        "build.cmd commit-check --commit-file .git/COMMIT_EDITMSG",
                         "build.cmd commit-check --message \"feat: add timeline panel\""
                     ]);
                 return;
@@ -773,18 +1016,53 @@ internal sealed partial class BuildScript : NukeBuild
         ShowHelpSummary();
     }
 
+    WorkflowHelpBlock CaptureWorkflowHelpBlock(string workflowRaw)
+    {
+        var normalizedWorkflow = (workflowRaw ?? string.Empty).Trim().ToLowerInvariant();
+        _isCapturingWorkflowHelp = true;
+        _capturedWorkflowHelp = null;
+        try
+        {
+            ShowHelpWorkflow(normalizedWorkflow);
+            return _capturedWorkflowHelp ?? new WorkflowHelpBlock(
+                normalizedWorkflow,
+                "Unknown workflow.",
+                [],
+                []);
+        }
+        finally
+        {
+            _isCapturingWorkflowHelp = false;
+            _capturedWorkflowHelp = null;
+        }
+    }
+
     void PrintHelpBlock(string name, string purpose, IEnumerable<string> parameters, IEnumerable<string> examples)
     {
+        var parameterList = parameters?.ToList() ?? [];
+        var exampleList = examples?.ToList() ?? [];
+
+        _capturedWorkflowHelp = new WorkflowHelpBlock(
+            Workflow: name,
+            Purpose: purpose,
+            Parameters: parameterList,
+            Examples: exampleList);
+
+        if (_isCapturingWorkflowHelp)
+        {
+            return;
+        }
+
         Log.Information($"Workflow: {name}");
         Log.Information($"Purpose: {purpose}");
         Log.Information("Parameters:");
-        foreach (var line in parameters)
+        foreach (var line in parameterList)
         {
             Log.Information($"  - {line}");
         }
 
         Log.Information("Examples:");
-        foreach (var line in examples)
+        foreach (var line in exampleList)
         {
             Log.Information($"  {line}");
         }
@@ -1701,13 +1979,16 @@ internal sealed partial class BuildScript : NukeBuild
                 return fromArg;
             }
 
-            Log.Warning($"Provided --gamedir is invalid: {fromArg}");
+            Log.Warning($"Provided --game-dir is invalid: {fromArg}");
         }
 
-        var fromConfig = NormalizePathOrEmpty(cfg.GameDir);
-        if (IsValidGameDir(fromConfig))
+        if (!RefreshGameDir)
         {
-            return fromConfig;
+            var fromConfig = NormalizePathOrEmpty(cfg.GameDir);
+            if (IsValidGameDir(fromConfig))
+            {
+                return fromConfig;
+            }
         }
 
         var detected = DetectGameDir();
@@ -1742,46 +2023,6 @@ internal sealed partial class BuildScript : NukeBuild
         return string.Empty;
     }
 
-    string ResolveAutoDeployModeForSetup(LocalConfig cfg)
-    {
-        var prefilled = NormalizeAutoDeployModeOrEmpty(AutoMode);
-        if (!string.IsNullOrWhiteSpace(AutoMode) && string.IsNullOrWhiteSpace(prefilled))
-        {
-            Fail($"Invalid --mode '{AutoMode}'. Use none, update, or mod-only.");
-        }
-
-        if (!string.IsNullOrWhiteSpace(prefilled))
-        {
-            return prefilled;
-        }
-
-        var fromConfig = NormalizeAutoDeployModeOrEmpty(cfg.DeployMode);
-        if (!string.IsNullOrWhiteSpace(fromConfig) && fromConfig != "none")
-        {
-            return fromConfig;
-        }
-
-        if (!InteractiveSession)
-        {
-            return "none";
-        }
-
-        Log.Information("How should full local builds be auto-deployed?");
-        Log.Information("  1) mod-only (default) - always deploy mod payload (merge)");
-        Log.Information("  2) update - copy and overwrite full payload, no deletions");
-        Log.Information("  3) none - disable automatic deployment");
-        Console.Write("Select deploy mode [1/2/3] (default 1): ");
-        var input = (Console.ReadLine() ?? string.Empty).Trim().ToLowerInvariant();
-
-        return input switch
-        {
-            "" or "1" or "mod-only" or "modonly" or "mod" => "mod-only",
-            "2" or "update" or "merge" => "update",
-            "3" or "none" or "off" or "disable" => "none",
-            _ => "none"
-        };
-    }
-
     void TryAutoDeployAfterBuild(string buildTarget, string configuration, bool useReleaseRef)
     {
         if (useReleaseRef || IsServerBuild)
@@ -1790,23 +2031,33 @@ internal sealed partial class BuildScript : NukeBuild
         }
 
         var cfg = LoadLocalConfig();
-        var configuredMode = NormalizeAutoDeployModeOrEmpty(AutoMode);
-        if (!string.IsNullOrWhiteSpace(AutoMode) && string.IsNullOrWhiteSpace(configuredMode))
+        if (DeployOverride.HasValue && !DeployOverride.Value)
         {
-            Fail($"Invalid --mode '{AutoMode}'. Use none, update, or mod-only.");
+            Log.Information("Automatic deployment was disabled by --no-deploy.");
+            return;
         }
 
-        if (string.IsNullOrWhiteSpace(configuredMode))
+        if (!DeployOverride.HasValue && !cfg.AutoDeploy.HasValue)
         {
-            configuredMode = NormalizeAutoDeployModeOrEmpty(cfg.DeployMode);
+            if (!InteractiveSession)
+            {
+                Log.Information("AutoDeploy is not configured yet (null). Skipping automatic deploy in non-interactive mode.");
+                return;
+            }
+
+            var enableAutoDeploy = AskYesNo("Enable automatic deployment after successful local builds?", defaultYes: true);
+            cfg.AutoDeploy = enableAutoDeploy;
+            SaveLocalConfig(cfg);
+
+            if (!enableAutoDeploy)
+            {
+                Log.Information("Automatic deploy remains disabled. You can change this later with: build.cmd auto-deploy");
+                return;
+            }
         }
 
-        if (string.IsNullOrWhiteSpace(configuredMode))
-        {
-            configuredMode = "none";
-        }
-
-        if (configuredMode == "none")
+        var autoDeployEnabled = DeployOverride ?? cfg.AutoDeploy ?? false;
+        if (!autoDeployEnabled)
         {
             return;
         }
@@ -1814,78 +2065,80 @@ internal sealed partial class BuildScript : NukeBuild
         var gameDir = NormalizePathOrEmpty(GameDir);
         if (!string.IsNullOrWhiteSpace(GameDir) && !IsValidGameDir(gameDir))
         {
-            Log.Warning($"Invalid --gamedir value '{GameDir}' (FFX.exe not found). Skipping automatic deploy.");
+            Log.Warning($"Invalid --game-dir value '{GameDir}' (FFX.exe not found). Skipping automatic deploy.");
             return;
         }
 
-        if (!IsValidGameDir(gameDir))
+        if (!IsValidGameDir(gameDir) && !RefreshGameDir)
         {
             gameDir = NormalizePathOrEmpty(cfg.GameDir);
         }
 
         if (!IsValidGameDir(gameDir))
         {
-            Log.Warning("Automatic deploy mode is set but GAME_DIR is missing/invalid. Skipping automatic deploy.");
-            Log.Information("Run: build.cmd auto-deploy");
+            gameDir = DetectGameDir();
+        }
+
+        if (!IsValidGameDir(gameDir) && InteractiveSession)
+        {
+            Console.Write("Enter game installation directory for auto-deploy (must contain FFX.exe): ");
+            var manual = NormalizePathOrEmpty(Console.ReadLine());
+            if (IsValidGameDir(manual))
+            {
+                gameDir = manual;
+            }
+        }
+
+        if (!IsValidGameDir(gameDir))
+        {
+            Log.Warning("Automatic deploy is enabled but no valid GameDir could be resolved. Skipping automatic deploy.");
+            Log.Information("Run: build.cmd auto-deploy --game-dir <path>");
             return;
         }
 
-        var deployTarget = "mod";
-        var deployMode = "merge";
-
-        if (buildTarget == "full")
+        var normalizedGameDir = NormalizePathOrEmpty(gameDir);
+        if (!normalizedGameDir.Equals(NormalizePathOrEmpty(cfg.GameDir), StringComparison.OrdinalIgnoreCase))
         {
-            if (configuredMode == "mod-only")
-            {
-                deployTarget = "mod";
-                deployMode = "merge";
-            }
-            else
-            {
-                deployTarget = "full";
-                deployMode = "merge";
-            }
+            cfg.GameDir = normalizedGameDir;
+            SaveLocalConfig(cfg);
         }
 
-        var ok = DeployFromArtifacts(gameDir, configuration, deployTarget, deployMode, failOnError: false, reason: "Automatic deploy");
+        var normalizedBuildTarget = (buildTarget ?? string.Empty).Trim().ToLowerInvariant();
+        var deployTarget = normalizedBuildTarget switch
+        {
+            "full" => "full",
+            "mod" => "mod",
+            _ => string.Empty
+        };
+
+        if (string.IsNullOrWhiteSpace(deployTarget))
+        {
+            Log.Warning($"Unknown build target '{buildTarget}'. Skipping automatic deploy.");
+            return;
+        }
+
+        var ok = DeployFromArtifacts(normalizedGameDir, configuration, deployTarget, failOnError: false, reason: "Automatic deploy");
         if (!ok)
         {
             Log.Warning("Automatic deploy failed and was skipped.");
         }
     }
 
-    string NormalizeManualDeployMode(string mode)
-    {
-        var m = (mode ?? string.Empty).Trim().ToLowerInvariant();
-        return m switch
-        {
-            "merge" or "update" => "merge",
-            _ => FailWithReturn<string>($"Invalid deploy mode '{mode}'. Use merge.")
-        };
-    }
-
-    string NormalizeAutoDeployModeOrEmpty(string mode)
-    {
-        var m = (mode ?? string.Empty).Trim().ToLowerInvariant();
-        return m switch
-        {
-            "" => string.Empty,
-            "none" or "off" or "disable" => "none",
-            "update" or "merge" => "update",
-            "replace" => "update",
-            "mod-only" or "modonly" or "mod" => "mod-only",
-            _ => string.Empty
-        };
-    }
-
-    bool DeployFromArtifacts(string gameDir, string configuration, string target, string mode, bool failOnError, string reason)
+    bool DeployFromArtifacts(string gameDir, string configuration, string target, bool failOnError, string reason)
     {
         var normalizedTarget = target.Trim().ToLowerInvariant();
-        var normalizedMode = NormalizeManualDeployMode(mode);
+        if (normalizedTarget != "mod" && normalizedTarget != "full")
+        {
+            var msg = $"Invalid deploy target '{target}'. Use mod or full.";
+            if (failOnError) Fail(msg);
+            Log.Warning(msg);
+            return false;
+        }
+
         var normalizedGameDir = NormalizePathOrEmpty(gameDir);
         if (!IsValidGameDir(normalizedGameDir))
         {
-            var msg = $"Invalid GAME_DIR '{gameDir}' (FFX.exe not found).";
+            var msg = $"Invalid GameDir '{gameDir}' (FFX.exe not found).";
             if (failOnError) Fail(msg);
             Log.Warning(msg);
             return false;
@@ -1908,8 +2161,6 @@ internal sealed partial class BuildScript : NukeBuild
         var destinationPath = normalizedTarget == "full"
             ? targetRoot
             : Path.Combine(targetRoot, "mods", ModId);
-        var targetModsDir = Path.Combine(targetRoot, "mods");
-        var targetLoadOrderPath = Path.Combine(targetModsDir, "loadorder");
 
         if (!Directory.Exists(sourcePath))
         {
@@ -1919,24 +2170,21 @@ internal sealed partial class BuildScript : NukeBuild
             return false;
         }
 
-        var deployBlocklist = LoadLocalConfig().DeployBlocklist;
+        var cfg = LoadLocalConfig();
+        var deployBlocklist = cfg.DeployBlocklist ?? [];
 
         try
         {
-            var preservedLoadOrder = normalizedTarget == "full"
-                ? ReadLoadOrderLines(targetLoadOrderPath)
-                : new List<string>();
-
-            CopyDirectoryRecursiveWithBlocklist(sourcePath, destinationPath, targetRoot, deployBlocklist);
-
-            if (normalizedTarget == "full")
+            SyncDirectoryRecursiveWithBlocklist(sourcePath, destinationPath, targetRoot, deployBlocklist);
+            if (DryRun)
             {
-                MergeLoadOrderEntries(targetLoadOrderPath, preservedLoadOrder);
+                Log.Information($"{reason}: [DRY-RUN] simulated deploy {normalizedTarget} to {destinationPath}");
             }
-
-            EnsureLoadOrderEntry(targetLoadOrderPath, ModId);
-            Log.Information($"{reason}: deployed {normalizedTarget} ({normalizedMode}) to {destinationPath}");
-            CleanupReleaseDirAfterDeploy();
+            else
+            {
+                Log.Information($"{reason}: deployed {normalizedTarget} to {destinationPath}");
+                CleanupReleaseDirAfterDeploy();
+            }
             return true;
         }
         catch (Exception ex)
@@ -1951,55 +2199,6 @@ internal sealed partial class BuildScript : NukeBuild
         }
     }
 
-    static void MergeLoadOrderEntries(string loadOrderPath, IEnumerable<string> preservedEntries)
-    {
-        var merged = new List<string>();
-
-        void appendDistinct(IEnumerable<string> source)
-        {
-            foreach (var line in source)
-            {
-                var entry = line.Trim();
-                if (entry.Length == 0) continue;
-                if (!merged.Any(x => x.Equals(entry, StringComparison.OrdinalIgnoreCase)))
-                {
-                    merged.Add(entry);
-                }
-            }
-        }
-
-        appendDistinct(preservedEntries);
-        appendDistinct(ReadLoadOrderLines(loadOrderPath));
-
-        EnsureDir(Path.GetDirectoryName(loadOrderPath) ?? string.Empty);
-        File.WriteAllLines(loadOrderPath, merged);
-    }
-
-    static List<string> ReadLoadOrderLines(string loadOrderPath)
-    {
-        if (!File.Exists(loadOrderPath))
-        {
-            return new List<string>();
-        }
-
-        return File.ReadAllLines(loadOrderPath)
-            .Select(x => x.Trim())
-            .Where(x => x.Length > 0)
-            .ToList();
-    }
-
-    void EnsureLoadOrderEntry(string loadOrderPath, string entry)
-    {
-        EnsureDir(Path.GetDirectoryName(loadOrderPath) ?? string.Empty);
-        var existing = ReadLoadOrderLines(loadOrderPath);
-
-        if (!existing.Any(x => x.Equals(entry, StringComparison.OrdinalIgnoreCase)))
-        {
-            existing.Add(entry);
-            File.WriteAllLines(loadOrderPath, existing);
-        }
-    }
-
     string ResolveGameDir(bool promptIfMissing, bool persist)
     {
         var cfg = LoadLocalConfig();
@@ -2007,7 +2206,7 @@ internal sealed partial class BuildScript : NukeBuild
         var fromArg = NormalizePathOrEmpty(GameDir);
         if (!string.IsNullOrWhiteSpace(GameDir) && !IsValidGameDir(fromArg))
         {
-            Fail($"Invalid --gamedir value '{GameDir}' (FFX.exe not found).");
+            Fail($"Invalid --game-dir value '{GameDir}' (FFX.exe not found).");
         }
 
         if (IsValidGameDir(fromArg))
@@ -2021,10 +2220,13 @@ internal sealed partial class BuildScript : NukeBuild
             return fromArg;
         }
 
-        var fromConfig = NormalizePathOrEmpty(cfg.GameDir);
-        if (IsValidGameDir(fromConfig))
+        if (!RefreshGameDir)
         {
-            return fromConfig;
+            var fromConfig = NormalizePathOrEmpty(cfg.GameDir);
+            if (IsValidGameDir(fromConfig))
+            {
+                return fromConfig;
+            }
         }
 
         var detected = DetectGameDir();
@@ -2061,7 +2263,7 @@ internal sealed partial class BuildScript : NukeBuild
             }
         }
 
-        Fail("Could not resolve GAME_DIR. Pass --gamedir or run build.cmd auto-deploy.");
+        Fail("Could not resolve GameDir. Pass --game-dir or run build.cmd auto-deploy.");
         return string.Empty;
     }
 
@@ -2099,78 +2301,358 @@ internal sealed partial class BuildScript : NukeBuild
 
     IEnumerable<string> GameDirCandidates()
     {
-        yield return @"C:\Games\Final Fantasy X-X2 - HD Remaster";
-        yield return @"C:\Games\Final Fantasy X_X-2 HD Remaster";
-        yield return @"C:\Games\FINAL FANTASY X_X-2 HD Remaster";
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var candidate in DiscoverGameDirCandidates())
+        {
+            var normalized = NormalizePathOrEmpty(candidate);
+            if (string.IsNullOrWhiteSpace(normalized)) continue;
+            if (seen.Add(normalized))
+            {
+                yield return normalized;
+            }
+        }
+    }
+
+    IEnumerable<string> DiscoverGameDirCandidates()
+    {
+        foreach (var candidate in DiscoverGameDirCandidatesFromSteamAppManifest())
+        {
+            yield return candidate;
+        }
+
+        foreach (var candidate in DiscoverGameDirCandidatesFromGamesFallbackByPattern())
+        {
+            yield return candidate;
+        }
+    }
+
+    IEnumerable<string> DiscoverGameDirCandidatesFromSteamAppManifest()
+    {
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var libraryRoot in DiscoverSteamLibraryRoots())
+        {
+            var steamApps = Path.Combine(libraryRoot, "steamapps");
+            var appManifestPath = Path.Combine(steamApps, $"appmanifest_{SteamAppIdFfx}.acf");
+            if (!File.Exists(appManifestPath))
+            {
+                continue;
+            }
+
+            var installDir = TryReadInstallDirFromAppManifest(appManifestPath);
+            if (string.IsNullOrWhiteSpace(installDir))
+            {
+                continue;
+            }
+
+            var candidate = NormalizePathOrEmpty(Path.Combine(steamApps, "common", installDir));
+            if (!string.IsNullOrWhiteSpace(candidate) && seen.Add(candidate))
+            {
+                yield return candidate;
+            }
+        }
+    }
+
+    IEnumerable<string> DiscoverGameDirCandidatesFromGamesFallbackByPattern()
+    {
+        var gamesRoot = @"X:\Games";
+        if (!Directory.Exists(gamesRoot))
+        {
+            yield break;
+        }
+
+        IEnumerable<string> dirs;
+        try
+        {
+            dirs = Directory.EnumerateDirectories(gamesRoot, "*", SearchOption.TopDirectoryOnly);
+        }
+        catch
+        {
+            yield break;
+        }
+
+        foreach (var dir in dirs)
+        {
+            var name = Path.GetFileName(dir);
+            if (string.IsNullOrWhiteSpace(name)) continue;
+            if (!GameInstallDirNamePattern.IsMatch(name)) continue;
+            yield return dir;
+        }
+    }
+
+    IEnumerable<string> DiscoverSteamLibraryRoots()
+    {
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var installRoot in DiscoverSteamInstallRoots())
+        {
+            if (seen.Add(installRoot))
+            {
+                yield return installRoot;
+            }
+
+            foreach (var libraryRoot in DiscoverSteamLibraryRootsFromLibraryFolders(installRoot))
+            {
+                if (seen.Add(libraryRoot))
+                {
+                    yield return libraryRoot;
+                }
+            }
+        }
+    }
+
+    IEnumerable<string> DiscoverSteamInstallRoots()
+    {
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var root in DiscoverSteamInstallRootsFromRegistry())
+        {
+            var normalized = NormalizePathOrEmpty(root);
+            if (!string.IsNullOrWhiteSpace(normalized) && Directory.Exists(normalized) && seen.Add(normalized))
+            {
+                yield return normalized;
+            }
+        }
 
         var pf86 = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
         var pf = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
-        if (!string.IsNullOrWhiteSpace(pf86))
+
+        foreach (var fallback in new[]
+                 {
+                     string.IsNullOrWhiteSpace(pf86) ? string.Empty : Path.Combine(pf86, "Steam"),
+                     string.IsNullOrWhiteSpace(pf) ? string.Empty : Path.Combine(pf, "Steam")
+                 })
         {
-            yield return Path.Combine(pf86, "Steam", "steamapps", "common", "FINAL FANTASY X_X-2 HD Remaster");
+            var normalized = NormalizePathOrEmpty(fallback);
+            if (!string.IsNullOrWhiteSpace(normalized) && Directory.Exists(normalized) && seen.Add(normalized))
+            {
+                yield return normalized;
+            }
+        }
+    }
+
+    IEnumerable<string> DiscoverSteamInstallRootsFromRegistry()
+    {
+        if (!OperatingSystem.IsWindows())
+        {
+            yield break;
         }
 
-        if (!string.IsNullOrWhiteSpace(pf))
+        var keyPaths = new[]
         {
-            yield return Path.Combine(pf, "Steam", "steamapps", "common", "FINAL FANTASY X_X-2 HD Remaster");
+            @"SOFTWARE\Valve\Steam",
+            @"SOFTWARE\WOW6432Node\Valve\Steam"
+        };
+        var valueNames = new[] { "InstallPath", "SteamPath" };
+
+        foreach (var hive in new[] { RegistryHive.CurrentUser, RegistryHive.LocalMachine })
+        {
+            foreach (var view in new[] { RegistryView.Registry64, RegistryView.Registry32 })
+            {
+                RegistryKey? baseKey = null;
+                try
+                {
+                    baseKey = RegistryKey.OpenBaseKey(hive, view);
+                }
+                catch
+                {
+                    // Ignore unavailable registry views/hives.
+                }
+
+                if (baseKey is null)
+                {
+                    continue;
+                }
+
+                using (baseKey)
+                {
+                    foreach (var keyPath in keyPaths)
+                    {
+                        using var steamKey = baseKey.OpenSubKey(keyPath);
+                        if (steamKey is null) continue;
+
+                        foreach (var valueName in valueNames)
+                        {
+                            var raw = steamKey.GetValue(valueName) as string;
+                            var normalized = NormalizePathOrEmpty(raw);
+                            if (!string.IsNullOrWhiteSpace(normalized))
+                            {
+                                yield return normalized;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    IEnumerable<string> DiscoverSteamLibraryRootsFromLibraryFolders(string steamRoot)
+    {
+        var libraryFoldersPath = Path.Combine(steamRoot, "steamapps", "libraryfolders.vdf");
+        if (!File.Exists(libraryFoldersPath))
+        {
+            yield break;
         }
 
-        foreach (var drive in new[] { "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P" })
+        string text;
+        try
         {
-            yield return $"{drive}:\\SteamLibrary\\steamapps\\common\\FINAL FANTASY X_X-2 HD Remaster";
-            yield return $"{drive}:\\Games\\Final Fantasy X-X2 - HD Remaster";
+            text = File.ReadAllText(libraryFoldersPath);
         }
+        catch
+        {
+            yield break;
+        }
+
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (Match match in SteamLibraryPathRegex.Matches(text))
+        {
+            var rawPath = match.Groups["path"].Value;
+            var normalizedLibraryRoot = NormalizeSteamLibraryPath(rawPath);
+            if (string.IsNullOrWhiteSpace(normalizedLibraryRoot) || !Directory.Exists(normalizedLibraryRoot)) continue;
+            if (seen.Add(normalizedLibraryRoot))
+            {
+                yield return normalizedLibraryRoot;
+            }
+        }
+
+        foreach (Match match in SteamLibraryLegacyPathRegex.Matches(text))
+        {
+            var rawPath = match.Groups["path"].Value;
+            var normalizedLibraryRoot = NormalizeSteamLibraryPath(rawPath);
+            if (string.IsNullOrWhiteSpace(normalizedLibraryRoot) || !Directory.Exists(normalizedLibraryRoot)) continue;
+            if (seen.Add(normalizedLibraryRoot))
+            {
+                yield return normalizedLibraryRoot;
+            }
+        }
+    }
+
+    string TryReadInstallDirFromAppManifest(string appManifestPath)
+    {
+        string text;
+        try
+        {
+            text = File.ReadAllText(appManifestPath);
+        }
+        catch
+        {
+            return string.Empty;
+        }
+
+        var match = SteamAppManifestInstallDirRegex.Match(text);
+        if (!match.Success)
+        {
+            return string.Empty;
+        }
+
+        var installDir = match.Groups["dir"].Value
+            .Trim()
+            .Replace(@"\\", @"\")
+            .Replace('/', '\\')
+            .Trim('\\');
+
+        return string.IsNullOrWhiteSpace(installDir) ? string.Empty : installDir;
+    }
+
+    static string NormalizeSteamLibraryPath(string rawPath)
+    {
+        if (string.IsNullOrWhiteSpace(rawPath))
+        {
+            return string.Empty;
+        }
+
+        var unescaped = rawPath
+            .Trim()
+            .Replace(@"\\", @"\")
+            .Replace('/', '\\');
+
+        return NormalizePathOrEmpty(unescaped);
     }
 
     LocalConfig LoadLocalConfig()
     {
+        EnsureDir(WorkspaceDir);
+
         if (!File.Exists(LocalConfigPath))
         {
-            return new LocalConfig();
+            var defaults = CreateDefaultLocalConfig();
+            SaveLocalConfig(defaults);
+            Log.Information($"Created default local config: {LocalConfigPath}");
+            return defaults;
         }
 
         try
         {
-            using var doc = JsonDocument.Parse(File.ReadAllText(LocalConfigPath));
-            var root = doc.RootElement;
-            var cfg = new LocalConfig
+            var cfg = JsonSerializer.Deserialize<LocalConfig>(File.ReadAllText(LocalConfigPath), new JsonSerializerOptions
             {
-                GameDir = ReadJsonString(root, "GAME_DIR", "GameDir"),
-                DeployMode = NormalizeAutoDeployModeOrEmpty(ReadJsonString(root, "DEPLOY_MODE", "DeployMode")),
-                DeployBlocklist = ReadJsonStringArray(root, "DEPLOY_BLOCKLIST", "DeployBlocklist")
-            };
-
-            if (string.IsNullOrWhiteSpace(cfg.DeployMode))
-            {
-                cfg.DeployMode = "none";
-            }
-
+                PropertyNameCaseInsensitive = true
+            }) ?? CreateDefaultLocalConfig();
+            cfg = NormalizeLocalConfig(cfg);
+            SaveLocalConfig(cfg);
             return cfg;
         }
-        catch
+        catch (Exception ex)
         {
-            return new LocalConfig();
+            var defaults = CreateDefaultLocalConfig();
+            SaveLocalConfig(defaults);
+            Log.Warning($"Local config was invalid and has been replaced with defaults: {LocalConfigPath}. Reason: {ex.Message}");
+            return defaults;
         }
     }
 
     void SaveLocalConfig(LocalConfig cfg)
     {
         EnsureDir(WorkspaceDir);
-        var normalizedGameDir = NormalizePathOrEmpty(cfg.GameDir);
-        var normalizedMode = NormalizeAutoDeployModeOrEmpty(cfg.DeployMode);
-        if (string.IsNullOrWhiteSpace(normalizedMode))
+        var normalized = NormalizeLocalConfig(cfg);
+        var json = JsonSerializer.Serialize(normalized, new JsonSerializerOptions { WriteIndented = true });
+        File.WriteAllText(LocalConfigPath, json + Environment.NewLine);
+    }
+
+    static LocalConfig CreateDefaultLocalConfig()
+    {
+        return new LocalConfig
         {
-            normalizedMode = "none";
+            GameDir = string.Empty,
+            AutoDeploy = null,
+            DeployBlocklist = CreateDefaultDeployBlocklist()
+        };
+    }
+
+    static List<string> CreateDefaultDeployBlocklist() => DefaultDeployBlocklist.ToList();
+
+    LocalConfig NormalizeLocalConfig(LocalConfig cfg)
+    {
+        var normalized = cfg ?? CreateDefaultLocalConfig();
+
+        normalized.GameDir = NormalizePathOrEmpty(normalized.GameDir);
+        normalized.DeployBlocklist ??= CreateDefaultDeployBlocklist();
+
+        normalized.DeployBlocklist = normalized.DeployBlocklist
+            .Select(NormalizeDeployBlocklistEntry)
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(x => x, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        return normalized;
+    }
+
+    string NormalizeDeployBlocklistEntry(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return string.Empty;
         }
 
-        var payload = new Dictionary<string, object>
+        var trimmed = value.Trim();
+        if (Path.IsPathRooted(trimmed))
         {
-            ["GAME_DIR"] = normalizedGameDir,
-            ["DEPLOY_MODE"] = normalizedMode
-        };
+            return NormalizePathOrEmpty(trimmed);
+        }
 
-        var json = JsonSerializer.Serialize(payload, new JsonSerializerOptions { WriteIndented = true });
-        File.WriteAllText(LocalConfigPath, json + Environment.NewLine);
+        return trimmed.Replace('\\', '/').Trim('/');
     }
 
     static string ReadJsonString(JsonElement root, params string[] keys)
@@ -2593,51 +3075,288 @@ goto :eof
         }
     }
 
-    void CopyDirectoryRecursiveWithBlocklist(string source, string destination, string blocklistRoot, IReadOnlyList<string> blocklist)
+    void MirrorDirectoryRecursive(string source, string destination)
     {
-        if (blocklist.Count == 0)
+        EnsureDirectoryMaybe(destination);
+        var destinationExists = Directory.Exists(destination);
+
+        if (destinationExists)
         {
-            CopyDirectoryRecursive(source, destination);
-            return;
+            foreach (var file in Directory.GetFiles(destination, "*", SearchOption.AllDirectories))
+            {
+                var relative = Path.GetRelativePath(destination, file);
+                var sourceFile = Path.Combine(source, relative);
+                if (!File.Exists(sourceFile))
+                {
+                    DeleteFileMaybe(file);
+                }
+            }
+
+            foreach (var dir in Directory.GetDirectories(destination, "*", SearchOption.AllDirectories)
+                         .OrderByDescending(x => x.Length))
+            {
+                var relative = Path.GetRelativePath(destination, dir);
+                var sourceDir = Path.Combine(source, relative);
+                if (!Directory.Exists(sourceDir))
+                {
+                    DeleteDirectoryMaybe(dir);
+                }
+            }
         }
 
         foreach (var dir in Directory.GetDirectories(source, "*", SearchOption.AllDirectories))
         {
-            var relativeToRoot = Path.GetRelativePath(blocklistRoot, dir).Replace('\\', '/');
-            if (is_blocklisted(relativeToRoot))
-            {
-                Log.Information($"Deploy blocklist: skipping directory {relativeToRoot}");
-                continue;
-            }
             var relative = Path.GetRelativePath(source, dir);
-            Directory.CreateDirectory(Path.Combine(destination, relative));
+            EnsureDirectoryMaybe(Path.Combine(destination, relative));
         }
 
         foreach (var file in Directory.GetFiles(source, "*", SearchOption.AllDirectories))
         {
-            var relativeToRoot = Path.GetRelativePath(blocklistRoot, file).Replace('\\', '/');
-            if (is_blocklisted(relativeToRoot))
-            {
-                Log.Information($"Deploy blocklist: skipping file {relativeToRoot}");
-                continue;
-            }
             var relative = Path.GetRelativePath(source, file);
             var target = Path.Combine(destination, relative);
             var parent = Path.GetDirectoryName(target);
-            if (!string.IsNullOrWhiteSpace(parent)) Directory.CreateDirectory(parent);
-            File.Copy(file, target, overwrite: true);
+            if (!string.IsNullOrWhiteSpace(parent)) EnsureDirectoryMaybe(parent);
+            CopyFileMaybe(file, target, overwrite: true);
+        }
+    }
+
+    void SyncDirectoryRecursiveWithBlocklist(string source, string destination, string blocklistRoot, IReadOnlyList<string> blocklist)
+    {
+        var normalizedBlocklist = (blocklist ?? [])
+            .Select(NormalizeDeployBlocklistEntry)
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        if (normalizedBlocklist.Count == 0)
+        {
+            MirrorDirectoryRecursive(source, destination);
+            return;
         }
 
-        bool is_blocklisted(string relativeToRoot)
+        EnsureDirectoryMaybe(destination);
+        var destinationExists = Directory.Exists(destination);
+
+        var relativeEntries = normalizedBlocklist
+            .Where(x => !Path.IsPathRooted(x))
+            .Select(NormalizeRelativeForComparison)
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .ToList();
+        var absoluteEntries = normalizedBlocklist
+            .Where(Path.IsPathRooted)
+            .Select(x => NormalizePathOrEmpty(x).Replace('\\', '/').TrimEnd('/'))
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .ToList();
+
+        if (destinationExists)
         {
-            foreach (var entry in blocklist)
+            foreach (var file in Directory.GetFiles(destination, "*", SearchOption.AllDirectories))
             {
-                var normalized = entry.Replace('\\', '/').Trim('/');
-                if (relativeToRoot.Equals(normalized, StringComparison.OrdinalIgnoreCase)) return true;
-                if (relativeToRoot.StartsWith(normalized + "/", StringComparison.OrdinalIgnoreCase)) return true;
+                var relative = Path.GetRelativePath(destination, file);
+                var sourceFile = Path.Combine(source, relative);
+                if (File.Exists(sourceFile))
+                {
+                    continue;
+                }
+
+                if (IsTargetPathBlocklisted(file, blocklistRoot, relativeEntries, absoluteEntries, out var relativeToRoot))
+                {
+                    Log.Information($"Deploy blocklist: preserving file {relativeToRoot}");
+                    continue;
+                }
+
+                DeleteFileMaybe(file);
             }
+
+            foreach (var dir in Directory.GetDirectories(destination, "*", SearchOption.AllDirectories)
+                         .OrderByDescending(x => x.Length))
+            {
+                var relative = Path.GetRelativePath(destination, dir);
+                var sourceDir = Path.Combine(source, relative);
+                if (Directory.Exists(sourceDir))
+                {
+                    continue;
+                }
+
+                if (IsTargetPathBlocklisted(dir, blocklistRoot, relativeEntries, absoluteEntries, out var relativeToRoot))
+                {
+                    Log.Information($"Deploy blocklist: preserving directory {relativeToRoot}");
+                    continue;
+                }
+
+                var normalizedDirAbsolute = NormalizePathOrEmpty(dir).Replace('\\', '/').TrimEnd('/');
+                var normalizedRelativeToRoot = NormalizeRelativeForComparison(Path.GetRelativePath(blocklistRoot, dir));
+                if (DirectoryContainsBlocklistedPath(normalizedRelativeToRoot, normalizedDirAbsolute, relativeEntries, absoluteEntries))
+                {
+                    Log.Information($"Deploy blocklist: preserving directory {relativeToRoot} (contains blocklisted path)");
+                    continue;
+                }
+
+                DeleteDirectoryMaybe(dir);
+            }
+        }
+
+        foreach (var dir in Directory.GetDirectories(source, "*", SearchOption.AllDirectories))
+        {
+            var relative = Path.GetRelativePath(source, dir);
+            var target = Path.Combine(destination, relative);
+            if (IsTargetPathBlocklisted(target, blocklistRoot, relativeEntries, absoluteEntries, out var relativeToRoot))
+            {
+                Log.Information($"Deploy blocklist: skipping directory sync {relativeToRoot}");
+                continue;
+            }
+
+            EnsureDirectoryMaybe(target);
+        }
+
+        foreach (var file in Directory.GetFiles(source, "*", SearchOption.AllDirectories))
+        {
+            var relative = Path.GetRelativePath(source, file);
+            var target = Path.Combine(destination, relative);
+            if (IsTargetPathBlocklisted(target, blocklistRoot, relativeEntries, absoluteEntries, out var relativeToRoot))
+            {
+                Log.Information($"Deploy blocklist: skipping file sync {relativeToRoot}");
+                continue;
+            }
+
+            var parent = Path.GetDirectoryName(target);
+            if (!string.IsNullOrWhiteSpace(parent)) EnsureDirectoryMaybe(parent);
+            CopyFileMaybe(file, target, overwrite: true);
+        }
+    }
+
+    void EnsureDirectoryMaybe(string path)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            return;
+        }
+
+        if (Directory.Exists(path))
+        {
+            return;
+        }
+
+        if (DryRun)
+        {
+            Log.Information($"[DRY-RUN] Create directory: {path}");
+            return;
+        }
+
+        Directory.CreateDirectory(path);
+    }
+
+    void DeleteFileMaybe(string path)
+    {
+        if (DryRun)
+        {
+            Log.Information($"[DRY-RUN] Delete file: {path}");
+            return;
+        }
+
+        File.Delete(path);
+    }
+
+    void DeleteDirectoryMaybe(string path)
+    {
+        if (DryRun)
+        {
+            Log.Information($"[DRY-RUN] Delete directory: {path}");
+            return;
+        }
+
+        Directory.Delete(path, recursive: true);
+    }
+
+    void CopyFileMaybe(string source, string target, bool overwrite)
+    {
+        if (DryRun)
+        {
+            Log.Information($"[DRY-RUN] Copy file: {source} -> {target}");
+            return;
+        }
+
+        File.Copy(source, target, overwrite: overwrite);
+    }
+
+    bool IsTargetPathBlocklisted(string targetPath, string blocklistRoot, IReadOnlyList<string> relativeEntries, IReadOnlyList<string> absoluteEntries, out string relativeToRootDisplay)
+    {
+        var normalizedTargetAbsolute = NormalizePathOrEmpty(targetPath).Replace('\\', '/').TrimEnd('/');
+        var normalizedRelativeToRoot = NormalizeRelativeForComparison(Path.GetRelativePath(blocklistRoot, targetPath));
+        relativeToRootDisplay = string.IsNullOrWhiteSpace(normalizedRelativeToRoot) ? "." : normalizedRelativeToRoot;
+        return IsBlocklistedPath(normalizedRelativeToRoot, normalizedTargetAbsolute, relativeEntries, absoluteEntries);
+    }
+
+    static bool IsBlocklistedPath(string relativeToRoot, string targetAbsolute, IReadOnlyList<string> relativeEntries, IReadOnlyList<string> absoluteEntries)
+    {
+        foreach (var absoluteEntry in absoluteEntries)
+        {
+            if (targetAbsolute.Equals(absoluteEntry, StringComparison.OrdinalIgnoreCase) ||
+                targetAbsolute.StartsWith(absoluteEntry + "/", StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        if (relativeToRoot.StartsWith("..", StringComparison.Ordinal))
+        {
             return false;
         }
+
+        foreach (var relativeEntry in relativeEntries)
+        {
+            if (relativeToRoot.Equals(relativeEntry, StringComparison.OrdinalIgnoreCase) ||
+                relativeToRoot.StartsWith(relativeEntry + "/", StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    static bool DirectoryContainsBlocklistedPath(string directoryRelativeToRoot, string directoryAbsolute, IReadOnlyList<string> relativeEntries, IReadOnlyList<string> absoluteEntries)
+    {
+        foreach (var absoluteEntry in absoluteEntries)
+        {
+            if (absoluteEntry.Equals(directoryAbsolute, StringComparison.OrdinalIgnoreCase) ||
+                absoluteEntry.StartsWith(directoryAbsolute + "/", StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        if (directoryRelativeToRoot.StartsWith("..", StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(directoryRelativeToRoot))
+        {
+            return relativeEntries.Count > 0;
+        }
+
+        foreach (var relativeEntry in relativeEntries)
+        {
+            if (relativeEntry.Equals(directoryRelativeToRoot, StringComparison.OrdinalIgnoreCase) ||
+                relativeEntry.StartsWith(directoryRelativeToRoot + "/", StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    static string NormalizeRelativeForComparison(string relativePath)
+    {
+        var normalized = (relativePath ?? string.Empty).Replace('\\', '/').Trim();
+        if (normalized == ".")
+        {
+            return string.Empty;
+        }
+
+        return normalized.Trim('/');
     }
 
     static void WriteSha256(string path)
@@ -2680,9 +3399,15 @@ goto :eof
     sealed class LocalConfig
     {
         public string GameDir { get; set; } = string.Empty;
-        public string DeployMode { get; set; } = "none";
-        public List<string> DeployBlocklist { get; set; } = new();
+        public bool? AutoDeploy { get; set; }
+        public List<string>? DeployBlocklist { get; set; }
     }
+
+    readonly record struct WorkflowHelpBlock(
+        string Workflow,
+        string Purpose,
+        IReadOnlyList<string> Parameters,
+        IReadOnlyList<string> Examples);
 
     readonly record struct SemVersion(int Major, int Minor, int Patch)
     {
@@ -2693,8 +3418,5 @@ goto :eof
 
     readonly record struct ProcessResult(int ExitCode, string StdOut, string StdErr);
 }
-
-
-
 
 

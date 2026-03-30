@@ -4,106 +4,127 @@ setlocal EnableExtensions EnableDelayedExpansion
 call :ensure_dotnet
 if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
 
+set "LOCKDIR="
+set "LOCK_ENABLED=1"
+if /I "%BUILD_CMD_SMOKE_ONLY%"=="1" set "LOCK_ENABLED=0"
+if /I "%BUILD_CMD_ALLOW_NESTED%"=="1" set "LOCK_ENABLED=0"
+
+if "%LOCK_ENABLED%"=="1" (
+    call :acquire_lock
+    if !ERRORLEVEL! NEQ 0 exit /B !ERRORLEVEL!
+)
+
 if "%~1"=="" (
     set "NUKE_ARGS=--target Help"
     goto :run_nuke
 )
 
 set "CMD=%~1"
-shift
-set "REST="
-:collect_rest
-if "%~1"=="" goto :rest_done
-set "REST=!REST! %~1"
-shift
-goto :collect_rest
-:rest_done
-if defined REST set "REST=!REST:~1!"
 
-if /I "%CMD%"=="help" (
-    if "%REST%"=="" (
-        set "NUKE_ARGS=--target Help"
-    ) else (
-        set "NUKE_ARGS=--target Help --workflow %REST%"
-    )
-    goto :run_nuke
-)
-
-if /I "%CMD%"=="-h" (
-    if "%REST%"=="" (
-        set "NUKE_ARGS=--target Help"
-    ) else (
-        set "NUKE_ARGS=--target Help --workflow %REST%"
-    )
-    goto :run_nuke
-)
-
-if /I "%CMD%"=="--help" (
-    if "%REST%"=="" (
-        set "NUKE_ARGS=--target Help"
-    ) else (
-        set "NUKE_ARGS=--target Help --workflow %REST%"
-    )
-    goto :run_nuke
-)
+if /I "%CMD%"=="-h" goto :global_help
+if /I "%CMD%"=="--help" goto :global_help
+if /I "%CMD%"=="help" goto :global_help
 
 if /I "%CMD:~0,1%"=="-" (
-    set "NUKE_ARGS=%CMD% %REST%"
+    set "NUKE_ARGS=%*"
     goto :run_nuke
 )
 
-set "TARGET="
-if /I "%CMD%"=="install" set "TARGET=Install"
-if /I "%CMD%"=="setup" set "TARGET=Setup"
-if /I "%CMD%"=="clean" set "TARGET=Clean"
-if /I "%CMD%"=="auto-deploy" set "TARGET=AutoDeploy"
-if /I "%CMD%"=="doctor" set "TARGET=Doctor"
-if /I "%CMD%"=="format" set "TARGET=Format"
-if /I "%CMD%"=="lint" set "TARGET=Lint"
-if /I "%CMD%"=="smoke" set "TARGET=Smoke"
-if /I "%CMD%"=="verify" set "TARGET=Verify"
-if /I "%CMD%"=="build" set "TARGET=Build"
-if /I "%CMD%"=="deploy" set "TARGET=Deploy"
-if /I "%CMD%"=="start" set "TARGET=Start"
-if /I "%CMD%"=="data-setup" set "TARGET=DataSetup"
-if /I "%CMD%"=="ghidra-setup" set "TARGET=GhidraSetup"
-if /I "%CMD%"=="ghidra-start" set "TARGET=GhidraStart"
-if /I "%CMD%"=="discord-sync" set "TARGET=DiscordSync"
-if /I "%CMD%"=="data-extract" set "TARGET=DataExtract"
-if /I "%CMD%"=="data-parse" set "TARGET=DataParse"
-if /I "%CMD%"=="data-parse-all" set "TARGET=DataParseAll"
-if /I "%CMD%"=="map-import" set "TARGET=MapImport"
-if /I "%CMD%"=="map-build" set "TARGET=MapBuild"
-if /I "%CMD%"=="data-inventory" set "TARGET=DataInventory"
-if /I "%CMD%"=="data-offload" set "TARGET=DataOffload"
-if /I "%CMD%"=="release-bump" set "TARGET=ReleaseBump"
-if /I "%CMD%"=="release-ready" set "TARGET=ReleaseReady"
-if /I "%CMD%"=="release-pack" set "TARGET=ReleasePack"
-if /I "%CMD%"=="release-notes" set "TARGET=ReleaseNotes"
-if /I "%CMD%"=="commit" set "TARGET=Commit"
-if /I "%CMD%"=="commit-check" set "TARGET=CommitCheck"
-if /I "%CMD%"=="commit-range" set "TARGET=CommitRange"
+if /I "%~2"=="-h" goto :workflow_help
+if /I "%~2"=="--help" goto :workflow_help
 
-if not defined TARGET set "TARGET=%CMD%"
+set "NUKE_ARGS=--target Cli --workflow %CMD%"
+:append_remaining_args
+shift
+if "%~1"=="" goto :run_nuke
+set "NUKE_ARGS=%NUKE_ARGS% %1"
+goto :append_remaining_args
 
-set "NUKE_ARGS=--target %TARGET%"
-if not "%REST%"=="" set "NUKE_ARGS=!NUKE_ARGS! %REST%"
+:global_help
+if "%~2"=="" (
+    set "NUKE_ARGS=--target Help"
+) else (
+    set "NUKE_ARGS=--target Help --workflow %~2"
+)
+goto :run_nuke
+
+:workflow_help
+set "NUKE_ARGS=--target Help --workflow %CMD%"
+goto :run_nuke
 
 :run_nuke
 set "NUKE_TELEMETRY_OPTOUT=1"
-echo [NUKE] dotnet run --project build\Build.csproj -- !NUKE_ARGS!
-dotnet run --project build\Build.csproj -- !NUKE_ARGS!
-exit /B %ERRORLEVEL%
+echo [NUKE] dotnet run --project build\Build.csproj -- %NUKE_ARGS%
+if /I "%BUILD_CMD_SMOKE_ONLY%"=="1" (
+    call :release_lock
+    exit /B 0
+)
+
+dotnet run --project build\Build.csproj -- %NUKE_ARGS%
+set "EXIT_CODE=%ERRORLEVEL%"
+call :release_lock
+exit /B %EXIT_CODE%
+
+:acquire_lock
+if not exist ".nuke" mkdir ".nuke" >NUL 2>&1
+set "LOCKDIR=.nuke\run.lock"
+
+if exist "%LOCKDIR%" (
+    call :is_lock_active
+    if !ERRORLEVEL! EQU 0 (
+        echo ERROR: another build invocation appears to be running.
+        echo If this is stale, remove "%LOCKDIR%" and retry.
+        exit /B 9
+    )
+
+    echo [WARN] Stale build lock detected. Removing "%LOCKDIR%".
+    rd /s /q "%LOCKDIR%" >NUL 2>&1
+)
+
+mkdir "%LOCKDIR%" >NUL 2>&1
+if !ERRORLEVEL! NEQ 0 (
+    echo ERROR: failed to create build lock directory "%LOCKDIR%".
+    exit /B 9
+)
+
+set "LOCK_OWNER_PID="
+for /f %%P in ('powershell -NoProfile -Command "$PID"') do set "LOCK_OWNER_PID=%%P"
+if defined LOCK_OWNER_PID (
+    >"%LOCKDIR%\owner.pid" echo %LOCK_OWNER_PID%
+)
+>"%LOCKDIR%\started.txt" echo %DATE% %TIME%
+exit /B 0
+
+:is_lock_active
+if not exist "%LOCKDIR%\owner.pid" exit /B 1
+
+set "LOCK_OWNER_PID="
+set /p LOCK_OWNER_PID=<"%LOCKDIR%\owner.pid"
+if not defined LOCK_OWNER_PID exit /B 1
+
+set "NON_NUMERIC_PID="
+for /f "tokens=* delims=0123456789" %%A in ("%LOCK_OWNER_PID%") do set "NON_NUMERIC_PID=1"
+if defined NON_NUMERIC_PID exit /B 1
+
+tasklist /FI "PID eq %LOCK_OWNER_PID%" | findstr /R /C:"[ ]%LOCK_OWNER_PID%[ ]" >NUL
+if !ERRORLEVEL! EQU 0 exit /B 0
+exit /B 1
+
+:release_lock
+if defined LOCKDIR (
+    if exist "%LOCKDIR%" rd /s /q "%LOCKDIR%" >NUL 2>&1
+)
+exit /B 0
 
 :ensure_dotnet
 where dotnet >NUL 2>&1
-if %ERRORLEVEL% EQU 0 (
+if !ERRORLEVEL! EQU 0 (
     dotnet --list-sdks | findstr /R /C:"^10\." >NUL
-    if %ERRORLEVEL% EQU 0 exit /B 0
+    if !ERRORLEVEL! EQU 0 exit /B 0
 )
 
 where winget >NUL 2>&1
-if %ERRORLEVEL% NEQ 0 (
+if !ERRORLEVEL! NEQ 0 (
     echo ERROR: dotnet SDK 10.x missing and winget is unavailable.
     echo Install .NET SDK 10.x manually, then retry.
     exit /B 3
@@ -120,19 +141,19 @@ if /I not "%CONFIRM%"=="Y" if /I not "%CONFIRM%"=="YES" (
 
 echo Installing .NET SDK 10.x...
 winget install --id "Microsoft.DotNet.SDK.10" -e --source winget --accept-source-agreements --accept-package-agreements --silent
-if %ERRORLEVEL% NEQ 0 (
+if !ERRORLEVEL! NEQ 0 (
     echo ERROR: failed to install .NET SDK 10.x.
     exit /B 4
 )
 
 where dotnet >NUL 2>&1
-if %ERRORLEVEL% NEQ 0 (
+if !ERRORLEVEL! NEQ 0 (
     echo ERROR: dotnet command still not available. Open a new terminal and retry.
     exit /B 4
 )
 
 dotnet --list-sdks | findstr /R /C:"^10\." >NUL
-if %ERRORLEVEL% NEQ 0 (
+if !ERRORLEVEL! NEQ 0 (
     echo ERROR: .NET SDK 10.x could not be verified after installation.
     exit /B 4
 )

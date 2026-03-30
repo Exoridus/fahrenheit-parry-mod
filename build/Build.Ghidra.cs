@@ -90,7 +90,7 @@ internal sealed partial class BuildScript
         }
 
         Log.Information($"Ghidra ready: {launcher}");
-        Log.Information("Start with: build.cmd ghidrastart");
+        Log.Information("Start with: build.cmd ghidra-start");
     }
 
     void StartGhidraCore()
@@ -101,7 +101,7 @@ internal sealed partial class BuildScript
         var launcher = FindGhidraLauncher(ghidraRoot);
         if (string.IsNullOrWhiteSpace(launcher))
         {
-            Fail($"Ghidra launcher not found under {ghidraRoot}. Run build.cmd ghidrasetup first.");
+            Fail($"Ghidra launcher not found under {ghidraRoot}. Run build.cmd ghidra-setup first.");
         }
 
         if (DryRun)

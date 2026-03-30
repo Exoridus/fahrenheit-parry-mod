@@ -9,17 +9,16 @@ internal sealed partial class BuildScript
         RunTestsIfAny(configuration);
     }
 
-    void DeployCore(string target, string mode, string configuration)
+    void DeployCore(string target, string configuration)
     {
         var t = target.Trim().ToLowerInvariant();
-        var m = NormalizeManualDeployMode(mode);
         if (t != "mod" && t != "full")
         {
             Fail($"Invalid deploy target '{target}'. Use mod or full.");
         }
 
         var gameDir = ResolveGameDir(promptIfMissing: true, persist: false);
-        DeployFromArtifacts(gameDir, configuration, t, m, failOnError: true, reason: "Manual deploy");
+        DeployFromArtifacts(gameDir, configuration, t, failOnError: true, reason: "Manual deploy");
     }
 }
 

@@ -5,21 +5,33 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
-    "GAME_DIR": {
+    "GameDir": {
       "type": "string",
       "description": "Absolute path to game install directory containing FFX.exe."
     },
-    "DEPLOY_MODE": {
-      "type": "string",
-      "enum": ["none", "update", "replace", "mod-only"],
-      "description": "Automatic deploy behavior for full builds. Use 'none' to disable."
+    "AutoDeploy": {
+      "type": ["boolean", "null"],
+      "description": "Enable automatic post-build deploy in local build workflow. Null means not configured yet."
+    },
+    "DeployBlocklist": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Paths to skip while deploying. Supports both relative paths under GameDir\\fahrenheit and absolute filesystem paths."
     }
   },
-  "required": ["GAME_DIR", "DEPLOY_MODE"],
+  "required": ["GameDir", "AutoDeploy", "DeployBlocklist"],
   "examples": [
     {
-      "GAME_DIR": "C:\\Games\\Final Fantasy X-X2 - HD Remaster",
-      "DEPLOY_MODE": "update"
+      "GameDir": "C:\\Games\\Final Fantasy X-X2 - HD Remaster",
+      "AutoDeploy": null,
+      "DeployBlocklist": [
+        "mods/loadorder",
+        "saves",
+        "C:\\Games\\Final Fantasy X-X2 - HD Remaster\\fahrenheit\\mods\\some_other_mod"
+      ]
     }
   ]
 }
+
