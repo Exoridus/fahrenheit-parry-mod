@@ -1,16 +1,23 @@
-# Local workspace / build outputs
+# =========================
+# Local workspace/tooling
+# =========================
 .workspace/
-.release/
-.nuke/temp/
-.nuke/build.schema.json
-.nuke/parameters.json
-artifacts/
-bin/
-obj/
-TestResults/
-.tmp-game/
+.nuke/
 
-# IDE / editor and local AI tooling state
+# =========================
+# Build outputs
+# =========================
+.release/
+TestResults/
+**/bin/
+**/obj/
+coverage/
+*.coverage
+*.trx
+
+# =========================
+# IDE/editor
+# =========================
 .vs/
 .vscode/
 .idea/
@@ -19,27 +26,45 @@ TestResults/
 *.user
 *.userosscache
 *.rsuser
+*.code-workspace
 
-# Logs / temporary files
+# =========================
+# Logs/temp/crash files
+# =========================
 *.log
 *.dmp
 *.tmp
 *.temp
 *.cache
-OUTPUT.TXT
+*.pid
+*.orig
+*.rej
 
+# =========================
 # Python leftovers
+# =========================
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
 
+# =========================
 # OS junk
+# =========================
 .DS_Store
 Thumbs.db
+Desktop.ini
 
-# Local secrets / env files
+# =========================
+# Secrets/local env
+# =========================
 .env
 .env.*
+!.env.example
 *.secrets.json
+*.local.json
 
-# Local downloaded / packaged archives
+# =========================
+# Local downloaded archives
+# =========================
 fahrenheit_windows_x86_release_*.zip

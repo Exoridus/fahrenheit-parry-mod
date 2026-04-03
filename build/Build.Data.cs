@@ -2165,8 +2165,8 @@ public final class LocalizedCommandDump {
             return fromArg;
         }
 
-        var cfg = LoadLocalConfig();
-        var fromConfig = NormalizePathOrEmpty(cfg.GameDir);
+        var cfg = LoadWorkspaceConfig();
+        var fromConfig = NormalizePathOrEmpty(cfg.InstallPath);
         if (IsValidGameDir(fromConfig))
         {
             return fromConfig;
@@ -2596,8 +2596,8 @@ public final class LocalizedCommandDump {
             }
         }
 
-        var cfg = LoadLocalConfig();
-        var cfgGameDir = NormalizePathOrEmpty(cfg.GameDir);
+        var cfg = LoadWorkspaceConfig();
+        var cfgGameDir = NormalizePathOrEmpty(cfg.InstallPath);
         if (IsValidGameDir(cfgGameDir))
         {
             var data = Path.Combine(cfgGameDir, "data");
@@ -2619,7 +2619,7 @@ public final class LocalizedCommandDump {
 
         Fail(
             "Could not locate game data directory with VBF files.\n" +
-            "Pass --vbf-game-dir <path-to-game-data-folder> or configure GameDir.\n" +
+            "Pass --vbf-game-dir <path-to-game-data-folder> or configure InstallPath.\n" +
             "Expected files: FFX_Data.vbf and FFX2_Data.vbf.");
         return string.Empty;
     }

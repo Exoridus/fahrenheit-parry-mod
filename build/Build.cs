@@ -14,7 +14,7 @@ using static Nuke.Common.Assert;
 
 internal sealed partial class BuildScript : NukeBuild
 {
-    [Parameter(Name = "config")] readonly string Config = IsServerBuild ? "Release" : "Debug";
+    [Parameter(Name = "config")] readonly string Config = string.Empty;
     [Parameter(Name = "fahrenheit-repo")] readonly string FahrenheitRepo = "https://github.com/peppy-enterprises/fahrenheit.git";
     [Parameter(Name = "fahrenheit-dir")] readonly string FahrenheitDir = ".workspace/fahrenheit";
     [Parameter(Name = "fahrenheit-ref")] readonly string FahrenheitRef = string.Empty;
@@ -22,12 +22,11 @@ internal sealed partial class BuildScript : NukeBuild
     [Parameter(Name = "toolset")] readonly string Toolset = string.Empty;
     [Parameter(Name = "mod-id")] readonly string ModId = "fhparry";
 
-    [Parameter(Name = "payload")] readonly string Payload = "mod";
-
     [Parameter(Name = "game-dir")] readonly string GameDir = string.Empty;
     [Parameter(Name = "repo")] readonly string Repo = string.Empty;
     [Parameter(Name = "bump")] readonly string Bump = "patch";
     [Parameter(Name = "workflow")] readonly string Workflow = string.Empty;
+    [Parameter(Name = "preset")] readonly string Preset = "safe";
 
     [Parameter(Name = "full")] readonly bool Full;
     [Parameter(Name = "dry-run")] readonly bool DryRun;
@@ -78,10 +77,10 @@ internal sealed partial class BuildScript : NukeBuild
 
     bool InteractiveSession => !NonInteractive && !IsServerBuild && Environment.UserInteractive;
     AbsolutePath WorkspaceDir => RootDirectory / ".workspace";
-    AbsolutePath LocalConfigPath => WorkspaceDir / "dev.local.json";
+    AbsolutePath WorkspaceConfigPath => WorkspaceDir / "config.local.json";
     AbsolutePath ReleaseFahrenheitRefPath => RootDirectory / "fahrenheit.release.ref";
     AbsolutePath ManifestPath => RootDirectory / "fhparry.manifest.json";
-    static readonly Regex GameInstallDirNamePattern = new(
+    static readonly Regex InstallPathNamePattern = new(
         @"^Final Fantasy X[-_ ]X-?2(?:\s*-\s*)?HD Remaster$",
         RegexOptions.IgnoreCase | RegexOptions.Compiled);
     static readonly Regex SteamLibraryPathRegex = new(
@@ -94,7 +93,7 @@ internal sealed partial class BuildScript : NukeBuild
         "\"installdir\"\\s*\"(?<dir>[^\"]+)\"",
         RegexOptions.IgnoreCase | RegexOptions.Compiled);
     const string SteamAppIdFfx = "359870";
-    static readonly string[] DefaultDeployBlocklist = ["mods/loadorder", "saves"];
+    static readonly string[] DefaultPreservePaths = ["mods/loadorder", "saves"];
     bool _isCapturingWorkflowHelp;
     WorkflowHelpBlock? _capturedWorkflowHelp;
 
@@ -113,6 +112,22 @@ internal sealed partial class BuildScript : NukeBuild
 
     Target Cli => _ => _
         .Executes(RunCliWorkflow);
+
+    Target ToolsHelp => _ => _
+        .Executes(() =>
+        {
+            if (string.IsNullOrWhiteSpace(Workflow))
+            {
+                ShowToolsHelpSummary();
+            }
+            else
+            {
+                ShowToolsHelpWorkflow(Workflow);
+            }
+        });
+
+    Target ToolsCli => _ => _
+        .Executes(RunToolsCliWorkflow);
 
     Target Install => _ => _
         .Executes(() =>
@@ -133,59 +148,21 @@ internal sealed partial class BuildScript : NukeBuild
     Target AutoDeploy => _ => _
         .Executes(SetupAutoDeployCore);
 
-    Target DataSetup => _ => _
-        .Executes(() =>
-        {
-            SetupVbfExtractorCore();
-            SetupDataParserCore();
-        });
-
-    Target GhidraSetup => _ => _
-        .Executes(SetupGhidraCore);
-
-    Target GhidraStart => _ => _
-        .Executes(StartGhidraCore);
-
-    Target DataExtract => _ => _
-        .DependsOn(DataSetup)
-        .Executes(ExtractGameDataCore);
-
-    Target DataParse => _ => _
-        .DependsOn(DataSetup)
-        .Executes(ParseDataCore);
-
-    Target DataParseAll => _ => _
-        .DependsOn(DataSetup)
-        .Executes(ParseDataAllCore);
-
-    Target MapImport => _ => _
-        .DependsOn(DataSetup)
-        .Executes(ImportLocalizedMappingsCore);
-
-    Target MapBuild => _ => _
-        .Executes(BuildLocalizedBundlesCore);
-
-    Target DataInventory => _ => _
-        .Executes(DataInventoryCore);
-
-    Target DataOffload => _ => _
-        .DependsOn(DataInventory)
-        .Executes(OffloadDataCore);
-
     Target DocsSync => _ => _
         .Executes(SyncAutomationDocsCore);
 
     Target Setup => _ => _
         .Executes(() =>
         {
+            var resolvedConfiguration = ResolveBuildConfiguration(Config);
             SetupHooksCore();
-            RunBuildProjTarget("Setup", Config, includeNativeMsbuild: false, fahrenheitRef: ResolveFahrenheitRef(useReleaseRef: false));
+            RunBuildProjTarget("Setup", resolvedConfiguration, includeNativeMsbuild: false, fahrenheitRef: ResolveFahrenheitRef(useReleaseRef: false));
 
             SetupAutoDeployCore();
 
             if (InteractiveSession && AskYesNo("Run first full build now? (Recommended)", defaultYes: true))
             {
-                RunBuildProjTarget("Build", Config, includeNativeMsbuild: true, fahrenheitRef: ResolveFahrenheitRef(useReleaseRef: false));
+                RunBuildProjTarget("Build", resolvedConfiguration, includeNativeMsbuild: true, fahrenheitRef: ResolveFahrenheitRef(useReleaseRef: false));
             }
         });
 
@@ -213,9 +190,9 @@ internal sealed partial class BuildScript : NukeBuild
             RunVerifyCore(Config);
         });
 
-    Target Build => _ => _.Executes(() => BuildCore(Payload, Config, useReleaseRef: false));
+    Target Build => _ => _.Executes(() => BuildCore("full", Config, useReleaseRef: false));
 
-    Target Deploy => _ => _.Executes(() => DeployCore(Payload, Config));
+    Target Deploy => _ => _.Executes(() => DeployCore("full", Config));
     Target Start => _ => _.Executes(StartCore);
 
     Target ReleaseNotes => _ => _.Executes(() =>
@@ -321,701 +298,75 @@ internal sealed partial class BuildScript : NukeBuild
             return;
         }
 
-        switch (workflow)
+        if (workflow.Equals("help", StringComparison.OrdinalIgnoreCase))
         {
-            case "help":
-                if (string.IsNullOrWhiteSpace(Workflow))
-                {
-                    ShowHelpSummary();
-                }
-                else
-                {
-                    ShowHelpWorkflow(Workflow);
-                }
-                return;
-            case "install":
-                EnsureWingetAvailable();
-                EnsureGitInstalled();
-                EnsureDotNetSdk10Installed();
-                if (Full)
-                {
-                    EnsureMsbuildInstalled();
-                    EnsureVcpkgInstalledAndIntegrated();
-                }
-                Log.Information("Prerequisite check/install finished.");
-                return;
-            case "setup":
-                SetupHooksCore();
-                RunBuildProjTarget("Setup", Config, includeNativeMsbuild: false, fahrenheitRef: ResolveFahrenheitRef(useReleaseRef: false));
-                SetupAutoDeployCore();
-                if (InteractiveSession && AskYesNo("Run first full build now? (Recommended)", defaultYes: true))
-                {
-                    RunBuildProjTarget("Build", Config, includeNativeMsbuild: true, fahrenheitRef: ResolveFahrenheitRef(useReleaseRef: false));
-                }
-                return;
-            case "clean":
-                RunCleanCore(Full);
-                return;
-            case "auto-deploy":
-                SetupAutoDeployCore();
-                return;
-            case "doctor":
-                RunDoctorCore();
-                return;
-            case "format":
-                RunFormatFixCore();
-                return;
-            case "docs-sync":
-                SyncAutomationDocsCore();
-                return;
-            case "lint":
-                RunLintCore(Config);
-                return;
-            case "smoke":
-                RunSmokeCore(Payload, Config);
-                return;
-            case "verify":
-                if (!IsValidConventionalCommit("feat: selftest commit format") || IsValidConventionalCommit("invalid message"))
-                {
-                    Fail("Commit validator selftest failed.");
-                }
-                RunVerifyCore(Config);
-                return;
-            case "build":
-                BuildCore(Payload, Config, useReleaseRef: false);
-                return;
-            case "deploy":
-                DeployCore(Payload, Config);
-                return;
-            case "start":
-                StartCore();
-                return;
-            case "data-setup":
-                SetupVbfExtractorCore();
-                SetupDataParserCore();
-                return;
-            case "ghidra-setup":
-                SetupGhidraCore();
-                return;
-            case "ghidra-start":
-                StartGhidraCore();
-                return;
-            case "discord-sync":
-                DiscordSyncCore();
-                return;
-            case "data-extract":
-                SetupVbfExtractorCore();
-                ExtractGameDataCore();
-                return;
-            case "data-parse":
-                SetupVbfExtractorCore();
-                SetupDataParserCore();
-                ParseDataCore();
-                return;
-            case "data-parse-all":
-                SetupVbfExtractorCore();
-                SetupDataParserCore();
-                ParseDataAllCore();
-                return;
-            case "map-import":
-                SetupVbfExtractorCore();
-                SetupDataParserCore();
-                ImportLocalizedMappingsCore();
-                return;
-            case "map-build":
-                BuildLocalizedBundlesCore();
-                return;
-            case "data-inventory":
-                DataInventoryCore();
-                return;
-            case "data-offload":
-                DataInventoryCore();
-                OffloadDataCore();
-                return;
-            case "release-bump":
-                ReleaseVersionCore();
-                return;
-            case "release-ready":
-                ReleaseReadyCore();
-                return;
-            case "release-pack":
-                if (string.IsNullOrWhiteSpace(Tag))
-                {
-                    Fail("Missing --tag.");
-                }
-                PackageReleaseCore(Tag, ResolvePath(DeployDir), ResolvePath(OutDir), ModId);
-                return;
-            case "release-notes":
-                if (string.IsNullOrWhiteSpace(Tag))
-                {
-                    Fail("Missing --tag.");
-                }
-                var repoSlug = ResolveRepositorySlug(Repo);
-                if (string.IsNullOrWhiteSpace(repoSlug))
-                {
-                    Fail("Missing --repo owner/repo.");
-                }
-                GenerateReleaseNotesCore(
-                    tag: Tag,
-                    repositorySlug: repoSlug,
-                    outputPath: ResolvePath(Out));
-                return;
-            case "commit":
-                var requestedMessage = Subject;
-                var requestedType = Type;
-                var requestedScope = Scope;
-                var requestedBreaking = Breaking;
-                if (string.IsNullOrWhiteSpace(requestedMessage))
-                {
-                    if (!InteractiveSession)
-                    {
-                        Fail("Missing --subject. In interactive mode, you can run build.cmd commit without arguments.");
-                    }
-                    var wizard = RunCommitWizard();
-                    if (!wizard.Confirmed)
-                    {
-                        Fail("Commit canceled.");
-                    }
-                    requestedType = wizard.Type;
-                    requestedScope = wizard.Scope;
-                    requestedMessage = wizard.Message;
-                    requestedBreaking = wizard.Breaking;
-                }
-                var subject = BuildCommitSubject(requestedType, requestedScope, requestedMessage, requestedBreaking);
-                if (!IsValidConventionalCommit(subject))
-                {
-                    Fail($"Invalid Conventional Commit subject: {subject}");
-                }
-                RunChecked("git", $"commit -m {Quote(subject)}", "Create commit");
-                return;
-            case "commit-check":
-                if (!string.IsNullOrWhiteSpace(CommitFile))
-                {
-                    ValidateCommitMessageFromFile(ResolvePath(CommitFile));
-                    return;
-                }
-                if (string.IsNullOrWhiteSpace(Message))
-                {
-                    Fail("Missing --commit-file or --message.");
-                }
-                ValidateCommitMessageString(Message);
-                return;
-            case "commit-range":
-                if (string.IsNullOrWhiteSpace(Range))
-                {
-                    Fail("Missing --range BASE..HEAD.");
-                }
-                ValidateCommitRangeCore(Range);
-                return;
-            default:
-                Fail($"Unknown workflow '{workflow}'. Use: build.cmd help");
-                return;
+            ShowHelpSummary();
+            return;
         }
-    }
 
+        var definition = TryGetBuildWorkflow(workflow);
+        if (definition is not null)
+        {
+            definition.Execute();
+            return;
+        }
+
+        if (IsToolWorkflow(workflow))
+        {
+            FailWorkflowMovedToTools(workflow);
+            return;
+        }
+
+        Fail($"Unknown workflow '{workflow}'. Use: build.cmd help");
+    }
     void ShowHelpSummary()
     {
         Log.Information("Usage: build.cmd <workflow> [options]");
         Log.Information("Detailed help: build.cmd -h <workflow>");
         Log.Information("Bool options: --flag (true), --no-flag (false)");
+
+        foreach (var section in BuildWorkflowSections)
+        {
+            Log.Information(string.Empty);
+            Log.Information($"{section.Heading}:");
+            foreach (var workflow in section.Workflows)
+            {
+                Log.Information($"  {workflow.Name,-14} {workflow.Summary}");
+            }
+        }
+
         Log.Information(string.Empty);
-        Log.Information("Core:");
-        Log.Information("  install      Install/check prerequisites");
-        Log.Information("  setup        Configure repo hooks + Fahrenheit setup + optional auto-deploy setup");
-        Log.Information("  clean        Remove local build/preflight outputs");
-        Log.Information("  auto-deploy  Configure automatic post-build deploy");
-        Log.Information("  doctor       Diagnose local toolchain/environment state");
-        Log.Information("  format       Auto-fix code formatting/style");
-        Log.Information("  lint         Run fast lint/compile checks");
-        Log.Information("  smoke        Run quick end-to-end sanity checks");
-        Log.Information("  verify       Build mod (Debug by default) + run tests");
-        Log.Information("  build        Build mod/full payload");
-        Log.Information("  deploy       Deploy artifacts to game directory");
-        Log.Information("  start        Launch fhstage0.exe");
-        Log.Information(string.Empty);
-        Log.Information("Release:");
-        Log.Information("  release-bump  Bump version + changelog + tag");
-        Log.Information("  release-ready Preflight checks/build/package/notes");
-        Log.Information("  release-pack  Create release ZIP assets");
-        Log.Information("  release-notes Generate release notes markdown");
-        Log.Information(string.Empty);
-        Log.Information("Commit:");
-        Log.Information("  commit       Interactive/non-interactive Conventional Commit");
-        Log.Information("  commit-check Validate one commit message");
-        Log.Information("  commit-range Validate commit subjects in a range");
-        Log.Information(string.Empty);
-        Log.Information("Advanced:");
-        Log.Information("  discord-sync Incremental Discord JSON export into .workspace/discord");
-        Log.Information("  docs-sync    Regenerate docs/automation.md from build help metadata");
-        Log.Information("  data-* / map-* / ghidra-* workflows are available.");
+        Log.Information("  tools.cmd    Local-only research/tooling workflows (discord/data/ghidra)");
         Log.Information("  Use: build.cmd -h <workflow> for detailed parameters and examples.");
     }
-
     void ShowHelpWorkflow(string workflowRaw)
     {
         var workflow = (workflowRaw ?? string.Empty).Trim().ToLowerInvariant();
-
-        switch (workflow)
+        if (string.IsNullOrWhiteSpace(workflow))
         {
-            case "install":
-                PrintHelpBlock(
-                    "install",
-                    "Install/check local prerequisites.",
-                    [
-                        "--full (optional, default false) -> also install native build deps (MSBuild + vcpkg).",
-                        "--dry-run (optional, default false) -> only print intended actions."
-                    ],
-                    [
-                        "build.cmd install",
-                        "build.cmd install --full"
-                    ]);
-                return;
+            ShowHelpSummary();
+            return;
+        }
 
-            case "setup":
-                PrintHelpBlock(
-                    "setup",
-                    "Prepare repository for local development.",
-                    [
-                        "No required parameters."
-                    ],
-                    [
-                        "build.cmd setup"
-                    ]);
-                return;
+        if (TryGetBuildWorkflow(workflow) is { } definition)
+        {
+            PrintHelpBlock(
+                definition.Name,
+                definition.Purpose,
+                definition.Parameters,
+                definition.Examples);
+            return;
+        }
 
-            case "auto-deploy":
-                PrintHelpBlock(
-                    "auto-deploy",
-                    "Configure automatic post-build deployment.",
-                    [
-                        "--game-dir <path> (optional) -> game install directory (must contain FFX.exe).",
-                        "--refresh-game-dir (optional, default false) -> ignore saved GameDir and force detection/prompt flow."
-                    ],
-                    [
-                        "build.cmd auto-deploy",
-                        "build.cmd auto-deploy --game-dir \"C:\\Games\\Final Fantasy X-X2 - HD Remaster\""
-                    ]);
-                return;
-
-            case "clean":
-                PrintHelpBlock(
-                    "clean",
-                    "Remove generated local build outputs and preflight artifacts.",
-                    [
-                        "--full (optional, default false) -> also remove .release packaged outputs."
-                    ],
-                    [
-                        "build.cmd clean",
-                        "build.cmd clean --full"
-                    ]);
-                return;
-
-            case "build":
-                PrintHelpBlock(
-                    "build",
-                    "Build mod-only or full Fahrenheit payload.",
-                    [
-                        "--payload mod|full (optional, default mod).",
-                        "--config Debug|Release (optional, default Debug local / Release CI).",
-                        "--deploy or --no-deploy (optional) -> override AutoDeploy from settings for this run.",
-                        "--dry-run (optional, default false) -> simulate deploy sync actions without writing files."
-                    ],
-                    [
-                        "build.cmd build",
-                        "build.cmd build --payload full --config Release"
-                    ]);
-                return;
-
-            case "deploy":
-                PrintHelpBlock(
-                    "deploy",
-                    "Deploy build artifacts into GameDir.",
-                    [
-                        "--payload mod|full (optional, default mod).",
-                        "--game-dir <path> (optional if configured in dev.local.json).",
-                        "--refresh-game-dir (optional, default false) -> ignore saved GameDir and force re-detection.",
-                        "--config Debug|Release (optional, default Debug).",
-                        "--dry-run (optional, default false) -> simulate deploy sync actions without writing files."
-                    ],
-                    [
-                        "build.cmd deploy",
-                        "build.cmd deploy --payload full --game-dir \"C:\\Games\\Final Fantasy X-X2 - HD Remaster\""
-                    ]);
-                return;
-
-            case "start":
-                PrintHelpBlock(
-                    "start",
-                    "Launch the game via deployed Fahrenheit stage0 loader.",
-                    [
-                        "--game-dir <path> (optional if configured).",
-                        "--refresh-game-dir (optional, default false) -> ignore saved GameDir and force re-detection.",
-                        "--elevated or --no-elevated (optional, default false)."
-                    ],
-                    [
-                        "build.cmd start --game-dir \"C:\\Games\\Final Fantasy X-X2 - HD Remaster\"",
-                        "build.cmd start --game-dir \"C:\\Games\\Final Fantasy X-X2 - HD Remaster\" --elevated"
-                    ]);
-                return;
-
-            case "verify":
-                PrintHelpBlock(
-                    "verify",
-                    "Run local validation (build + tests + commit parser selftest) without deployment side effects.",
-                    [
-                        "--config Debug|Release (optional, default Debug).",
-                        "--repo owner/repo (optional, used in generated links)."
-                    ],
-                    [
-                        "build.cmd verify",
-                        "build.cmd verify --config Release --repo Exoridus/fahrenheit-parry-mod"
-                    ]);
-                return;
-
-            case "doctor":
-                PrintHelpBlock(
-                    "doctor",
-                    "Diagnose local toolchain and environment state.",
-                    [
-                        "--full (optional, default false) -> include native/full-build tool checks."
-                    ],
-                    [
-                        "build.cmd doctor",
-                        "build.cmd doctor --full"
-                    ]);
-                return;
-
-            case "format":
-                PrintHelpBlock(
-                    "format",
-                    "Apply code formatting/style fixes using dotnet format.",
-                    [
-                        "No required parameters."
-                    ],
-                    [
-                        "build.cmd format"
-                    ]);
-                return;
-
-            case "docs-sync":
-                PrintHelpBlock(
-                    "docs-sync",
-                    "Regenerate docs/automation.md from build help metadata.",
-                    [
-                        "No required parameters."
-                    ],
-                    [
-                        "build.cmd docs-sync"
-                    ]);
-                return;
-
-            case "lint":
-                PrintHelpBlock(
-                    "lint",
-                    "Run fast lint/compile checks for build, mod, and tests projects.",
-                    [
-                        "--config Debug|Release (optional, default Debug)."
-                    ],
-                    [
-                        "build.cmd lint",
-                        "build.cmd lint --config Release"
-                    ]);
-                return;
-
-            case "smoke":
-                PrintHelpBlock(
-                    "smoke",
-                    "Run quick sanity checks (build + required artifact assertions).",
-                    [
-                        "--config Debug|Release (optional, default Debug).",
-                        "--payload mod|full (optional, default mod)."
-                    ],
-                    [
-                        "build.cmd smoke",
-                        "build.cmd smoke --config Release --payload mod"
-                    ]);
-                return;
-
-            case "data-setup":
-                PrintHelpBlock(
-                    "data-setup",
-                    "Install/update data tooling (VBFTool + FFXDataParser).",
-                    [
-                        "--parser-repo <url> (optional).",
-                        "--parser-dir <path> (optional).",
-                        "--parser-ref <git-ref> (optional).",
-                        "--vbf-api <url> (optional).",
-                        "--vbf-dir <path> (optional)."
-                    ],
-                    [
-                        "build.cmd data-setup",
-                        "build.cmd data-setup --parser-ref main"
-                    ]);
-                return;
-
-            case "discord-sync":
-                PrintHelpBlock(
-                    "discord-sync",
-                    "Export Discord channels/threads into .workspace/discord with auto full-or-delta behavior and a per-server Media folder by default.",
-                    [
-                        "--guild <serverId> (required).",
-                        "--channels <id1,id2,...> (optional) -> restrict export to explicit channel/thread IDs.",
-                        "--full (optional, default false) -> force full refresh for every discovered channel/thread.",
-                        "--discord-config <path> (optional, default .workspace/discord/config.local.json).",
-                        "--discord-out-dir <path> (optional, default .workspace/discord).",
-                        "--discord-include-threads none|active|all (optional, default config/all).",
-                        "--discord-include-vc or --no-discord-include-vc (optional, default config/true).",
-                        "--discord-media or --no-discord-media (optional, default config/true).",
-                        "config blacklist[] (optional, local-only) -> filter known inaccessible/unsupported channel IDs before sync.",
-                        "--discord-media-dir <path> (optional, advanced) -> override the default server-local Media directory."
-                    ],
-                    [
-                        "build.cmd discord-sync --guild 612363389003366405",
-                        "build.cmd discord-sync --guild 1328407223528853598 --channels 1328424139832168572",
-                        "build.cmd discord-sync --guild 612363389003366405 --full"
-                    ]);
-                return;
-
-            case "ghidra-setup":
-                PrintHelpBlock(
-                    "ghidra-setup",
-                    "Install/update Ghidra into a repo-local tools directory.",
-                    [
-                        "--ghidra-api <url> (optional, default latest NSA release API).",
-                        "--ghidra-dir <path> (optional, default .workspace/tools/ghidra)."
-                    ],
-                    [
-                        "build.cmd ghidra-setup",
-                        "build.cmd ghidra-setup --ghidra-dir .workspace/tools/ghidra"
-                    ]);
-                return;
-
-            case "ghidra-start":
-                PrintHelpBlock(
-                    "ghidra-start",
-                    "Start the repo-local Ghidra launcher.",
-                    [
-                        "--ghidra-dir <path> (optional, default .workspace/tools/ghidra)."
-                    ],
-                    [
-                        "build.cmd ghidra-start",
-                        "build.cmd ghidra-start --ghidra-dir .workspace/tools/ghidra"
-                    ]);
-                return;
-
-            case "data-extract":
-                PrintHelpBlock(
-                    "data-extract",
-                    "Extract FFX/FFX-2 data archives with VBFTool.",
-                    [
-                        "--vbf-game-dir <path> (optional, defaults to detected GameDir\\\\data).",
-                        "--extract-out <path> (optional, default .workspace/data).",
-                        "--extract-meta-menu or --no-extract-meta-menu (optional, default true)."
-                    ],
-                    [
-                        "build.cmd data-extract --vbf-game-dir \"C:\\Games\\Final Fantasy X-X2 - HD Remaster\\data\"",
-                        "build.cmd data-extract --extract-out .workspace/data"
-                    ]);
-                return;
-
-            case "data-parse":
-                PrintHelpBlock(
-                    "data-parse",
-                    "Run one parser mode and capture output as txt.",
-                    [
-                        "--data-mode <MODE> (optional, default READ_ALL_COMMANDS).",
-                        "--data-args \"<arg1> <arg2>\" (optional).",
-                        "--data-root <path> (optional, must contain ffx_ps2).",
-                        "--data-out <path> (optional, default .workspace/data/ffx-dataparser)."
-                    ],
-                    [
-                        "build.cmd data-parse --data-mode READ_MONSTER_LOCALIZATIONS --data-args \"de\"",
-                        "build.cmd data-parse --data-mode PARSE_ALL_BATTLES"
-                    ]);
-                return;
-
-            case "data-parse-all":
-                PrintHelpBlock(
-                    "data-parse-all",
-                    "Run the configured parser mode batch and capture all outputs.",
-                    [
-                        "--data-batch \"MODE1;MODE2 arg\" (optional, default built-in batch).",
-                        "--data-root <path> (optional, must contain ffx_ps2).",
-                        "--data-out <path> (optional, default .workspace/data/ffx-dataparser)."
-                    ],
-                    [
-                        "build.cmd data-parse-all --data-root .workspace/data",
-                        "build.cmd data-parse-all --data-batch \"READ_ALL_COMMANDS;READ_MONSTER_LOCALIZATIONS de\""
-                    ]);
-                return;
-
-            case "map-import":
-                PrintHelpBlock(
-                    "map-import",
-                    "Generate canonical locale/domain mapping JSON from parser outputs.",
-                    [
-                        "--map-source <path> (optional, default mappings/source).",
-                        "--locales us,de,... (optional, default us,de).",
-                        "--data-out <path> (optional parser output root)."
-                    ],
-                    [
-                        "build.cmd map-import --locales us,de,fr,it,sp,jp,ch,kr",
-                        "build.cmd map-import --map-source mappings/source"
-                    ]);
-                return;
-
-            case "map-build":
-                PrintHelpBlock(
-                    "map-build",
-                    "Build runtime mapping bundles from canonical mapping JSON.",
-                    [
-                        "--map-source <path> (optional, default mappings/source).",
-                        "--map-out <path> (optional, default mappings/runtime).",
-                        "--map-publish <path> (optional, default mappings/runtime).",
-                        "--locales us,de,... (optional, default us,de)."
-                    ],
-                    [
-                        "build.cmd map-build --locales us,de,fr,it,sp,jp,ch,kr",
-                        "build.cmd map-build --map-out mappings/runtime --map-publish mappings/runtime"
-                    ]);
-                return;
-
-            case "data-inventory":
-                PrintHelpBlock(
-                    "data-inventory",
-                    "Generate DATA_TREE.txt summaries for extracted data folders.",
-                    [
-                        "--data-root-dir <path> (optional, default .workspace/data).",
-                        "--folders \"name1;name2\" (optional, default auto-detect under data root)."
-                    ],
-                    [
-                        "build.cmd data-inventory",
-                        "build.cmd data-inventory --data-root-dir .workspace/data --folders \"ffx_data;ffx-2_data\""
-                    ]);
-                return;
-
-            case "data-offload":
-                PrintHelpBlock(
-                    "data-offload",
-                    "Move or copy large extracted data folders to NAS and optionally keep junctions.",
-                    [
-                        "--nas-dir <unc-path> (required).",
-                        "--offload-mode move|copy (optional, default move).",
-                        "--keep-data-junction or --no-keep-data-junction (optional, default false).",
-                        "--data-root-dir <path> (optional, default .workspace/data).",
-                        "--folders \"name1;name2\" (optional)."
-                    ],
-                    [
-                        "build.cmd data-offload --nas-dir \"\\\\10.0.10.50\\data\\archive\\final-fantasy-assets\"",
-                        "build.cmd data-offload --nas-dir \"\\\\10.0.10.50\\data\\archive\\final-fantasy-assets\" --offload-mode move --keep-data-junction"
-                    ]);
-                return;
-
-            case "release-bump":
-                PrintHelpBlock(
-                    "release-bump",
-                    "Bump version, regenerate changelog, pin Fahrenheit ref, create release commit + tag.",
-                    [
-                        "--bump patch|minor|major (optional, default patch).",
-                        "--repo owner/repo (optional, improves links in notes/changelog)."
-                    ],
-                    [
-                        "build.cmd release-bump",
-                        "build.cmd release-bump --bump minor --repo Exoridus/fahrenheit-parry-mod"
-                    ]);
-                return;
-
-            case "release-ready":
-                PrintHelpBlock(
-                    "release-ready",
-                    "Run release preflight (clean tree, commit checks, verify, release build, package dry-run, notes).",
-                    [
-                        "--range <BASE..HEAD> (optional, auto-derived if omitted).",
-                        "--repo owner/repo (optional).",
-                        "--tag vX.Y.Z (optional, used for dry-run notes/packages)."
-                    ],
-                    [
-                        "build.cmd release-ready --repo Exoridus/fahrenheit-parry-mod",
-                        "build.cmd release-ready --range v0.0.1..HEAD --tag v0.0.2"
-                    ]);
-                return;
-
-            case "release-pack":
-                PrintHelpBlock(
-                    "release-pack",
-                    "Package built release payloads into ZIP archives + SHA256 files.",
-                    [
-                        "--tag vX.Y.Z (required).",
-                        "--deploy-dir <path> (optional, default .workspace/fahrenheit/artifacts/deploy/rel).",
-                        "--out-dir <path> (optional, default .release)."
-                    ],
-                    [
-                        "build.cmd release-pack --tag v0.0.1",
-                        "build.cmd release-pack --tag v0.0.1 --out-dir .release"
-                    ]);
-                return;
-
-            case "release-notes":
-                PrintHelpBlock(
-                    "release-notes",
-                    "Generate release-notes markdown/text for a tag.",
-                    [
-                        "--tag vX.Y.Z (required).",
-                        "--repo owner/repo (required).",
-                        "--out <path> (optional, default .release/release-notes.txt)."
-                    ],
-                    [
-                        "build.cmd release-notes --tag v0.0.1 --repo Exoridus/fahrenheit-parry-mod",
-                        "build.cmd release-notes --tag v0.0.1 --repo Exoridus/fahrenheit-parry-mod --out .release/release-notes.txt"
-                    ]);
-                return;
-
-            case "commit":
-                PrintHelpBlock(
-                    "commit",
-                    "Create a Conventional Commit (wizard or direct flags).",
-                    [
-                        "--type feat|fix|... (optional, default chore).",
-                        "--scope <scope> (optional).",
-                        "--subject \"message\" (required in non-interactive mode).",
-                        "--breaking or --no-breaking (optional, default false)."
-                    ],
-                    [
-                        "build.cmd commit",
-                        "build.cmd commit --type feat --scope ui --subject \"add queue table\""
-                    ]);
-                return;
-
-            case "commit-check":
-                PrintHelpBlock(
-                    "commit-check",
-                    "Validate one commit message.",
-                    [
-                        "--commit-file <path> or --message \"...\" (one is required)."
-                    ],
-                    [
-                        "build.cmd commit-check --commit-file .git/COMMIT_EDITMSG",
-                        "build.cmd commit-check --message \"feat: add timeline panel\""
-                    ]);
-                return;
-
-            case "commit-range":
-                PrintHelpBlock(
-                    "commit-range",
-                    "Validate commit subjects in a git range.",
-                    [
-                        "--range <BASE..HEAD> (required)."
-                    ],
-                    [
-                        "build.cmd commit-range --range origin/main..HEAD"
-                    ]);
-                return;
+        if (IsToolWorkflow(workflow))
+        {
+            FailWorkflowMovedToTools(workflow);
+            return;
         }
 
         Log.Warning($"Unknown workflow: {workflowRaw}");
         ShowHelpSummary();
     }
-
     WorkflowHelpBlock CaptureWorkflowHelpBlock(string workflowRaw)
     {
         var normalizedWorkflow = (workflowRaw ?? string.Empty).Trim().ToLowerInvariant();
@@ -1070,15 +421,16 @@ internal sealed partial class BuildScript : NukeBuild
 
     void BuildCore(string target, string configuration, bool useReleaseRef, bool allowAutoDeploy = true)
     {
+        var resolvedConfiguration = ResolveBuildConfiguration(configuration);
         var effectiveFahrenheitRef = ResolveFahrenheitRef(useReleaseRef);
         var t = target.Trim().ToLowerInvariant();
         if (t == "mod")
         {
-            RunBuildProjTarget("BuildModOnly", configuration, includeNativeMsbuild: false, fahrenheitRef: effectiveFahrenheitRef);
+            RunBuildProjTarget("BuildModOnly", resolvedConfiguration, includeNativeMsbuild: false, fahrenheitRef: effectiveFahrenheitRef);
         }
         else if (t == "full")
         {
-            RunBuildProjTarget("Build", configuration, includeNativeMsbuild: true, fahrenheitRef: effectiveFahrenheitRef);
+            RunBuildProjTarget("Build", resolvedConfiguration, includeNativeMsbuild: true, fahrenheitRef: effectiveFahrenheitRef);
         }
         else
         {
@@ -1087,7 +439,7 @@ internal sealed partial class BuildScript : NukeBuild
 
         if (allowAutoDeploy)
         {
-            TryAutoDeployAfterBuild(t, configuration, useReleaseRef);
+            TryAutoDeployAfterBuild(t, resolvedConfiguration, useReleaseRef);
         }
     }
 
@@ -1188,14 +540,49 @@ internal sealed partial class BuildScript : NukeBuild
     }
 
 
+    string ResolveBuildConfiguration(string configuration)
+    {
+        var fromArg = (configuration ?? string.Empty).Trim();
+        if (!string.IsNullOrWhiteSpace(fromArg))
+        {
+            if (fromArg.Equals("Debug", StringComparison.OrdinalIgnoreCase))
+            {
+                return "Debug";
+            }
+
+            if (fromArg.Equals("Release", StringComparison.OrdinalIgnoreCase))
+            {
+                return "Release";
+            }
+
+            Fail($"Invalid --config value '{configuration}'. Use Debug or Release.");
+        }
+
+        var cfg = LoadWorkspaceConfig();
+        var fromConfig = (cfg.BuildTarget ?? string.Empty).Trim();
+        if (fromConfig.Equals("Debug", StringComparison.OrdinalIgnoreCase))
+        {
+            return "Debug";
+        }
+
+        if (fromConfig.Equals("Release", StringComparison.OrdinalIgnoreCase))
+        {
+            return "Release";
+        }
+
+        Fail($"Invalid BuildTarget '{cfg.BuildTarget}' in '{WorkspaceConfigPath}'. Use Debug or Release.");
+        return string.Empty;
+    }
+
     void RunBuildProjTarget(string target, string configuration, bool includeNativeMsbuild, string fahrenheitRef)
     {
+        var resolvedConfiguration = ResolveBuildConfiguration(configuration);
         var args = new StringBuilder();
         args.Append("msbuild ");
         args.Append(Quote(RootDirectory / "build.proj"));
         args.Append(" -nologo -verbosity:minimal");
         args.Append($" -t:{target}");
-        args.Append($" -p:Configuration={Quote(configuration)}");
+        args.Append($" -p:Configuration={Quote(resolvedConfiguration)}");
         args.Append($" -p:FahrenheitRepo={Quote(FahrenheitRepo)}");
         args.Append($" -p:FahrenheitDir={Quote(ResolvePath(FahrenheitDir))}");
         args.Append($" -p:FahrenheitRef={Quote(fahrenheitRef)}");
@@ -1969,7 +1356,7 @@ internal sealed partial class BuildScript : NukeBuild
         RunChecked("winget", args.ToString(), $"Install {label}", showSpinner: true, silent: true);
     }
 
-    string ResolveGameDirForAutoDeploySetup(LocalConfig cfg)
+    string ResolveGameDirForAutoDeploySetup(WorkspaceConfig cfg)
     {
         var fromArg = NormalizePathOrEmpty(GameDir);
         if (!string.IsNullOrWhiteSpace(fromArg))
@@ -1984,7 +1371,7 @@ internal sealed partial class BuildScript : NukeBuild
 
         if (!RefreshGameDir)
         {
-            var fromConfig = NormalizePathOrEmpty(cfg.GameDir);
+            var fromConfig = NormalizePathOrEmpty(cfg.InstallPath);
             if (IsValidGameDir(fromConfig))
             {
                 return fromConfig;
@@ -2030,33 +1417,34 @@ internal sealed partial class BuildScript : NukeBuild
             return;
         }
 
-        var cfg = LoadLocalConfig();
+        var cfg = LoadWorkspaceConfig();
         if (DeployOverride.HasValue && !DeployOverride.Value)
         {
             Log.Information("Automatic deployment was disabled by --no-deploy.");
             return;
         }
 
-        if (!DeployOverride.HasValue && !cfg.AutoDeploy.HasValue)
+        bool autoDeployEnabled;
+        if (DeployOverride.HasValue)
         {
-            if (!InteractiveSession)
-            {
-                Log.Information("AutoDeploy is not configured yet (null). Skipping automatic deploy in non-interactive mode.");
-                return;
-            }
-
-            var enableAutoDeploy = AskYesNo("Enable automatic deployment after successful local builds?", defaultYes: true);
-            cfg.AutoDeploy = enableAutoDeploy;
-            SaveLocalConfig(cfg);
-
-            if (!enableAutoDeploy)
-            {
-                Log.Information("Automatic deploy remains disabled. You can change this later with: build.cmd auto-deploy");
-                return;
-            }
+            autoDeployEnabled = DeployOverride.Value;
+        }
+        else if (cfg.DeployAfterBuild.HasValue)
+        {
+            autoDeployEnabled = cfg.DeployAfterBuild.Value;
+        }
+        else if (InteractiveSession)
+        {
+            autoDeployEnabled = AskYesNo("Enable automatic deployment after build?", defaultYes: true);
+            cfg.DeployAfterBuild = autoDeployEnabled;
+            SaveWorkspaceConfig(cfg);
+        }
+        else
+        {
+            Log.Information("DeployAfterBuild is not configured (null) in non-interactive mode. Skipping automatic deploy.");
+            return;
         }
 
-        var autoDeployEnabled = DeployOverride ?? cfg.AutoDeploy ?? false;
         if (!autoDeployEnabled)
         {
             return;
@@ -2071,7 +1459,7 @@ internal sealed partial class BuildScript : NukeBuild
 
         if (!IsValidGameDir(gameDir) && !RefreshGameDir)
         {
-            gameDir = NormalizePathOrEmpty(cfg.GameDir);
+            gameDir = NormalizePathOrEmpty(cfg.InstallPath);
         }
 
         if (!IsValidGameDir(gameDir))
@@ -2091,16 +1479,16 @@ internal sealed partial class BuildScript : NukeBuild
 
         if (!IsValidGameDir(gameDir))
         {
-            Log.Warning("Automatic deploy is enabled but no valid GameDir could be resolved. Skipping automatic deploy.");
+            Log.Warning("Automatic deploy is enabled but no valid InstallPath could be resolved. Skipping automatic deploy.");
             Log.Information("Run: build.cmd auto-deploy --game-dir <path>");
             return;
         }
 
         var normalizedGameDir = NormalizePathOrEmpty(gameDir);
-        if (!normalizedGameDir.Equals(NormalizePathOrEmpty(cfg.GameDir), StringComparison.OrdinalIgnoreCase))
+        if (!normalizedGameDir.Equals(NormalizePathOrEmpty(cfg.InstallPath), StringComparison.OrdinalIgnoreCase))
         {
-            cfg.GameDir = normalizedGameDir;
-            SaveLocalConfig(cfg);
+            cfg.InstallPath = normalizedGameDir;
+            SaveWorkspaceConfig(cfg);
         }
 
         var normalizedBuildTarget = (buildTarget ?? string.Empty).Trim().ToLowerInvariant();
@@ -2138,13 +1526,14 @@ internal sealed partial class BuildScript : NukeBuild
         var normalizedGameDir = NormalizePathOrEmpty(gameDir);
         if (!IsValidGameDir(normalizedGameDir))
         {
-            var msg = $"Invalid GameDir '{gameDir}' (FFX.exe not found).";
+            var msg = $"Invalid InstallPath '{gameDir}' (FFX.exe not found).";
             if (failOnError) Fail(msg);
             Log.Warning(msg);
             return false;
         }
 
-        var deployCfg = configuration.Equals("Release", StringComparison.OrdinalIgnoreCase) ? "rel" : "dbg";
+        var resolvedConfiguration = ResolveBuildConfiguration(configuration);
+        var deployCfg = resolvedConfiguration.Equals("Release", StringComparison.OrdinalIgnoreCase) ? "rel" : "dbg";
         var sourceRoot = Path.Combine(ResolvePath(FahrenheitDir), "artifacts", "deploy", deployCfg);
         if (!Directory.Exists(sourceRoot))
         {
@@ -2170,12 +1559,12 @@ internal sealed partial class BuildScript : NukeBuild
             return false;
         }
 
-        var cfg = LoadLocalConfig();
-        var deployBlocklist = cfg.DeployBlocklist ?? [];
+        var cfg = LoadWorkspaceConfig();
+        var preservePaths = cfg.PreservePaths ?? [];
 
         try
         {
-            SyncDirectoryRecursiveWithBlocklist(sourcePath, destinationPath, targetRoot, deployBlocklist);
+            SyncDirectoryRecursiveWithPreservePaths(sourcePath, destinationPath, targetRoot, preservePaths);
             if (DryRun)
             {
                 Log.Information($"{reason}: [DRY-RUN] simulated deploy {normalizedTarget} to {destinationPath}");
@@ -2201,7 +1590,7 @@ internal sealed partial class BuildScript : NukeBuild
 
     string ResolveGameDir(bool promptIfMissing, bool persist)
     {
-        var cfg = LoadLocalConfig();
+        var cfg = LoadWorkspaceConfig();
 
         var fromArg = NormalizePathOrEmpty(GameDir);
         if (!string.IsNullOrWhiteSpace(GameDir) && !IsValidGameDir(fromArg))
@@ -2213,8 +1602,8 @@ internal sealed partial class BuildScript : NukeBuild
         {
             if (persist)
             {
-                cfg.GameDir = fromArg;
-                SaveLocalConfig(cfg);
+                cfg.InstallPath = fromArg;
+                SaveWorkspaceConfig(cfg);
             }
 
             return fromArg;
@@ -2222,7 +1611,7 @@ internal sealed partial class BuildScript : NukeBuild
 
         if (!RefreshGameDir)
         {
-            var fromConfig = NormalizePathOrEmpty(cfg.GameDir);
+            var fromConfig = NormalizePathOrEmpty(cfg.InstallPath);
             if (IsValidGameDir(fromConfig))
             {
                 return fromConfig;
@@ -2235,8 +1624,8 @@ internal sealed partial class BuildScript : NukeBuild
             Log.Information($"Auto-detected game directory: {detected}");
             if (persist)
             {
-                cfg.GameDir = detected;
-                SaveLocalConfig(cfg);
+                cfg.InstallPath = detected;
+                SaveWorkspaceConfig(cfg);
             }
 
             return detected;
@@ -2252,8 +1641,8 @@ internal sealed partial class BuildScript : NukeBuild
                 {
                     if (persist)
                     {
-                        cfg.GameDir = input;
-                        SaveLocalConfig(cfg);
+                        cfg.InstallPath = input;
+                        SaveWorkspaceConfig(cfg);
                     }
 
                     return input;
@@ -2263,7 +1652,7 @@ internal sealed partial class BuildScript : NukeBuild
             }
         }
 
-        Fail("Could not resolve GameDir. Pass --game-dir or run build.cmd auto-deploy.");
+        Fail("Could not resolve InstallPath. Pass --game-dir or run build.cmd auto-deploy.");
         return string.Empty;
     }
 
@@ -2375,7 +1764,7 @@ internal sealed partial class BuildScript : NukeBuild
         {
             var name = Path.GetFileName(dir);
             if (string.IsNullOrWhiteSpace(name)) continue;
-            if (!GameInstallDirNamePattern.IsMatch(name)) continue;
+            if (!InstallPathNamePattern.IsMatch(name)) continue;
             yield return dir;
         }
     }
@@ -2571,75 +1960,239 @@ internal sealed partial class BuildScript : NukeBuild
         return NormalizePathOrEmpty(unescaped);
     }
 
-    LocalConfig LoadLocalConfig()
+    WorkspaceConfig LoadWorkspaceConfig()
     {
         EnsureDir(WorkspaceDir);
 
-        if (!File.Exists(LocalConfigPath))
+        if (!File.Exists(WorkspaceConfigPath))
         {
-            var defaults = CreateDefaultLocalConfig();
-            SaveLocalConfig(defaults);
-            Log.Information($"Created default local config: {LocalConfigPath}");
+            var defaults = CreateDefaultWorkspaceConfig();
+            SaveWorkspaceConfig(defaults);
+            Log.Information($"Created default workspace config: {WorkspaceConfigPath}");
             return defaults;
         }
 
         try
         {
-            var cfg = JsonSerializer.Deserialize<LocalConfig>(File.ReadAllText(LocalConfigPath), new JsonSerializerOptions
+            var json = File.ReadAllText(WorkspaceConfigPath);
+            using var doc = JsonDocument.Parse(json);
+            ValidateWorkspaceConfigSchema(doc.RootElement);
+
+            var cfg = JsonSerializer.Deserialize<WorkspaceConfig>(json, new JsonSerializerOptions
             {
-                PropertyNameCaseInsensitive = true
-            }) ?? CreateDefaultLocalConfig();
-            cfg = NormalizeLocalConfig(cfg);
-            SaveLocalConfig(cfg);
+                PropertyNameCaseInsensitive = false
+            }) ?? FailWithReturn<WorkspaceConfig>($"Failed to deserialize workspace config '{WorkspaceConfigPath}'.");
+            cfg = NormalizeWorkspaceConfig(cfg);
+            SaveWorkspaceConfig(cfg);
             return cfg;
         }
         catch (Exception ex)
         {
-            var defaults = CreateDefaultLocalConfig();
-            SaveLocalConfig(defaults);
-            Log.Warning($"Local config was invalid and has been replaced with defaults: {LocalConfigPath}. Reason: {ex.Message}");
-            return defaults;
+            Fail($"Invalid workspace config '{WorkspaceConfigPath}': {ex.Message}");
+            return CreateDefaultWorkspaceConfig();
         }
     }
 
-    void SaveLocalConfig(LocalConfig cfg)
+    void SaveWorkspaceConfig(WorkspaceConfig cfg)
     {
         EnsureDir(WorkspaceDir);
-        var normalized = NormalizeLocalConfig(cfg);
+        var normalized = NormalizeWorkspaceConfig(cfg);
         var json = JsonSerializer.Serialize(normalized, new JsonSerializerOptions { WriteIndented = true });
-        File.WriteAllText(LocalConfigPath, json + Environment.NewLine);
+        File.WriteAllText(WorkspaceConfigPath, json + Environment.NewLine);
     }
 
-    static LocalConfig CreateDefaultLocalConfig()
+    WorkspaceConfig CreateDefaultWorkspaceConfig()
     {
-        return new LocalConfig
+        return new WorkspaceConfig
         {
-            GameDir = string.Empty,
-            AutoDeploy = null,
-            DeployBlocklist = CreateDefaultDeployBlocklist()
+            BuildTarget = "Release",
+            InstallPath = string.Empty,
+            DeployAfterBuild = null,
+            PreservePaths = CreateDefaultPreservePaths(),
+            OpenApiUrl = string.Empty,
+            OpenApiKey = string.Empty,
+            OpenApiModel = string.Empty,
+            FetchRetryCount = 2,
+            DiscordToken = string.Empty
         };
     }
 
-    static List<string> CreateDefaultDeployBlocklist() => DefaultDeployBlocklist.ToList();
+    static List<string> CreateDefaultPreservePaths() => DefaultPreservePaths.ToList();
 
-    LocalConfig NormalizeLocalConfig(LocalConfig cfg)
+    void ValidateWorkspaceConfigSchema(JsonElement root)
     {
-        var normalized = cfg ?? CreateDefaultLocalConfig();
+        if (root.ValueKind != JsonValueKind.Object)
+        {
+            Fail($"Workspace config '{WorkspaceConfigPath}' must be a JSON object.");
+        }
 
-        normalized.GameDir = NormalizePathOrEmpty(normalized.GameDir);
-        normalized.DeployBlocklist ??= CreateDefaultDeployBlocklist();
+        var allowedKeys = new HashSet<string>(StringComparer.Ordinal)
+        {
+            "BuildTarget",
+            "InstallPath",
+            "DeployAfterBuild",
+            "PreservePaths",
+            "OpenApiUrl",
+            "OpenApiKey",
+            "OpenApiModel",
+            "FetchRetryCount",
+            "DiscordToken"
+        };
 
-        normalized.DeployBlocklist = normalized.DeployBlocklist
-            .Select(NormalizeDeployBlocklistEntry)
+        foreach (var property in root.EnumerateObject())
+        {
+            if (!allowedKeys.Contains(property.Name))
+            {
+                Fail($"Unsupported workspace config key '{property.Name}' in '{WorkspaceConfigPath}'.");
+            }
+        }
+
+        if (!root.TryGetProperty("BuildTarget", out var buildTargetElement) || buildTargetElement.ValueKind != JsonValueKind.String)
+        {
+            Fail($"Workspace config '{WorkspaceConfigPath}' must contain a string property 'BuildTarget'.");
+        }
+
+        if (!root.TryGetProperty("InstallPath", out var gameDirElement) || gameDirElement.ValueKind != JsonValueKind.String)
+        {
+            Fail($"Workspace config '{WorkspaceConfigPath}' must contain a string property 'InstallPath'.");
+        }
+
+        if (!root.TryGetProperty("DeployAfterBuild", out var deployAfterBuildElement)
+            || (deployAfterBuildElement.ValueKind is not JsonValueKind.True
+                && deployAfterBuildElement.ValueKind is not JsonValueKind.False
+                && deployAfterBuildElement.ValueKind is not JsonValueKind.Null))
+        {
+            Fail($"Workspace config '{WorkspaceConfigPath}' must contain 'DeployAfterBuild' with value true, false, or null.");
+        }
+
+        if (!root.TryGetProperty("PreservePaths", out var preservePathsElement)
+            || preservePathsElement.ValueKind != JsonValueKind.Array
+            || preservePathsElement.EnumerateArray().Any(x => x.ValueKind != JsonValueKind.String))
+        {
+            Fail($"Workspace config '{WorkspaceConfigPath}' must contain 'PreservePaths' as an array of strings.");
+        }
+
+        if (!root.TryGetProperty("OpenApiUrl", out var openApiUrlElement) || openApiUrlElement.ValueKind != JsonValueKind.String)
+        {
+            Fail($"Workspace config '{WorkspaceConfigPath}' must contain a string property 'OpenApiUrl'.");
+        }
+
+        if (!root.TryGetProperty("OpenApiKey", out var openApiKeyElement) || openApiKeyElement.ValueKind != JsonValueKind.String)
+        {
+            Fail($"Workspace config '{WorkspaceConfigPath}' must contain a string property 'OpenApiKey'.");
+        }
+
+        if (!root.TryGetProperty("OpenApiModel", out var openApiModelElement) || openApiModelElement.ValueKind != JsonValueKind.String)
+        {
+            Fail($"Workspace config '{WorkspaceConfigPath}' must contain a string property 'OpenApiModel'.");
+        }
+
+        if (!root.TryGetProperty("FetchRetryCount", out var fetchRetryCountElement)
+            || fetchRetryCountElement.ValueKind != JsonValueKind.Number
+            || !fetchRetryCountElement.TryGetInt32(out _))
+        {
+            Fail($"Workspace config '{WorkspaceConfigPath}' must contain an integer property 'FetchRetryCount'.");
+        }
+
+        if (!root.TryGetProperty("DiscordToken", out var discordTokenElement) || discordTokenElement.ValueKind != JsonValueKind.String)
+        {
+            Fail($"Workspace config '{WorkspaceConfigPath}' must contain a string property 'DiscordToken'.");
+        }
+    }
+
+    WorkspaceConfig NormalizeWorkspaceConfig(WorkspaceConfig cfg)
+    {
+        var normalized = cfg ?? CreateDefaultWorkspaceConfig();
+
+        normalized.BuildTarget = NormalizeBuildTarget(normalized.BuildTarget);
+        normalized.InstallPath = NormalizePathOrEmpty(normalized.InstallPath);
+        normalized.PreservePaths ??= CreateDefaultPreservePaths();
+        normalized.PreservePaths = normalized.PreservePaths
+            .Select(NormalizePreservePathEntry)
             .Where(x => !string.IsNullOrWhiteSpace(x))
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .OrderBy(x => x, StringComparer.OrdinalIgnoreCase)
             .ToList();
+        if (normalized.PreservePaths.Count == 0)
+        {
+            normalized.PreservePaths = CreateDefaultPreservePaths();
+        }
+
+        normalized.OpenApiUrl = NormalizeOpenApiUrl(normalized.OpenApiUrl);
+        normalized.OpenApiKey = (normalized.OpenApiKey ?? string.Empty).Trim();
+        normalized.OpenApiModel = (normalized.OpenApiModel ?? string.Empty).Trim();
+        normalized.FetchRetryCount = Math.Max(0, normalized.FetchRetryCount);
+        normalized.DiscordToken = (normalized.DiscordToken ?? string.Empty).Trim();
 
         return normalized;
     }
 
-    string NormalizeDeployBlocklistEntry(string value)
+    static string NormalizeBuildTarget(string value)
+    {
+        var trimmed = (value ?? string.Empty).Trim();
+        if (trimmed.Equals("Debug", StringComparison.OrdinalIgnoreCase))
+        {
+            return "Debug";
+        }
+
+        if (trimmed.Equals("Release", StringComparison.OrdinalIgnoreCase))
+        {
+            return "Release";
+        }
+
+        Fail($"Invalid BuildTarget '{value}'. Use Debug or Release.");
+        return string.Empty;
+    }
+
+    static string NormalizeOpenApiUrl(string value)
+    {
+        var trimmed = (value ?? string.Empty).Trim();
+        if (string.IsNullOrWhiteSpace(trimmed))
+        {
+            return string.Empty;
+        }
+
+        if (!Uri.TryCreate(trimmed, UriKind.Absolute, out var uri)
+            || (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
+        {
+            Fail($"Invalid OpenApiUrl '{value}'. Use an absolute http(s) URL.");
+        }
+
+        return trimmed.TrimEnd('/');
+    }
+
+    string ResolveConfigEnvValue(string value, string propertyName)
+    {
+        var trimmed = (value ?? string.Empty).Trim();
+        if (string.IsNullOrWhiteSpace(trimmed))
+        {
+            return string.Empty;
+        }
+
+        const string envPrefix = "$env:";
+        if (!trimmed.StartsWith(envPrefix, StringComparison.OrdinalIgnoreCase))
+        {
+            return trimmed;
+        }
+
+        var envName = trimmed[envPrefix.Length..].Trim();
+        if (string.IsNullOrWhiteSpace(envName))
+        {
+            Log.Warning($"Config property '{propertyName}' references an empty environment variable name.");
+            return string.Empty;
+        }
+
+        var resolved = Environment.GetEnvironmentVariable(envName);
+        if (string.IsNullOrWhiteSpace(resolved))
+        {
+            Log.Warning($"Config property '{propertyName}' references environment variable '{envName}', but it is not set.");
+            return string.Empty;
+        }
+
+        return resolved.Trim();
+    }
+
+    string NormalizePreservePathEntry(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
         {
@@ -2653,34 +2206,6 @@ internal sealed partial class BuildScript : NukeBuild
         }
 
         return trimmed.Replace('\\', '/').Trim('/');
-    }
-
-    static string ReadJsonString(JsonElement root, params string[] keys)
-    {
-        foreach (var key in keys)
-        {
-            if (root.TryGetProperty(key, out var value) && value.ValueKind == JsonValueKind.String)
-            {
-                return value.GetString() ?? string.Empty;
-            }
-        }
-
-        return string.Empty;
-    }
-
-    static bool? ReadJsonBool(JsonElement root, params string[] keys)
-    {
-        foreach (var key in keys)
-        {
-            if (root.TryGetProperty(key, out var value))
-            {
-                if (value.ValueKind == JsonValueKind.True) return true;
-                if (value.ValueKind == JsonValueKind.False) return false;
-                if (value.ValueKind == JsonValueKind.String && bool.TryParse(value.GetString(), out var parsed)) return parsed;
-            }
-        }
-
-        return null;
     }
 
     static T FailWithReturn<T>(string message)
@@ -3120,15 +2645,15 @@ goto :eof
         }
     }
 
-    void SyncDirectoryRecursiveWithBlocklist(string source, string destination, string blocklistRoot, IReadOnlyList<string> blocklist)
+    void SyncDirectoryRecursiveWithPreservePaths(string source, string destination, string preserveRoot, IReadOnlyList<string> preservePaths)
     {
-        var normalizedBlocklist = (blocklist ?? [])
-            .Select(NormalizeDeployBlocklistEntry)
+        var normalizedPreservePaths = (preservePaths ?? [])
+            .Select(NormalizePreservePathEntry)
             .Where(x => !string.IsNullOrWhiteSpace(x))
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
 
-        if (normalizedBlocklist.Count == 0)
+        if (normalizedPreservePaths.Count == 0)
         {
             MirrorDirectoryRecursive(source, destination);
             return;
@@ -3137,15 +2662,43 @@ goto :eof
         EnsureDirectoryMaybe(destination);
         var destinationExists = Directory.Exists(destination);
 
-        var relativeEntries = normalizedBlocklist
+        var relativeEntries = normalizedPreservePaths
             .Where(x => !Path.IsPathRooted(x))
+            .Where(x => !IsGlobPattern(x))
             .Select(NormalizeRelativeForComparison)
             .Where(x => !string.IsNullOrWhiteSpace(x))
             .ToList();
-        var absoluteEntries = normalizedBlocklist
+        var relativeGlobEntries = normalizedPreservePaths
+            .Where(x => !Path.IsPathRooted(x))
+            .Where(IsGlobPattern)
+            .Select(NormalizeRelativeForComparison)
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .ToList();
+        var absoluteEntries = normalizedPreservePaths
             .Where(Path.IsPathRooted)
+            .Where(x => !IsGlobPattern(x))
             .Select(x => NormalizePathOrEmpty(x).Replace('\\', '/').TrimEnd('/'))
             .Where(x => !string.IsNullOrWhiteSpace(x))
+            .ToList();
+        var absoluteGlobEntries = normalizedPreservePaths
+            .Where(Path.IsPathRooted)
+            .Where(IsGlobPattern)
+            .Select(x => NormalizePathOrEmpty(x).Replace('\\', '/').TrimEnd('/'))
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .ToList();
+        var relativeGlobPatterns = relativeGlobEntries
+            .Select(CreateGlobRegex)
+            .ToList();
+        var absoluteGlobPatterns = absoluteGlobEntries
+            .Select(CreateGlobRegex)
+            .ToList();
+        var relativeGlobPrefixes = relativeGlobEntries
+            .Select(GetGlobLiteralPrefix)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+        var absoluteGlobPrefixes = absoluteGlobEntries
+            .Select(GetGlobLiteralPrefix)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
 
         if (destinationExists)
@@ -3159,9 +2712,9 @@ goto :eof
                     continue;
                 }
 
-                if (IsTargetPathBlocklisted(file, blocklistRoot, relativeEntries, absoluteEntries, out var relativeToRoot))
+                if (IsTargetPathPreserved(file, preserveRoot, relativeEntries, absoluteEntries, relativeGlobPatterns, absoluteGlobPatterns, out var relativeToRoot))
                 {
-                    Log.Information($"Deploy blocklist: preserving file {relativeToRoot}");
+                    Log.Information($"Deploy preserve-paths: preserving file {relativeToRoot}");
                     continue;
                 }
 
@@ -3178,17 +2731,17 @@ goto :eof
                     continue;
                 }
 
-                if (IsTargetPathBlocklisted(dir, blocklistRoot, relativeEntries, absoluteEntries, out var relativeToRoot))
+                if (IsTargetPathPreserved(dir, preserveRoot, relativeEntries, absoluteEntries, relativeGlobPatterns, absoluteGlobPatterns, out var relativeToRoot))
                 {
-                    Log.Information($"Deploy blocklist: preserving directory {relativeToRoot}");
+                    Log.Information($"Deploy preserve-paths: preserving directory {relativeToRoot}");
                     continue;
                 }
 
                 var normalizedDirAbsolute = NormalizePathOrEmpty(dir).Replace('\\', '/').TrimEnd('/');
-                var normalizedRelativeToRoot = NormalizeRelativeForComparison(Path.GetRelativePath(blocklistRoot, dir));
-                if (DirectoryContainsBlocklistedPath(normalizedRelativeToRoot, normalizedDirAbsolute, relativeEntries, absoluteEntries))
+                var normalizedRelativeToRoot = NormalizeRelativeForComparison(Path.GetRelativePath(preserveRoot, dir));
+                if (DirectoryContainsPreservedPath(normalizedRelativeToRoot, normalizedDirAbsolute, relativeEntries, absoluteEntries, relativeGlobPrefixes, absoluteGlobPrefixes))
                 {
-                    Log.Information($"Deploy blocklist: preserving directory {relativeToRoot} (contains blocklisted path)");
+                    Log.Information($"Deploy preserve-paths: preserving directory {relativeToRoot} (contains preserved path)");
                     continue;
                 }
 
@@ -3200,9 +2753,9 @@ goto :eof
         {
             var relative = Path.GetRelativePath(source, dir);
             var target = Path.Combine(destination, relative);
-            if (IsTargetPathBlocklisted(target, blocklistRoot, relativeEntries, absoluteEntries, out var relativeToRoot))
+            if (IsTargetPathPreserved(target, preserveRoot, relativeEntries, absoluteEntries, relativeGlobPatterns, absoluteGlobPatterns, out var relativeToRoot))
             {
-                Log.Information($"Deploy blocklist: skipping directory sync {relativeToRoot}");
+                Log.Information($"Deploy preserve-paths: skipping directory sync {relativeToRoot}");
                 continue;
             }
 
@@ -3213,9 +2766,9 @@ goto :eof
         {
             var relative = Path.GetRelativePath(source, file);
             var target = Path.Combine(destination, relative);
-            if (IsTargetPathBlocklisted(target, blocklistRoot, relativeEntries, absoluteEntries, out var relativeToRoot))
+            if (IsTargetPathPreserved(target, preserveRoot, relativeEntries, absoluteEntries, relativeGlobPatterns, absoluteGlobPatterns, out var relativeToRoot))
             {
-                Log.Information($"Deploy blocklist: skipping file sync {relativeToRoot}");
+                Log.Information($"Deploy preserve-paths: skipping file sync {relativeToRoot}");
                 continue;
             }
 
@@ -3279,20 +2832,41 @@ goto :eof
         File.Copy(source, target, overwrite: overwrite);
     }
 
-    bool IsTargetPathBlocklisted(string targetPath, string blocklistRoot, IReadOnlyList<string> relativeEntries, IReadOnlyList<string> absoluteEntries, out string relativeToRootDisplay)
+    bool IsTargetPathPreserved(
+        string targetPath,
+        string preserveRoot,
+        IReadOnlyList<string> relativeEntries,
+        IReadOnlyList<string> absoluteEntries,
+        IReadOnlyList<Regex> relativeGlobPatterns,
+        IReadOnlyList<Regex> absoluteGlobPatterns,
+        out string relativeToRootDisplay)
     {
         var normalizedTargetAbsolute = NormalizePathOrEmpty(targetPath).Replace('\\', '/').TrimEnd('/');
-        var normalizedRelativeToRoot = NormalizeRelativeForComparison(Path.GetRelativePath(blocklistRoot, targetPath));
+        var normalizedRelativeToRoot = NormalizeRelativeForComparison(Path.GetRelativePath(preserveRoot, targetPath));
         relativeToRootDisplay = string.IsNullOrWhiteSpace(normalizedRelativeToRoot) ? "." : normalizedRelativeToRoot;
-        return IsBlocklistedPath(normalizedRelativeToRoot, normalizedTargetAbsolute, relativeEntries, absoluteEntries);
+        return IsPreservedPath(normalizedRelativeToRoot, normalizedTargetAbsolute, relativeEntries, absoluteEntries, relativeGlobPatterns, absoluteGlobPatterns);
     }
 
-    static bool IsBlocklistedPath(string relativeToRoot, string targetAbsolute, IReadOnlyList<string> relativeEntries, IReadOnlyList<string> absoluteEntries)
+    static bool IsPreservedPath(
+        string relativeToRoot,
+        string targetAbsolute,
+        IReadOnlyList<string> relativeEntries,
+        IReadOnlyList<string> absoluteEntries,
+        IReadOnlyList<Regex> relativeGlobPatterns,
+        IReadOnlyList<Regex> absoluteGlobPatterns)
     {
         foreach (var absoluteEntry in absoluteEntries)
         {
             if (targetAbsolute.Equals(absoluteEntry, StringComparison.OrdinalIgnoreCase) ||
                 targetAbsolute.StartsWith(absoluteEntry + "/", StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        foreach (var absolutePattern in absoluteGlobPatterns)
+        {
+            if (absolutePattern.IsMatch(targetAbsolute))
             {
                 return true;
             }
@@ -3312,10 +2886,24 @@ goto :eof
             }
         }
 
+        foreach (var relativePattern in relativeGlobPatterns)
+        {
+            if (relativePattern.IsMatch(relativeToRoot))
+            {
+                return true;
+            }
+        }
+
         return false;
     }
 
-    static bool DirectoryContainsBlocklistedPath(string directoryRelativeToRoot, string directoryAbsolute, IReadOnlyList<string> relativeEntries, IReadOnlyList<string> absoluteEntries)
+    static bool DirectoryContainsPreservedPath(
+        string directoryRelativeToRoot,
+        string directoryAbsolute,
+        IReadOnlyList<string> relativeEntries,
+        IReadOnlyList<string> absoluteEntries,
+        IReadOnlyList<string> relativeGlobPrefixes,
+        IReadOnlyList<string> absoluteGlobPrefixes)
     {
         foreach (var absoluteEntry in absoluteEntries)
         {
@@ -3333,7 +2921,7 @@ goto :eof
 
         if (string.IsNullOrWhiteSpace(directoryRelativeToRoot))
         {
-            return relativeEntries.Count > 0;
+            return relativeEntries.Count > 0 || relativeGlobPrefixes.Count > 0;
         }
 
         foreach (var relativeEntry in relativeEntries)
@@ -3345,7 +2933,100 @@ goto :eof
             }
         }
 
+        foreach (var relativePrefix in relativeGlobPrefixes)
+        {
+            if (string.IsNullOrWhiteSpace(relativePrefix))
+            {
+                return true;
+            }
+
+            if (relativePrefix.Equals(directoryRelativeToRoot, StringComparison.OrdinalIgnoreCase) ||
+                relativePrefix.StartsWith(directoryRelativeToRoot + "/", StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        foreach (var absolutePrefix in absoluteGlobPrefixes)
+        {
+            if (string.IsNullOrWhiteSpace(absolutePrefix))
+            {
+                return true;
+            }
+
+            if (absolutePrefix.Equals(directoryAbsolute, StringComparison.OrdinalIgnoreCase) ||
+                absolutePrefix.StartsWith(directoryAbsolute + "/", StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
         return false;
+    }
+
+    static bool IsGlobPattern(string value)
+    {
+        return !string.IsNullOrWhiteSpace(value)
+               && (value.Contains('*') || value.Contains('?') || value.Contains('['));
+    }
+
+    static Regex CreateGlobRegex(string pattern)
+    {
+        var normalized = (pattern ?? string.Empty).Replace('\\', '/').Trim();
+        var sb = new StringBuilder("^");
+
+        for (var i = 0; i < normalized.Length; i++)
+        {
+            var c = normalized[i];
+            if (c == '*')
+            {
+                var isDoubleStar = i + 1 < normalized.Length && normalized[i + 1] == '*';
+                if (isDoubleStar)
+                {
+                    sb.Append(".*");
+                    i++;
+                }
+                else
+                {
+                    sb.Append("[^/]*");
+                }
+
+                continue;
+            }
+
+            if (c == '?')
+            {
+                sb.Append("[^/]");
+                continue;
+            }
+
+            sb.Append(Regex.Escape(c.ToString()));
+        }
+
+        sb.Append("$");
+        return new Regex(sb.ToString(), RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.Compiled);
+    }
+
+    static string GetGlobLiteralPrefix(string pattern)
+    {
+        var normalized = (pattern ?? string.Empty).Replace('\\', '/').Trim('/');
+        if (string.IsNullOrWhiteSpace(normalized))
+        {
+            return string.Empty;
+        }
+
+        var wildcardIndex = normalized.IndexOfAny(['*', '?', '[']);
+        if (wildcardIndex < 0)
+        {
+            return normalized;
+        }
+
+        if (wildcardIndex == 0)
+        {
+            return string.Empty;
+        }
+
+        return normalized[..wildcardIndex].TrimEnd('/');
     }
 
     static string NormalizeRelativeForComparison(string relativePath)
@@ -3396,11 +3077,17 @@ goto :eof
         return $"\"{escaped}\"";
     }
 
-    sealed class LocalConfig
+    sealed class WorkspaceConfig
     {
-        public string GameDir { get; set; } = string.Empty;
-        public bool? AutoDeploy { get; set; }
-        public List<string>? DeployBlocklist { get; set; }
+        public string BuildTarget { get; set; } = "Release";
+        public string InstallPath { get; set; } = string.Empty;
+        public bool? DeployAfterBuild { get; set; }
+        public List<string>? PreservePaths { get; set; }
+        public string OpenApiUrl { get; set; } = string.Empty;
+        public string OpenApiKey { get; set; } = string.Empty;
+        public string OpenApiModel { get; set; } = string.Empty;
+        public int FetchRetryCount { get; set; } = 2;
+        public string DiscordToken { get; set; } = string.Empty;
     }
 
     readonly record struct WorkflowHelpBlock(
@@ -3418,5 +3105,6 @@ goto :eof
 
     readonly record struct ProcessResult(int ExitCode, string StdOut, string StdErr);
 }
+
 
 

@@ -13,7 +13,7 @@ internal sealed partial class BuildScript
 
     Target Lint => _ => _.Executes(() => RunLintCore(Config));
 
-    Target Smoke => _ => _.Executes(() => RunSmokeCore(Payload, Config));
+    Target Smoke => _ => _.Executes(() => RunSmokeCore(Config));
 
     void RunCleanCore(bool full)
     {
@@ -100,11 +100,11 @@ internal sealed partial class BuildScript
         else
         {
             var hasMsbuild = CommandExists("msbuild");
-            LogDoctorCheck("MSBuild", hasMsbuild, required: false, "Needed only for --payload full.");
+            LogDoctorCheck("MSBuild", hasMsbuild, required: false, "Needed for full Fahrenheit native builds.");
             if (!hasMsbuild) optionalWarnings.Add("msbuild");
 
             var hasVcpkg = !string.IsNullOrWhiteSpace(FindVcpkgExecutable());
-            LogDoctorCheck("vcpkg", hasVcpkg, required: false, "Needed only for --payload full.");
+            LogDoctorCheck("vcpkg", hasVcpkg, required: false, "Needed for full Fahrenheit native builds.");
             if (!hasVcpkg) optionalWarnings.Add("vcpkg");
         }
 
@@ -123,6 +123,7 @@ internal sealed partial class BuildScript
 
     void RunLintCore(string configuration)
     {
+        var normalizedConfiguration = ResolveBuildConfiguration(configuration);
         ValidateJsonConfigsCore();
 
         var buildProject = Path.Combine(RootDirectory, "build", "Build.csproj");
@@ -133,13 +134,13 @@ internal sealed partial class BuildScript
 
         RunChecked(
             "dotnet",
-            $"build {Quote(buildProject)} --configuration {Quote(configuration)} --nologo -warnaserror",
+            $"build {Quote(buildProject)} --configuration {Quote(normalizedConfiguration)} --nologo -warnaserror",
             "Lint compile check (build orchestration)");
 
         var modProject = Path.Combine(RootDirectory, "Fahrenheit.Mods.Parry.csproj");
         RunChecked(
             "dotnet",
-            $"build {Quote(modProject)} --configuration {Quote(configuration)} --nologo",
+            $"build {Quote(modProject)} --configuration {Quote(normalizedConfiguration)} --nologo",
             "Lint compile check (mod project)");
 
         var testsProject = Path.Combine(RootDirectory, "tests", "Parry.Tests", "Parry.Tests.csproj");
@@ -147,7 +148,7 @@ internal sealed partial class BuildScript
         {
             RunChecked(
                 "dotnet",
-                $"build {Quote(testsProject)} --configuration {Quote(configuration)} --nologo",
+                $"build {Quote(testsProject)} --configuration {Quote(normalizedConfiguration)} --nologo",
                 "Lint compile check (tests)");
         }
 
@@ -301,26 +302,13 @@ internal sealed partial class BuildScript
         return map;
     }
 
-    void RunSmokeCore(string payload, string configuration)
+    void RunSmokeCore(string configuration)
     {
-        var normalizedPayload = (payload ?? string.Empty).Trim().ToLowerInvariant();
-        if (normalizedPayload != "mod" && normalizedPayload != "full")
-        {
-            Fail($"Invalid payload '{payload}'. Use mod or full.");
-        }
-
-        var normalizedConfig = configuration.Equals("Release", StringComparison.OrdinalIgnoreCase) ? "Release" : "Debug";
+        var normalizedConfig = ResolveBuildConfiguration(configuration);
         var deployConfig = normalizedConfig.Equals("Release", StringComparison.OrdinalIgnoreCase) ? "rel" : "dbg";
         var effectiveFahrenheitRef = ResolveFahrenheitRef(useReleaseRef: false);
 
-        if (normalizedPayload == "full")
-        {
-            RunBuildProjTarget("Build", normalizedConfig, includeNativeMsbuild: true, fahrenheitRef: effectiveFahrenheitRef);
-        }
-        else
-        {
-            RunBuildProjTarget("BuildModOnly", normalizedConfig, includeNativeMsbuild: false, fahrenheitRef: effectiveFahrenheitRef);
-        }
+        RunBuildProjTarget("Build", normalizedConfig, includeNativeMsbuild: true, fahrenheitRef: effectiveFahrenheitRef);
 
         var localOutput = Path.Combine(RootDirectory, "bin", normalizedConfig, "net10.0", "win-x86");
         AssertFilesExist(
@@ -338,17 +326,14 @@ internal sealed partial class BuildScript
             Path.Combine("mappings", "runtime", "ffx-mappings.json"),
             Path.Combine("mappings", "runtime", "ffx-mappings.us.json"));
 
-        if (normalizedPayload == "full")
+        var stage0 = Path.Combine(ResolvePath(FahrenheitDir), "artifacts", "deploy", deployConfig, "bin", "fhstage0.exe");
+        if (!File.Exists(stage0))
         {
-            var stage0 = Path.Combine(ResolvePath(FahrenheitDir), "artifacts", "deploy", deployConfig, "bin", "fhstage0.exe");
-            if (!File.Exists(stage0))
-            {
-                Fail($"Smoke check failed. Missing stage0 loader: {stage0}");
-            }
+            Fail($"Smoke check failed. Missing stage0 loader: {stage0}");
         }
 
         RunBuildCliSmokeCore();
-        Log.Information($"Smoke checks passed for payload={normalizedPayload}, config={normalizedConfig}.");
+        Log.Information($"Smoke checks passed for full payload, config={normalizedConfig}.");
     }
 
     void RunBuildCliSmokeCore()

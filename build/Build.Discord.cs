@@ -1,4 +1,8 @@
 using System.Diagnostics;
+using System.Collections.Concurrent;
+using System.Net;
+using System.Net.Http;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -15,27 +19,122 @@ internal sealed partial class BuildScript
     static readonly Regex DiscordGuildLineRegex = new(
         @"^\s*(?<id>\d+)\s+\|\s+(?<name>.+?)\s*$",
         RegexOptions.Compiled | RegexOptions.CultureInvariant);
+    static readonly Regex DiscordExportFileRegex = new(
+        @"(?:_|[(])(?<id>\d{17,20})\)?\.(?:json|md)$",
+        RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+    static readonly Regex DiscordUrlRegex = new(
+        @"https?://[^\s<>""'\]\)]+",
+        RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+    static readonly UTF8Encoding Utf8NoBom = new(encoderShouldEmitUTF8Identifier: false);
+    static readonly HttpClient DiscordFetchHttpClient = CreateDiscordFetchHttpClient();
+    const int DiscordCliTimeoutMs = 30 * 60 * 1000; // 30 minutes
+    const int PowerShellScriptTimeoutMs = 6 * 60 * 60 * 1000; // 6 hours
+    const string DiscordOutputRootRelative = ".workspace/discord";
+    const string DiscordConfigRelativePath = ".workspace/discord/config.local.json";
+    const string DiscordExportIndexCacheRelativePath = ".workspace/discord/_index/export-index.cache.json";
+    const string DiscordScriptsRelativeDir = "build/scripts/discord";
+    const string DiscordPrimaryToolsRelativeDir = ".workspace/tools";
+    const string DiscordOcrOutRelativeDir = ".workspace/analysis/discord-ocr";
+    const int DiscordTesseractMinDimension = 640;
+    const int MaxFetchedTextBytes = 800000;
+    const int MaxRenderedRefCharsPerMessage = 16000;
 
     [Parameter(Name = "guild")] readonly string Guild = string.Empty;
     [Parameter(Name = "channels")] readonly string Channels = string.Empty;
-    [Parameter(Name = "discord-tool-dir")] readonly string DiscordToolDir = ".workspace/tools/DiscordChatExporter";
-    [Parameter(Name = "discord-out-dir")] readonly string DiscordOutDir = ".workspace/discord";
-    [Parameter(Name = "discord-config")] readonly string DiscordConfig = ".workspace/discord/config.local.json";
-    [Parameter(Name = "discord-media-dir")] readonly string DiscordMediaDir = string.Empty;
-    [Parameter(Name = "discord-include-threads")] readonly string DiscordIncludeThreads = string.Empty;
-    [Parameter(Name = "discord-include-vc")] readonly bool? DiscordIncludeVc;
-    [Parameter(Name = "discord-media")] readonly bool? DiscordMedia;
-    [Parameter(Name = "discord-reuse-media")] readonly bool? DiscordReuseMedia;
+    [Parameter(Name = "discord-utc")] readonly bool? DiscordUtc;
     [Parameter(Name = "discord-cleanup-staging")] readonly bool DiscordCleanupStaging = true;
     [Parameter(Name = "discord-register-guild")] readonly bool DiscordRegisterGuild = false;
 
     Target DiscordSync => _ => _
         .Executes(DiscordSyncCore);
 
+    static string GetSlug(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name)) return "unknown";
+        var cleanName = Regex.Replace(name, @"\s\(\d+\)$", "");
+        var slug = Regex.Replace(cleanName.ToLowerInvariant(), @"[^a-z0-9]", "-");
+        slug = Regex.Replace(slug, @"-+", "-");
+        return slug.Trim('-');
+    }
+
+    string ResolveDiscordOutputRoot() => ResolvePath(DiscordOutputRootRelative);
+    string ResolveDiscordConfigPath() => ResolvePath(DiscordConfigRelativePath);
+    string ResolveDiscordExportIndexCachePath() => ResolvePath(DiscordExportIndexCacheRelativePath);
+
+    string ResolveDiscordToolDirectory(string toolName) => ResolvePath(Path.Combine(DiscordPrimaryToolsRelativeDir, toolName));
+
+    string ResolveDiscordScriptPath(string scriptName) => ResolvePath(Path.Combine(DiscordScriptsRelativeDir, scriptName));
+
+    void CleanupRedundantDiscordFiles(string outputRoot, string currentGuildId)
+    {
+        Log.Information($"Cleaning up redundant files for guild {currentGuildId}...");
+        var guildDirs = Directory.GetDirectories(outputRoot, $"*_{currentGuildId}", SearchOption.TopDirectoryOnly);
+        foreach (var guildDir in guildDirs)
+        {
+            var files = Directory.GetFiles(guildDir, "*.json", SearchOption.AllDirectories)
+                .Concat(Directory.GetFiles(guildDir, "*.md", SearchOption.AllDirectories))
+                .ToList();
+
+            var byId = new Dictionary<string, List<string>>();
+            foreach (var file in files)
+            {
+                var fileName = Path.GetFileName(file);
+                if (TryGetDiscordExportIdFromFileName(fileName, out var channelId, out var extension))
+                {
+                    var id = $"{channelId}|{extension}";
+                    if (!byId.ContainsKey(id)) byId[id] = new List<string>();
+                    byId[id].Add(file);
+                }
+            }
+
+            foreach (var idGroup in byId.Values)
+            {
+                if (idGroup.Count <= 1) continue;
+
+                var sorted = idGroup
+                    .OrderByDescending(f => ScoreDiscordCanonicalExportPath(guildDir, f))
+                    .ThenBy(f => Path.GetDirectoryName(f)?.Length ?? 0)
+                    .ThenBy(f => Path.GetFileName(f).Length)
+                    .ThenByDescending(f => new FileInfo(f).Length)
+                    .ToList();
+                var toKeep = sorted[0];
+                foreach (var toDelete in sorted.Skip(1))
+                {
+                    Log.Information($"  Deleting redundant file: {Path.GetFileName(toDelete)} (kept {Path.GetFileName(toKeep)})");
+                    File.Delete(toDelete);
+                }
+            }
+        }
+    }
+
+    static int ScoreDiscordCanonicalExportPath(string guildRoot, string path)
+    {
+        var score = 0;
+        var directory = Path.GetDirectoryName(path) ?? string.Empty;
+        if (string.Equals(directory, guildRoot, StringComparison.OrdinalIgnoreCase))
+        {
+            score += 5;
+        }
+
+        var fileName = Path.GetFileName(path);
+        if (Regex.IsMatch(fileName, "^[a-z0-9-]+_[0-9]{17,20}\\.(json|md)$", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase))
+        {
+            score += 5;
+        }
+
+        var relative = Path.GetRelativePath(guildRoot, path);
+        if (!relative.Contains(Path.DirectorySeparatorChar) && !relative.Contains(Path.AltDirectorySeparatorChar))
+        {
+            score += 2;
+        }
+
+        return score;
+    }
+
     Target FixDiscordExtensions => _ => _
         .Executes(() =>
         {
-            var outputRoot = ResolvePath(DiscordOutDir);
+            var outputRoot = ResolveDiscordOutputRoot();
             if (!Directory.Exists(outputRoot))
             {
                 Log.Warning($"Discord output directory not found: {outputRoot}");
@@ -59,7 +158,7 @@ internal sealed partial class BuildScript
                 }
             }
 
-            foreach (var guildDir in Directory.GetDirectories(outputRoot, "* (*)", SearchOption.TopDirectoryOnly))
+            foreach (var guildDir in Directory.GetDirectories(outputRoot, "*_*", SearchOption.TopDirectoryOnly))
             {
                 var mediaDir = Path.Combine(guildDir, "Media");
                 if (Directory.Exists(mediaDir))
@@ -76,83 +175,297 @@ internal sealed partial class BuildScript
             Log.Information("Finished fixing Discord asset extensions.");
         });
 
-    Target DiscordCompact => _ => _
+    Target DiscordEnrich => _ => _
         .Executes(() =>
         {
-            var outputRoot = ResolvePath(DiscordOutDir);
-            var analysisRoot = ResolvePath(".workspace/analysis");
-            EnsureDir(analysisRoot);
-
-            var outputFile = Path.Combine(analysisRoot, "discord_messages_compact.csv");
-            Log.Information($"Compacting Discord exports to {outputFile}...");
-
-            using var writer = new StreamWriter(outputFile, false, Encoding.UTF8);
-            writer.WriteLine("Guild,Channel,Date,Author,Content");
-
-            var jsonFiles = Directory.GetFiles(outputRoot, "*.json", SearchOption.AllDirectories)
-                .Where(path => !IsDiscordHousekeepingPath(outputRoot, path) && !IsDiscordAssetPath(outputRoot, path))
-                .ToList();
-
-            var messageCount = 0;
-            foreach (var jsonPath in jsonFiles)
+            var outputRoot = ResolveDiscordOutputRoot();
+            var workspaceConfig = LoadWorkspaceConfig();
+            var discordConfig = LoadDiscordConfig();
+            if (!Directory.Exists(outputRoot))
             {
-                try
-                {
-                    using var doc = JsonDocument.Parse(File.ReadAllText(jsonPath));
-                    var root = doc.RootElement;
-
-                    var guildName = root.TryGetProperty("guild", out var g) ? g.GetProperty("name").GetString() ?? "Unknown" : "Unknown";
-                    var channelName = root.TryGetProperty("channel", out var c) ? c.GetProperty("name").GetString() ?? "Unknown" : "Unknown";
-
-                    if (!root.TryGetProperty("messages", out var messages) || messages.ValueKind != JsonValueKind.Array)
-                        continue;
-
-                    foreach (var message in messages.EnumerateArray())
-                    {
-                        var timestamp = message.TryGetProperty("timestamp", out var t) ? t.GetString() ?? "" : "";
-                        var author = message.TryGetProperty("author", out var a) ? a.GetProperty("nickname").GetString() ?? a.GetProperty("name").GetString() ?? "Unknown" : "Unknown";
-                        var content = message.TryGetProperty("content", out var co) ? co.GetString() ?? "" : "";
-
-                        if (string.IsNullOrWhiteSpace(content) && !message.TryGetProperty("attachments", out var atts))
-                            continue;
-
-                        // Add attachment info to content if any
-                        if (message.TryGetProperty("attachments", out var attachments) && attachments.ValueKind == JsonValueKind.Array)
-                        {
-                            foreach (var att in attachments.EnumerateArray())
-                            {
-                                var fileName = att.GetProperty("fileName").GetString();
-                                content += $" [Attachment: {fileName}]";
-                            }
-                        }
-
-                        writer.WriteLine($"{EscapeCsv(guildName)},{EscapeCsv(channelName)},{EscapeCsv(timestamp)},{EscapeCsv(author)},{EscapeCsv(content)}");
-                        messageCount++;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Log.Warning($"Failed to process {jsonPath}: {ex.Message}");
-                }
+                Log.Warning($"Discord output directory not found: {outputRoot}");
+                return;
             }
 
-            Log.Information($"Successfully compacted {messageCount} messages.");
+            var tesseractScript = ResolveDiscordScriptPath("tesseract-ocr.ps1");
+            var ocrScript = ResolveDiscordScriptPath("discord-ocr-pipeline.ps1");
+            var postprocessScript = ResolveDiscordScriptPath("postprocess-discord-ocr.ps1");
+            var tesseractPath = Path.Combine(ResolveDiscordToolDirectory("tesseract"), "tesseract.exe");
+            var ocrRoot = ResolvePath(DiscordOcrOutRelativeDir);
+            EnsureDir(ocrRoot);
+
+            var guildDirs = Directory.GetDirectories(outputRoot, "*_*", SearchOption.TopDirectoryOnly)
+                .Where(d => !IsDiscordHousekeepingPath(outputRoot, d))
+                .OrderBy(x => x, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            if (guildDirs.Count == 0)
+            {
+                Log.Warning("No guild directories found for Discord enrichment.");
+                return;
+            }
+
+            Log.Information($"Starting Discord enrichment pipeline for {guildDirs.Count} guild(s).");
+
+            Parallel.ForEach(guildDirs, new ParallelOptions { MaxDegreeOfParallelism = 2 }, guildDir =>
+            {
+                EnrichDiscordGuild(
+                    guildDir,
+                    ocrRoot,
+                    workspaceConfig,
+                    tesseractScript,
+                    tesseractPath,
+                    ocrScript,
+                    postprocessScript);
+                GenerateDiscordReferencesForGuild(guildDir, workspaceConfig, discordConfig.BlacklistedChannelIds);
+                RegenerateDiscordMarkdownForGuild(guildDir);
+            });
+
+            Log.Information("Discord enrichment pipeline complete.");
         });
 
-    static string EscapeCsv(string? value)
+    void RunPowerShellScript(string scriptPath, string args)
     {
-        if (string.IsNullOrEmpty(value)) return "";
-        if (value.Contains('"') || value.Contains(',') || value.Contains('\n') || value.Contains('\r'))
+        var psi = new ProcessStartInfo
         {
-            return $"\"{value.Replace("\"", "\"\"")}\"";
+            FileName = "powershell.exe",
+            Arguments = $"-NoProfile -ExecutionPolicy Bypass -File {Quote(scriptPath)} {args}",
+            UseShellExecute = false,
+            CreateNoWindow = true
+        };
+
+        using var process = Process.Start(psi);
+        if (process is null)
+        {
+            Log.Warning($"Failed to start PowerShell script: {scriptPath}");
+            return;
         }
-        return value;
+
+        if (!process.WaitForExit(PowerShellScriptTimeoutMs))
+        {
+            try
+            {
+                process.Kill(entireProcessTree: true);
+            }
+            catch
+            {
+                // Best-effort timeout cleanup.
+            }
+
+            Log.Warning($"PowerShell script {Path.GetFileName(scriptPath)} timed out after {PowerShellScriptTimeoutMs / 1000} seconds.");
+            return;
+        }
+
+        if (process.ExitCode != 0)
+        {
+            Log.Warning($"PowerShell script {Path.GetFileName(scriptPath)} failed with code {process.ExitCode}.");
+        }
+    }
+
+    static bool IsSupportedOcrImageFile(string path)
+    {
+        var ext = Path.GetExtension(path);
+        return ext.Equals(".png", StringComparison.OrdinalIgnoreCase)
+               || ext.Equals(".jpg", StringComparison.OrdinalIgnoreCase)
+               || ext.Equals(".jpeg", StringComparison.OrdinalIgnoreCase)
+               || ext.Equals(".webp", StringComparison.OrdinalIgnoreCase)
+               || ext.Equals(".bmp", StringComparison.OrdinalIgnoreCase)
+               || ext.Equals(".gif", StringComparison.OrdinalIgnoreCase)
+               || ext.Equals(".tif", StringComparison.OrdinalIgnoreCase)
+               || ext.Equals(".tiff", StringComparison.OrdinalIgnoreCase);
+    }
+
+    void WriteMissingOcrSidecarsFromLinks(string ocrOutDir)
+    {
+        var linksPath = Path.Combine(ocrOutDir, "ocr_message_image_links.jsonl");
+        if (!File.Exists(linksPath))
+        {
+            return;
+        }
+
+        var bestByImage = new Dictionary<string, (int Confidence, string Text)>(StringComparer.OrdinalIgnoreCase);
+        foreach (var line in File.ReadLines(linksPath))
+        {
+            if (string.IsNullOrWhiteSpace(line))
+            {
+                continue;
+            }
+
+            try
+            {
+                using var doc = JsonDocument.Parse(line);
+                var root = doc.RootElement;
+                var imagePath = root.TryGetProperty("ImagePath", out var imageNode) ? imageNode.GetString() : string.Empty;
+                var text = root.TryGetProperty("OcrText", out var textNode) ? textNode.GetString() : string.Empty;
+                var classification = root.TryGetProperty("OcrClassification", out var classificationNode)
+                    ? classificationNode.GetString() ?? string.Empty
+                    : string.Empty;
+                var confidence = root.TryGetProperty("OcrConfidence", out var confidenceNode) && confidenceNode.TryGetInt32(out var parsedConfidence)
+                    ? parsedConfidence
+                    : 0;
+
+                if (string.IsNullOrWhiteSpace(imagePath)
+                    || string.IsNullOrWhiteSpace(text)
+                    || confidence < 60
+                    || !(classification.Equals("full_text", StringComparison.OrdinalIgnoreCase)
+                         || classification.Equals("partial_text", StringComparison.OrdinalIgnoreCase)))
+                {
+                    continue;
+                }
+
+                if (!bestByImage.TryGetValue(imagePath, out var existing) || confidence > existing.Confidence)
+                {
+                    bestByImage[imagePath] = (confidence, text);
+                }
+            }
+            catch
+            {
+                // Skip malformed JSONL rows.
+            }
+        }
+
+        var created = 0;
+        foreach (var kvp in bestByImage)
+        {
+            var imagePath = kvp.Key;
+            if (!File.Exists(imagePath))
+            {
+                continue;
+            }
+
+            var sidecarPath = imagePath + ".ocr.txt";
+            if (File.Exists(sidecarPath))
+            {
+                continue;
+            }
+
+            File.WriteAllText(sidecarPath, kvp.Value.Text, Utf8NoBom);
+            created++;
+        }
+
+        if (created > 0)
+        {
+            Log.Information($"Wrote {created} missing OCR sidecar file(s) from {Path.GetFileName(linksPath)}.");
+        }
+    }
+
+    void EnrichDiscordGuild(
+        string guildDir,
+        string ocrRoot,
+        WorkspaceConfig workspaceConfig,
+        string tesseractScript,
+        string tesseractPath,
+        string ocrScript,
+        string postprocessScript)
+    {
+        var guildName = Path.GetFileName(guildDir);
+        var guildOcrOut = Path.Combine(ocrRoot, guildName);
+        EnsureDir(guildOcrOut);
+        Log.Information($"Enriching {guildName}...");
+
+        if (File.Exists(tesseractScript) && File.Exists(tesseractPath))
+        {
+            var mediaFiles = Directory.GetFiles(guildDir, "*.*", SearchOption.AllDirectories)
+                .Where(IsSupportedOcrImageFile)
+                .Where(path => path.Contains($"{Path.DirectorySeparatorChar}Media{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            Parallel.ForEach(mediaFiles, new ParallelOptions { MaxDegreeOfParallelism = 4 }, file =>
+            {
+                if (!File.Exists(file + ".ocr.txt"))
+                {
+                    RunPowerShellScript(
+                        tesseractScript,
+                        $"-ImagePath {Quote(file)} -TesseractPath {Quote(tesseractPath)} -MinDimension {DiscordTesseractMinDimension}");
+                }
+            });
+        }
+
+        if (File.Exists(ocrScript))
+        {
+            var hasOcrModelConfig = !string.IsNullOrWhiteSpace(workspaceConfig.OpenApiUrl)
+                                    && !string.IsNullOrWhiteSpace(workspaceConfig.OpenApiModel);
+            if (hasOcrModelConfig)
+            {
+                var resolvedOpenApiKey = ResolveConfigEnvValue(workspaceConfig.OpenApiKey, nameof(WorkspaceConfig.OpenApiKey));
+                var args = new StringBuilder();
+                args.Append($"-Root {Quote(guildDir)} -OutDir {Quote(guildOcrOut)} -Resume");
+                args.Append($" -ApiBase {Quote(workspaceConfig.OpenApiUrl)}");
+                if (!string.IsNullOrWhiteSpace(resolvedOpenApiKey))
+                {
+                    args.Append($" -ApiKey {Quote(resolvedOpenApiKey)}");
+                }
+
+                args.Append($" -FastModel {Quote(workspaceConfig.OpenApiModel)}");
+                args.Append($" -LargeModel {Quote(workspaceConfig.OpenApiModel)}");
+                if (Full)
+                {
+                    args.Append(" -Full");
+                }
+
+                RunPowerShellScript(ocrScript, args.ToString());
+            }
+            else
+            {
+                Log.Information("Skipping LLM OCR pass (OpenApiUrl/OpenApiModel are not configured in .workspace/config.local.json).");
+            }
+        }
+
+        if (File.Exists(postprocessScript))
+        {
+            RunPowerShellScript(postprocessScript, $"-GuildRoot {Quote(guildDir)} -OcrOutDir {Quote(guildOcrOut)}");
+            WriteMissingOcrSidecarsFromLinks(guildOcrOut);
+        }
+    }
+
+    void RunDiscordEnrichmentForGuild(string guildDir, WorkspaceConfig workspaceConfig)
+    {
+        if (!Directory.Exists(guildDir))
+        {
+            return;
+        }
+
+        var tesseractScript = ResolveDiscordScriptPath("tesseract-ocr.ps1");
+        var ocrScript = ResolveDiscordScriptPath("discord-ocr-pipeline.ps1");
+        var postprocessScript = ResolveDiscordScriptPath("postprocess-discord-ocr.ps1");
+
+        var missingAnyScript =
+            !File.Exists(tesseractScript)
+            && !File.Exists(ocrScript)
+            && !File.Exists(postprocessScript);
+        if (missingAnyScript)
+        {
+            return;
+        }
+
+        var tesseractPath = Path.Combine(ResolveDiscordToolDirectory("tesseract"), "tesseract.exe");
+        var ocrRoot = ResolvePath(DiscordOcrOutRelativeDir);
+        EnsureDir(ocrRoot);
+
+        EnrichDiscordGuild(
+            guildDir,
+            ocrRoot,
+            workspaceConfig,
+            tesseractScript,
+            tesseractPath,
+            ocrScript,
+            postprocessScript);
     }
 
     void DiscordSyncCore()
     {
-        var outputRoot = ResolvePath(DiscordOutDir);
-        var baseSettings = ResolveDiscordSettings();
+        var outputRoot = ResolveDiscordOutputRoot();
+        var workspaceConfig = LoadWorkspaceConfig();
+        var baseSettings = ResolveDiscordSettings(workspaceConfig);
+        var exportIndexCachePath = ResolveDiscordExportIndexCachePath();
+        var exportIndex = LoadDiscordExportIndexCache(exportIndexCachePath);
+        if (exportIndex.Count == 0 && Directory.Exists(outputRoot))
+        {
+            Log.Information("Discord export index cache missing or empty. Building initial cache from disk...");
+            exportIndex = BuildDiscordExportIndex(outputRoot);
+            SaveDiscordExportIndexCache(exportIndexCachePath, exportIndex);
+        }
+
         var guildsToSync = new List<string>();
 
         if (!string.IsNullOrWhiteSpace(Guild))
@@ -175,13 +488,16 @@ internal sealed partial class BuildScript
         {
             Log.Information($"--- Starting sync for Guild {currentGuildId} ---");
 
-            var settings = ResolveGuildScopedDiscordSettings(
-                outputRoot,
-                cliPath,
-                currentGuildId,
-                baseSettings);
+            var guildName = ResolveDiscordGuildName(cliPath, currentGuildId, baseSettings.Token);
+            var serverSlug = GetSlug(guildName);
+            var guildRoot = Path.Combine(outputRoot, $"{serverSlug}_{currentGuildId}");
+            var settings = baseSettings;
+            if (string.IsNullOrWhiteSpace(settings.MediaDirectory))
+            {
+                settings = settings with { MediaDirectory = Path.Combine(guildRoot, "Media") };
+            }
 
-            var stagingRoot = Path.Combine(outputRoot, "_staging", currentGuildId);
+            var stagingRoot = Path.Combine(outputRoot, "_staging", $"{serverSlug}_{currentGuildId}");
 
             EnsureDir(outputRoot);
             EnsureDir(stagingRoot);
@@ -197,51 +513,64 @@ internal sealed partial class BuildScript
                 continue;
             }
 
-            var processed = 0;
-            var updated = 0;
-            var created = 0;
-            var unchanged = 0;
-            var skipped = 0;
             var syncSucceeded = false;
-
-            var jsonFiles = Directory.GetFiles(outputRoot, "*.json", SearchOption.AllDirectories)
-                .Where(path => !IsDiscordHousekeepingPath(outputRoot, path) && !IsDiscordAssetPath(outputRoot, path))
-                .ToList();
+            var skippedChannels = new ConcurrentDictionary<string, string>(StringComparer.Ordinal);
+            var assetDirsToFix = new ConcurrentDictionary<string, byte>(StringComparer.OrdinalIgnoreCase);
+            var newestMessageIdIndex = new ConcurrentDictionary<string, string>(StringComparer.Ordinal);
 
             try
             {
-                foreach (var target in targets)
+                Parallel.ForEach(targets, new ParallelOptions { MaxDegreeOfParallelism = 2 }, target =>
                 {
-                    processed++;
-
-                    var existingPath = FindExistingDiscordExport(outputRoot, target.ChannelId);
-                    var mode = "full";
+                    var channelSlug = GetSlug(target.Label);
+                    var fileName = $"{channelSlug}_{target.ChannelId}.json";
+                    var finalPath = Path.Combine(guildRoot, fileName);
+                    var existingPath = string.Empty;
                     var afterValue = string.Empty;
-                    var stageOutput = string.Empty;
+                    var cachedEntry = GetDiscordIndexedExportEntry(exportIndex, target.ChannelId);
+                    if (cachedEntry.HasValue)
+                    {
+                        existingPath = cachedEntry.Value.Path;
+                        afterValue = cachedEntry.Value.NewestMessageId;
+                    }
+
+                    if (!cachedEntry.HasValue && !Full && File.Exists(finalPath))
+                    {
+                        existingPath = finalPath;
+                    }
+
+                    if (!Full && cachedEntry.HasValue && cachedEntry.Value.Inaccessible)
+                    {
+                        skippedChannels.TryAdd(target.ChannelId, $"cached inaccessible: {cachedEntry.Value.InaccessibleReason}");
+                        return;
+                    }
+
+                    var mode = "full";
+                    var stageOutput = Path.Combine(stagingRoot, fileName);
 
                     if (!Full && !string.IsNullOrWhiteSpace(existingPath))
                     {
-                        afterValue = ReadNewestMessageId(existingPath);
+                        if (string.IsNullOrWhiteSpace(afterValue))
+                        {
+                            afterValue = newestMessageIdIndex.GetOrAdd(
+                                target.ChannelId,
+                                _ => ReadNewestMessageId(existingPath));
+                        }
+                        else
+                        {
+                            newestMessageIdIndex[target.ChannelId] = afterValue;
+                        }
+
                         if (!string.IsNullOrWhiteSpace(afterValue))
                         {
                             mode = "delta";
                         }
                     }
 
-                    if (!string.IsNullOrWhiteSpace(existingPath))
-                    {
-                        var relativeExistingPath = Path.GetRelativePath(outputRoot, existingPath);
-                        stageOutput = Path.Combine(stagingRoot, relativeExistingPath);
-                    }
-                    else
-                    {
-                        stageOutput = BuildDiscordOutputTemplate(stagingRoot);
-                    }
-
                     EnsureDir(Path.GetDirectoryName(stageOutput) ?? string.Empty);
                     DeleteDiscordStageOutputsForChannel(stagingRoot, target.ChannelId);
 
-                    Log.Information($"[{processed}/{targets.Count}] {target.Label} [{target.ChannelId}] -> {mode}");
+                    Log.Information($"{target.Label} [{target.ChannelId}] -> {mode}");
 
                     var exportOutcome = ExportDiscordChannel(
                         cliPath: cliPath,
@@ -253,10 +582,9 @@ internal sealed partial class BuildScript
 
                     if (exportOutcome.Status is DiscordExportStatus.SkippedForbidden or DiscordExportStatus.SkippedUnsupported)
                     {
-                        RememberBlacklistedChannel(settings, target.ChannelId, exportOutcome.Message);
-                        skipped++;
-                        Log.Warning($"Skipping inaccessible channel {target.ChannelId}: {exportOutcome.Message}");
-                        continue;
+                        skippedChannels.TryAdd(target.ChannelId, exportOutcome.Message);
+                        UpdateDiscordExportIndexInaccessible(exportIndex, target.ChannelId, currentGuildId, exportOutcome.Message);
+                        return;
                     }
 
                     var stagePath = ResolveStageExportPath(stagingRoot, stageOutput, target.ChannelId);
@@ -264,19 +592,11 @@ internal sealed partial class BuildScript
                     {
                         if (mode == "delta")
                         {
-                            unchanged++;
                             Log.Information($"No new messages for {target.ChannelId}.");
-                            continue;
+                            return;
                         }
 
                         Fail($"Export completed without producing an output file for channel {target.ChannelId}.");
-                    }
-
-                    var finalPath = existingPath;
-                    if (string.IsNullOrWhiteSpace(finalPath))
-                    {
-                        finalPath = Path.Combine(outputRoot, Path.GetRelativePath(stagingRoot, stagePath));
-                        if (!jsonFiles.Contains(finalPath)) jsonFiles.Add(finalPath);
                     }
 
                     EnsureDir(Path.GetDirectoryName(finalPath) ?? string.Empty);
@@ -284,41 +604,48 @@ internal sealed partial class BuildScript
                     if (string.IsNullOrWhiteSpace(existingPath) || mode == "full")
                     {
                         InstallDiscordExport(stagePath, finalPath);
-                        if (string.IsNullOrWhiteSpace(existingPath))
-                        {
-                            created++;
-                        }
-                        else
-                        {
-                            updated++;
-                        }
                     }
                     else
                     {
-                        var mergeChanged = MergeDiscordExport(existingPath, stagePath, finalPath);
+                        MergeDiscordExport(existingPath, stagePath, finalPath);
                         CopyStageAssets(stagePath, finalPath, replaceExisting: false);
-
-                        if (mergeChanged)
-                        {
-                            updated++;
-                        }
-                        else
-                        {
-                            unchanged++;
-                        }
                     }
 
-                    FixAssetExtensionsInDirectory(outputRoot, GetDiscordAssetDirectory(finalPath), jsonFiles);
+                    NormalizeDiscordExportJson(finalPath);
+                    assetDirsToFix.TryAdd(GetDiscordAssetDirectory(finalPath), 0);
+                    var newestMessageId = ReadNewestMessageId(finalPath);
+                    newestMessageIdIndex[target.ChannelId] = newestMessageId;
+                    UpdateDiscordExportIndex(exportIndex, target.ChannelId, currentGuildId, finalPath, newestMessageId);
+                });
+
+                foreach (var skipped in skippedChannels.OrderBy(x => x.Key, StringComparer.Ordinal))
+                {
+                    RememberBlacklistedChannel(settings, skipped.Key, skipped.Value);
+                    Log.Warning($"Skipping inaccessible channel {skipped.Key}: {skipped.Value}");
                 }
 
-                syncSucceeded = true;
-                Log.Information(
-                    $"Discord sync finished for guild {currentGuildId}: {processed} targets, {created} created, {updated} updated, {unchanged} unchanged, {skipped} skipped.");
+                CleanupRedundantDiscordFiles(outputRoot, currentGuildId);
 
                 if (!string.IsNullOrWhiteSpace(settings.MediaDirectory))
                 {
-                    FixAssetExtensionsInDirectory(outputRoot, settings.MediaDirectory, jsonFiles);
+                    assetDirsToFix.TryAdd(settings.MediaDirectory, 0);
                 }
+
+                var jsonFiles = Directory.GetFiles(outputRoot, "*.json", SearchOption.AllDirectories)
+                    .Where(path => !IsDiscordHousekeepingPath(outputRoot, path) && !IsDiscordAssetPath(outputRoot, path))
+                    .ToList();
+
+                foreach (var assetDir in assetDirsToFix.Keys.OrderBy(x => x, StringComparer.OrdinalIgnoreCase))
+                {
+                    FixAssetExtensionsInDirectory(outputRoot, assetDir, jsonFiles);
+                }
+
+                RunDiscordEnrichmentForGuild(guildRoot, workspaceConfig);
+                GenerateDiscordReferencesForGuild(guildRoot, workspaceConfig, settings.BlacklistedChannelIds);
+                RegenerateDiscordMarkdownForGuild(guildRoot);
+
+                syncSucceeded = true;
+                Log.Information($"Discord sync finished for guild {currentGuildId}.");
 
                 if (!Full)
                 {
@@ -330,6 +657,8 @@ internal sealed partial class BuildScript
                     PersistDiscordGuildId(settings.ConfigPath, currentGuildId);
                     baseSettings.GuildIds.Add(currentGuildId);
                 }
+
+                SaveDiscordExportIndexCache(exportIndexCachePath, exportIndex);
             }
             finally
             {
@@ -341,32 +670,16 @@ internal sealed partial class BuildScript
         }
     }
 
-    static void PersistDiscordGuildId(string configPath, string guildId)
+    void PersistDiscordGuildId(string configPath, string guildId)
     {
-        EnsureDir(Path.GetDirectoryName(configPath) ?? string.Empty);
-
-        JsonObject root;
-        if (File.Exists(configPath))
-        {
-            root = JsonNode.Parse(File.ReadAllText(configPath))?.AsObject() ?? new JsonObject();
-        }
-        else
-        {
-            root = new JsonObject();
-        }
-
-        var guilds = root["guilds"]?.AsArray() ?? new JsonArray();
-        if (guilds.Any(x => string.Equals(x?.GetValue<string>(), guildId, StringComparison.Ordinal)))
+        var config = LoadDiscordConfig();
+        if (config.GuildIds.Any(x => string.Equals(x, guildId, StringComparison.Ordinal)))
         {
             return;
         }
 
-        guilds.Add(guildId);
-        root["guilds"] = guilds;
-
-        var options = new JsonSerializerOptions { WriteIndented = true };
-        var output = root.ToJsonString(options);
-        File.WriteAllText(configPath, output + Environment.NewLine, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+        config.GuildIds.Add(guildId);
+        SaveDiscordConfig(configPath, config);
         Log.Information($"Added guild {guildId} to Discord configuration.");
     }
 
@@ -374,7 +687,9 @@ internal sealed partial class BuildScript
     {
         var relativePath = Path.GetRelativePath(outputRoot, candidatePath);
         var segments = relativePath.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
-        return segments.Any(s => s.EndsWith("_Files", StringComparison.OrdinalIgnoreCase) || s.Equals("Media", StringComparison.OrdinalIgnoreCase));
+        return segments.Any(s =>
+            s.Equals("Media", StringComparison.OrdinalIgnoreCase)
+            || s.EndsWith("_Files", StringComparison.OrdinalIgnoreCase));
     }
 
     List<DiscordChannelTarget> ResolveDiscordTargets(string cliPath, string guildId, DiscordSyncSettings settings)
@@ -410,9 +725,9 @@ internal sealed partial class BuildScript
         var args = new StringBuilder();
         args.Append("channels");
         args.Append(" --guild ").Append(guildId);
-        args.Append(" --include-vc ").Append(settings.IncludeVoiceChannels ? "true" : "false");
-        args.Append(" --include-threads ").Append(settings.IncludeThreads);
-        args.Append(" --respect-rate-limits ").Append(settings.RespectRateLimits ? "true" : "false");
+        args.Append(" --include-vc true");
+        args.Append(" --include-threads All");
+        args.Append(" --respect-rate-limits true");
 
         var result = RunDiscordCli(
             cliPath,
@@ -461,15 +776,8 @@ internal sealed partial class BuildScript
         args.Append(" --channel ").Append(channelId);
         args.Append(" --output ").Append(Quote(stageOutput));
         args.Append(" --format Json");
-
-        if (settings.Media)
-        {
-            args.Append(" --media");
-            if (settings.ReuseMedia)
-            {
-                args.Append(" --reuse-media");
-            }
-        }
+        args.Append(" --media");
+        args.Append(" --reuse-media");
 
         if (!string.IsNullOrWhiteSpace(settings.MediaDirectory))
         {
@@ -481,7 +789,7 @@ internal sealed partial class BuildScript
             args.Append(" --utc");
         }
 
-        args.Append(" --respect-rate-limits ").Append(settings.RespectRateLimits ? "true" : "false");
+        args.Append(" --respect-rate-limits true");
 
         if (!string.IsNullOrWhiteSpace(afterValue))
         {
@@ -521,52 +829,15 @@ internal sealed partial class BuildScript
 
     string ResolveDiscordCliPath()
     {
-        var toolDir = ResolvePath(DiscordToolDir);
+        var toolDir = ResolveDiscordToolDirectory("DiscordChatExporter");
         var cliPath = Path.Combine(toolDir, "DiscordChatExporter.Cli.exe");
         if (!File.Exists(cliPath))
         {
-            Fail($"DiscordChatExporter CLI not found: {cliPath}");
+            var expected = ResolvePath(Path.Combine(DiscordPrimaryToolsRelativeDir, "DiscordChatExporter", "DiscordChatExporter.Cli.exe"));
+            Fail($"DiscordChatExporter CLI not found at: {expected}");
         }
 
         return cliPath;
-    }
-
-    DiscordSyncSettings ResolveGuildScopedDiscordSettings(string outputRoot, string cliPath, string guildId, DiscordSyncSettings settings)
-    {
-        if (!settings.Media || !string.IsNullOrWhiteSpace(settings.MediaDirectory))
-        {
-            return settings;
-        }
-
-        var guildRoot = ResolveDiscordGuildRoot(outputRoot, cliPath, guildId, settings.Token);
-        if (string.IsNullOrWhiteSpace(guildRoot))
-        {
-            return settings;
-        }
-
-        return settings with { MediaDirectory = Path.Combine(guildRoot, "Media") };
-    }
-
-    string ResolveDiscordGuildRoot(string outputRoot, string cliPath, string guildId, string token)
-    {
-        var existingGuildRoot = Directory
-            .GetDirectories(outputRoot, $"*({guildId})", SearchOption.TopDirectoryOnly)
-            .Where(path => !IsDiscordHousekeepingPath(outputRoot, path))
-            .OrderByDescending(Directory.GetLastWriteTimeUtc)
-            .FirstOrDefault();
-
-        if (!string.IsNullOrWhiteSpace(existingGuildRoot))
-        {
-            return existingGuildRoot;
-        }
-
-        var guildName = ResolveDiscordGuildName(cliPath, guildId, token);
-        if (string.IsNullOrWhiteSpace(guildName))
-        {
-            return string.Empty;
-        }
-
-        return Path.Combine(outputRoot, $"{SanitizeDiscordPathSegment(guildName)} ({guildId})");
     }
 
     string ResolveDiscordGuildName(string cliPath, string guildId, string token)
@@ -602,135 +873,120 @@ internal sealed partial class BuildScript
         return string.Empty;
     }
 
-    static string SanitizeDiscordPathSegment(string value)
-    {
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            return string.Empty;
-        }
-
-        var invalidChars = Path.GetInvalidFileNameChars();
-        var builder = new StringBuilder(value.Length);
-        foreach (var ch in value.Trim())
-        {
-            builder.Append(invalidChars.Contains(ch) ? '_' : ch);
-        }
-
-        return builder.ToString().Trim().TrimEnd('.');
-    }
-
-    DiscordSyncSettings ResolveDiscordSettings()
+    DiscordSyncSettings ResolveDiscordSettings(WorkspaceConfig workspaceConfig)
     {
         var config = LoadDiscordConfig();
-        var token = config.Token.Trim();
+        var token = ResolveConfigEnvValue(workspaceConfig.DiscordToken, nameof(WorkspaceConfig.DiscordToken));
+
         if (string.IsNullOrWhiteSpace(token))
         {
             Fail(
-                $"Missing Discord token. Add {{\"token\": \"...\"}} to {ResolvePath(DiscordConfig)}.");
+                $"Missing Discord token. Set 'DiscordToken' in '{WorkspaceConfigPath}'.");
         }
 
-        var mediaDirectory = FirstNonEmpty(DiscordMediaDir, config.Defaults.MediaDirectory);
-        mediaDirectory = string.IsNullOrWhiteSpace(mediaDirectory)
-            ? string.Empty
-            : ResolvePath(mediaDirectory);
-
-        var media = DiscordMedia ?? config.Defaults.Media ?? true;
-        var reuseMedia = DiscordReuseMedia ?? config.Defaults.ReuseMedia ?? true;
-        if (!media)
-        {
-            reuseMedia = false;
-            mediaDirectory = string.Empty;
-        }
+        var utc = DiscordUtc ?? false;
+        var blacklistedChannelIds = config.BlacklistedChannelIds
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .Distinct(StringComparer.Ordinal)
+            .ToHashSet(StringComparer.Ordinal);
+        var guildIds = config.GuildIds
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .Distinct(StringComparer.Ordinal)
+            .ToList();
 
         return new DiscordSyncSettings(
             Token: token,
-            IncludeVoiceChannels: DiscordIncludeVc ?? config.Defaults.IncludeVoiceChannels ?? true,
-            IncludeThreads: NormalizeDiscordIncludeThreads(FirstNonEmpty(DiscordIncludeThreads, config.Defaults.IncludeThreads, "All")),
-            Media: media,
-            ReuseMedia: reuseMedia,
-            MediaDirectory: mediaDirectory,
-            RespectRateLimits: config.Defaults.RespectRateLimits ?? true,
-            Utc: config.Defaults.Utc ?? false,
-            ConfigPath: ResolvePath(DiscordConfig),
-            BlacklistedChannelIds: config.BlacklistedChannelIds,
-            GuildIds: config.GuildIds);
+            MediaDirectory: string.Empty,
+            Utc: utc,
+            ConfigPath: ResolveDiscordConfigPath(),
+            BlacklistedChannelIds: blacklistedChannelIds,
+            GuildIds: guildIds);
     }
 
     DiscordWorkflowConfig LoadDiscordConfig()
     {
+        var configPath = ResolveDiscordConfigPath();
         var config = new DiscordWorkflowConfig();
-        var configCandidates = new string[]
+        if (!File.Exists(configPath))
         {
-            ResolvePath(DiscordConfig)
-        };
-
-        foreach (var configPath in configCandidates.Distinct(StringComparer.OrdinalIgnoreCase))
-        {
-            MergeDiscordConfig(config, configPath);
-        }
-
-        return config;
-    }
-
-    static void MergeDiscordConfig(DiscordWorkflowConfig config, string path)
-    {
-        if (!File.Exists(path))
-        {
-            return;
+            return config;
         }
 
         try
         {
-            using var doc = JsonDocument.Parse(File.ReadAllText(path));
+            using var doc = JsonDocument.Parse(File.ReadAllText(configPath));
             var root = doc.RootElement;
+            ValidateDiscordConfigSchema(root, configPath);
 
-            config.Token = FirstNonEmpty(
-                config.Token,
-                ReadJsonString(root, "token", "Token", "DISCORD_TOKEN", "DiscordToken", "discordToken")).Trim();
-
-            var defaultsElement = root;
-            if (root.TryGetProperty("defaults", out var explicitDefaults) && explicitDefaults.ValueKind == JsonValueKind.Object)
+            if (root.TryGetProperty("Blacklist", out var blacklistElement))
             {
-                defaultsElement = explicitDefaults;
+                foreach (var channelId in blacklistElement.EnumerateArray()
+                             .Select(x => x.GetString()?.Trim() ?? string.Empty)
+                             .Where(x => !string.IsNullOrWhiteSpace(x))
+                             .Distinct(StringComparer.Ordinal))
+                {
+                    config.BlacklistedChannelIds.Add(channelId);
+                }
             }
 
-            config.Defaults.IncludeVoiceChannels ??= ReadJsonBool(defaultsElement, "includeVc", "IncludeVc", "includeVoiceChannels", "IncludeVoiceChannels");
-            config.Defaults.Media ??= ReadJsonBool(defaultsElement, "media", "Media");
-            config.Defaults.ReuseMedia ??= ReadJsonBool(defaultsElement, "reuseMedia", "ReuseMedia");
-            config.Defaults.RespectRateLimits ??= ReadJsonBool(defaultsElement, "respectRateLimits", "RespectRateLimits");
-            config.Defaults.Utc ??= ReadJsonBool(defaultsElement, "utc", "Utc");
-            config.Defaults.IncludeThreads = FirstNonEmpty(
-                config.Defaults.IncludeThreads,
-                ReadJsonString(defaultsElement, "includeThreads", "IncludeThreads"));
-            config.Defaults.MediaDirectory = FirstNonEmpty(
-                config.Defaults.MediaDirectory,
-                ReadJsonString(defaultsElement, "mediaDir", "MediaDir", "mediaDirectory", "MediaDirectory"));
-
-            foreach (var channelId in ReadJsonStringArray(root, "blacklist", "channelBlacklist", "blacklistedChannels"))
+            if (root.TryGetProperty("Guilds", out var guildsElement))
             {
-                config.BlacklistedChannelIds.Add(channelId);
-            }
-
-            foreach (var guildId in ReadJsonStringArray(root, "guilds", "guildIds", "serverIds"))
-            {
-                if (!config.GuildIds.Contains(guildId))
+                foreach (var guildId in guildsElement.EnumerateArray()
+                             .Select(x => x.GetString()?.Trim() ?? string.Empty)
+                             .Where(x => !string.IsNullOrWhiteSpace(x))
+                             .Distinct(StringComparer.Ordinal))
                 {
                     config.GuildIds.Add(guildId);
                 }
             }
+
+            return config;
         }
-        catch
+        catch (Exception ex)
         {
-            return;
+            Fail($"Failed to parse Discord config '{configPath}': {ex.Message}");
+            return new DiscordWorkflowConfig();
         }
     }
 
-    static string NormalizeDiscordIncludeThreads(string value)
+    static void ValidateDiscordConfigSchema(JsonElement root, string path)
     {
-        var normalized = (value ?? string.Empty).Trim();
-        if (normalized.Equals("none", StringComparison.OrdinalIgnoreCase)) return "None";
-        if (normalized.Equals("active", StringComparison.OrdinalIgnoreCase)) return "Active";
-        return "All";
+        if (root.ValueKind != JsonValueKind.Object)
+        {
+            Fail($"Discord config '{path}' must be a JSON object.");
+        }
+
+        var allowedRootKeys = new HashSet<string>(StringComparer.Ordinal)
+        {
+            "Blacklist",
+            "Guilds"
+        };
+
+        foreach (var property in root.EnumerateObject())
+        {
+            if (!allowedRootKeys.Contains(property.Name))
+            {
+                Fail($"Unsupported Discord config key '{property.Name}' in '{path}'. Use only: Blacklist, Guilds.");
+            }
+        }
+
+        if (root.TryGetProperty("Blacklist", out var blacklistElement))
+        {
+            if (blacklistElement.ValueKind != JsonValueKind.Array
+                || blacklistElement.EnumerateArray().Any(x => x.ValueKind != JsonValueKind.String))
+            {
+                Fail($"Discord config '{path}' property 'Blacklist' must be an array of strings.");
+            }
+        }
+
+        if (root.TryGetProperty("Guilds", out var guildsElement))
+        {
+            if (guildsElement.ValueKind != JsonValueKind.Array
+                || guildsElement.EnumerateArray().Any(x => x.ValueKind != JsonValueKind.String))
+            {
+                Fail($"Discord config '{path}' property 'Guilds' must be an array of strings.");
+            }
+        }
     }
 
     static List<string> ParseRequestedChannelIds(string raw)
@@ -748,17 +1004,30 @@ internal sealed partial class BuildScript
             .ToList();
     }
 
-    static string FirstNonEmpty(params string[] values)
+    void SaveDiscordConfig(string configPath, DiscordWorkflowConfig config)
     {
-        foreach (var value in values)
-        {
-            if (!string.IsNullOrWhiteSpace(value))
-            {
-                return value;
-            }
-        }
+        EnsureDir(Path.GetDirectoryName(configPath) ?? string.Empty);
 
-        return string.Empty;
+        var normalizedBlacklist = config.BlacklistedChannelIds
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .Distinct(StringComparer.Ordinal)
+            .OrderBy(x => x, StringComparer.Ordinal)
+            .ToList();
+        var normalizedGuilds = config.GuildIds
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .Distinct(StringComparer.Ordinal)
+            .OrderBy(x => x, StringComparer.Ordinal)
+            .ToList();
+
+        var payload = new DiscordWorkflowConfig
+        {
+            BlacklistedChannelIds = normalizedBlacklist,
+            GuildIds = normalizedGuilds
+        };
+
+        var options = new JsonSerializerOptions { WriteIndented = true };
+        var output = JsonSerializer.Serialize(payload, options);
+        File.WriteAllText(configPath, output + Environment.NewLine, Utf8NoBom);
     }
 
     void RememberBlacklistedChannel(DiscordSyncSettings settings, string channelId, string reason)
@@ -773,60 +1042,14 @@ internal sealed partial class BuildScript
         Log.Information($"Added channel {channelId} to Discord blacklist ({reason}).");
     }
 
-    static void PersistDiscordBlacklist(string configPath, IEnumerable<string> blacklistedChannelIds)
+    void PersistDiscordBlacklist(string configPath, IEnumerable<string> blacklistedChannelIds)
     {
-        EnsureDir(Path.GetDirectoryName(configPath) ?? string.Empty);
-
-        JsonObject root;
-        if (File.Exists(configPath))
-        {
-            root = JsonNode.Parse(File.ReadAllText(configPath))?.AsObject() ?? new JsonObject();
-        }
-        else
-        {
-            root = new JsonObject();
-        }
-
-        var blacklist = new JsonArray();
-        foreach (var channelId in blacklistedChannelIds
-                     .Where(x => !string.IsNullOrWhiteSpace(x))
-                     .Distinct(StringComparer.Ordinal)
-                     .OrderBy(x => x, StringComparer.Ordinal))
-        {
-            blacklist.Add(channelId);
-        }
-
-        root["blacklist"] = blacklist;
-
-        var options = new JsonSerializerOptions { WriteIndented = true };
-        var output = root.ToJsonString(options);
-        File.WriteAllText(configPath, output + Environment.NewLine, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
-    }
-
-    static List<string> ReadJsonStringArray(JsonElement root, params string[] propertyNames)
-    {
-        foreach (var propertyName in propertyNames)
-        {
-            if (!root.TryGetProperty(propertyName, out var element) || element.ValueKind != JsonValueKind.Array)
-            {
-                continue;
-            }
-
-            return element
-                .EnumerateArray()
-                .Where(x => x.ValueKind == JsonValueKind.String)
-                .Select(x => x.GetString()?.Trim() ?? string.Empty)
-                .Where(x => !string.IsNullOrWhiteSpace(x))
-                .Distinct(StringComparer.Ordinal)
-                .ToList();
-        }
-
-        return [];
-    }
-
-    static string BuildDiscordOutputTemplate(string root)
-    {
-        return Path.Combine(root, "%G (%g)", "%T (%t)", "%C (%c).json");
+        var config = LoadDiscordConfig();
+        config.BlacklistedChannelIds = blacklistedChannelIds
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .Distinct(StringComparer.Ordinal)
+            .ToList();
+        SaveDiscordConfig(configPath, config);
     }
 
     static string ResolveStageExportPath(string stagingRoot, string stageOutput, string channelId)
@@ -836,8 +1059,14 @@ internal sealed partial class BuildScript
             return stageOutput;
         }
 
+        if (!Directory.Exists(stagingRoot))
+        {
+            return string.Empty;
+        }
+
         var matches = Directory
-            .GetFiles(stagingRoot, $"*({channelId}).json", SearchOption.AllDirectories)
+            .GetFiles(stagingRoot, "*.json", SearchOption.AllDirectories)
+            .Where(path => IsDiscordExportForChannel(path, channelId))
             .OrderByDescending(File.GetLastWriteTimeUtc)
             .ToArray();
 
@@ -851,26 +1080,241 @@ internal sealed partial class BuildScript
             return;
         }
 
-        foreach (var path in Directory.GetFiles(stagingRoot, $"*({channelId}).json", SearchOption.AllDirectories))
+        foreach (var path in Directory
+                     .GetFiles(stagingRoot, "*.json", SearchOption.AllDirectories)
+                     .Where(path => IsDiscordExportForChannel(path, channelId)))
         {
             File.Delete(path);
         }
     }
 
-    string FindExistingDiscordExport(string outputRoot, string channelId)
+    static ConcurrentDictionary<string, DiscordExportIndexEntry> BuildDiscordExportIndex(string outputRoot)
     {
-        var matches = Directory
-            .GetFiles(outputRoot, $"*({channelId}).json", SearchOption.AllDirectories)
-            .Where(path => !IsDiscordHousekeepingPath(outputRoot, path))
-            .OrderByDescending(File.GetLastWriteTimeUtc)
-            .ToArray();
-
-        if (matches.Length > 1)
+        var index = new ConcurrentDictionary<string, DiscordExportIndexEntry>(StringComparer.Ordinal);
+        if (!Directory.Exists(outputRoot))
         {
-            Log.Warning($"Multiple exports found for channel {channelId}; using most recent: {matches[0]}");
+            return index;
         }
 
-        return matches.FirstOrDefault() ?? string.Empty;
+        foreach (var path in Directory.GetFiles(outputRoot, "*.json", SearchOption.AllDirectories))
+        {
+            if (IsDiscordHousekeepingPath(outputRoot, path) || IsDiscordAssetPath(outputRoot, path))
+            {
+                continue;
+            }
+
+            var fileName = Path.GetFileName(path);
+            if (!TryGetDiscordExportIdFromFileName(fileName, out var channelId, out _))
+            {
+                continue;
+            }
+
+            var entry = new DiscordExportIndexEntry(
+                Path: path,
+                LastWriteUtcTicks: File.GetLastWriteTimeUtc(path).Ticks,
+                NewestMessageId: ReadNewestMessageId(path),
+                GuildId: TryReadGuildId(path),
+                Inaccessible: false,
+                InaccessibleReason: string.Empty);
+            index.AddOrUpdate(
+                channelId,
+                entry,
+                (_, current) => entry.LastWriteUtcTicks > current.LastWriteUtcTicks ? entry : current);
+        }
+
+        return index;
+    }
+
+    static DiscordExportIndexEntry? GetDiscordIndexedExportEntry(ConcurrentDictionary<string, DiscordExportIndexEntry> index, string channelId)
+    {
+        if (!index.TryGetValue(channelId, out var entry))
+        {
+            return null;
+        }
+
+        if (entry.Inaccessible)
+        {
+            return entry;
+        }
+
+        if (File.Exists(entry.Path))
+        {
+            return entry;
+        }
+
+        index.TryRemove(channelId, out _);
+        return null;
+    }
+
+    static void UpdateDiscordExportIndex(
+        ConcurrentDictionary<string, DiscordExportIndexEntry> index,
+        string channelId,
+        string guildId,
+        string path,
+        string newestMessageId)
+    {
+        if (string.IsNullOrWhiteSpace(channelId) || string.IsNullOrWhiteSpace(path))
+        {
+            return;
+        }
+
+        var entry = new DiscordExportIndexEntry(
+            Path: path,
+            LastWriteUtcTicks: File.GetLastWriteTimeUtc(path).Ticks,
+            NewestMessageId: newestMessageId ?? string.Empty,
+            GuildId: guildId ?? string.Empty,
+            Inaccessible: false,
+            InaccessibleReason: string.Empty);
+        index.AddOrUpdate(
+            channelId,
+            entry,
+            (_, current) => entry.LastWriteUtcTicks >= current.LastWriteUtcTicks ? entry : current);
+    }
+
+    static void UpdateDiscordExportIndexInaccessible(
+        ConcurrentDictionary<string, DiscordExportIndexEntry> index,
+        string channelId,
+        string guildId,
+        string reason)
+    {
+        if (string.IsNullOrWhiteSpace(channelId))
+        {
+            return;
+        }
+
+        var entry = new DiscordExportIndexEntry(
+            Path: string.Empty,
+            LastWriteUtcTicks: DateTime.UtcNow.Ticks,
+            NewestMessageId: string.Empty,
+            GuildId: guildId ?? string.Empty,
+            Inaccessible: true,
+            InaccessibleReason: (reason ?? string.Empty).Trim());
+        index[channelId] = entry;
+    }
+
+    ConcurrentDictionary<string, DiscordExportIndexEntry> LoadDiscordExportIndexCache(string cachePath)
+    {
+        var result = new ConcurrentDictionary<string, DiscordExportIndexEntry>(StringComparer.Ordinal);
+        if (!File.Exists(cachePath))
+        {
+            return result;
+        }
+
+        try
+        {
+            var json = File.ReadAllText(cachePath);
+            var cache = JsonSerializer.Deserialize<DiscordExportIndexCacheFile>(json, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = false
+            });
+            if (cache?.Channels is null)
+            {
+                return result;
+            }
+
+            foreach (var pair in cache.Channels)
+            {
+                var channelId = (pair.Key ?? string.Empty).Trim();
+                var row = pair.Value;
+                if (string.IsNullOrWhiteSpace(channelId) || row is null)
+                {
+                    continue;
+                }
+
+                var path = NormalizePathOrEmpty(row.Path);
+                var inaccessible = row.Inaccessible;
+                if (!inaccessible && string.IsNullOrWhiteSpace(path))
+                {
+                    continue;
+                }
+
+                if (!inaccessible && !File.Exists(path))
+                {
+                    continue;
+                }
+
+                result[channelId] = new DiscordExportIndexEntry(
+                    Path: inaccessible ? string.Empty : path,
+                    LastWriteUtcTicks: row.LastWriteUtcTicks,
+                    NewestMessageId: (row.NewestMessageId ?? string.Empty).Trim(),
+                    GuildId: (row.GuildId ?? string.Empty).Trim(),
+                    Inaccessible: inaccessible,
+                    InaccessibleReason: (row.InaccessibleReason ?? string.Empty).Trim());
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Warning($"Failed to load Discord export index cache '{cachePath}': {ex.Message}");
+        }
+
+        return result;
+    }
+
+    void SaveDiscordExportIndexCache(string cachePath, ConcurrentDictionary<string, DiscordExportIndexEntry> index)
+    {
+        try
+        {
+            var payload = new DiscordExportIndexCacheFile
+            {
+                UpdatedAtUtc = DateTime.UtcNow.ToString("O"),
+                Channels = index
+                    .OrderBy(x => x.Key, StringComparer.Ordinal)
+                    .ToDictionary(
+                        x => x.Key,
+                        x => new DiscordExportIndexCacheEntry
+                        {
+                            Path = x.Value.Path,
+                            LastWriteUtcTicks = x.Value.LastWriteUtcTicks,
+                            NewestMessageId = x.Value.NewestMessageId,
+                            GuildId = x.Value.GuildId,
+                            Inaccessible = x.Value.Inaccessible,
+                            InaccessibleReason = x.Value.InaccessibleReason
+                        },
+                        StringComparer.Ordinal)
+            };
+
+            EnsureDir(Path.GetDirectoryName(cachePath) ?? string.Empty);
+            var json = JsonSerializer.Serialize(payload, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(cachePath, json + Environment.NewLine, Utf8NoBom);
+        }
+        catch (Exception ex)
+        {
+            Log.Warning($"Failed to save Discord export index cache '{cachePath}': {ex.Message}");
+        }
+    }
+
+    static bool IsDiscordExportForChannel(string path, string channelId)
+    {
+        if (string.IsNullOrWhiteSpace(path) || string.IsNullOrWhiteSpace(channelId))
+        {
+            return false;
+        }
+
+        var fileName = Path.GetFileName(path);
+        return TryGetDiscordExportIdFromFileName(fileName, out var discoveredId, out _)
+               && string.Equals(discoveredId, channelId, StringComparison.Ordinal);
+    }
+
+    static bool TryGetDiscordExportIdFromFileName(string fileName, out string channelId, out string extension)
+    {
+        if (string.IsNullOrWhiteSpace(fileName))
+        {
+            channelId = string.Empty;
+            extension = string.Empty;
+            return false;
+        }
+
+        var match = DiscordExportFileRegex.Match(fileName);
+        if (!match.Success)
+        {
+            channelId = string.Empty;
+            extension = string.Empty;
+            return false;
+        }
+
+        channelId = match.Groups["id"].Value;
+        extension = Path.GetExtension(fileName).TrimStart('.').ToLowerInvariant();
+        return !string.IsNullOrWhiteSpace(channelId);
     }
 
     static bool IsDiscordHousekeepingPath(string outputRoot, string candidatePath)
@@ -938,6 +1382,961 @@ internal sealed partial class BuildScript
         }
 
         return found ? best.ToString() : string.Empty;
+    }
+
+    static string TryReadGuildId(string exportPath)
+    {
+        try
+        {
+            using var doc = JsonDocument.Parse(File.ReadAllText(exportPath));
+            if (!doc.RootElement.TryGetProperty("guild", out var guild)
+                || guild.ValueKind != JsonValueKind.Object
+                || !guild.TryGetProperty("id", out var guildIdNode))
+            {
+                return string.Empty;
+            }
+
+            return guildIdNode.ValueKind == JsonValueKind.String
+                ? guildIdNode.GetString()?.Trim() ?? string.Empty
+                : guildIdNode.ToString().Trim();
+        }
+        catch
+        {
+            return string.Empty;
+        }
+    }
+
+    static void NormalizeDiscordExportJson(string exportPath)
+    {
+        var root = JsonNode.Parse(File.ReadAllText(exportPath));
+        if (root is null)
+        {
+            return;
+        }
+
+        var options = new JsonSerializerOptions { WriteIndented = true };
+        File.WriteAllText(exportPath, root.ToJsonString(options) + Environment.NewLine, Utf8NoBom);
+    }
+
+    void GenerateDiscordReferencesForGuild(string guildDir, WorkspaceConfig workspaceConfig, IEnumerable<string> blacklistedChannelIds)
+    {
+        if (!Directory.Exists(guildDir))
+        {
+            return;
+        }
+
+        var outputRoot = ResolveDiscordOutputRoot();
+        var exports = Directory.GetFiles(guildDir, "*.json", SearchOption.AllDirectories)
+            .Where(path => !IsDiscordHousekeepingPath(outputRoot, path) && !IsDiscordAssetPath(outputRoot, path))
+            .Where(path => TryGetDiscordExportIdFromFileName(Path.GetFileName(path), out _, out _))
+            .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+        if (exports.Count == 0)
+        {
+            return;
+        }
+
+        var fetchCache = new Dictionary<string, DiscordFetchResult>(StringComparer.OrdinalIgnoreCase);
+        var channelSummaries = new List<DiscordServerRefsChannelSummary>();
+        var guildId = string.Empty;
+        var guildName = string.Empty;
+
+        foreach (var exportPath in exports)
+        {
+            try
+            {
+                var channelRefs = BuildDiscordRefsForExport(exportPath, workspaceConfig.FetchRetryCount, fetchCache, out var summary);
+                if (string.IsNullOrWhiteSpace(guildId))
+                {
+                    guildId = summary.GuildId;
+                    guildName = summary.GuildName;
+                }
+
+                WriteDiscordRefsJsonl(GetDiscordRefsPath(exportPath), channelRefs);
+                channelSummaries.Add(summary with { RefCount = channelRefs.Count });
+            }
+            catch (Exception ex)
+            {
+                Log.Warning($"Failed to generate refs for export {exportPath}: {ex.Message}");
+            }
+        }
+
+        WriteDiscordServerRefsMetadata(guildDir, guildId, guildName, blacklistedChannelIds, channelSummaries);
+    }
+
+    List<DiscordMessageRefEntry> BuildDiscordRefsForExport(
+        string exportPath,
+        int fetchRetryCount,
+        Dictionary<string, DiscordFetchResult> fetchCache,
+        out DiscordServerRefsChannelSummary summary)
+    {
+        using var doc = JsonDocument.Parse(File.ReadAllText(exportPath));
+        var root = doc.RootElement;
+        var guildId = TryGetNestedJsonString(root, "guild", "id");
+        var guildName = TryGetNestedJsonString(root, "guild", "name");
+        var channelId = TryGetNestedJsonString(root, "channel", "id");
+        var channelName = TryGetNestedJsonString(root, "channel", "name");
+
+        var refs = new List<DiscordMessageRefEntry>();
+        if (root.TryGetProperty("messages", out var messages) && messages.ValueKind == JsonValueKind.Array)
+        {
+            foreach (var message in messages.EnumerateArray())
+            {
+                var messageId = TryGetJsonString(message, "id");
+                if (string.IsNullOrWhiteSpace(messageId))
+                {
+                    continue;
+                }
+
+                var messageTimestamp = TryGetJsonString(message, "timestamp");
+
+                foreach (var imagePath in EnumerateDiscordMessageLocalImagePaths(message, exportPath))
+                {
+                    var ocrSidecarPath = imagePath + ".ocr.txt";
+                    var ocrText = SafeReadAllText(ocrSidecarPath);
+                    if (string.IsNullOrWhiteSpace(ocrText))
+                    {
+                        continue;
+                    }
+
+                    refs.Add(new DiscordMessageRefEntry(
+                        MessageId: messageId,
+                        MessageTimestamp: messageTimestamp,
+                        Kind: "ocr",
+                        SourceUrl: string.Empty,
+                        FetchUrl: string.Empty,
+                        RefPath: ToRelativePathFromExport(exportPath, ocrSidecarPath),
+                        DetectedLanguage: "text",
+                        Confidence: null,
+                        Sha256: ComputeSha256Hex(ocrText),
+                        Bytes: Encoding.UTF8.GetByteCount(ocrText),
+                        Status: "ok",
+                        Error: string.Empty));
+                }
+
+                var remoteUrls = EnumerateDiscordMessageRemoteUrls(message).ToList();
+                foreach (var originalUrl in remoteUrls)
+                {
+                    if (!TryResolveDiscordRemoteFetchTarget(originalUrl, out var target))
+                    {
+                        continue;
+                    }
+
+                    if (!fetchCache.TryGetValue(target.FetchUrl, out var fetched))
+                    {
+                        fetched = FetchRemoteSourceText(target.FetchUrl, fetchRetryCount);
+                        fetchCache[target.FetchUrl] = fetched;
+                    }
+
+                    if (!fetched.Ok || string.IsNullOrWhiteSpace(fetched.Text))
+                    {
+                        refs.Add(new DiscordMessageRefEntry(
+                            MessageId: messageId,
+                            MessageTimestamp: messageTimestamp,
+                            Kind: "fetched_source",
+                            SourceUrl: originalUrl,
+                            FetchUrl: target.FetchUrl,
+                            RefPath: string.Empty,
+                            DetectedLanguage: target.DetectedLanguage,
+                            Confidence: null,
+                            Sha256: string.Empty,
+                            Bytes: 0,
+                            Status: "error",
+                            Error: fetched.Error ?? "fetch_failed"));
+                        continue;
+                    }
+
+                    var refsDir = Path.Combine(GetDiscordAssetDirectory(exportPath), "refs");
+                    EnsureDir(refsDir);
+                    var assetFileName = $"{fetched.Sha256[..16]}.src.txt";
+                    var sourcePath = Path.Combine(refsDir, assetFileName);
+                    if (!File.Exists(sourcePath))
+                    {
+                        File.WriteAllText(sourcePath, fetched.Text, Utf8NoBom);
+                    }
+
+                    refs.Add(new DiscordMessageRefEntry(
+                        MessageId: messageId,
+                        MessageTimestamp: messageTimestamp,
+                        Kind: "fetched_source",
+                        SourceUrl: originalUrl,
+                        FetchUrl: target.FetchUrl,
+                        RefPath: ToRelativePathFromExport(exportPath, sourcePath),
+                        DetectedLanguage: target.DetectedLanguage,
+                        Confidence: null,
+                        Sha256: fetched.Sha256,
+                        Bytes: fetched.Bytes,
+                        Status: "ok",
+                        Error: string.Empty));
+                }
+            }
+        }
+
+        refs = refs
+            .DistinctBy(x => $"{x.MessageId}|{x.Kind}|{x.SourceUrl}|{x.FetchUrl}|{x.RefPath}", StringComparer.OrdinalIgnoreCase)
+            .OrderBy(x => ParseSnowflake(x.MessageId))
+            .ThenBy(x => x.Kind, StringComparer.OrdinalIgnoreCase)
+            .ThenBy(x => x.RefPath, StringComparer.OrdinalIgnoreCase)
+            .ThenBy(x => x.SourceUrl, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        summary = new DiscordServerRefsChannelSummary(
+            GuildId: guildId,
+            GuildName: guildName,
+            ChannelId: channelId,
+            ChannelName: channelName,
+            ExportPath: Path.GetFileName(exportPath),
+            RefsPath: Path.GetFileName(GetDiscordRefsPath(exportPath)),
+            RefCount: refs.Count,
+            LastMessageId: ReadNewestMessageId(exportPath),
+            RefKinds: refs
+                .GroupBy(x => x.Kind, StringComparer.OrdinalIgnoreCase)
+                .OrderBy(x => x.Key, StringComparer.OrdinalIgnoreCase)
+                .ToDictionary(x => x.Key, x => x.Count(), StringComparer.OrdinalIgnoreCase));
+
+        return refs;
+    }
+
+    void WriteDiscordRefsJsonl(string refsPath, IReadOnlyList<DiscordMessageRefEntry> entries)
+    {
+        EnsureDir(Path.GetDirectoryName(refsPath) ?? string.Empty);
+        if (entries.Count == 0)
+        {
+            if (File.Exists(refsPath))
+            {
+                File.Delete(refsPath);
+            }
+
+            return;
+        }
+
+        var lines = entries
+            .Select(entry => JsonSerializer.Serialize(entry))
+            .ToArray();
+        var payload = string.Join(Environment.NewLine, lines) + Environment.NewLine;
+        File.WriteAllText(refsPath, payload, Utf8NoBom);
+    }
+
+    void WriteDiscordServerRefsMetadata(
+        string guildDir,
+        string guildId,
+        string guildName,
+        IEnumerable<string> blacklistedChannelIds,
+        IReadOnlyList<DiscordServerRefsChannelSummary> channelSummaries)
+    {
+        var metadataPath = Path.Combine(guildDir, "server.refs.json");
+        var payload = new DiscordServerRefsMetadata
+        {
+            GeneratedAtUtc = DateTime.UtcNow.ToString("O"),
+            GuildId = guildId,
+            GuildName = guildName,
+            Blacklist = (blacklistedChannelIds ?? [])
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Distinct(StringComparer.Ordinal)
+                .OrderBy(x => x, StringComparer.Ordinal)
+                .ToList(),
+            Channels = channelSummaries
+                .OrderBy(x => x.ChannelName, StringComparer.OrdinalIgnoreCase)
+                .ThenBy(x => x.ChannelId, StringComparer.Ordinal)
+                .ToList(),
+            TotalRefs = channelSummaries.Sum(x => x.RefCount)
+        };
+
+        var json = JsonSerializer.Serialize(payload, new JsonSerializerOptions { WriteIndented = true });
+        File.WriteAllText(metadataPath, json + Environment.NewLine, Utf8NoBom);
+    }
+
+    Dictionary<string, List<DiscordMessageRefEntry>> LoadDiscordRefsByMessageId(string exportPath)
+    {
+        var refsPath = GetDiscordRefsPath(exportPath);
+        var refsByMessageId = new Dictionary<string, List<DiscordMessageRefEntry>>(StringComparer.Ordinal);
+        if (!File.Exists(refsPath))
+        {
+            return refsByMessageId;
+        }
+
+        foreach (var line in File.ReadLines(refsPath))
+        {
+            if (string.IsNullOrWhiteSpace(line))
+            {
+                continue;
+            }
+
+            try
+            {
+                var entry = JsonSerializer.Deserialize<DiscordMessageRefEntry>(line);
+                if (string.IsNullOrWhiteSpace(entry.MessageId))
+                {
+                    continue;
+                }
+
+                if (!refsByMessageId.TryGetValue(entry.MessageId, out var bucket))
+                {
+                    bucket = [];
+                    refsByMessageId[entry.MessageId] = bucket;
+                }
+
+                bucket.Add(entry);
+            }
+            catch
+            {
+                // Ignore malformed lines and continue.
+            }
+        }
+
+        return refsByMessageId;
+    }
+
+    static string GetDiscordRefsPath(string exportPath)
+    {
+        var fileName = Path.GetFileNameWithoutExtension(exportPath);
+        var parent = Path.GetDirectoryName(exportPath) ?? string.Empty;
+        return Path.Combine(parent, fileName + ".refs.jsonl");
+    }
+
+    static IEnumerable<string> EnumerateDiscordMessageLocalImagePaths(JsonElement message, string exportPath)
+    {
+        var baseDir = Path.GetDirectoryName(exportPath) ?? string.Empty;
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        if (message.TryGetProperty("attachments", out var attachments) && attachments.ValueKind == JsonValueKind.Array)
+        {
+            foreach (var attachment in attachments.EnumerateArray())
+            {
+                var url = TryGetJsonString(attachment, "url");
+                foreach (var path in AddIfFileExistsIterator(url))
+                {
+                    yield return path;
+                }
+            }
+        }
+
+        if (message.TryGetProperty("embeds", out var embeds) && embeds.ValueKind == JsonValueKind.Array)
+        {
+            foreach (var embed in embeds.EnumerateArray())
+            {
+                if (embed.TryGetProperty("image", out var image) && image.ValueKind == JsonValueKind.Object)
+                {
+                    var url = TryGetJsonString(image, "url");
+                    foreach (var path in AddIfFileExistsIterator(url))
+                    {
+                        yield return path;
+                    }
+                }
+
+                if (embed.TryGetProperty("images", out var images) && images.ValueKind == JsonValueKind.Array)
+                {
+                    foreach (var imageNode in images.EnumerateArray())
+                    {
+                        var url = TryGetJsonString(imageNode, "url");
+                        foreach (var path in AddIfFileExistsIterator(url))
+                        {
+                            yield return path;
+                        }
+                    }
+                }
+            }
+        }
+
+        IEnumerable<string> AddIfFileExistsIterator(string candidate)
+        {
+            if (string.IsNullOrWhiteSpace(candidate))
+            {
+                yield break;
+            }
+
+            var normalized = candidate.Trim();
+            if (!Path.IsPathRooted(normalized))
+            {
+                normalized = Path.GetFullPath(Path.Combine(baseDir, normalized));
+            }
+            else
+            {
+                normalized = Path.GetFullPath(normalized);
+            }
+
+            if (!File.Exists(normalized) || !IsSupportedOcrImageFile(normalized))
+            {
+                yield break;
+            }
+
+            if (seen.Add(normalized))
+            {
+                yield return normalized;
+            }
+        }
+    }
+
+    static IEnumerable<string> EnumerateDiscordMessageRemoteUrls(JsonElement message)
+    {
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var candidate in ExtractUrlsFromText(TryGetJsonString(message, "content")))
+        {
+            if (seen.Add(candidate))
+            {
+                yield return candidate;
+            }
+        }
+
+        if (message.TryGetProperty("embeds", out var embeds) && embeds.ValueKind == JsonValueKind.Array)
+        {
+            foreach (var embed in embeds.EnumerateArray())
+            {
+                var embedUrl = NormalizeDiscordUrl(TryGetJsonString(embed, "url"));
+                if (!string.IsNullOrWhiteSpace(embedUrl) && seen.Add(embedUrl))
+                {
+                    yield return embedUrl;
+                }
+            }
+        }
+    }
+
+    static IEnumerable<string> ExtractUrlsFromText(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return [];
+        }
+
+        return DiscordUrlRegex.Matches(text)
+            .Select(match => NormalizeDiscordUrl(match.Value))
+            .Where(url => !string.IsNullOrWhiteSpace(url))
+            .Distinct(StringComparer.OrdinalIgnoreCase);
+    }
+
+    static string NormalizeDiscordUrl(string url)
+    {
+        var value = (url ?? string.Empty).Trim();
+        while (value.Length > 0 && ".,;:)]}>".Contains(value[^1]))
+        {
+            value = value[..^1];
+        }
+
+        return value;
+    }
+
+    static bool TryResolveDiscordRemoteFetchTarget(string url, out DiscordRemoteFetchTarget target)
+    {
+        target = default;
+        if (string.IsNullOrWhiteSpace(url))
+        {
+            return false;
+        }
+
+        var normalized = NormalizeDiscordUrl(url);
+        var fetchUrl = normalized;
+        var sourceType = "direct";
+
+        if (TryConvertGitHubBlobToRaw(normalized, out var blobRaw))
+        {
+            fetchUrl = blobRaw;
+            sourceType = "github_blob_raw";
+        }
+        else if (TryConvertGitHubCommitToPatch(normalized, out var commitPatch))
+        {
+            fetchUrl = commitPatch;
+            sourceType = "github_commit_patch";
+        }
+        else if (TryConvertGitHubPullToPatch(normalized, out var pullPatch))
+        {
+            fetchUrl = pullPatch;
+            sourceType = "github_pull_patch";
+        }
+        else if (TryConvertGistPageToRaw(normalized, out var gistRaw))
+        {
+            fetchUrl = gistRaw;
+            sourceType = "gist_raw";
+        }
+        else if (!IsFetchableCodeUrl(normalized))
+        {
+            return false;
+        }
+
+        target = new DiscordRemoteFetchTarget(
+            SourceUrl: normalized,
+            FetchUrl: fetchUrl,
+            SourceType: sourceType,
+            DetectedLanguage: DetectLanguageFromUrl(fetchUrl));
+        return true;
+    }
+
+    static bool TryConvertGitHubBlobToRaw(string url, out string rawUrl)
+    {
+        rawUrl = string.Empty;
+        var match = Regex.Match(
+            url.Split('#')[0],
+            @"^https?://github\.com/([^/]+)/([^/]+)/blob/([^/]+)/(.+)$",
+            RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+        if (!match.Success)
+        {
+            return false;
+        }
+
+        rawUrl = $"https://raw.githubusercontent.com/{match.Groups[1].Value}/{match.Groups[2].Value}/{match.Groups[3].Value}/{match.Groups[4].Value}";
+        return true;
+    }
+
+    static bool TryConvertGitHubCommitToPatch(string url, out string patchUrl)
+    {
+        patchUrl = string.Empty;
+        var normalized = url.Split('#')[0];
+        var match = Regex.Match(
+            normalized,
+            @"^https?://github\.com/[^/]+/[^/]+/commit/[0-9a-fA-F]+$",
+            RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+        if (!match.Success)
+        {
+            return false;
+        }
+
+        patchUrl = normalized + ".patch";
+        return true;
+    }
+
+    static bool TryConvertGitHubPullToPatch(string url, out string patchUrl)
+    {
+        patchUrl = string.Empty;
+        var normalized = url.Split('#')[0];
+        var match = Regex.Match(
+            normalized,
+            @"^https?://github\.com/[^/]+/[^/]+/pull/[0-9]+$",
+            RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+        if (!match.Success)
+        {
+            return false;
+        }
+
+        patchUrl = normalized + ".patch";
+        return true;
+    }
+
+    static bool TryConvertGistPageToRaw(string url, out string rawUrl)
+    {
+        rawUrl = string.Empty;
+        var normalized = url.Split('#')[0].TrimEnd('/');
+        var match = Regex.Match(
+            normalized,
+            @"^https?://gist\.github\.com/[^/]+/[0-9a-fA-F]+(?:/[^/?#]+)?$",
+            RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+        if (!match.Success)
+        {
+            return false;
+        }
+
+        rawUrl = normalized + "/raw";
+        return true;
+    }
+
+    static bool IsFetchableCodeUrl(string url)
+    {
+        if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
+        {
+            return false;
+        }
+
+        if (uri.Host.EndsWith("raw.githubusercontent.com", StringComparison.OrdinalIgnoreCase)
+            || uri.Host.EndsWith("gist.githubusercontent.com", StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        var extension = Path.GetExtension(uri.AbsolutePath).ToLowerInvariant();
+        return IsCodeLikeExtension(extension);
+    }
+
+    static bool IsCodeLikeExtension(string extension)
+    {
+        var ext = (extension ?? string.Empty).Trim().ToLowerInvariant();
+        if (string.IsNullOrWhiteSpace(ext))
+        {
+            return false;
+        }
+
+        return ext is ".txt" or ".log" or ".md" or ".markdown" or ".rst" or ".ini" or ".cfg" or ".conf" or ".toml" or ".yaml" or ".yml" or ".json" or ".jsonc" or ".xml" or ".csv"
+            or ".cs" or ".csproj" or ".sln" or ".c" or ".h" or ".cpp" or ".hpp" or ".cc" or ".cxx" or ".hh" or ".java" or ".kt" or ".kts" or ".go" or ".rs" or ".py" or ".lua"
+            or ".js" or ".jsx" or ".ts" or ".tsx" or ".php" or ".swift" or ".vb" or ".fs" or ".fsi" or ".m" or ".mm" or ".sh" or ".bash" or ".zsh" or ".ps1" or ".bat" or ".cmd"
+            or ".sql" or ".patch" or ".diff" or ".hexpat" or ".ebp" or ".tbl" or ".dat";
+    }
+
+    static string DetectLanguageFromUrl(string url)
+    {
+        var extension = string.Empty;
+        try
+        {
+            if (Uri.TryCreate(url, UriKind.Absolute, out var uri))
+            {
+                extension = Path.GetExtension(uri.AbsolutePath).ToLowerInvariant();
+            }
+            else
+            {
+                extension = Path.GetExtension(url).ToLowerInvariant();
+            }
+        }
+        catch
+        {
+            extension = string.Empty;
+        }
+
+        return extension switch
+        {
+            ".cs" or ".csproj" or ".sln" => "csharp",
+            ".json" or ".jsonc" => "json",
+            ".xml" => "xml",
+            ".yaml" or ".yml" => "yaml",
+            ".ps1" => "powershell",
+            ".bat" or ".cmd" or ".sh" or ".bash" or ".zsh" => "bash",
+            ".py" => "python",
+            ".js" or ".jsx" => "javascript",
+            ".ts" or ".tsx" => "typescript",
+            ".cpp" or ".hpp" or ".cc" or ".cxx" or ".hh" => "cpp",
+            ".c" or ".h" => "c",
+            ".go" => "go",
+            ".rs" => "rust",
+            ".java" => "java",
+            ".lua" => "lua",
+            ".sql" => "sql",
+            ".md" or ".markdown" => "markdown",
+            ".patch" or ".diff" => "diff",
+            _ => "text"
+        };
+    }
+
+    static DiscordFetchResult FetchRemoteSourceText(string fetchUrl, int fetchRetryCount)
+    {
+        var maxAttempts = Math.Max(1, fetchRetryCount + 1);
+        Exception? lastError = null;
+
+        for (var attempt = 1; attempt <= maxAttempts; attempt++)
+        {
+            try
+            {
+                using var request = new HttpRequestMessage(HttpMethod.Get, fetchUrl);
+                using var response = DiscordFetchHttpClient.Send(request);
+                if (!response.IsSuccessStatusCode)
+                {
+                    lastError = new HttpRequestException($"HTTP {(int)response.StatusCode}");
+                    if (attempt < maxAttempts)
+                    {
+                        Thread.Sleep(Math.Min(5000, attempt * 1500));
+                        continue;
+                    }
+
+                    break;
+                }
+
+                var bytes = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
+                if (bytes.Length == 0 || bytes.Length > MaxFetchedTextBytes)
+                {
+                    return DiscordFetchResult.Failed("empty_or_too_large");
+                }
+
+                if (LooksLikeBinary(bytes))
+                {
+                    return DiscordFetchResult.Failed("binary_content");
+                }
+
+                var text = Encoding.UTF8.GetString(bytes);
+                if (LooksLikeHtml(text))
+                {
+                    return DiscordFetchResult.Failed("html_content");
+                }
+
+                return DiscordFetchResult.Success(text);
+            }
+            catch (Exception ex)
+            {
+                lastError = ex;
+                if (attempt < maxAttempts)
+                {
+                    Thread.Sleep(Math.Min(5000, attempt * 1500));
+                }
+            }
+        }
+
+        return DiscordFetchResult.Failed(lastError?.Message ?? "request_failed");
+    }
+
+    static bool LooksLikeBinary(byte[] bytes)
+    {
+        var limit = Math.Min(bytes.Length, 12000);
+        for (var i = 0; i < limit; i++)
+        {
+            if (bytes[i] == 0)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    static bool LooksLikeHtml(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return false;
+        }
+
+        return text.Contains("<html", StringComparison.OrdinalIgnoreCase)
+               || text.Contains("<!DOCTYPE html", StringComparison.OrdinalIgnoreCase);
+    }
+
+    static HttpClient CreateDiscordFetchHttpClient()
+    {
+        var handler = new HttpClientHandler
+        {
+            AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate | DecompressionMethods.Brotli
+        };
+        var client = new HttpClient(handler)
+        {
+            Timeout = TimeSpan.FromSeconds(30)
+        };
+        client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) Fahrenheit-Discord-Refs/1.0");
+        return client;
+    }
+
+    static string ComputeSha256Hex(string value)
+    {
+        var bytes = Encoding.UTF8.GetBytes(value ?? string.Empty);
+        var hash = SHA256.HashData(bytes);
+        return Convert.ToHexString(hash).ToLowerInvariant();
+    }
+
+    static string SafeReadAllText(string path)
+    {
+        if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
+        {
+            return string.Empty;
+        }
+
+        try
+        {
+            return File.ReadAllText(path);
+        }
+        catch
+        {
+            return string.Empty;
+        }
+    }
+
+    static string ToRelativePathFromExport(string exportPath, string targetPath)
+    {
+        var exportDir = Path.GetDirectoryName(exportPath) ?? string.Empty;
+        var relative = Path.GetRelativePath(exportDir, targetPath);
+        return relative.Replace('\\', '/');
+    }
+
+    void RegenerateDiscordMarkdownForGuild(string guildDir)
+    {
+        if (!Directory.Exists(guildDir))
+        {
+            return;
+        }
+
+        var outputRoot = ResolveDiscordOutputRoot();
+        var exports = Directory.GetFiles(guildDir, "*.json", SearchOption.AllDirectories)
+            .Where(path => !IsDiscordHousekeepingPath(outputRoot, path) && !IsDiscordAssetPath(outputRoot, path))
+            .Where(path => TryGetDiscordExportIdFromFileName(Path.GetFileName(path), out _, out _))
+            .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        foreach (var exportPath in exports)
+        {
+            try
+            {
+                WriteDiscordMarkdownSidecar(exportPath);
+            }
+            catch (Exception ex)
+            {
+                Log.Warning($"Failed to regenerate markdown sidecar for {exportPath}: {ex.Message}");
+            }
+        }
+    }
+
+    void WriteDiscordMarkdownSidecar(string exportPath)
+    {
+        var refsByMessageId = LoadDiscordRefsByMessageId(exportPath);
+
+        using var doc = JsonDocument.Parse(File.ReadAllText(exportPath));
+        var root = doc.RootElement;
+        var guildId = TryGetNestedJsonString(root, "guild", "id");
+        var guildName = TryGetNestedJsonString(root, "guild", "name");
+        var channelId = TryGetNestedJsonString(root, "channel", "id");
+        var channelName = TryGetNestedJsonString(root, "channel", "name");
+        var messageCount = root.TryGetProperty("messageCount", out var messageCountNode)
+            ? messageCountNode.ToString()
+            : "0";
+
+        var builder = new StringBuilder();
+        builder.AppendLine($"# {guildName} / {channelName}");
+        builder.AppendLine();
+        builder.AppendLine($"- guildId: `{guildId}`");
+        builder.AppendLine($"- channelId: `{channelId}`");
+        builder.AppendLine($"- messages: `{messageCount}`");
+        builder.AppendLine();
+
+        if (root.TryGetProperty("messages", out var messages) && messages.ValueKind == JsonValueKind.Array)
+        {
+            foreach (var message in messages.EnumerateArray())
+            {
+                var messageId = TryGetJsonString(message, "id");
+                var timestamp = TryGetJsonString(message, "timestamp");
+                var authorName = TryGetNestedJsonString(message, "author", "nickname");
+                if (string.IsNullOrWhiteSpace(authorName))
+                {
+                    authorName = TryGetNestedJsonString(message, "author", "name");
+                }
+                var authorId = TryGetNestedJsonString(message, "author", "id");
+                var content = StripLegacyEmbeddedMessageContent(TryGetJsonString(message, "content"));
+
+                builder.AppendLine($"## {timestamp} | {authorName} ({authorId})");
+                builder.AppendLine($"- messageId: `{messageId}`");
+                builder.AppendLine();
+                if (!string.IsNullOrWhiteSpace(content))
+                {
+                    builder.AppendLine(content.TrimEnd());
+                    builder.AppendLine();
+                }
+
+                if (message.TryGetProperty("attachments", out var attachments) && attachments.ValueKind == JsonValueKind.Array)
+                {
+                    foreach (var attachment in attachments.EnumerateArray())
+                    {
+                        var fileName = TryGetJsonString(attachment, "fileName");
+                        var url = TryGetJsonString(attachment, "url");
+                        if (!string.IsNullOrWhiteSpace(fileName) || !string.IsNullOrWhiteSpace(url))
+                        {
+                            builder.AppendLine($"- attachment: `{fileName}` {url}");
+                        }
+                    }
+                }
+
+                if (refsByMessageId.TryGetValue(messageId, out var refsForMessage) && refsForMessage.Count > 0)
+                {
+                    builder.AppendLine();
+                    builder.AppendLine("### Enrichment References");
+                    foreach (var reference in refsForMessage
+                                 .OrderBy(x => x.Kind, StringComparer.OrdinalIgnoreCase)
+                                 .ThenBy(x => x.RefPath, StringComparer.OrdinalIgnoreCase))
+                    {
+                        var confidenceLabel = reference.Confidence.HasValue ? $" | confidence={reference.Confidence.Value}" : string.Empty;
+                        var sourceUrlLabel = !string.IsNullOrWhiteSpace(reference.SourceUrl) ? $" | source={reference.SourceUrl}" : string.Empty;
+                        builder.AppendLine($"- kind={reference.Kind} | language={reference.DetectedLanguage}{confidenceLabel}{sourceUrlLabel}");
+                        builder.AppendLine($"  - ref: `{reference.RefPath}`");
+
+                        var refTextPath = Path.IsPathRooted(reference.RefPath)
+                            ? reference.RefPath
+                            : Path.GetFullPath(Path.Combine(Path.GetDirectoryName(exportPath) ?? string.Empty, reference.RefPath));
+                        if (!File.Exists(refTextPath))
+                        {
+                            continue;
+                        }
+
+                        var refText = SafeReadAllText(refTextPath);
+                        if (string.IsNullOrWhiteSpace(refText))
+                        {
+                            continue;
+                        }
+
+                        var normalizedText = refText.TrimEnd();
+                        if (normalizedText.Length > MaxRenderedRefCharsPerMessage)
+                        {
+                            normalizedText = normalizedText[..MaxRenderedRefCharsPerMessage]
+                                             + Environment.NewLine
+                                             + "[TRUNCATED]";
+                        }
+
+                        var fenceLanguage = MapReferenceLanguageToFence(reference.DetectedLanguage);
+                        builder.AppendLine($"```{fenceLanguage}");
+                        builder.AppendLine(normalizedText);
+                        builder.AppendLine("```");
+                    }
+                }
+
+                builder.AppendLine();
+            }
+        }
+
+        var markdownPath = Path.ChangeExtension(exportPath, ".md");
+        File.WriteAllText(markdownPath, builder.ToString(), Utf8NoBom);
+    }
+
+    static string MapReferenceLanguageToFence(string detectedLanguage)
+    {
+        var lang = (detectedLanguage ?? string.Empty).Trim().ToLowerInvariant();
+        return lang switch
+        {
+            "csharp" => "csharp",
+            "json" => "json",
+            "xml" => "xml",
+            "yaml" => "yaml",
+            "powershell" => "powershell",
+            "bash" => "bash",
+            "python" => "python",
+            "javascript" => "javascript",
+            "typescript" => "typescript",
+            "cpp" => "cpp",
+            "c" => "c",
+            "go" => "go",
+            "rust" => "rust",
+            "java" => "java",
+            "lua" => "lua",
+            _ => "text"
+        };
+    }
+
+    static string StripLegacyEmbeddedMessageContent(string content)
+    {
+        var value = content ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return string.Empty;
+        }
+
+        const string startMarker = "<!-- BEGIN EMBEDDED_CODE_SNIPPETS -->";
+        const string endMarker = "<!-- END EMBEDDED_CODE_SNIPPETS -->";
+        var result = value;
+        while (true)
+        {
+            var start = result.IndexOf(startMarker, StringComparison.Ordinal);
+            if (start < 0)
+            {
+                break;
+            }
+
+            var end = result.IndexOf(endMarker, start, StringComparison.Ordinal);
+            if (end < 0)
+            {
+                result = result[..start];
+                break;
+            }
+
+            result = result.Remove(start, end + endMarker.Length - start);
+        }
+
+        return result.TrimEnd();
+    }
+
+    static string TryGetNestedJsonString(JsonElement root, string parentProperty, string childProperty)
+    {
+        if (!root.TryGetProperty(parentProperty, out var parent) || parent.ValueKind != JsonValueKind.Object)
+        {
+            return string.Empty;
+        }
+
+        return TryGetJsonString(parent, childProperty);
+    }
+
+    static string TryGetJsonString(JsonElement root, string propertyName)
+    {
+        if (!root.TryGetProperty(propertyName, out var property))
+        {
+            return string.Empty;
+        }
+
+        return property.ValueKind == JsonValueKind.String
+            ? property.GetString()?.Trim() ?? string.Empty
+            : property.ToString().Trim();
     }
 
     static bool MergeDiscordExport(string existingPath, string deltaPath, string finalPath)
@@ -1020,7 +2419,7 @@ internal sealed partial class BuildScript
 
         var options = new JsonSerializerOptions { WriteIndented = true };
         var output = existingRoot.ToJsonString(options);
-        File.WriteAllText(finalPath, output + Environment.NewLine, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+        File.WriteAllText(finalPath, output + Environment.NewLine, Utf8NoBom);
         return changed;
     }
 
@@ -1133,7 +2532,7 @@ internal sealed partial class BuildScript
                 if (changed)
                 {
                     var options = new JsonSerializerOptions { WriteIndented = true };
-                    File.WriteAllText(jsonPath, json.ToJsonString(options) + Environment.NewLine, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+                    File.WriteAllText(jsonPath, json.ToJsonString(options) + Environment.NewLine, Utf8NoBom);
                     Log.Information($"Updated references in {Path.GetFileName(jsonPath)}.");
                 }
             }
@@ -1253,7 +2652,24 @@ internal sealed partial class BuildScript
 
         process.BeginOutputReadLine();
         process.BeginErrorReadLine();
-        process.WaitForExit();
+        if (!process.WaitForExit(DiscordCliTimeoutMs))
+        {
+            try
+            {
+                process.Kill(entireProcessTree: true);
+            }
+            catch
+            {
+                // Best-effort timeout cleanup.
+            }
+
+            return new ProcessResult(
+                -2,
+                stdout.ToString(),
+                $"Process timed out after {DiscordCliTimeoutMs / 1000} seconds.");
+        }
+
+        // Ensure async output readers flush remaining buffered lines.
         process.WaitForExit();
 
         if (!silent)
@@ -1274,34 +2690,93 @@ internal sealed partial class BuildScript
 
     readonly record struct DiscordChannelTarget(string ChannelId, string Label);
     readonly record struct DiscordExportOutcome(DiscordExportStatus Status, string Message);
+    readonly record struct DiscordRemoteFetchTarget(string SourceUrl, string FetchUrl, string SourceType, string DetectedLanguage);
+    readonly record struct DiscordFetchResult(bool Ok, string Text, string Error, string Sha256, int Bytes)
+    {
+        public static DiscordFetchResult Success(string text)
+        {
+            var normalized = text ?? string.Empty;
+            return new DiscordFetchResult(
+                Ok: true,
+                Text: normalized,
+                Error: string.Empty,
+                Sha256: ComputeSha256Hex(normalized),
+                Bytes: Encoding.UTF8.GetByteCount(normalized));
+        }
+
+        public static DiscordFetchResult Failed(string error) => new(
+            Ok: false,
+            Text: string.Empty,
+            Error: error ?? "error",
+            Sha256: string.Empty,
+            Bytes: 0);
+    }
+    readonly record struct DiscordMessageRefEntry(
+        string MessageId,
+        string MessageTimestamp,
+        string Kind,
+        string SourceUrl,
+        string FetchUrl,
+        string RefPath,
+        string DetectedLanguage,
+        int? Confidence,
+        string Sha256,
+        int Bytes,
+        string Status,
+        string Error);
+    readonly record struct DiscordServerRefsChannelSummary(
+        string GuildId,
+        string GuildName,
+        string ChannelId,
+        string ChannelName,
+        string ExportPath,
+        string RefsPath,
+        int RefCount,
+        string LastMessageId,
+        Dictionary<string, int> RefKinds);
+    readonly record struct DiscordExportIndexEntry(
+        string Path,
+        long LastWriteUtcTicks,
+        string NewestMessageId,
+        string GuildId,
+        bool Inaccessible,
+        string InaccessibleReason);
+
+    sealed class DiscordExportIndexCacheFile
+    {
+        public string UpdatedAtUtc { get; set; } = string.Empty;
+        public Dictionary<string, DiscordExportIndexCacheEntry> Channels { get; set; } = new(StringComparer.Ordinal);
+    }
+
+    sealed class DiscordExportIndexCacheEntry
+    {
+        public string Path { get; set; } = string.Empty;
+        public long LastWriteUtcTicks { get; set; }
+        public string NewestMessageId { get; set; } = string.Empty;
+        public string GuildId { get; set; } = string.Empty;
+        public bool Inaccessible { get; set; }
+        public string InaccessibleReason { get; set; } = string.Empty;
+    }
 
     sealed class DiscordWorkflowConfig
     {
-        public string Token { get; set; } = string.Empty;
-        public DiscordWorkflowDefaults Defaults { get; } = new();
-        public HashSet<string> BlacklistedChannelIds { get; } = new(StringComparer.Ordinal);
-        public List<string> GuildIds { get; } = new();
+        public List<string> BlacklistedChannelIds { get; set; } = [];
+        public List<string> GuildIds { get; set; } = [];
     }
 
-    sealed class DiscordWorkflowDefaults
+    sealed class DiscordServerRefsMetadata
     {
-        public bool? IncludeVoiceChannels { get; set; }
-        public bool? Media { get; set; }
-        public bool? ReuseMedia { get; set; }
-        public bool? RespectRateLimits { get; set; }
-        public bool? Utc { get; set; }
-        public string IncludeThreads { get; set; } = string.Empty;
-        public string MediaDirectory { get; set; } = string.Empty;
+        public string GeneratedAtUtc { get; set; } = string.Empty;
+        public string GuildId { get; set; } = string.Empty;
+        public string GuildName { get; set; } = string.Empty;
+        public List<string> Blacklist { get; set; } = [];
+        public List<DiscordServerRefsChannelSummary> Channels { get; set; } = [];
+        public int TotalRefs { get; set; }
     }
 
     readonly record struct DiscordSyncSettings(
         string Token,
-        bool IncludeVoiceChannels,
-        string IncludeThreads,
-        bool Media,
-        bool ReuseMedia,
         string MediaDirectory,
-        bool RespectRateLimits,
         bool Utc,
         string ConfigPath,
         HashSet<string> BlacklistedChannelIds,

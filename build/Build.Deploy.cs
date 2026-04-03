@@ -4,9 +4,11 @@ internal sealed partial class BuildScript
 {
     void RunVerifyCore(string configuration)
     {
+        var resolvedConfiguration = ResolveBuildConfiguration(configuration);
         ValidateJsonConfigsCore();
-        BuildCore("mod", configuration, useReleaseRef: false, allowAutoDeploy: false);
-        RunTestsIfAny(configuration);
+        AssertAutomationDocsUpToDate();
+        BuildCore("full", resolvedConfiguration, useReleaseRef: false, allowAutoDeploy: false);
+        RunTestsIfAny(resolvedConfiguration);
     }
 
     void DeployCore(string target, string configuration)
