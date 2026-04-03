@@ -10,7 +10,8 @@ Quick command discovery:
 - Bool parameters support both `--flag` and `--no-flag`.
 - Global verbosity: `--verbosity|-v quiet|minimal|normal|detailed|diagnostic` (default: `normal`).
 - Recommended escalation: `quiet` -> `normal` -> `detailed` -> `diagnostic`.
-- Common shorthand: `-n` (`--dry-run`).
+- Global config path: `--config-path` (shorthand: `-c`).
+- Common shorthand: `-c <config-path>`, `-n` (`--dry-run`).
 - Agent guidance: use `--verbosity quiet` for routine tooling workflows.
 
 ## Tooling Workflows (local-only)
@@ -21,8 +22,7 @@ Quick command discovery:
   - --guild <serverId> (required).
   - --channels <id1,id2,...> (optional).
   - --full (optional).
-  - --discord-utc or --no-discord-utc (optional).
-  - Workspace config uses strict PascalCase keys in .workspace/config.local.json (DiscordToken, OpenApiUrl, OpenApiKey, OpenApiModel, FetchRetryCount).
+  - Workspace config uses strict PascalCase keys in .workspace/config.local.json (DiscordToken, VisionApiUrl, VisionApiKey, VisionModel, FetchRetries).
   - Discord workflow config uses strict PascalCase keys in .workspace/discord/config.local.json (Blacklist[], Guilds[]).
   - Examples:
   - `.\tools.cmd discord-sync --guild 612363389003366405`
@@ -52,8 +52,8 @@ Quick command discovery:
   - Parameters:
   - --data-mode <MODE> (optional).
   - --data-args "<arg1> <arg2>" (optional).
-  - --data-root <path> (optional).
-  - --data-out <path> (optional).
+  - --input-dir <path> (optional).
+  - --out-dir <path> (optional).
   - Examples:
   - `.\tools.cmd data-parse --data-mode READ_ALL_COMMANDS`
 
@@ -61,8 +61,8 @@ Quick command discovery:
   - Run configured parser mode batch and capture all outputs.
   - Parameters:
   - --data-batch "MODE1;MODE2 arg" (optional).
-  - --data-root <path> (optional).
-  - --data-out <path> (optional).
+  - --input-dir <path> (optional).
+  - --out-dir <path> (optional).
   - Examples:
   - `.\tools.cmd data-parse-all`
 
@@ -71,7 +71,8 @@ Quick command discovery:
   - Parameters:
   - --map-source <path> (optional).
   - --locales us,de,... (optional).
-  - --data-out <path> (optional).
+  - --out-dir <path> (optional).
+  - Requires existing parser outputs under --out-dir. Run: .\tools.cmd data-parse-all
   - Examples:
   - `.\tools.cmd map-import`
 

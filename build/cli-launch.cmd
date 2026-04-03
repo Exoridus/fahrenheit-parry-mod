@@ -84,9 +84,8 @@ shift
 
 :append_workflow_args
 if "%~1"=="" goto run_nuke
-set "FORWARD_ARG=%~1"
-if /I "%FORWARD_ARG%"=="--target" set "FORWARD_ARG=--build-target"
-call :normalize_common_arg "%~1" "%~2"
+set "FORWARD_ARG=%1"
+call :normalize_common_arg "%~1" "%~2" "%CMD%"
 if "%PARSE_ERROR%"=="1" goto :parse_failed
 if "%SKIP_CURRENT%"=="1" (
     if "%SHIFT_EXTRA%"=="1" shift
@@ -101,84 +100,16 @@ goto append_workflow_args
 
 :append_passthrough_args
 if "%~1"=="" goto run_nuke
-set "FORWARD_ARG=%~1"
-set "SHIFT_EXTRA=0"
-set "SKIP_CURRENT=0"
+set "FORWARD_ARG=%1"
 
-if /I "%~1"=="-n" set "FORWARD_ARG=--dry-run"
-
-if /I "%~1"=="-c" (
-    if "%~2"=="" (
-        echo ERROR: -c requires a config file path.
-        set "PARSE_ERROR=1"
-    ) else (
-        set "FORWARD_ARG=--config %~2"
-        set "SHIFT_EXTRA=1"
-    )
-)
-
-if /I "%~1"=="-v" (
-    if "%HAS_VERBOSITY%"=="1" (
-        echo ERROR: verbosity specified multiple times.
-        set "PARSE_ERROR=1"
-    ) else if "%~2"=="" (
-        echo ERROR: -v requires one of quiet^|minimal^|normal^|detailed^|diagnostic.
-        set "PARSE_ERROR=1"
-    ) else (
-        set "HAS_VERBOSITY=1"
-        set "REQUESTED_VERBOSITY=%~2"
-        set "SKIP_CURRENT=1"
-        set "SHIFT_EXTRA=1"
-    )
-)
-
-if /I "%~1"=="--verbosity" (
-    if "%HAS_VERBOSITY%"=="1" (
-        echo ERROR: verbosity specified multiple times.
-        set "PARSE_ERROR=1"
-    ) else if "%~2"=="" (
-        echo ERROR: --verbosity requires one of quiet^|minimal^|normal^|detailed^|diagnostic.
-        set "PARSE_ERROR=1"
-    ) else (
-        set "HAS_VERBOSITY=1"
-        set "REQUESTED_VERBOSITY=%~2"
-        set "SKIP_CURRENT=1"
-        set "SHIFT_EXTRA=1"
-    )
-)
-
-if /I "%~1"=="--quiet" (
-    echo ERROR: --quiet is not supported. Use --verbosity quiet or -v quiet.
-    set "PARSE_ERROR=1"
-)
-if /I "%~1"=="--verbose" (
-    echo ERROR: --verbose is not supported. Use --verbosity detailed or -v detailed.
-    set "PARSE_ERROR=1"
-)
-if /I "%~1"=="--trace" (
-    echo ERROR: --trace is not supported. Use --verbosity diagnostic or -v diagnostic.
-    set "PARSE_ERROR=1"
-)
-
-set "PREFIX=%~1"
-if /I "!PREFIX:~0,12!"=="--verbosity=" (
-    if "%HAS_VERBOSITY%"=="1" (
-        echo ERROR: verbosity specified multiple times.
-        set "PARSE_ERROR=1"
-    ) else (
-        set "HAS_VERBOSITY=1"
-        set "REQUESTED_VERBOSITY=!PREFIX:~12!"
-        set "SKIP_CURRENT=1"
-    )
-)
-
+call :normalize_common_arg "%~1" "%~2" ""
 if "%PARSE_ERROR%"=="1" goto :parse_failed
-
 if "%SKIP_CURRENT%"=="1" (
     if "%SHIFT_EXTRA%"=="1" shift
     shift
     goto append_passthrough_args
 )
+if defined FORWARD_OVERRIDE set "FORWARD_ARG=!FORWARD_OVERRIDE!"
 
 if defined NUKE_ARGS (
     set "NUKE_ARGS=%NUKE_ARGS% !FORWARD_ARG!"
@@ -242,6 +173,8 @@ set "SHIFT_EXTRA=0"
 set "FORWARD_OVERRIDE="
 set "ARG1=%~1"
 set "ARG2=%~2"
+set "ARG2_RAW=%2"
+set "WORKFLOW=%~3"
 
 if /I "%ARG1%"=="-n" (
     set "FORWARD_OVERRIDE=--dry-run"
@@ -255,10 +188,147 @@ if /I "%ARG1%"=="-c" (
         set "PARSE_ERROR=1"
         goto :eof
     )
-    set "FORWARD_OVERRIDE=--config %ARG2%"
+    set "FORWARD_OVERRIDE=--config-path %ARG2_RAW%"
     set "SHIFT_EXTRA=1"
     goto :eof
 )
+
+if /I "%ARG1%"=="--config" (
+    echo ERROR: --config is no longer supported. Use --config-path or -c.
+    set "PARSE_ERROR=1"
+    goto :eof
+)
+
+set "CONFIG_PREFIX=!ARG1:~0,9!"
+if /I "!CONFIG_PREFIX!"=="--config=" (
+    echo ERROR: --config is no longer supported. Use --config-path or -c.
+    set "PARSE_ERROR=1"
+    goto :eof
+)
+
+if not "%WORKFLOW%"=="" (
+    if /I "%ARG1%"=="--target" (
+        echo ERROR: --target is no longer supported as workflow configuration override. Use --configuration.
+        set "PARSE_ERROR=1"
+        goto :eof
+    )
+
+    if /I "%ARG1%"=="--build-target" (
+        echo ERROR: --build-target is no longer supported. Use --configuration.
+        set "PARSE_ERROR=1"
+        goto :eof
+    )
+
+    set "TARGET_PREFIX=!ARG1:~0,9!"
+    if /I "!TARGET_PREFIX!"=="--target=" (
+        echo ERROR: --target is no longer supported as workflow configuration override. Use --configuration.
+        set "PARSE_ERROR=1"
+        goto :eof
+    )
+
+    set "BUILD_TARGET_PREFIX=!ARG1:~0,15!"
+    if /I "!BUILD_TARGET_PREFIX!"=="--build-target=" (
+        echo ERROR: --build-target is no longer supported. Use --configuration.
+        set "PARSE_ERROR=1"
+        goto :eof
+    )
+
+    if /I "%WORKFLOW%"=="clean" (
+        if /I "%ARG1%"=="--tools" (
+            echo ERROR: --tools is no longer supported. Use --purge-tools.
+            set "PARSE_ERROR=1"
+            goto :eof
+        )
+
+        set "TOOLS_PREFIX=!ARG1:~0,8!"
+        if /I "!TOOLS_PREFIX!"=="--tools=" (
+            echo ERROR: --tools is no longer supported. Use --purge-tools.
+            set "PARSE_ERROR=1"
+            goto :eof
+        )
+    )
+
+    if /I "%WORKFLOW%"=="data-parse" (
+        goto normalize_data_aliases
+    )
+    if /I "%WORKFLOW%"=="data-parse-all" (
+        goto normalize_data_aliases
+    )
+    if /I "%WORKFLOW%"=="map-import" (
+        goto normalize_data_aliases
+    )
+)
+
+goto normalize_verbosity
+
+:normalize_data_aliases
+if /I "%ARG1%"=="--out-dir" (
+    if "%ARG2%"=="" (
+        echo ERROR: --out-dir requires a path.
+        set "PARSE_ERROR=1"
+        goto :eof
+    )
+    set "FORWARD_OVERRIDE=--data-out %ARG2_RAW%"
+    set "SHIFT_EXTRA=1"
+    goto :eof
+)
+
+set "OUT_DIR_PREFIX=!ARG1:~0,10!"
+if /I "!OUT_DIR_PREFIX!"=="--out-dir=" (
+    set "FORWARD_OVERRIDE=--data-out=!ARG1:~10!"
+    goto :eof
+)
+
+if /I "%ARG1%"=="--data-out" (
+    echo ERROR: --data-out is no longer supported. Use --out-dir.
+    set "PARSE_ERROR=1"
+    goto :eof
+)
+set "DATA_OUT_PREFIX=!ARG1:~0,11!"
+if /I "!DATA_OUT_PREFIX!"=="--data-out=" (
+    echo ERROR: --data-out is no longer supported. Use --out-dir.
+    set "PARSE_ERROR=1"
+    goto :eof
+)
+
+if /I "%WORKFLOW%"=="data-parse" (
+    goto normalize_input_alias
+)
+if /I "%WORKFLOW%"=="data-parse-all" (
+    goto normalize_input_alias
+)
+goto normalize_verbosity
+
+:normalize_input_alias
+if /I "%ARG1%"=="--input-dir" (
+    if "%ARG2%"=="" (
+        echo ERROR: --input-dir requires a path.
+        set "PARSE_ERROR=1"
+        goto :eof
+    )
+    set "FORWARD_OVERRIDE=--input-dir %ARG2_RAW%"
+    set "SHIFT_EXTRA=1"
+    goto :eof
+)
+
+set "INPUT_DIR_PREFIX=!ARG1:~0,12!"
+if /I "!INPUT_DIR_PREFIX!"=="--input-dir=" (
+    goto :eof
+)
+
+if /I "%ARG1%"=="--data-root" (
+    echo ERROR: --data-root is no longer supported. Use --input-dir.
+    set "PARSE_ERROR=1"
+    goto :eof
+)
+set "DATA_ROOT_PREFIX=!ARG1:~0,12!"
+if /I "!DATA_ROOT_PREFIX!"=="--data-root=" (
+    echo ERROR: --data-root is no longer supported. Use --input-dir.
+    set "PARSE_ERROR=1"
+    goto :eof
+)
+
+:normalize_verbosity
 
 if /I "%ARG1%"=="-v" (
     set "SKIP_CURRENT=1"

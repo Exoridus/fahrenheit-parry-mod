@@ -13,24 +13,24 @@ internal sealed partial class BuildScript
             if (!IsValidGameDir(normalizedPath))
             {
                 Log.Warning($"Provided --game-dir is invalid: {GameDir}");
-                cfg.InstallPath = string.Empty;
+                cfg.GameDir = string.Empty;
             }
             else
             {
-                cfg.InstallPath = normalizedPath;
+                cfg.GameDir = normalizedPath;
             }
         }
 
-        if (!IsValidGameDir(cfg.InstallPath))
+        if (!IsValidGameDir(cfg.GameDir))
         {
-            cfg.InstallPath = string.Empty;
+            cfg.GameDir = string.Empty;
         }
 
-        var alreadyConfigured = cfg.AutoDeploy == true && IsValidGameDir(cfg.InstallPath);
+        var alreadyConfigured = cfg.AutoDeploy == true && IsValidGameDir(cfg.GameDir);
         if (alreadyConfigured && !hasPathOverride && !RefreshGameDir)
         {
             SaveWorkspaceConfig(cfg);
-            Log.Information($"Auto deploy already configured: InstallPath={cfg.InstallPath}");
+            Log.Information($"Auto deploy already configured: GameDir={cfg.GameDir}");
             return;
         }
 
@@ -46,18 +46,18 @@ internal sealed partial class BuildScript
             }
         }
 
-        if (!IsValidGameDir(cfg.InstallPath))
+        if (!IsValidGameDir(cfg.GameDir))
         {
             var resolvedGameDir = ResolveGameDirForAutoDeploySetup(cfg);
             if (IsValidGameDir(resolvedGameDir))
             {
-                cfg.InstallPath = resolvedGameDir;
+                cfg.GameDir = resolvedGameDir;
             }
         }
 
-        if (!IsValidGameDir(cfg.InstallPath))
+        if (!IsValidGameDir(cfg.GameDir))
         {
-            cfg.InstallPath = string.Empty;
+            cfg.GameDir = string.Empty;
             cfg.AutoDeploy = false;
             SaveWorkspaceConfig(cfg);
             Log.Warning("No valid game installation path was configured.");
@@ -67,7 +67,7 @@ internal sealed partial class BuildScript
 
         cfg.AutoDeploy = true;
         SaveWorkspaceConfig(cfg);
-        Log.Information($"Configured automatic deployment: InstallPath={cfg.InstallPath}");
+        Log.Information($"Configured automatic deployment: GameDir={cfg.GameDir}");
     }
 }
 

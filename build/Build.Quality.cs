@@ -11,9 +11,9 @@ internal sealed partial class BuildScript
 
     Target Format => _ => _.Executes(RunFormatFixCore);
 
-    Target Lint => _ => _.Executes(() => RunLintCore(BuildTargetOverride));
+    Target Lint => _ => _.Executes(() => RunLintCore(RequestedConfiguration));
 
-    Target Smoke => _ => _.Executes(() => RunSmokeCore(BuildTargetOverride));
+    Target Smoke => _ => _.Executes(() => RunSmokeCore(RequestedConfiguration));
 
     void RunCleanCore()
     {
@@ -25,12 +25,12 @@ internal sealed partial class BuildScript
         var includeAnalysis = Purge || CleanAnalysis;
         var includeExports = Purge || CleanExports;
         var includeGameData = Purge || CleanGameData;
-        var includeTools = Purge || CleanTools;
+        var includeTools = Purge || CleanToolsRequested;
         var includeReleaseRoot = Purge;
 
         var result = new CleanupAccountingResult();
         Log.Information(
-            $"Starting clean (dry-run={DryRun.ToString().ToLowerInvariant()}, purge={Purge.ToString().ToLowerInvariant()}, analysis={includeAnalysis.ToString().ToLowerInvariant()}, exports={includeExports.ToString().ToLowerInvariant()}, game-data={includeGameData.ToString().ToLowerInvariant()}, tools={includeTools.ToString().ToLowerInvariant()}).");
+            $"Starting clean (dry-run={DryRun.ToString().ToLowerInvariant()}, purge={Purge.ToString().ToLowerInvariant()}, analysis={includeAnalysis.ToString().ToLowerInvariant()}, exports={includeExports.ToString().ToLowerInvariant()}, game-data={includeGameData.ToString().ToLowerInvariant()}, purge-tools={includeTools.ToString().ToLowerInvariant()}).");
 
         // Default clean: cache + artifacts.
         DeleteFileMaybeWithAccounting(ResolvePath(".workspace/discord/_index/export-index.cache.json"), result);
@@ -394,8 +394,8 @@ internal sealed partial class BuildScript
                 MustContain: ["[NUKE] dotnet run --project build\\Build.csproj -- --target Help --workflow deploy"],
                 MustNotContain: []),
             new BuildCliSmokeCheck(
-                Command: @".\build.cmd build --no-auto-deploy --target Debug",
-                MustContain: ["[NUKE] dotnet run --project build\\Build.csproj -- --target Cli --workflow build --no-auto-deploy --build-target Debug"],
+                Command: @".\build.cmd build --no-auto-deploy --configuration Debug",
+                MustContain: ["[NUKE] dotnet run --project build\\Build.csproj -- --target Cli --workflow build --no-auto-deploy --configuration Debug"],
                 MustNotContain: []),
             new BuildCliSmokeCheck(
                 Command: @".\build.cmd --target Help --workflow build --dry-run",

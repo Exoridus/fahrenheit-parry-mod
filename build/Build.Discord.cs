@@ -39,7 +39,6 @@ internal sealed partial class BuildScript
 
     [Parameter(Name = "guild")] readonly string Guild = string.Empty;
     [Parameter(Name = "channels")] readonly string Channels = string.Empty;
-    [Parameter(Name = "discord-utc")] readonly bool? DiscordUtc;
     [Parameter(Name = "discord-cleanup-staging")] readonly bool DiscordCleanupStaging = true;
     [Parameter(Name = "discord-register-guild")] readonly bool DiscordRegisterGuild = false;
 
@@ -573,11 +572,6 @@ internal sealed partial class BuildScript
             args.Append(" --media-dir ").Append(Quote(settings.MediaDirectory));
         }
 
-        if (settings.Utc)
-        {
-            args.Append(" --utc");
-        }
-
         args.Append(" --respect-rate-limits true");
 
         if (!string.IsNullOrWhiteSpace(afterValue))
@@ -673,7 +667,6 @@ internal sealed partial class BuildScript
                 $"Missing Discord token. Set 'DiscordToken' in '{WorkspaceConfigPath}'.");
         }
 
-        var utc = DiscordUtc ?? false;
         var blacklistedChannelIds = config.BlacklistedChannelIds
             .Where(x => !string.IsNullOrWhiteSpace(x))
             .Distinct(StringComparer.Ordinal)
@@ -686,7 +679,6 @@ internal sealed partial class BuildScript
         return new DiscordSyncSettings(
             Token: token,
             MediaDirectory: string.Empty,
-            Utc: utc,
             ConfigPath: ResolveDiscordConfigPath(),
             BlacklistedChannelIds: blacklistedChannelIds,
             GuildIds: guildIds);
@@ -1234,7 +1226,7 @@ internal sealed partial class BuildScript
         {
             try
             {
-                var channelRefs = BuildDiscordRefsForExport(exportPath, workspaceConfig.FetchRetryCount, fetchCache, out var summary);
+                var channelRefs = BuildDiscordRefsForExport(exportPath, workspaceConfig.FetchRetries, fetchCache, out var summary);
                 if (string.IsNullOrWhiteSpace(guildId))
                 {
                     guildId = summary.GuildId;

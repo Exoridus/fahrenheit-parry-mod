@@ -119,6 +119,29 @@ internal sealed partial class BuildScript
         "CUSTOM"
     ];
 
+    void CheckDataParserReady()
+    {
+        var parserDir = ResolvePath(ParserDir);
+        if (!Directory.Exists(parserDir) || !Directory.Exists(Path.Combine(parserDir, ".git")))
+        {
+            Fail(
+                $"FFXDataParser is not set up at: {parserDir}" + Environment.NewLine +
+                "Run: .\\tools.cmd data-setup");
+        }
+        var targetDir = Path.Combine(parserDir, "target");
+        var jarExists = Directory.Exists(targetDir) &&
+            Directory.EnumerateFiles(targetDir, "*.jar", SearchOption.TopDirectoryOnly)
+                .Any(p => !p.EndsWith("-sources.jar", StringComparison.OrdinalIgnoreCase)
+                       && !p.EndsWith("-javadoc.jar", StringComparison.OrdinalIgnoreCase));
+        if (!jarExists)
+        {
+            Fail(
+                $"FFXDataParser is not built at: {targetDir}" + Environment.NewLine +
+                "Run: .\\tools.cmd data-setup");
+        }
+        Log.Information($"FFXDataParser ready: {parserDir}");
+    }
+
     void SetupDataParserCore()
     {
         EnsureJavaInstalled();
@@ -643,10 +666,18 @@ internal sealed partial class BuildScript
             return;
         }
 
-        Log.Information($"{fileName} not found. Running parser mode {mode}.");
-        RunParserInvocationsCore(
-            [CreateParserInvocation(mode, Array.Empty<string>())],
-            failIfMissingDataRoot: !DryRun);
+        var dataOutOption = $"--out-dir \"{parserOutDir}\"";
+        var parseAllCommand = $".\\tools.cmd data-parse-all {dataOutOption}";
+        var parseSingleCommand = $".\\tools.cmd data-parse --data-mode {mode} {dataOutOption}";
+
+        Fail(
+            $"Missing required parser output for map-import: {path}{Environment.NewLine}" +
+            "map-import no longer generates parser outputs implicitly." + Environment.NewLine +
+            "Generate parser outputs first, then rerun map-import." + Environment.NewLine +
+            "Recommended:" + Environment.NewLine +
+            $"  {parseAllCommand}" + Environment.NewLine +
+            "Minimal command for this file:" + Environment.NewLine +
+            $"  {parseSingleCommand}");
     }
 
     Dictionary<string, LocalizedCommandEntry> ParseCommandDomainFromDump(string path, string? forcedKind)
@@ -1810,7 +1841,7 @@ public final class LocalizedCommandDump {
         {
             if (string.IsNullOrWhiteSpace(inputRoot))
             {
-                Log.Warning("[DRY-RUN] No extracted data root detected yet. Pass --data-root or extract FFX_Data.vbf first.");
+                Log.Warning("[DRY-RUN] No extracted data root detected yet. Pass --input-dir or extract FFX_Data.vbf first.");
                 parserInputRoot = "<path-containing-ffx_ps2>/";
             }
 
@@ -2019,7 +2050,7 @@ public final class LocalizedCommandDump {
         var targetDir = Path.Combine(parserDir, "target");
         if (!Directory.Exists(targetDir))
         {
-            Fail($"FFXDataParser target directory not found: {targetDir}. Run build.cmd data-setup first.");
+            Fail($"FFXDataParser target directory not found: {targetDir}. Run: .\\tools.cmd data-setup");
         }
 
         var candidates = Directory.EnumerateFiles(targetDir, "*.jar", SearchOption.TopDirectoryOnly)
@@ -2040,10 +2071,11 @@ public final class LocalizedCommandDump {
 
     string ResolveDataParserInputRoot(bool failIfMissing)
     {
-        var explicitSource = NormalizeExtractedDataRoot(DataRoot);
-        if (!string.IsNullOrWhiteSpace(DataRoot) && string.IsNullOrWhiteSpace(explicitSource))
+        var inputDirOverride = RequestedInputDir;
+        var explicitSource = NormalizeExtractedDataRoot(inputDirOverride);
+        if (!string.IsNullOrWhiteSpace(inputDirOverride) && string.IsNullOrWhiteSpace(explicitSource))
         {
-            Fail($"Invalid --data-root '{DataRoot}'. Expected a directory containing ffx_ps2.");
+            Fail($"Invalid --input-dir '{inputDirOverride}'. Expected a directory containing ffx_ps2.");
         }
 
         if (!string.IsNullOrWhiteSpace(explicitSource))
@@ -2094,7 +2126,7 @@ public final class LocalizedCommandDump {
             Fail(
                 "Could not locate extracted game data for FFXDataParser.\n" +
                 "Expected a folder containing 'ffx_ps2'.\n" +
-                "Use --data-root <path> or place extracted data under .workspace/data.\n" +
+                "Use --input-dir <path> or place extracted data under .workspace/data.\n" +
                 "If you only have FFX_Data.vbf, extract it first (for example with vbfextract).");
         }
 
@@ -2166,7 +2198,7 @@ public final class LocalizedCommandDump {
         }
 
         var cfg = LoadWorkspaceConfig();
-        var fromConfig = NormalizePathOrEmpty(cfg.InstallPath);
+        var fromConfig = NormalizePathOrEmpty(cfg.GameDir);
         if (IsValidGameDir(fromConfig))
         {
             return fromConfig;
@@ -2454,6 +2486,20 @@ public final class LocalizedCommandDump {
         return string.Empty;
     }
 
+    void CheckVbfExtractorReady()
+    {
+        var toolDir = ResolvePath(VbfDir);
+        var required = new[] { "vbfextract.exe", "FFX_Data.txt", "FFX2_Data.txt", "metamenu.txt" };
+        var missing = required.Where(name => !File.Exists(Path.Combine(toolDir, name))).ToList();
+        if (missing.Count > 0)
+        {
+            Fail(
+                $"VBFTool is not ready. Missing: {string.Join(", ", missing)}." + Environment.NewLine +
+                "Run: .\\tools.cmd data-setup");
+        }
+        Log.Information($"VBFTool ready: {toolDir}");
+    }
+
     void SetupVbfExtractorCore()
     {
         var toolDir = ResolvePath(VbfDir);
@@ -2516,7 +2562,7 @@ public final class LocalizedCommandDump {
 
     void ExtractGameDataCore()
     {
-        SetupVbfExtractorCore();
+        CheckVbfExtractorReady();
 
         var toolDir = ResolvePath(VbfDir);
         var gameDataDir = ResolveVbfGameDataDir();
@@ -2597,7 +2643,7 @@ public final class LocalizedCommandDump {
         }
 
         var cfg = LoadWorkspaceConfig();
-        var cfgGameDir = NormalizePathOrEmpty(cfg.InstallPath);
+        var cfgGameDir = NormalizePathOrEmpty(cfg.GameDir);
         if (IsValidGameDir(cfgGameDir))
         {
             var data = Path.Combine(cfgGameDir, "data");
@@ -2619,7 +2665,7 @@ public final class LocalizedCommandDump {
 
         Fail(
             "Could not locate game data directory with VBF files.\n" +
-            "Pass --vbf-game-dir <path-to-game-data-folder> or configure InstallPath.\n" +
+            "Pass --vbf-game-dir <path-to-game-data-folder> or configure GameDir.\n" +
             "Expected files: FFX_Data.vbf and FFX2_Data.vbf.");
         return string.Empty;
     }

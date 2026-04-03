@@ -5,12 +5,12 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
-    "BuildTarget": {
+    "Configuration": {
       "type": "string",
       "enum": ["Debug", "Release"],
       "description": "Default build configuration for build workflows."
     },
-    "InstallPath": {
+    "GameDir": {
       "type": "string",
       "description": "Absolute path to game install directory containing FFX.exe."
     },
@@ -18,26 +18,26 @@
       "type": ["boolean", "null"],
       "description": "Automatic deploy behavior after build. Null means first-time interactive prompt."
     },
-    "PreservePaths": {
+    "DeployPreservePaths": {
       "type": "array",
       "items": {
         "type": "string"
       },
-      "description": "Paths to preserve during deploy sync. Supports relative paths under InstallPath\\fahrenheit and absolute paths."
+      "description": "Paths to preserve during deploy sync. Supports relative paths under <GameDir>\\fahrenheit and absolute paths."
     },
-    "OpenApiUrl": {
+    "VisionApiUrl": {
       "type": "string",
       "description": "OpenAI-compatible API base URL for local OCR vision calls."
     },
-    "OpenApiKey": {
+    "VisionApiKey": {
       "type": "string",
       "description": "API key or environment variable reference in $env:VAR format."
     },
-    "OpenApiModel": {
+    "VisionModel": {
       "type": "string",
       "description": "Model id for local OCR vision passes."
     },
-    "FetchRetryCount": {
+    "FetchRetries": {
       "type": "integer",
       "minimum": 0,
       "description": "Number of additional retries for remote source fetches."
@@ -48,26 +48,21 @@
     }
   },
   "required": [
-    "BuildTarget",
-    "InstallPath",
+    "Configuration",
+    "GameDir",
     "AutoDeploy",
-    "PreservePaths",
-    "OpenApiUrl",
-    "OpenApiKey",
-    "OpenApiModel",
-    "FetchRetryCount",
-    "DiscordToken"
+    "DeployPreservePaths"
   ],
   "examples": [
     {
-      "BuildTarget": "Release",
-      "InstallPath": "C:\\Games\\Final Fantasy X-X2 - HD Remaster",
+      "Configuration": "Release",
+      "GameDir": "C:\\Games\\Final Fantasy X-X2 - HD Remaster",
       "AutoDeploy": null,
-      "PreservePaths": ["mods/loadorder", "saves"],
-      "OpenApiUrl": "http://127.0.0.1:1234/v1",
-      "OpenApiKey": "$env:LM_API_TOKEN",
-      "OpenApiModel": "qwen3.5-35b-a3b",
-      "FetchRetryCount": 2,
+      "DeployPreservePaths": ["mods/loadorder", "saves"],
+      "VisionApiUrl": "http://127.0.0.1:1234/v1",
+      "VisionApiKey": "$env:LM_API_TOKEN",
+      "VisionModel": "qwen3.5-35b-a3b",
+      "FetchRetries": 2,
       "DiscordToken": "$env:DISCORD_TOKEN"
     }
   ]

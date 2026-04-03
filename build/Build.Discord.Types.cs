@@ -94,7 +94,6 @@ internal sealed partial class BuildScript
     readonly record struct DiscordSyncSettings(
         string Token,
         string MediaDirectory,
-        bool Utc,
         string ConfigPath,
         HashSet<string> BlacklistedChannelIds,
         List<string> GuildIds);

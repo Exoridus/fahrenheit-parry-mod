@@ -26,7 +26,7 @@ Optional (reverse engineering workflows):
 .\build.cmd install --full
 .\build.cmd setup
 .\build.cmd doctor
-.\build.cmd verify -c Debug --verbosity quiet
+.\build.cmd verify --configuration Debug --verbosity quiet
 ```
 
 ## Core Workflows
@@ -46,6 +46,7 @@ Verbosity defaults to `normal`.
 - Explicit level: `--verbosity|-v quiet|minimal|normal|detailed|diagnostic`
 - Escalation path: `quiet` -> `normal` -> `detailed` -> `diagnostic`
 - Agent guidance: use `--verbosity quiet` for routine `.\build.cmd verify`, `.\build.cmd build`, and `.\build.cmd deploy` runs.
+- Global config path: `--config-path` (shorthand: `-c`)
 - Common shorthand: `-c <config-path>`, `-n` for `--dry-run`, `-h` for help.
 
 Quality:
@@ -53,17 +54,18 @@ Quality:
 ```bash
 .\build.cmd format
 .\build.cmd doctor [--full]
-.\build.cmd lint [--target Debug|Release] [--config .\path\to\config.local.json]
-.\build.cmd smoke [--target Debug|Release] [--config .\path\to\config.local.json]
-.\build.cmd verify [--target Debug|Release] [--config .\path\to\config.local.json] [--repo owner/repo]
-.\build.cmd clean [--full]
+.\build.cmd lint [--configuration Debug|Release] [--config-path .\path\to\config.local.json]
+.\build.cmd smoke [--configuration Debug|Release] [--config-path .\path\to\config.local.json]
+.\build.cmd verify [--configuration Debug|Release] [--config-path .\path\to\config.local.json] [--repo owner/repo]
+.\build.cmd clean [--analysis] [--exports] [--game-data] [--purge-tools]
+.\build.cmd clean --purge --yes
 ```
 
 Build and deploy:
 
 ```bash
-.\build.cmd build [--target Debug|Release] [--config .\path\to\config.local.json] [--auto-deploy|--no-auto-deploy]
-.\build.cmd deploy [--game-dir "C:\\Path\\To\\Game"] [--target Debug|Release] [--config .\path\to\config.local.json]
+.\build.cmd build [--configuration Debug|Release] [--config-path .\path\to\config.local.json] [--auto-deploy|--no-auto-deploy]
+.\build.cmd deploy [--game-dir "C:\\Path\\To\\Game"] [--configuration Debug|Release] [--config-path .\path\to\config.local.json]
 .\build.cmd auto-deploy [--game-dir "C:\\Path\\To\\Game"]
 .\build.cmd start [--game-dir "C:\\Path\\To\\Game"] [--elevated|--no-elevated]
 ```
@@ -89,17 +91,19 @@ The test suite includes simulation-time pacing checks for 1x/2x/4x-equivalent de
 
 Local build and tooling settings are stored in `.workspace/config.local.json`.
 
-Schema keys are strict and case-sensitive:
+Canonical schema keys are strict and case-sensitive when written by the build tooling:
 
-- `BuildTarget` (`Debug` or `Release`)
-- `InstallPath` (game install directory containing `FFX.exe`)
+- `Configuration` (`Debug` or `Release`)
+- `GameDir` (game install directory containing `FFX.exe`)
 - `AutoDeploy` (`true`/`false`/`null`; `null` prompts once in interactive mode)
-- `PreservePaths` (array of deploy-preserved paths under `<InstallPath>\fahrenheit` and/or absolute paths)
-- `OpenApiUrl`
-- `OpenApiKey`
-- `OpenApiModel`
-- `FetchRetryCount`
+- `DeployPreservePaths` (array of deploy-preserved paths under `<GameDir>\fahrenheit` and/or absolute paths)
+- `VisionApiUrl`
+- `VisionApiKey`
+- `VisionModel`
+- `FetchRetries`
 - `DiscordToken`
+
+Legacy keys are still accepted for compatibility (`BuildTarget`, `InstallPath`, `PreservePaths`, `OpenApiUrl`, `OpenApiKey`, `OpenApiModel`, `FetchRetryCount`) but canonical keys are written back on save.
 
 `.\build.cmd build` can override deploy behavior per run:
 
@@ -107,7 +111,7 @@ Schema keys are strict and case-sensitive:
 - `--no-auto-deploy` disables deploy for this run even if `AutoDeploy` is `true`.
 
 Build and deploy workflows always operate on full payloads to reduce stale artifact issues.
-Deploy behavior mirrors artifact state into the selected deploy target and preserves entries from `PreservePaths`.
+Deploy behavior mirrors artifact state into the selected deploy target and preserves entries from `DeployPreservePaths`.
 
 Use `--dry-run` with `build` or `deploy` to preview sync actions without writing files.
 
@@ -117,14 +121,14 @@ Recommended shape for `.workspace/config.local.json`:
 
 ```json
 {
-  "BuildTarget": "Release",
-  "InstallPath": "",
+  "Configuration": "Release",
+  "GameDir": "",
   "AutoDeploy": null,
-  "PreservePaths": ["mods/loadorder", "saves"],
-  "OpenApiUrl": "",
-  "OpenApiKey": "",
-  "OpenApiModel": "",
-  "FetchRetryCount": 2,
+  "DeployPreservePaths": ["mods/loadorder", "saves"],
+  "VisionApiUrl": "",
+  "VisionApiKey": "",
+  "VisionModel": "",
+  "FetchRetries": 2,
   "DiscordToken": ""
 }
 ```
@@ -152,7 +156,7 @@ The Discord sync workflow exports immutable raw channel JSON into `.workspace/di
 .\build.cmd commit
 .\build.cmd commit --type feat --scope ui --subject "add timeline row grouping"
 .\build.cmd commit-check --message "feat: add timeline row grouping"
-.\build.cmd commit-range --range origin/main..HEAD
+.\build.cmd commit-check --range origin/main..HEAD
 ```
 
 ## Release Workflows
@@ -183,5 +187,3 @@ git push origin main --follow-tags
 - Localization strategy: `docs/localization.md`
 - Pointer/hook primer: `docs/pointers-hooks-guide.md`
 - Local config schema: `docs/workspace-config.local.schema.json`
-
-

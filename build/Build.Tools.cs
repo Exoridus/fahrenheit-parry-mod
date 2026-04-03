@@ -36,7 +36,8 @@ internal sealed partial class BuildScript
         WriteHelpLine("Bool options: --flag (true), --no-flag (false)");
         WriteHelpLine("Global verbosity: --verbosity|-v quiet|minimal|normal|detailed|diagnostic (default: normal)");
         WriteHelpLine("Recommended escalation: quiet -> normal -> detailed -> diagnostic");
-        WriteHelpLine("Common shorthand: -n (--dry-run), -h (help)");
+        WriteHelpLine("Global config path: --config-path (shorthand: -c)");
+        WriteHelpLine("Common shorthand: -c <config-path>, -n (--dry-run), -h (help)");
         WriteHelpLine("Agent guidance: use --verbosity quiet for routine tooling runs.");
 
         foreach (var section in ToolsWorkflowSections)

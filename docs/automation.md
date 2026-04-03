@@ -10,6 +10,7 @@ Quick command discovery:
 - Bool parameters support both `--flag` and `--no-flag`.
 - Global verbosity: `--verbosity|-v quiet|minimal|normal|detailed|diagnostic` (default: `normal`).
 - Recommended escalation: `quiet` -> `normal` -> `detailed` -> `diagnostic`.
+- Global config path: `--config-path` (shorthand: `-c`).
 - Common shorthand: `-c <config-path>`, `-n` (`--dry-run`).
 - Agent guidance: use `--verbosity quiet` for routine `.\build.cmd verify`, `.\build.cmd build`, and `.\build.cmd deploy`.
 - Local research/tooling workflows moved to `tools.cmd` (`tools.cmd help`).
@@ -31,12 +32,12 @@ Quick command discovery:
   - `.\build.cmd setup`
 
 - `.\build.cmd clean`
-  - Default clean removes cache + build artifacts. Add explicit flags for analysis/exports/game-data/tools or use --purge for full local cleanup.
+  - Default clean removes cache + build artifacts. Add explicit flags for analysis/exports/game-data/purge-tools or use --purge for full local cleanup.
   - Parameters:
   - --analysis (optional).
   - --exports (optional).
   - --game-data (optional).
-  - --tools (optional).
+  - --purge-tools (optional).
   - --purge (optional, requires --yes).
   - --yes (required with --purge).
   - --dry-run (optional).
@@ -71,24 +72,24 @@ Quick command discovery:
 - `.\build.cmd lint`
   - Run fast lint/compile checks for build, mod, and tests projects.
   - Parameters:
-  - --target Debug|Release (optional).
-  - --config <path-to-config.local.json> (optional).
+  - --configuration Debug|Release (optional).
+  - --config-path <path-to-config.local.json> (optional, shorthand: -c).
   - Examples:
   - `.\build.cmd lint`
 
 - `.\build.cmd smoke`
   - Run quick sanity checks against a full build.
   - Parameters:
-  - --target Debug|Release (optional).
-  - --config <path-to-config.local.json> (optional).
+  - --configuration Debug|Release (optional).
+  - --config-path <path-to-config.local.json> (optional, shorthand: -c).
   - Examples:
   - `.\build.cmd smoke`
 
 - `.\build.cmd verify`
   - Run local validation without deploy side effects.
   - Parameters:
-  - --target Debug|Release (optional).
-  - --config <path-to-config.local.json> (optional).
+  - --configuration Debug|Release (optional).
+  - --config-path <path-to-config.local.json> (optional, shorthand: -c).
   - --repo owner/repo (optional).
   - Examples:
   - `.\build.cmd verify`
@@ -96,21 +97,21 @@ Quick command discovery:
 - `.\build.cmd build`
   - Build full Fahrenheit payload.
   - Parameters:
-  - --target Debug|Release (optional).
-  - --config <path-to-config.local.json> (optional).
+  - --configuration Debug|Release (optional).
+  - --config-path <path-to-config.local.json> (optional, shorthand: -c).
   - --auto-deploy or --no-auto-deploy (optional).
   - --dry-run (optional).
   - Examples:
   - `.\build.cmd build`
-  - `.\build.cmd build --target Release`
+  - `.\build.cmd build --configuration Release`
 
 - `.\build.cmd deploy`
-  - Deploy full build artifacts into InstallPath.
+  - Deploy full build artifacts into GameDir.
   - Parameters:
   - --game-dir <path> (optional).
   - --refresh-game-dir (optional).
-  - --target Debug|Release (optional).
-  - --config <path-to-config.local.json> (optional).
+  - --configuration Debug|Release (optional).
+  - --config-path <path-to-config.local.json> (optional, shorthand: -c).
   - --dry-run (optional).
   - Examples:
   - `.\build.cmd deploy`
@@ -136,8 +137,8 @@ Quick command discovery:
 - `.\build.cmd release-ready`
   - Run release preflight.
   - Parameters:
-  - --target Debug|Release (optional).
-  - --config <path-to-config.local.json> (optional).
+  - --configuration Debug|Release (optional).
+  - --config-path <path-to-config.local.json> (optional, shorthand: -c).
   - --repo owner/repo (optional).
   - Examples:
   - `.\build.cmd release-ready`
@@ -173,18 +174,14 @@ Quick command discovery:
   - `.\build.cmd commit`
 
 - `.\build.cmd commit-check`
-  - Validate one commit message.
+  - Validate a commit message string, a commit message file, or a git commit range.
   - Parameters:
-  - --commit-file <path> or --message "...".
+  - --message "..." (optional).
+  - --commit-file <path> (optional).
+  - --range <BASE..HEAD> (optional).
   - Examples:
   - `.\build.cmd commit-check --message "feat: x"`
-
-- `.\build.cmd commit-range`
-  - Validate commit subjects in a git range.
-  - Parameters:
-  - --range <BASE..HEAD> (required).
-  - Examples:
-  - `.\build.cmd commit-range --range origin/main..HEAD`
+  - `.\build.cmd commit-check --range origin/main..HEAD`
 
 ## Utility Workflows
 

@@ -14,8 +14,8 @@ using static Nuke.Common.Assert;
 
 internal sealed partial class BuildScript : NukeBuild
 {
-    [Parameter(Name = "config")] readonly string ConfigPath = string.Empty;
-    [Parameter(Name = "build-target")] readonly string BuildTargetOverride = string.Empty;
+    [Parameter(Name = "config-path")] readonly string ConfigPath = string.Empty;
+    [Parameter(Name = "configuration")] readonly string ConfigurationOverride = string.Empty;
     [Parameter(Name = "fahrenheit-repo")] readonly string FahrenheitRepo = "https://github.com/peppy-enterprises/fahrenheit.git";
     [Parameter(Name = "fahrenheit-dir")] readonly string FahrenheitDir = ".workspace/fahrenheit";
     [Parameter(Name = "fahrenheit-ref")] readonly string FahrenheitRef = string.Empty;
@@ -33,7 +33,7 @@ internal sealed partial class BuildScript : NukeBuild
     [Parameter(Name = "analysis")] readonly bool CleanAnalysis;
     [Parameter(Name = "exports")] readonly bool CleanExports;
     [Parameter(Name = "game-data")] readonly bool CleanGameData;
-    [Parameter(Name = "tools")] readonly bool CleanTools;
+    [Parameter(Name = "purge-tools")] readonly bool CleanTools;
     [Parameter(Name = "purge")] readonly bool Purge;
     [Parameter(Name = "yes")] readonly bool Yes;
     [Parameter(Name = "dry-run")] readonly bool DryRun;
@@ -58,7 +58,7 @@ internal sealed partial class BuildScript : NukeBuild
     [Parameter(Name = "parser-repo")] readonly string ParserRepo = "https://github.com/Karifean/FFXDataParser.git";
     [Parameter(Name = "parser-dir")] readonly string ParserDir = ".workspace/tools/FFXDataParser";
     [Parameter(Name = "parser-ref")] readonly string ParserRef = string.Empty;
-    [Parameter(Name = "data-root")] readonly string DataRoot = string.Empty;
+    [Parameter(Name = "input-dir")] readonly string InputDir = string.Empty;
     [Parameter(Name = "data-mode")] readonly string DataMode = "READ_ALL_COMMANDS";
     [Parameter(Name = "data-args")] readonly string DataArgs = string.Empty;
     [Parameter(Name = "data-batch")] readonly string DataBatch = "READ_ALL_COMMANDS;READ_GEAR_ABILITIES;READ_KEY_ITEMS;READ_MONSTER_LOCALIZATIONS us;READ_MONSTER_LOCALIZATIONS de";
@@ -104,6 +104,17 @@ internal sealed partial class BuildScript : NukeBuild
     bool _isCapturingWorkflowHelp;
     WorkflowHelpBlock? _capturedWorkflowHelp;
     BuildLogVerbosity? _resolvedLogVerbosity;
+
+    string RequestedConfiguration =>
+        ConfigurationOverride;
+
+    string RequestedConfigPath =>
+        ConfigPath;
+
+    bool CleanToolsRequested => CleanTools;
+
+    string RequestedInputDir =>
+        InputDir;
 
     Target Help => _ => _
         .Executes(() =>
@@ -164,7 +175,7 @@ internal sealed partial class BuildScript : NukeBuild
     Target Setup => _ => _
         .Executes(() =>
         {
-            var resolvedConfiguration = ResolveBuildConfiguration(BuildTargetOverride);
+            var resolvedConfiguration = ResolveBuildConfiguration(RequestedConfiguration);
             SetupHooksCore();
             RunBuildProjTarget("Setup", resolvedConfiguration, includeNativeMsbuild: false, fahrenheitRef: ResolveFahrenheitRef(useReleaseRef: false));
 
@@ -176,7 +187,7 @@ internal sealed partial class BuildScript : NukeBuild
             }
         });
 
-    Target Clean => _ => _.Executes(RunCleanCore);
+    Target Clean => _ => _.Executes(ExecuteCleanWorkflow);
 
     void SetupHooksCore()
     {
@@ -189,21 +200,12 @@ internal sealed partial class BuildScript : NukeBuild
         RunChecked("git", "config --local core.hooksPath .githooks", "Setup hooks");
     }
 
-    Target Verify => _ => _
-        .Executes(() =>
-        {
-            if (!IsValidConventionalCommit("feat: selftest commit format") || IsValidConventionalCommit("invalid message"))
-            {
-                Fail("Commit validator selftest failed.");
-            }
+    Target Verify => _ => _.Executes(ExecuteVerifyWorkflow);
 
-            RunVerifyCore(BuildTargetOverride);
-        });
+    Target Build => _ => _.Executes(ExecuteBuildWorkflow);
 
-    Target Build => _ => _.Executes(() => BuildCore("full", BuildTargetOverride, useReleaseRef: false));
-
-    Target Deploy => _ => _.Executes(() => DeployCore("full", BuildTargetOverride));
-    Target Start => _ => _.Executes(StartCore);
+    Target Deploy => _ => _.Executes(ExecuteDeployWorkflow);
+    Target Start => _ => _.Executes(ExecuteStartWorkflow);
 
     Target ReleaseNotes => _ => _.Executes(() =>
     {
@@ -273,31 +275,8 @@ internal sealed partial class BuildScript : NukeBuild
         RunChecked("git", $"commit -m {Quote(subject)}", "Create commit");
     });
 
-    Target CommitCheck => _ => _.Executes(() =>
-    {
-        if (!string.IsNullOrWhiteSpace(CommitFile))
-        {
-            ValidateCommitMessageFromFile(ResolvePath(CommitFile));
-            return;
-        }
+    Target CommitCheck => _ => _.Executes(ExecuteCommitCheckWorkflow);
 
-        if (string.IsNullOrWhiteSpace(Message))
-        {
-            Fail("Missing --commit-file or --message.");
-        }
-
-        ValidateCommitMessageString(Message);
-    });
-
-    Target CommitRange => _ => _.Executes(() =>
-    {
-        if (string.IsNullOrWhiteSpace(Range))
-        {
-            Fail("Missing --range BASE..HEAD.");
-        }
-
-        ValidateCommitRangeCore(Range);
-    });
 
     void RunCliWorkflow()
     {
@@ -338,7 +317,8 @@ internal sealed partial class BuildScript : NukeBuild
         WriteHelpLine("Bool options: --flag (true), --no-flag (false)");
         WriteHelpLine("Global verbosity: --verbosity|-v quiet|minimal|normal|detailed|diagnostic (default: normal)");
         WriteHelpLine("Recommended escalation: quiet -> normal -> detailed -> diagnostic");
-        WriteHelpLine("Common shorthand: -c <config-path>, -n (--dry-run)");
+        WriteHelpLine("Global config path: --config-path (shorthand: -c)");
+        WriteHelpLine("Common shorthand: -c <config-path>, -n (--dry-run), -h (help)");
         WriteHelpLine("Agent guidance: use --verbosity quiet for routine verify/build/deploy runs.");
 
         foreach (var section in BuildWorkflowSections)
@@ -424,7 +404,8 @@ internal sealed partial class BuildScript : NukeBuild
         WriteHelpLine($"Purpose: {purpose}");
         WriteHelpLine("Global options:");
         WriteHelpLine("  - --verbosity|-v quiet|minimal|normal|detailed|diagnostic (default: normal)");
-        WriteHelpLine("  - -c <config-path>, -n (--dry-run), -h (help)");
+        WriteHelpLine("  - --config-path <path> (shorthand: -c)");
+        WriteHelpLine("  - -n (--dry-run), -h (help)");
         WriteHelpLine("Parameters:");
         foreach (var line in parameterList)
         {
@@ -561,7 +542,7 @@ internal sealed partial class BuildScript : NukeBuild
 
     AbsolutePath ResolveWorkspaceConfigPath()
     {
-        var fromArg = (ConfigPath ?? string.Empty).Trim();
+        var fromArg = (RequestedConfigPath ?? string.Empty).Trim();
         if (string.IsNullOrWhiteSpace(fromArg))
         {
             return WorkspaceDir / "config.local.json";
@@ -585,11 +566,11 @@ internal sealed partial class BuildScript : NukeBuild
                 return "Release";
             }
 
-            Fail($"Invalid --build-target value '{configuration}'. Use Debug or Release.");
+            Fail($"Invalid --configuration value '{configuration}'. Use Debug or Release.");
         }
 
         var cfg = LoadWorkspaceConfig();
-        var fromConfig = (cfg.BuildTarget ?? string.Empty).Trim();
+        var fromConfig = (cfg.Configuration ?? string.Empty).Trim();
         if (fromConfig.Equals("Debug", StringComparison.OrdinalIgnoreCase))
         {
             return "Debug";
@@ -600,7 +581,7 @@ internal sealed partial class BuildScript : NukeBuild
             return "Release";
         }
 
-        Fail($"Invalid BuildTarget '{cfg.BuildTarget}' in '{WorkspaceConfigPath}'. Use Debug or Release.");
+        Fail($"Invalid Configuration '{cfg.Configuration}' in '{WorkspaceConfigPath}'. Use Debug or Release.");
         return string.Empty;
     }
 
@@ -1401,7 +1382,7 @@ internal sealed partial class BuildScript : NukeBuild
 
         if (!RefreshGameDir)
         {
-            var fromConfig = NormalizePathOrEmpty(cfg.InstallPath);
+            var fromConfig = NormalizePathOrEmpty(cfg.GameDir);
             if (IsValidGameDir(fromConfig))
             {
                 return fromConfig;
@@ -1489,7 +1470,7 @@ internal sealed partial class BuildScript : NukeBuild
 
         if (!IsValidGameDir(gameDir) && !RefreshGameDir)
         {
-            gameDir = NormalizePathOrEmpty(cfg.InstallPath);
+            gameDir = NormalizePathOrEmpty(cfg.GameDir);
         }
 
         if (!IsValidGameDir(gameDir))
@@ -1509,15 +1490,15 @@ internal sealed partial class BuildScript : NukeBuild
 
         if (!IsValidGameDir(gameDir))
         {
-            Log.Warning("Automatic deploy is enabled but no valid InstallPath could be resolved. Skipping automatic deploy.");
+            Log.Warning("Automatic deploy is enabled but no valid GameDir could be resolved. Skipping automatic deploy.");
             Log.Information("Run: build.cmd auto-deploy --game-dir <path>");
             return;
         }
 
         var normalizedGameDir = NormalizePathOrEmpty(gameDir);
-        if (!normalizedGameDir.Equals(NormalizePathOrEmpty(cfg.InstallPath), StringComparison.OrdinalIgnoreCase))
+        if (!normalizedGameDir.Equals(NormalizePathOrEmpty(cfg.GameDir), StringComparison.OrdinalIgnoreCase))
         {
-            cfg.InstallPath = normalizedGameDir;
+            cfg.GameDir = normalizedGameDir;
             SaveWorkspaceConfig(cfg);
         }
 
@@ -1556,7 +1537,7 @@ internal sealed partial class BuildScript : NukeBuild
         var normalizedGameDir = NormalizePathOrEmpty(gameDir);
         if (!IsValidGameDir(normalizedGameDir))
         {
-            var msg = $"Invalid InstallPath '{gameDir}' (FFX.exe not found).";
+            var msg = $"Invalid GameDir '{gameDir}' (FFX.exe not found).";
             if (failOnError) Fail(msg);
             Log.Warning(msg);
             return false;
@@ -1590,7 +1571,7 @@ internal sealed partial class BuildScript : NukeBuild
         }
 
         var cfg = LoadWorkspaceConfig();
-        var preservePaths = cfg.PreservePaths ?? [];
+        var preservePaths = cfg.DeployPreservePaths ?? [];
 
         try
         {
@@ -1632,7 +1613,7 @@ internal sealed partial class BuildScript : NukeBuild
         {
             if (persist)
             {
-                cfg.InstallPath = fromArg;
+                cfg.GameDir = fromArg;
                 SaveWorkspaceConfig(cfg);
             }
 
@@ -1641,7 +1622,7 @@ internal sealed partial class BuildScript : NukeBuild
 
         if (!RefreshGameDir)
         {
-            var fromConfig = NormalizePathOrEmpty(cfg.InstallPath);
+            var fromConfig = NormalizePathOrEmpty(cfg.GameDir);
             if (IsValidGameDir(fromConfig))
             {
                 return fromConfig;
@@ -1654,7 +1635,7 @@ internal sealed partial class BuildScript : NukeBuild
             Log.Information($"Auto-detected game directory: {detected}");
             if (persist)
             {
-                cfg.InstallPath = detected;
+                cfg.GameDir = detected;
                 SaveWorkspaceConfig(cfg);
             }
 
@@ -1671,7 +1652,7 @@ internal sealed partial class BuildScript : NukeBuild
                 {
                     if (persist)
                     {
-                        cfg.InstallPath = input;
+                        cfg.GameDir = input;
                         SaveWorkspaceConfig(cfg);
                     }
 
@@ -1682,7 +1663,7 @@ internal sealed partial class BuildScript : NukeBuild
             }
         }
 
-        Fail("Could not resolve InstallPath. Pass --game-dir or run build.cmd auto-deploy.");
+        Fail("Could not resolve GameDir. Pass --game-dir or run build.cmd auto-deploy.");
         return string.Empty;
     }
 
@@ -2006,12 +1987,10 @@ internal sealed partial class BuildScript : NukeBuild
         {
             var json = File.ReadAllText(WorkspaceConfigPath);
             using var doc = JsonDocument.Parse(json);
-            ValidateWorkspaceConfigSchema(doc.RootElement);
+            var root = doc.RootElement;
+            ValidateWorkspaceConfigSchema(root);
 
-            var cfg = JsonSerializer.Deserialize<WorkspaceConfig>(json, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = false
-            }) ?? FailWithReturn<WorkspaceConfig>($"Failed to deserialize workspace config '{WorkspaceConfigPath}'.");
+            var cfg = ParseWorkspaceConfig(root);
             cfg = NormalizeWorkspaceConfig(cfg);
             SaveWorkspaceConfig(cfg);
             return cfg;
@@ -2035,19 +2014,42 @@ internal sealed partial class BuildScript : NukeBuild
     {
         return new WorkspaceConfig
         {
-            BuildTarget = "Release",
-            InstallPath = string.Empty,
+            Configuration = "Release",
+            GameDir = string.Empty,
             AutoDeploy = null,
-            PreservePaths = CreateDefaultPreservePaths(),
-            OpenApiUrl = string.Empty,
-            OpenApiKey = string.Empty,
-            OpenApiModel = string.Empty,
-            FetchRetryCount = 2,
+            DeployPreservePaths = CreateDefaultPreservePaths(),
+            VisionApiUrl = string.Empty,
+            VisionApiKey = string.Empty,
+            VisionModel = string.Empty,
+            FetchRetries = 2,
             DiscordToken = string.Empty
         };
     }
 
     static List<string> CreateDefaultPreservePaths() => DefaultPreservePaths.ToList();
+
+    WorkspaceConfig ParseWorkspaceConfig(JsonElement root)
+    {
+        var defaults = CreateDefaultWorkspaceConfig();
+        var deployPreservePaths = ReadStringArrayWithLegacy(
+            root,
+            canonicalKey: "DeployPreservePaths",
+            legacyKeys: ["PreservePaths"],
+            fallback: defaults.DeployPreservePaths ?? CreateDefaultPreservePaths());
+
+        return new WorkspaceConfig
+        {
+            Configuration = ReadStringWithLegacy(root, "Configuration", ["BuildTarget"], defaults.Configuration),
+            GameDir = ReadStringWithLegacy(root, "GameDir", ["InstallPath"], defaults.GameDir),
+            AutoDeploy = ReadNullableBool(root, "AutoDeploy", defaults.AutoDeploy),
+            DeployPreservePaths = deployPreservePaths,
+            VisionApiUrl = ReadStringWithLegacy(root, "VisionApiUrl", ["OpenApiUrl"], defaults.VisionApiUrl),
+            VisionApiKey = ReadStringWithLegacy(root, "VisionApiKey", ["OpenApiKey"], defaults.VisionApiKey),
+            VisionModel = ReadStringWithLegacy(root, "VisionModel", ["OpenApiModel"], defaults.VisionModel),
+            FetchRetries = ReadIntWithLegacy(root, "FetchRetries", ["FetchRetryCount"], defaults.FetchRetries),
+            DiscordToken = ReadStringWithLegacy(root, "DiscordToken", [], defaults.DiscordToken)
+        };
+    }
 
     void ValidateWorkspaceConfigSchema(JsonElement root)
     {
@@ -2058,13 +2060,20 @@ internal sealed partial class BuildScript : NukeBuild
 
         var allowedKeys = new HashSet<string>(StringComparer.Ordinal)
         {
+            "Configuration",
             "BuildTarget",
+            "GameDir",
             "InstallPath",
             "AutoDeploy",
+            "DeployPreservePaths",
             "PreservePaths",
+            "VisionApiUrl",
+            "VisionApiKey",
+            "VisionModel",
             "OpenApiUrl",
             "OpenApiKey",
             "OpenApiModel",
+            "FetchRetries",
             "FetchRetryCount",
             "DiscordToken"
         };
@@ -2077,87 +2086,60 @@ internal sealed partial class BuildScript : NukeBuild
             }
         }
 
-        if (!root.TryGetProperty("BuildTarget", out var buildTargetElement) || buildTargetElement.ValueKind != JsonValueKind.String)
-        {
-            Fail($"Workspace config '{WorkspaceConfigPath}' must contain a string property 'BuildTarget'.");
-        }
+        ValidateStringPropertyIfPresent(root, "Configuration");
+        ValidateStringPropertyIfPresent(root, "BuildTarget");
+        ValidateStringPropertyIfPresent(root, "GameDir");
+        ValidateStringPropertyIfPresent(root, "InstallPath");
 
-        if (!root.TryGetProperty("InstallPath", out var gameDirElement) || gameDirElement.ValueKind != JsonValueKind.String)
-        {
-            Fail($"Workspace config '{WorkspaceConfigPath}' must contain a string property 'InstallPath'.");
-        }
-
-        if (!root.TryGetProperty("AutoDeploy", out var autoDeployElement)
-            || (autoDeployElement.ValueKind is not JsonValueKind.True
+        if (root.TryGetProperty("AutoDeploy", out var autoDeployElement)
+            && (autoDeployElement.ValueKind is not JsonValueKind.True
                 && autoDeployElement.ValueKind is not JsonValueKind.False
                 && autoDeployElement.ValueKind is not JsonValueKind.Null))
         {
             Fail($"Workspace config '{WorkspaceConfigPath}' must contain 'AutoDeploy' with value true, false, or null.");
         }
 
-        if (!root.TryGetProperty("PreservePaths", out var preservePathsElement)
-            || preservePathsElement.ValueKind != JsonValueKind.Array
-            || preservePathsElement.EnumerateArray().Any(x => x.ValueKind != JsonValueKind.String))
-        {
-            Fail($"Workspace config '{WorkspaceConfigPath}' must contain 'PreservePaths' as an array of strings.");
-        }
-
-        if (!root.TryGetProperty("OpenApiUrl", out var openApiUrlElement) || openApiUrlElement.ValueKind != JsonValueKind.String)
-        {
-            Fail($"Workspace config '{WorkspaceConfigPath}' must contain a string property 'OpenApiUrl'.");
-        }
-
-        if (!root.TryGetProperty("OpenApiKey", out var openApiKeyElement) || openApiKeyElement.ValueKind != JsonValueKind.String)
-        {
-            Fail($"Workspace config '{WorkspaceConfigPath}' must contain a string property 'OpenApiKey'.");
-        }
-
-        if (!root.TryGetProperty("OpenApiModel", out var openApiModelElement) || openApiModelElement.ValueKind != JsonValueKind.String)
-        {
-            Fail($"Workspace config '{WorkspaceConfigPath}' must contain a string property 'OpenApiModel'.");
-        }
-
-        if (!root.TryGetProperty("FetchRetryCount", out var fetchRetryCountElement)
-            || fetchRetryCountElement.ValueKind != JsonValueKind.Number
-            || !fetchRetryCountElement.TryGetInt32(out _))
-        {
-            Fail($"Workspace config '{WorkspaceConfigPath}' must contain an integer property 'FetchRetryCount'.");
-        }
-
-        if (!root.TryGetProperty("DiscordToken", out var discordTokenElement) || discordTokenElement.ValueKind != JsonValueKind.String)
-        {
-            Fail($"Workspace config '{WorkspaceConfigPath}' must contain a string property 'DiscordToken'.");
-        }
+        ValidateStringArrayPropertyIfPresent(root, "DeployPreservePaths");
+        ValidateStringArrayPropertyIfPresent(root, "PreservePaths");
+        ValidateStringPropertyIfPresent(root, "VisionApiUrl");
+        ValidateStringPropertyIfPresent(root, "VisionApiKey");
+        ValidateStringPropertyIfPresent(root, "VisionModel");
+        ValidateStringPropertyIfPresent(root, "OpenApiUrl");
+        ValidateStringPropertyIfPresent(root, "OpenApiKey");
+        ValidateStringPropertyIfPresent(root, "OpenApiModel");
+        ValidateIntegerPropertyIfPresent(root, "FetchRetries");
+        ValidateIntegerPropertyIfPresent(root, "FetchRetryCount");
+        ValidateStringPropertyIfPresent(root, "DiscordToken");
     }
 
     WorkspaceConfig NormalizeWorkspaceConfig(WorkspaceConfig cfg)
     {
         var normalized = cfg ?? CreateDefaultWorkspaceConfig();
 
-        normalized.BuildTarget = NormalizeBuildTarget(normalized.BuildTarget);
-        normalized.InstallPath = NormalizePathOrEmpty(normalized.InstallPath);
-        normalized.PreservePaths ??= CreateDefaultPreservePaths();
-        normalized.PreservePaths = normalized.PreservePaths
+        normalized.Configuration = NormalizeConfiguration(normalized.Configuration);
+        normalized.GameDir = NormalizePathOrEmpty(normalized.GameDir);
+        normalized.DeployPreservePaths ??= CreateDefaultPreservePaths();
+        normalized.DeployPreservePaths = normalized.DeployPreservePaths
             .Select(NormalizePreservePathEntry)
             .Where(x => !string.IsNullOrWhiteSpace(x))
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .OrderBy(x => x, StringComparer.OrdinalIgnoreCase)
             .ToList();
-        if (normalized.PreservePaths.Count == 0)
+        if (normalized.DeployPreservePaths.Count == 0)
         {
-            normalized.PreservePaths = CreateDefaultPreservePaths();
+            normalized.DeployPreservePaths = CreateDefaultPreservePaths();
         }
 
-        normalized.OpenApiUrl = NormalizeOpenApiUrl(normalized.OpenApiUrl);
-        normalized.OpenApiKey = (normalized.OpenApiKey ?? string.Empty).Trim();
-        normalized.OpenApiModel = (normalized.OpenApiModel ?? string.Empty).Trim();
-        normalized.FetchRetryCount = Math.Max(0, normalized.FetchRetryCount);
+        normalized.VisionApiUrl = NormalizeVisionApiUrl(normalized.VisionApiUrl);
+        normalized.VisionApiKey = (normalized.VisionApiKey ?? string.Empty).Trim();
+        normalized.VisionModel = (normalized.VisionModel ?? string.Empty).Trim();
+        normalized.FetchRetries = Math.Max(0, normalized.FetchRetries);
         normalized.DiscordToken = (normalized.DiscordToken ?? string.Empty).Trim();
 
         return normalized;
     }
 
-    static string NormalizeBuildTarget(string value)
+    static string NormalizeConfiguration(string value)
     {
         var trimmed = (value ?? string.Empty).Trim();
         if (trimmed.Equals("Debug", StringComparison.OrdinalIgnoreCase))
@@ -2170,11 +2152,11 @@ internal sealed partial class BuildScript : NukeBuild
             return "Release";
         }
 
-        Fail($"Invalid BuildTarget '{value}'. Use Debug or Release.");
+        Fail($"Invalid Configuration '{value}'. Use Debug or Release.");
         return string.Empty;
     }
 
-    static string NormalizeOpenApiUrl(string value)
+    static string NormalizeVisionApiUrl(string value)
     {
         var trimmed = (value ?? string.Empty).Trim();
         if (string.IsNullOrWhiteSpace(trimmed))
@@ -2185,10 +2167,113 @@ internal sealed partial class BuildScript : NukeBuild
         if (!Uri.TryCreate(trimmed, UriKind.Absolute, out var uri)
             || (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
         {
-            Fail($"Invalid OpenApiUrl '{value}'. Use an absolute http(s) URL.");
+            Fail($"Invalid VisionApiUrl '{value}'. Use an absolute http(s) URL.");
         }
 
         return trimmed.TrimEnd('/');
+    }
+
+    static bool TryGetPropertyWithLegacy(JsonElement root, string canonicalKey, IReadOnlyList<string> legacyKeys, out JsonElement value)
+    {
+        if (root.TryGetProperty(canonicalKey, out value))
+        {
+            return true;
+        }
+
+        for (var i = 0; i < legacyKeys.Count; i++)
+        {
+            if (root.TryGetProperty(legacyKeys[i], out value))
+            {
+                return true;
+            }
+        }
+
+        value = default;
+        return false;
+    }
+
+    static string ReadStringWithLegacy(JsonElement root, string canonicalKey, IReadOnlyList<string> legacyKeys, string fallback)
+    {
+        if (!TryGetPropertyWithLegacy(root, canonicalKey, legacyKeys, out var element))
+        {
+            return fallback;
+        }
+
+        return element.ValueKind == JsonValueKind.String ? (element.GetString() ?? string.Empty) : fallback;
+    }
+
+    static bool? ReadNullableBool(JsonElement root, string key, bool? fallback)
+    {
+        if (!root.TryGetProperty(key, out var element))
+        {
+            return fallback;
+        }
+
+        return element.ValueKind switch
+        {
+            JsonValueKind.True => true,
+            JsonValueKind.False => false,
+            JsonValueKind.Null => null,
+            _ => fallback
+        };
+    }
+
+    static int ReadIntWithLegacy(JsonElement root, string canonicalKey, IReadOnlyList<string> legacyKeys, int fallback)
+    {
+        if (!TryGetPropertyWithLegacy(root, canonicalKey, legacyKeys, out var element))
+        {
+            return fallback;
+        }
+
+        return element.ValueKind == JsonValueKind.Number && element.TryGetInt32(out var value) ? value : fallback;
+    }
+
+    static List<string> ReadStringArrayWithLegacy(JsonElement root, string canonicalKey, IReadOnlyList<string> legacyKeys, IReadOnlyList<string> fallback)
+    {
+        if (!TryGetPropertyWithLegacy(root, canonicalKey, legacyKeys, out var element))
+        {
+            return fallback.ToList();
+        }
+
+        if (element.ValueKind != JsonValueKind.Array)
+        {
+            return fallback.ToList();
+        }
+
+        return element.EnumerateArray()
+            .Where(x => x.ValueKind == JsonValueKind.String)
+            .Select(x => x.GetString() ?? string.Empty)
+            .ToList();
+    }
+
+    void ValidateStringPropertyIfPresent(JsonElement root, string key)
+    {
+        if (root.TryGetProperty(key, out var element) && element.ValueKind != JsonValueKind.String)
+        {
+            Fail($"Workspace config '{WorkspaceConfigPath}' property '{key}' must be a string.");
+        }
+    }
+
+    void ValidateIntegerPropertyIfPresent(JsonElement root, string key)
+    {
+        if (root.TryGetProperty(key, out var element)
+            && (element.ValueKind != JsonValueKind.Number || !element.TryGetInt32(out _)))
+        {
+            Fail($"Workspace config '{WorkspaceConfigPath}' property '{key}' must be an integer.");
+        }
+    }
+
+    void ValidateStringArrayPropertyIfPresent(JsonElement root, string key)
+    {
+        if (!root.TryGetProperty(key, out var element))
+        {
+            return;
+        }
+
+        if (element.ValueKind != JsonValueKind.Array || element.EnumerateArray().Any(x => x.ValueKind != JsonValueKind.String))
+        {
+            Fail($"Workspace config '{WorkspaceConfigPath}' property '{key}' must be an array of strings.");
+        }
     }
 
     string ResolveConfigEnvValue(string value, string propertyName)
@@ -3342,14 +3427,14 @@ goto :eof
 
     sealed class WorkspaceConfig
     {
-        public string BuildTarget { get; set; } = "Release";
-        public string InstallPath { get; set; } = string.Empty;
+        public string Configuration { get; set; } = "Release";
+        public string GameDir { get; set; } = string.Empty;
         public bool? AutoDeploy { get; set; }
-        public List<string>? PreservePaths { get; set; }
-        public string OpenApiUrl { get; set; } = string.Empty;
-        public string OpenApiKey { get; set; } = string.Empty;
-        public string OpenApiModel { get; set; } = string.Empty;
-        public int FetchRetryCount { get; set; } = 2;
+        public List<string>? DeployPreservePaths { get; set; }
+        public string VisionApiUrl { get; set; } = string.Empty;
+        public string VisionApiKey { get; set; } = string.Empty;
+        public string VisionModel { get; set; } = string.Empty;
+        public int FetchRetries { get; set; } = 2;
         public string DiscordToken { get; set; } = string.Empty;
     }
 

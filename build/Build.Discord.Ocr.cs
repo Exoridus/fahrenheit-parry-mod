@@ -104,17 +104,17 @@ internal sealed partial class BuildScript
             Log.Information($"Tesseract binary not found; skipping tesseract OCR pass for {guildName}: {tesseractPath}");
         }
 
-        var hasLlmConfig = !string.IsNullOrWhiteSpace(workspaceConfig.OpenApiUrl)
-                           && !string.IsNullOrWhiteSpace(workspaceConfig.OpenApiModel);
+        var hasLlmConfig = !string.IsNullOrWhiteSpace(workspaceConfig.VisionApiUrl)
+                           && !string.IsNullOrWhiteSpace(workspaceConfig.VisionModel);
         if (!hasLlmConfig)
         {
-            Log.Information("Skipping LLM OCR pass (OpenApiUrl/OpenApiModel are not configured in .workspace/config.local.json).");
+            Log.Information("Skipping LLM OCR pass (VisionApiUrl/VisionModel are not configured in .workspace/config.local.json).");
             WriteDiscordOcrAudit(guildOcrOut, audit);
             SaveDiscordOcrIndex(ocrIndexPath, guildDir, mediaFiles, ocrIndex, audit);
             return;
         }
 
-        var resolvedApiKey = ResolveConfigEnvValue(workspaceConfig.OpenApiKey, nameof(WorkspaceConfig.OpenApiKey));
+        var resolvedApiKey = ResolveConfigEnvValue(workspaceConfig.VisionApiKey, nameof(WorkspaceConfig.VisionApiKey));
         var visionCandidates = mediaFiles
             .Where(path => !skipByIndex.ContainsKey(path))
             .Where(path => full || !HasOcrSidecarText(path))
@@ -131,9 +131,9 @@ internal sealed partial class BuildScript
             var sidecarPath = imagePath + ".ocr.txt";
             var llm = RunLocalVisionOcr(
                 imagePath,
-                workspaceConfig.OpenApiUrl,
+                workspaceConfig.VisionApiUrl,
                 resolvedApiKey,
-                workspaceConfig.OpenApiModel,
+                workspaceConfig.VisionModel,
                 DiscordVisionTimeoutSeconds);
             if (!llm.Success)
             {

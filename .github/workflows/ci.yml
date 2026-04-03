@@ -41,7 +41,7 @@ jobs:
       - name: Validate commit messages (PR)
         if: github.event_name == 'pull_request'
         shell: cmd
-        run: build.cmd commit-range --range "${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}"
+        run: build.cmd commit-check --range "${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}"
 
       - name: CLI sanity
         shell: cmd
@@ -58,7 +58,7 @@ jobs:
 
       - name: Verify
         shell: cmd
-        run: build.cmd verify --target Debug --repo "${{ github.repository }}"
+        run: build.cmd verify --configuration Debug --repo "${{ github.repository }}"
 
       - name: Upload debug deploy output (PR)
         if: github.event_name == 'pull_request'
@@ -95,4 +95,4 @@ jobs:
 
       - name: Verify
         shell: cmd
-        run: build.cmd verify --target Release --repo "${{ github.repository }}"
+        run: build.cmd verify --configuration Release --repo "${{ github.repository }}"
