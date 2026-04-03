@@ -52,6 +52,10 @@ jobs:
           build.cmd clean --purge --yes --dry-run
           tools.cmd help
 
+      - name: Setup Vcpkg Integration
+        shell: cmd
+        run: "%VCPKG_INSTALLATION_ROOT%\\vcpkg.exe integrate install"
+
       - name: Verify
         shell: cmd
         run: build.cmd verify --target Debug --repo "${{ github.repository }}"
@@ -84,6 +88,10 @@ jobs:
           path: ~/.nuget/packages
           key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', '**/packages.lock.json') }}
           restore-keys: nuget-${{ runner.os }}-
+
+      - name: Setup Vcpkg Integration
+        shell: cmd
+        run: "%VCPKG_INSTALLATION_ROOT%\\vcpkg.exe integrate install"
 
       - name: Verify
         shell: cmd
