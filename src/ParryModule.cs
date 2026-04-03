@@ -78,6 +78,13 @@ public unsafe sealed partial class ParryModule : FhModule
         nint command, int command_id,
         nint p7, nint p8, nint p9, nint p10, int p11);
 
+    // FUN_0078f0b0 at FFX.exe+0x38F0B0 — per-target native commit point.
+    // Internally calls MsSubHP → MsDamageCheckDeath → MsDamageSetMotion for each targeted slot.
+    // Returning early atomically prevents HP reduction, death-latch, status commit, and flinch.
+    // Phase 1 reactive hook: returns early when _parryExpiry[param_3] is active for the target slot.
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate int MsSetDamageInternalProbe(int param_1, byte param_2, int param_3, int param_4, int param_5);
+
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate void MovieStopProg();
     [UnmanagedFunctionPointer(CallingConvention.StdCall)]
@@ -177,7 +184,7 @@ public unsafe sealed partial class ParryModule : FhModule
         public bool SetDamageTargetFired;  // MsSetDamage p2=target
         public uint HpBeforeFinalization;
         public uint HpAfterFinalization;
-        public int  CommandId;
+        public int CommandId;
     }
 
     private readonly struct StartupScriptPatch
@@ -254,7 +261,7 @@ public unsafe sealed partial class ParryModule : FhModule
 
     private bool _optionEnabled = true;
     private bool _optionSound = true;
-    private float _optionAudioVolume = 1.0f;
+    private float _optionAudioVolume = 0.5f;
     private bool _optionLogging = true;
     private bool _optionParryStateHud = true;
     private bool _optionOverdriveBoost = true;
@@ -268,10 +275,20 @@ public unsafe sealed partial class ParryModule : FhModule
 #else
         false;
 #endif
-    private ParryDifficulty _optionDifficulty = ParryDifficulty.Normal;
+    private ParryDifficulty _optionDifficulty = ParryDifficulty.Easy;
     private readonly bool[] _damageEventActive = new bool[PartyActorCapacity];
     private readonly bool[] _parryFeedbackPending = new bool[PartyActorCapacity];
+    // Per-turn bitmask of slots intercepted at MsSetDamageInternal. Prevents double-resolution
+    // when both skipOrigForParry (h_ms_set_damage) and the internal hook could both fire.
+    private uint _internalInterceptedMask;
+    // Durable per-turn marker: set at MsDamageSetMotion (visual impact time) when the parry
+    // timing gate passed. Consumed at MsSetDamageInternal p5=1024 (authoritative HP/death commit)
+    // to skip the commit without re-evaluating the wall-clock window, which may have expired
+    // by the time the delayed commit pass fires (Anfunkeln, Blitzra, multi-pass attacks).
+    private uint _parryResolvedAtImpactMask;
     private readonly long[] _parryExpiry = new long[PartyActorCapacity];
+    private readonly byte[] _parryArmedAttackerId = new byte[PartyActorCapacity];
+    private readonly uint[] _preHitHpSnapshot = new uint[PartyActorCapacity];
     private readonly AttackTelemetry[] _attackTelemetry = new AttackTelemetry[PartyActorCapacity];
     private ParryRuntimeState _runtime = ParryRuntimeState.CreateDefault();
     private readonly List<DebugLogEntry> _debugLog = new(DebugLogRingCapacity);
@@ -342,6 +359,7 @@ public unsafe sealed partial class ParryModule : FhModule
     private StreamWriter? _sessionStartupProbeWriter;
     private string _sessionLogsRoot = string.Empty;
     private string _sessionLogDirectory = string.Empty;
+    private string _sessionLogPrefix = string.Empty;
     private bool _sessionLogDisabled;
     private bool _sessionRetentionPruned;
     private bool _startupProbeHeaderWritten;
@@ -360,6 +378,7 @@ public unsafe sealed partial class ParryModule : FhModule
     private readonly FhMethodHandle<MsCalcDamageProbe> _hMsCalcDamage;
     private readonly FhMethodHandle<DmgCalcArmoredProbe> _hDmgCalcArmored;
     private readonly FhMethodHandle<MsCalcDamageInternalProbe> _hMsCalcDamageInternal;
+    private readonly FhMethodHandle<MsSetDamageInternalProbe> _hMsSetDamageInternal;
     private readonly FhMethodHandle<AtelEventSetUp> _hAtelEventSetUp;
     private readonly FhMethodHandle<NeedShowJapanLogo> _hNeedShowJapanLogo;
     private FhMethodHandle<MapShow2DLayerExec>? _hMapShow2DLayerExec;
@@ -380,6 +399,7 @@ public unsafe sealed partial class ParryModule : FhModule
         _hMsCalcDamage = new FhMethodHandle<MsCalcDamageProbe>(this, "FFX.exe", FhFfx.FhCall.__addr_MsCalcDamage, h_ms_calc_damage);
         _hDmgCalcArmored = new FhMethodHandle<DmgCalcArmoredProbe>(this, "FFX.exe", 0x38AB80, h_dmg_calc_armored);
         _hMsCalcDamageInternal = new FhMethodHandle<MsCalcDamageInternalProbe>(this, "FFX.exe", 0x38E680, h_ms_calc_damage_internal);
+        _hMsSetDamageInternal = new FhMethodHandle<MsSetDamageInternalProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.DiscordCandidates.FnMsSetDamageInternal, h_ms_set_damage_internal);
         _hAtelEventSetUp = new FhMethodHandle<AtelEventSetUp>(this, "FFX.exe", 0x472e90, h_startup_event_setup); // AtelEventSetUp — Atel scripting event dispatch; intercepted for startup skip
         _hNeedShowJapanLogo = new FhMethodHandle<NeedShowJapanLogo>(this, "FFX.exe", 0x387450, h_need_show_japan_logo); // isNeedShowJapanLogo — suppresses Japan logo display during startup skip
 
@@ -455,6 +475,15 @@ public unsafe sealed partial class ParryModule : FhModule
         catch (Exception ex)
         {
             _logger.Warning($"[Parry] Could not hook MsCalcDamageInternal Probe: {ex.Message}");
+        }
+
+        try
+        {
+            _hMsSetDamageInternal.hook();
+        }
+        catch (Exception ex)
+        {
+            _logger.Warning($"[Parry] Could not hook MsSetDamageInternal Probe: {ex.Message}");
         }
 
         try

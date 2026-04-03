@@ -132,6 +132,8 @@ public sealed class TurnTimelineTracker
     private int _currentTurnId;
     private string _lastIntegrityWarningText = string.Empty;
     private ulong _lastIntegrityWarningFrame;
+    private bool _recentlyParriedContextActive;
+    private TurnTimelineCueFingerprint _recentlyParriedFingerprint;
 
     public TurnTimelineTracker(int rowCapacity)
     {
@@ -251,6 +253,12 @@ public sealed class TurnTimelineTracker
             set_lifecycle(row, desiredLifecycle, timestampLocal, frameIndex);
 
             TurnTimelineParryState desiredParry = compute_desired_parry_state(row, parryWindowActive);
+            if (desiredParry == TurnTimelineParryState.Open
+                && _recentlyParriedContextActive
+                && row.CueKey.Fingerprint.Equals(_recentlyParriedFingerprint))
+            {
+                desiredParry = TurnTimelineParryState.Waiting;
+            }
             set_parry(row, desiredParry, timestampLocal, frameIndex);
         }
 
@@ -382,6 +390,9 @@ public sealed class TurnTimelineTracker
         TurnTimelineRow? active = find_first_active_row();
         if (active == null || active.Parryability != TurnTimelineParryability.Parryable) return;
 
+        _recentlyParriedContextActive = true;
+        _recentlyParriedFingerprint = active.CueKey.Fingerprint;
+
         set_parry(active, TurnTimelineParryState.Parried, timestampLocal, frameIndex);
         set_lifecycle(active, TurnTimelineLifecycleState.Completed, timestampLocal, frameIndex);
         promote_next_pending(timestampLocal, frameIndex, parryWindowActive: false);
@@ -421,6 +432,7 @@ public sealed class TurnTimelineTracker
         append_row(row);
         emit_event(TurnTimelineEventKind.QueueFlushed, row, timestampLocal, frameIndex, "Turn queue flushed.");
         _activeRowOrder.Clear();
+        _recentlyParriedContextActive = false;
         validate_integrity(timestampLocal, frameIndex);
     }
 

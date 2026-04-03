@@ -2,6 +2,13 @@ namespace Fahrenheit.Mods.Parry;
 
 public unsafe sealed partial class ParryModule
 {
+    private static readonly string[] SessionLogSuffixes =
+    [
+        "_debug-window.log",
+        "_turn-timeline.tsv",
+        "_startup-probe.tsv"
+    ];
+
     private void initialize_session_logging(FhModContext modContext)
     {
         if (_sessionLogDisabled) return;
@@ -16,26 +23,30 @@ public unsafe sealed partial class ParryModule
                 ? modsDir.Parent.FullName
                 : modDir;
 
-            _sessionLogsRoot = Path.Combine(fhRoot, "logs", "fhparry");
-            string sessionId = $"session_{DateTime.Now:yyyyMMdd_HHmmss}";
-            _sessionLogDirectory = create_unique_session_directory(_sessionLogsRoot, sessionId);
-            Directory.CreateDirectory(_sessionLogDirectory);
+            _sessionLogsRoot = Path.Combine(fhRoot, "logs");
+            Directory.CreateDirectory(_sessionLogsRoot);
+            _sessionLogPrefix = create_unique_session_log_prefix(
+                _sessionLogsRoot,
+                resolve_runtime_log_prefix(_sessionLogsRoot));
+            _sessionLogDirectory = _sessionLogsRoot;
 
-            string debugPath = Path.Combine(_sessionLogDirectory, "debug-window.log");
-            string timelinePath = Path.Combine(_sessionLogDirectory, "turn-timeline.tsv");
+            string debugPath = Path.Combine(_sessionLogsRoot, $"{_sessionLogPrefix}_debug-window.log");
+            string timelinePath = Path.Combine(_sessionLogsRoot, $"{_sessionLogPrefix}_turn-timeline.tsv");
 
             _sessionDebugLogWriter = create_session_writer(debugPath);
             _sessionTimelineLogWriter = create_session_writer(timelinePath);
             if (_optionStartupProbeMode)
             {
-                string startupProbePath = Path.Combine(_sessionLogDirectory, "startup-probe.tsv");
+                string startupProbePath = Path.Combine(_sessionLogsRoot, $"{_sessionLogPrefix}_startup-probe.tsv");
                 _sessionStartupProbeWriter = create_session_writer(startupProbePath);
             }
 
             string startedLocal = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture);
-            _sessionDebugLogWriter.WriteLine($"# fhparry session: {Path.GetFileName(_sessionLogDirectory)}");
+            _sessionDebugLogWriter.WriteLine($"# fhparry session: {_sessionLogPrefix}");
             _sessionDebugLogWriter.WriteLine($"# started_local: {startedLocal}");
-            _sessionDebugLogWriter.WriteLine($"# log_dir: {_sessionLogDirectory}");
+            _sessionDebugLogWriter.WriteLine($"# log_dir: {_sessionLogsRoot}");
+            _sessionDebugLogWriter.WriteLine($"# debug_file: {Path.GetFileName(debugPath)}");
+            _sessionDebugLogWriter.WriteLine($"# timeline_file: {Path.GetFileName(timelinePath)}");
             _sessionDebugLogWriter.WriteLine($"# process_id: {Environment.ProcessId}");
             _sessionDebugLogWriter.WriteLine("# format: [hh:mm:ss Fxxxxxxx] message");
             _sessionDebugLogWriter.WriteLine();
@@ -43,7 +54,7 @@ public unsafe sealed partial class ParryModule
             _sessionTimelineLogWriter.WriteLine(
                 "Time\tFrame\tEvent\tRowId\tTurn\tActor\tAction\tTargets\tParryable\tParry\tLifecycle\tQueue\tAttacker\tCommand\tCommandMeta\tMessage");
 
-            _logger.Info($"[Parry] Session logging enabled. Dir: {_sessionLogDirectory}");
+            _logger.Info($"[Parry] Session logging enabled. Prefix: {_sessionLogPrefix}, Dir: {_sessionLogsRoot}");
         }
         catch (Exception ex)
         {
@@ -55,25 +66,101 @@ public unsafe sealed partial class ParryModule
         }
     }
 
-    private static string create_unique_session_directory(string root, string preferredName)
+    private static string resolve_runtime_log_prefix(string logsRoot)
     {
-        Directory.CreateDirectory(root);
-        string candidate = Path.Combine(root, preferredName);
-        if (!Directory.Exists(candidate))
+        try
         {
-            return candidate;
+            DirectoryInfo root = new(logsRoot);
+            FileInfo? latestCore = root
+                .EnumerateFiles("*__core.log", SearchOption.TopDirectoryOnly)
+                .OrderByDescending(f => f.LastWriteTimeUtc)
+                .FirstOrDefault();
+
+            if (latestCore != null)
+            {
+                const string marker = "__core.log";
+                string name = latestCore.Name;
+                if (name.EndsWith(marker, StringComparison.OrdinalIgnoreCase) && name.Length > marker.Length)
+                {
+                    string prefix = name[..^marker.Length];
+                    if (!string.IsNullOrWhiteSpace(prefix))
+                    {
+                        return prefix;
+                    }
+                }
+            }
+        }
+        catch
+        {
+            // Fall through to timestamp prefix.
+        }
+
+        return DateTime.Now.ToString("yyyyMMdd_HHmmss", CultureInfo.InvariantCulture);
+    }
+
+    private static string create_unique_session_log_prefix(string logsRoot, string preferredPrefix)
+    {
+        string basePrefix = string.IsNullOrWhiteSpace(preferredPrefix)
+            ? DateTime.Now.ToString("yyyyMMdd_HHmmss", CultureInfo.InvariantCulture)
+            : preferredPrefix.Trim();
+
+        if (!session_log_prefix_exists(logsRoot, basePrefix))
+        {
+            return basePrefix;
         }
 
         for (int i = 1; i <= 99; i++)
         {
-            string withSuffix = Path.Combine(root, $"{preferredName}_{i:D2}");
-            if (!Directory.Exists(withSuffix))
+            string withSuffix = $"{basePrefix}_{i:D2}";
+            if (!session_log_prefix_exists(logsRoot, withSuffix))
             {
                 return withSuffix;
             }
         }
 
-        return Path.Combine(root, $"{preferredName}_{DateTime.Now:fff}");
+        return $"{basePrefix}_{DateTime.Now:fff}";
+    }
+
+    private static bool session_log_prefix_exists(string logsRoot, string prefix)
+    {
+        string[] paths = session_log_files_for_prefix(logsRoot, prefix);
+        for (int i = 0; i < paths.Length; i++)
+        {
+            if (File.Exists(paths[i]))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static string[] session_log_files_for_prefix(string logsRoot, string prefix)
+    {
+        return
+        [
+            Path.Combine(logsRoot, $"{prefix}_debug-window.log"),
+            Path.Combine(logsRoot, $"{prefix}_turn-timeline.tsv"),
+            Path.Combine(logsRoot, $"{prefix}_startup-probe.tsv")
+        ];
+    }
+
+    private static bool try_get_session_log_prefix(string fileName, out string prefix)
+    {
+        for (int i = 0; i < SessionLogSuffixes.Length; i++)
+        {
+            string suffix = SessionLogSuffixes[i];
+            if (!fileName.EndsWith(suffix, StringComparison.OrdinalIgnoreCase) || fileName.Length <= suffix.Length)
+            {
+                continue;
+            }
+
+            prefix = fileName[..^suffix.Length];
+            return true;
+        }
+
+        prefix = string.Empty;
+        return false;
     }
 
     private static StreamWriter create_session_writer(string path)
@@ -279,22 +366,49 @@ public unsafe sealed partial class ParryModule
         {
             const int keepCount = 10;
             DirectoryInfo root = new(_sessionLogsRoot);
-            List<DirectoryInfo> sessions = root
-                .EnumerateDirectories("session_*", SearchOption.TopDirectoryOnly)
-                .OrderByDescending(d => d.Name, StringComparer.OrdinalIgnoreCase)
+            Dictionary<string, DateTime> prefixes = new(StringComparer.OrdinalIgnoreCase);
+            foreach (FileInfo file in root.EnumerateFiles("*", SearchOption.TopDirectoryOnly))
+            {
+                if (!try_get_session_log_prefix(file.Name, out string prefix)) continue;
+
+                DateTime lastWrite = file.LastWriteTimeUtc;
+                if (prefixes.TryGetValue(prefix, out DateTime existing))
+                {
+                    if (lastWrite > existing)
+                    {
+                        prefixes[prefix] = lastWrite;
+                    }
+                }
+                else
+                {
+                    prefixes[prefix] = lastWrite;
+                }
+            }
+
+            List<string> sessions = prefixes
+                .OrderByDescending(p => p.Value)
+                .Select(p => p.Key)
                 .ToList();
 
             if (sessions.Count > keepCount)
             {
                 for (int i = keepCount; i < sessions.Count; i++)
                 {
+                    string oldPrefix = sessions[i];
                     try
                     {
-                        sessions[i].Delete(recursive: true);
+                        string[] paths = session_log_files_for_prefix(_sessionLogsRoot, oldPrefix);
+                        for (int p = 0; p < paths.Length; p++)
+                        {
+                            if (File.Exists(paths[p]))
+                            {
+                                File.Delete(paths[p]);
+                            }
+                        }
                     }
                     catch (Exception ex)
                     {
-                        _logger.Warning($"[Parry] Could not delete old session log '{sessions[i].FullName}': {ex.Message}");
+                        _logger.Warning($"[Parry] Could not delete old session log prefix '{oldPrefix}': {ex.Message}");
                     }
                 }
             }

@@ -26,6 +26,8 @@ public static partial class ExternalMemoryOffsetMap
 
         // Suggested function offsets from Discord hooks (FFX.exe + offset).
         public const int FnDmgCalcArmored = 0x0038AB80;
+        public const int FnMsCalcDamageInternal = 0x0038E680;
+        public const int FnMsSetDamageInternal = 0x0038F0B0;
         public const int FnEiAbmParaGet = 0x00A54860;
 
         // Mentioned as FFX input raw address in Fahrenheit-dev discussion.

@@ -166,10 +166,7 @@ public unsafe sealed partial class ParryModule
             return false;
         }
 
-        int selfExclude = is_confused_party_attacker(cue.attacker_id, attacker)
-            ? (int)cue.attacker_id
-            : -1;
-        uint partyMask = extract_party_target_mask(cue, selfExclude);
+        uint partyMask = extract_party_target_mask(cue);
         bool actionable = partyMask != 0;
         if (!actionable)
         {
@@ -270,10 +267,7 @@ public unsafe sealed partial class ParryModule
                 fallbackChr = candidateChr;
             }
 
-            int selfExclude = is_confused_party_attacker(candidate.attacker_id, candidateChr)
-                ? (int)candidate.attacker_id
-                : -1;
-            if (extract_party_target_mask(candidate, selfExclude) != 0)
+            if (extract_party_target_mask(candidate) != 0)
             {
                 cueIndex = (byte)i;
                 cue = candidate;
@@ -293,30 +287,7 @@ public unsafe sealed partial class ParryModule
         return false;
     }
 
-    /// <summary>
-    ///     Returns true if the attacker is a party member (slot &lt; PartyActorCapacity,
-    ///     stat_group == 0) who is currently confused. Such attackers are treated as enemies
-    ///     for parry purposes when hitting other party members, but self-hits are excluded.
-    /// </summary>
-    private static bool is_confused_party_attacker(byte slotIndex, Chr* chr)
-    {
-        if (chr == null) return false;
-        if (slotIndex >= PartyActorCapacity) return false;
-        if (chr->stat_group != 0) return false;
-        return chr->ram.status_suffer.HasFlag(StatusPermanentFlags.CONFUSE);
-    }
-
     private static uint extract_party_target_mask(AttackCue cue)
-    {
-        return extract_party_target_mask(cue, excludeSelfSlot: -1);
-    }
-
-    /// <summary>
-    ///     Extracts the party target mask from a cue's command list, optionally excluding
-    ///     a specific slot. Used to exclude a confused party member's self-hit from the
-    ///     parryable target set (hitting yourself while confused is not parryable).
-    /// </summary>
-    private static uint extract_party_target_mask(AttackCue cue, int excludeSelfSlot)
     {
         uint mask = 0;
         int commandCount = Math.Clamp((int)cue.command_count, 0, 4);
@@ -324,12 +295,6 @@ public unsafe sealed partial class ParryModule
         {
             ref AttackCommandInfo info = ref cue.command_list[i];
             mask |= info.targets & PlayerTargetMask;
-        }
-
-        // Exclude the attacker's own slot when a confused party member targets themselves.
-        if (excludeSelfSlot >= 0 && excludeSelfSlot < PartyActorCapacity)
-        {
-            mask &= ~(1u << excludeSelfSlot);
         }
 
         return mask;
@@ -375,6 +340,19 @@ public unsafe sealed partial class ParryModule
         byte cueIndex = context.CueIndex;
         uint partyMask = context.PartyMask;
 
+        // Guard: suppress re-arm if this attack context was already successfully parried.
+        // The cue can remain live in the battle queue for several frames between parry
+        // resolution (visual impact) and finalization_complete. Without this guard, a
+        // fresh R1 press during that gap re-opens the window for the same attack.
+        if (_runtime.ParryWindowSucceeded
+            && _runtime.AwaitingTurnEnd
+            && cue.attacker_id == _runtime.CurrentAttackerId
+            && cueIndex == _runtime.CurrentCueIndex)
+        {
+            log_debug("Parry re-arm suppressed (context already parried).");
+            return;
+        }
+
         if (_optionPenaltyEnabled)
         {
             ParrySpamTransition spamTransition = _spamController.OnQualifyingPress();
@@ -410,10 +388,13 @@ public unsafe sealed partial class ParryModule
         for (int i = 0; i < PartyActorCapacity; i++)
         {
             if ((partyMask & (1u << i)) != 0)
+            {
                 _parryExpiry[i] = expiry;
+                _parryArmedAttackerId[i] = _runtime.CurrentAttackerId;
+            }
         }
 
-        float windowMs = _runtime.ParryWindowRemainingSeconds * 1000f;
+        float windowMs = windowDurationSeconds * 1000f;
         log_debug($"Parry input armed for {format_actor_slot(cue.attacker_id)} (q{cueIndex}) for {windowMs:F0}ms [{ParryDifficultyModel.FormatName(_optionDifficulty)} T{spamTier + 1}].");
     }
 
@@ -449,10 +430,7 @@ public unsafe sealed partial class ParryModule
             return false;
         }
 
-        int selfExclude = is_confused_party_attacker(cue.attacker_id, attacker)
-            ? (int)cue.attacker_id
-            : -1;
-        partyMask = extract_party_target_mask(cue, selfExclude);
+        partyMask = extract_party_target_mask(cue);
         return partyMask != 0;
     }
 
@@ -486,18 +464,13 @@ public unsafe sealed partial class ParryModule
 
     private static bool should_flag_as_enemy(byte slotIndex, Chr* chr)
     {
+        // Party-member attackers (slot < PartyActorCapacity, stat_group == 0) must never be
+        // flagged as enemies, even when confused. Confused party attacks are friendly fire
+        // and must not arm parry windows, resolve parries, restore HP, or grant overdrive.
         if (chr != null)
         {
             if (chr->stat_group != 0) return true;
             if (!chr->stat_exist_flag || chr->ram.hp <= 0) return slotIndex >= PartyActorCapacity;
-
-            // A confused party member attacking other party members counts as an enemy action
-            // for parry purposes. The target-side self-hit exclusion is handled separately in
-            // extract_party_target_mask_excluding_self.
-            if (slotIndex < PartyActorCapacity && chr->ram.status_suffer.HasFlag(StatusPermanentFlags.CONFUSE))
-            {
-                return true;
-            }
         }
 
         return slotIndex >= PartyActorCapacity;
@@ -555,7 +528,11 @@ public unsafe sealed partial class ParryModule
 
         flush_attack_telemetry(reason);
         Array.Clear(_parryExpiry);
+        Array.Clear(_parryArmedAttackerId);
         Array.Clear(_parryFeedbackPending);
+        _internalInterceptedMask = 0;
+        _parryResolvedAtImpactMask = 0;
+        Array.Clear(_preHitHpSnapshot);
         _runtime.ParryWindowActive = false;
         _runtime.ParryWindowRemainingSeconds = 0f;
         _runtime.ParryWindowElapsedSeconds = 0f;
@@ -569,7 +546,11 @@ public unsafe sealed partial class ParryModule
         flush_attack_telemetry(reason);
         _runtime.AwaitingTurnEnd = false;
         Array.Clear(_parryExpiry);
+        Array.Clear(_parryArmedAttackerId);
         Array.Clear(_parryFeedbackPending);
+        _internalInterceptedMask = 0;
+        _parryResolvedAtImpactMask = 0;
+        Array.Clear(_preHitHpSnapshot);
         if (_runtime.ParryWindowActive)
         {
             // Turn context ended; silently cancel any lingering open window.
@@ -741,10 +722,7 @@ public unsafe sealed partial class ParryModule
                 return false;
             }
 
-            int selfExclude = is_confused_party_attacker(cue.attacker_id, attacker)
-                ? (int)cue.attacker_id
-                : -1;
-            uint partyMask = extract_party_target_mask(cue, selfExclude);
+            uint partyMask = extract_party_target_mask(cue);
             if ((partyMask & _runtime.CurrentPartyTargetMask) == 0)
             {
                 reason = "Target mask mismatch";
