@@ -45,7 +45,7 @@ jobs:
 
       - name: Verify
         shell: cmd
-        run: build.cmd verify --config Debug --repo "${{ github.repository }}"
+        run: build.cmd verify --target Debug --repo "${{ github.repository }}"
 
       - name: Upload debug deploy output (PR)
         if: github.event_name == 'pull_request'
@@ -78,4 +78,4 @@ jobs:
 
       - name: Verify
         shell: cmd
-        run: build.cmd verify --config Release --repo "${{ github.repository }}"
+        run: build.cmd verify --target Release --repo "${{ github.repository }}"

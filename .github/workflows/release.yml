@@ -58,11 +58,11 @@ jobs:
 
       - name: Full release build
         shell: cmd
-        run: build.cmd build --payload full --config Release --repo "${{ github.repository }}" --toolset "${{ env.NATIVE_PLATFORM_TOOLSET }}"
+        run: build.cmd build --target Release --repo "${{ github.repository }}" --toolset "${{ env.NATIVE_PLATFORM_TOOLSET }}"
 
       - name: Package release archives
         shell: cmd
-        run: build.cmd release-pack --tag "${{ github.ref_name }}" --deploydir ".workspace\fahrenheit\artifacts\deploy\rel" --outdir ".release"
+        run: build.cmd release-pack --tag "${{ github.ref_name }}" --deploy-dir ".workspace\fahrenheit\artifacts\deploy\rel" --out-dir ".release"
 
       - name: Validate release asset sizes
         shell: pwsh
