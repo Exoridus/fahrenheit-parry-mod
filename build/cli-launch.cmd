@@ -36,11 +36,28 @@ if /I "%SMOKE_ONLY_VALUE%"=="1" set "LOCK_ENABLED=0"
 if /I "%ALLOW_NESTED_VALUE%"=="1" set "LOCK_ENABLED=0"
 
 if "%LOCK_ENABLED%"=="1" (
-    call :acquire_lock
-    if !ERRORLEVEL! NEQ 0 exit /B !ERRORLEVEL!
+    if not exist ".nuke" mkdir ".nuke" >NUL 2>&1
+    set "LOCKDIR=.nuke\cli.lock"
+
+    if exist "!LOCKDIR!" (
+        echo ERROR: another %LOCK_LABEL% invocation appears to be running, or a stale lock exists.
+        echo If this is stale, remove "!LOCKDIR!" and retry.
+        exit /B 9
+    )
+
+    mkdir "!LOCKDIR!" >NUL 2>&1
+    if !ERRORLEVEL! NEQ 0 (
+        echo ERROR: failed to create %LOCK_LABEL% lock directory "!LOCKDIR!".
+        exit /B 9
+    )
+
+    >"!LOCKDIR!\started.txt" echo %DATE% %TIME%
 )
 
 set "NUKE_ARGS="
+set "WANTS_QUIET=0"
+set "WANTS_VERBOSE=0"
+set "HAS_VERBOSITY=0"
 
 if "%~1"=="" (
     set "NUKE_ARGS=--target %DEFAULT_TARGET%"
@@ -67,12 +84,18 @@ shift
 if "%~1"=="" goto run_nuke
 set "NEXT_ARG=%~1"
 if /I "%NEXT_ARG%"=="--target" set "NEXT_ARG=--build-target"
+if /I "%NEXT_ARG%"=="--quiet" set "WANTS_QUIET=1"
+if /I "%NEXT_ARG%"=="--verbose" set "WANTS_VERBOSE=1"
+if /I "%NEXT_ARG%"=="--verbosity" set "HAS_VERBOSITY=1"
 set "NUKE_ARGS=%NUKE_ARGS% %NEXT_ARG%"
 shift
 goto append_workflow_args
 
 :append_passthrough_args
 if "%~1"=="" goto run_nuke
+if /I "%~1"=="--quiet" set "WANTS_QUIET=1"
+if /I "%~1"=="--verbose" set "WANTS_VERBOSE=1"
+if /I "%~1"=="--verbosity" set "HAS_VERBOSITY=1"
 if defined NUKE_ARGS (
     set "NUKE_ARGS=%NUKE_ARGS% %1"
 ) else (
@@ -85,7 +108,14 @@ goto append_passthrough_args
 if "%~2"=="" (
     set "NUKE_ARGS=--target %HELP_TARGET%"
 ) else (
-    set "NUKE_ARGS=--target %HELP_TARGET% --workflow %~2"
+    set "HELP_ARG2=%~2"
+    if /I "!HELP_ARG2:~0,1!"=="-" (
+        set "NUKE_ARGS=--target %HELP_TARGET%"
+        shift
+        goto append_passthrough_args
+    ) else (
+        set "NUKE_ARGS=--target %HELP_TARGET% --workflow %~2"
+    )
 )
 goto run_nuke
 
@@ -95,6 +125,13 @@ goto run_nuke
 
 :run_nuke
 set "NUKE_TELEMETRY_OPTOUT=1"
+if "%HAS_VERBOSITY%"=="0" (
+    if "%WANTS_QUIET%"=="1" (
+        set "NUKE_ARGS=%NUKE_ARGS% --verbosity quiet"
+    ) else if "%WANTS_VERBOSE%"=="1" (
+        set "NUKE_ARGS=%NUKE_ARGS% --verbosity normal"
+    )
+)
 echo [NUKE] dotnet run --project build\Build.csproj -- %NUKE_ARGS%
 if /I "%SMOKE_ONLY_VALUE%"=="1" (
     if defined LOCKDIR if exist "%LOCKDIR%" rd /s /q "%LOCKDIR%" >NUL 2>&1
@@ -105,25 +142,6 @@ dotnet run --project build\Build.csproj -- %NUKE_ARGS%
 set "EXIT_CODE=%ERRORLEVEL%"
 if defined LOCKDIR if exist "%LOCKDIR%" rd /s /q "%LOCKDIR%" >NUL 2>&1
 exit /B %EXIT_CODE%
-
-:acquire_lock
-if not exist ".nuke" mkdir ".nuke" >NUL 2>&1
-set "LOCKDIR=.nuke\cli.lock"
-
-if exist "%LOCKDIR%" (
-    echo ERROR: another %LOCK_LABEL% invocation appears to be running, or a stale lock exists.
-    echo If this is stale, remove "%LOCKDIR%" and retry.
-    exit /B 9
-)
-
-mkdir "%LOCKDIR%" >NUL 2>&1
-if !ERRORLEVEL! NEQ 0 (
-    echo ERROR: failed to create %LOCK_LABEL% lock directory "%LOCKDIR%".
-    exit /B 9
-)
-
->"%LOCKDIR%\started.txt" echo %DATE% %TIME%
-exit /B 0
 
 :ensure_dotnet
 where dotnet >NUL 2>&1
@@ -168,3 +186,4 @@ if !ERRORLEVEL! NEQ 0 (
 )
 
 exit /B 0
+

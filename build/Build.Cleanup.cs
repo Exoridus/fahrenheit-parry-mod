@@ -21,14 +21,22 @@ internal sealed partial class BuildScript
 
         if (DryRun)
         {
-            Log.Information($"[DRY-RUN] Delete file: {path}");
+            if (Verbose)
+            {
+                Log.Information($"[DRY-RUN] Delete file: {path}");
+            }
+
             result.FilesRemoved++;
             result.BytesReclaimed += Math.Max(0, size);
             return;
         }
 
         File.Delete(path);
-        Log.Information($"Deleted file: {path}");
+        if (Verbose)
+        {
+            Log.Information($"Deleted file: {path}");
+        }
+
         result.FilesRemoved++;
         result.BytesReclaimed += Math.Max(0, size);
     }
@@ -43,14 +51,22 @@ internal sealed partial class BuildScript
         var size = MeasureDirectoryBytes(path);
         if (DryRun)
         {
-            Log.Information($"[DRY-RUN] Delete directory: {path}");
+            if (Verbose)
+            {
+                Log.Information($"[DRY-RUN] Delete directory: {path}");
+            }
+
             result.DirectoriesRemoved++;
             result.BytesReclaimed += size;
             return;
         }
 
         Directory.Delete(path, recursive: true);
-        Log.Information($"Deleted directory: {path}");
+        if (Verbose)
+        {
+            Log.Information($"Deleted directory: {path}");
+        }
+
         result.DirectoriesRemoved++;
         result.BytesReclaimed += size;
     }

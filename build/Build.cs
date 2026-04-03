@@ -29,6 +29,8 @@ internal sealed partial class BuildScript : NukeBuild
     [Parameter(Name = "workflow")] readonly string Workflow = string.Empty;
 
     [Parameter(Name = "full")] readonly bool Full;
+    [Parameter(Name = "quiet")] readonly bool Quiet;
+    [Parameter(Name = "verbose")] readonly bool Verbose;
     [Parameter(Name = "analysis")] readonly bool CleanAnalysis;
     [Parameter(Name = "exports")] readonly bool CleanExports;
     [Parameter(Name = "game-data")] readonly bool CleanGameData;
@@ -297,6 +299,8 @@ internal sealed partial class BuildScript : NukeBuild
 
     void RunCliWorkflow()
     {
+        ValidateVerbosityFlags();
+
         var workflow = (Workflow ?? string.Empty).Trim().ToLowerInvariant();
         if (string.IsNullOrWhiteSpace(workflow))
         {
@@ -330,6 +334,7 @@ internal sealed partial class BuildScript : NukeBuild
         Log.Information("Usage: build.cmd <workflow> [options]");
         Log.Information("Detailed help: build.cmd -h <workflow>");
         Log.Information("Bool options: --flag (true), --no-flag (false)");
+        Log.Information("Global verbosity: --quiet or --verbose");
 
         foreach (var section in BuildWorkflowSections)
         {
@@ -2225,6 +2230,72 @@ internal sealed partial class BuildScript : NukeBuild
         return trimmed.Replace('\\', '/').Trim('/');
     }
 
+    void LogConfiguredPreservePathEntries(string preserveRoot, IReadOnlyList<string> normalizedPreservePaths)
+    {
+        foreach (var entry in normalizedPreservePaths)
+        {
+            var display = GetPreservePathDisplay(preserveRoot, entry);
+            var kind = ClassifyPreservePathEntry(preserveRoot, entry);
+            if (kind == "directory")
+            {
+                Log.Information($"Deploy preserve-paths: preserving directory {display}");
+            }
+            else
+            {
+                Log.Information($"Deploy preserve-paths: preserving file {display}");
+            }
+        }
+    }
+
+    string GetPreservePathDisplay(string preserveRoot, string entry)
+    {
+        if (!Path.IsPathRooted(entry))
+        {
+            return entry;
+        }
+
+        var normalizedRoot = NormalizePathOrEmpty(preserveRoot).Replace('\\', '/').TrimEnd('/');
+        var normalizedEntry = NormalizePathOrEmpty(entry).Replace('\\', '/').TrimEnd('/');
+        if (!string.IsNullOrWhiteSpace(normalizedRoot)
+            && normalizedEntry.StartsWith(normalizedRoot + "/", StringComparison.OrdinalIgnoreCase))
+        {
+            var relative = normalizedEntry[(normalizedRoot.Length + 1)..];
+            return string.IsNullOrWhiteSpace(relative) ? "." : relative;
+        }
+
+        return normalizedEntry;
+    }
+
+    string ClassifyPreservePathEntry(string preserveRoot, string entry)
+    {
+        if (IsGlobPattern(entry))
+        {
+            return "file";
+        }
+
+        var endsWithSeparator = entry.EndsWith("/", StringComparison.Ordinal) || entry.EndsWith("\\", StringComparison.Ordinal);
+        var resolved = Path.IsPathRooted(entry)
+            ? NormalizePathOrEmpty(entry)
+            : NormalizePathOrEmpty(Path.Combine(preserveRoot, entry.Replace('/', Path.DirectorySeparatorChar)));
+
+        if (Directory.Exists(resolved))
+        {
+            return "directory";
+        }
+
+        if (File.Exists(resolved))
+        {
+            return "file";
+        }
+
+        if (endsWithSeparator)
+        {
+            return "directory";
+        }
+
+        return Path.HasExtension(entry) ? "file" : "directory";
+    }
+
     static T FailWithReturn<T>(string message)
     {
         Fail(message);
@@ -2592,7 +2663,14 @@ goto :eof
 
         if (!silent)
         {
-            foreach (var line in stdout.ToString().Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)) Log.Information(line);
+            if (Verbose)
+            {
+                foreach (var line in stdout.ToString().Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    Log.Information(line);
+                }
+            }
+
             foreach (var line in stderr.ToString().Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)) Log.Warning(line);
         }
 
@@ -2676,6 +2754,8 @@ goto :eof
             return;
         }
 
+        LogConfiguredPreservePathEntries(preserveRoot, normalizedPreservePaths);
+
         EnsureDirectoryMaybe(destination);
         var destinationExists = Directory.Exists(destination);
 
@@ -2729,9 +2809,8 @@ goto :eof
                     continue;
                 }
 
-                if (IsTargetPathPreserved(file, preserveRoot, relativeEntries, absoluteEntries, relativeGlobPatterns, absoluteGlobPatterns, out var relativeToRoot))
+                if (IsTargetPathPreserved(file, preserveRoot, relativeEntries, absoluteEntries, relativeGlobPatterns, absoluteGlobPatterns, out _))
                 {
-                    Log.Information($"Deploy preserve-paths: preserving file {relativeToRoot}");
                     continue;
                 }
 
@@ -2748,9 +2827,8 @@ goto :eof
                     continue;
                 }
 
-                if (IsTargetPathPreserved(dir, preserveRoot, relativeEntries, absoluteEntries, relativeGlobPatterns, absoluteGlobPatterns, out var relativeToRoot))
+                if (IsTargetPathPreserved(dir, preserveRoot, relativeEntries, absoluteEntries, relativeGlobPatterns, absoluteGlobPatterns, out _))
                 {
-                    Log.Information($"Deploy preserve-paths: preserving directory {relativeToRoot}");
                     continue;
                 }
 
@@ -2758,7 +2836,6 @@ goto :eof
                 var normalizedRelativeToRoot = NormalizeRelativeForComparison(Path.GetRelativePath(preserveRoot, dir));
                 if (DirectoryContainsPreservedPath(normalizedRelativeToRoot, normalizedDirAbsolute, relativeEntries, absoluteEntries, relativeGlobPrefixes, absoluteGlobPrefixes))
                 {
-                    Log.Information($"Deploy preserve-paths: preserving directory {relativeToRoot} (contains preserved path)");
                     continue;
                 }
 
@@ -2770,9 +2847,8 @@ goto :eof
         {
             var relative = Path.GetRelativePath(source, dir);
             var target = Path.Combine(destination, relative);
-            if (IsTargetPathPreserved(target, preserveRoot, relativeEntries, absoluteEntries, relativeGlobPatterns, absoluteGlobPatterns, out var relativeToRoot))
+            if (IsTargetPathPreserved(target, preserveRoot, relativeEntries, absoluteEntries, relativeGlobPatterns, absoluteGlobPatterns, out _))
             {
-                Log.Information($"Deploy preserve-paths: skipping directory sync {relativeToRoot}");
                 continue;
             }
 
@@ -2783,9 +2859,8 @@ goto :eof
         {
             var relative = Path.GetRelativePath(source, file);
             var target = Path.Combine(destination, relative);
-            if (IsTargetPathPreserved(target, preserveRoot, relativeEntries, absoluteEntries, relativeGlobPatterns, absoluteGlobPatterns, out var relativeToRoot))
+            if (IsTargetPathPreserved(target, preserveRoot, relativeEntries, absoluteEntries, relativeGlobPatterns, absoluteGlobPatterns, out _))
             {
-                Log.Information($"Deploy preserve-paths: skipping file sync {relativeToRoot}");
                 continue;
             }
 
@@ -2809,7 +2884,11 @@ goto :eof
 
         if (DryRun)
         {
-            Log.Information($"[DRY-RUN] Create directory: {path}");
+            if (Verbose)
+            {
+                Log.Information($"[DRY-RUN] Create directory: {path}");
+            }
+
             return;
         }
 
@@ -2820,7 +2899,11 @@ goto :eof
     {
         if (DryRun)
         {
-            Log.Information($"[DRY-RUN] Delete file: {path}");
+            if (Verbose)
+            {
+                Log.Information($"[DRY-RUN] Delete file: {path}");
+            }
+
             return;
         }
 
@@ -2831,7 +2914,11 @@ goto :eof
     {
         if (DryRun)
         {
-            Log.Information($"[DRY-RUN] Delete directory: {path}");
+            if (Verbose)
+            {
+                Log.Information($"[DRY-RUN] Delete directory: {path}");
+            }
+
             return;
         }
 
@@ -2842,7 +2929,11 @@ goto :eof
     {
         if (DryRun)
         {
-            Log.Information($"[DRY-RUN] Copy file: {source} -> {target}");
+            if (Verbose)
+            {
+                Log.Information($"[DRY-RUN] Copy file: {source} -> {target}");
+            }
+
             return;
         }
 
@@ -3092,6 +3183,14 @@ goto :eof
     {
         var escaped = value.Replace("\"", "\\\"", StringComparison.Ordinal);
         return $"\"{escaped}\"";
+    }
+
+    void ValidateVerbosityFlags()
+    {
+        if (Quiet && Verbose)
+        {
+            Fail("Use either --quiet or --verbose, not both.");
+        }
     }
 
     sealed class WorkspaceConfig

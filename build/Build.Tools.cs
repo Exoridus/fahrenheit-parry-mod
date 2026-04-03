@@ -5,6 +5,8 @@ internal sealed partial class BuildScript
 {
     void RunToolsCliWorkflow()
     {
+        ValidateVerbosityFlags();
+
         var workflow = (Workflow ?? string.Empty).Trim().ToLowerInvariant();
         if (string.IsNullOrWhiteSpace(workflow) || workflow.Equals("help", StringComparison.OrdinalIgnoreCase))
         {
@@ -32,6 +34,7 @@ internal sealed partial class BuildScript
         Log.Information("Usage: tools.cmd <workflow> [options]");
         Log.Information("Detailed help: tools.cmd -h <workflow>");
         Log.Information("Bool options: --flag (true), --no-flag (false)");
+        Log.Information("Global verbosity: --quiet or --verbose");
 
         foreach (var section in ToolsWorkflowSections)
         {
