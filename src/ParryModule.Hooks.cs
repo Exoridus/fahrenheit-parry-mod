@@ -882,18 +882,49 @@ public unsafe sealed partial class ParryModule
     {
         bool isPartySlot = param_3 >= 0 && param_3 < PartyActorCapacity;
 
-        // Phase 2: authoritative commit skip via durable impact marker.
-        // Only act on p5=1024. p5=0 is not the HP-commit pass — do not intercept there.
-        if (isPartySlot && _optionEnabled && _optionNegateDamage && param_5 == 1024)
+        // Phase 2: authoritative commit skip via durable impact marker or prior resolution.
+        // - p5=0: skip if already resolved, OR if the parry window is currently active for this slot.
+        // - p5=1024: skip if the durable impact marker is set (handles delayed-finalization).
+        if (isPartySlot && _optionEnabled && _optionNegateDamage)
         {
-            bool markerSet         = (_parryResolvedAtImpactMask & (1u << param_3)) != 0;
-            bool notAlreadyConsumed = (_internalInterceptedMask  & (1u << param_3)) == 0;
+            bool markerSet = (_parryResolvedAtImpactMask & (1u << param_3)) != 0;
+            bool alreadyResolved = (_runtime.LastParriedTargetMask & (1u << param_3)) != 0;
+            bool notAlreadyConsumed = (_internalInterceptedMask & (1u << param_3)) == 0;
 
-            if (markerSet && notAlreadyConsumed)
+            bool isActiveParry = !alreadyResolved
+                && DateTime.UtcNow.Ticks < _parryExpiry[param_3]
+                && param_1 == _runtime.CurrentAttackerId
+                && (_runtime.CurrentPartyTargetMask & (1u << param_3)) != 0;
+
+            if (param_5 == 0 && (alreadyResolved || isActiveParry) && notAlreadyConsumed)
             {
-                _parryResolvedAtImpactMask     &= ~(1u << param_3);
-                _internalInterceptedMask        |= 1u << param_3;
-                _runtime.LastParriedTargetMask  |= 1u << param_3;
+                if (isActiveParry)
+                {
+                    // If h_ms_set_damage p2=target didn't resolve it (e.g. group attack p2=-5),
+                    // resolve it here before skipping the native commit.
+                    Chr* party = _battleAdapter.GetPlayerCharacters();
+                    Chr* candidate = party != null ? party + param_3 : null;
+                    if (candidate != null && candidate->stat_exist_flag && candidate->damage_hp > 0)
+                    {
+                        resolve_successful_parry(param_3, candidate, "internal_impact", closeWindow: false);
+                    }
+                }
+
+                // p5=0 commit skip for resolved hits.
+                _internalInterceptedMask |= 1u << param_3;
+                write_session_hook_entry(
+                    $"[MsSetDamageInternal] f={_debugFrameIndex} slot={param_3} p5=0 resolved=1 -> SKIP " +
+                    $"attacker={param_1} cmd={param_2}");
+                log_debug($"MsSetDamageInternal p5=0 commit skipped for {format_actor_slot((byte)param_3)} (resolved).");
+                return 0;
+            }
+
+            if (param_5 == 1024 && markerSet && notAlreadyConsumed)
+            {
+                // p5=1024 commit skip via durable marker (likely magic/special delayed-finalization).
+                _parryResolvedAtImpactMask &= ~(1u << param_3);
+                _internalInterceptedMask |= 1u << param_3;
+                _runtime.LastParriedTargetMask |= 1u << param_3;
 
                 write_session_hook_entry(
                     $"[MsSetDamageInternal] f={_debugFrameIndex} slot={param_3} p5=1024 marker=1 -> SKIP " +

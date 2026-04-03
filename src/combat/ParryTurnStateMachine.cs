@@ -36,6 +36,7 @@ public static class TurnTimelineStateMachine
 
         return (from, to) switch
         {
+            (TurnTimelineParryState.Pending, TurnTimelineParryState.None) => true,
             (TurnTimelineParryState.Pending, TurnTimelineParryState.Waiting) => true,
             (TurnTimelineParryState.Pending, TurnTimelineParryState.Open) => true,
             (TurnTimelineParryState.Pending, TurnTimelineParryState.Missed) => true,
