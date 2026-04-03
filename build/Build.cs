@@ -34,6 +34,7 @@ internal sealed partial class BuildScript : NukeBuild
     [Parameter(Name = "game-data")] readonly bool CleanGameData;
     [Parameter(Name = "tools")] readonly bool CleanTools;
     [Parameter(Name = "purge")] readonly bool Purge;
+    [Parameter(Name = "yes")] readonly bool Yes;
     [Parameter(Name = "dry-run")] readonly bool DryRun;
     [Parameter(Name = "non-interactive")] readonly bool NonInteractive;
     [Parameter(Name = "elevated")] readonly bool Elevated;

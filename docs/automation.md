@@ -33,13 +33,14 @@ Quick command discovery:
   - --exports (optional).
   - --game-data (optional).
   - --tools (optional).
-  - --purge (optional).
+  - --purge (optional, requires --yes).
+  - --yes (required with --purge).
   - --dry-run (optional).
   - Examples:
   - `.\build.cmd clean`
   - `.\build.cmd clean --analysis`
   - `.\build.cmd clean --exports --game-data`
-  - `.\build.cmd clean --purge`
+  - `.\build.cmd clean --purge --yes`
 
 - `.\build.cmd auto-deploy`
   - Configure automatic post-build deployment.

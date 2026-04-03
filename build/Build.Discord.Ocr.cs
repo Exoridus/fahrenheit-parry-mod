@@ -2,6 +2,8 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Headers;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Serilog;
@@ -11,6 +13,7 @@ internal sealed partial class BuildScript
     static readonly HttpClient DiscordOcrHttpClient = CreateDiscordOcrHttpClient();
     const int DiscordTesseractTimeoutMs = 2 * 60 * 1000;
     const int DiscordVisionTimeoutSeconds = 240;
+    const string DiscordOcrIndexFileName = "ocr.index.csv";
 
     sealed record DiscordOcrAuditEntry(
         string ImagePath,
@@ -20,6 +23,20 @@ internal sealed partial class BuildScript
         bool WroteSidecar,
         string SidecarPath,
         string Error);
+
+    sealed class DiscordOcrIndexRow
+    {
+        public string RelativePath { get; set; } = string.Empty;
+        public long FileSizeBytes { get; set; }
+        public long LastWriteUtcTicks { get; set; }
+        public string ImageSha256 { get; set; } = string.Empty;
+        public string LastEngine { get; set; } = string.Empty;
+        public string LastClassification { get; set; } = string.Empty;
+        public int LastConfidence { get; set; }
+        public bool HasSidecarText { get; set; }
+        public string LastError { get; set; } = string.Empty;
+        public string UpdatedAtUtc { get; set; } = string.Empty;
+    }
 
     void RunDiscordOcrPipeline(string guildDir, WorkspaceConfig workspaceConfig, bool full)
     {
@@ -46,6 +63,9 @@ internal sealed partial class BuildScript
         }
 
         var audit = new ConcurrentBag<DiscordOcrAuditEntry>();
+        var ocrIndexPath = Path.Combine(guildDir, DiscordOcrIndexFileName);
+        var ocrIndex = LoadDiscordOcrIndex(ocrIndexPath);
+        var skipByIndex = new ConcurrentDictionary<string, byte>(StringComparer.OrdinalIgnoreCase);
         var tesseractPath = Path.Combine(ResolveDiscordToolDirectory("tesseract"), "tesseract.exe");
         var tesseractEnabled = File.Exists(tesseractPath);
 
@@ -53,6 +73,20 @@ internal sealed partial class BuildScript
         {
             Parallel.ForEach(mediaFiles, new ParallelOptions { MaxDegreeOfParallelism = 4 }, imagePath =>
             {
+                if (!full && ShouldSkipOcrFromIndex(guildDir, imagePath, ocrIndex))
+                {
+                    skipByIndex.TryAdd(imagePath, 0);
+                    audit.Add(new DiscordOcrAuditEntry(
+                        ImagePath: imagePath,
+                        Engine: "index",
+                        Classification: "cached_no_text",
+                        Confidence: 0,
+                        WroteSidecar: false,
+                        SidecarPath: imagePath + ".ocr.txt",
+                        Error: string.Empty));
+                    return;
+                }
+
                 if (!full && HasOcrSidecarText(imagePath))
                 {
                     return;
@@ -76,16 +110,19 @@ internal sealed partial class BuildScript
         {
             Log.Information("Skipping LLM OCR pass (OpenApiUrl/OpenApiModel are not configured in .workspace/config.local.json).");
             WriteDiscordOcrAudit(guildOcrOut, audit);
+            SaveDiscordOcrIndex(ocrIndexPath, guildDir, mediaFiles, ocrIndex, audit);
             return;
         }
 
         var resolvedApiKey = ResolveConfigEnvValue(workspaceConfig.OpenApiKey, nameof(WorkspaceConfig.OpenApiKey));
         var visionCandidates = mediaFiles
+            .Where(path => !skipByIndex.ContainsKey(path))
             .Where(path => full || !HasOcrSidecarText(path))
             .ToList();
         if (visionCandidates.Count == 0)
         {
             WriteDiscordOcrAudit(guildOcrOut, audit);
+            SaveDiscordOcrIndex(ocrIndexPath, guildDir, mediaFiles, ocrIndex, audit);
             return;
         }
 
@@ -134,6 +171,7 @@ internal sealed partial class BuildScript
         });
 
         WriteDiscordOcrAudit(guildOcrOut, audit);
+        SaveDiscordOcrIndex(ocrIndexPath, guildDir, mediaFiles, ocrIndex, audit);
     }
 
     static void WriteDiscordOcrAudit(string guildOcrOut, IEnumerable<DiscordOcrAuditEntry> entries)
@@ -158,6 +196,8 @@ internal sealed partial class BuildScript
         }
 
         var summaryPath = Path.Combine(guildOcrOut, "ocr.summary.json");
+        var confidenceRows = ordered.Where(x => x.Confidence > 0).Select(x => x.Confidence).ToList();
+        var successfulRows = ordered.Where(x => string.IsNullOrWhiteSpace(x.Error)).ToList();
         var summary = new
         {
             GeneratedAtUtc = DateTime.UtcNow.ToString("O"),
@@ -165,12 +205,290 @@ internal sealed partial class BuildScript
             Tesseract = ordered.Count(x => x.Engine.Equals("tesseract", StringComparison.OrdinalIgnoreCase)),
             LocalLlm = ordered.Count(x => x.Engine.Equals("local-llm", StringComparison.OrdinalIgnoreCase)),
             SidecarsWritten = ordered.Count(x => x.WroteSidecar),
-            Errors = ordered.Count(x => !string.IsNullOrWhiteSpace(x.Error))
+            Errors = ordered.Count(x => !string.IsNullOrWhiteSpace(x.Error)),
+            AvgConfidence = confidenceRows.Count == 0 ? 0 : Math.Round(confidenceRows.Average(), 2),
+            MaxConfidence = confidenceRows.Count == 0 ? 0 : confidenceRows.Max(),
+            MinConfidence = confidenceRows.Count == 0 ? 0 : confidenceRows.Min(),
+            SuccessRate = ordered.Count == 0 ? 0 : Math.Round(successfulRows.Count / (double)ordered.Count, 4)
         };
         File.WriteAllText(
             summaryPath,
             JsonSerializer.Serialize(summary, new JsonSerializerOptions { WriteIndented = true }) + Environment.NewLine,
             Utf8NoBom);
+    }
+
+    static Dictionary<string, DiscordOcrIndexRow> LoadDiscordOcrIndex(string indexPath)
+    {
+        var map = new Dictionary<string, DiscordOcrIndexRow>(StringComparer.OrdinalIgnoreCase);
+        if (!File.Exists(indexPath))
+        {
+            return map;
+        }
+
+        foreach (var line in File.ReadLines(indexPath))
+        {
+            if (string.IsNullOrWhiteSpace(line) || line.StartsWith("RelativePath,", StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            var fields = ParseCsvLine(line);
+            if (fields.Count < 10)
+            {
+                continue;
+            }
+
+            if (!long.TryParse(fields[1], out var size))
+            {
+                size = 0;
+            }
+
+            if (!long.TryParse(fields[2], out var ticks))
+            {
+                ticks = 0;
+            }
+
+            if (!int.TryParse(fields[6], out var confidence))
+            {
+                confidence = 0;
+            }
+
+            var row = new DiscordOcrIndexRow
+            {
+                RelativePath = fields[0],
+                FileSizeBytes = size,
+                LastWriteUtcTicks = ticks,
+                ImageSha256 = fields[3],
+                LastEngine = fields[4],
+                LastClassification = fields[5],
+                LastConfidence = confidence,
+                HasSidecarText = fields[7].Equals("true", StringComparison.OrdinalIgnoreCase),
+                LastError = fields[8],
+                UpdatedAtUtc = fields[9]
+            };
+
+            if (!string.IsNullOrWhiteSpace(row.RelativePath))
+            {
+                map[row.RelativePath] = row;
+            }
+        }
+
+        return map;
+    }
+
+    static bool ShouldSkipOcrFromIndex(string guildDir, string imagePath, IReadOnlyDictionary<string, DiscordOcrIndexRow> index)
+    {
+        var relativePath = Path.GetRelativePath(guildDir, imagePath).Replace('\\', '/');
+        if (!index.TryGetValue(relativePath, out var row))
+        {
+            return false;
+        }
+
+        var file = new FileInfo(imagePath);
+        if (!file.Exists)
+        {
+            return false;
+        }
+
+        if (row.FileSizeBytes != file.Length || row.LastWriteUtcTicks != file.LastWriteTimeUtc.Ticks)
+        {
+            return false;
+        }
+
+        if (row.HasSidecarText)
+        {
+            return false;
+        }
+
+        if (!string.IsNullOrWhiteSpace(row.LastError))
+        {
+            return false;
+        }
+
+        return row.LastClassification.Equals("no_text", StringComparison.OrdinalIgnoreCase)
+               || row.LastClassification.Equals("skipped_small_image", StringComparison.OrdinalIgnoreCase)
+               || row.LastClassification.Equals("skipped", StringComparison.OrdinalIgnoreCase)
+               || row.LastClassification.Equals("cached_no_text", StringComparison.OrdinalIgnoreCase);
+    }
+
+    void SaveDiscordOcrIndex(
+        string indexPath,
+        string guildDir,
+        IReadOnlyCollection<string> mediaFiles,
+        IDictionary<string, DiscordOcrIndexRow> existingIndex,
+        IEnumerable<DiscordOcrAuditEntry> auditEntries)
+    {
+        var now = DateTime.UtcNow.ToString("O");
+        var auditByImage = auditEntries
+            .GroupBy(entry => entry.ImagePath, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(
+                group => group.Key,
+                PickBestAuditEntry,
+                StringComparer.OrdinalIgnoreCase);
+
+        foreach (var imagePath in mediaFiles)
+        {
+            if (!File.Exists(imagePath))
+            {
+                continue;
+            }
+
+            var relativePath = Path.GetRelativePath(guildDir, imagePath).Replace('\\', '/');
+            var file = new FileInfo(imagePath);
+            if (!existingIndex.TryGetValue(relativePath, out var row))
+            {
+                row = new DiscordOcrIndexRow { RelativePath = relativePath };
+            }
+
+            row.FileSizeBytes = file.Length;
+            row.LastWriteUtcTicks = file.LastWriteTimeUtc.Ticks;
+            row.HasSidecarText = HasOcrSidecarText(imagePath);
+            row.UpdatedAtUtc = now;
+
+            if (auditByImage.TryGetValue(imagePath, out var audit))
+            {
+                row.LastEngine = audit.Engine;
+                row.LastClassification = audit.Classification;
+                row.LastConfidence = audit.Confidence;
+                row.LastError = audit.Error ?? string.Empty;
+                row.ImageSha256 = ComputeFileSha256Hex(imagePath);
+            }
+            else if (string.IsNullOrWhiteSpace(row.LastClassification))
+            {
+                row.LastClassification = row.HasSidecarText ? "full_text" : "unknown";
+                row.LastEngine = row.HasSidecarText ? "existing-sidecar" : "none";
+            }
+
+            existingIndex[relativePath] = row;
+        }
+
+        var lines = new List<string>
+        {
+            "RelativePath,FileSizeBytes,LastWriteUtcTicks,ImageSha256,LastEngine,LastClassification,LastConfidence,HasSidecarText,LastError,UpdatedAtUtc"
+        };
+        foreach (var row in existingIndex.Values.OrderBy(x => x.RelativePath, StringComparer.OrdinalIgnoreCase))
+        {
+            lines.Add(string.Join(",",
+                CsvEscape(row.RelativePath),
+                row.FileSizeBytes.ToString(),
+                row.LastWriteUtcTicks.ToString(),
+                CsvEscape(row.ImageSha256),
+                CsvEscape(row.LastEngine),
+                CsvEscape(row.LastClassification),
+                row.LastConfidence.ToString(),
+                row.HasSidecarText ? "true" : "false",
+                CsvEscape(row.LastError),
+                CsvEscape(row.UpdatedAtUtc)));
+        }
+
+        File.WriteAllText(indexPath, string.Join(Environment.NewLine, lines) + Environment.NewLine, Utf8NoBom);
+    }
+
+    static DiscordOcrAuditEntry PickBestAuditEntry(IEnumerable<DiscordOcrAuditEntry> entries)
+    {
+        DiscordOcrAuditEntry? best = null;
+        var bestScore = int.MinValue;
+        foreach (var entry in entries)
+        {
+            var score = entry.Engine switch
+            {
+                "local-llm" => 20,
+                "tesseract" => 10,
+                _ => 0
+            };
+            if (string.IsNullOrWhiteSpace(entry.Error))
+            {
+                score += 5;
+            }
+
+            if (entry.WroteSidecar)
+            {
+                score += 3;
+            }
+
+            if (entry.Confidence > 0)
+            {
+                score += 1;
+            }
+
+            if (score > bestScore)
+            {
+                bestScore = score;
+                best = entry;
+            }
+        }
+
+        return best ?? entries.First();
+    }
+
+    static string ComputeFileSha256Hex(string path)
+    {
+        using var sha = SHA256.Create();
+        using var stream = File.OpenRead(path);
+        var hash = sha.ComputeHash(stream);
+        return Convert.ToHexString(hash).ToLowerInvariant();
+    }
+
+    static string CsvEscape(string value)
+    {
+        var input = value ?? string.Empty;
+        if (!input.Contains(',') && !input.Contains('"') && !input.Contains('\n') && !input.Contains('\r'))
+        {
+            return input;
+        }
+
+        return "\"" + input.Replace("\"", "\"\"") + "\"";
+    }
+
+    static List<string> ParseCsvLine(string line)
+    {
+        var result = new List<string>();
+        if (line is null)
+        {
+            return result;
+        }
+
+        var current = new StringBuilder();
+        var inQuotes = false;
+        for (var i = 0; i < line.Length; i++)
+        {
+            var c = line[i];
+            if (inQuotes)
+            {
+                if (c == '"')
+                {
+                    if (i + 1 < line.Length && line[i + 1] == '"')
+                    {
+                        current.Append('"');
+                        i++;
+                    }
+                    else
+                    {
+                        inQuotes = false;
+                    }
+                }
+                else
+                {
+                    current.Append(c);
+                }
+            }
+            else if (c == '"')
+            {
+                inQuotes = true;
+            }
+            else if (c == ',')
+            {
+                result.Add(current.ToString());
+                current.Clear();
+            }
+            else
+            {
+                current.Append(c);
+            }
+        }
+
+        result.Add(current.ToString());
+        return result;
     }
 
     DiscordOcrAuditEntry? RunTesseractOcr(string imagePath, string tesseractPath, int minDimension)

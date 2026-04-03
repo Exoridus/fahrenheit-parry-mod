@@ -43,6 +43,15 @@ jobs:
         shell: cmd
         run: build.cmd commit-range --range "${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}"
 
+      - name: CLI sanity
+        shell: cmd
+        run: |
+          build.cmd help
+          build.cmd -h clean
+          build.cmd clean --dry-run
+          build.cmd clean --purge --yes --dry-run
+          tools.cmd help
+
       - name: Verify
         shell: cmd
         run: build.cmd verify --target Debug --repo "${{ github.repository }}"

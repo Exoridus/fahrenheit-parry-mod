@@ -17,6 +17,11 @@ internal sealed partial class BuildScript
 
     void RunCleanCore()
     {
+        if (Purge && !Yes)
+        {
+            Fail("clean --purge is destructive and requires --yes.");
+        }
+
         var includeAnalysis = Purge || CleanAnalysis;
         var includeExports = Purge || CleanExports;
         var includeGameData = Purge || CleanGameData;
