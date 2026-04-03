@@ -28,11 +28,9 @@ internal sealed partial class BuildScript
     static readonly UTF8Encoding Utf8NoBom = new(encoderShouldEmitUTF8Identifier: false);
     static readonly HttpClient DiscordFetchHttpClient = CreateDiscordFetchHttpClient();
     const int DiscordCliTimeoutMs = 30 * 60 * 1000; // 30 minutes
-    const int PowerShellScriptTimeoutMs = 6 * 60 * 60 * 1000; // 6 hours
     const string DiscordOutputRootRelative = ".workspace/discord";
     const string DiscordConfigRelativePath = ".workspace/discord/config.local.json";
     const string DiscordExportIndexCacheRelativePath = ".workspace/discord/_index/export-index.cache.json";
-    const string DiscordScriptsRelativeDir = "build/scripts/discord";
     const string DiscordPrimaryToolsRelativeDir = ".workspace/tools";
     const string DiscordOcrOutRelativeDir = ".workspace/analysis/discord-ocr";
     const int DiscordTesseractMinDimension = 640;
@@ -62,8 +60,6 @@ internal sealed partial class BuildScript
     string ResolveDiscordExportIndexCachePath() => ResolvePath(DiscordExportIndexCacheRelativePath);
 
     string ResolveDiscordToolDirectory(string toolName) => ResolvePath(Path.Combine(DiscordPrimaryToolsRelativeDir, toolName));
-
-    string ResolveDiscordScriptPath(string scriptName) => ResolvePath(Path.Combine(DiscordScriptsRelativeDir, scriptName));
 
     void CleanupRedundantDiscordFiles(string outputRoot, string currentGuildId)
     {
@@ -187,13 +183,6 @@ internal sealed partial class BuildScript
                 return;
             }
 
-            var tesseractScript = ResolveDiscordScriptPath("tesseract-ocr.ps1");
-            var ocrScript = ResolveDiscordScriptPath("discord-ocr-pipeline.ps1");
-            var postprocessScript = ResolveDiscordScriptPath("postprocess-discord-ocr.ps1");
-            var tesseractPath = Path.Combine(ResolveDiscordToolDirectory("tesseract"), "tesseract.exe");
-            var ocrRoot = ResolvePath(DiscordOcrOutRelativeDir);
-            EnsureDir(ocrRoot);
-
             var guildDirs = Directory.GetDirectories(outputRoot, "*_*", SearchOption.TopDirectoryOnly)
                 .Where(d => !IsDiscordHousekeepingPath(outputRoot, d))
                 .OrderBy(x => x, StringComparer.OrdinalIgnoreCase)
@@ -209,58 +198,13 @@ internal sealed partial class BuildScript
 
             Parallel.ForEach(guildDirs, new ParallelOptions { MaxDegreeOfParallelism = 2 }, guildDir =>
             {
-                EnrichDiscordGuild(
-                    guildDir,
-                    ocrRoot,
-                    workspaceConfig,
-                    tesseractScript,
-                    tesseractPath,
-                    ocrScript,
-                    postprocessScript);
+                EnrichDiscordGuild(guildDir, workspaceConfig);
                 GenerateDiscordReferencesForGuild(guildDir, workspaceConfig, discordConfig.BlacklistedChannelIds);
                 RegenerateDiscordMarkdownForGuild(guildDir);
             });
 
             Log.Information("Discord enrichment pipeline complete.");
         });
-
-    void RunPowerShellScript(string scriptPath, string args)
-    {
-        var psi = new ProcessStartInfo
-        {
-            FileName = "powershell.exe",
-            Arguments = $"-NoProfile -ExecutionPolicy Bypass -File {Quote(scriptPath)} {args}",
-            UseShellExecute = false,
-            CreateNoWindow = true
-        };
-
-        using var process = Process.Start(psi);
-        if (process is null)
-        {
-            Log.Warning($"Failed to start PowerShell script: {scriptPath}");
-            return;
-        }
-
-        if (!process.WaitForExit(PowerShellScriptTimeoutMs))
-        {
-            try
-            {
-                process.Kill(entireProcessTree: true);
-            }
-            catch
-            {
-                // Best-effort timeout cleanup.
-            }
-
-            Log.Warning($"PowerShell script {Path.GetFileName(scriptPath)} timed out after {PowerShellScriptTimeoutMs / 1000} seconds.");
-            return;
-        }
-
-        if (process.ExitCode != 0)
-        {
-            Log.Warning($"PowerShell script {Path.GetFileName(scriptPath)} failed with code {process.ExitCode}.");
-        }
-    }
 
     static bool IsSupportedOcrImageFile(string path)
     {
@@ -275,147 +219,16 @@ internal sealed partial class BuildScript
                || ext.Equals(".tiff", StringComparison.OrdinalIgnoreCase);
     }
 
-    void WriteMissingOcrSidecarsFromLinks(string ocrOutDir)
+    void EnrichDiscordGuild(string guildDir, WorkspaceConfig workspaceConfig)
     {
-        var linksPath = Path.Combine(ocrOutDir, "ocr_message_image_links.jsonl");
-        if (!File.Exists(linksPath))
+        if (!Directory.Exists(guildDir))
         {
             return;
         }
 
-        var bestByImage = new Dictionary<string, (int Confidence, string Text)>(StringComparer.OrdinalIgnoreCase);
-        foreach (var line in File.ReadLines(linksPath))
-        {
-            if (string.IsNullOrWhiteSpace(line))
-            {
-                continue;
-            }
-
-            try
-            {
-                using var doc = JsonDocument.Parse(line);
-                var root = doc.RootElement;
-                var imagePath = root.TryGetProperty("ImagePath", out var imageNode) ? imageNode.GetString() : string.Empty;
-                var text = root.TryGetProperty("OcrText", out var textNode) ? textNode.GetString() : string.Empty;
-                var classification = root.TryGetProperty("OcrClassification", out var classificationNode)
-                    ? classificationNode.GetString() ?? string.Empty
-                    : string.Empty;
-                var confidence = root.TryGetProperty("OcrConfidence", out var confidenceNode) && confidenceNode.TryGetInt32(out var parsedConfidence)
-                    ? parsedConfidence
-                    : 0;
-
-                if (string.IsNullOrWhiteSpace(imagePath)
-                    || string.IsNullOrWhiteSpace(text)
-                    || confidence < 60
-                    || !(classification.Equals("full_text", StringComparison.OrdinalIgnoreCase)
-                         || classification.Equals("partial_text", StringComparison.OrdinalIgnoreCase)))
-                {
-                    continue;
-                }
-
-                if (!bestByImage.TryGetValue(imagePath, out var existing) || confidence > existing.Confidence)
-                {
-                    bestByImage[imagePath] = (confidence, text);
-                }
-            }
-            catch
-            {
-                // Skip malformed JSONL rows.
-            }
-        }
-
-        var created = 0;
-        foreach (var kvp in bestByImage)
-        {
-            var imagePath = kvp.Key;
-            if (!File.Exists(imagePath))
-            {
-                continue;
-            }
-
-            var sidecarPath = imagePath + ".ocr.txt";
-            if (File.Exists(sidecarPath))
-            {
-                continue;
-            }
-
-            File.WriteAllText(sidecarPath, kvp.Value.Text, Utf8NoBom);
-            created++;
-        }
-
-        if (created > 0)
-        {
-            Log.Information($"Wrote {created} missing OCR sidecar file(s) from {Path.GetFileName(linksPath)}.");
-        }
-    }
-
-    void EnrichDiscordGuild(
-        string guildDir,
-        string ocrRoot,
-        WorkspaceConfig workspaceConfig,
-        string tesseractScript,
-        string tesseractPath,
-        string ocrScript,
-        string postprocessScript)
-    {
         var guildName = Path.GetFileName(guildDir);
-        var guildOcrOut = Path.Combine(ocrRoot, guildName);
-        EnsureDir(guildOcrOut);
         Log.Information($"Enriching {guildName}...");
-
-        if (File.Exists(tesseractScript) && File.Exists(tesseractPath))
-        {
-            var mediaFiles = Directory.GetFiles(guildDir, "*.*", SearchOption.AllDirectories)
-                .Where(IsSupportedOcrImageFile)
-                .Where(path => path.Contains($"{Path.DirectorySeparatorChar}Media{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
-                .ToList();
-
-            Parallel.ForEach(mediaFiles, new ParallelOptions { MaxDegreeOfParallelism = 4 }, file =>
-            {
-                if (!File.Exists(file + ".ocr.txt"))
-                {
-                    RunPowerShellScript(
-                        tesseractScript,
-                        $"-ImagePath {Quote(file)} -TesseractPath {Quote(tesseractPath)} -MinDimension {DiscordTesseractMinDimension}");
-                }
-            });
-        }
-
-        if (File.Exists(ocrScript))
-        {
-            var hasOcrModelConfig = !string.IsNullOrWhiteSpace(workspaceConfig.OpenApiUrl)
-                                    && !string.IsNullOrWhiteSpace(workspaceConfig.OpenApiModel);
-            if (hasOcrModelConfig)
-            {
-                var resolvedOpenApiKey = ResolveConfigEnvValue(workspaceConfig.OpenApiKey, nameof(WorkspaceConfig.OpenApiKey));
-                var args = new StringBuilder();
-                args.Append($"-Root {Quote(guildDir)} -OutDir {Quote(guildOcrOut)} -Resume");
-                args.Append($" -ApiBase {Quote(workspaceConfig.OpenApiUrl)}");
-                if (!string.IsNullOrWhiteSpace(resolvedOpenApiKey))
-                {
-                    args.Append($" -ApiKey {Quote(resolvedOpenApiKey)}");
-                }
-
-                args.Append($" -FastModel {Quote(workspaceConfig.OpenApiModel)}");
-                args.Append($" -LargeModel {Quote(workspaceConfig.OpenApiModel)}");
-                if (Full)
-                {
-                    args.Append(" -Full");
-                }
-
-                RunPowerShellScript(ocrScript, args.ToString());
-            }
-            else
-            {
-                Log.Information("Skipping LLM OCR pass (OpenApiUrl/OpenApiModel are not configured in .workspace/config.local.json).");
-            }
-        }
-
-        if (File.Exists(postprocessScript))
-        {
-            RunPowerShellScript(postprocessScript, $"-GuildRoot {Quote(guildDir)} -OcrOutDir {Quote(guildOcrOut)}");
-            WriteMissingOcrSidecarsFromLinks(guildOcrOut);
-        }
+        RunDiscordOcrPipeline(guildDir, workspaceConfig, Full);
     }
 
     void RunDiscordEnrichmentForGuild(string guildDir, WorkspaceConfig workspaceConfig)
@@ -425,31 +238,7 @@ internal sealed partial class BuildScript
             return;
         }
 
-        var tesseractScript = ResolveDiscordScriptPath("tesseract-ocr.ps1");
-        var ocrScript = ResolveDiscordScriptPath("discord-ocr-pipeline.ps1");
-        var postprocessScript = ResolveDiscordScriptPath("postprocess-discord-ocr.ps1");
-
-        var missingAnyScript =
-            !File.Exists(tesseractScript)
-            && !File.Exists(ocrScript)
-            && !File.Exists(postprocessScript);
-        if (missingAnyScript)
-        {
-            return;
-        }
-
-        var tesseractPath = Path.Combine(ResolveDiscordToolDirectory("tesseract"), "tesseract.exe");
-        var ocrRoot = ResolvePath(DiscordOcrOutRelativeDir);
-        EnsureDir(ocrRoot);
-
-        EnrichDiscordGuild(
-            guildDir,
-            ocrRoot,
-            workspaceConfig,
-            tesseractScript,
-            tesseractPath,
-            ocrScript,
-            postprocessScript);
+        EnrichDiscordGuild(guildDir, workspaceConfig);
     }
 
     void DiscordSyncCore()

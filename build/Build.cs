@@ -27,9 +27,13 @@ internal sealed partial class BuildScript : NukeBuild
     [Parameter(Name = "repo")] readonly string Repo = string.Empty;
     [Parameter(Name = "bump")] readonly string Bump = "patch";
     [Parameter(Name = "workflow")] readonly string Workflow = string.Empty;
-    [Parameter(Name = "preset")] readonly string Preset = "safe";
 
     [Parameter(Name = "full")] readonly bool Full;
+    [Parameter(Name = "analysis")] readonly bool CleanAnalysis;
+    [Parameter(Name = "exports")] readonly bool CleanExports;
+    [Parameter(Name = "game-data")] readonly bool CleanGameData;
+    [Parameter(Name = "tools")] readonly bool CleanTools;
+    [Parameter(Name = "purge")] readonly bool Purge;
     [Parameter(Name = "dry-run")] readonly bool DryRun;
     [Parameter(Name = "non-interactive")] readonly bool NonInteractive;
     [Parameter(Name = "elevated")] readonly bool Elevated;
@@ -167,7 +171,7 @@ internal sealed partial class BuildScript : NukeBuild
             }
         });
 
-    Target Clean => _ => _.Executes(() => RunCleanCore(Full));
+    Target Clean => _ => _.Executes(RunCleanCore);
 
     void SetupHooksCore()
     {

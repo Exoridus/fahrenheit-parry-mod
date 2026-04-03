@@ -27,12 +27,19 @@ Quick command discovery:
   - `.\build.cmd setup`
 
 - `.\build.cmd clean`
-  - Remove generated local build outputs and preflight artifacts.
+  - Default clean removes cache + build artifacts. Add explicit flags for analysis/exports/game-data/tools or use --purge for full local cleanup.
   - Parameters:
-  - --full (optional).
+  - --analysis (optional).
+  - --exports (optional).
+  - --game-data (optional).
+  - --tools (optional).
+  - --purge (optional).
+  - --dry-run (optional).
   - Examples:
   - `.\build.cmd clean`
-  - `.\build.cmd clean --full`
+  - `.\build.cmd clean --analysis`
+  - `.\build.cmd clean --exports --game-data`
+  - `.\build.cmd clean --purge`
 
 - `.\build.cmd auto-deploy`
   - Configure automatic post-build deployment.

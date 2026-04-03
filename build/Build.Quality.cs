@@ -15,9 +15,23 @@ internal sealed partial class BuildScript
 
     Target Smoke => _ => _.Executes(() => RunSmokeCore(BuildTargetOverride));
 
-    void RunCleanCore(bool full)
+    void RunCleanCore()
     {
-        var directories = new List<string>
+        var includeAnalysis = Purge || CleanAnalysis;
+        var includeExports = Purge || CleanExports;
+        var includeGameData = Purge || CleanGameData;
+        var includeTools = Purge || CleanTools;
+        var includeReleaseRoot = Purge;
+
+        var result = new CleanupAccountingResult();
+        Log.Information(
+            $"Starting clean (dry-run={DryRun.ToString().ToLowerInvariant()}, purge={Purge.ToString().ToLowerInvariant()}, analysis={includeAnalysis.ToString().ToLowerInvariant()}, exports={includeExports.ToString().ToLowerInvariant()}, game-data={includeGameData.ToString().ToLowerInvariant()}, tools={includeTools.ToString().ToLowerInvariant()}).");
+
+        // Default clean: cache + artifacts.
+        DeleteFileMaybeWithAccounting(ResolvePath(".workspace/discord/_index/export-index.cache.json"), result);
+        DeleteDirectoryMaybeWithAccounting(ResolvePath(".workspace/local-build"), result);
+
+        var artifactDirectories = new[]
         {
             Path.Combine(RootDirectory, "bin"),
             Path.Combine(RootDirectory, "obj"),
@@ -30,27 +44,49 @@ internal sealed partial class BuildScript
             Path.Combine(ResolvePath(".release"), "preflight")
         };
 
-        if (full)
+        foreach (var path in artifactDirectories.Distinct(StringComparer.OrdinalIgnoreCase))
         {
-            directories.Add(ResolvePath(".release"));
+            DeleteDirectoryMaybeWithAccounting(path, result);
         }
 
-        var removed = 0;
-        foreach (var path in directories.Distinct(StringComparer.OrdinalIgnoreCase))
+        if (includeReleaseRoot)
         {
-            if (!Directory.Exists(path))
+            DeleteDirectoryMaybeWithAccounting(ResolvePath(".release"), result);
+        }
+
+        if (includeAnalysis)
+        {
+            DeleteDirectoryMaybeWithAccounting(ResolvePath(".workspace/analysis"), result);
+        }
+
+        if (includeExports)
+        {
+            var discordRoot = ResolvePath(".workspace/discord");
+            if (Directory.Exists(discordRoot))
             {
-                continue;
-            }
+                foreach (var guildDir in Directory.GetDirectories(discordRoot, "*_*", SearchOption.TopDirectoryOnly)
+                             .Where(path => !IsDiscordHousekeepingPath(discordRoot, path))
+                             .OrderBy(path => path, StringComparer.OrdinalIgnoreCase))
+                {
+                    DeleteDirectoryMaybeWithAccounting(guildDir, result);
+                }
 
-            Directory.Delete(path, recursive: true);
-            removed++;
-            Log.Information($"Removed: {path}");
+                DeleteDirectoryMaybeWithAccounting(Path.Combine(discordRoot, "_staging"), result);
+            }
         }
 
-        Log.Information(removed == 0
-            ? "Clean completed: nothing to remove."
-            : $"Clean completed: removed {removed} director{(removed == 1 ? "y" : "ies")}.");
+        if (includeGameData)
+        {
+            DeleteDirectoryMaybeWithAccounting(ResolvePath(".workspace/data"), result);
+        }
+
+        if (includeTools)
+        {
+            DeleteDirectoryMaybeWithAccounting(ResolvePath(".workspace/tools"), result);
+        }
+
+        Log.Information(
+            $"Clean complete. Removed files={result.FilesRemoved}, directories={result.DirectoriesRemoved}, reclaimed={FormatBytes(result.BytesReclaimed)}.");
     }
 
     void RunDoctorCore()
@@ -338,17 +374,72 @@ internal sealed partial class BuildScript
 
     void RunBuildCliSmokeCore()
     {
-        var scriptPath = Path.Combine(RootDirectory, "tests", "build-cli-smoke.ps1");
-        if (!File.Exists(scriptPath))
+        var checks = new[]
         {
-            Fail($"Missing CLI smoke script: {scriptPath}");
+            new BuildCliSmokeCheck(
+                Command: @".\build.cmd --help",
+                MustContain: ["[NUKE] dotnet run --project build\\Build.csproj -- --target Help"],
+                MustNotContain: []),
+            new BuildCliSmokeCheck(
+                Command: @".\build.cmd -h deploy",
+                MustContain: ["[NUKE] dotnet run --project build\\Build.csproj -- --target Help --workflow deploy"],
+                MustNotContain: []),
+            new BuildCliSmokeCheck(
+                Command: @".\build.cmd deploy -h",
+                MustContain: ["[NUKE] dotnet run --project build\\Build.csproj -- --target Help --workflow deploy"],
+                MustNotContain: []),
+            new BuildCliSmokeCheck(
+                Command: @".\build.cmd build --no-auto-deploy --target Debug",
+                MustContain: ["[NUKE] dotnet run --project build\\Build.csproj -- --target Cli --workflow build --no-auto-deploy --build-target Debug"],
+                MustNotContain: []),
+            new BuildCliSmokeCheck(
+                Command: @".\build.cmd --target Help --workflow build --dry-run",
+                MustContain: ["[NUKE] dotnet run --project build\\Build.csproj -- --target Help --workflow build --dry-run"],
+                MustNotContain: []),
+            new BuildCliSmokeCheck(
+                Command: @".\build.cmd --target Help --workflow deploy --game-dir ""C:\Program Files\Square Enix\Final Fantasy X-X2 - HD Remaster""",
+                MustContain: ["--target Help --workflow deploy --game-dir"],
+                MustNotContain: [])
+        };
+
+        foreach (var check in checks)
+        {
+            Log.Information($"[CLI-SMOKE] {check.Command}");
+            var cmdArgs = $"/c set BUILD_CMD_SMOKE_ONLY=1&& set BUILD_CMD_ALLOW_NESTED=1&& {check.Command}";
+            var result = RunProcess(
+                "cmd",
+                cmdArgs,
+                $"CLI smoke: {check.Command}",
+                showSpinner: false,
+                silent: true);
+            var output = result.StdOut + result.StdErr;
+
+            if (result.ExitCode != 0)
+            {
+                Fail($"CLI smoke command failed ({result.ExitCode}): {check.Command}{Environment.NewLine}{output}");
+            }
+
+            foreach (var needle in check.MustContain)
+            {
+                if (!output.Contains(needle, StringComparison.Ordinal))
+                {
+                    Fail($"CLI smoke expected output to contain '{needle}' for command: {check.Command}{Environment.NewLine}{output}");
+                }
+            }
+
+            foreach (var needle in check.MustNotContain)
+            {
+                if (output.Contains(needle, StringComparison.Ordinal))
+                {
+                    Fail($"CLI smoke expected output to not contain '{needle}' for command: {check.Command}{Environment.NewLine}{output}");
+                }
+            }
         }
 
-        RunChecked(
-            "powershell",
-            $"-NoProfile -ExecutionPolicy Bypass -File {Quote(scriptPath)}",
-            "Run build CLI smoke checks");
+        Log.Information("[CLI-SMOKE] All CLI checks passed.");
     }
+
+    readonly record struct BuildCliSmokeCheck(string Command, string[] MustContain, string[] MustNotContain);
 
     static void AssertFilesExist(string rootPath, params string[] relativeFiles)
     {

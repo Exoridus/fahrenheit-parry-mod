@@ -23,15 +23,6 @@ Quick command discovery:
   - Examples:
   - `.\tools.cmd discord-sync --guild 612363389003366405`
 
-- `.\tools.cmd workspace-prune`
-  - Remove regenerable local workspace artifacts using safe/deep presets.
-  - Parameters:
-  - --preset safe|deep (optional, default safe).
-  - --dry-run (optional).
-  - Examples:
-  - `.\tools.cmd workspace-prune --preset safe --dry-run`
-  - `.\tools.cmd workspace-prune --preset deep`
-
 - `.\tools.cmd data-setup`
   - Install/update data tooling (VBFTool + FFXDataParser).
   - Parameters:
