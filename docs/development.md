@@ -7,7 +7,7 @@ Required (all local development):
 - Git
 - .NET SDK 10.x (pinned by `global.json`)
 
-Required for full native builds (`--payload full`):
+Required for native Fahrenheit builds:
 - Visual Studio Build Tools (or Visual Studio) with:
   - `.NET desktop development`
   - `Desktop development with C++`
@@ -18,7 +18,7 @@ Optional (data workflows only):
 - Maven (`mvn`)
 
 Optional (reverse engineering workflows):
-- Ghidra (managed via `.\build.cmd ghidra-setup`)
+- Ghidra (managed via `.\tools.cmd ghidra-setup`)
 
 ## Quick Start
 
@@ -48,7 +48,7 @@ Quality:
 .\build.cmd format
 .\build.cmd doctor [--full]
 .\build.cmd lint [--config Debug|Release]
-.\build.cmd smoke [--payload mod|full] [--config Debug|Release]
+.\build.cmd smoke [--config Debug|Release]
 .\build.cmd verify [--config Debug|Release] [--repo owner/repo]
 .\build.cmd clean [--full]
 ```
@@ -56,8 +56,8 @@ Quality:
 Build and deploy:
 
 ```bash
-.\build.cmd build [--payload mod|full] [--config Debug|Release]
-.\build.cmd deploy [--payload mod|full] [--game-dir "C:\\Path\\To\\Game"]
+.\build.cmd build [--config Debug|Release]
+.\build.cmd deploy [--game-dir "C:\\Path\\To\\Game"] [--config Debug|Release]
 .\build.cmd auto-deploy [--game-dir "C:\\Path\\To\\Game"]
 .\build.cmd start [--game-dir "C:\\Path\\To\\Game"] [--elevated|--no-elevated]
 ```
@@ -65,9 +65,10 @@ Build and deploy:
 Reverse engineering tooling:
 
 ```bash
-.\build.cmd ghidra-setup
-.\build.cmd ghidra-start
-.\build.cmd discord-sync --guild 612363389003366405
+.\tools.cmd help
+.\tools.cmd ghidra-setup
+.\tools.cmd ghidra-start
+.\tools.cmd discord-sync --guild 612363389003366405
 ```
 
 ## Parry Timing Determinism Checks
@@ -80,48 +81,64 @@ The test suite includes simulation-time pacing checks for 1x/2x/4x-equivalent de
 
 ## Local Config
 
-`.\build.cmd auto-deploy` stores settings in `.workspace/dev.local.json`:
+Local build and tooling settings are stored in `.workspace/config.local.json`.
 
-- `GameDir`
-- `AutoDeploy` (`true`/`false`/`null`, default `null`) -> global default for auto-deploy in `build` workflow. If `null`, the first local build asks once and stores the choice.
-- `DeployBlocklist` (array of paths to preserve/skip during deploy; supports relative paths under `GameDir\fahrenheit` and absolute paths; default `["mods/loadorder", "saves"]`).
+Schema keys are strict and case-sensitive:
 
-`.\build.cmd build` can override `AutoDeploy` per run:
+- `BuildTarget` (`Debug` or `Release`)
+- `InstallPath` (game install directory containing `FFX.exe`)
+- `DeployAfterBuild` (`true`/`false`/`null`; `null` prompts once in interactive mode)
+- `PreservePaths` (array of deploy-preserved paths under `<InstallPath>\fahrenheit` and/or absolute paths)
+- `OpenApiUrl`
+- `OpenApiKey`
+- `OpenApiModel`
+- `FetchRetryCount`
+- `DiscordToken`
 
-- `--deploy` forces deploy for this run even if `AutoDeploy` is `false`.
-- `--no-deploy` disables deploy for this run even if `AutoDeploy` is `true`.
+`.\build.cmd build` can override deploy behavior per run:
 
-Auto-deploy target follows the build target:
-- `--payload mod` -> deploy `mod`
-- `--payload full` -> deploy `full`
+- `--deploy` forces deploy for this run even if `DeployAfterBuild` is `false`.
+- `--no-deploy` disables deploy for this run even if `DeployAfterBuild` is `true`.
 
-Deploy behavior mirrors artifact state into the selected deploy target and preserves entries from `DeployBlocklist`.
+Build and deploy workflows always operate on full payloads to reduce stale artifact issues.
+Deploy behavior mirrors artifact state into the selected deploy target and preserves entries from `PreservePaths`.
 
 Use `--dry-run` with `build` or `deploy` to preview sync actions without writing files.
 
-`.\build.cmd discord-sync` reads a Discord token from this local-only file:
+`.\tools.cmd discord-sync` reads Discord auth and enrichment settings from `.workspace/config.local.json` and workflow-level sync filters from `.workspace/discord/config.local.json`.
 
-- `.workspace/discord/config.local.json`
+Recommended shape for `.workspace/config.local.json`:
+
+```json
+{
+  "BuildTarget": "Release",
+  "InstallPath": "",
+  "DeployAfterBuild": null,
+  "PreservePaths": ["mods/loadorder", "saves"],
+  "OpenApiUrl": "",
+  "OpenApiKey": "",
+  "OpenApiModel": "",
+  "FetchRetryCount": 2,
+  "DiscordToken": ""
+}
+```
 
 Recommended shape for `.workspace/discord/config.local.json`:
 
 ```json
 {
-  "token": "...",
-  "defaults": {
-    "includeVc": true,
-    "includeThreads": "All",
-    "media": true,
-    "reuseMedia": true,
-    "respectRateLimits": true
-  },
-  "blacklist": [
+  "Blacklist": [
     "123456789012345678"
+  ],
+  "Guilds": [
+    "612363389003366405"
   ]
 }
 ```
 
-The Discord sync workflow exports JSON into `.workspace/discord`, discovers channels and threads automatically, and defaults to full-or-delta behavior per channel. Voice channels are included by default because they can also contain text chat. If you do not set `defaults.mediaDir`, the build workflow now resolves a server-local media directory at `<Guild Root>\\Media` and keeps each guild's downloaded assets there by default. A local `blacklist` array can exclude known inaccessible or unsupported channel/thread IDs before sync starts, and future inaccessible IDs are persisted back into that same local config automatically. Use `.\build.cmd discord-sync --guild <serverId> --full` periodically to reconcile edits/deletions that delta mode cannot recover.
+Config keys are strict and case-sensitive.
+
+The Discord sync workflow exports immutable raw channel JSON into `.workspace/discord`, discovers channels and threads automatically, and defaults to full-or-delta behavior per channel. Voice channels, thread discovery, media downloads, media reuse, and advisory rate-limit handling are always enabled for consistency. Assets are stored per guild at `<Guild Root>\\Media`. OCR outputs are sidecars (`*.ocr.txt`) and the Tesseract pre-pass only runs on larger images (currently max dimension >= 640px). Fetched text/code is stored as `*.src.txt`, per-channel reference indexes are stored as `*.refs.jsonl`, and per-server metadata is written to `server.refs.json`. A local `Blacklist` array can exclude known inaccessible or unsupported channel/thread IDs before sync starts, and future inaccessible IDs are persisted back into that same local config automatically. Use `.\tools.cmd discord-sync --guild <serverId> --full` periodically to reconcile edits/deletions that delta mode cannot recover.
 
 ## Commit Workflows
 
@@ -159,6 +176,6 @@ git push origin main --follow-tags
 - Data pipeline: `docs/data-pipeline.md`
 - Localization strategy: `docs/localization.md`
 - Pointer/hook primer: `docs/pointers-hooks-guide.md`
-- Local config schema: `docs/dev-local.schema.json`
+- Local config schema: `docs/workspace-config.local.schema.json`
 
 

@@ -2,6 +2,35 @@
 
 These rules apply to all AI assistants working in this repository, including Claude, Codex, Gemini, and similar coding agents.
 
+
+## 0) Canonical Parry + Agent Routing Addendum
+
+Canonical gameplay authority order:
+1. `.workspace/knowledge-base/FINAL_PARRY_SPEC.md`
+2. `.workspace/knowledge-base/parry_interaction_model.md`
+3. `.workspace/knowledge-base/TIERED_PENALTY_RATIONALE.md`
+4. other active KB files under `.workspace/knowledge-base/`
+5. code/tests/logs/docs
+6. `.workspace/knowledge-base/archive/` historical references
+
+Non-negotiable parry semantics:
+- no hold-to-parry behavior
+- no pre-held auto-arm behavior
+- no persistent pre-arm/persistent protection model
+- fresh R1 press opens window immediately
+- hit in window = parry success
+- whiff = temporary hard lockout
+- tiered anti-spam penalty is secondary and temporary
+
+Active Claude agent set:
+- Main: `parry-router`, `parry-reviewer`, `parry-worker-sonnet`, `parry-worker-opus`, `ffx-forensics`
+- Optional: `kb-curator`, `combat-design-reviewer`, `session-log-analyst`
+- Shared memory: `.claude/agent-memory/MEMORY.md`
+- Per-agent memory: `.claude/agent-memory/<agent>/MEMORY.md`
+- Legacy agents/memories: `.claude/archive/`
+
+Historical docs are valuable for context and forensics, but they must not silently override canonical design semantics.
+
 ## 1) Project Purpose and High-Level Shape
 
 This repository is a Final Fantasy X mod loaded through Fahrenheit.
