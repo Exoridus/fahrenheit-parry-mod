@@ -14,7 +14,7 @@
       "type": "string",
       "description": "Absolute path to game install directory containing FFX.exe."
     },
-    "DeployAfterBuild": {
+    "AutoDeploy": {
       "type": ["boolean", "null"],
       "description": "Automatic deploy behavior after build. Null means first-time interactive prompt."
     },
@@ -50,7 +50,7 @@
   "required": [
     "BuildTarget",
     "InstallPath",
-    "DeployAfterBuild",
+    "AutoDeploy",
     "PreservePaths",
     "OpenApiUrl",
     "OpenApiKey",
@@ -62,7 +62,7 @@
     {
       "BuildTarget": "Release",
       "InstallPath": "C:\\Games\\Final Fantasy X-X2 - HD Remaster",
-      "DeployAfterBuild": null,
+      "AutoDeploy": null,
       "PreservePaths": ["mods/loadorder", "saves"],
       "OpenApiUrl": "http://127.0.0.1:1234/v1",
       "OpenApiKey": "$env:LM_API_TOKEN",

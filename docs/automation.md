@@ -59,21 +59,24 @@ Quick command discovery:
 - `.\build.cmd lint`
   - Run fast lint/compile checks for build, mod, and tests projects.
   - Parameters:
-  - --config Debug|Release (optional).
+  - --target Debug|Release (optional).
+  - --config <path-to-config.local.json> (optional).
   - Examples:
   - `.\build.cmd lint`
 
 - `.\build.cmd smoke`
   - Run quick sanity checks against a full build.
   - Parameters:
-  - --config Debug|Release (optional).
+  - --target Debug|Release (optional).
+  - --config <path-to-config.local.json> (optional).
   - Examples:
   - `.\build.cmd smoke`
 
 - `.\build.cmd verify`
   - Run local validation without deploy side effects.
   - Parameters:
-  - --config Debug|Release (optional).
+  - --target Debug|Release (optional).
+  - --config <path-to-config.local.json> (optional).
   - --repo owner/repo (optional).
   - Examples:
   - `.\build.cmd verify`
@@ -81,19 +84,21 @@ Quick command discovery:
 - `.\build.cmd build`
   - Build full Fahrenheit payload.
   - Parameters:
-  - --config Debug|Release (optional).
-  - --deploy or --no-deploy (optional).
+  - --target Debug|Release (optional).
+  - --config <path-to-config.local.json> (optional).
+  - --auto-deploy or --no-auto-deploy (optional).
   - --dry-run (optional).
   - Examples:
   - `.\build.cmd build`
-  - `.\build.cmd build --config Release`
+  - `.\build.cmd build --target Release`
 
 - `.\build.cmd deploy`
   - Deploy full build artifacts into InstallPath.
   - Parameters:
   - --game-dir <path> (optional).
   - --refresh-game-dir (optional).
-  - --config Debug|Release (optional).
+  - --target Debug|Release (optional).
+  - --config <path-to-config.local.json> (optional).
   - --dry-run (optional).
   - Examples:
   - `.\build.cmd deploy`
@@ -119,7 +124,8 @@ Quick command discovery:
 - `.\build.cmd release-ready`
   - Run release preflight.
   - Parameters:
-  - --config Debug|Release (optional).
+  - --target Debug|Release (optional).
+  - --config <path-to-config.local.json> (optional).
   - --repo owner/repo (optional).
   - Examples:
   - `.\build.cmd release-ready`

@@ -59,14 +59,14 @@ internal sealed partial class BuildScript
             new("auto-deploy", "Core", "Configure automatic post-build deploy", "Configure automatic post-build deployment.", ["--game-dir <path> (optional).", "--refresh-game-dir (optional)."], ["build.cmd auto-deploy", "build.cmd auto-deploy --game-dir \"C:\\Games\\Final Fantasy X-X2 - HD Remaster\""], SetupAutoDeployCore),
             new("doctor", "Core", "Diagnose local toolchain/environment state", "Diagnose local toolchain and environment state.", ["--full (optional)."], ["build.cmd doctor", "build.cmd doctor --full"], RunDoctorCore),
             new("format", "Core", "Auto-fix code formatting/style", "Apply code formatting/style fixes using dotnet format.", [], ["build.cmd format"], RunFormatFixCore),
-            new("lint", "Core", "Run fast lint/compile checks", "Run fast lint/compile checks for build, mod, and tests projects.", ["--config Debug|Release (optional)."], ["build.cmd lint"], () => RunLintCore(Config)),
-            new("smoke", "Core", "Run quick end-to-end sanity checks", "Run quick sanity checks against a full build.", ["--config Debug|Release (optional)."], ["build.cmd smoke"], () => RunSmokeCore(Config)),
-            new("verify", "Core", "Build full payload (Debug by default) + run tests", "Run local validation without deploy side effects.", ["--config Debug|Release (optional).", "--repo owner/repo (optional)."], ["build.cmd verify"], ExecuteVerifyWorkflow),
-            new("build", "Core", "Build full payload", "Build full Fahrenheit payload.", ["--config Debug|Release (optional).", "--deploy or --no-deploy (optional).", "--dry-run (optional)."], ["build.cmd build", "build.cmd build --config Release"], () => BuildCore("full", Config, useReleaseRef: false)),
-            new("deploy", "Core", "Deploy artifacts to game directory", "Deploy full build artifacts into InstallPath.", ["--game-dir <path> (optional).", "--refresh-game-dir (optional).", "--config Debug|Release (optional).", "--dry-run (optional)."], ["build.cmd deploy"], () => DeployCore("full", Config)),
+            new("lint", "Core", "Run fast lint/compile checks", "Run fast lint/compile checks for build, mod, and tests projects.", ["--target Debug|Release (optional).", "--config <path-to-config.local.json> (optional)."], ["build.cmd lint"], () => RunLintCore(BuildTargetOverride)),
+            new("smoke", "Core", "Run quick end-to-end sanity checks", "Run quick sanity checks against a full build.", ["--target Debug|Release (optional).", "--config <path-to-config.local.json> (optional)."], ["build.cmd smoke"], () => RunSmokeCore(BuildTargetOverride)),
+            new("verify", "Core", "Build full payload (config BuildTarget by default) + run tests", "Run local validation without deploy side effects.", ["--target Debug|Release (optional).", "--config <path-to-config.local.json> (optional).", "--repo owner/repo (optional)."], ["build.cmd verify"], ExecuteVerifyWorkflow),
+            new("build", "Core", "Build full payload", "Build full Fahrenheit payload.", ["--target Debug|Release (optional).", "--config <path-to-config.local.json> (optional).", "--auto-deploy or --no-auto-deploy (optional).", "--dry-run (optional)."], ["build.cmd build", "build.cmd build --target Release"], () => BuildCore("full", BuildTargetOverride, useReleaseRef: false)),
+            new("deploy", "Core", "Deploy artifacts to game directory", "Deploy full build artifacts into InstallPath.", ["--game-dir <path> (optional).", "--refresh-game-dir (optional).", "--target Debug|Release (optional).", "--config <path-to-config.local.json> (optional).", "--dry-run (optional)."], ["build.cmd deploy"], () => DeployCore("full", BuildTargetOverride)),
             new("start", "Core", "Launch fhstage0.exe", "Launch the game via deployed Fahrenheit stage0 loader.", ["--game-dir <path> (optional).", "--refresh-game-dir (optional).", "--elevated (optional)."], ["build.cmd start"], StartCore),
             new("release-bump", "Release", "Bump version + changelog + tag", "Bump version and create release commit/tag.", ["--bump patch|minor|major (optional)."], ["build.cmd release-bump"], ReleaseVersionCore),
-            new("release-ready", "Release", "Preflight checks/build/package/notes", "Run release preflight.", ["--config Debug|Release (optional).", "--repo owner/repo (optional)."], ["build.cmd release-ready"], ReleaseReadyCore),
+            new("release-ready", "Release", "Preflight checks/build/package/notes", "Run release preflight.", ["--target Debug|Release (optional).", "--config <path-to-config.local.json> (optional).", "--repo owner/repo (optional)."], ["build.cmd release-ready"], ReleaseReadyCore),
             new("release-pack", "Release", "Create release ZIP assets", "Package built release payloads into ZIP archives.", ["--tag vX.Y.Z (required).", "--deploy-dir <path> (optional).", "--out-dir <path> (optional)."], ["build.cmd release-pack --tag v0.0.1"], ExecuteReleasePackWorkflow),
             new("release-notes", "Release", "Generate release notes markdown", "Generate release-notes markdown/text for a tag.", ["--tag vX.Y.Z (required).", "--repo owner/repo (required).", "--out <path> (optional)."], ["build.cmd release-notes --tag v0.0.1 --repo owner/repo"], ExecuteReleaseNotesWorkflow),
             new("commit", "Commit", "Interactive/non-interactive Conventional Commit", "Create a Conventional Commit.", ["--type feat|fix|... (optional).", "--scope <scope> (optional).", "--subject \"message\" (required in non-interactive mode).", "--breaking (optional)."], ["build.cmd commit"], ExecuteCommitWorkflow),
@@ -138,7 +138,7 @@ internal sealed partial class BuildScript
 
     void ExecuteSetupWorkflow()
     {
-        var resolvedConfiguration = ResolveBuildConfiguration(Config);
+        var resolvedConfiguration = ResolveBuildConfiguration(BuildTargetOverride);
         SetupHooksCore();
         RunBuildProjTarget("Setup", resolvedConfiguration, includeNativeMsbuild: false, fahrenheitRef: ResolveFahrenheitRef(useReleaseRef: false));
         SetupAutoDeployCore();
@@ -155,7 +155,7 @@ internal sealed partial class BuildScript
             Fail("Commit validator selftest failed.");
         }
 
-        RunVerifyCore(Config);
+        RunVerifyCore(BuildTargetOverride);
     }
 
     void ExecuteReleasePackWorkflow()

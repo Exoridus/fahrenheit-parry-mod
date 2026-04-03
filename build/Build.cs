@@ -14,7 +14,8 @@ using static Nuke.Common.Assert;
 
 internal sealed partial class BuildScript : NukeBuild
 {
-    [Parameter(Name = "config")] readonly string Config = string.Empty;
+    [Parameter(Name = "config")] readonly string ConfigPath = string.Empty;
+    [Parameter(Name = "build-target")] readonly string BuildTargetOverride = string.Empty;
     [Parameter(Name = "fahrenheit-repo")] readonly string FahrenheitRepo = "https://github.com/peppy-enterprises/fahrenheit.git";
     [Parameter(Name = "fahrenheit-dir")] readonly string FahrenheitDir = ".workspace/fahrenheit";
     [Parameter(Name = "fahrenheit-ref")] readonly string FahrenheitRef = string.Empty;
@@ -32,7 +33,7 @@ internal sealed partial class BuildScript : NukeBuild
     [Parameter(Name = "dry-run")] readonly bool DryRun;
     [Parameter(Name = "non-interactive")] readonly bool NonInteractive;
     [Parameter(Name = "elevated")] readonly bool Elevated;
-    [Parameter(Name = "deploy")] readonly bool? DeployOverride;
+    [Parameter(Name = "auto-deploy")] readonly bool? AutoDeployOverride;
     [Parameter(Name = "refresh-game-dir")] readonly bool RefreshGameDir;
 
     [Parameter(Name = "type")] readonly string Type = "chore";
@@ -77,7 +78,7 @@ internal sealed partial class BuildScript : NukeBuild
 
     bool InteractiveSession => !NonInteractive && !IsServerBuild && Environment.UserInteractive;
     AbsolutePath WorkspaceDir => RootDirectory / ".workspace";
-    AbsolutePath WorkspaceConfigPath => WorkspaceDir / "config.local.json";
+    AbsolutePath WorkspaceConfigPath => ResolveWorkspaceConfigPath();
     AbsolutePath ReleaseFahrenheitRefPath => RootDirectory / "fahrenheit.release.ref";
     AbsolutePath ManifestPath => RootDirectory / "fhparry.manifest.json";
     static readonly Regex InstallPathNamePattern = new(
@@ -154,7 +155,7 @@ internal sealed partial class BuildScript : NukeBuild
     Target Setup => _ => _
         .Executes(() =>
         {
-            var resolvedConfiguration = ResolveBuildConfiguration(Config);
+            var resolvedConfiguration = ResolveBuildConfiguration(BuildTargetOverride);
             SetupHooksCore();
             RunBuildProjTarget("Setup", resolvedConfiguration, includeNativeMsbuild: false, fahrenheitRef: ResolveFahrenheitRef(useReleaseRef: false));
 
@@ -187,12 +188,12 @@ internal sealed partial class BuildScript : NukeBuild
                 Fail("Commit validator selftest failed.");
             }
 
-            RunVerifyCore(Config);
+            RunVerifyCore(BuildTargetOverride);
         });
 
-    Target Build => _ => _.Executes(() => BuildCore("full", Config, useReleaseRef: false));
+    Target Build => _ => _.Executes(() => BuildCore("full", BuildTargetOverride, useReleaseRef: false));
 
-    Target Deploy => _ => _.Executes(() => DeployCore("full", Config));
+    Target Deploy => _ => _.Executes(() => DeployCore("full", BuildTargetOverride));
     Target Start => _ => _.Executes(StartCore);
 
     Target ReleaseNotes => _ => _.Executes(() =>
@@ -540,6 +541,17 @@ internal sealed partial class BuildScript : NukeBuild
     }
 
 
+    AbsolutePath ResolveWorkspaceConfigPath()
+    {
+        var fromArg = (ConfigPath ?? string.Empty).Trim();
+        if (string.IsNullOrWhiteSpace(fromArg))
+        {
+            return WorkspaceDir / "config.local.json";
+        }
+
+        return ResolvePath(fromArg);
+    }
+
     string ResolveBuildConfiguration(string configuration)
     {
         var fromArg = (configuration ?? string.Empty).Trim();
@@ -555,7 +567,7 @@ internal sealed partial class BuildScript : NukeBuild
                 return "Release";
             }
 
-            Fail($"Invalid --config value '{configuration}'. Use Debug or Release.");
+            Fail($"Invalid --build-target value '{configuration}'. Use Debug or Release.");
         }
 
         var cfg = LoadWorkspaceConfig();
@@ -1418,30 +1430,30 @@ internal sealed partial class BuildScript : NukeBuild
         }
 
         var cfg = LoadWorkspaceConfig();
-        if (DeployOverride.HasValue && !DeployOverride.Value)
+        if (AutoDeployOverride.HasValue && !AutoDeployOverride.Value)
         {
-            Log.Information("Automatic deployment was disabled by --no-deploy.");
+            Log.Information("Automatic deployment was disabled by --no-auto-deploy.");
             return;
         }
 
         bool autoDeployEnabled;
-        if (DeployOverride.HasValue)
+        if (AutoDeployOverride.HasValue)
         {
-            autoDeployEnabled = DeployOverride.Value;
+            autoDeployEnabled = AutoDeployOverride.Value;
         }
-        else if (cfg.DeployAfterBuild.HasValue)
+        else if (cfg.AutoDeploy.HasValue)
         {
-            autoDeployEnabled = cfg.DeployAfterBuild.Value;
+            autoDeployEnabled = cfg.AutoDeploy.Value;
         }
         else if (InteractiveSession)
         {
             autoDeployEnabled = AskYesNo("Enable automatic deployment after build?", defaultYes: true);
-            cfg.DeployAfterBuild = autoDeployEnabled;
+            cfg.AutoDeploy = autoDeployEnabled;
             SaveWorkspaceConfig(cfg);
         }
         else
         {
-            Log.Information("DeployAfterBuild is not configured (null) in non-interactive mode. Skipping automatic deploy.");
+            Log.Information("AutoDeploy is not configured (null) in non-interactive mode. Skipping automatic deploy.");
             return;
         }
 
@@ -1962,7 +1974,7 @@ internal sealed partial class BuildScript : NukeBuild
 
     WorkspaceConfig LoadWorkspaceConfig()
     {
-        EnsureDir(WorkspaceDir);
+        EnsureDir(Path.GetDirectoryName(WorkspaceConfigPath) ?? string.Empty);
 
         if (!File.Exists(WorkspaceConfigPath))
         {
@@ -1995,7 +2007,7 @@ internal sealed partial class BuildScript : NukeBuild
 
     void SaveWorkspaceConfig(WorkspaceConfig cfg)
     {
-        EnsureDir(WorkspaceDir);
+        EnsureDir(Path.GetDirectoryName(WorkspaceConfigPath) ?? string.Empty);
         var normalized = NormalizeWorkspaceConfig(cfg);
         var json = JsonSerializer.Serialize(normalized, new JsonSerializerOptions { WriteIndented = true });
         File.WriteAllText(WorkspaceConfigPath, json + Environment.NewLine);
@@ -2007,7 +2019,7 @@ internal sealed partial class BuildScript : NukeBuild
         {
             BuildTarget = "Release",
             InstallPath = string.Empty,
-            DeployAfterBuild = null,
+            AutoDeploy = null,
             PreservePaths = CreateDefaultPreservePaths(),
             OpenApiUrl = string.Empty,
             OpenApiKey = string.Empty,
@@ -2030,7 +2042,7 @@ internal sealed partial class BuildScript : NukeBuild
         {
             "BuildTarget",
             "InstallPath",
-            "DeployAfterBuild",
+            "AutoDeploy",
             "PreservePaths",
             "OpenApiUrl",
             "OpenApiKey",
@@ -2057,12 +2069,12 @@ internal sealed partial class BuildScript : NukeBuild
             Fail($"Workspace config '{WorkspaceConfigPath}' must contain a string property 'InstallPath'.");
         }
 
-        if (!root.TryGetProperty("DeployAfterBuild", out var deployAfterBuildElement)
-            || (deployAfterBuildElement.ValueKind is not JsonValueKind.True
-                && deployAfterBuildElement.ValueKind is not JsonValueKind.False
-                && deployAfterBuildElement.ValueKind is not JsonValueKind.Null))
+        if (!root.TryGetProperty("AutoDeploy", out var autoDeployElement)
+            || (autoDeployElement.ValueKind is not JsonValueKind.True
+                && autoDeployElement.ValueKind is not JsonValueKind.False
+                && autoDeployElement.ValueKind is not JsonValueKind.Null))
         {
-            Fail($"Workspace config '{WorkspaceConfigPath}' must contain 'DeployAfterBuild' with value true, false, or null.");
+            Fail($"Workspace config '{WorkspaceConfigPath}' must contain 'AutoDeploy' with value true, false, or null.");
         }
 
         if (!root.TryGetProperty("PreservePaths", out var preservePathsElement)
@@ -3081,7 +3093,7 @@ goto :eof
     {
         public string BuildTarget { get; set; } = "Release";
         public string InstallPath { get; set; } = string.Empty;
-        public bool? DeployAfterBuild { get; set; }
+        public bool? AutoDeploy { get; set; }
         public List<string>? PreservePaths { get; set; }
         public string OpenApiUrl { get; set; } = string.Empty;
         public string OpenApiKey { get; set; } = string.Empty;

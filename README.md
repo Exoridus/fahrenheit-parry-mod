@@ -50,7 +50,7 @@ Download the latest release assets:
 .\build.cmd -h build
 .\build.cmd format
 
-.\build.cmd build --config Debug
+.\build.cmd build --target Debug
 .\build.cmd deploy --game-dir "C:\\Games\\Final Fantasy X-X2 - HD Remaster"
 .\build.cmd start --game-dir "C:\\Games\\Final Fantasy X-X2 - HD Remaster"
 

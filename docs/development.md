@@ -47,17 +47,17 @@ Quality:
 ```bash
 .\build.cmd format
 .\build.cmd doctor [--full]
-.\build.cmd lint [--config Debug|Release]
-.\build.cmd smoke [--config Debug|Release]
-.\build.cmd verify [--config Debug|Release] [--repo owner/repo]
+.\build.cmd lint [--target Debug|Release] [--config .\path\to\config.local.json]
+.\build.cmd smoke [--target Debug|Release] [--config .\path\to\config.local.json]
+.\build.cmd verify [--target Debug|Release] [--config .\path\to\config.local.json] [--repo owner/repo]
 .\build.cmd clean [--full]
 ```
 
 Build and deploy:
 
 ```bash
-.\build.cmd build [--config Debug|Release]
-.\build.cmd deploy [--game-dir "C:\\Path\\To\\Game"] [--config Debug|Release]
+.\build.cmd build [--target Debug|Release] [--config .\path\to\config.local.json] [--auto-deploy|--no-auto-deploy]
+.\build.cmd deploy [--game-dir "C:\\Path\\To\\Game"] [--target Debug|Release] [--config .\path\to\config.local.json]
 .\build.cmd auto-deploy [--game-dir "C:\\Path\\To\\Game"]
 .\build.cmd start [--game-dir "C:\\Path\\To\\Game"] [--elevated|--no-elevated]
 ```
@@ -87,7 +87,7 @@ Schema keys are strict and case-sensitive:
 
 - `BuildTarget` (`Debug` or `Release`)
 - `InstallPath` (game install directory containing `FFX.exe`)
-- `DeployAfterBuild` (`true`/`false`/`null`; `null` prompts once in interactive mode)
+- `AutoDeploy` (`true`/`false`/`null`; `null` prompts once in interactive mode)
 - `PreservePaths` (array of deploy-preserved paths under `<InstallPath>\fahrenheit` and/or absolute paths)
 - `OpenApiUrl`
 - `OpenApiKey`
@@ -97,8 +97,8 @@ Schema keys are strict and case-sensitive:
 
 `.\build.cmd build` can override deploy behavior per run:
 
-- `--deploy` forces deploy for this run even if `DeployAfterBuild` is `false`.
-- `--no-deploy` disables deploy for this run even if `DeployAfterBuild` is `true`.
+- `--auto-deploy` forces deploy for this run even if `AutoDeploy` is `false`.
+- `--no-auto-deploy` disables deploy for this run even if `AutoDeploy` is `true`.
 
 Build and deploy workflows always operate on full payloads to reduce stale artifact issues.
 Deploy behavior mirrors artifact state into the selected deploy target and preserves entries from `PreservePaths`.
@@ -113,7 +113,7 @@ Recommended shape for `.workspace/config.local.json`:
 {
   "BuildTarget": "Release",
   "InstallPath": "",
-  "DeployAfterBuild": null,
+  "AutoDeploy": null,
   "PreservePaths": ["mods/loadorder", "saves"],
   "OpenApiUrl": "",
   "OpenApiKey": "",

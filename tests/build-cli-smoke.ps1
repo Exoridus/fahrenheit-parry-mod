@@ -10,7 +10,7 @@ $checks = @(
     @{ Command = '.\\build.cmd --help'; MustContain = @('[NUKE] dotnet run --project build\Build.csproj -- --target Help') },
     @{ Command = '.\\build.cmd -h deploy'; MustContain = @('[NUKE] dotnet run --project build\Build.csproj -- --target Help --workflow deploy') },
     @{ Command = '.\\build.cmd deploy -h'; MustContain = @('[NUKE] dotnet run --project build\Build.csproj -- --target Help --workflow deploy') },
-    @{ Command = '.\\build.cmd build --no-deploy --config Debug'; MustContain = @('[NUKE] dotnet run --project build\Build.csproj -- --target Cli --workflow build --no-deploy --config Debug') },
+    @{ Command = '.\\build.cmd build --no-auto-deploy --target Debug'; MustContain = @('[NUKE] dotnet run --project build\Build.csproj -- --target Cli --workflow build --no-auto-deploy --build-target Debug') },
     @{ Command = '.\\build.cmd --target Help --workflow build --dry-run'; MustContain = @('[NUKE] dotnet run --project build\Build.csproj -- --target Help --workflow build --dry-run') },
     @{ Command = '.\\build.cmd --target Help --workflow deploy --game-dir "C:\\Program Files\\Square Enix\\Final Fantasy X-X2 - HD Remaster"'; MustContain = @('--target Help --workflow deploy --game-dir') }
 )

@@ -26,7 +26,7 @@ internal sealed partial class BuildScript
             cfg.InstallPath = string.Empty;
         }
 
-        var alreadyConfigured = cfg.DeployAfterBuild == true && IsValidGameDir(cfg.InstallPath);
+        var alreadyConfigured = cfg.AutoDeploy == true && IsValidGameDir(cfg.InstallPath);
         if (alreadyConfigured && !hasPathOverride && !RefreshGameDir)
         {
             SaveWorkspaceConfig(cfg);
@@ -38,7 +38,7 @@ internal sealed partial class BuildScript
         {
             if (!AskYesNo("Would you like to setup automatic build deployment into the game installation path?", defaultYes: true))
             {
-                cfg.DeployAfterBuild = false;
+                cfg.AutoDeploy = false;
                 SaveWorkspaceConfig(cfg);
                 Log.Warning("Automatic deployment setup skipped for now.");
                 Log.Information("You can configure it later with: build.cmd auto-deploy");
@@ -58,14 +58,14 @@ internal sealed partial class BuildScript
         if (!IsValidGameDir(cfg.InstallPath))
         {
             cfg.InstallPath = string.Empty;
-            cfg.DeployAfterBuild = false;
+            cfg.AutoDeploy = false;
             SaveWorkspaceConfig(cfg);
             Log.Warning("No valid game installation path was configured.");
             Log.Information("Automatic deployment setup was skipped. You can configure it later with: build.cmd auto-deploy");
             return;
         }
 
-        cfg.DeployAfterBuild = true;
+        cfg.AutoDeploy = true;
         SaveWorkspaceConfig(cfg);
         Log.Information($"Configured automatic deployment: InstallPath={cfg.InstallPath}");
     }

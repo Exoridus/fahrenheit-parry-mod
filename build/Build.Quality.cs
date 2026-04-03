@@ -11,9 +11,9 @@ internal sealed partial class BuildScript
 
     Target Format => _ => _.Executes(RunFormatFixCore);
 
-    Target Lint => _ => _.Executes(() => RunLintCore(Config));
+    Target Lint => _ => _.Executes(() => RunLintCore(BuildTargetOverride));
 
-    Target Smoke => _ => _.Executes(() => RunSmokeCore(Config));
+    Target Smoke => _ => _.Executes(() => RunSmokeCore(BuildTargetOverride));
 
     void RunCleanCore(bool full)
     {
