@@ -55,9 +55,11 @@ if "%LOCK_ENABLED%"=="1" (
 )
 
 set "NUKE_ARGS="
-set "WANTS_QUIET=0"
-set "WANTS_VERBOSE=0"
 set "HAS_VERBOSITY=0"
+set "REQUESTED_VERBOSITY="
+set "RESOLVED_VERBOSITY="
+set "NUKE_VERBOSITY="
+set "PARSE_ERROR=0"
 
 if "%~1"=="" (
     set "NUKE_ARGS=--target %DEFAULT_TARGET%"
@@ -82,25 +84,108 @@ shift
 
 :append_workflow_args
 if "%~1"=="" goto run_nuke
-set "NEXT_ARG=%~1"
-if /I "%NEXT_ARG%"=="--target" set "NEXT_ARG=--build-target"
-if /I "%NEXT_ARG%"=="--quiet" set "WANTS_QUIET=1"
-if /I "%NEXT_ARG%"=="--verbose" set "WANTS_VERBOSE=1"
-if /I "%NEXT_ARG%"=="--verbosity" set "HAS_VERBOSITY=1"
-set "NUKE_ARGS=%NUKE_ARGS% %NEXT_ARG%"
+set "FORWARD_ARG=%~1"
+if /I "%FORWARD_ARG%"=="--target" set "FORWARD_ARG=--build-target"
+call :normalize_common_arg "%~1" "%~2"
+if "%PARSE_ERROR%"=="1" goto :parse_failed
+if "%SKIP_CURRENT%"=="1" (
+    if "%SHIFT_EXTRA%"=="1" shift
+    shift
+    goto append_workflow_args
+)
+if defined FORWARD_OVERRIDE set "FORWARD_ARG=!FORWARD_OVERRIDE!"
+set "NUKE_ARGS=%NUKE_ARGS% %FORWARD_ARG%"
+if "%SHIFT_EXTRA%"=="1" shift
 shift
 goto append_workflow_args
 
 :append_passthrough_args
 if "%~1"=="" goto run_nuke
-if /I "%~1"=="--quiet" set "WANTS_QUIET=1"
-if /I "%~1"=="--verbose" set "WANTS_VERBOSE=1"
-if /I "%~1"=="--verbosity" set "HAS_VERBOSITY=1"
-if defined NUKE_ARGS (
-    set "NUKE_ARGS=%NUKE_ARGS% %1"
-) else (
-    set "NUKE_ARGS=%1"
+set "FORWARD_ARG=%~1"
+set "SHIFT_EXTRA=0"
+set "SKIP_CURRENT=0"
+
+if /I "%~1"=="-n" set "FORWARD_ARG=--dry-run"
+
+if /I "%~1"=="-c" (
+    if "%~2"=="" (
+        echo ERROR: -c requires a config file path.
+        set "PARSE_ERROR=1"
+    ) else (
+        set "FORWARD_ARG=--config %~2"
+        set "SHIFT_EXTRA=1"
+    )
 )
+
+if /I "%~1"=="-v" (
+    if "%HAS_VERBOSITY%"=="1" (
+        echo ERROR: verbosity specified multiple times.
+        set "PARSE_ERROR=1"
+    ) else if "%~2"=="" (
+        echo ERROR: -v requires one of quiet^|minimal^|normal^|detailed^|diagnostic.
+        set "PARSE_ERROR=1"
+    ) else (
+        set "HAS_VERBOSITY=1"
+        set "REQUESTED_VERBOSITY=%~2"
+        set "SKIP_CURRENT=1"
+        set "SHIFT_EXTRA=1"
+    )
+)
+
+if /I "%~1"=="--verbosity" (
+    if "%HAS_VERBOSITY%"=="1" (
+        echo ERROR: verbosity specified multiple times.
+        set "PARSE_ERROR=1"
+    ) else if "%~2"=="" (
+        echo ERROR: --verbosity requires one of quiet^|minimal^|normal^|detailed^|diagnostic.
+        set "PARSE_ERROR=1"
+    ) else (
+        set "HAS_VERBOSITY=1"
+        set "REQUESTED_VERBOSITY=%~2"
+        set "SKIP_CURRENT=1"
+        set "SHIFT_EXTRA=1"
+    )
+)
+
+if /I "%~1"=="--quiet" (
+    echo ERROR: --quiet is not supported. Use --verbosity quiet or -v quiet.
+    set "PARSE_ERROR=1"
+)
+if /I "%~1"=="--verbose" (
+    echo ERROR: --verbose is not supported. Use --verbosity detailed or -v detailed.
+    set "PARSE_ERROR=1"
+)
+if /I "%~1"=="--trace" (
+    echo ERROR: --trace is not supported. Use --verbosity diagnostic or -v diagnostic.
+    set "PARSE_ERROR=1"
+)
+
+set "PREFIX=%~1"
+if /I "!PREFIX:~0,12!"=="--verbosity=" (
+    if "%HAS_VERBOSITY%"=="1" (
+        echo ERROR: verbosity specified multiple times.
+        set "PARSE_ERROR=1"
+    ) else (
+        set "HAS_VERBOSITY=1"
+        set "REQUESTED_VERBOSITY=!PREFIX:~12!"
+        set "SKIP_CURRENT=1"
+    )
+)
+
+if "%PARSE_ERROR%"=="1" goto :parse_failed
+
+if "%SKIP_CURRENT%"=="1" (
+    if "%SHIFT_EXTRA%"=="1" shift
+    shift
+    goto append_passthrough_args
+)
+
+if defined NUKE_ARGS (
+    set "NUKE_ARGS=%NUKE_ARGS% !FORWARD_ARG!"
+) else (
+    set "NUKE_ARGS=!FORWARD_ARG!"
+)
+if "%SHIFT_EXTRA%"=="1" shift
 shift
 goto append_passthrough_args
 
@@ -123,25 +208,165 @@ goto run_nuke
 set "NUKE_ARGS=--target %HELP_TARGET% --workflow %CMD%"
 goto run_nuke
 
+:parse_failed
+set "EXIT_CODE=2"
+goto :cleanup_and_exit
+
 :run_nuke
-set "NUKE_TELEMETRY_OPTOUT=1"
-if "%HAS_VERBOSITY%"=="0" (
-    if "%WANTS_QUIET%"=="1" (
-        set "NUKE_ARGS=%NUKE_ARGS% --verbosity quiet"
-    ) else if "%WANTS_VERBOSE%"=="1" (
-        set "NUKE_ARGS=%NUKE_ARGS% --verbosity normal"
-    )
+call :resolve_verbosity
+if %ERRORLEVEL% NEQ 0 (
+    set "EXIT_CODE=%ERRORLEVEL%"
+    goto :cleanup_and_exit
 )
+
+set "NUKE_TELEMETRY_OPTOUT=1"
+set "NUKE_ARGS=%NUKE_ARGS% --verbosity %NUKE_VERBOSITY% --log-verbosity %RESOLVED_VERBOSITY%"
+
 echo [NUKE] dotnet run --project build\Build.csproj -- %NUKE_ARGS%
 if /I "%SMOKE_ONLY_VALUE%"=="1" (
-    if defined LOCKDIR if exist "%LOCKDIR%" rd /s /q "%LOCKDIR%" >NUL 2>&1
-    exit /B 0
+    set "EXIT_CODE=0"
+    goto :cleanup_and_exit
 )
 
 dotnet run --project build\Build.csproj -- %NUKE_ARGS%
 set "EXIT_CODE=%ERRORLEVEL%"
+goto :cleanup_and_exit
+
+:cleanup_and_exit
 if defined LOCKDIR if exist "%LOCKDIR%" rd /s /q "%LOCKDIR%" >NUL 2>&1
 exit /B %EXIT_CODE%
+
+:normalize_common_arg
+set "SKIP_CURRENT=0"
+set "SHIFT_EXTRA=0"
+set "FORWARD_OVERRIDE="
+set "ARG1=%~1"
+set "ARG2=%~2"
+
+if /I "%ARG1%"=="-n" (
+    set "FORWARD_OVERRIDE=--dry-run"
+    goto :eof
+)
+
+if /I "%ARG1%"=="-c" (
+    set "SKIP_CURRENT=0"
+    if "%ARG2%"=="" (
+        echo ERROR: -c requires a config file path.
+        set "PARSE_ERROR=1"
+        goto :eof
+    )
+    set "FORWARD_OVERRIDE=--config %ARG2%"
+    set "SHIFT_EXTRA=1"
+    goto :eof
+)
+
+if /I "%ARG1%"=="-v" (
+    set "SKIP_CURRENT=1"
+    if "%HAS_VERBOSITY%"=="1" (
+        echo ERROR: verbosity specified multiple times.
+        set "PARSE_ERROR=1"
+        goto :eof
+    )
+    if "%ARG2%"=="" (
+        echo ERROR: -v requires one of quiet^|minimal^|normal^|detailed^|diagnostic.
+        set "PARSE_ERROR=1"
+        goto :eof
+    )
+    set "HAS_VERBOSITY=1"
+    set "REQUESTED_VERBOSITY=%ARG2%"
+    set "SHIFT_EXTRA=1"
+    goto :eof
+)
+
+if /I "%ARG1%"=="--verbosity" (
+    set "SKIP_CURRENT=1"
+    if "%HAS_VERBOSITY%"=="1" (
+        echo ERROR: verbosity specified multiple times.
+        set "PARSE_ERROR=1"
+        goto :eof
+    )
+    if "%ARG2%"=="" (
+        echo ERROR: --verbosity requires one of quiet^|minimal^|normal^|detailed^|diagnostic.
+        set "PARSE_ERROR=1"
+        goto :eof
+    )
+    set "HAS_VERBOSITY=1"
+    set "REQUESTED_VERBOSITY=%ARG2%"
+    set "SHIFT_EXTRA=1"
+    goto :eof
+)
+
+if /I "%ARG1%"=="--quiet" (
+    echo ERROR: --quiet is not supported. Use --verbosity quiet or -v quiet.
+    set "PARSE_ERROR=1"
+    goto :eof
+)
+if /I "%ARG1%"=="--verbose" (
+    echo ERROR: --verbose is not supported. Use --verbosity detailed or -v detailed.
+    set "PARSE_ERROR=1"
+    goto :eof
+)
+if /I "%ARG1%"=="--trace" (
+    echo ERROR: --trace is not supported. Use --verbosity diagnostic or -v diagnostic.
+    set "PARSE_ERROR=1"
+    goto :eof
+)
+
+set "PREFIX=!ARG1:~0,12!"
+if /I "!PREFIX!"=="--verbosity=" (
+    set "SKIP_CURRENT=1"
+    if "%HAS_VERBOSITY%"=="1" (
+        echo ERROR: verbosity specified multiple times.
+        set "PARSE_ERROR=1"
+        goto :eof
+    )
+    set "HAS_VERBOSITY=1"
+    set "REQUESTED_VERBOSITY=!ARG1:~12!"
+)
+
+goto :eof
+
+:resolve_verbosity
+if "%HAS_VERBOSITY%"=="1" (
+    set "NORMALIZED_VERBOSITY="
+    set "RAW_VERBOSITY=%REQUESTED_VERBOSITY%"
+    if /I "!RAW_VERBOSITY!"=="quiet" set "NORMALIZED_VERBOSITY=quiet"
+    if /I "!RAW_VERBOSITY!"=="q" set "NORMALIZED_VERBOSITY=quiet"
+    if /I "!RAW_VERBOSITY!"=="minimal" set "NORMALIZED_VERBOSITY=minimal"
+    if /I "!RAW_VERBOSITY!"=="min" set "NORMALIZED_VERBOSITY=minimal"
+    if /I "!RAW_VERBOSITY!"=="m" set "NORMALIZED_VERBOSITY=minimal"
+    if /I "!RAW_VERBOSITY!"=="normal" set "NORMALIZED_VERBOSITY=normal"
+    if /I "!RAW_VERBOSITY!"=="n" set "NORMALIZED_VERBOSITY=normal"
+    if /I "!RAW_VERBOSITY!"=="detailed" set "NORMALIZED_VERBOSITY=detailed"
+    if /I "!RAW_VERBOSITY!"=="detail" set "NORMALIZED_VERBOSITY=detailed"
+    if /I "!RAW_VERBOSITY!"=="d" set "NORMALIZED_VERBOSITY=detailed"
+    if /I "!RAW_VERBOSITY!"=="diagnostic" set "NORMALIZED_VERBOSITY=diagnostic"
+    if /I "!RAW_VERBOSITY!"=="diag" set "NORMALIZED_VERBOSITY=diagnostic"
+    if not defined NORMALIZED_VERBOSITY (
+        echo ERROR: invalid --verbosity value "%REQUESTED_VERBOSITY%". Use quiet, minimal, normal, detailed, or diagnostic.
+        exit /B 2
+    )
+    set "RESOLVED_VERBOSITY=!NORMALIZED_VERBOSITY!"
+) else (
+    set "RESOLVED_VERBOSITY=normal"
+)
+
+if /I "%RESOLVED_VERBOSITY%"=="quiet" (
+    set "NUKE_VERBOSITY=quiet"
+) else if /I "%RESOLVED_VERBOSITY%"=="minimal" (
+    set "NUKE_VERBOSITY=minimal"
+) else if /I "%RESOLVED_VERBOSITY%"=="normal" (
+    set "NUKE_VERBOSITY=normal"
+) else if /I "%RESOLVED_VERBOSITY%"=="detailed" (
+    set "NUKE_VERBOSITY=verbose"
+) else if /I "%RESOLVED_VERBOSITY%"=="diagnostic" (
+    set "NUKE_VERBOSITY=verbose"
+) else (
+    echo ERROR: unsupported resolved verbosity "%RESOLVED_VERBOSITY%".
+    exit /B 2
+)
+
+exit /B 0
 
 :ensure_dotnet
 where dotnet >NUL 2>&1
@@ -186,4 +411,3 @@ if !ERRORLEVEL! NEQ 0 (
 )
 
 exit /B 0
-

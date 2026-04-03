@@ -8,6 +8,10 @@ Quick command discovery:
 - `.\build.cmd help`
 - `.\build.cmd -h <workflow>`
 - Bool parameters support both `--flag` and `--no-flag`.
+- Global verbosity: `--verbosity|-v quiet|minimal|normal|detailed|diagnostic` (default: `normal`).
+- Recommended escalation: `quiet` -> `normal` -> `detailed` -> `diagnostic`.
+- Common shorthand: `-c <config-path>`, `-n` (`--dry-run`).
+- Agent guidance: use `--verbosity quiet` for routine `.\build.cmd verify`, `.\build.cmd build`, and `.\build.cmd deploy`.
 - Local research/tooling workflows moved to `tools.cmd` (`tools.cmd help`).
 
 ## Core Workflows

@@ -26,7 +26,7 @@ Optional (reverse engineering workflows):
 .\build.cmd install --full
 .\build.cmd setup
 .\build.cmd doctor
-.\build.cmd verify --config Debug
+.\build.cmd verify -c Debug --verbosity quiet
 ```
 
 ## Core Workflows
@@ -41,6 +41,12 @@ Discover workflows:
 Bool flags use this style:
 - `--flag` to enable
 - `--no-flag` to disable
+
+Verbosity defaults to `normal`.
+- Explicit level: `--verbosity|-v quiet|minimal|normal|detailed|diagnostic`
+- Escalation path: `quiet` -> `normal` -> `detailed` -> `diagnostic`
+- Agent guidance: use `--verbosity quiet` for routine `.\build.cmd verify`, `.\build.cmd build`, and `.\build.cmd deploy` runs.
+- Common shorthand: `-c <config-path>`, `-n` for `--dry-run`, `-h` for help.
 
 Quality:
 

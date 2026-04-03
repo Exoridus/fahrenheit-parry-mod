@@ -31,18 +31,21 @@ internal sealed partial class BuildScript
 
     void ShowToolsHelpSummary()
     {
-        Log.Information("Usage: tools.cmd <workflow> [options]");
-        Log.Information("Detailed help: tools.cmd -h <workflow>");
-        Log.Information("Bool options: --flag (true), --no-flag (false)");
-        Log.Information("Global verbosity: --quiet or --verbose");
+        WriteHelpLine("Usage: tools.cmd <workflow> [options]");
+        WriteHelpLine("Detailed help: tools.cmd -h <workflow>");
+        WriteHelpLine("Bool options: --flag (true), --no-flag (false)");
+        WriteHelpLine("Global verbosity: --verbosity|-v quiet|minimal|normal|detailed|diagnostic (default: normal)");
+        WriteHelpLine("Recommended escalation: quiet -> normal -> detailed -> diagnostic");
+        WriteHelpLine("Common shorthand: -n (--dry-run), -h (help)");
+        WriteHelpLine("Agent guidance: use --verbosity quiet for routine tooling runs.");
 
         foreach (var section in ToolsWorkflowSections)
         {
-            Log.Information(string.Empty);
-            Log.Information($"{section.Heading}:");
+            WriteHelpLine(string.Empty);
+            WriteHelpLine($"{section.Heading}:");
             foreach (var workflow in section.Workflows)
             {
-                Log.Information($"  {workflow.Name,-14} {workflow.Summary}");
+                WriteHelpLine($"  {workflow.Name,-14} {workflow.Summary}");
             }
         }
     }

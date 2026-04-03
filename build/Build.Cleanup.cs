@@ -21,7 +21,7 @@ internal sealed partial class BuildScript
 
         if (DryRun)
         {
-            if (Verbose)
+            if (IsLogVerbosityAtLeast(BuildLogVerbosity.Detailed))
             {
                 Log.Information($"[DRY-RUN] Delete file: {path}");
             }
@@ -32,7 +32,7 @@ internal sealed partial class BuildScript
         }
 
         File.Delete(path);
-        if (Verbose)
+        if (IsLogVerbosityAtLeast(BuildLogVerbosity.Detailed))
         {
             Log.Information($"Deleted file: {path}");
         }
@@ -51,7 +51,7 @@ internal sealed partial class BuildScript
         var size = MeasureDirectoryBytes(path);
         if (DryRun)
         {
-            if (Verbose)
+            if (IsLogVerbosityAtLeast(BuildLogVerbosity.Detailed))
             {
                 Log.Information($"[DRY-RUN] Delete directory: {path}");
             }
@@ -62,7 +62,7 @@ internal sealed partial class BuildScript
         }
 
         Directory.Delete(path, recursive: true);
-        if (Verbose)
+        if (IsLogVerbosityAtLeast(BuildLogVerbosity.Detailed))
         {
             Log.Information($"Deleted directory: {path}");
         }

@@ -50,6 +50,10 @@ internal sealed partial class BuildScript
         sb.AppendLine("- `.\\build.cmd help`");
         sb.AppendLine("- `.\\build.cmd -h <workflow>`");
         sb.AppendLine("- Bool parameters support both `--flag` and `--no-flag`.");
+        sb.AppendLine("- Global verbosity: `--verbosity|-v quiet|minimal|normal|detailed|diagnostic` (default: `normal`).");
+        sb.AppendLine("- Recommended escalation: `quiet` -> `normal` -> `detailed` -> `diagnostic`.");
+        sb.AppendLine("- Common shorthand: `-c <config-path>`, `-n` (`--dry-run`).");
+        sb.AppendLine("- Agent guidance: use `--verbosity quiet` for routine `.\\build.cmd verify`, `.\\build.cmd build`, and `.\\build.cmd deploy`.");
         sb.AppendLine("- Local research/tooling workflows moved to `tools.cmd` (`tools.cmd help`).");
         sb.AppendLine();
 
@@ -81,6 +85,10 @@ internal sealed partial class BuildScript
         sb.AppendLine("- `.\\tools.cmd help`");
         sb.AppendLine("- `.\\tools.cmd -h <workflow>`");
         sb.AppendLine("- Bool parameters support both `--flag` and `--no-flag`.");
+        sb.AppendLine("- Global verbosity: `--verbosity|-v quiet|minimal|normal|detailed|diagnostic` (default: `normal`).");
+        sb.AppendLine("- Recommended escalation: `quiet` -> `normal` -> `detailed` -> `diagnostic`.");
+        sb.AppendLine("- Common shorthand: `-n` (`--dry-run`).");
+        sb.AppendLine("- Agent guidance: use `--verbosity quiet` for routine tooling workflows.");
         sb.AppendLine();
 
         foreach (var section in ToolsWorkflowSections)

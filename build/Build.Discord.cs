@@ -2461,20 +2461,14 @@ internal sealed partial class BuildScript
         // Ensure async output readers flush remaining buffered lines.
         process.WaitForExit();
 
-        if (!silent)
-        {
-            foreach (var line in stdout.ToString().Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries))
-            {
-                Log.Information(line);
-            }
-
-            foreach (var line in stderr.ToString().Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries))
-            {
-                Log.Warning(line);
-            }
-        }
-
-        return new ProcessResult(process.ExitCode, stdout.ToString(), stderr.ToString());
+        var result = new ProcessResult(process.ExitCode, stdout.ToString(), stderr.ToString());
+        EmitProcessOutput(
+            description,
+            result,
+            silent,
+            showStdOutOnSuccess: false,
+            showStdErrOnSuccess: false);
+        return result;
     }
 
 }

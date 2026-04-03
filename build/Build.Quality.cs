@@ -175,13 +175,13 @@ internal sealed partial class BuildScript
 
         RunChecked(
             "dotnet",
-            $"build {Quote(buildProject)} --configuration {Quote(normalizedConfiguration)} --nologo -warnaserror",
+            $"build {Quote(buildProject)} --configuration {Quote(normalizedConfiguration)} --nologo --verbosity {ResolveDotNetCliVerbosity()} -warnaserror",
             "Lint compile check (build orchestration)");
 
         var modProject = Path.Combine(RootDirectory, "Fahrenheit.Mods.Parry.csproj");
         RunChecked(
             "dotnet",
-            $"build {Quote(modProject)} --configuration {Quote(normalizedConfiguration)} --nologo",
+            $"build {Quote(modProject)} --configuration {Quote(normalizedConfiguration)} --nologo --verbosity {ResolveDotNetCliVerbosity()}",
             "Lint compile check (mod project)");
 
         var testsProject = Path.Combine(RootDirectory, "tests", "Parry.Tests", "Parry.Tests.csproj");
@@ -189,7 +189,7 @@ internal sealed partial class BuildScript
         {
             RunChecked(
                 "dotnet",
-                $"build {Quote(testsProject)} --configuration {Quote(normalizedConfiguration)} --nologo",
+                $"build {Quote(testsProject)} --configuration {Quote(normalizedConfiguration)} --nologo --verbosity {ResolveDotNetCliVerbosity()}",
                 "Lint compile check (tests)");
         }
 
@@ -207,7 +207,7 @@ internal sealed partial class BuildScript
 
         RunChecked(
             "dotnet",
-            $"format {Quote(modProject)} --no-restore",
+            $"format {Quote(modProject)} --no-restore --verbosity {ResolveDotNetCliVerbosity()}",
             "Code style auto-fix (dotnet format)");
     }
 

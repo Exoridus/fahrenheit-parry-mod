@@ -8,6 +8,10 @@ Quick command discovery:
 - `.\tools.cmd help`
 - `.\tools.cmd -h <workflow>`
 - Bool parameters support both `--flag` and `--no-flag`.
+- Global verbosity: `--verbosity|-v quiet|minimal|normal|detailed|diagnostic` (default: `normal`).
+- Recommended escalation: `quiet` -> `normal` -> `detailed` -> `diagnostic`.
+- Common shorthand: `-n` (`--dry-run`).
+- Agent guidance: use `--verbosity quiet` for routine tooling workflows.
 
 ## Tooling Workflows (local-only)
 

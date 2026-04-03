@@ -29,8 +29,7 @@ internal sealed partial class BuildScript : NukeBuild
     [Parameter(Name = "workflow")] readonly string Workflow = string.Empty;
 
     [Parameter(Name = "full")] readonly bool Full;
-    [Parameter(Name = "quiet")] readonly bool Quiet;
-    [Parameter(Name = "verbose")] readonly bool Verbose;
+    [Parameter(Name = "log-verbosity")] readonly string LogVerbosity = string.Empty;
     [Parameter(Name = "analysis")] readonly bool CleanAnalysis;
     [Parameter(Name = "exports")] readonly bool CleanExports;
     [Parameter(Name = "game-data")] readonly bool CleanGameData;
@@ -104,10 +103,12 @@ internal sealed partial class BuildScript : NukeBuild
     static readonly string[] DefaultPreservePaths = ["mods/loadorder", "saves"];
     bool _isCapturingWorkflowHelp;
     WorkflowHelpBlock? _capturedWorkflowHelp;
+    BuildLogVerbosity? _resolvedLogVerbosity;
 
     Target Help => _ => _
         .Executes(() =>
         {
+            ValidateVerbosityFlags();
             if (string.IsNullOrWhiteSpace(Workflow))
             {
                 ShowHelpSummary();
@@ -124,6 +125,7 @@ internal sealed partial class BuildScript : NukeBuild
     Target ToolsHelp => _ => _
         .Executes(() =>
         {
+            ValidateVerbosityFlags();
             if (string.IsNullOrWhiteSpace(Workflow))
             {
                 ShowToolsHelpSummary();
@@ -331,24 +333,27 @@ internal sealed partial class BuildScript : NukeBuild
     }
     void ShowHelpSummary()
     {
-        Log.Information("Usage: build.cmd <workflow> [options]");
-        Log.Information("Detailed help: build.cmd -h <workflow>");
-        Log.Information("Bool options: --flag (true), --no-flag (false)");
-        Log.Information("Global verbosity: --quiet or --verbose");
+        WriteHelpLine("Usage: build.cmd <workflow> [options]");
+        WriteHelpLine("Detailed help: build.cmd -h <workflow>");
+        WriteHelpLine("Bool options: --flag (true), --no-flag (false)");
+        WriteHelpLine("Global verbosity: --verbosity|-v quiet|minimal|normal|detailed|diagnostic (default: normal)");
+        WriteHelpLine("Recommended escalation: quiet -> normal -> detailed -> diagnostic");
+        WriteHelpLine("Common shorthand: -c <config-path>, -n (--dry-run)");
+        WriteHelpLine("Agent guidance: use --verbosity quiet for routine verify/build/deploy runs.");
 
         foreach (var section in BuildWorkflowSections)
         {
-            Log.Information(string.Empty);
-            Log.Information($"{section.Heading}:");
+            WriteHelpLine(string.Empty);
+            WriteHelpLine($"{section.Heading}:");
             foreach (var workflow in section.Workflows)
             {
-                Log.Information($"  {workflow.Name,-14} {workflow.Summary}");
+                WriteHelpLine($"  {workflow.Name,-14} {workflow.Summary}");
             }
         }
 
-        Log.Information(string.Empty);
-        Log.Information("  tools.cmd    Local-only research/tooling workflows (discord/data/ghidra)");
-        Log.Information("  Use: build.cmd -h <workflow> for detailed parameters and examples.");
+        WriteHelpLine(string.Empty);
+        WriteHelpLine("  tools.cmd    Local-only research/tooling workflows (discord/data/ghidra)");
+        WriteHelpLine("  Use: build.cmd -h <workflow> for detailed parameters and examples.");
     }
     void ShowHelpWorkflow(string workflowRaw)
     {
@@ -415,18 +420,21 @@ internal sealed partial class BuildScript : NukeBuild
             return;
         }
 
-        Log.Information($"Workflow: {name}");
-        Log.Information($"Purpose: {purpose}");
-        Log.Information("Parameters:");
+        WriteHelpLine($"Workflow: {name}");
+        WriteHelpLine($"Purpose: {purpose}");
+        WriteHelpLine("Global options:");
+        WriteHelpLine("  - --verbosity|-v quiet|minimal|normal|detailed|diagnostic (default: normal)");
+        WriteHelpLine("  - -c <config-path>, -n (--dry-run), -h (help)");
+        WriteHelpLine("Parameters:");
         foreach (var line in parameterList)
         {
-            Log.Information($"  - {line}");
+            WriteHelpLine($"  - {line}");
         }
 
-        Log.Information("Examples:");
+        WriteHelpLine("Examples:");
         foreach (var line in exampleList)
         {
-            Log.Information($"  {line}");
+            WriteHelpLine($"  {line}");
         }
     }
 
@@ -602,7 +610,7 @@ internal sealed partial class BuildScript : NukeBuild
         var args = new StringBuilder();
         args.Append("msbuild ");
         args.Append(Quote(RootDirectory / "build.proj"));
-        args.Append(" -nologo -verbosity:minimal");
+        args.Append($" -nologo -verbosity:{ResolveMsBuildVerbosity()}");
         args.Append($" -t:{target}");
         args.Append($" -p:Configuration={Quote(resolvedConfiguration)}");
         args.Append($" -p:FahrenheitRepo={Quote(FahrenheitRepo)}");
@@ -2524,7 +2532,10 @@ goto :eof
 
         foreach (var project in projects)
         {
-            RunChecked("dotnet", $"test {Quote(project)} --configuration {Quote(configuration)} --nologo", $"Run tests for {Path.GetFileName(project)}");
+            RunChecked(
+                "dotnet",
+                $"test {Quote(project)} --configuration {Quote(configuration)} --nologo --verbosity {ResolveDotNetCliVerbosity()}",
+                $"Run tests for {Path.GetFileName(project)}");
         }
     }
 
@@ -2609,13 +2620,22 @@ goto :eof
         string description,
         string? workingDirectory = null,
         bool showSpinner = false,
-        bool silent = false)
+        bool silent = false,
+        bool showStdOutOnSuccess = false,
+        bool showStdErrOnSuccess = false)
     {
+        var effectiveWorkingDirectory = workingDirectory ?? RootDirectory;
+        if (!silent && IsLogVerbosityAtLeast(BuildLogVerbosity.Diagnostic))
+        {
+            Log.Information($"[TRACE] EXEC {fileName} {args}");
+            Log.Information($"[TRACE] CWD  {effectiveWorkingDirectory}");
+        }
+
         var psi = new ProcessStartInfo
         {
             FileName = fileName,
             Arguments = args,
-            WorkingDirectory = workingDirectory ?? RootDirectory,
+            WorkingDirectory = effectiveWorkingDirectory,
             UseShellExecute = false,
             RedirectStandardOutput = true,
             RedirectStandardError = true,
@@ -2661,20 +2681,82 @@ goto :eof
 
         process.WaitForExit();
 
-        if (!silent)
+        var result = new ProcessResult(process.ExitCode, stdout.ToString(), stderr.ToString());
+        EmitProcessOutput(
+            description,
+            result,
+            silent,
+            showStdOutOnSuccess,
+            showStdErrOnSuccess);
+        return result;
+    }
+
+    void EmitProcessOutput(
+        string description,
+        ProcessResult result,
+        bool silent,
+        bool showStdOutOnSuccess,
+        bool showStdErrOnSuccess)
+    {
+        if (silent)
         {
-            if (Verbose)
+            return;
+        }
+
+        var level = ResolveLogVerbosity();
+        var failed = result.ExitCode != 0;
+        var stdoutLines = SplitProcessOutputLines(result.StdOut);
+        var stderrLines = SplitProcessOutputLines(result.StdErr);
+
+        var emitStdOut = failed
+                         || level is BuildLogVerbosity.Detailed or BuildLogVerbosity.Diagnostic
+                         || (level == BuildLogVerbosity.Normal && showStdOutOnSuccess);
+        var emitStdErr = failed
+                         || level is BuildLogVerbosity.Detailed or BuildLogVerbosity.Diagnostic
+                         || (level == BuildLogVerbosity.Normal && showStdErrOnSuccess);
+
+        if (!failed && (level is BuildLogVerbosity.Quiet or BuildLogVerbosity.Minimal))
+        {
+            emitStdOut = false;
+            emitStdErr = false;
+        }
+
+        if (emitStdOut)
+        {
+            foreach (var line in stdoutLines)
             {
-                foreach (var line in stdout.ToString().Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries))
+                if (level == BuildLogVerbosity.Diagnostic)
+                {
+                    Log.Information($"[TRACE][{description}][stdout] {line}");
+                }
+                else
                 {
                     Log.Information(line);
                 }
             }
-
-            foreach (var line in stderr.ToString().Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)) Log.Warning(line);
         }
 
-        return new ProcessResult(process.ExitCode, stdout.ToString(), stderr.ToString());
+        if (emitStdErr)
+        {
+            foreach (var line in stderrLines)
+            {
+                if (level == BuildLogVerbosity.Diagnostic)
+                {
+                    Log.Warning($"[TRACE][{description}][stderr] {line}");
+                }
+                else
+                {
+                    Log.Warning(line);
+                }
+            }
+        }
+    }
+
+    static IReadOnlyList<string> SplitProcessOutputLines(string value)
+    {
+        return value
+            .Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)
+            .ToList();
     }
 
     static void CopyDirectoryRecursive(string source, string destination)
@@ -2884,7 +2966,7 @@ goto :eof
 
         if (DryRun)
         {
-            if (Verbose)
+            if (IsLogVerbosityAtLeast(BuildLogVerbosity.Detailed))
             {
                 Log.Information($"[DRY-RUN] Create directory: {path}");
             }
@@ -2899,7 +2981,7 @@ goto :eof
     {
         if (DryRun)
         {
-            if (Verbose)
+            if (IsLogVerbosityAtLeast(BuildLogVerbosity.Detailed))
             {
                 Log.Information($"[DRY-RUN] Delete file: {path}");
             }
@@ -2914,7 +2996,7 @@ goto :eof
     {
         if (DryRun)
         {
-            if (Verbose)
+            if (IsLogVerbosityAtLeast(BuildLogVerbosity.Detailed))
             {
                 Log.Information($"[DRY-RUN] Delete directory: {path}");
             }
@@ -2929,7 +3011,7 @@ goto :eof
     {
         if (DryRun)
         {
-            if (Verbose)
+            if (IsLogVerbosityAtLeast(BuildLogVerbosity.Detailed))
             {
                 Log.Information($"[DRY-RUN] Copy file: {source} -> {target}");
             }
@@ -3185,12 +3267,77 @@ goto :eof
         return $"\"{escaped}\"";
     }
 
-    void ValidateVerbosityFlags()
+    void ValidateVerbosityFlags() => _ = ResolveLogVerbosity();
+
+    BuildLogVerbosity ResolveLogVerbosity()
     {
-        if (Quiet && Verbose)
+        if (_resolvedLogVerbosity is { } cached)
         {
-            Fail("Use either --quiet or --verbose, not both.");
+            return cached;
         }
+
+        var fromParameter = (LogVerbosity ?? string.Empty).Trim();
+        _resolvedLogVerbosity = string.IsNullOrWhiteSpace(fromParameter)
+            ? BuildLogVerbosity.Normal
+            : ParseLogVerbosity(fromParameter);
+        return _resolvedLogVerbosity.Value;
+    }
+
+    static BuildLogVerbosity ParseLogVerbosity(string value)
+    {
+        var normalized = (value ?? string.Empty).Trim().ToLowerInvariant();
+        if (normalized is "quiet" or "q")
+            return BuildLogVerbosity.Quiet;
+        if (normalized is "minimal" or "min" or "m")
+            return BuildLogVerbosity.Minimal;
+        if (normalized is "normal" or "n")
+            return BuildLogVerbosity.Normal;
+        if (normalized is "detailed" or "detail" or "d")
+            return BuildLogVerbosity.Detailed;
+        if (normalized is "diagnostic" or "diag")
+            return BuildLogVerbosity.Diagnostic;
+
+        Fail($"Invalid verbosity '{value}'. Use: quiet, minimal, normal, detailed, diagnostic.");
+        return BuildLogVerbosity.Normal;
+    }
+
+    bool IsLogVerbosityAtLeast(BuildLogVerbosity level) => ResolveLogVerbosity() >= level;
+
+    static void WriteHelpLine(string value) => Console.WriteLine(value);
+
+    string ResolveMsBuildVerbosity()
+    {
+        return ResolveLogVerbosity() switch
+        {
+            BuildLogVerbosity.Quiet => "quiet",
+            BuildLogVerbosity.Minimal => "minimal",
+            BuildLogVerbosity.Normal => "minimal",
+            BuildLogVerbosity.Detailed => "normal",
+            BuildLogVerbosity.Diagnostic => "diagnostic",
+            _ => "minimal"
+        };
+    }
+
+    string ResolveDotNetCliVerbosity()
+    {
+        return ResolveLogVerbosity() switch
+        {
+            BuildLogVerbosity.Quiet => "quiet",
+            BuildLogVerbosity.Minimal => "minimal",
+            BuildLogVerbosity.Normal => "minimal",
+            BuildLogVerbosity.Detailed => "normal",
+            BuildLogVerbosity.Diagnostic => "detailed",
+            _ => "minimal"
+        };
+    }
+
+    enum BuildLogVerbosity
+    {
+        Quiet = 0,
+        Minimal = 1,
+        Normal = 2,
+        Detailed = 3,
+        Diagnostic = 4
     }
 
     sealed class WorkspaceConfig
