@@ -22,11 +22,11 @@ public unsafe sealed partial class ParryModule
                 reason: "probe_end",
                 eventId: *FhFfx.Globals.event_id,
                 eventName: get_current_event_name_safe((uint)Math.Max(0, *FhFfx.Globals.event_id)),
-                menuState: read_u8_at(0xF407E4),
+                menuState: read_u8_at(ExternalMemoryOffsetMap.StartupState.MenuState),
                 needAutoSave: read_u32_ptr(FhFfx.FhCall.gNeedAutoSave),
-                moviePlay: read_u32_at(0xD2A008),
-                stateD36FA0: read_u32_at(0xD36FA0),
-                stateD36FA4: read_u32_at(0xD36FA4),
+                moviePlay: read_u32_at(ExternalMemoryOffsetMap.StartupState.MoviePlay),
+                stateD36FA0: read_u32_at(ExternalMemoryOffsetMap.StartupState.StateD36FA0),
+                stateD36FA4: read_u32_at(ExternalMemoryOffsetMap.StartupState.StateD36FA4),
                 saveData0C88: read_save_data_byte(save, StartupSkipProgressFlagOffset),
                 gameplayReadyOverlay: gameplayReadyOverlay,
                 gameplayReadyStartup: gameplayReadyStartup,
@@ -39,11 +39,11 @@ public unsafe sealed partial class ParryModule
 
         int eventId = *FhFfx.Globals.event_id;
         string eventName = get_current_event_name_safe((uint)Math.Max(0, eventId));
-        int menuState = read_u8_at(0xF407E4);
+        int menuState = read_u8_at(ExternalMemoryOffsetMap.StartupState.MenuState);
         int needAutoSave = read_u32_ptr(FhFfx.FhCall.gNeedAutoSave);
-        int moviePlay = read_u32_at(0xD2A008);
-        int stateD36FA0 = read_u32_at(0xD36FA0);
-        int stateD36FA4 = read_u32_at(0xD36FA4);
+        int moviePlay = read_u32_at(ExternalMemoryOffsetMap.StartupState.MoviePlay);
+        int stateD36FA0 = read_u32_at(ExternalMemoryOffsetMap.StartupState.StateD36FA0);
+        int stateD36FA4 = read_u32_at(ExternalMemoryOffsetMap.StartupState.StateD36FA4);
         int saveData0C88 = read_save_data_byte(save, StartupSkipProgressFlagOffset);
 
         string signature =

@@ -28,26 +28,6 @@ public unsafe sealed partial class ParryModule
         }
     }
 
-    private void render_setting_audio_volume()
-    {
-        if (!_optionSound)
-        {
-            ImGui.BeginDisabled(true);
-        }
-
-        bool changed = ImGui.SliderFloat("##fhparry.audio_volume", ref _optionAudioVolume, 0f, 1f, "%.2f");
-        _optionAudioVolume = Math.Clamp(_optionAudioVolume, 0f, 1f);
-        if (changed && ImGui.IsItemDeactivatedAfterEdit())
-        {
-            persist_settings();
-        }
-
-        if (!_optionSound)
-        {
-            ImGui.EndDisabled();
-        }
-    }
-
     private void render_setting_parry_state_hud()
     {
         if (ImGui.Checkbox("##fhparry.parry_state_hud", ref _optionParryStateHud))

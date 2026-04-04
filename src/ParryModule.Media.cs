@@ -1,27 +1,23 @@
+// SPDX-License-Identifier: MIT
+
+using System.Runtime.InteropServices;
+
 namespace Fahrenheit.Mods.Parry;
 
 public unsafe sealed partial class ParryModule
 {
+    private const uint SndAsync = 0x0001;
+    private const uint SndMemory = 0x0004;
+    private const uint SndNoDefault = 0x0002;
+    private const uint SndPurge = 0x0040;
     private const float OverlayFontSizePx = 62f;
 
-    private const uint SndAsync = 0x0001;
-    private const uint SndNoDefault = 0x0002;
-    private const uint SndMemory = 0x0004;
-    private const uint SndPurge = 0x0040;
-
-    [DllImport("winmm.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+    [DllImport("winmm.dll", EntryPoint = "PlaySoundW", CharSet = CharSet.Unicode)]
     private static extern bool PlaySoundW(nint pszSound, nint hmod, uint fdwSound);
 
-    private sealed class WavClip
-    {
-        public required string FileName { get; init; }
-        public required byte[] Bytes { get; init; }
-        public required int DataOffset { get; init; }
-        public required int DataLength { get; init; }
-        public required ushort Channels { get; init; }
-        public required int SampleRate { get; init; }
-        public required ushort BitsPerSample { get; init; }
-    }
+    private readonly List<WavClip> _parryAudioClips = new(8);
+    private WavClip? _silenceAudioClip;
+    private bool _audioWarmupAttempted;
 
     private GCHandle _activeAudioBufferHandle;
     private bool _activeAudioBufferPinned;
@@ -29,6 +25,7 @@ public unsafe sealed partial class ParryModule
     private void initialize_audio_resources()
     {
         _parryAudioClips.Clear();
+        _silenceAudioClip = null;
         if (string.IsNullOrWhiteSpace(_audioResourcesDir) || !Directory.Exists(_audioResourcesDir))
         {
             _logger.Warning($"[Parry] Audio resource directory not found: {_audioResourcesDir}");
@@ -46,110 +43,85 @@ public unsafe sealed partial class ParryModule
             }
         }
 
+        string silencePath = Path.Combine(_audioResourcesDir, "silence.wav");
+        if (File.Exists(silencePath) && try_load_wav_clip(silencePath, out WavClip silence))
+        {
+            _silenceAudioClip = silence;
+        }
+        else
+        {
+            _logger.Warning($"[Parry] Audio warmup clip missing or invalid: {silencePath}");
+        }
+
         _logger.Info($"[Parry] Loaded {_parryAudioClips.Count} parry audio clip(s).");
     }
 
-    private bool try_load_wav_clip(string path, out WavClip clip)
+    private static bool try_load_wav_clip(string path, out WavClip clip)
     {
-        clip = null!;
-        byte[] bytes;
+        clip = default;
         try
         {
-            bytes = File.ReadAllBytes(path);
-        }
-        catch (Exception ex)
-        {
-            _logger.Warning($"[Parry] Failed to read audio clip '{path}': {ex.Message}");
-            return false;
-        }
+            byte[] bytes = File.ReadAllBytes(path);
+            if (bytes.Length < 44) return false;
+            if (!match_ascii(bytes, 0, "RIFF") || !match_ascii(bytes, 8, "WAVE")) return false;
 
-        if (!try_parse_wav_metadata(bytes, out int dataOffset, out int dataLength, out ushort channels, out int sampleRate, out ushort bitsPerSample))
-        {
-            _logger.Warning($"[Parry] Unsupported WAV format for '{path}'. Expected PCM 16-bit WAV.");
-            return false;
-        }
+            int offset = 12;
+            bool foundFmt = false;
+            bool foundData = false;
+            ushort fmtCode = 0;
+            ushort channels = 0;
+            int sampleRate = 0;
+            ushort bitsPerSample = 0;
+            int dataOffset = 0;
+            int dataSize = 0;
 
-        clip = new WavClip
-        {
-            FileName = Path.GetFileName(path),
-            Bytes = bytes,
-            DataOffset = dataOffset,
-            DataLength = dataLength,
-            Channels = channels,
-            SampleRate = sampleRate,
-            BitsPerSample = bitsPerSample
-        };
-
-        return true;
-    }
-
-    private static bool try_parse_wav_metadata(
-        byte[] bytes,
-        out int dataOffset,
-        out int dataLength,
-        out ushort channels,
-        out int sampleRate,
-        out ushort bitsPerSample)
-    {
-        dataOffset = 0;
-        dataLength = 0;
-        channels = 0;
-        sampleRate = 0;
-        bitsPerSample = 0;
-
-        if (bytes.Length < 44) return false;
-        if (!is_ascii(bytes, 0, "RIFF") || !is_ascii(bytes, 8, "WAVE")) return false;
-
-        int offset = 12;
-        bool foundFmt = false;
-        bool foundData = false;
-        ushort fmtCode = 0;
-
-        while (offset + 8 <= bytes.Length)
-        {
-            string chunkId = Encoding.ASCII.GetString(bytes, offset, 4);
-            int chunkSize = BitConverter.ToInt32(bytes, offset + 4);
-            offset += 8;
-
-            if (chunkSize < 0 || offset + chunkSize > bytes.Length) return false;
-
-            if (chunkId == "fmt ")
+            while (offset + 8 <= bytes.Length)
             {
-                if (chunkSize < 16) return false;
-                fmtCode = BitConverter.ToUInt16(bytes, offset + 0);
-                channels = BitConverter.ToUInt16(bytes, offset + 2);
-                sampleRate = BitConverter.ToInt32(bytes, offset + 4);
-                bitsPerSample = BitConverter.ToUInt16(bytes, offset + 14);
-                foundFmt = true;
-            }
-            else if (chunkId == "data")
-            {
-                dataOffset = offset;
-                dataLength = chunkSize;
-                foundData = true;
+                int chunkSize = BitConverter.ToInt32(bytes, offset + 4);
+                if (chunkSize < 0 || offset + 8 + chunkSize > bytes.Length) return false;
+
+                if (match_ascii(bytes, offset, "fmt "))
+                {
+                    if (chunkSize < 16) return false;
+                    fmtCode       = BitConverter.ToUInt16(bytes, offset + 8);
+                    channels      = BitConverter.ToUInt16(bytes, offset + 10);
+                    sampleRate    = BitConverter.ToInt32(bytes,  offset + 12);
+                    bitsPerSample = BitConverter.ToUInt16(bytes, offset + 22);
+                    foundFmt = true;
+                }
+                else if (match_ascii(bytes, offset, "data"))
+                {
+                    dataOffset = offset + 8;
+                    dataSize   = chunkSize;
+                    foundData  = true;
+                }
+
+                int advance = chunkSize + (chunkSize & 1);
+                offset += 8 + advance;
             }
 
-            int advance = chunkSize + (chunkSize & 1);
-            offset += advance;
+            if (!foundFmt || !foundData) return false;
+            if (fmtCode != 1) return false;
+            if (bitsPerSample != 16) return false;
+            if (channels is < 1 or > 2) return false;
+            if (sampleRate <= 0) return false;
+
+            clip = new WavClip(Path.GetFileName(path), bytes, dataOffset, dataSize);
+            return true;
         }
-
-        if (!foundFmt || !foundData) return false;
-        if (fmtCode != 1) return false; // PCM
-        if (bitsPerSample != 16) return false;
-        if (channels is < 1 or > 2) return false;
-        if (sampleRate <= 0) return false;
-
-        return true;
+        catch
+        {
+            return false;
+        }
     }
 
-    private static bool is_ascii(byte[] bytes, int offset, string text)
+    private static bool match_ascii(byte[] bytes, int offset, string text)
     {
         if (offset < 0 || offset + text.Length > bytes.Length) return false;
         for (int i = 0; i < text.Length; i++)
         {
             if (bytes[offset + i] != text[i]) return false;
         }
-
         return true;
     }
 
@@ -162,7 +134,7 @@ public unsafe sealed partial class ParryModule
         }
 
         byte[] scaled = (byte[])clip.Bytes.Clone();
-        int end = Math.Min(scaled.Length, clip.DataOffset + clip.DataLength);
+        int end = Math.Min(scaled.Length, clip.DataOffset + clip.DataSize);
 
         for (int i = clip.DataOffset; i + 1 < end; i += 2)
         {
@@ -170,7 +142,7 @@ public unsafe sealed partial class ParryModule
             int scaledSample = (int)MathF.Round(sample * clamped);
             scaledSample = Math.Clamp(scaledSample, short.MinValue, short.MaxValue);
             short s = (short)scaledSample;
-            scaled[i] = (byte)(s & 0xFF);
+            scaled[i]     = (byte)(s & 0xFF);
             scaled[i + 1] = (byte)((s >> 8) & 0xFF);
         }
 
@@ -179,20 +151,41 @@ public unsafe sealed partial class ParryModule
 
     private void play_feedback_sound()
     {
-        if (!_optionSound) return;
-        if (_parryAudioClips.Count == 0) return;
-        if (_optionAudioVolume <= 0f) return;
+        if (!_optionSound)
+        {
+            write_session_hook_entry("[ParrySFX] skipped: _optionSound=false");
+            return;
+        }
+        if (_parryAudioClips.Count == 0)
+        {
+            write_session_hook_entry("[ParrySFX] skipped: no clips loaded");
+            return;
+        }
+
+        if (!try_get_game_audio_volume_ratio(out float gameVolumeRatio))
+        {
+            gameVolumeRatio = 1.0f;
+        }
+
+        float finalVolume = Math.Clamp(gameVolumeRatio, 0f, 1f);
+        if (finalVolume <= 0f)
+        {
+            write_session_hook_entry("[ParrySFX] skipped: game volume is 0");
+            return;
+        }
 
         int idx = _rng.Next(_parryAudioClips.Count);
         WavClip clip = _parryAudioClips[idx];
-        byte[] bytes = scale_wav_pcm_16(clip, _optionAudioVolume);
-        if (!play_wave_from_memory(bytes))
+        byte[] bytes = scale_wav_pcm_16(clip, finalVolume);
+        bool ok = play_wave_from_memory(bytes);
+        write_session_hook_entry($"[ParrySFX] play clip={clip.FileName} gameVolume={finalVolume:F2} ok={ok}");
+        if (!ok)
         {
             log_debug($"Parry SFX playback failed for {clip.FileName}.");
         }
     }
 
-    private bool play_wave_from_memory(byte[] wavBytes)
+    private bool play_wave_from_memory(byte[] wavBytes, bool asyncPlayback = true)
     {
         stop_audio_playback();
         try
@@ -200,7 +193,8 @@ public unsafe sealed partial class ParryModule
             _activeAudioBufferHandle = GCHandle.Alloc(wavBytes, GCHandleType.Pinned);
             _activeAudioBufferPinned = true;
             nint ptr = _activeAudioBufferHandle.AddrOfPinnedObject();
-            bool ok = PlaySoundW(ptr, 0, SndAsync | SndMemory | SndNoDefault);
+            uint flags = (asyncPlayback ? SndAsync : 0u) | SndMemory | SndNoDefault;
+            bool ok = PlaySoundW(ptr, 0, flags);
             if (!ok)
             {
                 stop_audio_playback();
@@ -214,17 +208,54 @@ public unsafe sealed partial class ParryModule
         }
     }
 
+    private void warmup_audio_playback_once()
+    {
+        if (_audioWarmupAttempted) return;
+        _audioWarmupAttempted = true;
+
+        if (_silenceAudioClip == null) return;
+
+        // One synchronous silent playback eagerly initializes WinMM audio state so
+        // first real parry feedback is less likely to be delayed or dropped.
+        bool ok = play_wave_from_memory(_silenceAudioClip.Value.Bytes, asyncPlayback: false);
+        stop_audio_playback();
+        if (!ok)
+        {
+            _logger.Warning("[Parry] Audio warmup playback failed; continuing with normal audio path.");
+        }
+    }
+
+    private bool try_get_game_audio_volume_ratio(out float ratio)
+    {
+        ratio = 1.0f;
+        return true; // Hardcoded to 1.0f for now to restore SFX playback until FMOD slider addresses are confirmed.
+    }
+
     private void stop_audio_playback()
     {
         // SND_PURGE synchronously stops the current sound and waits for the
-        // audio thread to finish, ensuring the old buffer is no longer accessed
-        // before we free the GCHandle. PlaySoundW(0, 0, 0) does not carry this
-        // guarantee and could leave the audio thread reading freed memory.
+        // audio thread to finish, ensuring the old buffer is no longer accessed.
         PlaySoundW(0, 0, SndPurge);
         if (_activeAudioBufferPinned)
         {
             _activeAudioBufferHandle.Free();
             _activeAudioBufferPinned = false;
+        }
+    }
+
+    private readonly struct WavClip
+    {
+        public readonly string FileName;
+        public readonly byte[] Bytes;
+        public readonly int DataOffset;
+        public readonly int DataSize;
+
+        public WavClip(string fileName, byte[] bytes, int dataOffset, int dataSize)
+        {
+            FileName = fileName;
+            Bytes = bytes;
+            DataOffset = dataOffset;
+            DataSize = dataSize;
         }
     }
 

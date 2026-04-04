@@ -320,68 +320,119 @@ public unsafe sealed partial class ParryModule
             }
             else
             {
-                // Anfunkeln-style: no p2=target calls fired and no prior missed detection.
-                // h_ms_calc_damage return-0 blocked the damage. Resolve parry feedback
-                // now for all targeted party members.
-                Chr* party = _battleAdapter.GetPlayerCharacters();
-                if (party != null)
+                // Branch on whether any targeted slot received a per-target MsSetDamage p2=slot
+                // call before this p3=0x400 finalization. Attacks that go through the per-target
+                // call path set SetDamageTargetFired; attacks that commit entirely through
+                // MsSetDamageInternal p5=1024 (delayed finalization) do not.
+                // When attacks with per-target calls arrive here, it means damage_hp was 0 at
+                // p5=0 time (staging latency gap after reactive R1 press), so resolve_successful_parry
+                // was skipped even though _internalInterceptedMask was set and HP is protected.
+                // This distinction matches all currently observed attack paths. If a hybrid path
+                // (per-target calls AND delayed p5=1024 commit) is discovered, revisit this branch.
+                bool hasPerTargetSetDamageCalls = false;
                 {
-                    uint mask = _runtime.CurrentPartyTargetMask;
-                    while (mask != 0)
+                    uint tmask = _runtime.CurrentPartyTargetMask;
+                    for (int i = 0; i < PartyActorCapacity; i++)
                     {
-                        int slot = BitOperations.TrailingZeroCount(mask);
-                        mask &= mask - 1;
-                        Chr* candidate = party + slot;
-
-                        // AnfunkelProbe: log status fields and parry gate results at the
-                        // exact branching point for Anfunkeln-style finalization. This
-                        // distinguishes status-carrying attacks (e.g. confuse 0x0100 in
-                        // 0x606) that fail is_target_non_parryable from statusless ones
-                        // that resolve successfully.
-                        if (_optionLogging && candidate->stat_exist_flag)
+                        if ((tmask & (1u << i)) != 0 && _attackTelemetry[i].SetDamageTargetFired)
                         {
-                            byte*  anfB    = (byte*)candidate;
-                            ushort anf_606 = *(ushort*)(anfB + 0x606);
-                            byte   anf_617 = anfB[0x617];
-                            bool   anfNonP = is_target_non_parryable(candidate);
-                            write_session_hook_entry(
-                                $"[AnfunkelProbe] f={_debugFrameIndex} slot={slot} " +
-                                $"cmdId=0x{(_attackTelemetry[slot].CommandId):X4} " +
-                                $"hp={(uint)candidate->ram.hp} dmg_hp={candidate->damage_hp} " +
-                                $"0x606=0x{anf_606:X4} 0x617=0x{anf_617:X2} " +
-                                $"parryActive={_runtime.ParryWindowActive} " +
-                                $"nonParryable={anfNonP} " +
-                                $"success={(!anfNonP && candidate->damage_hp > 0 ? 1 : 0)}");
-                        }
-
-                        if (candidate->stat_exist_flag && candidate->damage_hp > 0 && !is_target_non_parryable(candidate))
-                        {
-                            // Additive restore — same semantics as motion and p2=target paths.
-                            if (_optionNegateDamage)
-                            {
-                                int restored = (int)candidate->ram.hp + candidate->damage_hp;
-                                uint snap = _preHitHpSnapshot[slot];
-                                if (snap > 0 && (uint)restored > snap) restored = (int)snap;
-                                candidate->ram.hp = restored;
-                                log_debug($"Parry restored {candidate->damage_hp} HP for {format_actor_slot((byte)slot)} at magic_finalization (hp now={(uint)candidate->ram.hp}).");
-                            }
-
-                            resolve_successful_parry(slot, candidate, "magic_impact", closeWindow: false);
-
-                            // StatusProbe: read 0x606 and 0x617 immediately after parry resolution
-                            // to determine whether the confuse bit (0x0100) and surrounding status
-                            // fields are committed to effective game state at this point.
-                            if (_optionLogging)
-                            {
-                                byte*  chrB   = (byte*)candidate;
-                                ushort s606   = *(ushort*)(chrB + 0x606);
-                                byte   s617   = chrB[0x617];
-                                write_session_hook_entry($"[StatusProbe/magic_finalization_post] f={_debugFrameIndex} slot={slot} hp={(uint)candidate->ram.hp} 0x606=0x{s606:X4} 0x617=0x{s617:X2}");
-                            }
+                            hasPerTargetSetDamageCalls = true;
+                            break;
                         }
                     }
                 }
-                end_parry_window("magic_finalization");
+
+                if (!hasPerTargetSetDamageCalls)
+                {
+                    // Delayed-finalization path: no per-target MsSetDamage calls observed.
+                    // h_ms_calc_damage return-0 blocked the damage. Resolve parry feedback
+                    // now for all targeted party members.
+                    Chr* party = _battleAdapter.GetPlayerCharacters();
+                    if (party != null)
+                    {
+                        uint mask = _runtime.CurrentPartyTargetMask;
+                        while (mask != 0)
+                        {
+                            int slot = BitOperations.TrailingZeroCount(mask);
+                            mask &= mask - 1;
+                            Chr* candidate = party + slot;
+
+                            // AnfunkelProbe: log status fields and parry gate results at the
+                            // exact branching point for Anfunkeln-style finalization. This
+                            // distinguishes status-carrying attacks (e.g. confuse 0x0100 in
+                            // 0x606) that fail is_target_non_parryable from statusless ones
+                            // that resolve successfully.
+                            if (_optionLogging && candidate->stat_exist_flag)
+                            {
+                                byte*  anfB    = (byte*)candidate;
+                                ushort anf_606 = *(ushort*)(anfB + 0x606);
+                                byte   anf_617 = anfB[0x617];
+                                bool   anfNonP = is_target_non_parryable(candidate);
+                                write_session_hook_entry(
+                                    $"[AnfunkelProbe] f={_debugFrameIndex} slot={slot} " +
+                                    $"cmdId=0x{(_attackTelemetry[slot].CommandId):X4} " +
+                                    $"hp={(uint)candidate->ram.hp} dmg_hp={candidate->damage_hp} " +
+                                    $"0x606=0x{anf_606:X4} 0x617=0x{anf_617:X2} " +
+                                    $"parryActive={_runtime.ParryWindowActive} " +
+                                    $"nonParryable={anfNonP} " +
+                                    $"success={(!anfNonP && candidate->damage_hp > 0 ? 1 : 0)}");
+                            }
+
+                            if (candidate->stat_exist_flag && candidate->damage_hp > 0 && !is_target_non_parryable(candidate))
+                            {
+                                // Additive restore — same semantics as motion and p2=target paths.
+                                if (_optionNegateDamage)
+                                {
+                                    int restored = (int)candidate->ram.hp + candidate->damage_hp;
+                                    uint snap = _preHitHpSnapshot[slot];
+                                    if (snap > 0 && (uint)restored > snap) restored = (int)snap;
+                                    candidate->ram.hp = restored;
+                                    log_debug($"Parry restored {candidate->damage_hp} HP for {format_actor_slot((byte)slot)} at magic_finalization (hp now={(uint)candidate->ram.hp}).");
+                                }
+
+                                resolve_successful_parry(slot, candidate, "magic_impact", closeWindow: false);
+
+                                // StatusProbe: read 0x606 and 0x617 immediately after parry resolution
+                                // to determine whether the confuse bit (0x0100) and surrounding status
+                                // fields are committed to effective game state at this point.
+                                if (_optionLogging)
+                                {
+                                    byte*  chrB   = (byte*)candidate;
+                                    ushort s606   = *(ushort*)(chrB + 0x606);
+                                    byte   s617   = chrB[0x617];
+                                    write_session_hook_entry($"[StatusProbe/magic_finalization_post] f={_debugFrameIndex} slot={slot} hp={(uint)candidate->ram.hp} 0x606=0x{s606:X4} 0x617=0x{s617:X2}");
+                                }
+                            }
+                        }
+                    }
+                    end_parry_window("magic_finalization");
+                }
+                else
+                {
+                    // Per-target call path: SetDamageTargetFired was observed for at least one
+                    // targeted slot. damage_hp was 0 at p5=0 time, so resolve_successful_parry
+                    // was not called from h_ms_set_damage_internal. HP is protected via
+                    // _internalInterceptedMask. Emit feedback for any slot where the interception
+                    // evidence matches the current attacker and the parry has not already been
+                    // acknowledged.
+                    Chr* party = _battleAdapter.GetPlayerCharacters();
+                    if (party != null)
+                    {
+                        uint mask = _runtime.CurrentPartyTargetMask;
+                        for (int i = 0; i < PartyActorCapacity; i++)
+                        {
+                            if ((mask & (1u << i)) == 0) continue;
+                            bool intercepted = (_internalInterceptedMask & (1u << i)) != 0
+                                && _internalInterceptedAttackerId[i] == (byte)param_1;
+                            bool resolved = (_runtime.LastParriedTargetMask & (1u << i)) != 0;
+                            if (!intercepted || resolved) continue;
+                            Chr* candidate = party + i;
+                            if (candidate->stat_exist_flag && !is_target_non_parryable(candidate))
+                                resolve_successful_parry(i, candidate, "physical_finalization", closeWindow: false);
+                        }
+                    }
+                    end_parry_window("physical_finalization");
+                }
             }
         }
 
@@ -868,15 +919,15 @@ public unsafe sealed partial class ParryModule
     /// <summary>
     ///     Phase 2 reactive interception at MsSetDamageInternal (FUN_0078f0b0 at FFX.exe+0x38F0B0).
     ///
-    ///     Architecture (revised):
-    ///     - p5=0 is NOT the authoritative HP/death commit pass. Do not intercept there.
-    ///     - p5=1024 is the confirmed commit/finalization pass for the relevant failing attack classes.
-    ///     - Timing decision is made earlier at MsDamageSetMotion (visual impact), where
-    ///       _parryResolvedAtImpactMask is set when the parry window was valid at impact.
-    ///     - Here we only check the durable marker — NOT the live wall-clock window.
-    ///       This correctly handles delayed-finalization attacks (Anfunkeln, Blitzra) where
-    ///       the p5=1024 call arrives long after the timing window has expired.
-    ///     - Feedback (text/sound) was already emitted at MsDamageSetMotion; no second signal here.
+    ///     Architecture:
+    ///     - p5=0: intercepted when parry window is still live (isActiveParry) or slot already resolved.
+    ///       Sets _internalInterceptedMask to prevent duplicate processing within the same frame sweep.
+    ///       Calls resolve_successful_parry if not yet resolved (group-attack fallback path).
+    ///     - p5=1024: the confirmed HP/death commit pass for delayed-finalization attacks (Anfunkeln,
+    ///       Blitzra, Hauch). Skip unconditionally when alreadyResolved — the p5=0 pass already consumed
+    ///       the _internalInterceptedMask bit, so notAlreadyConsumed is false by this point.
+    ///       Also skips when _parryResolvedAtImpactMask is set (MsDamageSetMotion marker path, if available).
+    ///     - Feedback (text/sound) is emitted at resolve_successful_parry; no second signal here.
     /// </summary>
     private int h_ms_set_damage_internal(int param_1, byte param_2, int param_3, int param_4, int param_5)
     {
@@ -910,26 +961,58 @@ public unsafe sealed partial class ParryModule
                     }
                 }
 
-                // p5=0 commit skip for resolved hits.
+                // p5=0 commit skip. Record attacker id so that the later p5=1024 skip can
+                // require exact attacker match — preventing a different next attacker's p5=1024
+                // from inheriting this slot's interception evidence if end_parry_window fires
+                // between the two passes (e.g. cue mutation / "attacker changed").
                 _internalInterceptedMask |= 1u << param_3;
+                _internalInterceptedAttackerId[param_3] = (byte)param_1;
                 write_session_hook_entry(
                     $"[MsSetDamageInternal] f={_debugFrameIndex} slot={param_3} p5=0 resolved=1 -> SKIP " +
                     $"attacker={param_1} cmd={param_2}");
                 log_debug($"MsSetDamageInternal p5=0 commit skipped for {format_actor_slot((byte)param_3)} (resolved).");
+
                 return 0;
             }
 
-            if (param_5 == 1024 && markerSet && notAlreadyConsumed)
+            // p5=1024 is the authoritative HP/death commit for delayed-finalization attacks
+            // (Anfunkeln, Blitzra, Hauch). Three skip paths:
+            //   markerSet     — durable marker set at MsDamageSetMotion visual-impact time
+            //   alreadyResolved — LastParriedTargetMask set by a prior resolution call
+            //   internalBlocked — p5=0 was intercepted for this slot, same attacker:
+            //                     the window may have been closed by "attacker changed" between
+            //                     p5=0 and p5=1024, but the attacker id must still match to
+            //                     prevent a different next-attacker's commit from being skipped.
+            bool internalBlocked =
+                (_internalInterceptedMask & (1u << param_3)) != 0
+                && _internalInterceptedAttackerId[param_3] == (byte)param_1;
+
+            if (param_5 == 1024 && (markerSet || alreadyResolved || internalBlocked))
             {
-                // p5=1024 commit skip via durable marker (likely magic/special delayed-finalization).
-                _parryResolvedAtImpactMask &= ~(1u << param_3);
+                if (markerSet)
+                    _parryResolvedAtImpactMask &= ~(1u << param_3);
                 _internalInterceptedMask |= 1u << param_3;
                 _runtime.LastParriedTargetMask |= 1u << param_3;
 
+                string skipReason = markerSet ? "marker=1"
+                    : alreadyResolved ? "resolved=1"
+                    : $"internal=1 attacker={param_1}";
                 write_session_hook_entry(
-                    $"[MsSetDamageInternal] f={_debugFrameIndex} slot={param_3} p5=1024 marker=1 -> SKIP " +
+                    $"[MsSetDamageInternal] f={_debugFrameIndex} slot={param_3} p5=1024 {skipReason} -> SKIP " +
                     $"attacker={param_1} cmd={param_2}");
-                log_debug($"MsSetDamageInternal p5=1024 commit skipped for {format_actor_slot((byte)param_3)} (impact marker).");
+                log_debug($"MsSetDamageInternal p5=1024 commit skipped for {format_actor_slot((byte)param_3)} ({(markerSet ? "impact marker" : alreadyResolved ? "resolved" : "internal intercepted")}).");
+
+                Chr* party = _battleAdapter.GetPlayerCharacters();
+                Chr* candidate = party != null ? party + param_3 : null;
+                if (candidate != null && candidate->stat_exist_flag)
+                {
+                    byte* chrB = (byte*)candidate;
+                    // Safely discard the intercepted attack from the Chr's BtlPos staging queue.
+                    // 0x776 and 0xA4E are the attacker_id fields; 0x777 and 0xA4F are the command_id fields.
+                    if (chrB[0x776] == (byte)param_1 && chrB[0x777] == param_2) chrB[0x776] = 0xFF;
+                    if (chrB[0xA4E] == (byte)param_1 && chrB[0xA4F] == param_2) chrB[0xA4E] = 0xFF;
+                }
+
                 return 0;
             }
         }

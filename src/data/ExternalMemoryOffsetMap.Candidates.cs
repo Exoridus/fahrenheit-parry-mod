@@ -2,15 +2,19 @@ namespace Fahrenheit.Mods.Parry;
 
 public static partial class ExternalMemoryOffsetMap
 {
+    public static class DiscordCandidateOffsets
+    {
+        // Mentioned as queued/active command id in battle context: *(T_XCommandId*)((byte*)btl + 0x3A8)
+        // Expected type: ushort
+        public const int BtlOffsetLikelyQueuedCommandId = 0x03A8;
+    }
+
     /// <summary>
     /// Candidate offsets/functions mentioned in Discord reverse-engineering threads.
     /// Treat as unverified until validated against runtime behavior in this project.
     /// </summary>
     public static class DiscordCandidates
     {
-        // Mentioned as queued/active command id in battle context: *(T_XCommandId*)((byte*)btl + 0x3A8)
-        public const int BtlOffsetLikelyQueuedCommandId = 0x03A8;
-
         // Mentioned in overdrive-mode checks in arena-related discussion.
         public const int BtlOffsetLikelyArenaContextFlag = 0x2115;
 
@@ -24,9 +28,7 @@ public static partial class ExternalMemoryOffsetMap
         public const int GlobalLikelyBattleRangeStart = 0x00D2CA90;
         public const int GlobalLikelyBattleRangeEnd = 0x00D33350;
 
-        // Suggested function offsets from Discord hooks (FFX.exe + offset).
-        public const int FnDmgCalcArmored = 0x0038AB80;
-        public const int FnMsCalcDamageInternal = 0x0038E680;
+        // Unvalidated function candidates from Discord (not yet promoted to Functions class).
         public const int FnMsSetDamageInternal = 0x0038F0B0;
         public const int FnEiAbmParaGet = 0x00A54860;
 

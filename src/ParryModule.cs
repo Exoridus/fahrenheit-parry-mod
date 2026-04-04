@@ -22,28 +22,16 @@ public unsafe sealed partial class ParryModule : FhModule
     private const uint StartupSkipMemochekEventId = 348;
     private const uint StartupSkipLoopdemoEventId = 349;
     private const int StartupSkipProgressFlagOffset = 0xC88;
-    private const float StartupLayerSuppressWindowSeconds = 8.0f;
-    private const int StartupLayerPrimaryId = 13;
-    private const int StartupLayerSecondaryAId = 2;
-    private const int StartupLayerSecondaryBId = 4;
     private const float StartupForceSkipWindowSeconds = 20.0f;
     private const int StartupTest20PatchRequiredCodeLength = 0x381;
     private const int StartupForceRetryFrames = 3;
     private const int StartupForceMaxAttempts = 120;
     private const float StartupProbeWindowSeconds = 30.0f;
     private const int StartupProbePeriodicFrames = 5;
-    private static readonly bool StartupTest20ScriptPatchEnabled = false;
-    private static readonly byte[] StartupPatchWait0Call = new byte[] { 0xAE, 0x00, 0x00, 0xD8, 0x00, 0x00 };
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate void AtelEventSetUp(uint eventId);
     private delegate char* AtelGetEventName(uint eventId);
-    [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    private delegate void MapShow2DLayerExec(Fahrenheit.Atel.AtelBasicWorker* work, nint* storage, Fahrenheit.Atel.AtelStack* stack);
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    private delegate int MapShow2DLayerRetInt(Fahrenheit.Atel.AtelBasicWorker* work, nint* storage, Fahrenheit.Atel.AtelStack* stack);
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    private delegate float MapShow2DLayerRetFloat(Fahrenheit.Atel.AtelBasicWorker* work, nint* storage, Fahrenheit.Atel.AtelStack* stack);
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate int NeedShowJapanLogo();
     // Community-confirmed signature: int __cdecl MsSetDamage(byte param_1, int param_2, int param_3)
@@ -84,21 +72,6 @@ public unsafe sealed partial class ParryModule : FhModule
     // Phase 1 reactive hook: returns early when _parryExpiry[param_3] is active for the target slot.
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate int MsSetDamageInternalProbe(int param_1, byte param_2, int param_3, int param_4, int param_5);
-
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    private delegate void MovieStopProg();
-    [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    private delegate void CommonSetSplashSpriteExec(Fahrenheit.Atel.AtelBasicWorker* work, nint* storage, Fahrenheit.Atel.AtelStack* stack);
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    private delegate int CommonSetSplashSpriteRetInt(Fahrenheit.Atel.AtelBasicWorker* work, nint* storage, Fahrenheit.Atel.AtelStack* stack);
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    private delegate float CommonSetSplashSpriteRetFloat(Fahrenheit.Atel.AtelBasicWorker* work, nint* storage, Fahrenheit.Atel.AtelStack* stack);
-    [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    private delegate void CommonHideSplashExec(Fahrenheit.Atel.AtelBasicWorker* work, nint* storage, Fahrenheit.Atel.AtelStack* stack);
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    private delegate int CommonHideSplashRetInt(Fahrenheit.Atel.AtelBasicWorker* work, nint* storage, Fahrenheit.Atel.AtelStack* stack);
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    private delegate float CommonHideSplashRetFloat(Fahrenheit.Atel.AtelBasicWorker* work, nint* storage, Fahrenheit.Atel.AtelStack* stack);
 
     private enum CommandIdSource
     {
@@ -192,22 +165,27 @@ public unsafe sealed partial class ParryModule : FhModule
         public readonly int Offset;
         public readonly string Label;
         public readonly byte[] Expected;
+        public readonly byte[] Payload;
 
-        public StartupScriptPatch(int offset, string label, byte[] expected)
+        public StartupScriptPatch(int offset, string label, byte[] payload, byte[] expected)
         {
             Offset = offset;
             Label = label;
+            Payload = payload;
             Expected = expected;
         }
     }
 
     private static readonly StartupScriptPatch[] StartupTest20SplashPatches = new StartupScriptPatch[] {
-        new StartupScriptPatch(0x032A, "title-layer13-a", new byte[] { 0xAE, 0x0D, 0x00, 0xD8, 0x0F, 0x80 }),
-        new StartupScriptPatch(0x0333, "title-layer13-b", new byte[] { 0xAE, 0x0D, 0x00, 0xD8, 0x0F, 0x80 }),
-        new StartupScriptPatch(0x033C, "title-layer13-c", new byte[] { 0xAE, 0x0D, 0x00, 0xD8, 0x0F, 0x80 }),
-        new StartupScriptPatch(0x0369, "title-layer2", new byte[] { 0xAE, 0x02, 0x00, 0xD8, 0x0F, 0x80 }),
-        new StartupScriptPatch(0x0372, "title-layer4-a", new byte[] { 0xAE, 0x04, 0x00, 0xD8, 0x0F, 0x80 }),
-        new StartupScriptPatch(0x037B, "title-layer4-b", new byte[] { 0xAE, 0x04, 0x00, 0xD8, 0x0F, 0x80 }),
+        // Overwrites the Autosave-Check with "Jump to j09 (Offset 02B7)" -> Skips Room 348 entirely
+        new StartupScriptPatch(0x0289, "skip-autosave", 
+            new byte[] { 0xB0, 0x09, 0x00, 0x3C, 0x3C, 0x3C, 0x3C, 0x3C, 0x3C, 0x3C }, 
+            expected: new byte[] { 0x9F, 0x01, 0x00, 0xAE, 0x00, 0x00, 0x06, 0xD7, 0x09, 0x00 }),
+        
+        // Overwrites an overlay clear with "Jump to j12 (Offset 0397)" -> Skips FF Logo & Video, jumps to Menu
+        new StartupScriptPatch(0x02C6, "skip-ff-logo-and-movie", 
+            new byte[] { 0xB0, 0x12, 0x00 }, 
+            expected: new byte[] { 0xD8, 0x0C, 0x40 })
     };
 
     // Runtime-only mutable state lives here to keep transitions centralized and auditable.
@@ -261,7 +239,6 @@ public unsafe sealed partial class ParryModule : FhModule
 
     private bool _optionEnabled = true;
     private bool _optionSound = true;
-    private float _optionAudioVolume = 0.5f;
     private bool _optionLogging = true;
     private bool _optionParryStateHud = true;
     private bool _optionOverdriveBoost = true;
@@ -281,6 +258,9 @@ public unsafe sealed partial class ParryModule : FhModule
     // Per-turn bitmask of slots intercepted at MsSetDamageInternal. Prevents double-resolution
     // when both skipOrigForParry (h_ms_set_damage) and the internal hook could both fire.
     private uint _internalInterceptedMask;
+    // Per-turn attacker id recorded at p5=0 intercept time. Prevents a different attacker's
+    // p5=1024 from inheriting the skip when the parry window closes between the two passes.
+    private readonly byte[] _internalInterceptedAttackerId = new byte[PartyActorCapacity];
     // Durable per-turn marker: set at MsDamageSetMotion (visual impact time) when the parry
     // timing gate passed. Consumed at MsSetDamageInternal p5=1024 (authoritative HP/death commit)
     // to skip the commit without re-evaluating the wall-clock window, which may have expired
@@ -331,19 +311,9 @@ public unsafe sealed partial class ParryModule : FhModule
     private bool _debugGameSaveLoaded;
     private bool _debugGameplayReady;
     private bool _startupSkipStatusLogged;
-    private bool _startupMovieSkipApplied;
     private int _startupForceAttemptCount;
     private ulong _startupForceLastAttemptFrame;
     private int _startupEventTraceCount;
-    private int _startupLayerTraceCount;
-    private int _startupLayerHookProbeTraceCount;
-    private int _startupLayerArgTraceCount;
-    private ulong _startupHideLastFrame;
-    private int _startupHideLastLayer = -1;
-    private byte _startupNeedAutoSaveLast;
-    private bool _startupNeedAutoSaveLogged;
-    private bool _startupLayerHooksEnabled;
-    private int _startupCommonTraceCount;
     private bool _startupTest20PatchApplied;
     private bool _startupTest20PatchMismatchLogged;
     private bool _debugAutoScroll = true;
@@ -352,7 +322,6 @@ public unsafe sealed partial class ParryModule : FhModule
     private int _debugCueTurnId;
     private string _dataMappingStatus = "No data mappings loaded.";
     private readonly Random _rng = new();
-    private readonly List<WavClip> _parryAudioClips = new(8);
     private string _settingsFilePath = string.Empty;
     private StreamWriter? _sessionDebugLogWriter;
     private StreamWriter? _sessionTimelineLogWriter;
@@ -381,33 +350,23 @@ public unsafe sealed partial class ParryModule : FhModule
     private readonly FhMethodHandle<MsSetDamageInternalProbe> _hMsSetDamageInternal;
     private readonly FhMethodHandle<AtelEventSetUp> _hAtelEventSetUp;
     private readonly FhMethodHandle<NeedShowJapanLogo> _hNeedShowJapanLogo;
-    private FhMethodHandle<MapShow2DLayerExec>? _hMapShow2DLayerExec;
-    private FhMethodHandle<MapShow2DLayerRetInt>? _hMapShow2DLayerRetInt;
-    private FhMethodHandle<MapShow2DLayerRetFloat>? _hMapShow2DLayerRetFloat;
-    private FhMethodHandle<CommonSetSplashSpriteExec>? _hCommonSetSplashSpriteExec;
-    private FhMethodHandle<CommonSetSplashSpriteRetInt>? _hCommonSetSplashSpriteRetInt;
-    private FhMethodHandle<CommonSetSplashSpriteRetFloat>? _hCommonSetSplashSpriteRetFloat;
-    private FhMethodHandle<CommonHideSplashExec>? _hCommonHideSplashExec;
-    private FhMethodHandle<CommonHideSplashRetInt>? _hCommonHideSplashRetInt;
-    private FhMethodHandle<CommonHideSplashRetFloat>? _hCommonHideSplashRetFloat;
 
     public ParryModule()
     {
         _hMsExeInputCue = new FhMethodHandle<FhFfx.FhCall.MsExeInputCue>(this, "FFX.exe", FhFfx.FhCall.__addr_MsExeInputCue, h_ms_exe_input_cue);
         _hMsSetDamage = new FhMethodHandle<MsSetDamageProbe>(this, "FFX.exe", FhFfx.FhCall.__addr_MsSetDamage, h_ms_set_damage);
-        _hMsDamageSetMotion = new FhMethodHandle<MsDamageSetMotionProbe>(this, "FFX.exe", 0x38CAE0, h_ms_damage_set_motion);
+        _hMsDamageSetMotion = new FhMethodHandle<MsDamageSetMotionProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsDamageSetMotion, h_ms_damage_set_motion);
         _hMsCalcDamage = new FhMethodHandle<MsCalcDamageProbe>(this, "FFX.exe", FhFfx.FhCall.__addr_MsCalcDamage, h_ms_calc_damage);
-        _hDmgCalcArmored = new FhMethodHandle<DmgCalcArmoredProbe>(this, "FFX.exe", 0x38AB80, h_dmg_calc_armored);
-        _hMsCalcDamageInternal = new FhMethodHandle<MsCalcDamageInternalProbe>(this, "FFX.exe", 0x38E680, h_ms_calc_damage_internal);
+        _hDmgCalcArmored = new FhMethodHandle<DmgCalcArmoredProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.DmgCalcArmored, h_dmg_calc_armored);
+        _hMsCalcDamageInternal = new FhMethodHandle<MsCalcDamageInternalProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsCalcDamageInternal, h_ms_calc_damage_internal);
         _hMsSetDamageInternal = new FhMethodHandle<MsSetDamageInternalProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.DiscordCandidates.FnMsSetDamageInternal, h_ms_set_damage_internal);
-        _hAtelEventSetUp = new FhMethodHandle<AtelEventSetUp>(this, "FFX.exe", 0x472e90, h_startup_event_setup); // AtelEventSetUp — Atel scripting event dispatch; intercepted for startup skip
-        _hNeedShowJapanLogo = new FhMethodHandle<NeedShowJapanLogo>(this, "FFX.exe", 0x387450, h_need_show_japan_logo); // isNeedShowJapanLogo — suppresses Japan logo display during startup skip
+        _hAtelEventSetUp = new FhMethodHandle<AtelEventSetUp>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.AtelEventSetUp, h_startup_event_setup); // AtelEventSetUp — Atel scripting event dispatch; intercepted for startup skip
+        _hNeedShowJapanLogo = new FhMethodHandle<NeedShowJapanLogo>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.NeedShowJapanLogo, h_need_show_japan_logo); // isNeedShowJapanLogo — suppresses Japan logo display during startup skip
 
         settings = new FhSettingsCategory("fhparry", [
             new FhSettingCustomRenderer("enabled", render_setting_enabled),
             new FhSettingCustomRenderer("difficulty", render_setting_difficulty),
             new FhSettingCustomRenderer("audio", render_setting_audio),
-            new FhSettingCustomRenderer("audio_volume", render_setting_audio_volume),
             new FhSettingCustomRenderer("parry_state_hud", render_setting_parry_state_hud),
             new FhSettingCustomRenderer("startup_skip", render_setting_startup_skip),
             new FhSettingCustomRenderer("ctb", render_setting_overdrive_boost),
@@ -428,6 +387,7 @@ public unsafe sealed partial class ParryModule : FhModule
         _fontResourcesDir = Path.Combine(mod_context.Paths.ResourcesDir.FullName, "fonts");
         initialize_overlay_fonts();
         initialize_audio_resources();
+        warmup_audio_playback_once();
         initialize_data_mappings(mod_context);
 
         FhApi.Events.Common.GameLoop.PreUpdate.subscribe(on_pre_update);
@@ -504,9 +464,6 @@ public unsafe sealed partial class ParryModule : FhModule
             _logger.Warning($"[Parry] Could not hook startup event setup (splash skip unavailable): {ex.Message}");
         }
 
-        _startupLayerHooksEnabled = false;
-        try_hook_startup_layer_calls();
-
         try
         {
             _hNeedShowJapanLogo.hook();
@@ -527,8 +484,6 @@ public unsafe sealed partial class ParryModule : FhModule
         _simulationClockSeconds += deltaSeconds;
         update_debug_save_loaded_state();
         try_run_startup_force_title_skip();
-        try_apply_startup_warning_skip();
-        try_apply_startup_movie_skip("pre_update");
         update_debug_battle_session_state();
         if (_optionDebugOverlay || _optionLogging)
         {
@@ -782,6 +737,7 @@ public unsafe sealed partial class ParryModule : FhModule
 
         if (redirected || isTitle)
         {
+            try_patch_startup_test20_script("pre_update");
         }
     }
 
@@ -816,15 +772,14 @@ public unsafe sealed partial class ParryModule : FhModule
 
         _hAtelEventSetUp.orig_fptr(targetEventId);
 
+        if (is_startup_title_event(targetEventId, eventName))
+        {
+            try_patch_startup_test20_script("event_setup");
+        }
     }
 
     private void try_patch_startup_test20_script(string source)
     {
-        if (!StartupTest20ScriptPatchEnabled)
-        {
-            return;
-        }
-
         if (_startupTest20PatchApplied || !startup_skip_mutations_enabled())
         {
             return;
@@ -855,7 +810,7 @@ public unsafe sealed partial class ParryModule : FhModule
         foreach (StartupScriptPatch patch in StartupTest20SplashPatches)
         {
             byte* target = code + patch.Offset;
-            if (bytes_match(target, StartupPatchWait0Call))
+            if (bytes_match(target, patch.Payload))
             {
                 alreadyPatched++;
                 continue;
@@ -872,7 +827,7 @@ public unsafe sealed partial class ParryModule : FhModule
                 return;
             }
 
-            write_bytes(target, StartupPatchWait0Call);
+            write_bytes(target, patch.Payload);
             patchedCount++;
         }
 
@@ -946,7 +901,7 @@ public unsafe sealed partial class ParryModule : FhModule
         foreach (StartupScriptPatch patch in StartupTest20SplashPatches)
         {
             byte* target = code + patch.Offset;
-            if (!bytes_match(target, patch.Expected) && !bytes_match(target, StartupPatchWait0Call))
+            if (!bytes_match(target, patch.Expected) && !bytes_match(target, patch.Payload))
             {
                 return false;
             }
@@ -986,453 +941,6 @@ public unsafe sealed partial class ParryModule : FhModule
         }
     }
 
-    private void try_hook_startup_common_calls()
-    {
-        if (_hCommonSetSplashSpriteExec != null
-            || _hCommonSetSplashSpriteRetInt != null
-            || _hCommonSetSplashSpriteRetFloat != null
-            || _hCommonHideSplashExec != null
-            || _hCommonHideSplashRetInt != null
-            || _hCommonHideSplashRetFloat != null)
-        {
-            return;
-        }
-
-        try
-        {
-            Fahrenheit.Atel.AtelCallTarget* commonTargets = Fahrenheit.Atel.CTNamespaceExt.get_internal(Fahrenheit.Atel.AtelCallTargetNamespace.Common);
-            if (commonTargets == null)
-            {
-                _logger.Warning("[Parry] Could not resolve Atel Common call table (startup probe hooks unavailable).");
-                return;
-            }
-
-            Fahrenheit.Atel.AtelCallTarget setSplashSprite = commonTargets[0x011B];
-            if (setSplashSprite.exec_func != 0)
-            {
-                _hCommonSetSplashSpriteExec = new FhMethodHandle<CommonSetSplashSpriteExec>(this, setSplashSprite.exec_func, h_common_set_splash_sprite_exec);
-                _hCommonSetSplashSpriteExec.hook();
-                _logger.Info($"[Parry] Startup probe hook armed (std::011B exec @ 0x{setSplashSprite.exec_func:X8}).");
-            }
-
-            if (setSplashSprite.ret_int_func != 0)
-            {
-                _hCommonSetSplashSpriteRetInt = new FhMethodHandle<CommonSetSplashSpriteRetInt>(this, setSplashSprite.ret_int_func, h_common_set_splash_sprite_ret_int);
-                _hCommonSetSplashSpriteRetInt.hook();
-                _logger.Info($"[Parry] Startup probe hook armed (std::011B ret_int @ 0x{setSplashSprite.ret_int_func:X8}).");
-            }
-
-            if (setSplashSprite.ret_float_func != 0)
-            {
-                _hCommonSetSplashSpriteRetFloat = new FhMethodHandle<CommonSetSplashSpriteRetFloat>(this, setSplashSprite.ret_float_func, h_common_set_splash_sprite_ret_float);
-                _hCommonSetSplashSpriteRetFloat.hook();
-                _logger.Info($"[Parry] Startup probe hook armed (std::011B ret_float @ 0x{setSplashSprite.ret_float_func:X8}).");
-            }
-
-            Fahrenheit.Atel.AtelCallTarget hideSplash = commonTargets[0x011C];
-            if (hideSplash.exec_func != 0)
-            {
-                _hCommonHideSplashExec = new FhMethodHandle<CommonHideSplashExec>(this, hideSplash.exec_func, h_common_hide_splash_exec);
-                _hCommonHideSplashExec.hook();
-                _logger.Info($"[Parry] Startup probe hook armed (std::011C exec @ 0x{hideSplash.exec_func:X8}).");
-            }
-
-            if (hideSplash.ret_int_func != 0)
-            {
-                _hCommonHideSplashRetInt = new FhMethodHandle<CommonHideSplashRetInt>(this, hideSplash.ret_int_func, h_common_hide_splash_ret_int);
-                _hCommonHideSplashRetInt.hook();
-                _logger.Info($"[Parry] Startup probe hook armed (std::011C ret_int @ 0x{hideSplash.ret_int_func:X8}).");
-            }
-
-            if (hideSplash.ret_float_func != 0)
-            {
-                _hCommonHideSplashRetFloat = new FhMethodHandle<CommonHideSplashRetFloat>(this, hideSplash.ret_float_func, h_common_hide_splash_ret_float);
-                _hCommonHideSplashRetFloat.hook();
-                _logger.Info($"[Parry] Startup probe hook armed (std::011C ret_float @ 0x{hideSplash.ret_float_func:X8}).");
-            }
-
-            if (_hCommonSetSplashSpriteExec == null
-                && _hCommonSetSplashSpriteRetInt == null
-                && _hCommonSetSplashSpriteRetFloat == null
-                && _hCommonHideSplashExec == null
-                && _hCommonHideSplashRetInt == null
-                && _hCommonHideSplashRetFloat == null)
-            {
-                _logger.Warning("[Parry] Startup probe hooks unresolved (std::011B/std::011C pointers are null).");
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger.Warning($"[Parry] Could not hook std::011B/std::011C startup probe calls: {ex.Message}");
-        }
-    }
-
-    private void h_common_set_splash_sprite_exec(Fahrenheit.Atel.AtelBasicWorker* work, nint* storage, Fahrenheit.Atel.AtelStack* stack)
-    {
-        trace_startup_common_call(0x011B, "setSplashSprite", "exec", argCount: 2, storage, stack);
-        _hCommonSetSplashSpriteExec!.orig_fptr(work, storage, stack);
-    }
-
-    private int h_common_set_splash_sprite_ret_int(Fahrenheit.Atel.AtelBasicWorker* work, nint* storage, Fahrenheit.Atel.AtelStack* stack)
-    {
-        trace_startup_common_call(0x011B, "setSplashSprite", "ret_int", argCount: 2, storage, stack);
-        return _hCommonSetSplashSpriteRetInt!.orig_fptr(work, storage, stack);
-    }
-
-    private float h_common_set_splash_sprite_ret_float(Fahrenheit.Atel.AtelBasicWorker* work, nint* storage, Fahrenheit.Atel.AtelStack* stack)
-    {
-        trace_startup_common_call(0x011B, "setSplashSprite", "ret_float", argCount: 2, storage, stack);
-        return _hCommonSetSplashSpriteRetFloat!.orig_fptr(work, storage, stack);
-    }
-
-    private void h_common_hide_splash_exec(Fahrenheit.Atel.AtelBasicWorker* work, nint* storage, Fahrenheit.Atel.AtelStack* stack)
-    {
-        trace_startup_common_call(0x011C, "hideSplash", "exec", argCount: 1, storage, stack);
-        _hCommonHideSplashExec!.orig_fptr(work, storage, stack);
-    }
-
-    private int h_common_hide_splash_ret_int(Fahrenheit.Atel.AtelBasicWorker* work, nint* storage, Fahrenheit.Atel.AtelStack* stack)
-    {
-        trace_startup_common_call(0x011C, "hideSplash", "ret_int", argCount: 1, storage, stack);
-        return _hCommonHideSplashRetInt!.orig_fptr(work, storage, stack);
-    }
-
-    private float h_common_hide_splash_ret_float(Fahrenheit.Atel.AtelBasicWorker* work, nint* storage, Fahrenheit.Atel.AtelStack* stack)
-    {
-        trace_startup_common_call(0x011C, "hideSplash", "ret_float", argCount: 1, storage, stack);
-        return _hCommonHideSplashRetFloat!.orig_fptr(work, storage, stack);
-    }
-
-    private void trace_startup_common_call(
-        ushort callId,
-        string callName,
-        string source,
-        int argCount,
-        nint* storage,
-        Fahrenheit.Atel.AtelStack* stack)
-    {
-        if (_startupCommonTraceCount >= 256)
-        {
-            return;
-        }
-
-        if (_simulationClockSeconds > 60.0f)
-        {
-            return;
-        }
-
-        if (_debugGameplayReady)
-        {
-            return;
-        }
-
-        int eventId = *FhFfx.Globals.event_id;
-        string eventName = get_current_event_name_safe((uint)Math.Max(0, eventId));
-        int arg0 = resolve_atel_call_arg(storage, stack, argCount, argIndex: 0);
-        int arg1 = resolve_atel_call_arg(storage, stack, argCount, argIndex: 1);
-
-        _startupCommonTraceCount++;
-        append_debug_event(
-            $"[Parry] Startup std::{callId:X4} {callName} [{source}] args=({format_probe_arg(arg0)}, {format_probe_arg(arg1)}) event={eventId}:{eventName}");
-    }
-
-    private static int resolve_atel_call_arg(nint* storage, Fahrenheit.Atel.AtelStack* stack, int argCount, int argIndex)
-    {
-        if (argIndex < 0 || argIndex >= argCount)
-        {
-            return int.MinValue;
-        }
-
-        try
-        {
-            if (stack != null && stack->size >= argCount)
-            {
-                int stackIndex = stack->size - argCount + argIndex;
-                if (stackIndex >= 0 && stackIndex < stack->size)
-                {
-                    return stack->values.as_int()[stackIndex];
-                }
-            }
-        }
-        catch
-        {
-            // ignored; fall back to storage
-        }
-
-        try
-        {
-            if (storage != null && argIndex <= 3)
-            {
-                return unchecked((int)storage[argIndex]);
-            }
-        }
-        catch
-        {
-            // ignored
-        }
-
-        return int.MinValue;
-    }
-
-    private static string format_probe_arg(int value)
-    {
-        return value == int.MinValue ? "-" : value.ToString(CultureInfo.InvariantCulture);
-    }
-
-    private void try_hook_startup_layer_calls()
-    {
-        if (!_startupLayerHooksEnabled)
-        {
-            return;
-        }
-
-        if (_hMapShow2DLayerExec != null || _hMapShow2DLayerRetInt != null || _hMapShow2DLayerRetFloat != null)
-        {
-            return;
-        }
-
-        try
-        {
-            Fahrenheit.Atel.AtelCallTarget* mapTargets = Fahrenheit.Atel.CTNamespaceExt.get_internal(Fahrenheit.Atel.AtelCallTargetNamespace.Map);
-            if (mapTargets == null)
-            {
-                _logger.Warning("[Parry] Could not resolve Atel Map call table (startup 2D layer suppression unavailable).");
-                return;
-            }
-
-            Fahrenheit.Atel.AtelCallTarget target = mapTargets[0x000F]; // map::800F (show2DLayer)
-            if (target.exec_func == 0 && target.ret_int_func == 0 && target.ret_float_func == 0)
-            {
-                if (_startupLayerHookProbeTraceCount < 8)
-                {
-                    _startupLayerHookProbeTraceCount++;
-                    _logger.Info("[Parry] map::800F unresolved yet (all pointers are null). Will retry.");
-                }
-                return;
-            }
-
-            if (target.exec_func != 0)
-            {
-                _hMapShow2DLayerExec = new FhMethodHandle<MapShow2DLayerExec>(this, target.exec_func, h_map_show_2d_layer_exec);
-                _hMapShow2DLayerExec.hook();
-                _logger.Info($"[Parry] Startup layer suppression hook armed (map::800F exec @ 0x{target.exec_func:X8}).");
-                return;
-            }
-
-            if (target.ret_int_func != 0)
-            {
-                _hMapShow2DLayerRetInt = new FhMethodHandle<MapShow2DLayerRetInt>(this, target.ret_int_func, h_map_show_2d_layer_ret_int);
-                _hMapShow2DLayerRetInt.hook();
-                _logger.Info($"[Parry] Startup layer suppression hook armed (map::800F ret_int @ 0x{target.ret_int_func:X8}).");
-                return;
-            }
-
-            if (target.ret_float_func != 0)
-            {
-                _hMapShow2DLayerRetFloat = new FhMethodHandle<MapShow2DLayerRetFloat>(this, target.ret_float_func, h_map_show_2d_layer_ret_float);
-                _hMapShow2DLayerRetFloat.hook();
-                _logger.Info($"[Parry] Startup layer suppression hook armed (map::800F ret_float @ 0x{target.ret_float_func:X8}).");
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger.Warning($"[Parry] Could not hook map::800F startup layer call: {ex.Message}");
-        }
-    }
-
-    private void h_map_show_2d_layer_exec(Fahrenheit.Atel.AtelBasicWorker* work, nint* storage, Fahrenheit.Atel.AtelStack* stack)
-    {
-        int layerIndex = resolve_map_layer_index(storage, stack);
-        trace_map_show_2d_layer_args("exec", layerIndex, storage, stack);
-        if (should_skip_startup_layer_show(layerIndex, "exec"))
-        {
-            return;
-        }
-        _hMapShow2DLayerExec!.orig_fptr(work, storage, stack);
-    }
-
-    private int h_map_show_2d_layer_ret_int(Fahrenheit.Atel.AtelBasicWorker* work, nint* storage, Fahrenheit.Atel.AtelStack* stack)
-    {
-        int layerIndex = resolve_map_layer_index(storage, stack);
-        trace_map_show_2d_layer_args("ret_int", layerIndex, storage, stack);
-        if (should_skip_startup_layer_show(layerIndex, "ret_int"))
-        {
-            return 0;
-        }
-        int result = _hMapShow2DLayerRetInt!.orig_fptr(work, storage, stack);
-        return result;
-    }
-
-    private float h_map_show_2d_layer_ret_float(Fahrenheit.Atel.AtelBasicWorker* work, nint* storage, Fahrenheit.Atel.AtelStack* stack)
-    {
-        int layerIndex = resolve_map_layer_index(storage, stack);
-        trace_map_show_2d_layer_args("ret_float", layerIndex, storage, stack);
-        if (should_skip_startup_layer_show(layerIndex, "ret_float"))
-        {
-            return 0f;
-        }
-        float result = _hMapShow2DLayerRetFloat!.orig_fptr(work, storage, stack);
-        return result;
-    }
-
-    private static int resolve_map_layer_index(nint* storage, Fahrenheit.Atel.AtelStack* stack)
-    {
-        // For map::800F in our startup path, the incoming layer argument is observed on stack top.
-        // storage[0] can hold the return slot/current result and often appears as 0.
-        try
-        {
-            if (stack != null && stack->size > 0)
-            {
-                int i = stack->size - 1;
-                int candidate = stack->values.as_int()[i];
-                if (candidate >= 0 && candidate <= 64) return candidate;
-            }
-        }
-        catch
-        {
-            // ignored
-        }
-
-        try
-        {
-            if (storage != null)
-            {
-                int s1 = unchecked((int)storage[1]);
-                if (s1 >= 0 && s1 <= 64) return s1;
-                int s0 = unchecked((int)storage[0]);
-                if (s0 >= 0 && s0 <= 64) return s0;
-            }
-        }
-        catch
-        {
-            // ignored, fallback below
-        }
-
-        return -1;
-    }
-
-    private void trace_map_show_2d_layer_args(string source, int resolvedLayer, nint* storage, Fahrenheit.Atel.AtelStack* stack)
-    {
-        if (_startupLayerArgTraceCount >= 32)
-        {
-            return;
-        }
-
-        if (_simulationClockSeconds > StartupLayerSuppressWindowSeconds)
-        {
-            return;
-        }
-
-        int eventId = *FhFfx.Globals.event_id;
-        string eventName = eventId > 0 ? get_current_event_name((uint)eventId) : string.Empty;
-        if (!is_startup_title_event((uint)Math.Max(0, eventId), eventName)
-            && !is_startup_splash_event((uint)Math.Max(0, eventId), eventName))
-        {
-            return;
-        }
-
-        int s0 = int.MinValue;
-        int s1 = int.MinValue;
-        int stackTop = int.MinValue;
-        int stackSize = -1;
-
-        try
-        {
-            if (storage != null)
-            {
-                s0 = unchecked((int)storage[0]);
-                s1 = unchecked((int)storage[1]);
-            }
-        }
-        catch
-        {
-            // ignored
-        }
-
-        try
-        {
-            if (stack != null)
-            {
-                stackSize = stack->size;
-                if (stackSize > 0)
-                {
-                    stackTop = stack->values.as_int()[stackSize - 1];
-                }
-            }
-        }
-        catch
-        {
-            // ignored
-        }
-
-        _startupLayerArgTraceCount++;
-        _logger.Info(
-            $"[Parry] map::800F arg trace #{_startupLayerArgTraceCount}: src={source}, resolved={resolvedLayer}, s0={s0}, s1={s1}, stackSize={stackSize}, stackTop={stackTop}, event={eventId}, name={eventName}.");
-    }
-
-    private bool should_skip_startup_layer_show(
-        int layerIndex,
-        string source)
-    {
-        if (!startup_skip_mutations_enabled()) return false;
-        if (!should_suppress_startup_layer(layerIndex)) return false;
-        if (_startupHideLastFrame == _debugFrameIndex && _startupHideLastLayer == layerIndex) return true;
-
-        _startupHideLastFrame = _debugFrameIndex;
-        _startupHideLastLayer = layerIndex;
-
-        if (_startupLayerTraceCount < 24)
-        {
-            _startupLayerTraceCount++;
-            int eventId = *FhFfx.Globals.event_id;
-            string eventName = eventId > 0 ? get_current_event_name((uint)eventId) : string.Empty;
-            _logger.Info($"[Parry] Suppressed startup layer {layerIndex} at map::800F ({source}; event={eventId}, name={eventName}, t={_simulationClockSeconds:F2}s).");
-        }
-
-        return true;
-    }
-
-    private bool should_suppress_startup_layer(int layerIndex)
-    {
-        if (!_optionStartupSkipForceTitle)
-        {
-            return false;
-        }
-
-        if (_simulationClockSeconds > StartupLayerSuppressWindowSeconds)
-        {
-            return false;
-        }
-
-        int eventId = *FhFfx.Globals.event_id;
-        if (eventId <= 0)
-        {
-            return false;
-        }
-
-        string eventName = get_current_event_name((uint)eventId);
-        if (!is_startup_title_event((uint)eventId, eventName)
-            && !is_startup_splash_event((uint)eventId, eventName))
-        {
-            return false;
-        }
-
-        if (layerIndex < 0)
-        {
-            return false;
-        }
-
-        // Keep layer suppression scoped to known secondary overlays.
-        // Primary layer 13 suppression caused startup hangs in live runs.
-        if (layerIndex != StartupLayerSecondaryAId
-            && layerIndex != StartupLayerSecondaryBId)
-        {
-            return false;
-        }
-
-        return true;
-    }
-
     private int h_need_show_japan_logo()
     {
         if (startup_skip_mutations_enabled() && !is_gameplay_ready_for_startup_skip())
@@ -1441,40 +949,6 @@ public unsafe sealed partial class ParryModule : FhModule
         }
 
         return _hNeedShowJapanLogo.orig_fptr();
-    }
-
-    private void try_apply_startup_warning_skip()
-    {
-        if (!startup_skip_mutations_enabled())
-        {
-            return;
-        }
-
-        if (is_gameplay_ready_for_startup_skip())
-        {
-            return;
-        }
-
-        uint* gNeedAutoSave = FhFfx.FhCall.gNeedAutoSave;
-        if (gNeedAutoSave == null)
-        {
-            return;
-        }
-
-        byte current = (byte)(*gNeedAutoSave & 0xFF);
-        if (!_startupNeedAutoSaveLogged || current != _startupNeedAutoSaveLast)
-        {
-            _startupNeedAutoSaveLogged = true;
-            _startupNeedAutoSaveLast = current;
-            _logger.Info($"[Parry] Startup gNeedAutoSave={current}.");
-        }
-
-        if (current != 0)
-        {
-            *gNeedAutoSave = 0;
-            _startupNeedAutoSaveLast = 0;
-            _logger.Info("[Parry] Startup gNeedAutoSave forced to 0.");
-        }
     }
 
     private bool is_gameplay_ready_for_startup_skip()
@@ -1492,44 +966,8 @@ public unsafe sealed partial class ParryModule : FhModule
             return true;
         }
 
-        byte* menuState = FhUtil.ptr_at<byte>(0xF407E4);
+        byte* menuState = FhUtil.ptr_at<byte>(ExternalMemoryOffsetMap.StartupState.MenuState);
         return menuState != null && *menuState != 0;
-    }
-
-    private void try_apply_startup_movie_skip(string source)
-    {
-        if (_startupMovieSkipApplied || !startup_skip_mutations_enabled())
-        {
-            return;
-        }
-
-        if (is_gameplay_ready_for_startup_skip())
-        {
-            return;
-        }
-
-        if (_simulationClockSeconds > StartupForceSkipWindowSeconds)
-        {
-            return;
-        }
-
-        try
-        {
-            uint* gMoviePlay = FhUtil.ptr_at<uint>(0xD2A008);
-            if (gMoviePlay != null)
-            {
-                *gMoviePlay = 0;
-            }
-
-            FhUtil.get_fptr<MovieStopProg>(0x36F1A0)();
-            _startupMovieSkipApplied = true;
-            int eventId = *FhFfx.Globals.event_id;
-            _logger.Info($"[Parry] Startup movie skip applied via {source} (event={eventId}).");
-        }
-        catch (Exception ex)
-        {
-            _logger.Warning($"[Parry] Startup movie skip failed: {ex.Message}");
-        }
     }
 
     private static bool is_startup_title_event(uint eventId, string eventName)
@@ -1575,7 +1013,7 @@ public unsafe sealed partial class ParryModule : FhModule
     {
         try
         {
-            char* ptr = FhUtil.get_fptr<AtelGetEventName>(0x4796e0)(eventId);
+            char* ptr = FhUtil.get_fptr<AtelGetEventName>(ExternalMemoryOffsetMap.Functions.AtelGetEventName)(eventId);
             if (ptr == null) return string.Empty;
             return Marshal.PtrToStringAnsi((nint)ptr) ?? string.Empty;
         }

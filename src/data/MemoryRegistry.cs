@@ -67,7 +67,7 @@ internal static class MemoryRegistry
     internal static class Candidates
     {
         public static readonly MemoryLocation QueuedCommandOffset =
-            new(nameof(QueuedCommandOffset), ExternalMemoryOffsetMap.DiscordCandidates.BtlOffsetLikelyQueuedCommandId);
+            new(nameof(QueuedCommandOffset), ExternalMemoryOffsetMap.DiscordCandidateOffsets.BtlOffsetLikelyQueuedCommandId);
         public static readonly MemoryLocation ArenaContextFlag =
             new(nameof(ArenaContextFlag), ExternalMemoryOffsetMap.DiscordCandidates.BtlOffsetLikelyArenaContextFlag);
         public static readonly MemoryLocation OverdriveLearnPopupFlag =

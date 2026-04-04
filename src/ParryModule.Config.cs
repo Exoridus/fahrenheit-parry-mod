@@ -6,7 +6,6 @@ public unsafe sealed partial class ParryModule
     {
         public bool? Enabled { get; set; }
         public bool? Sound { get; set; }
-        public float? AudioVolume { get; set; }
         public bool? ParryStateHud { get; set; }
         public bool? Logging { get; set; }
         public bool? OverdriveBoost { get; set; }
@@ -39,6 +38,7 @@ public unsafe sealed partial class ParryModule
 
             string json = File.ReadAllText(_settingsFilePath);
             PersistedSettings? persisted = JsonSerializer.Deserialize<PersistedSettings>(json, PersistedSettingsJsonOptions);
+            // Legacy fields (for example prior audioVolume slider state) are ignored on load.
             if (persisted == null)
             {
                 return;
@@ -46,7 +46,6 @@ public unsafe sealed partial class ParryModule
 
             if (persisted.Enabled.HasValue) _optionEnabled = persisted.Enabled.Value;
             if (persisted.Sound.HasValue) _optionSound = persisted.Sound.Value;
-            if (persisted.AudioVolume.HasValue) _optionAudioVolume = Math.Clamp(persisted.AudioVolume.Value, 0f, 1f);
             if (persisted.ParryStateHud.HasValue) _optionParryStateHud = persisted.ParryStateHud.Value;
             if (persisted.Logging.HasValue) _optionLogging = persisted.Logging.Value;
             if (persisted.OverdriveBoost.HasValue) _optionOverdriveBoost = persisted.OverdriveBoost.Value;
@@ -86,7 +85,6 @@ public unsafe sealed partial class ParryModule
             {
                 Enabled = _optionEnabled,
                 Sound = _optionSound,
-                AudioVolume = Math.Clamp(_optionAudioVolume, 0f, 1f),
                 ParryStateHud = _optionParryStateHud,
                 Logging = _optionLogging,
                 OverdriveBoost = _optionOverdriveBoost,

@@ -530,7 +530,13 @@ public unsafe sealed partial class ParryModule
         Array.Clear(_parryExpiry);
         Array.Clear(_parryArmedAttackerId);
         Array.Clear(_parryFeedbackPending);
-        _internalInterceptedMask = 0;
+        // _internalInterceptedMask intentionally NOT cleared here.
+        // A p5=1024 commit for the just-closed attacker may still be in flight (e.g. after cue
+        // mutation triggers "attacker changed"). The attacker-correlated check in
+        // h_ms_set_damage_internal ensures only the same old attacker's p5=1024 inherits the
+        // skip — a subsequent different attacker on the same slot will not match.
+        // _internalInterceptedMask and _internalInterceptedAttackerId are fully reset by
+        // clear_awaiting_turn_end when the cue queue actually drains.
         _parryResolvedAtImpactMask = 0;
         Array.Clear(_preHitHpSnapshot);
         _runtime.ParryWindowActive = false;
@@ -549,6 +555,7 @@ public unsafe sealed partial class ParryModule
         Array.Clear(_parryArmedAttackerId);
         Array.Clear(_parryFeedbackPending);
         _internalInterceptedMask = 0;
+        Array.Clear(_internalInterceptedAttackerId);
         _parryResolvedAtImpactMask = 0;
         Array.Clear(_preHitHpSnapshot);
         if (_runtime.ParryWindowActive)
