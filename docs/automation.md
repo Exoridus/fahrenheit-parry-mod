@@ -17,17 +17,8 @@ Quick command discovery:
 
 ## Core Workflows
 
-- `.\build.cmd install`
-  - Install/check local prerequisites.
-  - Parameters:
-  - --full (optional).
-  - --dry-run (optional).
-  - Examples:
-  - `.\build.cmd install`
-  - `.\build.cmd install --full`
-
 - `.\build.cmd setup`
-  - Prepare repository for local development.
+  - Primary local onboarding: prerequisites, config/GameDir repair, hooks, workspace setup, and auto-deploy setup.
   - Examples:
   - `.\build.cmd setup`
 

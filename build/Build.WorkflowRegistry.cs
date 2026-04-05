@@ -53,8 +53,7 @@ internal sealed partial class BuildScript
     {
         return
         [
-            new("install", "Core", "Install/check prerequisites", "Install/check local prerequisites.", ["--full (optional).", "--dry-run (optional)."], ["build.cmd install", "build.cmd install --full"], ExecuteInstallWorkflow),
-            new("setup", "Core", "Configure repo hooks + Fahrenheit setup + optional auto-deploy setup", "Prepare repository for local development.", [], ["build.cmd setup"], ExecuteSetupWorkflow),
+            new("setup", "Core", "Primary local onboarding/setup", "Primary local onboarding: prerequisites, config/GameDir repair, hooks, workspace setup, and auto-deploy setup.", [], ["build.cmd setup"], ExecuteSetupWorkflow),
             new("clean", "Core", "Remove local caches/artifacts (safe default)", "Default clean removes cache + build artifacts. Add explicit flags for analysis/exports/game-data/purge-tools or use --purge for full local cleanup.", ["--analysis (optional).", "--exports (optional).", "--game-data (optional).", "--purge-tools (optional).", "--purge (optional, requires --yes).", "--yes (required with --purge).", "--dry-run (optional)."], ["build.cmd clean", "build.cmd clean --analysis", "build.cmd clean --exports --game-data", "build.cmd clean --purge --yes"], ExecuteCleanWorkflow),
             new("auto-deploy", "Core", "Configure automatic post-build deploy", "Configure automatic post-build deployment.", ["--game-dir <path> (optional).", "--refresh-game-dir (optional)."], ["build.cmd auto-deploy", "build.cmd auto-deploy --game-dir \"C:\\Games\\Final Fantasy X-X2 - HD Remaster\""], SetupAutoDeployCore),
             new("doctor", "Core", "Diagnose local toolchain/environment state", "Diagnose local toolchain and environment state.", ["--full (optional)."], ["build.cmd doctor", "build.cmd doctor --full"], RunDoctorCore),
@@ -111,27 +110,15 @@ internal sealed partial class BuildScript
         ];
     }
 
-    void ExecuteInstallWorkflow()
-    {
-        EnsureWingetAvailable();
-        EnsureGitInstalled();
-        EnsureDotNetSdk10Installed();
-        if (Full)
-        {
-            EnsureMsbuildInstalled();
-            EnsureVcpkgInstalledAndIntegrated();
-        }
-
-        Log.Information("Prerequisite check/install finished.");
-    }
-
     void ExecuteSetupWorkflow()
     {
+        EnsureLocalBuildPrerequisitesForSetup();
+        EnsureGameDirConfiguredForSetup();
         var resolvedConfiguration = ResolveBuildConfiguration(RequestedConfiguration);
         SetupHooksCore();
-        RunBuildProjTarget("Setup", resolvedConfiguration, includeNativeMsbuild: false, fahrenheitRef: ResolveFahrenheitRef(useReleaseRef: false));
+        bool ranWorkspaceSetup = EnsureProjectWorkspaceSetup(resolvedConfiguration);
         SetupAutoDeployCore();
-        if (InteractiveSession && AskYesNo("Run first full build now? (Recommended)", defaultYes: true))
+        if (ranWorkspaceSetup && InteractiveSession && AskYesNo("Run first full build now? (Recommended)", defaultYes: true))
         {
             RunBuildProjTarget("Build", resolvedConfiguration, includeNativeMsbuild: true, fahrenheitRef: ResolveFahrenheitRef(useReleaseRef: false));
         }

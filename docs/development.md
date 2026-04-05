@@ -23,7 +23,6 @@ Optional (reverse engineering workflows):
 ## Quick Start
 
 ```bash
-.\build.cmd install --full
 .\build.cmd setup
 .\build.cmd doctor
 .\build.cmd verify --configuration Debug --verbosity quiet

@@ -150,42 +150,13 @@ internal sealed partial class BuildScript : NukeBuild
     Target ToolsCli => _ => _
         .Executes(RunToolsCliWorkflow);
 
-    Target Install => _ => _
-        .Executes(() =>
-        {
-            EnsureWingetAvailable();
-            EnsureGitInstalled();
-            EnsureDotNetSdk10Installed();
-
-            if (Full)
-            {
-                EnsureMsbuildInstalled();
-                EnsureVcpkgInstalledAndIntegrated();
-            }
-
-            Log.Information("Prerequisite check/install finished.");
-        });
-
     Target AutoDeploy => _ => _
         .Executes(SetupAutoDeployCore);
 
     Target DocsSync => _ => _
         .Executes(SyncAutomationDocsCore);
 
-    Target Setup => _ => _
-        .Executes(() =>
-        {
-            var resolvedConfiguration = ResolveBuildConfiguration(RequestedConfiguration);
-            SetupHooksCore();
-            RunBuildProjTarget("Setup", resolvedConfiguration, includeNativeMsbuild: false, fahrenheitRef: ResolveFahrenheitRef(useReleaseRef: false));
-
-            SetupAutoDeployCore();
-
-            if (InteractiveSession && AskYesNo("Run first full build now? (Recommended)", defaultYes: true))
-            {
-                RunBuildProjTarget("Build", resolvedConfiguration, includeNativeMsbuild: true, fahrenheitRef: ResolveFahrenheitRef(useReleaseRef: false));
-            }
-        });
+    Target Setup => _ => _.Executes(ExecuteSetupWorkflow);
 
     Target Clean => _ => _.Executes(ExecuteCleanWorkflow);
 
@@ -295,6 +266,13 @@ internal sealed partial class BuildScript : NukeBuild
             return;
         }
 
+        if (workflow.Equals("install", StringComparison.OrdinalIgnoreCase))
+        {
+            Log.Warning("Workflow 'install' was removed. Redirecting to 'build.cmd setup'.");
+            ExecuteSetupWorkflow();
+            return;
+        }
+
         var definition = TryGetBuildWorkflow(workflow);
         if (definition is not null)
         {
@@ -352,6 +330,20 @@ internal sealed partial class BuildScript : NukeBuild
                 definition.Parameters,
                 definition.Examples);
             return;
+        }
+
+        if (workflow.Equals("install", StringComparison.OrdinalIgnoreCase))
+        {
+            Log.Warning("Workflow 'install' was removed. Use: build.cmd setup");
+            if (TryGetBuildWorkflow("setup") is { } setupDefinition)
+            {
+                PrintHelpBlock(
+                    setupDefinition.Name,
+                    setupDefinition.Purpose,
+                    setupDefinition.Parameters,
+                    setupDefinition.Examples);
+                return;
+            }
         }
 
         if (IsToolWorkflow(workflow))
@@ -1220,6 +1212,7 @@ internal sealed partial class BuildScript : NukeBuild
             return;
         }
 
+        EnsureWingetAvailable();
         PromptInstallOrFail(
             title: "Git not found.",
             detail: "Git is required for clone/update, changelog generation, tags, and release workflows.",
@@ -1243,6 +1236,7 @@ internal sealed partial class BuildScript : NukeBuild
             return;
         }
 
+        EnsureWingetAvailable();
         PromptInstallOrFail(
             title: ".NET SDK 10.x not found.",
             detail: ".NET SDK 10.x is required to run NUKE and to build this project.",
@@ -1266,6 +1260,7 @@ internal sealed partial class BuildScript : NukeBuild
             return;
         }
 
+        EnsureWingetAvailable();
         PromptInstallOrFail(
             title: "MSBuild not found.",
             detail: "Full builds require Visual Studio Build Tools with C++ and .NET desktop workloads.",
@@ -1365,60 +1360,6 @@ internal sealed partial class BuildScript : NukeBuild
         }
 
         RunChecked("winget", args.ToString(), $"Install {label}", showSpinner: true, silent: true);
-    }
-
-    string ResolveGameDirForAutoDeploySetup(WorkspaceConfig cfg)
-    {
-        var fromArg = NormalizePathOrEmpty(GameDir);
-        if (!string.IsNullOrWhiteSpace(fromArg))
-        {
-            if (IsValidGameDir(fromArg))
-            {
-                return fromArg;
-            }
-
-            Log.Warning($"Provided --game-dir is invalid: {fromArg}");
-        }
-
-        if (!RefreshGameDir)
-        {
-            var fromConfig = NormalizePathOrEmpty(cfg.GameDir);
-            if (IsValidGameDir(fromConfig))
-            {
-                return fromConfig;
-            }
-        }
-
-        var detected = DetectGameDir();
-        if (IsValidGameDir(detected))
-        {
-            if (!InteractiveSession)
-            {
-                return detected;
-            }
-
-            if (AskYesNo($"Detected game path '{detected}'. Use this path?", defaultYes: true))
-            {
-                return detected;
-            }
-        }
-
-        if (InteractiveSession)
-        {
-            Console.Write("Enter game installation directory (must contain FFX.exe): ");
-            var manual = NormalizePathOrEmpty(Console.ReadLine());
-            if (IsValidGameDir(manual))
-            {
-                return manual;
-            }
-
-            if (!string.IsNullOrWhiteSpace(manual))
-            {
-                Log.Warning($"Invalid game directory: {manual}");
-            }
-        }
-
-        return string.Empty;
     }
 
     void TryAutoDeployAfterBuild(string buildTarget, string configuration, bool useReleaseRef)

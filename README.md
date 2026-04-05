@@ -37,7 +37,6 @@ Download the latest release assets:
 ## Contributor Start
 
 ```bash
-.\build.cmd install --full
 .\build.cmd setup
 .\build.cmd doctor
 .\build.cmd verify
