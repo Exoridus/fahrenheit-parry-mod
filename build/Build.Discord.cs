@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Collections.Concurrent;
+using System.IO.Compression;
 using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
@@ -242,6 +243,8 @@ internal sealed partial class BuildScript
 
     void DiscordSyncCore()
     {
+        EnsureDiscordToolingReadyForSync();
+
         var outputRoot = ResolveDiscordOutputRoot();
         var workspaceConfig = LoadWorkspaceConfig();
         var baseSettings = ResolveDiscordSettings(workspaceConfig);
@@ -610,17 +613,178 @@ internal sealed partial class BuildScript
         return new DiscordExportOutcome(DiscordExportStatus.Success, string.Empty);
     }
 
-    string ResolveDiscordCliPath()
+    void SetupDiscordCore()
     {
         var toolDir = ResolveDiscordToolDirectory("DiscordChatExporter");
-        var cliPath = Path.Combine(toolDir, "DiscordChatExporter.Cli.exe");
-        if (!File.Exists(cliPath))
+        if (TryResolveDiscordCliPath(out var existingCliPath, out _))
         {
-            var expected = ResolvePath(Path.Combine(DiscordPrimaryToolsRelativeDir, "DiscordChatExporter", "DiscordChatExporter.Cli.exe"));
-            Fail($"DiscordChatExporter CLI not found at: {expected}");
+            Log.Information($"DiscordChatExporter is ready: {existingCliPath}");
+            return;
+        }
+
+        EnsureDir(toolDir);
+        if (DryRun)
+        {
+            Log.Information($"[DRY-RUN] Would download latest DiscordChatExporter CLI from {DiscordApi}");
+            Log.Information($"[DRY-RUN] Would install into {toolDir}");
+            return;
+        }
+
+        var tempRoot = Path.Combine(Path.GetTempPath(), $"discordchatexporter-{Guid.NewGuid():N}");
+        var zipPath = Path.Combine(tempRoot, "DiscordChatExporter.Cli.zip");
+        var unpackDir = Path.Combine(tempRoot, "unzipped");
+        EnsureDir(tempRoot);
+        EnsureDir(unpackDir);
+
+        try
+        {
+            var zipUrl = ResolveLatestDiscordCliZipUrl(DiscordApi);
+            DownloadFile(zipUrl, zipPath);
+            ZipFile.ExtractToDirectory(zipPath, unpackDir);
+
+            var extractedCliPath = Directory
+                .EnumerateFiles(unpackDir, "DiscordChatExporter.Cli.exe", SearchOption.AllDirectories)
+                .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
+                .FirstOrDefault();
+            if (string.IsNullOrWhiteSpace(extractedCliPath))
+            {
+                Fail($"Downloaded DiscordChatExporter archive did not contain DiscordChatExporter.Cli.exe: {zipUrl}");
+            }
+
+            var sourceRoot = Path.GetDirectoryName(extractedCliPath) ?? string.Empty;
+            if (string.IsNullOrWhiteSpace(sourceRoot) || !Directory.Exists(sourceRoot))
+            {
+                Fail("Could not resolve extracted DiscordChatExporter directory.");
+            }
+
+            CopyDirectoryRecursive(sourceRoot, toolDir);
+        }
+        finally
+        {
+            try
+            {
+                if (Directory.Exists(tempRoot))
+                {
+                    Directory.Delete(tempRoot, recursive: true);
+                }
+            }
+            catch
+            {
+                // Best-effort cleanup.
+            }
+        }
+
+        if (!TryResolveDiscordCliPath(out var cliPath, out var expectedCliPath))
+        {
+            Fail($"DiscordChatExporter setup finished but CLI was not found: {expectedCliPath}");
+        }
+
+        Log.Information($"DiscordChatExporter ready: {cliPath}");
+    }
+
+    void EnsureDiscordToolingReadyForSync()
+    {
+        EnsureLocalToolingReadyForWorkflow(
+            workflowName: "tools.cmd discord-sync",
+            dependencyName: "DiscordChatExporter CLI",
+            setupWorkflowName: "discord-setup",
+            readinessProbe: ProbeDiscordCliReadiness,
+            setupAction: SetupDiscordCore);
+    }
+
+    (bool IsReady, string Details) ProbeDiscordCliReadiness()
+    {
+        if (TryResolveDiscordCliPath(out _, out var expectedCliPath))
+        {
+            return (true, string.Empty);
+        }
+
+        return (false, $"DiscordChatExporter.Cli.exe not found at: {expectedCliPath}");
+    }
+
+    string ResolveDiscordCliPath()
+    {
+        if (!TryResolveDiscordCliPath(out var cliPath, out var expectedCliPath))
+        {
+            Fail($"DiscordChatExporter CLI not found at: {expectedCliPath}. Run: .\\tools.cmd discord-setup");
         }
 
         return cliPath;
+    }
+
+    bool TryResolveDiscordCliPath(out string cliPath, out string expectedCliPath)
+    {
+        var toolDir = ResolveDiscordToolDirectory("DiscordChatExporter");
+        expectedCliPath = Path.Combine(toolDir, "DiscordChatExporter.Cli.exe");
+        cliPath = expectedCliPath;
+        return File.Exists(expectedCliPath);
+    }
+
+    static string ResolveLatestDiscordCliZipUrl(string releaseApiUrl)
+    {
+        using var client = CreateGitHubHttpClient();
+        var json = client.GetStringAsync(releaseApiUrl).GetAwaiter().GetResult();
+        using var doc = JsonDocument.Parse(json);
+        if (!doc.RootElement.TryGetProperty("assets", out var assets) || assets.ValueKind != JsonValueKind.Array)
+        {
+            Fail($"Invalid GitHub API response: missing assets array. URL={releaseApiUrl}");
+        }
+
+        string? preferredCliWinX64 = null;
+        string? preferredCliWindows = null;
+        string? fallbackWindows = null;
+        string? firstZip = null;
+
+        foreach (var asset in assets.EnumerateArray())
+        {
+            var name = asset.TryGetProperty("name", out var n) ? n.GetString() ?? string.Empty : string.Empty;
+            var url = asset.TryGetProperty("browser_download_url", out var u) ? u.GetString() ?? string.Empty : string.Empty;
+            if (string.IsNullOrWhiteSpace(url) || !name.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            firstZip ??= url;
+            if (name.Contains(".Cli.win-x64", StringComparison.OrdinalIgnoreCase))
+            {
+                preferredCliWinX64 = url;
+                break;
+            }
+
+            if (name.Contains(".Cli.win", StringComparison.OrdinalIgnoreCase))
+            {
+                preferredCliWindows ??= url;
+                continue;
+            }
+
+            if (name.Contains(".win", StringComparison.OrdinalIgnoreCase))
+            {
+                fallbackWindows ??= url;
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(preferredCliWinX64))
+        {
+            return preferredCliWinX64;
+        }
+
+        if (!string.IsNullOrWhiteSpace(preferredCliWindows))
+        {
+            return preferredCliWindows;
+        }
+
+        if (!string.IsNullOrWhiteSpace(fallbackWindows))
+        {
+            return fallbackWindows;
+        }
+
+        if (!string.IsNullOrWhiteSpace(firstZip))
+        {
+            return firstZip;
+        }
+
+        Fail($"No .zip asset found in latest DiscordChatExporter release. URL={releaseApiUrl}");
+        return string.Empty;
     }
 
     string ResolveDiscordGuildName(string cliPath, string guildId, string token)

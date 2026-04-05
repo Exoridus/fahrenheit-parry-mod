@@ -69,6 +69,7 @@ internal sealed partial class BuildScript : NukeBuild
     [Parameter(Name = "map-publish")] readonly string MapPublish = "mappings/runtime";
     [Parameter(Name = "vbf-api")] readonly string VbfApi = "https://api.github.com/repos/topher-au/VBFTool/releases/latest";
     [Parameter(Name = "vbf-dir")] readonly string VbfDir = ".workspace/tools/VBFTool";
+    [Parameter(Name = "discord-api")] readonly string DiscordApi = "https://api.github.com/repos/Tyrrrz/DiscordChatExporter/releases/latest";
     [Parameter(Name = "ghidra-api")] readonly string GhidraApi = "https://api.github.com/repos/NationalSecurityAgency/ghidra/releases/latest";
     [Parameter(Name = "ghidra-dir")] readonly string GhidraDir = ".workspace/tools/ghidra";
     [Parameter(Name = "vbf-game-dir")] readonly string VbfGameDir = string.Empty;

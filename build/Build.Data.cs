@@ -121,25 +121,36 @@ internal sealed partial class BuildScript
 
     void CheckDataParserReady()
     {
+        var readiness = ProbeDataParserReadiness();
+        if (!readiness.IsReady)
+        {
+            Fail(
+                readiness.Details + Environment.NewLine +
+                "Run: .\\tools.cmd data-setup");
+        }
+
+        Log.Information("FFXDataParser ready.");
+    }
+
+    (bool IsReady, string Details) ProbeDataParserReadiness()
+    {
         var parserDir = ResolvePath(ParserDir);
         if (!Directory.Exists(parserDir) || !Directory.Exists(Path.Combine(parserDir, ".git")))
         {
-            Fail(
-                $"FFXDataParser is not set up at: {parserDir}" + Environment.NewLine +
-                "Run: .\\tools.cmd data-setup");
+            return (false, $"FFXDataParser is not set up at: {parserDir}");
         }
+
         var targetDir = Path.Combine(parserDir, "target");
         var jarExists = Directory.Exists(targetDir) &&
             Directory.EnumerateFiles(targetDir, "*.jar", SearchOption.TopDirectoryOnly)
-                .Any(p => !p.EndsWith("-sources.jar", StringComparison.OrdinalIgnoreCase)
-                       && !p.EndsWith("-javadoc.jar", StringComparison.OrdinalIgnoreCase));
+                .Any(path => !path.EndsWith("-sources.jar", StringComparison.OrdinalIgnoreCase)
+                    && !path.EndsWith("-javadoc.jar", StringComparison.OrdinalIgnoreCase));
         if (!jarExists)
         {
-            Fail(
-                $"FFXDataParser is not built at: {targetDir}" + Environment.NewLine +
-                "Run: .\\tools.cmd data-setup");
+            return (false, $"FFXDataParser is not built at: {targetDir}");
         }
-        Log.Information($"FFXDataParser ready: {parserDir}");
+
+        return (true, string.Empty);
     }
 
     void SetupDataParserCore()
@@ -1826,10 +1837,17 @@ public final class LocalizedCommandDump {
             return;
         }
 
-        var parserDir = ResolvePath(ParserDir);
-        if (!Directory.Exists(parserDir))
+        if (DryRun)
         {
-            SetupDataParserCore();
+            var parserReadiness = ProbeDataParserReadiness();
+            if (!parserReadiness.IsReady)
+            {
+                Log.Warning($"[DRY-RUN] {parserReadiness.Details}");
+            }
+        }
+        else
+        {
+            CheckDataParserReady();
         }
 
         var inputRoot = ResolveDataParserInputRoot(failIfMissing: failIfMissingDataRoot);
@@ -1859,6 +1877,7 @@ public final class LocalizedCommandDump {
             return;
         }
 
+        var parserDir = ResolvePath(ParserDir);
         var jarPath = ResolveDataParserJarPath(parserDir);
         for (var i = 0; i < invocations.Count; i++)
         {
@@ -2488,16 +2507,61 @@ public final class LocalizedCommandDump {
 
     void CheckVbfExtractorReady()
     {
+        var readiness = ProbeVbfExtractorReadiness();
+        if (!readiness.IsReady)
+        {
+            Fail(
+                readiness.Details + Environment.NewLine +
+                "Run: .\\tools.cmd data-setup");
+        }
+
+        Log.Information("VBFTool ready.");
+    }
+
+    (bool IsReady, string Details) ProbeVbfExtractorReadiness()
+    {
         var toolDir = ResolvePath(VbfDir);
         var required = new[] { "vbfextract.exe", "FFX_Data.txt", "FFX2_Data.txt", "metamenu.txt" };
         var missing = required.Where(name => !File.Exists(Path.Combine(toolDir, name))).ToList();
         if (missing.Count > 0)
         {
-            Fail(
-                $"VBFTool is not ready. Missing: {string.Join(", ", missing)}." + Environment.NewLine +
-                "Run: .\\tools.cmd data-setup");
+            return (false, $"VBFTool is not ready. Missing: {string.Join(", ", missing)}.");
         }
-        Log.Information($"VBFTool ready: {toolDir}");
+
+        return (true, string.Empty);
+    }
+
+    (bool IsReady, string Details) ProbeDataParseToolingReadiness()
+    {
+        var vbfReadiness = ProbeVbfExtractorReadiness();
+        var parserReadiness = ProbeDataParserReadiness();
+        var issues = new List<string>();
+        if (!vbfReadiness.IsReady)
+        {
+            issues.Add(vbfReadiness.Details);
+        }
+
+        if (!parserReadiness.IsReady)
+        {
+            issues.Add(parserReadiness.Details);
+        }
+
+        if (issues.Count == 0)
+        {
+            return (true, string.Empty);
+        }
+
+        return (false, string.Join(" ", issues));
+    }
+
+    void EnsureDataToolingReadyForParse(string workflowName)
+    {
+        EnsureLocalToolingReadyForWorkflow(
+            workflowName: $"tools.cmd {workflowName}",
+            dependencyName: "data tooling (VBFTool + FFXDataParser)",
+            setupWorkflowName: "data-setup",
+            readinessProbe: ProbeDataParseToolingReadiness,
+            setupAction: ExecuteDataSetupWorkflow);
     }
 
     void SetupVbfExtractorCore()

@@ -109,4 +109,57 @@ internal sealed partial class BuildScript
 
         Fail($"Workflow '{workflow}' moved to tools.cmd. Use: tools.cmd {workflow}");
     }
+
+    void EnsureLocalToolingReadyForWorkflow(
+        string workflowName,
+        string dependencyName,
+        string setupWorkflowName,
+        Func<(bool IsReady, string Details)> readinessProbe,
+        Action setupAction)
+    {
+        var readiness = readinessProbe();
+        if (readiness.IsReady)
+        {
+            return;
+        }
+
+        var setupCommand = $".\\tools.cmd {setupWorkflowName}";
+        var details = string.IsNullOrWhiteSpace(readiness.Details)
+            ? dependencyName
+            : readiness.Details;
+
+        if (!InteractiveSession)
+        {
+            Fail(
+                $"{workflowName} requires {dependencyName}, but it is not ready ({details})." + Environment.NewLine +
+                $"Run: {setupCommand}");
+        }
+
+        Log.Warning($"{workflowName} requires {dependencyName}, but it is not ready ({details}).");
+        if (!AskYesNo($"Run '{setupCommand}' now?", defaultYes: true))
+        {
+            Fail($"{workflowName} canceled because required tooling is missing. Run: {setupCommand}");
+        }
+
+        setupAction();
+
+        readiness = readinessProbe();
+        if (readiness.IsReady)
+        {
+            return;
+        }
+
+        if (DryRun)
+        {
+            Log.Information($"[DRY-RUN] {dependencyName} is still missing after simulated setup. Continuing.");
+            return;
+        }
+
+        details = string.IsNullOrWhiteSpace(readiness.Details)
+            ? dependencyName
+            : readiness.Details;
+        Fail(
+            $"{workflowName} setup did not produce a ready {dependencyName} ({details})." + Environment.NewLine +
+            $"Run: {setupCommand}");
+    }
 }

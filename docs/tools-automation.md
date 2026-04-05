@@ -16,12 +16,20 @@ Quick command discovery:
 
 ## Tooling Workflows (local-only)
 
+- `.\tools.cmd discord-setup`
+  - Install/update DiscordChatExporter CLI into .workspace/tools/DiscordChatExporter.
+  - Parameters:
+  - --discord-api <url> (optional).
+  - Examples:
+  - `.\tools.cmd discord-setup`
+
 - `.\tools.cmd discord-sync`
   - Export Discord channels/threads into .workspace/discord.
   - Parameters:
   - --guild <serverId> (required).
   - --channels <id1,id2,...> (optional).
   - --full (optional).
+  - Missing DiscordChatExporter is auto-ensured via tools.cmd discord-setup in interactive mode.
   - Workspace config uses strict PascalCase keys in .workspace/config.local.json (DiscordToken, VisionApiUrl, VisionApiKey, VisionModel, FetchRetries).
   - Discord workflow config uses strict PascalCase keys in .workspace/discord/config.local.json (Blacklist[], Guilds[]).
   - Examples:
@@ -54,6 +62,7 @@ Quick command discovery:
   - --data-args "<arg1> <arg2>" (optional).
   - --input-dir <path> (optional).
   - --out-dir <path> (optional).
+  - Missing tooling is auto-ensured via tools.cmd data-setup in interactive mode.
   - Examples:
   - `.\tools.cmd data-parse --data-mode READ_ALL_COMMANDS`
 
@@ -63,6 +72,7 @@ Quick command discovery:
   - --data-batch "MODE1;MODE2 arg" (optional).
   - --input-dir <path> (optional).
   - --out-dir <path> (optional).
+  - Missing tooling is auto-ensured via tools.cmd data-setup in interactive mode.
   - Examples:
   - `.\tools.cmd data-parse-all`
 
@@ -117,6 +127,7 @@ Quick command discovery:
   - Start the repo-local Ghidra launcher.
   - Parameters:
   - --ghidra-dir <path> (optional).
+  - Missing Ghidra is auto-ensured via tools.cmd ghidra-setup in interactive mode.
   - Examples:
   - `.\tools.cmd ghidra-start`
 

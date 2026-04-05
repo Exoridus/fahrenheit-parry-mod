@@ -90,7 +90,7 @@ internal sealed partial class BuildScript
         }
 
         Log.Information($"Ghidra ready: {launcher}");
-        Log.Information("Start with: build.cmd ghidra-start");
+        Log.Information("Start with: tools.cmd ghidra-start");
     }
 
     void StartGhidraCore()
@@ -101,7 +101,7 @@ internal sealed partial class BuildScript
         var launcher = FindGhidraLauncher(ghidraRoot);
         if (string.IsNullOrWhiteSpace(launcher))
         {
-            Fail($"Ghidra launcher not found under {ghidraRoot}. Run build.cmd ghidra-setup first.");
+            Fail($"Ghidra launcher not found under {ghidraRoot}. Run tools.cmd ghidra-setup first.");
         }
 
         if (DryRun)
@@ -125,6 +125,28 @@ internal sealed partial class BuildScript
         }
 
         Log.Information($"Started Ghidra: {launcher}");
+    }
+
+    (bool IsReady, string Details) ProbeGhidraReadiness()
+    {
+        var ghidraRoot = ResolvePath(GhidraDir);
+        var launcher = FindGhidraLauncher(ghidraRoot);
+        if (string.IsNullOrWhiteSpace(launcher))
+        {
+            return (false, $"Ghidra launcher not found under {ghidraRoot}");
+        }
+
+        return (true, string.Empty);
+    }
+
+    void EnsureGhidraReadyForStart()
+    {
+        EnsureLocalToolingReadyForWorkflow(
+            workflowName: "tools.cmd ghidra-start",
+            dependencyName: "Ghidra",
+            setupWorkflowName: "ghidra-setup",
+            readinessProbe: ProbeGhidraReadiness,
+            setupAction: SetupGhidraCore);
     }
 
     static string FindGhidraLauncher(string root)
