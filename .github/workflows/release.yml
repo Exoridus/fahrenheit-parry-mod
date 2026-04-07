@@ -58,7 +58,7 @@ jobs:
 
       - name: Full release build
         shell: cmd
-        run: build.cmd build --target Release --repo "${{ github.repository }}" --toolset "${{ env.NATIVE_PLATFORM_TOOLSET }}"
+        run: build.cmd build --configuration Release --repo "${{ github.repository }}" --toolset "${{ env.NATIVE_PLATFORM_TOOLSET }}"
 
       - name: Package release archives
         shell: cmd
