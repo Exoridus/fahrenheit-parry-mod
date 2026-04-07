@@ -54,7 +54,10 @@ public unsafe sealed partial class ParryModule
             _sessionTimelineLogWriter.WriteLine(
                 "Time\tFrame\tEvent\tRowId\tTurn\tActor\tAction\tTargets\tParryable\tParry\tLifecycle\tQueue\tAttacker\tCommand\tCommandMeta\tMessage");
 
-            _logger.Info($"[Parry] Session logging enabled. Prefix: {_sessionLogPrefix}, Dir: {_sessionLogsRoot}");
+            if (_optionLogging || _optionStartupProbeMode)
+            {
+                _logger.Info($"[Parry] Session logging enabled. Prefix: {_sessionLogPrefix}, Dir: {_sessionLogsRoot}");
+            }
         }
         catch (Exception ex)
         {
@@ -175,7 +178,7 @@ public unsafe sealed partial class ParryModule
 
     private void write_session_debug_entry(in DebugLogEntry entry)
     {
-        if (_sessionLogDisabled || _sessionDebugLogWriter == null) return;
+        if (_sessionLogDisabled || _sessionDebugLogWriter == null || !_optionLogging) return;
 
         try
         {
@@ -196,7 +199,7 @@ public unsafe sealed partial class ParryModule
     /// </summary>
     private void write_session_hook_entry(string message)
     {
-        if (_sessionLogDisabled || _sessionDebugLogWriter == null) return;
+        if (_sessionLogDisabled || _sessionDebugLogWriter == null || !_optionLogging) return;
 
         try
         {
@@ -211,7 +214,7 @@ public unsafe sealed partial class ParryModule
 
     private void write_session_timeline_event(in TurnTimelineEvent evt)
     {
-        if (_sessionLogDisabled || _sessionTimelineLogWriter == null) return;
+        if (_sessionLogDisabled || _sessionTimelineLogWriter == null || !_optionLogging) return;
 
         try
         {

@@ -123,11 +123,25 @@ public unsafe sealed partial class ParryModule
         // it from re-applying damage from the native hit-record buffer via MsSubHP.
         bool alreadyParriedThisHit = isPartyTargetCall
             && (_runtime.LastParriedTargetMask & (1u << param_2)) != 0;
+        bool latePreOpenCommitted = isPartyTargetCall
+            && is_late_preopen_p5_zero_commit(param_2, param_1)
+            && has_live_enemy_damage_context_for_slot(param_1, param_2);
 
         // If the motion hook already handled this hit (window may have since expired),
         // parryTarget is null because isActiveParry failed the expiry check. Reconstruct
         // the target pointer so the skip logic and lethal-restore path below can use it.
         if (alreadyParriedThisHit && parryTarget == null)
+        {
+            Chr* party = _battleAdapter.GetPlayerCharacters();
+            Chr* candidate = party != null ? party + param_2 : null;
+            if (candidate != null && candidate->stat_exist_flag)
+                parryTarget = candidate;
+        }
+
+        // Late-commit fallback: p5=0 already committed before the parry gate opened for this
+        // slot/attacker. Rebuild target pointer so we can still block duplicate native apply
+        // at p2=target without promoting a false parry success.
+        if (latePreOpenCommitted && parryTarget == null)
         {
             Chr* party = _battleAdapter.GetPlayerCharacters();
             Chr* candidate = party != null ? party + param_2 : null;
@@ -146,16 +160,8 @@ public unsafe sealed partial class ParryModule
             && _optionNegateDamage
             && !is_target_non_parryable(parryTarget)
             && (alreadyParriedThisHit
+                || latePreOpenCommitted
                 || (DateTime.UtcNow.Ticks < _parryExpiry[param_2] && parryTarget->damage_hp > 0));
-
-        // MagicProbe: snapshot HP before orig for per-target call.
-        uint setDamageHpBefore = 0;
-        if (isPartyTargetCall && _optionLogging)
-        {
-            Chr* probeParty = _battleAdapter.GetPlayerCharacters();
-            if (probeParty != null)
-                setDamageHpBefore = (uint)(probeParty + param_2)->ram.hp;
-        }
 
         // Telemetry: snapshot HP for all targeted party slots before finalization.
         bool isFinalization = param_3 == 0x400;
@@ -180,7 +186,7 @@ public unsafe sealed partial class ParryModule
             result = 0;
             log_debug($"Parry blocked p2=target orig for {format_actor_slot((byte)param_2)} (damage_hp={parryTarget->damage_hp}, hp={(uint)parryTarget->ram.hp}).");
 
-            if (!alreadyParriedThisHit)
+            if (!alreadyParriedThisHit && !latePreOpenCommitted)
             {
                 string attackerLabel = format_actor_slot(param_1);
                 string targetLabel   = format_actor_slot((byte)param_2);
@@ -188,6 +194,15 @@ public unsafe sealed partial class ParryModule
                 resolve_successful_parry(param_2, parryTarget, "physical", closeWindow: false);
                 _damageEventActive[param_2]   = true;
                 _parryFeedbackPending[param_2] = false;
+            }
+            else if (latePreOpenCommitted && !alreadyParriedThisHit)
+            {
+                // p5=0 already committed before the window opened; this is a miss, not a
+                // successful parry. We still skip p2=target orig here to avoid duplicate apply.
+                _runtime.TurnImpactMissedSeen = true;
+                _runtime.TurnImpactMissedAttackerId = (byte)param_1;
+                trigger_failure_feedback();
+                log_debug($"Parry promotion suppressed for {format_actor_slot((byte)param_2)} (late p5=0 commit occurred before window open).");
             }
             else
             {
@@ -248,15 +263,6 @@ public unsafe sealed partial class ParryModule
         else
         {
             result = _hMsSetDamage.orig_fptr.Invoke(param_1, param_2, param_3);
-        }
-
-        // MagicProbe: emit per-target HP probe after orig (or after skip).
-        if (isPartyTargetCall && _optionLogging)
-        {
-            Chr* probeParty = _battleAdapter.GetPlayerCharacters();
-            uint setDamageHpAfter = probeParty != null ? (uint)(probeParty + param_2)->ram.hp : 0;
-            int setDamageHpDelta = (int)setDamageHpAfter - (int)setDamageHpBefore;
-            write_session_hook_entry($"[MagicProbe/SetDamage] frame={_debugFrameIndex} p1={param_1} p2={param_2} p3={param_3} skipped={skipOrigForParry} hp_before={setDamageHpBefore} hp_after={setDamageHpAfter} hp_delta={setDamageHpDelta}");
         }
 
         // Telemetry: snapshot HP after finalization.
@@ -357,27 +363,6 @@ public unsafe sealed partial class ParryModule
                             mask &= mask - 1;
                             Chr* candidate = party + slot;
 
-                            // AnfunkelProbe: log status fields and parry gate results at the
-                            // exact branching point for Anfunkeln-style finalization. This
-                            // distinguishes status-carrying attacks (e.g. confuse 0x0100 in
-                            // 0x606) that fail is_target_non_parryable from statusless ones
-                            // that resolve successfully.
-                            if (_optionLogging && candidate->stat_exist_flag)
-                            {
-                                byte*  anfB    = (byte*)candidate;
-                                ushort anf_606 = *(ushort*)(anfB + 0x606);
-                                byte   anf_617 = anfB[0x617];
-                                bool   anfNonP = is_target_non_parryable(candidate);
-                                write_session_hook_entry(
-                                    $"[AnfunkelProbe] f={_debugFrameIndex} slot={slot} " +
-                                    $"cmdId=0x{(_attackTelemetry[slot].CommandId):X4} " +
-                                    $"hp={(uint)candidate->ram.hp} dmg_hp={candidate->damage_hp} " +
-                                    $"0x606=0x{anf_606:X4} 0x617=0x{anf_617:X2} " +
-                                    $"parryActive={_runtime.ParryWindowActive} " +
-                                    $"nonParryable={anfNonP} " +
-                                    $"success={(!anfNonP && candidate->damage_hp > 0 ? 1 : 0)}");
-                            }
-
                             if (candidate->stat_exist_flag && candidate->damage_hp > 0 && !is_target_non_parryable(candidate))
                             {
                                 // Additive restore — same semantics as motion and p2=target paths.
@@ -391,17 +376,6 @@ public unsafe sealed partial class ParryModule
                                 }
 
                                 resolve_successful_parry(slot, candidate, "magic_impact", closeWindow: false);
-
-                                // StatusProbe: read 0x606 and 0x617 immediately after parry resolution
-                                // to determine whether the confuse bit (0x0100) and surrounding status
-                                // fields are committed to effective game state at this point.
-                                if (_optionLogging)
-                                {
-                                    byte*  chrB   = (byte*)candidate;
-                                    ushort s606   = *(ushort*)(chrB + 0x606);
-                                    byte   s617   = chrB[0x617];
-                                    write_session_hook_entry($"[StatusProbe/magic_finalization_post] f={_debugFrameIndex} slot={slot} hp={(uint)candidate->ram.hp} 0x606=0x{s606:X4} 0x617=0x{s617:X2}");
-                                }
                             }
                         }
                     }
@@ -415,6 +389,13 @@ public unsafe sealed partial class ParryModule
                     // _internalInterceptedMask. Emit feedback for any slot where the interception
                     // evidence matches the current attacker and the parry has not already been
                     // acknowledged.
+                    //
+                    // Important: do NOT close the window on this branch unless this exact
+                    // finalization pass actually resolves at least one parry.
+                    // Some E11 physical follow-up sequences can reach p3=0x400 while the
+                    // newly opened window has not yet reached a valid physical resolve path.
+                    // Closing without a real resolution causes false early Open=>Waiting.
+                    bool resolvedAtPhysicalFinalization = false;
                     Chr* party = _battleAdapter.GetPlayerCharacters();
                     if (party != null)
                     {
@@ -428,10 +409,21 @@ public unsafe sealed partial class ParryModule
                             if (!intercepted || resolved) continue;
                             Chr* candidate = party + i;
                             if (candidate->stat_exist_flag && !is_target_non_parryable(candidate))
+                            {
                                 resolve_successful_parry(i, candidate, "physical_finalization", closeWindow: false);
+                                resolvedAtPhysicalFinalization = true;
+                            }
                         }
                     }
-                    end_parry_window("physical_finalization");
+
+                    if (resolvedAtPhysicalFinalization)
+                    {
+                        end_parry_window("physical_finalization");
+                    }
+                    else
+                    {
+                        log_debug($"Physical finalization deferred for {format_actor_slot(param_1)}: no resolved slot in this pass.");
+                    }
                 }
             }
         }
@@ -517,7 +509,6 @@ public unsafe sealed partial class ParryModule
         }
 
         Chr* targetChrPtr = isPartyTarget && target_chr != 0 ? (Chr*)target_chr : null;
-        uint calcHpBefore = targetChrPtr != null ? (uint)targetChrPtr->ram.hp : 0;
 
         // Unconditional pre-hit HP snapshot for all party targets — captured before orig runs.
         // Reactive parries (R1 pressed after calc fires) never enter shouldIntercept, so this
@@ -549,13 +540,6 @@ public unsafe sealed partial class ParryModule
             user_id, user_chr, target_id, target_chr,
             command, command_id,
             p7, p8, p9, p10, p11);
-
-        if (isPartyTarget && _optionLogging)
-        {
-            uint calcHpAfter = targetChrPtr != null ? (uint)targetChrPtr->ram.hp : 0;
-            int calcHpDelta = (int)calcHpAfter - (int)calcHpBefore;
-            write_session_hook_entry($"[MagicProbe/CalcDamage] frame={_debugFrameIndex} user={user_id} target={target_id} cmd=0x{command_id:X4} result={result} hp_before={calcHpBefore} hp_after={calcHpAfter} hp_delta={calcHpDelta}");
-        }
 
         log_hook_ms_calc_damage(user_id, target_id, command_id, p11, result, command);
         return result;
@@ -613,69 +597,13 @@ public unsafe sealed partial class ParryModule
             suppressFlinch = flinchTarget != null && flinchTarget->stat_exist_flag && flinchTarget->damage_hp > 0;
         }
 
-        // Lethal-death-visual diagnostic: log death-state fields before/after orig for
-        // damage motions on party targets. This answers whether 0xDCC is latched and the
-        // death motion is dispatched INSIDE MsDamageSetMotion orig — before the later
-        // h_ms_set_damage lethal restore path has any opportunity to intervene.
-        bool isLethalDiagTarget = _optionLogging && targetIsParty && p3 == 1;
-        Chr* lethalDiagChr = null;
-        if (isLethalDiagTarget)
-        {
-            Chr* diagParty = _battleAdapter.GetPlayerCharacters();
-            lethalDiagChr = diagParty != null ? diagParty + target : null;
-            if (lethalDiagChr != null && lethalDiagChr->stat_exist_flag)
-            {
-                byte*  diagB        = (byte*)lethalDiagChr;
-                byte   dcc_pre      = diagB[0xDCC];
-                ushort s606_pre     = *(ushort*)(diagB + 0x606);
-                write_session_hook_entry(
-                    $"[MotionDeathDiag PRE ] f={_debugFrameIndex} slot={target} parryActive={parryActive} suppress={suppressFlinch} " +
-                    $"dmg_hp={lethalDiagChr->damage_hp} hp={lethalDiagChr->ram.hp} wdie={lethalDiagChr->stat_will_die} " +
-                    $"0xDCC={dcc_pre} 0x606=0x{s606_pre:X4}");
-
-                // LethalProbe: fires for ALL damage motions on party targets, regardless of
-                // whether the suppress/restore path runs later. Captures true lethal attempts
-                // that escape logging when the restore path does not fire (e.g. parryActive is
-                // false, or suppressFlinch is false because damage_hp was already zeroed).
-                bool lethalProbeIsLethal = lethalDiagChr->damage_hp >= lethalDiagChr->ram.hp
-                    || lethalDiagChr->ram.hp <= 0;
-                write_session_hook_entry(
-                    $"[LethalProbe/pre-orig] f={_debugFrameIndex} slot={target} hp={lethalDiagChr->ram.hp} " +
-                    $"dmg_hp={lethalDiagChr->damage_hp} lethal={(lethalProbeIsLethal ? 1 : 0)} " +
-                    $"wdie={lethalDiagChr->stat_will_die} 0xDCC={dcc_pre} 0x606=0x{s606_pre:X4} " +
-                    $"parryActive={parryActive} suppress={suppressFlinch}");
-            }
-        }
-
         if (!parryActive || !suppressFlinch)
         {
             _hMsDamageSetMotion.orig_fptr.Invoke(target, p2, p3);
-
-            // POST: read same fields after orig to detect whether death latch fires inside orig.
-            if (isLethalDiagTarget && lethalDiagChr != null && lethalDiagChr->stat_exist_flag)
-            {
-                byte*  diagB        = (byte*)lethalDiagChr;
-                byte   dcc_post     = diagB[0xDCC];
-                ushort s606_post    = *(ushort*)(diagB + 0x606);
-                write_session_hook_entry(
-                    $"[MotionDeathDiag POST] f={_debugFrameIndex} slot={target} parryActive={parryActive} suppress={suppressFlinch} " +
-                    $"dmg_hp={lethalDiagChr->damage_hp} hp={lethalDiagChr->ram.hp} wdie={lethalDiagChr->stat_will_die} " +
-                    $"0xDCC={dcc_post} 0x606=0x{s606_post:X4}");
-            }
         }
         else
         {
             log_debug($"Parry suppressed flinch for {format_actor_slot(target)} (MsDamageSetMotion skipped).");
-            if (isLethalDiagTarget && lethalDiagChr != null && lethalDiagChr->stat_exist_flag)
-            {
-                byte*  diagB     = (byte*)lethalDiagChr;
-                byte   dcc_skip  = diagB[0xDCC];
-                ushort s606_skip = *(ushort*)(diagB + 0x606);
-                write_session_hook_entry(
-                    $"[MotionDeathDiag SKIP] f={_debugFrameIndex} slot={target} orig skipped by parry suppress " +
-                    $"hp={lethalDiagChr->ram.hp} dmg_hp={lethalDiagChr->damage_hp} wdie={lethalDiagChr->stat_will_die} " +
-                    $"0xDCC={dcc_skip} 0x606=0x{s606_skip:X4}");
-            }
 
             // Additive restore: ram.hp += damage_hp undoes whatever the native pipeline
             // already applied. For reactive parries the snapshot is never set (calc fired
@@ -707,17 +635,6 @@ public unsafe sealed partial class ParryModule
                         chrB[0xDCC] = 0;
                         *(ushort*)(chrB + 0x606) &= unchecked((ushort)~1u);
                         targetChr->stat_will_die = 0;
-
-                        if (_optionLogging)
-                        {
-                            byte*  rlB    = (byte*)targetChr;
-                            byte   rl_dcc = rlB[0xDCC];
-                            ushort rl_606 = *(ushort*)(rlB + 0x606);
-                            write_session_hook_entry(
-                                $"[LethalProbe/post-restore] f={_debugFrameIndex} slot={target} hp={targetChr->ram.hp} " +
-                                $"dmg_hp={targetChr->damage_hp} wdie={targetChr->stat_will_die} " +
-                                $"0xDCC={rl_dcc} 0x606=0x{rl_606:X4} snap={snap}");
-                        }
 
                         log_debug($"Parry lethal restore (motion) for {format_actor_slot(target)}: HP restored to {(uint)targetChr->ram.hp}, death-latch cleared.");
                     }
@@ -768,10 +685,6 @@ public unsafe sealed partial class ParryModule
                 if ((_parryResolvedAtImpactMask & (1u << target)) == 0)
                 {
                     _parryResolvedAtImpactMask |= 1u << target;
-                    write_session_hook_entry(
-                        $"[ReactiveImpactMarker] f={_debugFrameIndex} slot={target} " +
-                        $"attacker={_runtime.CurrentAttackerId} deferred={pendingDeferred} " +
-                        $"reactive={reactiveParry} marker=SET");
                 }
 
                 Chr* party = _battleAdapter.GetPlayerCharacters();
@@ -780,17 +693,6 @@ public unsafe sealed partial class ParryModule
                 {
                     string source = pendingDeferred ? "deferred" : "visual";
                     resolve_successful_parry(target, candidate, source, closeWindow: false);
-
-                    // StatusProbe: read 0x606 and 0x617 immediately after parry resolution
-                    // to determine whether the confuse bit (0x0100) seen in MotionDeathDiag PRE
-                    // is committed to effective game state after the full motion hook path runs.
-                    if (_optionLogging)
-                    {
-                        byte*  chrB   = (byte*)candidate;
-                        ushort s606   = *(ushort*)(chrB + 0x606);
-                        byte   s617   = chrB[0x617];
-                        write_session_hook_entry($"[StatusProbe/motion_suppress_post] f={_debugFrameIndex} slot={target} hp={(uint)candidate->ram.hp} 0x606=0x{s606:X4} 0x617=0x{s617:X2}");
-                    }
                 }
                 _parryFeedbackPending[target] = false;
             }
@@ -799,13 +701,6 @@ public unsafe sealed partial class ParryModule
         if (_optionLogging)
         {
             write_session_hook_entry($"[MsDamageSetMotion] f={_debugFrameIndex} target={target} p2={p2} p3={p3} parry={_runtime.ParryWindowActive}");
-
-            if (target < PartyActorCapacity)
-            {
-                Chr* motionParty = _battleAdapter.GetPlayerCharacters();
-                uint motionHp = motionParty != null ? (uint)(motionParty + target)->ram.hp : 0;
-                write_session_hook_entry($"[MagicProbe/SetMotion] frame={_debugFrameIndex} target={target} p2={p2} p3={p3} hp={motionHp}");
-            }
         }
     }
 
@@ -917,15 +812,144 @@ public unsafe sealed partial class ParryModule
     }
 
     /// <summary>
+    ///     UI-only suppression for already-parried hits:
+    ///     clear staged damage fields and drop matching BtlPos entries so delayed native
+    ///     display paths are less likely to emit misleading floating numbers.
+    /// </summary>
+    private void suppress_parried_damage_display(Chr* slot, int slotIndex, byte attackerId, byte commandId, string source)
+    {
+        if (slot == null || !slot->stat_exist_flag)
+            return;
+
+        int hpBefore = slot->damage_hp;
+        int mpBefore = slot->damage_mp;
+        int ctbBefore = slot->damage_ctb;
+
+        negate_damage_on_impact(slot);
+
+        byte* slotB = (byte*)slot;
+        byte btl0AttBefore = slotB[0x776];
+        byte btl0CmdBefore = slotB[0x777];
+        byte btl1AttBefore = slotB[0xA4E];
+        byte btl1CmdBefore = slotB[0xA4F];
+
+        bool clearedBtl0 = false;
+        bool clearedBtl1 = false;
+        if (slotB[0x776] == attackerId && slotB[0x777] == commandId)
+        {
+            slotB[0x776] = 0xFF;
+            clearedBtl0 = true;
+        }
+
+        if (slotB[0xA4E] == attackerId && slotB[0xA4F] == commandId)
+        {
+            slotB[0xA4E] = 0xFF;
+            clearedBtl1 = true;
+        }
+
+        if (_optionLogging && (hpBefore != 0 || mpBefore != 0 || ctbBefore != 0 || clearedBtl0 || clearedBtl1))
+        {
+            write_session_hook_entry(
+                $"[ParryUiSuppress] f={_debugFrameIndex} slot={slotIndex} src={source} atk={attackerId} cmd=0x{commandId:X2} " +
+                $"dmg_hp={hpBefore}->{slot->damage_hp} dmg_mp={mpBefore}->{slot->damage_mp} dmg_ctb={ctbBefore}->{slot->damage_ctb} " +
+                $"btl0={btl0AttBefore}/{btl0CmdBefore:X2}->{slotB[0x776]}/{slotB[0x777]:X2} " +
+                $"btl1={btl1AttBefore}/{btl1CmdBefore:X2}->{slotB[0xA4E]}/{slotB[0xA4F]:X2}");
+        }
+    }
+
+    private void clear_internal_intercepted_slot(int slotIndex)
+    {
+        if ((uint)slotIndex >= PartyActorCapacity)
+            return;
+
+        _internalInterceptedMask &= ~(1u << slotIndex);
+        _internalInterceptedAttackerId[slotIndex] = 0;
+    }
+
+    private bool is_late_preopen_p5_zero_commit(int slotIndex, int attackerId)
+    {
+        if ((uint)slotIndex >= PartyActorCapacity)
+            return false;
+
+        return (_latePreOpenP5ZeroCommitMask & (1u << slotIndex)) != 0
+            && _latePreOpenP5ZeroCommitAttackerId[slotIndex] == (byte)attackerId;
+    }
+
+    private void mark_late_preopen_p5_zero_commit(int slotIndex, int attackerId)
+    {
+        if ((uint)slotIndex >= PartyActorCapacity)
+            return;
+
+        _latePreOpenP5ZeroCommitMask |= 1u << slotIndex;
+        _latePreOpenP5ZeroCommitAttackerId[slotIndex] = (byte)attackerId;
+    }
+
+    private void clear_late_preopen_p5_zero_commit_slot(int slotIndex)
+    {
+        if ((uint)slotIndex >= PartyActorCapacity)
+            return;
+
+        _latePreOpenP5ZeroCommitMask &= ~(1u << slotIndex);
+        _latePreOpenP5ZeroCommitAttackerId[slotIndex] = 0;
+    }
+
+    private bool has_live_enemy_damage_context_for_slot(int attackerId, int slotIndex)
+    {
+        if ((uint)slotIndex >= PartyActorCapacity)
+            return false;
+
+        if (!_runtime.AwaitingTurnEnd)
+            return false;
+
+        if (attackerId != _runtime.CurrentAttackerId)
+            return false;
+
+        if ((_runtime.CurrentPartyTargetMask & (1u << slotIndex)) == 0)
+            return false;
+
+        if (!try_get_enemy_attack_cue(out AttackCue cue, out byte cueIndex, out _))
+            return false;
+
+        if (cueIndex != _runtime.CurrentCueIndex)
+            return false;
+
+        uint liveMask = extract_party_target_mask(cue);
+        return (liveMask & (1u << slotIndex)) != 0;
+    }
+
+    private bool is_late_preopen_duplicate_skip_safe(int slotIndex)
+    {
+        if ((uint)slotIndex >= PartyActorCapacity)
+            return false;
+
+        Chr* party = _battleAdapter.GetPlayerCharacters();
+        Chr* slot = party != null ? party + slotIndex : null;
+        if (slot == null || !slot->stat_exist_flag)
+            return false;
+
+        // Freeze/crash safety: if p5=0 already pushed the slot into a native death-latch
+        // state, let native p5=1024 run so battle/UI finalization can complete normally.
+        if (slot->ram.hp <= 0 || slot->stat_will_die != 0)
+            return false;
+
+        byte* slotB = (byte*)slot;
+        if (slotB[0xDCC] != 0)
+            return false;
+        if ((*(ushort*)(slotB + 0x606) & 0x0001) != 0)
+            return false;
+
+        return true;
+    }
+
+    /// <summary>
     ///     Phase 2 reactive interception at MsSetDamageInternal (FUN_0078f0b0 at FFX.exe+0x38F0B0).
     ///
     ///     Architecture:
     ///     - p5=0: intercepted when parry window is still live (isActiveParry) or slot already resolved.
-    ///       Sets _internalInterceptedMask to prevent duplicate processing within the same frame sweep.
     ///       Calls resolve_successful_parry if not yet resolved (group-attack fallback path).
+    ///       Sets _internalInterceptedMask for correlated p5=1024/finalization handling.
     ///     - p5=1024: the confirmed HP/death commit pass for delayed-finalization attacks (Anfunkeln,
-    ///       Blitzra, Hauch). Skip unconditionally when alreadyResolved — the p5=0 pass already consumed
-    ///       the _internalInterceptedMask bit, so notAlreadyConsumed is false by this point.
+    ///       Blitzra, Hauch). Skip when alreadyResolved, markerSet, or internalBlocked.
     ///       Also skips when _parryResolvedAtImpactMask is set (MsDamageSetMotion marker path, if available).
     ///     - Feedback (text/sound) is emitted at resolve_successful_parry; no second signal here.
     /// </summary>
@@ -938,16 +962,35 @@ public unsafe sealed partial class ParryModule
         // - p5=1024: skip if the durable impact marker is set (handles delayed-finalization).
         if (isPartySlot && _optionEnabled && _optionNegateDamage)
         {
+            bool hasLiveEnemyContext = has_live_enemy_damage_context_for_slot(param_1, param_3);
             bool markerSet = (_parryResolvedAtImpactMask & (1u << param_3)) != 0;
             bool alreadyResolved = (_runtime.LastParriedTargetMask & (1u << param_3)) != 0;
-            bool notAlreadyConsumed = (_internalInterceptedMask & (1u << param_3)) == 0;
+            bool latePreOpenCommitted = is_late_preopen_p5_zero_commit(param_3, param_1)
+                && hasLiveEnemyContext;
+            bool latePreOpenSkipSafe = is_late_preopen_duplicate_skip_safe(param_3);
 
             bool isActiveParry = !alreadyResolved
                 && DateTime.UtcNow.Ticks < _parryExpiry[param_3]
-                && param_1 == _runtime.CurrentAttackerId
-                && (_runtime.CurrentPartyTargetMask & (1u << param_3)) != 0;
+                && hasLiveEnemyContext;
 
-            if (param_5 == 0 && (alreadyResolved || isActiveParry) && notAlreadyConsumed)
+            if (param_5 == 0
+                && !alreadyResolved
+                && !isActiveParry
+                && !latePreOpenCommitted
+                && hasLiveEnemyContext)
+            {
+                Chr* partyForLate = _battleAdapter.GetPlayerCharacters();
+                Chr* slotForLate = partyForLate != null ? partyForLate + param_3 : null;
+                if (slotForLate != null && slotForLate->stat_exist_flag && slotForLate->damage_hp > 0)
+                {
+                    mark_late_preopen_p5_zero_commit(param_3, param_1);
+                    write_session_hook_entry(
+                        $"[MsSetDamageInternal] f={_debugFrameIndex} slot={param_3} p5=0 late_preopen=1 observed " +
+                        $"attacker={param_1} cmd={param_2}");
+                }
+            }
+
+            if (param_5 == 0 && (alreadyResolved || (isActiveParry && !latePreOpenCommitted)))
             {
                 if (isActiveParry)
                 {
@@ -965,6 +1008,10 @@ public unsafe sealed partial class ParryModule
                 // require exact attacker match — preventing a different next attacker's p5=1024
                 // from inheriting this slot's interception evidence if end_parry_window fires
                 // between the two passes (e.g. cue mutation / "attacker changed").
+                Chr* partyForUi = _battleAdapter.GetPlayerCharacters();
+                Chr* slotForUi = partyForUi != null ? partyForUi + param_3 : null;
+                suppress_parried_damage_display(slotForUi, param_3, (byte)param_1, param_2, "p5=0");
+
                 _internalInterceptedMask |= 1u << param_3;
                 _internalInterceptedAttackerId[param_3] = (byte)param_1;
                 write_session_hook_entry(
@@ -973,6 +1020,34 @@ public unsafe sealed partial class ParryModule
                 log_debug($"MsSetDamageInternal p5=0 commit skipped for {format_actor_slot((byte)param_3)} (resolved).");
 
                 return 0;
+            }
+
+            if (param_5 == 1024 && latePreOpenCommitted && !alreadyResolved && !markerSet)
+            {
+                if (!latePreOpenSkipSafe)
+                {
+                    write_session_hook_entry(
+                        $"[MsSetDamageInternal] f={_debugFrameIndex} slot={param_3} p5=1024 late_preopen=1 -> PASS_ORIG death_latch=1 " +
+                        $"attacker={param_1} cmd={param_2}");
+                    log_debug($"MsSetDamageInternal p5=1024 late pre-open pass-through for {format_actor_slot((byte)param_3)} (death-latched slot).");
+                    clear_late_preopen_p5_zero_commit_slot(param_3);
+                }
+                else
+                {
+                    // Late-preopen duplicate path: clear staged values before skipping so stale
+                    // damage records cannot bleed into later item/system turns.
+                    Chr* partyForUi = _battleAdapter.GetPlayerCharacters();
+                    Chr* slotForUi = partyForUi != null ? partyForUi + param_3 : null;
+                    suppress_parried_damage_display(slotForUi, param_3, (byte)param_1, param_2, "p5=1024_late_preopen");
+
+                    write_session_hook_entry(
+                        $"[MsSetDamageInternal] f={_debugFrameIndex} slot={param_3} p5=1024 late_preopen=1 -> SKIP_DUP " +
+                        $"attacker={param_1} cmd={param_2}");
+                    log_debug($"MsSetDamageInternal p5=1024 duplicate commit skipped for {format_actor_slot((byte)param_3)} (late pre-open commit).");
+                    clear_internal_intercepted_slot(param_3);
+                    clear_late_preopen_p5_zero_commit_slot(param_3);
+                    return 0;
+                }
             }
 
             // p5=1024 is the authoritative HP/death commit for delayed-finalization attacks
@@ -993,6 +1068,7 @@ public unsafe sealed partial class ParryModule
                     _parryResolvedAtImpactMask &= ~(1u << param_3);
                 _internalInterceptedMask |= 1u << param_3;
                 _runtime.LastParriedTargetMask |= 1u << param_3;
+                clear_late_preopen_p5_zero_commit_slot(param_3);
 
                 string skipReason = markerSet ? "marker=1"
                     : alreadyResolved ? "resolved=1"
@@ -1004,14 +1080,11 @@ public unsafe sealed partial class ParryModule
 
                 Chr* party = _battleAdapter.GetPlayerCharacters();
                 Chr* candidate = party != null ? party + param_3 : null;
-                if (candidate != null && candidate->stat_exist_flag)
-                {
-                    byte* chrB = (byte*)candidate;
-                    // Safely discard the intercepted attack from the Chr's BtlPos staging queue.
-                    // 0x776 and 0xA4E are the attacker_id fields; 0x777 and 0xA4F are the command_id fields.
-                    if (chrB[0x776] == (byte)param_1 && chrB[0x777] == param_2) chrB[0x776] = 0xFF;
-                    if (chrB[0xA4E] == (byte)param_1 && chrB[0xA4F] == param_2) chrB[0xA4E] = 0xFF;
-                }
+                suppress_parried_damage_display(candidate, param_3, (byte)param_1, param_2, "p5=1024");
+
+                // Hit lifecycle boundary: this slot's p5=1024 completion was handled,
+                // so stale p5=0 evidence must not leak into the next hit in the same turn.
+                clear_internal_intercepted_slot(param_3);
 
                 return 0;
             }
@@ -1032,7 +1105,9 @@ public unsafe sealed partial class ParryModule
                         write_session_hook_entry(
                             $"[MsSetDamageInternal/slot] f={_debugFrameIndex} slot={param_3} " +
                             $"hp={(uint)slot->ram.hp} dmg_hp={slot->damage_hp} " +
-                            $"0x606=0x{*(ushort*)(slotB + 0x606):X4} 0xDCC={slotB[0xDCC]}");
+                            $"0x606=0x{*(ushort*)(slotB + 0x606):X4} 0xDCC={slotB[0xDCC]} " +
+                            $"btl0_att={slotB[0x776]} btl0_cmd=0x{slotB[0x777]:X2} " +
+                            $"btl1_att={slotB[0xA4E]} btl1_cmd=0x{slotB[0xA4F]:X2}");
                     }
                 }
             }
@@ -1043,7 +1118,9 @@ public unsafe sealed partial class ParryModule
                 $"attacker={_runtime.CurrentAttackerId} targetMask={_runtime.CurrentPartyTargetMask} windowActive={_runtime.ParryWindowActive}");
         }
 
-        return _hMsSetDamageInternal.orig_fptr.Invoke(param_1, param_2, param_3, param_4, param_5);
+        int result = _hMsSetDamageInternal.orig_fptr.Invoke(param_1, param_2, param_3, param_4, param_5);
+
+        return result;
     }
 
     private bool try_get_head_cue_snapshot(List<DebugCueSnapshot> scratch, out DebugCueSnapshot head)

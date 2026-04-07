@@ -54,10 +54,13 @@ public unsafe sealed partial class ParryModule
             if (persisted.StartupSkipForceTitle.HasValue) _optionStartupSkipForceTitle = persisted.StartupSkipForceTitle.Value;
             if (persisted.DebugOverlay.HasValue) _optionDebugOverlay = persisted.DebugOverlay.Value;
 
-            if (!string.IsNullOrWhiteSpace(persisted.Difficulty)
-                && Enum.TryParse(persisted.Difficulty, ignoreCase: true, out ParryDifficulty difficulty))
+            if (ParryDifficultyModel.TryParsePersistedDifficulty(persisted.Difficulty, out ParryDifficulty difficulty))
             {
-                _optionDifficulty = difficulty;
+                _optionDifficulty = ParryDifficultyModel.NormalizeDifficulty(difficulty);
+            }
+            else
+            {
+                _optionDifficulty = ParryDifficultyModel.NormalizeDifficulty(_optionDifficulty);
             }
         }
         catch (Exception ex)

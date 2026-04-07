@@ -106,15 +106,10 @@ public unsafe sealed partial class ParryModule
 
     private void render_setting_difficulty()
     {
-        int idx = Math.Clamp((int)_optionDifficulty, 0, 2);
-        if (ImGui.Combo("##fhparry.difficulty", ref idx, "Easy\0Normal\0Expert\0"))
+        int idx = ParryDifficultyModel.GetComboIndex(_optionDifficulty);
+        if (ImGui.Combo("##fhparry.difficulty", ref idx, ParryDifficultyModel.GetComboItems()))
         {
-            _optionDifficulty = idx switch
-            {
-                0 => ParryDifficulty.Easy,
-                2 => ParryDifficulty.Expert,
-                _ => ParryDifficulty.Normal
-            };
+            _optionDifficulty = ParryDifficultyModel.DifficultyFromComboIndex(idx);
             persist_settings();
             reset_spam_tier("difficulty_changed", logTransition: true);
             log_debug($"Difficulty changed to {ParryDifficultyModel.FormatName(_optionDifficulty)}.");

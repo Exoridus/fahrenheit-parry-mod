@@ -281,8 +281,21 @@ public unsafe sealed partial class ParryModule
             DebugCueSnapshot current = _debugCueScratch[i];
             if (!current.EqualsSemantic(previous))
             {
-                log_debug($"Cue~ q{current.QueueIndex}: {format_cue_brief(previous)} -> {format_cue_brief(current)}");
-                append_cue_history("UPD", current);
+                if (is_cue_ownership_change(previous, current))
+                {
+                    // Queue slot ownership changed (for example party/system -> enemy/system).
+                    // Treat this as replacement, not in-place mutation, to keep turn attribution clear.
+                    log_debug($"Cue- q{previous.QueueIndex}: {format_cue_brief(previous)}");
+                    append_cue_history("DEL", previous, "Consumed", "-");
+
+                    log_debug($"Cue+ q{current.QueueIndex}: {format_cue_brief(current)}");
+                    append_cue_history("ADD", current);
+                }
+                else
+                {
+                    log_debug($"Cue~ q{current.QueueIndex}: {format_cue_brief(previous)} -> {format_cue_brief(current)}");
+                    append_cue_history("UPD", current);
+                }
             }
         }
 
@@ -297,6 +310,12 @@ public unsafe sealed partial class ParryModule
 
         _debugCueSnapshots.Clear();
         _debugCueSnapshots.AddRange(_debugCueScratch);
+    }
+
+    private static bool is_cue_ownership_change(in DebugCueSnapshot previous, in DebugCueSnapshot current)
+    {
+        return previous.AttackerId != current.AttackerId
+            || previous.IsEnemy != current.IsEnemy;
     }
 
     private void sync_turn_timeline_from_cues()
@@ -511,6 +530,11 @@ public unsafe sealed partial class ParryModule
 
     private bool append_debug_event(string message)
     {
+        if (!should_capture_debug_messages())
+        {
+            return false;
+        }
+
         if (is_debug_message_throttled(message))
         {
             return false;

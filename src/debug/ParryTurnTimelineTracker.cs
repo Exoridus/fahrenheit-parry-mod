@@ -272,6 +272,14 @@ public sealed class TurnTimelineTracker
         ulong frameIndex,
         bool parryWindowActive)
     {
+        // Dispatch correlation is authoritative for enemy attack flow only.
+        // Party/system cues are tracked through cue snapshots and queue churn, and
+        // correlating dispatch signals for them creates transient row noise.
+        if (!is_enemy_attacker_id(attackerId))
+        {
+            return;
+        }
+
         TurnTimelineRow? row = find_best_row_for_dispatch(attackerId, queueIndex);
         if (row == null)
         {
@@ -307,7 +315,14 @@ public sealed class TurnTimelineTracker
         }
 
         set_lifecycle(row, TurnTimelineLifecycleState.Active, timestampLocal, frameIndex);
-        set_parry(row, compute_desired_parry_state(row, parryWindowActive), timestampLocal, frameIndex);
+        TurnTimelineParryState desiredParry = compute_desired_parry_state(row, parryWindowActive);
+        if (row.ParryState == TurnTimelineParryState.Open && desiredParry == TurnTimelineParryState.Waiting)
+        {
+            // Do not downgrade a just-opened window on dispatch-start correlation.
+            // This prevents transient Pending -> Open -> Waiting noise within the same flow.
+            desiredParry = TurnTimelineParryState.Open;
+        }
+        set_parry(row, desiredParry, timestampLocal, frameIndex);
         emit_event(
             TurnTimelineEventKind.DispatchStarted,
             row,
@@ -324,6 +339,11 @@ public sealed class TurnTimelineTracker
         ulong frameIndex,
         string reason)
     {
+        if (!is_enemy_attacker_id(attackerId))
+        {
+            return;
+        }
+
         TurnTimelineRow? row = find_consumed_row(attackerId, queueIndex);
         if (row == null)
         {
@@ -394,8 +414,7 @@ public sealed class TurnTimelineTracker
         _recentlyParriedFingerprint = active.CueKey.Fingerprint;
 
         set_parry(active, TurnTimelineParryState.Parried, timestampLocal, frameIndex);
-        set_lifecycle(active, TurnTimelineLifecycleState.Completed, timestampLocal, frameIndex);
-        promote_next_pending(timestampLocal, frameIndex, parryWindowActive: false);
+        // Lifecycle remains Active until DispatchConsumed (poll or hook) completes it.
         validate_integrity(timestampLocal, frameIndex);
     }
 
@@ -405,9 +424,8 @@ public sealed class TurnTimelineTracker
         if (active == null || active.Parryability != TurnTimelineParryability.Parryable) return;
 
         set_parry(active, TurnTimelineParryState.Missed, timestampLocal, frameIndex);
-        set_lifecycle(active, TurnTimelineLifecycleState.Completed, timestampLocal, frameIndex);
+        // Lifecycle remains Active until DispatchConsumed (poll or hook) completes it.
         emit_event(TurnTimelineEventKind.ParryStateChanged, active, timestampLocal, frameIndex, $"Turn {format_turn_id(active)} missed ({reason}).");
-        promote_next_pending(timestampLocal, frameIndex, parryWindowActive: false);
         validate_integrity(timestampLocal, frameIndex);
     }
 
@@ -570,6 +588,12 @@ public sealed class TurnTimelineTracker
         emit_event(TurnTimelineEventKind.CueRemoved, row, timestampLocal, frameIndex, $"Turn {format_turn_id(row)} completed ({reason}).");
     }
 
+    private static bool is_enemy_attacker_id(byte attackerId)
+    {
+        // FFX battle actor slots: party/system actors are 0..9, enemy actors start at 10.
+        return attackerId >= 10;
+    }
+
     private void promote_next_pending(DateTime timestampLocal, ulong frameIndex, bool parryWindowActive)
     {
         for (int i = 0; i < _activeRowOrder.Count; i++)
@@ -688,9 +712,14 @@ public sealed class TurnTimelineTracker
     private static TurnTimelineParryState compute_desired_parry_state(TurnTimelineRow row, bool parryWindowActive)
     {
         if (row.Parryability == TurnTimelineParryability.NonParryable) return TurnTimelineParryState.None;
-        if (row.Parryability == TurnTimelineParryability.Unknown) return TurnTimelineParryState.None;
+        // Unknown rows stay Pending until parryability is resolved. Returning None here would cause
+        // a Pending->None transition, and the None state has no valid outbound transitions to
+        // Waiting/Open/Parried — producing spurious integrity warnings when the same row is later
+        // upgraded to Parryable as the real attack cue arrives.
+        if (row.Parryability == TurnTimelineParryability.Unknown) return TurnTimelineParryState.Pending;
         if (row.Lifecycle == TurnTimelineLifecycleState.Pending) return TurnTimelineParryState.Pending;
         if (row.ParryState == TurnTimelineParryState.Parried || row.ParryState == TurnTimelineParryState.Missed) return row.ParryState;
+        if (row.ParryState == TurnTimelineParryState.Open) return TurnTimelineParryState.Open;
         return parryWindowActive ? TurnTimelineParryState.Open : TurnTimelineParryState.Waiting;
     }
 

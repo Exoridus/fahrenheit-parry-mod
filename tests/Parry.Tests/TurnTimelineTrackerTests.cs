@@ -27,14 +27,22 @@ public sealed class TurnTimelineTrackerTests {
         tracker.UpdateCues([e1, e2, e3], turnId, now.AddSeconds(1), frame++, parryWindowActive: true);
         assert_states(tracker, "E1", TurnTimelineParryState.Open, TurnTimelineLifecycleState.Active);
 
-        // Step 3: E1 parried -> completed; E2 promoted.
+        // Step 3: E1 parried -> stays Active (to support multi-hit); E2 pending.
         tracker.MarkActiveParried(now.AddSeconds(2), frame++);
+        assert_states(tracker, "E1", TurnTimelineParryState.Parried, TurnTimelineLifecycleState.Active);
+        assert_states(tracker, "E2", TurnTimelineParryState.Pending, TurnTimelineLifecycleState.Pending);
+
+        // Step 3b: E1 native dispatch finishes -> E1 completed; E2 promoted.
+        tracker.CorrelateDispatchConsumed(attackerId: 10, queueIndex: 0, now.AddSeconds(2).AddMilliseconds(16), frame++, "poll");
         assert_states(tracker, "E1", TurnTimelineParryState.Parried, TurnTimelineLifecycleState.Completed);
         assert_states(tracker, "E2", TurnTimelineParryState.Waiting, TurnTimelineLifecycleState.Active);
-        assert_states(tracker, "E3", TurnTimelineParryState.Pending, TurnTimelineLifecycleState.Pending);
 
-        // Step 4: impact occurs outside active parry window -> E2 missed and completed; E3 promoted.
+        // Step 4: impact occurs outside active parry window -> E2 missed; stays Active.
         tracker.MarkActiveMissed("impact outside active parry window", now.AddSeconds(3), frame++);
+        assert_states(tracker, "E2", TurnTimelineParryState.Missed, TurnTimelineLifecycleState.Active);
+
+        // Step 4b: E2 native dispatch finishes -> E2 completed; E3 promoted.
+        tracker.CorrelateDispatchConsumed(attackerId: 11, queueIndex: 1, now.AddSeconds(3).AddMilliseconds(16), frame++, "poll");
         assert_states(tracker, "E2", TurnTimelineParryState.Missed, TurnTimelineLifecycleState.Completed);
         assert_states(tracker, "E3", TurnTimelineParryState.Waiting, TurnTimelineLifecycleState.Active);
 
@@ -42,8 +50,12 @@ public sealed class TurnTimelineTrackerTests {
         tracker.MarkActiveParryOpen(now.AddSeconds(4), frame++);
         assert_states(tracker, "E3", TurnTimelineParryState.Open, TurnTimelineLifecycleState.Active);
 
-        // Step 6: E3 parried and completed.
+        // Step 6: E3 parried; stays Active.
         tracker.MarkActiveParried(now.AddSeconds(5), frame++);
+        assert_states(tracker, "E3", TurnTimelineParryState.Parried, TurnTimelineLifecycleState.Active);
+
+        // Step 6b: E3 native dispatch finishes -> E3 completed.
+        tracker.CorrelateDispatchConsumed(attackerId: 12, queueIndex: 2, now.AddSeconds(5).AddMilliseconds(16), frame++, "poll");
         assert_states(tracker, "E3", TurnTimelineParryState.Parried, TurnTimelineLifecycleState.Completed);
     }
 
@@ -213,6 +225,96 @@ public sealed class TurnTimelineTrackerTests {
 
         Assert.Equal(e1.RowId, damageEvent.RowId);
         Assert.Contains("impact", damageEvent.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Tracker_ShouldNotDowngradeOpenToWaitingOnDispatchStarted() {
+        var tracker = new TurnTimelineTracker(64);
+        tracker.BeginBattle();
+
+        DateTime now = new(2026, 3, 7, 10, 30, 0, DateTimeKind.Local);
+        ulong frame = 8000;
+        int turnId = 888;
+
+        var cue = create_cue(queueIndex: 0, attackerId: 10, actor: "E1", action: "Attack", targets: "Rikku");
+        tracker.UpdateCues([cue], turnId, now, frame++, parryWindowActive: false);
+        tracker.MarkActiveParryOpen(now.AddMilliseconds(8), frame++);
+
+        tracker.CorrelateDispatchStarted(
+            attackerId: 10,
+            queueIndex: 0,
+            timestampLocal: now.AddMilliseconds(16),
+            frameIndex: frame++,
+            parryWindowActive: false);
+
+        TurnTimelineRow row = find_latest_row(tracker, "E1");
+        Assert.Equal(TurnTimelineParryState.Open, row.ParryState);
+    }
+
+    [Fact]
+    public void Tracker_ShouldKeepOpenAcrossCueSnapshotsUntilResolved() {
+        var tracker = new TurnTimelineTracker(64);
+        tracker.BeginBattle();
+
+        DateTime now = new(2026, 3, 7, 10, 40, 0, DateTimeKind.Local);
+        ulong frame = 8500;
+        int turnId = 889;
+
+        var cue = create_cue(queueIndex: 0, attackerId: 10, actor: "E1", action: "Attack", targets: "Rikku");
+        tracker.UpdateCues([cue], turnId, now, frame++, parryWindowActive: true);
+        TurnTimelineRow row = find_latest_row(tracker, "E1");
+        Assert.Equal(TurnTimelineParryState.Open, row.ParryState);
+
+        // Later snapshots can carry parryWindowActive=false even though this row
+        // is still the unresolved active attack context. Keep Open until resolution.
+        tracker.UpdateCues([cue], turnId, now.AddMilliseconds(16), frame++, parryWindowActive: false);
+        row = find_latest_row(tracker, "E1");
+        Assert.Equal(TurnTimelineParryState.Open, row.ParryState);
+    }
+
+    [Fact]
+    public void Tracker_ShouldIgnoreDispatchCorrelationForPartyAttackerIds() {
+        var tracker = new TurnTimelineTracker(64);
+        tracker.BeginBattle();
+
+        DateTime now = new(2026, 3, 7, 10, 45, 0, DateTimeKind.Local);
+        ulong frame = 9000;
+        int turnId = 999;
+
+        var partyCue = create_cue(
+            queueIndex: 0,
+            attackerId: 2,
+            actor: "Kimahri",
+            action: "System: Angriff [Physical]",
+            targets: "Non-party",
+            parryability: TurnTimelineParryability.NonParryable);
+        tracker.UpdateCues([partyCue], turnId, now, frame++, parryWindowActive: false);
+
+        var before = new List<TurnTimelineEvent>();
+        tracker.DrainEvents(before);
+        int beforeRows = tracker.RowCount;
+
+        tracker.CorrelateDispatchStarted(
+            attackerId: 2,
+            queueIndex: 0,
+            timestampLocal: now.AddMilliseconds(16),
+            frameIndex: frame++,
+            parryWindowActive: false);
+        tracker.CorrelateDispatchConsumed(
+            attackerId: 2,
+            queueIndex: 0,
+            timestampLocal: now.AddMilliseconds(32),
+            frameIndex: frame++,
+            reason: "cue list cleared");
+
+        var events = new List<TurnTimelineEvent>();
+        tracker.DrainEvents(events);
+
+        Assert.DoesNotContain(events, e => e.Kind == TurnTimelineEventKind.DispatchStarted);
+        Assert.DoesNotContain(events, e => e.Kind == TurnTimelineEventKind.DispatchConsumed);
+        Assert.Equal(beforeRows, tracker.RowCount);
+        TurnTimelineRow row = find_latest_row(tracker, "Kimahri");
+        Assert.Equal(TurnTimelineLifecycleState.Active, row.Lifecycle);
     }
 
     private static TurnTimelineCueObservation create_cue(

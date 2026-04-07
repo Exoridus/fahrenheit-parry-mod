@@ -24,11 +24,14 @@ public unsafe sealed partial class ParryModule : FhModule
     private const int StartupSkipProgressFlagOffset = 0xC88;
     private const float StartupForceSkipWindowSeconds = 20.0f;
     private const int StartupTest20PatchRequiredCodeLength = 0x381;
+    private const int StartupAutosavePatchOffset = 0x0289;
+    private const uint StartupMaxSafeCodeLength = 0x20000; // Hard safety cap for startup script reads/scans.
+    private const uint StartupMaxSafeCodeOffset = 0x100000;
+    private const int StartupControllerScanLimit = 16;
     private const int StartupForceRetryFrames = 3;
     private const int StartupForceMaxAttempts = 120;
     private const float StartupProbeWindowSeconds = 30.0f;
     private const int StartupProbePeriodicFrames = 5;
-
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate void AtelEventSetUp(uint eventId);
     private delegate char* AtelGetEventName(uint eventId);
@@ -176,15 +179,42 @@ public unsafe sealed partial class ParryModule : FhModule
         }
     }
 
+    private enum StartupCodeSource
+    {
+        None,
+        CurrentWorker,
+        CurrentControllerWorker0,
+        CurrentController,
+        ControllersArrayWorker0,
+        ControllersArray
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct MemoryBasicInformation
+    {
+        public nint BaseAddress;
+        public nint AllocationBase;
+        public uint AllocationProtect;
+        public nuint RegionSize;
+        public uint State;
+        public uint Protect;
+        public uint Type;
+    }
+
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    private static partial nuint VirtualQuery(nint address, out MemoryBasicInformation buffer, nuint length);
+
     private static readonly StartupScriptPatch[] StartupTest20SplashPatches = new StartupScriptPatch[] {
-        // Overwrites the Autosave-Check with "Jump to j09 (Offset 02B7)" -> Skips Room 348 entirely
-        new StartupScriptPatch(0x0289, "skip-autosave", 
-            new byte[] { 0xB0, 0x09, 0x00, 0x3C, 0x3C, 0x3C, 0x3C, 0x3C, 0x3C, 0x3C }, 
+        // Overwrites the Autosave-Check with "Jump to j09 (Offset 02B7)" -> Skips Room 348 entirely.
+        new StartupScriptPatch(StartupAutosavePatchOffset, "skip-autosave",
+            new byte[] { 0xB0, 0x09, 0x00, 0x3C, 0x3C, 0x3C, 0x3C, 0x3C, 0x3C, 0x3C },
             expected: new byte[] { 0x9F, 0x01, 0x00, 0xAE, 0x00, 0x00, 0x06, 0xD7, 0x09, 0x00 }),
-        
-        // Overwrites an overlay clear with "Jump to j12 (Offset 0397)" -> Skips FF Logo & Video, jumps to Menu
-        new StartupScriptPatch(0x02C6, "skip-ff-logo-and-movie", 
-            new byte[] { 0xB0, 0x12, 0x00 }, 
+
+        // Overwrites an overlay clear with "Jump to j0D (Offset 032A)" -> Skips FF Logo & Video, lands before show2DLayer(13)->j0C->j12
+        // j0D directly calls show2DLayer(13) then jumps to j0C, which selects layer 2/4 by region before fading in.
+        // Previously targeted j12 (0397) which skipped all show2DLayer calls, leaving the title background invisible.
+        new StartupScriptPatch(0x02C6, "skip-ff-logo-and-movie",
+            new byte[] { 0xB0, 0x0D, 0x00 },
             expected: new byte[] { 0xD8, 0x0C, 0x40 })
     };
 
@@ -239,7 +269,12 @@ public unsafe sealed partial class ParryModule : FhModule
 
     private bool _optionEnabled = true;
     private bool _optionSound = true;
-    private bool _optionLogging = true;
+    private bool _optionLogging =
+#if DEBUG
+        true;
+#else
+        false;
+#endif
     private bool _optionParryStateHud = true;
     private bool _optionOverdriveBoost = true;
     private bool _optionNegateDamage = true;
@@ -252,15 +287,19 @@ public unsafe sealed partial class ParryModule : FhModule
 #else
         false;
 #endif
-    private ParryDifficulty _optionDifficulty = ParryDifficulty.Easy;
+    private ParryDifficulty _optionDifficulty = ParryDifficultyModel.DefaultDifficulty;
     private readonly bool[] _damageEventActive = new bool[PartyActorCapacity];
     private readonly bool[] _parryFeedbackPending = new bool[PartyActorCapacity];
-    // Per-turn bitmask of slots intercepted at MsSetDamageInternal. Prevents double-resolution
-    // when both skipOrigForParry (h_ms_set_damage) and the internal hook could both fire.
+    // Per-hit bitmask of slots intercepted at MsSetDamageInternal. Set at p5=0 and
+    // consumed/cleared at that slot's p5=1024 completion boundary.
     private uint _internalInterceptedMask;
-    // Per-turn attacker id recorded at p5=0 intercept time. Prevents a different attacker's
-    // p5=1024 from inheriting the skip when the parry window closes between the two passes.
+    // Per-hit attacker id recorded at p5=0 intercept time for slot-correlated p5=1024 skip.
     private readonly byte[] _internalInterceptedAttackerId = new byte[PartyActorCapacity];
+    // Slot-local marker: p5=0 already committed before a valid active parry gate existed.
+    // Used to prevent late false-positive "parry success" promotion while still allowing
+    // duplicate native commit passes to be safely skipped.
+    private uint _latePreOpenP5ZeroCommitMask;
+    private readonly byte[] _latePreOpenP5ZeroCommitAttackerId = new byte[PartyActorCapacity];
     // Durable per-turn marker: set at MsDamageSetMotion (visual impact time) when the parry
     // timing gate passed. Consumed at MsSetDamageInternal p5=1024 (authoritative HP/death commit)
     // to skip the commit without re-evaluating the wall-clock window, which may have expired
@@ -316,6 +355,7 @@ public unsafe sealed partial class ParryModule : FhModule
     private int _startupEventTraceCount;
     private bool _startupTest20PatchApplied;
     private bool _startupTest20PatchMismatchLogged;
+    private bool _startupDiagResolveFailureLogged;
     private bool _debugAutoScroll = true;
     private bool _debugCueAutoScroll = true;
     private float _debugCuePanelRatio = 0.50f;
@@ -596,8 +636,18 @@ public unsafe sealed partial class ParryModule : FhModule
         }
     }
 
+    private bool should_capture_debug_messages()
+    {
+        return _optionLogging || _optionDebugOverlay;
+    }
+
     private void log_debug(string message)
     {
+        if (!should_capture_debug_messages())
+        {
+            return;
+        }
+
         bool appended = append_debug_event(message);
 
         if (_optionLogging && appended && !is_low_signal_log_message(message))
@@ -695,7 +745,13 @@ public unsafe sealed partial class ParryModule : FhModule
             return;
         }
 
-        bool progressSet = try_set_startup_progress_flag("pre_update");
+        // Retry the script patch every frame while in test20 until it succeeds.
+        // The single attempt at event_setup time can miss if the worker isn't registered yet.
+        if (isTitle && !_startupTest20PatchApplied)
+        {
+            try_patch_startup_test20_script("pre_update");
+        }
+
         if (!isSplash)
         {
             return;
@@ -729,10 +785,10 @@ public unsafe sealed partial class ParryModule : FhModule
             _startupForceAttemptCount++;
         }
 
-        if (progressSet || redirected || _startupForceAttemptCount <= 8 || (_startupForceAttemptCount % 10) == 0)
+        if (redirected || _startupForceAttemptCount <= 8 || (_startupForceAttemptCount % 10) == 0)
         {
             log_debug(
-                $"Startup skip forced (event={currentEventId}, name={currentEventName}, progressSet={progressSet}, redirected={redirected}, attempts={_startupForceAttemptCount}).");
+                $"Startup skip forced (event={currentEventId}, name={currentEventName}, redirected={redirected}, attempts={_startupForceAttemptCount}).");
         }
 
         if (redirected || isTitle)
@@ -743,7 +799,7 @@ public unsafe sealed partial class ParryModule : FhModule
 
     private void h_startup_event_setup(uint eventId)
     {
-        if (_startupEventTraceCount < 20)
+        if (_startupEventTraceCount < 8)
         {
             _startupEventTraceCount++;
             string traceName = get_current_event_name(eventId);
@@ -757,15 +813,9 @@ public unsafe sealed partial class ParryModule : FhModule
         }
 
         string eventName = get_current_event_name(eventId);
-        if (is_startup_title_event(eventId, eventName))
-        {
-            try_set_startup_progress_flag("event:test20");
-        }
-
         uint targetEventId = eventId;
         if (is_startup_splash_event(eventId, eventName))
         {
-            try_set_startup_progress_flag($"event:{(string.IsNullOrWhiteSpace(eventName) ? eventId.ToString() : eventName)}");
             _logger.Info($"[Parry] Startup redirect: {(string.IsNullOrWhiteSpace(eventName) ? "event" : eventName)} ({eventId}) -> test20 ({StartupSkipTitleRoomId}).");
             targetEventId = StartupSkipTitleRoomId;
         }
@@ -774,33 +824,42 @@ public unsafe sealed partial class ParryModule : FhModule
 
         if (is_startup_title_event(targetEventId, eventName))
         {
-            try_patch_startup_test20_script("event_setup");
+            try_patch_startup_test20_script("event_setup", targetEventId, eventName);
         }
     }
 
-    private void try_patch_startup_test20_script(string source)
+    private void try_patch_startup_test20_script(string source, uint? eventIdHint = null, string eventNameHint = "")
     {
         if (_startupTest20PatchApplied || !startup_skip_mutations_enabled())
         {
             return;
         }
 
-        int eventId = *FhFfx.Globals.event_id;
-        string eventName = eventId > 0 ? get_current_event_name((uint)eventId) : string.Empty;
-        if (!is_startup_title_event((uint)Math.Max(0, eventId), eventName))
+        int currentEventId = *FhFfx.Globals.event_id;
+        string currentEventName = currentEventId > 0 ? get_current_event_name((uint)currentEventId) : string.Empty;
+        bool isTitleEvent = eventIdHint.HasValue
+            ? is_startup_title_event(eventIdHint.Value, eventNameHint)
+            : is_startup_title_event((uint)Math.Max(0, currentEventId), currentEventName);
+        if (!isTitleEvent)
         {
             return;
         }
 
-        Fahrenheit.Atel.AtelBasicWorker* worker = find_test20_patch_worker();
-        if (worker == null)
+        if (!try_resolve_loaded_test20_code(
+            out Fahrenheit.Atel.AtelWorkerController* controller,
+            out Fahrenheit.Atel.AtelBasicWorker* worker,
+            out Fahrenheit.Atel.AtelScriptChunk* scriptChunk,
+            out byte* code,
+            out StartupCodeSource codeSource,
+            out int controllerSlot,
+            out string resolveRejectReason))
         {
-            return;
-        }
-
-        byte* code = worker->code_ptr;
-        if (code == null)
-        {
+            if (!_startupDiagResolveFailureLogged)
+            {
+                _startupDiagResolveFailureLogged = true;
+                _logger.Warning(
+                    $"[Parry] Startup test20 patch resolve failed ({source}): {resolveRejectReason}.");
+            }
             return;
         }
 
@@ -809,7 +868,29 @@ public unsafe sealed partial class ParryModule : FhModule
 
         foreach (StartupScriptPatch patch in StartupTest20SplashPatches)
         {
+            int patchReadCount = Math.Max(patch.Expected.Length, patch.Payload.Length);
+            if (!is_offset_range_valid(scriptChunk->code_length, patch.Offset, patchReadCount))
+            {
+                _logger.Warning(
+                    $"[Parry] Startup patch reject ({source}): {patch.Label} out of range at 0x{patch.Offset:X4} (len=0x{scriptChunk->code_length:X4}).");
+                return;
+            }
+
             byte* target = code + patch.Offset;
+            if (!is_memory_region_accessible(target, (nuint)patchReadCount, requireWrite: false))
+            {
+                _logger.Warning(
+                    $"[Parry] Startup patch reject ({source}): {patch.Label} target unreadable at 0x{patch.Offset:X4}.");
+                return;
+            }
+
+            if (!is_memory_region_accessible(target, (nuint)patch.Payload.Length, requireWrite: true))
+            {
+                _logger.Warning(
+                    $"[Parry] Startup patch reject ({source}): {patch.Label} target not writable at 0x{patch.Offset:X4}.");
+                return;
+            }
+
             if (bytes_match(target, patch.Payload))
             {
                 alreadyPatched++;
@@ -822,7 +903,7 @@ public unsafe sealed partial class ParryModule : FhModule
                 {
                     _startupTest20PatchMismatchLogged = true;
                     _logger.Warning(
-                        $"[Parry] Startup test20 patch aborted at {patch.Label} (offset=0x{patch.Offset:X4}): unexpected script bytes.");
+                        $"[Parry] Startup test20 patch aborted at {patch.Label} (offset=0x{patch.Offset:X4}): unexpected loaded script bytes.");
                 }
                 return;
             }
@@ -835,78 +916,329 @@ public unsafe sealed partial class ParryModule : FhModule
         {
             _startupTest20PatchApplied = true;
             _logger.Info(
-                $"[Parry] Startup test20 splash patch applied via {source} (patched={patchedCount}, already={alreadyPatched}).");
+                $"[Parry] Startup test20 splash patch applied via {source} (patched={patchedCount}, already={alreadyPatched}, codeSource={codeSource}, slot={controllerSlot}).");
         }
     }
 
-    private static Fahrenheit.Atel.AtelBasicWorker* find_test20_patch_worker()
+    private static bool try_resolve_loaded_test20_code(
+        out Fahrenheit.Atel.AtelWorkerController* controller,
+        out Fahrenheit.Atel.AtelBasicWorker* worker,
+        out Fahrenheit.Atel.AtelScriptChunk* scriptChunk,
+        out byte* code,
+        out StartupCodeSource codeSource,
+        out int controllerSlot,
+        out string rejectionReason)
     {
+        controller = null;
+        worker = null;
+        scriptChunk = null;
+        code = null;
+        codeSource = StartupCodeSource.None;
+        controllerSlot = -1;
+        StringBuilder rejectDetails = new(256);
+        rejectionReason = "no_safe_candidate";
+
+        // Fastest path during event setup: currently active worker can already point at the script
+        // even when controller-level chunk references are not yet wired.
         try
         {
             Fahrenheit.Atel.AtelBasicWorker* currentWorker = FhFfx.Globals.Atel.current_worker;
-            if (is_test20_patch_worker(currentWorker))
+            if (try_get_test20_script_from_worker(currentWorker, out scriptChunk, out code, out string workerRejectReason))
             {
-                return currentWorker;
+                worker = currentWorker;
+                controller = FhFfx.Globals.Atel.current_controller;
+                controllerSlot = get_controller_slot(controller);
+                codeSource = StartupCodeSource.CurrentWorker;
+                return true;
             }
+
+            append_startup_resolve_reject(rejectDetails, "current_worker", workerRejectReason);
         }
         catch
         {
-            // ignored
+            append_startup_resolve_reject(rejectDetails, "current_worker", "exception");
         }
 
+        // Current controller worker(0) path. In startup this can be linked earlier than controller->script_chunk.
         try
         {
-            Fahrenheit.Atel.AtelWorkerController* controller = FhFfx.Globals.Atel.current_controller;
-            if (controller == null)
+            Fahrenheit.Atel.AtelWorkerController* candidate = FhFfx.Globals.Atel.current_controller;
+            if (try_get_test20_script_from_controller_worker0(candidate, out Fahrenheit.Atel.AtelBasicWorker* controllerWorker, out scriptChunk, out code, out string worker0RejectReason))
             {
-                return null;
+                controller = candidate;
+                worker = controllerWorker;
+                controllerSlot = get_controller_slot(controller);
+                codeSource = StartupCodeSource.CurrentControllerWorker0;
+                return true;
             }
 
-            int count = Math.Min(controller->runnable_script_count, (ushort)256);
-            for (int i = 0; i < count; i++)
+            append_startup_resolve_reject(rejectDetails, "current_controller.worker0", worker0RejectReason);
+        }
+        catch
+        {
+            append_startup_resolve_reject(rejectDetails, "current_controller.worker0", "exception");
+        }
+
+        // Primary controller chunk path.
+        try
+        {
+            Fahrenheit.Atel.AtelWorkerController* candidate = FhFfx.Globals.Atel.current_controller;
+            if (try_get_test20_script_from_controller(candidate, out scriptChunk, out code, out string controllerRejectReason))
             {
-                Fahrenheit.Atel.AtelBasicWorker* worker = (Fahrenheit.Atel.AtelBasicWorker*)controller->worker(i);
-                if (is_test20_patch_worker(worker))
+                controller = candidate;
+                controllerSlot = get_controller_slot(controller);
+                codeSource = StartupCodeSource.CurrentController;
+                return true;
+            }
+
+            append_startup_resolve_reject(rejectDetails, "current_controller.chunk", controllerRejectReason);
+        }
+        catch
+        {
+            append_startup_resolve_reject(rejectDetails, "current_controller.chunk", "exception");
+        }
+
+        // Bounded array scan fallback: event setup can load test20 on a controller slot that is
+        // not the current controller yet.
+        try
+        {
+            Fahrenheit.Atel.AtelWorkerController* controllersBase = FhFfx.Globals.Atel.controllers;
+            if (controllersBase != null)
+            {
+                for (int slot = 0; slot < StartupControllerScanLimit; slot++)
                 {
-                    return worker;
+                    Fahrenheit.Atel.AtelWorkerController* candidate = controllersBase + slot;
+                    if (try_get_test20_script_from_controller_worker0(candidate, out Fahrenheit.Atel.AtelBasicWorker* candidateWorker, out scriptChunk, out code, out string worker0RejectReason))
+                    {
+                        controller = candidate;
+                        worker = candidateWorker;
+                        controllerSlot = slot;
+                        codeSource = StartupCodeSource.ControllersArrayWorker0;
+                        return true;
+                    }
+
+                    append_startup_resolve_reject(rejectDetails, $"controllers[{slot}].worker0", worker0RejectReason);
+
+                    if (try_get_test20_script_from_controller(candidate, out scriptChunk, out code, out string arrayRejectReason))
+                    {
+                        controller = candidate;
+                        controllerSlot = slot;
+                        codeSource = StartupCodeSource.ControllersArray;
+                        return true;
+                    }
+
+                    append_startup_resolve_reject(rejectDetails, $"controllers[{slot}].chunk", arrayRejectReason);
                 }
+            }
+            else
+            {
+                append_startup_resolve_reject(rejectDetails, "controllers_base", "null");
             }
         }
         catch
         {
-            // ignored
+            append_startup_resolve_reject(rejectDetails, "controllers_array", "exception");
         }
 
-        return null;
+        if (rejectDetails.Length > 0)
+        {
+            rejectionReason = rejectDetails.ToString();
+        }
+
+        return false;
     }
 
-    private static bool is_test20_patch_worker(Fahrenheit.Atel.AtelBasicWorker* worker)
+    private static bool try_get_test20_script_from_controller_worker0(
+        Fahrenheit.Atel.AtelWorkerController* controller,
+        out Fahrenheit.Atel.AtelBasicWorker* worker,
+        out Fahrenheit.Atel.AtelScriptChunk* scriptChunk,
+        out byte* code,
+        out string rejectionReason)
     {
-        if (worker == null || worker->script_chunk == null || worker->script_header == null)
+        worker = null;
+        scriptChunk = null;
+        code = null;
+        rejectionReason = string.Empty;
+
+        if (controller == null)
+        {
+            rejectionReason = "controller:null";
+            return false;
+        }
+
+        if (!is_memory_region_accessible(controller, (nuint)sizeof(Fahrenheit.Atel.AtelWorkerController), requireWrite: false))
+        {
+            rejectionReason = "controller:unreadable";
+            return false;
+        }
+
+        if (controller->runnable_script_count == 0)
+        {
+            rejectionReason = "controller:runnable_script_count_zero";
+            return false;
+        }
+
+        Fahrenheit.Atel.AtelBasicWorker* candidateWorker = controller->worker(0);
+        if (candidateWorker == null)
+        {
+            rejectionReason = "controller:worker0:null";
+            return false;
+        }
+
+        if (!is_memory_region_accessible(candidateWorker, (nuint)sizeof(Fahrenheit.Atel.AtelBasicWorker), requireWrite: false))
+        {
+            rejectionReason = "controller:worker0:unreadable";
+            return false;
+        }
+
+        if (!try_get_test20_script_from_worker(candidateWorker, out scriptChunk, out code, out string workerRejectReason))
+        {
+            rejectionReason = $"controller:worker0:{workerRejectReason}";
+            return false;
+        }
+
+        worker = candidateWorker;
+        return true;
+    }
+
+    private static bool try_get_test20_script_from_controller(
+        Fahrenheit.Atel.AtelWorkerController* controller,
+        out Fahrenheit.Atel.AtelScriptChunk* scriptChunk,
+        out byte* code,
+        out string rejectionReason)
+    {
+        scriptChunk = null;
+        code = null;
+        rejectionReason = string.Empty;
+
+        if (controller == null)
+        {
+            rejectionReason = "controller:null";
+            return false;
+        }
+
+        if (!is_memory_region_accessible(controller, (nuint)sizeof(Fahrenheit.Atel.AtelWorkerController), requireWrite: false))
+        {
+            rejectionReason = "controller:unreadable";
+            return false;
+        }
+
+        return try_get_test20_script_from_chunk(controller->script_chunk, out scriptChunk, out code, out rejectionReason);
+    }
+
+    private static bool try_get_test20_script_from_worker(
+        Fahrenheit.Atel.AtelBasicWorker* worker,
+        out Fahrenheit.Atel.AtelScriptChunk* scriptChunk,
+        out byte* code,
+        out string rejectionReason)
+    {
+        scriptChunk = null;
+        code = null;
+        rejectionReason = string.Empty;
+
+        if (worker == null)
+        {
+            rejectionReason = "worker:null";
+            return false;
+        }
+
+        if (!is_memory_region_accessible(worker, (nuint)sizeof(Fahrenheit.Atel.AtelBasicWorker), requireWrite: false))
+        {
+            rejectionReason = "worker:unreadable";
+            return false;
+        }
+
+        return try_get_test20_script_from_chunk(worker->script_chunk, out scriptChunk, out code, out rejectionReason);
+    }
+
+    private static bool try_get_test20_script_from_chunk(
+        Fahrenheit.Atel.AtelScriptChunk* candidateChunk,
+        out Fahrenheit.Atel.AtelScriptChunk* scriptChunk,
+        out byte* code,
+        out string rejectionReason)
+    {
+        scriptChunk = null;
+        code = null;
+        rejectionReason = string.Empty;
+        if (!try_validate_test20_patch_buffer(candidateChunk, out byte* candidateCode, out _, out rejectionReason))
         {
             return false;
         }
 
-        if (worker->script_chunk->code_length < StartupTest20PatchRequiredCodeLength)
+        scriptChunk = candidateChunk;
+        code = candidateCode;
+        return true;
+    }
+
+    private static bool try_validate_test20_patch_buffer(
+        Fahrenheit.Atel.AtelScriptChunk* scriptChunk,
+        out byte* code,
+        out uint codeLength,
+        out string rejectionReason)
+    {
+        code = null;
+        codeLength = 0;
+        rejectionReason = string.Empty;
+        if (scriptChunk == null)
         {
+            rejectionReason = "chunk:null";
             return false;
         }
 
-        byte* code = worker->code_ptr;
-        if (code == null)
+        if (!is_memory_region_accessible(scriptChunk, (nuint)sizeof(Fahrenheit.Atel.AtelScriptChunk), requireWrite: false))
         {
+            rejectionReason = "chunk:unreadable";
+            return false;
+        }
+
+        uint chunkCodeLength = scriptChunk->code_length;
+        if (chunkCodeLength < StartupTest20PatchRequiredCodeLength || chunkCodeLength > StartupMaxSafeCodeLength)
+        {
+            rejectionReason = $"chunk:code_length_invalid:{chunkCodeLength}";
+            return false;
+        }
+
+        uint chunkCodeOffset = scriptChunk->offset_code;
+        if (chunkCodeOffset == 0 || chunkCodeOffset > StartupMaxSafeCodeOffset)
+        {
+            rejectionReason = $"chunk:code_offset_invalid:{chunkCodeOffset}";
+            return false;
+        }
+
+        nuint chunkBase = unchecked((nuint)scriptChunk);
+        nuint candidateCode = chunkBase + chunkCodeOffset;
+        if (candidateCode < chunkBase)
+        {
+            rejectionReason = "chunk:code_ptr_overflow";
+            return false;
+        }
+
+        byte* chunkCode = (byte*)candidateCode;
+        if (!is_memory_region_accessible(chunkCode, chunkCodeLength, requireWrite: false))
+        {
+            rejectionReason = "chunk:code_unreadable";
             return false;
         }
 
         foreach (StartupScriptPatch patch in StartupTest20SplashPatches)
         {
-            byte* target = code + patch.Offset;
+            int byteCount = Math.Max(patch.Expected.Length, patch.Payload.Length);
+            if (!is_offset_range_valid(chunkCodeLength, patch.Offset, byteCount))
+            {
+                rejectionReason = $"chunk:patch_out_of_range:{patch.Label}";
+                return false;
+            }
+
+            byte* target = chunkCode + patch.Offset;
             if (!bytes_match(target, patch.Expected) && !bytes_match(target, patch.Payload))
             {
+                rejectionReason = $"chunk:signature_mismatch:{patch.Label}";
                 return false;
             }
         }
 
+        code = chunkCode;
+        codeLength = chunkCodeLength;
         return true;
     }
 
@@ -939,6 +1271,146 @@ public unsafe sealed partial class ParryModule : FhModule
         {
             address[i] = value[i];
         }
+    }
+
+    private static void append_startup_resolve_reject(StringBuilder buffer, string source, string reason)
+    {
+        if (buffer == null || string.IsNullOrWhiteSpace(source))
+        {
+            return;
+        }
+
+        if (buffer.Length > 0)
+        {
+            buffer.Append(" | ");
+        }
+
+        buffer.Append(source);
+        buffer.Append(':');
+        buffer.Append(string.IsNullOrWhiteSpace(reason) ? "unknown" : reason);
+    }
+
+    private static int get_controller_slot(Fahrenheit.Atel.AtelWorkerController* controller)
+    {
+        if (controller == null)
+        {
+            return -1;
+        }
+
+        try
+        {
+            Fahrenheit.Atel.AtelWorkerController* controllersBase = FhFfx.Globals.Atel.controllers;
+            if (controllersBase == null)
+            {
+                return -1;
+            }
+
+            nint delta = (nint)controller - (nint)controllersBase;
+            int stride = sizeof(Fahrenheit.Atel.AtelWorkerController);
+            if (stride <= 0 || delta < 0 || (delta % stride) != 0)
+            {
+                return -1;
+            }
+
+            return (int)(delta / stride);
+        }
+        catch
+        {
+            return -1;
+        }
+    }
+
+    private const uint MemCommit = 0x1000;
+    private const uint PageNoAccess = 0x01;
+    private const uint PageReadOnly = 0x02;
+    private const uint PageReadWrite = 0x04;
+    private const uint PageWriteCopy = 0x08;
+    private const uint PageExecuteRead = 0x20;
+    private const uint PageExecuteReadWrite = 0x40;
+    private const uint PageExecuteWriteCopy = 0x80;
+    private const uint PageGuard = 0x100;
+
+    private static bool is_memory_region_accessible(void* address, nuint size, bool requireWrite)
+    {
+        if (address == null || size == 0)
+        {
+            return false;
+        }
+
+        nuint start = unchecked((nuint)address);
+        nuint end = start + size;
+        if (end < start)
+        {
+            return false;
+        }
+
+        nuint cursor = start;
+        while (cursor < end)
+        {
+            nuint queried = VirtualQuery((nint)cursor, out MemoryBasicInformation mbi, (nuint)Marshal.SizeOf<MemoryBasicInformation>());
+            if (queried == 0 || mbi.RegionSize == 0)
+            {
+                return false;
+            }
+
+            if (mbi.State != MemCommit)
+            {
+                return false;
+            }
+
+            uint protect = mbi.Protect;
+            if ((protect & PageGuard) != 0 || (protect & PageNoAccess) != 0)
+            {
+                return false;
+            }
+
+            uint baseProtect = protect & 0xFF;
+            if (requireWrite)
+            {
+                bool writable = baseProtect == PageReadWrite
+                    || baseProtect == PageWriteCopy
+                    || baseProtect == PageExecuteReadWrite
+                    || baseProtect == PageExecuteWriteCopy;
+                if (!writable)
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                bool readable = baseProtect == PageReadOnly
+                    || baseProtect == PageReadWrite
+                    || baseProtect == PageWriteCopy
+                    || baseProtect == PageExecuteRead
+                    || baseProtect == PageExecuteReadWrite
+                    || baseProtect == PageExecuteWriteCopy;
+                if (!readable)
+                {
+                    return false;
+                }
+            }
+
+            nuint regionStart = unchecked((nuint)mbi.BaseAddress);
+            nuint regionEnd = regionStart + mbi.RegionSize;
+            if (regionEnd <= cursor)
+            {
+                return false;
+            }
+
+            cursor = Math.Min(end, regionEnd);
+        }
+
+        return true;
+    }
+
+    private static bool is_offset_range_valid(uint codeLength, int offset, int byteCount)
+    {
+        if (offset < 0 || byteCount <= 0)
+        {
+            return false;
+        }
+
+        return offset <= codeLength && byteCount <= (codeLength - offset);
     }
 
     private int h_need_show_japan_logo()
@@ -987,26 +1459,6 @@ public unsafe sealed partial class ParryModule : FhModule
     private bool startup_skip_mutations_enabled()
     {
         return _optionStartupSkipForceTitle;
-    }
-
-    private bool try_set_startup_progress_flag(string source)
-    {
-        FhFfx.SaveData* save = FhFfx.Globals.save_data;
-        if (save == null)
-        {
-            return false;
-        }
-
-        byte* raw = (byte*)save;
-        byte current = raw[StartupSkipProgressFlagOffset];
-        if (current == 1)
-        {
-            return true;
-        }
-
-        raw[StartupSkipProgressFlagOffset] = 1;
-        _logger.Info($"[Parry] Startup flag set via {source}: saveData0C88 {current} -> 1.");
-        return true;
     }
 
     private static string get_current_event_name(uint eventId)

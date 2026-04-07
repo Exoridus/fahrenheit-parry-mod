@@ -14,9 +14,50 @@ public sealed class ParryDifficultyModelTests {
     [InlineData(ParryDifficulty.Expert, 0, 0.150f)]
     [InlineData(ParryDifficulty.Expert, 2, 0.033f)]
     [InlineData(ParryDifficulty.Expert, 3, 0.000f)]
+#if DEBUG
+    [InlineData(ParryDifficulty.Debug,  0, 0.500f)]
+#endif
     public void GetWindowSeconds_ShouldReturnExpectedPresetValues(ParryDifficulty difficulty, int tierIndex, float expectedSeconds) {
         float actual = ParryDifficultyModel.GetWindowSeconds(difficulty, tierIndex);
         Assert.Equal(expectedSeconds, actual, precision: 3);
+    }
+
+    [Fact]
+    public void DefaultDifficulty_ShouldMatchBuildConfiguration()
+    {
+#if DEBUG
+        Assert.Equal(ParryDifficulty.Debug, ParryDifficultyModel.DefaultDifficulty);
+#else
+        Assert.Equal(ParryDifficulty.Normal, ParryDifficultyModel.DefaultDifficulty);
+#endif
+    }
+
+    [Fact]
+    public void SelectableDifficulties_ShouldMatchBuildConfiguration()
+    {
+        ParryDifficulty[] selectable = ParryDifficultyModel.GetSelectableDifficulties().ToArray();
+
+#if DEBUG
+        Assert.Equal(
+            new[] { ParryDifficulty.Debug, ParryDifficulty.Easy, ParryDifficulty.Normal, ParryDifficulty.Expert },
+            selectable);
+#else
+        Assert.Equal(
+            new[] { ParryDifficulty.Easy, ParryDifficulty.Normal, ParryDifficulty.Expert },
+            selectable);
+#endif
+    }
+
+    [Fact]
+    public void TryParsePersistedDifficulty_ShouldHandleLegacyDebugSelection()
+    {
+        bool parsed = ParryDifficultyModel.TryParsePersistedDifficulty("Debug", out ParryDifficulty difficulty);
+        Assert.True(parsed);
+#if DEBUG
+        Assert.Equal(ParryDifficulty.Debug, difficulty);
+#else
+        Assert.Equal(ParryDifficulty.Normal, difficulty);
+#endif
     }
 
     [Fact]

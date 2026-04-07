@@ -38,13 +38,24 @@ public unsafe sealed partial class ParryModule
     ///     KO, Petrification, Sleep, and Confusion are non-parryable: the target cannot react,
     ///     and the player should not be penalised for failing to parry on their behalf.
     /// </summary>
+    private static bool has_confuse_status(Chr* target)
+    {
+        if (target == null || !target->stat_exist_flag) return false;
+        if (target->ram.status_suffer.HasFlag(StatusPermanentFlags.CONFUSE)) return true;
+
+        // Runtime fallback: battle traces show Confuse can be staged in chr+0x606 (bit 0x0100)
+        // before status_suffer flags are fully reflected.
+        ushort status606 = *(ushort*)((byte*)target + 0x606);
+        return (status606 & 0x0100) != 0;
+    }
+
     private static bool is_target_non_parryable(Chr* target)
     {
         if (target == null || !target->stat_exist_flag) return true;
         if (target->stat_death != 0) return true;                        // KO'd
         if (target->stat_stone != 0) return true;                        // Petrified
         if (target->ram.status_suffer_turns_left.sleep > 0) return true; // Sleeping
-        if (target->ram.status_suffer.HasFlag(StatusPermanentFlags.CONFUSE)) return true; // Confused
+        if (has_confuse_status(target)) return true;                      // Confused
         if (target->ram.status_suffer.HasFlag(StatusPermanentFlags.BERSERK)) return true; // Berserk
         return false;
     }
@@ -54,7 +65,7 @@ public unsafe sealed partial class ParryModule
         if (target->stat_death != 0) return "KO";
         if (target->stat_stone != 0) return "Petrified";
         if (target->ram.status_suffer_turns_left.sleep > 0) return "Sleeping";
-        if (target->ram.status_suffer.HasFlag(StatusPermanentFlags.CONFUSE)) return "Confused";
+        if (has_confuse_status(target)) return "Confused";
         if (target->ram.status_suffer.HasFlag(StatusPermanentFlags.BERSERK)) return "Berserk";
         return "Status";
     }
@@ -300,6 +311,28 @@ public unsafe sealed partial class ParryModule
         return mask;
     }
 
+    private uint filter_parryable_party_target_mask(uint partyMask)
+    {
+        if (partyMask == 0) return 0;
+
+        Chr* party = _battleAdapter.GetPlayerCharacters();
+        if (party == null) return 0;
+
+        uint filtered = 0;
+        uint mask = partyMask;
+        while (mask != 0)
+        {
+            int slot = BitOperations.TrailingZeroCount(mask);
+            mask &= mask - 1;
+
+            Chr* candidate = party + slot;
+            if (candidate->stat_exist_flag && !is_target_non_parryable(candidate))
+                filtered |= 1u << slot;
+        }
+
+        return filtered;
+    }
+
     private ParryInputContext capture_parry_input_context()
     {
         if (!try_get_parryable_enemy_cue(out AttackCue cue, out byte cueIndex, out _, out uint partyMask))
@@ -430,7 +463,7 @@ public unsafe sealed partial class ParryModule
             return false;
         }
 
-        partyMask = extract_party_target_mask(cue);
+        partyMask = filter_parryable_party_target_mask(extract_party_target_mask(cue));
         return partyMask != 0;
     }
 
@@ -530,13 +563,12 @@ public unsafe sealed partial class ParryModule
         Array.Clear(_parryExpiry);
         Array.Clear(_parryArmedAttackerId);
         Array.Clear(_parryFeedbackPending);
-        // _internalInterceptedMask intentionally NOT cleared here.
-        // A p5=1024 commit for the just-closed attacker may still be in flight (e.g. after cue
-        // mutation triggers "attacker changed"). The attacker-correlated check in
-        // h_ms_set_damage_internal ensures only the same old attacker's p5=1024 inherits the
-        // skip — a subsequent different attacker on the same slot will not match.
-        // _internalInterceptedMask and _internalInterceptedAttackerId are fully reset by
-        // clear_awaiting_turn_end when the cue queue actually drains.
+        // _internalInterceptedMask intentionally NOT cleared globally here.
+        // Slot evidence is cleared at the per-hit p5=1024 boundary in h_ms_set_damage_internal.
+        // Keeping the global mask untouched here preserves any other slot that still has an
+        // in-flight delayed finalization.
+        _latePreOpenP5ZeroCommitMask = 0;
+        Array.Clear(_latePreOpenP5ZeroCommitAttackerId);
         _parryResolvedAtImpactMask = 0;
         Array.Clear(_preHitHpSnapshot);
         _runtime.ParryWindowActive = false;
@@ -556,6 +588,8 @@ public unsafe sealed partial class ParryModule
         Array.Clear(_parryFeedbackPending);
         _internalInterceptedMask = 0;
         Array.Clear(_internalInterceptedAttackerId);
+        _latePreOpenP5ZeroCommitMask = 0;
+        Array.Clear(_latePreOpenP5ZeroCommitAttackerId);
         _parryResolvedAtImpactMask = 0;
         Array.Clear(_preHitHpSnapshot);
         if (_runtime.ParryWindowActive)
@@ -653,6 +687,15 @@ public unsafe sealed partial class ParryModule
 
     private void resolve_successful_parry(int slotIndex, Chr* target, string source, bool closeWindow = true)
     {
+        if (is_target_non_parryable(target))
+        {
+            string statusLabel = get_non_parryable_label(target);
+            _runtime.StatusBlockTextRemainingSeconds = ParriedTextSeconds;
+            _runtime.StatusBlockLabel = statusLabel;
+            log_debug($"Parry resolution blocked for {format_actor_slot((byte)slotIndex)} — {statusLabel} (status block).");
+            return;
+        }
+
         if (_optionNegateDamage)
         {
             negate_damage_on_impact(target);

@@ -10,6 +10,7 @@ public unsafe sealed partial class ParryModule
     private const uint SndMemory = 0x0004;
     private const uint SndNoDefault = 0x0002;
     private const uint SndPurge = 0x0040;
+    private const float DefaultParryAudioVolumeRatio = 0.3f;
     private const float OverlayFontSizePx = 62f;
 
     [DllImport("winmm.dll", EntryPoint = "PlaySoundW", CharSet = CharSet.Unicode)]
@@ -164,7 +165,7 @@ public unsafe sealed partial class ParryModule
 
         if (!try_get_game_audio_volume_ratio(out float gameVolumeRatio))
         {
-            gameVolumeRatio = 1.0f;
+            gameVolumeRatio = DefaultParryAudioVolumeRatio;
         }
 
         float finalVolume = Math.Clamp(gameVolumeRatio, 0f, 1f);
@@ -227,8 +228,8 @@ public unsafe sealed partial class ParryModule
 
     private bool try_get_game_audio_volume_ratio(out float ratio)
     {
-        ratio = 1.0f;
-        return true; // Hardcoded to 1.0f for now to restore SFX playback until FMOD slider addresses are confirmed.
+        ratio = DefaultParryAudioVolumeRatio;
+        return true; // Default to 0.3f until stable game volume reads are wired back in.
     }
 
     private void stop_audio_playback()
