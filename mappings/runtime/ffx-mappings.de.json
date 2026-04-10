@@ -1,9 +1,681 @@
 {
   "SchemaVersion": 1,
   "Locale": "de",
-  "GeneratedAtUtc": "2026-03-08T15:08:39.6513484Z",
+  "GeneratedAtUtc": "2026-04-09T23:28:23.2955933Z",
   "Domains": {
     "Commands": {
+      "2000": {
+        "Name": "Potion",
+        "Description": "Heilt HP um 200.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2001": {
+        "Name": "Hi-Potion",
+        "Description": "Heilt HP um 1000.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2002": {
+        "Name": "X-Potion",
+        "Description": "Heilt die gesamten HP.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2003": {
+        "Name": "Mega-Potion",
+        "Description": "Heilt HP der Gruppe um 2000.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2004": {
+        "Name": "\u00C4ther",
+        "Description": "Heilt MP um 100.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2005": {
+        "Name": "Turbo-\u00C4ther",
+        "Description": "Heilt MP um 500.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2006": {
+        "Name": "Ph\u00F6nixfeder",
+        "Description": "Kuriert [Kampfunf\u00E4higkeit].",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2007": {
+        "Name": "Mega-Ph\u00F6nix",
+        "Description": "Kuriert [Kampfunf\u00E4higkeit] der Gruppe.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2008": {
+        "Name": "Elixir",
+        "Description": "Heilt die gesamten HP und MP.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2009": {
+        "Name": "Final-Elixir",
+        "Description": "Heilt die gesamten HP und MP der Gruppe.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "200A": {
+        "Name": "Antidot",
+        "Description": "Kuriert [Gift]-Zustand.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "200B": {
+        "Name": "Goldnadel",
+        "Description": "Kuriert [Stein]-Zustand.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "200C": {
+        "Name": "Augentropfen",
+        "Description": "Kuriert [Blind]-Zustand.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "200D": {
+        "Name": "Echokraut",
+        "Description": "Kuriert [Stumm]-Zustand.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "200E": {
+        "Name": "Weihwasser",
+        "Description": "Kuriert [Zombie]\u002B[Fluch].",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "200F": {
+        "Name": "Allheilmittel",
+        "Description": "Kuriert alle Zustandsver\u00E4nderungen.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2010": {
+        "Name": "Kraftzettel",
+        "Description": "Gegner hinterl\u00E4sst [Kraft-Sph\u00E4roiden].",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2011": {
+        "Name": "Wunderzettel",
+        "Description": "Gegner hinterl\u00E4sst [Wunder-Sph\u00E4roiden].",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2012": {
+        "Name": "Zeitzettel",
+        "Description": "Gegner hinterl\u00E4sst [Zeit-Sph\u00E4roiden].",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2013": {
+        "Name": "Ability-Zettel",
+        "Description": "Gegner hinterl\u00E4sst [Ability-Sph\u00E4roiden].",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2014": {
+        "Name": "Al Bhed-Medizin",
+        "Description": "Heilt 1000 HP\u002B[Gift]\u002B[Stumm]\u002B[Stein] der Gruppe.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2015": {
+        "Name": "Heilwasser",
+        "Description": "Komplettheilung der Gruppe.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2016": {
+        "Name": "Tetra-Element",
+        "Description": "Komplettheilung\u002B[Element-Schutz].",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2017": {
+        "Name": "Antarktis-Wind",
+        "Description": "K\u00E4lte-elementarer Schaden.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2018": {
+        "Name": "Polar-Wind",
+        "Description": "K\u00E4lte-elementarer Schaden.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2019": {
+        "Name": "K\u00E4ltestein",
+        "Description": "K\u00E4lte-elementarer Fl\u00E4chenschaden.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "201A": {
+        "Name": "Bomber-Splitter",
+        "Description": "Hitze-elementarer Schaden.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "201B": {
+        "Name": "Bomber-Seele",
+        "Description": "Hitze-elementarer Schaden.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "201C": {
+        "Name": "Hitzestein",
+        "Description": "Hitze-elementarer Fl\u00E4chenschaden.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "201D": {
+        "Name": "Elektrokugel",
+        "Description": "Strom-elementarer Schaden.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "201E": {
+        "Name": "Blitzkugel",
+        "Description": "Strom-elementarer Schaden.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "201F": {
+        "Name": "Donnerstein",
+        "Description": "Strom-elementarer Fl\u00E4chenschaden.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2020": {
+        "Name": "Fischschuppe",
+        "Description": "N\u00E4sse-elementarer Schaden.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2021": {
+        "Name": "Drachenschuppe",
+        "Description": "N\u00E4sse-elementarer Schaden.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2022": {
+        "Name": "N\u00E4ssestein",
+        "Description": "N\u00E4sse-elementarer Fl\u00E4chenschaden.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2023": {
+        "Name": "Handgranate",
+        "Description": "Erteilt Fl\u00E4chenschaden.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2024": {
+        "Name": "Panzergranate",
+        "Description": "Fl\u00E4chenschaden\u002B[Panzerbrecher].",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2025": {
+        "Name": "Schlafpuder",
+        "Description": "Fl\u00E4chenschaden\u002B[Schlaf].",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2026": {
+        "Name": "Traumpuder",
+        "Description": "Fl\u00E4chenschaden\u002B[Schlaf].",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2027": {
+        "Name": "Silentium-Mine",
+        "Description": "Fl\u00E4chenschaden\u002B[Stumm].",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2028": {
+        "Name": "Rauchbombe",
+        "Description": "Fl\u00E4chenschaden\u002B[Blind].",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2029": {
+        "Name": "Schwarzer Stein",
+        "Description": "Verringert HP aller Gegner um die H\u00E4lfte.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "202A": {
+        "Name": "Lichtstein",
+        "Description": "Erteilt Schaden.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "202B": {
+        "Name": "Heiliger Stein",
+        "Description": "Erteilt Schaden.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "202C": {
+        "Name": "Himmelsstein",
+        "Description": "Erteilt Fl\u00E4chenschaden.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "202D": {
+        "Name": "Giftkralle",
+        "Description": "Schaden\u002B[Gift].",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "202E": {
+        "Name": "Silberne Sanduhr",
+        "Description": "Verlangsamt alle Gegner.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "202F": {
+        "Name": "Goldene Sanduhr",
+        "Description": "Verlangsamt alle Gegner\u002BFl\u00E4chenschaden.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2030": {
+        "Name": "Todeskerze",
+        "Description": "[Todesurteil].",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2031": {
+        "Name": "Perseus-Granate",
+        "Description": "[Stein] auf alle Gegner.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2032": {
+        "Name": "Todesschatten",
+        "Description": "[Tod].",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2033": {
+        "Name": "Wind des Jenseits",
+        "Description": "[Tod] auf alle Gegner.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2034": {
+        "Name": "Bonzenmesser",
+        "Description": "Verwendungszweck ist unbekannt...",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2035": {
+        "Name": "Dunkelkristall",
+        "Description": "Erheblicher Fl\u00E4chenschaden.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2036": {
+        "Name": "Chocobo-Feder",
+        "Description": "Erteilt [Hast].",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2037": {
+        "Name": "Chocobo-Daune",
+        "Description": "Erteilt der Gruppe [Hast].",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2038": {
+        "Name": "Mondschleier",
+        "Description": "Erteilt [Shell].",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2039": {
+        "Name": "Lichtschleier",
+        "Description": "Erteilt [Protes].",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "203A": {
+        "Name": "Sternenschleier",
+        "Description": "Erteilt [Reflek].",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "203B": {
+        "Name": "Heilquelle",
+        "Description": "Erteilt [Regena].",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "203C": {
+        "Name": "Magiequelle",
+        "Description": "Absorbiert gegnerische MP.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "203D": {
+        "Name": "Kraftquelle",
+        "Description": "Absorbiert gegnerische HP.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "203E": {
+        "Name": "Lebensquelle",
+        "Description": "Absorbiert gegnerische HP\u002BMP.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "203F": {
+        "Name": "Ablutionssalz",
+        "Description": "Schaden\u002BAufhebung von Zauber-Zust\u00E4nden.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2040": {
+        "Name": "HP-Pille",
+        "Description": "Maximal-HP werden verdoppelt.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2041": {
+        "Name": "MP-Pille",
+        "Description": "Maximal-MP werden verdoppelt.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2042": {
+        "Name": "Zweigestirn",
+        "Description": "MP-Verbrauch wird auf 0 reduziert.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2043": {
+        "Name": "HP-Wundermittel",
+        "Description": "Maximal-HP der Gruppe werden verdoppelt.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2044": {
+        "Name": "MP-Wundermittel",
+        "Description": "Maximal-MP der Gruppe werden verdoppelt.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2045": {
+        "Name": "Dreigestirn",
+        "Description": "MP-Verbrauch der Gruppe wird auf 0 reduziert.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2046": {
+        "Name": "Kraft-Sph\u00E4roid",
+        "Description": "Aktiviert [Angriffskraft], [Abwehrkraft] und [HP].",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2047": {
+        "Name": "Wunder-Sph\u00E4roid",
+        "Description": "Aktiviert [Magie], [Zauberabwehr] und [MP].",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2048": {
+        "Name": "Zeit-Sph\u00E4roid",
+        "Description": "Aktiviert [Geschick], [Treffer] und [Reflex].",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2049": {
+        "Name": "Ability-Sph\u00E4roid",
+        "Description": "Aktiviert [Abilitys].",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "204A": {
+        "Name": "Gl\u00FCcks-Sph\u00E4roid",
+        "Description": "Aktiviert [Gl\u00FCck].",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "204B": {
+        "Name": "Para-Sph\u00E4roid",
+        "Description": "Aktiviert die von anderen aktivierten [Parameter].",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "204C": {
+        "Name": "Spezial-Sph\u00E4roid",
+        "Description": "Aktiviert die von anderen aktivierten [Spezial]-Felder.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "204D": {
+        "Name": "Tech-Sph\u00E4roid",
+        "Description": "Aktiviert die von anderen aktivierten [Techs].",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "204E": {
+        "Name": "Wei\u00DF-Sph\u00E4roid",
+        "Description": "Aktiviert die von anderen aktivierte [Wei\u00DFmagie].",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "204F": {
+        "Name": "Schwarz-Sph\u00E4roid",
+        "Description": "Aktiviert die von anderen aktivierte [Schwarzmagie].",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2050": {
+        "Name": "Super-Sph\u00E4roid",
+        "Description": "Aktiviert ein beliebiges Aufbaufeld.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2051": {
+        "Name": "Lv. 1 Sph\u00E4ropass",
+        "Description": "L\u00F6scht einen [Lv. 1 Sph\u00E4rostopp].",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2052": {
+        "Name": "Lv. 2 Sph\u00E4ropass",
+        "Description": "L\u00F6scht einen [Lv. 2 Sph\u00E4rostopp].",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2053": {
+        "Name": "Lv. 3 Sph\u00E4ropass",
+        "Description": "L\u00F6scht einen [Lv. 3 Sph\u00E4rostopp].",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2054": {
+        "Name": "Lv. 4 Sph\u00E4ropass",
+        "Description": "L\u00F6scht einen [Lv. 4 Sph\u00E4rostopp].",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2055": {
+        "Name": "HP-Sph\u00E4roid",
+        "Description": "Wandelt ein leeres Feld in [HP] um.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2056": {
+        "Name": "MP-Sph\u00E4roid",
+        "Description": "Wandelt ein leeres Feld in [MP] um.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2057": {
+        "Name": "Angriffs-Sph\u00E4roid",
+        "Description": "Wandelt ein leeres Feld in [Angriffskraft] um.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2058": {
+        "Name": "Abwehr-Sph\u00E4roid",
+        "Description": "Wandelt ein leeres Feld in [Abwehrkraft] um.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2059": {
+        "Name": "Magie-Sph\u00E4roid",
+        "Description": "Wandelt ein leeres Feld in [Magie] um.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "205A": {
+        "Name": "Z-Abwehr-Sph\u00E4roid",
+        "Description": "Wandelt ein leeres Feld in [Zauberabwehr] um.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "205B": {
+        "Name": "Geschick-Sph\u00E4roid",
+        "Description": "Wandelt ein leeres Feld in [Geschick] um.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "205C": {
+        "Name": "Reflex-Sph\u00E4roid",
+        "Description": "Wandelt ein leeres Feld in [Reflex] um.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "205D": {
+        "Name": "Treffer-Sph\u00E4roid",
+        "Description": "Wandelt ein leeres Feld in [Treffer] um.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "205E": {
+        "Name": "Fortuna-Sph\u00E4roid",
+        "Description": "Wandelt ein leeres Feld in [Gl\u00FCck] um.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "205F": {
+        "Name": "Spreng-Sph\u00E4roid",
+        "Description": "L\u00F6scht ein Aufbaufeld.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2060": {
+        "Name": "R\u00FCck-Sph\u00E4roid",
+        "Description": "Springt auf ein freigesetztes Feld.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2061": {
+        "Name": "Freund-Sph\u00E4roid",
+        "Description": "Springt auf ein Feld, auf dem sich Mitstreiter befinden.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2062": {
+        "Name": "Teleport-Sph\u00E4roid",
+        "Description": "Springt auf ein von Mitstreitern freigesetztes Feld.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2063": {
+        "Name": "Warp-Sph\u00E4roid",
+        "Description": "Springt auf ein beliebiges Feld.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2064": {
+        "Name": "Weltkarte",
+        "Description": "\u00DCberblick \u00FCber Spira.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2065": {
+        "Name": "Tintenkiller",
+        "Description": "Bestia wird umbenannt.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2066": {
+        "Name": "Aufputschmittel",
+        "Description": "Verwendungszweck ist unbekannt...",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2067": {
+        "Name": "Hypello-Medizin",
+        "Description": "Verwendungszweck ist unbekannt...",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2068": {
+        "Name": "Exorzistendorne",
+        "Description": "Verwendungszweck ist unbekannt...",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2069": {
+        "Name": "Pendel",
+        "Description": "Verwendungszweck ist unbekannt...",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "206A": {
+        "Name": "Amulett",
+        "Description": "Verwendungszweck ist unbekannt...",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "206B": {
+        "Name": "Tor der Zukunft",
+        "Description": "Verwendungszweck ist unbekannt...",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "206C": {
+        "Name": "Gigantenfl\u00FCgel",
+        "Description": "Verwendungszweck ist unbekannt...",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "206D": {
+        "Name": "Zockerseele",
+        "Description": "Verwendungszweck ist unbekannt...",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "206E": {
+        "Name": "Wendeblatt",
+        "Description": "Verwendungszweck ist unbekannt...",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "206F": {
+        "Name": "Siegesrausch",
+        "Description": "Verwendungszweck ist unbekannt...",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
       "3000": {
         "Name": "Angriff",
         "Description": "Gegner angreifen.",
@@ -5205,678 +5877,6 @@
         "Description": "Angriff",
         "Kind": "BossCommand",
         "DamageType": "Magical"
-      },
-      "2000": {
-        "Name": "Potion",
-        "Description": "Heilt HP um 200.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2001": {
-        "Name": "Hi-Potion",
-        "Description": "Heilt HP um 1000.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2002": {
-        "Name": "X-Potion",
-        "Description": "Heilt die gesamten HP.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2003": {
-        "Name": "Mega-Potion",
-        "Description": "Heilt HP der Gruppe um 2000.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2004": {
-        "Name": "\u00C4ther",
-        "Description": "Heilt MP um 100.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2005": {
-        "Name": "Turbo-\u00C4ther",
-        "Description": "Heilt MP um 500.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2006": {
-        "Name": "Ph\u00F6nixfeder",
-        "Description": "Kuriert [Kampfunf\u00E4higkeit].",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2007": {
-        "Name": "Mega-Ph\u00F6nix",
-        "Description": "Kuriert [Kampfunf\u00E4higkeit] der Gruppe.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2008": {
-        "Name": "Elixir",
-        "Description": "Heilt die gesamten HP und MP.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2009": {
-        "Name": "Final-Elixir",
-        "Description": "Heilt die gesamten HP und MP der Gruppe.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "200A": {
-        "Name": "Antidot",
-        "Description": "Kuriert [Gift]-Zustand.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "200B": {
-        "Name": "Goldnadel",
-        "Description": "Kuriert [Stein]-Zustand.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "200C": {
-        "Name": "Augentropfen",
-        "Description": "Kuriert [Blind]-Zustand.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "200D": {
-        "Name": "Echokraut",
-        "Description": "Kuriert [Stumm]-Zustand.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "200E": {
-        "Name": "Weihwasser",
-        "Description": "Kuriert [Zombie]\u002B[Fluch].",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "200F": {
-        "Name": "Allheilmittel",
-        "Description": "Kuriert alle Zustandsver\u00E4nderungen.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2010": {
-        "Name": "Kraftzettel",
-        "Description": "Gegner hinterl\u00E4sst [Kraft-Sph\u00E4roiden].",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2011": {
-        "Name": "Wunderzettel",
-        "Description": "Gegner hinterl\u00E4sst [Wunder-Sph\u00E4roiden].",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2012": {
-        "Name": "Zeitzettel",
-        "Description": "Gegner hinterl\u00E4sst [Zeit-Sph\u00E4roiden].",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2013": {
-        "Name": "Ability-Zettel",
-        "Description": "Gegner hinterl\u00E4sst [Ability-Sph\u00E4roiden].",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2014": {
-        "Name": "Al Bhed-Medizin",
-        "Description": "Heilt 1000 HP\u002B[Gift]\u002B[Stumm]\u002B[Stein] der Gruppe.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2015": {
-        "Name": "Heilwasser",
-        "Description": "Komplettheilung der Gruppe.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2016": {
-        "Name": "Tetra-Element",
-        "Description": "Komplettheilung\u002B[Element-Schutz].",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2017": {
-        "Name": "Antarktis-Wind",
-        "Description": "K\u00E4lte-elementarer Schaden.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2018": {
-        "Name": "Polar-Wind",
-        "Description": "K\u00E4lte-elementarer Schaden.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2019": {
-        "Name": "K\u00E4ltestein",
-        "Description": "K\u00E4lte-elementarer Fl\u00E4chenschaden.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "201A": {
-        "Name": "Bomber-Splitter",
-        "Description": "Hitze-elementarer Schaden.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "201B": {
-        "Name": "Bomber-Seele",
-        "Description": "Hitze-elementarer Schaden.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "201C": {
-        "Name": "Hitzestein",
-        "Description": "Hitze-elementarer Fl\u00E4chenschaden.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "201D": {
-        "Name": "Elektrokugel",
-        "Description": "Strom-elementarer Schaden.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "201E": {
-        "Name": "Blitzkugel",
-        "Description": "Strom-elementarer Schaden.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "201F": {
-        "Name": "Donnerstein",
-        "Description": "Strom-elementarer Fl\u00E4chenschaden.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2020": {
-        "Name": "Fischschuppe",
-        "Description": "N\u00E4sse-elementarer Schaden.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2021": {
-        "Name": "Drachenschuppe",
-        "Description": "N\u00E4sse-elementarer Schaden.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2022": {
-        "Name": "N\u00E4ssestein",
-        "Description": "N\u00E4sse-elementarer Fl\u00E4chenschaden.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2023": {
-        "Name": "Handgranate",
-        "Description": "Erteilt Fl\u00E4chenschaden.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2024": {
-        "Name": "Panzergranate",
-        "Description": "Fl\u00E4chenschaden\u002B[Panzerbrecher].",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2025": {
-        "Name": "Schlafpuder",
-        "Description": "Fl\u00E4chenschaden\u002B[Schlaf].",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2026": {
-        "Name": "Traumpuder",
-        "Description": "Fl\u00E4chenschaden\u002B[Schlaf].",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2027": {
-        "Name": "Silentium-Mine",
-        "Description": "Fl\u00E4chenschaden\u002B[Stumm].",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2028": {
-        "Name": "Rauchbombe",
-        "Description": "Fl\u00E4chenschaden\u002B[Blind].",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2029": {
-        "Name": "Schwarzer Stein",
-        "Description": "Verringert HP aller Gegner um die H\u00E4lfte.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "202A": {
-        "Name": "Lichtstein",
-        "Description": "Erteilt Schaden.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "202B": {
-        "Name": "Heiliger Stein",
-        "Description": "Erteilt Schaden.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "202C": {
-        "Name": "Himmelsstein",
-        "Description": "Erteilt Fl\u00E4chenschaden.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "202D": {
-        "Name": "Giftkralle",
-        "Description": "Schaden\u002B[Gift].",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "202E": {
-        "Name": "Silberne Sanduhr",
-        "Description": "Verlangsamt alle Gegner.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "202F": {
-        "Name": "Goldene Sanduhr",
-        "Description": "Verlangsamt alle Gegner\u002BFl\u00E4chenschaden.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2030": {
-        "Name": "Todeskerze",
-        "Description": "[Todesurteil].",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2031": {
-        "Name": "Perseus-Granate",
-        "Description": "[Stein] auf alle Gegner.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2032": {
-        "Name": "Todesschatten",
-        "Description": "[Tod].",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2033": {
-        "Name": "Wind des Jenseits",
-        "Description": "[Tod] auf alle Gegner.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2034": {
-        "Name": "Bonzenmesser",
-        "Description": "Verwendungszweck ist unbekannt...",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2035": {
-        "Name": "Dunkelkristall",
-        "Description": "Erheblicher Fl\u00E4chenschaden.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2036": {
-        "Name": "Chocobo-Feder",
-        "Description": "Erteilt [Hast].",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2037": {
-        "Name": "Chocobo-Daune",
-        "Description": "Erteilt der Gruppe [Hast].",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2038": {
-        "Name": "Mondschleier",
-        "Description": "Erteilt [Shell].",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2039": {
-        "Name": "Lichtschleier",
-        "Description": "Erteilt [Protes].",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "203A": {
-        "Name": "Sternenschleier",
-        "Description": "Erteilt [Reflek].",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "203B": {
-        "Name": "Heilquelle",
-        "Description": "Erteilt [Regena].",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "203C": {
-        "Name": "Magiequelle",
-        "Description": "Absorbiert gegnerische MP.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "203D": {
-        "Name": "Kraftquelle",
-        "Description": "Absorbiert gegnerische HP.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "203E": {
-        "Name": "Lebensquelle",
-        "Description": "Absorbiert gegnerische HP\u002BMP.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "203F": {
-        "Name": "Ablutionssalz",
-        "Description": "Schaden\u002BAufhebung von Zauber-Zust\u00E4nden.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2040": {
-        "Name": "HP-Pille",
-        "Description": "Maximal-HP werden verdoppelt.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2041": {
-        "Name": "MP-Pille",
-        "Description": "Maximal-MP werden verdoppelt.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2042": {
-        "Name": "Zweigestirn",
-        "Description": "MP-Verbrauch wird auf 0 reduziert.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2043": {
-        "Name": "HP-Wundermittel",
-        "Description": "Maximal-HP der Gruppe werden verdoppelt.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2044": {
-        "Name": "MP-Wundermittel",
-        "Description": "Maximal-MP der Gruppe werden verdoppelt.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2045": {
-        "Name": "Dreigestirn",
-        "Description": "MP-Verbrauch der Gruppe wird auf 0 reduziert.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2046": {
-        "Name": "Kraft-Sph\u00E4roid",
-        "Description": "Aktiviert [Angriffskraft], [Abwehrkraft] und [HP].",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2047": {
-        "Name": "Wunder-Sph\u00E4roid",
-        "Description": "Aktiviert [Magie], [Zauberabwehr] und [MP].",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2048": {
-        "Name": "Zeit-Sph\u00E4roid",
-        "Description": "Aktiviert [Geschick], [Treffer] und [Reflex].",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2049": {
-        "Name": "Ability-Sph\u00E4roid",
-        "Description": "Aktiviert [Abilitys].",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "204A": {
-        "Name": "Gl\u00FCcks-Sph\u00E4roid",
-        "Description": "Aktiviert [Gl\u00FCck].",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "204B": {
-        "Name": "Para-Sph\u00E4roid",
-        "Description": "Aktiviert die von anderen aktivierten [Parameter].",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "204C": {
-        "Name": "Spezial-Sph\u00E4roid",
-        "Description": "Aktiviert die von anderen aktivierten [Spezial]-Felder.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "204D": {
-        "Name": "Tech-Sph\u00E4roid",
-        "Description": "Aktiviert die von anderen aktivierten [Techs].",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "204E": {
-        "Name": "Wei\u00DF-Sph\u00E4roid",
-        "Description": "Aktiviert die von anderen aktivierte [Wei\u00DFmagie].",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "204F": {
-        "Name": "Schwarz-Sph\u00E4roid",
-        "Description": "Aktiviert die von anderen aktivierte [Schwarzmagie].",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2050": {
-        "Name": "Super-Sph\u00E4roid",
-        "Description": "Aktiviert ein beliebiges Aufbaufeld.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2051": {
-        "Name": "Lv. 1 Sph\u00E4ropass",
-        "Description": "L\u00F6scht einen [Lv. 1 Sph\u00E4rostopp].",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2052": {
-        "Name": "Lv. 2 Sph\u00E4ropass",
-        "Description": "L\u00F6scht einen [Lv. 2 Sph\u00E4rostopp].",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2053": {
-        "Name": "Lv. 3 Sph\u00E4ropass",
-        "Description": "L\u00F6scht einen [Lv. 3 Sph\u00E4rostopp].",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2054": {
-        "Name": "Lv. 4 Sph\u00E4ropass",
-        "Description": "L\u00F6scht einen [Lv. 4 Sph\u00E4rostopp].",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2055": {
-        "Name": "HP-Sph\u00E4roid",
-        "Description": "Wandelt ein leeres Feld in [HP] um.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2056": {
-        "Name": "MP-Sph\u00E4roid",
-        "Description": "Wandelt ein leeres Feld in [MP] um.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2057": {
-        "Name": "Angriffs-Sph\u00E4roid",
-        "Description": "Wandelt ein leeres Feld in [Angriffskraft] um.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2058": {
-        "Name": "Abwehr-Sph\u00E4roid",
-        "Description": "Wandelt ein leeres Feld in [Abwehrkraft] um.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2059": {
-        "Name": "Magie-Sph\u00E4roid",
-        "Description": "Wandelt ein leeres Feld in [Magie] um.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "205A": {
-        "Name": "Z-Abwehr-Sph\u00E4roid",
-        "Description": "Wandelt ein leeres Feld in [Zauberabwehr] um.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "205B": {
-        "Name": "Geschick-Sph\u00E4roid",
-        "Description": "Wandelt ein leeres Feld in [Geschick] um.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "205C": {
-        "Name": "Reflex-Sph\u00E4roid",
-        "Description": "Wandelt ein leeres Feld in [Reflex] um.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "205D": {
-        "Name": "Treffer-Sph\u00E4roid",
-        "Description": "Wandelt ein leeres Feld in [Treffer] um.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "205E": {
-        "Name": "Fortuna-Sph\u00E4roid",
-        "Description": "Wandelt ein leeres Feld in [Gl\u00FCck] um.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "205F": {
-        "Name": "Spreng-Sph\u00E4roid",
-        "Description": "L\u00F6scht ein Aufbaufeld.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2060": {
-        "Name": "R\u00FCck-Sph\u00E4roid",
-        "Description": "Springt auf ein freigesetztes Feld.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2061": {
-        "Name": "Freund-Sph\u00E4roid",
-        "Description": "Springt auf ein Feld, auf dem sich Mitstreiter befinden.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2062": {
-        "Name": "Teleport-Sph\u00E4roid",
-        "Description": "Springt auf ein von Mitstreitern freigesetztes Feld.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2063": {
-        "Name": "Warp-Sph\u00E4roid",
-        "Description": "Springt auf ein beliebiges Feld.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2064": {
-        "Name": "Weltkarte",
-        "Description": "\u00DCberblick \u00FCber Spira.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2065": {
-        "Name": "Tintenkiller",
-        "Description": "Bestia wird umbenannt.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2066": {
-        "Name": "Aufputschmittel",
-        "Description": "Verwendungszweck ist unbekannt...",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2067": {
-        "Name": "Hypello-Medizin",
-        "Description": "Verwendungszweck ist unbekannt...",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2068": {
-        "Name": "Exorzistendorne",
-        "Description": "Verwendungszweck ist unbekannt...",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2069": {
-        "Name": "Pendel",
-        "Description": "Verwendungszweck ist unbekannt...",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "206A": {
-        "Name": "Amulett",
-        "Description": "Verwendungszweck ist unbekannt...",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "206B": {
-        "Name": "Tor der Zukunft",
-        "Description": "Verwendungszweck ist unbekannt...",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "206C": {
-        "Name": "Gigantenfl\u00FCgel",
-        "Description": "Verwendungszweck ist unbekannt...",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "206D": {
-        "Name": "Zockerseele",
-        "Description": "Verwendungszweck ist unbekannt...",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "206E": {
-        "Name": "Wendeblatt",
-        "Description": "Verwendungszweck ist unbekannt...",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "206F": {
-        "Name": "Siegesrausch",
-        "Description": "Verwendungszweck ist unbekannt...",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
       }
     },
     "AutoAbilities": {

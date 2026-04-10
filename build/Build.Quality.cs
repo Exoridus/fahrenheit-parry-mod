@@ -33,7 +33,6 @@ internal sealed partial class BuildScript
             $"Starting clean (dry-run={DryRun.ToString().ToLowerInvariant()}, purge={Purge.ToString().ToLowerInvariant()}, analysis={includeAnalysis.ToString().ToLowerInvariant()}, exports={includeExports.ToString().ToLowerInvariant()}, game-data={includeGameData.ToString().ToLowerInvariant()}, purge-tools={includeTools.ToString().ToLowerInvariant()}).");
 
         // Default clean: cache + artifacts.
-        DeleteFileMaybeWithAccounting(ResolvePath(".workspace/discord/_index/export-index.cache.json"), result);
         DeleteDirectoryMaybeWithAccounting(ResolvePath(".workspace/local-build"), result);
 
         var artifactDirectories = new[]
@@ -66,18 +65,7 @@ internal sealed partial class BuildScript
 
         if (includeExports)
         {
-            var discordRoot = ResolvePath(".workspace/discord");
-            if (Directory.Exists(discordRoot))
-            {
-                foreach (var guildDir in Directory.GetDirectories(discordRoot, "*_*", SearchOption.TopDirectoryOnly)
-                             .Where(path => !IsDiscordHousekeepingPath(discordRoot, path))
-                             .OrderBy(path => path, StringComparer.OrdinalIgnoreCase))
-                {
-                    DeleteDirectoryMaybeWithAccounting(guildDir, result);
-                }
-
-                DeleteDirectoryMaybeWithAccounting(Path.Combine(discordRoot, "_staging"), result);
-            }
+            DeleteDirectoryMaybeWithAccounting(ResolvePath(".workspace/discord"), result);
         }
 
         if (includeGameData)

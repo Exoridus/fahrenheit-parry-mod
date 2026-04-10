@@ -1,0 +1,27 @@
+{
+  "workflow": "build-mod-runtime-bundles",
+  "generated_at": "2026-04-09T23:28:23.7553056Z",
+  "generator": "ffx-forensics-pipeline",
+  "sibling_repo": "C:\\Users\\User\\Development\\fahrenheit-parry-mod",
+  "locales_built": 8,
+  "locale_set": [
+    "us",
+    "de",
+    "fr",
+    "it",
+    "sp",
+    "jp",
+    "ch",
+    "kr"
+  ],
+  "canonical_inputs": {
+    "items": "output/ffx/game_data/items_localized",
+    "commands": "output/ffx/game_data/commands_localized",
+    "monster_abilities": "output/ffx/game_data/monster_abilities_localized",
+    "gear_abilities": "output/ffx/game_data/gear_abilities_localized",
+    "key_items": "output/ffx/game_data/key_items_localized",
+    "monsters": "output/ffx/game_data/monsters_localized",
+    "script_text": "inputs/script_text"
+  },
+  "notes": "Commands/AutoAbilities/KeyItems/Monsters are sourced from canonical pipeline materialized outputs. Battles/Events are committed frozen snapshots under inputs/script_text/ pending a future script-text extractor."
+}

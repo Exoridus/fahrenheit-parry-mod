@@ -1,9 +1,681 @@
 {
   "SchemaVersion": 1,
   "Locale": "us",
-  "GeneratedAtUtc": "2026-03-08T15:08:39.5692636Z",
+  "GeneratedAtUtc": "2026-04-09T23:28:23.2317304Z",
   "Domains": {
     "Commands": {
+      "2000": {
+        "Name": "Potion",
+        "Description": "Restores 200 HP of one character.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2001": {
+        "Name": "Hi-Potion",
+        "Description": "Restores 1000 HP of one character.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2002": {
+        "Name": "X-Potion",
+        "Description": "Fully restores HP of one character.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2003": {
+        "Name": "Mega-Potion",
+        "Description": "Restores 2000 HP of each party member.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2004": {
+        "Name": "Ether",
+        "Description": "Restores 100 MP of one character.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2005": {
+        "Name": "Turbo Ether",
+        "Description": "Restores 500 MP of one character.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2006": {
+        "Name": "Phoenix Down",
+        "Description": "Revives one character from {CLR:OL_CYAN}KO{CLR:WHITE}.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2007": {
+        "Name": "Mega Phoenix",
+        "Description": "Revives party from {CLR:OL_CYAN}KO{CLR:WHITE}.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2008": {
+        "Name": "Elixir",
+        "Description": "Fully restores one character\u2019s HP \u0026 MP.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2009": {
+        "Name": "Megalixir",
+        "Description": "Fully restores HP \u0026 MP of party.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "200A": {
+        "Name": "Antidote",
+        "Description": "Cures {CLR:OL_CYAN}poison{CLR:WHITE}.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "200B": {
+        "Name": "Soft",
+        "Description": "Cures {CLR:OL_CYAN}petrification{CLR:WHITE}.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "200C": {
+        "Name": "Eye Drops",
+        "Description": "Cures {CLR:OL_CYAN}darkness{CLR:WHITE}.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "200D": {
+        "Name": "Echo Screen",
+        "Description": "Cures {CLR:OL_CYAN}silence{CLR:WHITE}.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "200E": {
+        "Name": "Holy Water",
+        "Description": "Cures {CLR:OL_CYAN}zombie{CLR:WHITE} and {CLR:OL_CYAN}curse{CLR:WHITE}.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "200F": {
+        "Name": "Remedy",
+        "Description": "Cures all status abnormalities.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2010": {
+        "Name": "Power Distiller",
+        "Description": "Makes one enemy drop Power Spheres.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2011": {
+        "Name": "Mana Distiller",
+        "Description": "Makes one enemy drop Mana Spheres.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2012": {
+        "Name": "Speed Distiller",
+        "Description": "Makes one enemy drop Speed Spheres.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2013": {
+        "Name": "Ability Distiller",
+        "Description": "Makes one enemy drop Ability Spheres.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2014": {
+        "Name": "Al Bhed Potion",
+        "Description": "Cures {CLR:OL_CYAN}poison{CLR:WHITE}, {CLR:OL_CYAN}silence{CLR:WHITE}, {CLR:OL_CYAN}petrification{CLR:WHITE}. Gives 1000 HP to all.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2015": {
+        "Name": "Healing Water",
+        "Description": "Fully restores HP of party.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2016": {
+        "Name": "Tetra Elemental",
+        "Description": "Fully restores HP and casts NulAll on party.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2017": {
+        "Name": "Antarctic Wind",
+        "Description": "Deals ice damage to an enemy.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2018": {
+        "Name": "Arctic Wind",
+        "Description": "Deals ice damage to an enemy.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2019": {
+        "Name": "Ice Gem",
+        "Description": "Deals ice damage to all enemies.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "201A": {
+        "Name": "Bomb Fragment",
+        "Description": "Deals fire damage to an enemy.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "201B": {
+        "Name": "Bomb Core",
+        "Description": "Deals fire damage to an enemy.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "201C": {
+        "Name": "Fire Gem",
+        "Description": "Deals fire damage to all enemies.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "201D": {
+        "Name": "Electro Marble",
+        "Description": "Deals lightning damage to an enemy.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "201E": {
+        "Name": "Lightning Marble",
+        "Description": "Deals lightning damage to an enemy.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "201F": {
+        "Name": "Lightning Gem",
+        "Description": "Deals lightning damage to all enemies.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2020": {
+        "Name": "Fish Scale",
+        "Description": "Deals water damage to an enemy.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2021": {
+        "Name": "Dragon Scale",
+        "Description": "Deals water damage to an enemy.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2022": {
+        "Name": "Water Gem",
+        "Description": "Deals water damage to all enemies.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2023": {
+        "Name": "Grenade",
+        "Description": "Damages all enemies.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2024": {
+        "Name": "Frag Grenade",
+        "Description": "Inflicts damage and nullifies {CLR:OL_CYAN}armored{CLR:WHITE} on all enemies.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2025": {
+        "Name": "Sleeping Powder",
+        "Description": "Inflicts damage and {CLR:OL_CYAN}sleep{CLR:WHITE} on all enemies.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2026": {
+        "Name": "Dream Powder",
+        "Description": "Inflicts damage and {CLR:OL_CYAN}sleep{CLR:WHITE} on all enemies.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2027": {
+        "Name": "Silence Grenade",
+        "Description": "Inflicts damage and {CLR:OL_CYAN}silence{CLR:WHITE} on all enemies.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2028": {
+        "Name": "Smoke Bomb",
+        "Description": "Inflicts damage and {CLR:OL_CYAN}darkness{CLR:WHITE} on all enemies.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2029": {
+        "Name": "Shadow Gem",
+        "Description": "Reduces HP of all enemies by half.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "202A": {
+        "Name": "Shining Gem",
+        "Description": "Damages an enemy.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "202B": {
+        "Name": "Blessed Gem",
+        "Description": "Damages an enemy.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "202C": {
+        "Name": "Supreme Gem",
+        "Description": "Damages all enemies.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "202D": {
+        "Name": "Poison Fang",
+        "Description": "Inflicts damage and {CLR:OL_CYAN}poison{CLR:WHITE} on an enemy.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "202E": {
+        "Name": "Silver Hourglass",
+        "Description": "Delays next turn of all enemies.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "202F": {
+        "Name": "Gold Hourglass",
+        "Description": "Damages all enemies and delays their next turn.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2030": {
+        "Name": "Candle of Life",
+        "Description": "Casts {CLR:OL_CYAN}Doom{CLR:WHITE} on an enemy.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2031": {
+        "Name": "Petrify Grenade",
+        "Description": "{CLR:OL_CYAN}Petrifies{CLR:WHITE} all enemies.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2032": {
+        "Name": "Farplane Shadow",
+        "Description": "Inflicts {CLR:OL_CYAN}death{CLR:WHITE} on an enemy.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2033": {
+        "Name": "Farplane Wind",
+        "Description": "Inflicts {CLR:OL_CYAN}death{CLR:WHITE} on all enemies.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2034": {
+        "Name": "Designer Wallet",
+        "Description": "There seems to be some use for this...",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2035": {
+        "Name": "Dark Matter",
+        "Description": "Deals major damage to all enemies.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2036": {
+        "Name": "Chocobo Feather",
+        "Description": "Casts {CLR:OL_CYAN}Haste{CLR:WHITE} on one character.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2037": {
+        "Name": "Chocobo Wing",
+        "Description": "Casts {CLR:OL_CYAN}Haste{CLR:WHITE} on party.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2038": {
+        "Name": "Lunar Curtain",
+        "Description": "Casts {CLR:OL_CYAN}Shell{CLR:WHITE} on one character.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2039": {
+        "Name": "Light Curtain",
+        "Description": "Casts {CLR:OL_CYAN}Protect{CLR:WHITE} on one character.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "203A": {
+        "Name": "Star Curtain",
+        "Description": "Casts {CLR:OL_CYAN}Reflect{CLR:WHITE} on one character.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "203B": {
+        "Name": "Healing Spring",
+        "Description": "Casts {CLR:OL_CYAN}Regen{CLR:WHITE} on one character.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "203C": {
+        "Name": "Mana Spring",
+        "Description": "Absorbs MP from an enemy.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "203D": {
+        "Name": "Stamina Spring",
+        "Description": "Absorbs HP from an enemy.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "203E": {
+        "Name": "Soul Spring",
+        "Description": "Absorbs HP \u0026 MP from an enemy.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "203F": {
+        "Name": "Purifying Salt",
+        "Description": "Damages an enemy and dispels its magic effects.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2040": {
+        "Name": "Stamina Tablet",
+        "Description": "Doubles max HP of one character.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2041": {
+        "Name": "Mana Tablet",
+        "Description": "Doubles max MP of one character.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2042": {
+        "Name": "Twin Stars",
+        "Description": "Reduces MP cost of one character to 0.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2043": {
+        "Name": "Stamina Tonic",
+        "Description": "Doubles max HP of party.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2044": {
+        "Name": "Mana Tonic",
+        "Description": "Doubles max MP of party.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2045": {
+        "Name": "Three Stars",
+        "Description": "Reduces party\u2019s MP cost to 0.",
+        "Kind": "ItemCommand",
+        "DamageType": "Special"
+      },
+      "2046": {
+        "Name": "Power Sphere",
+        "Description": "Activates nodes on Sphere Grid.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2047": {
+        "Name": "Mana Sphere",
+        "Description": "Activates nodes on Sphere Grid.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2048": {
+        "Name": "Speed Sphere",
+        "Description": "Activates nodes on Sphere Grid.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2049": {
+        "Name": "Ability Sphere",
+        "Description": "Activates nodes on Sphere Grid.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "204A": {
+        "Name": "Fortune Sphere",
+        "Description": "Activates nodes on Sphere Grid.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "204B": {
+        "Name": "Attribute Sphere",
+        "Description": "Activates nodes used by allies on Sphere Grid.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "204C": {
+        "Name": "Special Sphere",
+        "Description": "Activates nodes used by allies on Sphere Grid.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "204D": {
+        "Name": "Skill Sphere",
+        "Description": "Activates nodes used by allies on Sphere Grid.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "204E": {
+        "Name": "Wht Magic Sphere",
+        "Description": "Activates nodes used by allies on Sphere Grid.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "204F": {
+        "Name": "Blk Magic Sphere",
+        "Description": "Activates nodes used by allies on Sphere Grid.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2050": {
+        "Name": "Master Sphere",
+        "Description": "Activates any node on Sphere Grid.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2051": {
+        "Name": "Lv. 1 Key Sphere",
+        "Description": "Opens Locks on Sphere Grid.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2052": {
+        "Name": "Lv. 2 Key Sphere",
+        "Description": "Opens Locks on Sphere Grid.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2053": {
+        "Name": "Lv. 3 Key Sphere",
+        "Description": "Opens Locks on Sphere Grid.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2054": {
+        "Name": "Lv. 4 Key Sphere",
+        "Description": "Opens Locks on Sphere Grid.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2055": {
+        "Name": "HP Sphere",
+        "Description": "Fills empty nodes on Sphere Grid.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2056": {
+        "Name": "MP Sphere",
+        "Description": "Fills empty nodes on Sphere Grid.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2057": {
+        "Name": "Strength Sphere",
+        "Description": "Fills empty nodes on Sphere Grid.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2058": {
+        "Name": "Defense Sphere",
+        "Description": "Fills empty nodes on Sphere Grid.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2059": {
+        "Name": "Magic Sphere",
+        "Description": "Fills empty nodes on Sphere Grid.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "205A": {
+        "Name": "Magic Def Sphere",
+        "Description": "Fills empty nodes on Sphere Grid.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "205B": {
+        "Name": "Agility Sphere",
+        "Description": "Fills empty nodes on Sphere Grid.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "205C": {
+        "Name": "Evasion Sphere",
+        "Description": "Fills empty nodes on Sphere Grid.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "205D": {
+        "Name": "Accuracy Sphere",
+        "Description": "Fills empty nodes on Sphere Grid.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "205E": {
+        "Name": "Luck Sphere",
+        "Description": "Fills empty nodes on Sphere Grid.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "205F": {
+        "Name": "Clear Sphere",
+        "Description": "Clears nodes from Sphere Grid.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2060": {
+        "Name": "Return Sphere",
+        "Description": "Changes current location on Sphere Grid.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2061": {
+        "Name": "Friend Sphere",
+        "Description": "Changes current location on Sphere Grid.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2062": {
+        "Name": "Teleport Sphere",
+        "Description": "Changes current location on Sphere Grid.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2063": {
+        "Name": "Warp Sphere",
+        "Description": "Changes current location on Sphere Grid.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2064": {
+        "Name": "Map",
+        "Description": "Displays world map.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2065": {
+        "Name": "Rename Card",
+        "Description": "Renames aeon.",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2066": {
+        "Name": "Musk",
+        "Description": "There seems to be some use for this...",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2067": {
+        "Name": "Hypello Potion",
+        "Description": "There seems to be some use for this...",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2068": {
+        "Name": "Shining Thorn",
+        "Description": "There seems to be some use for this...",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "2069": {
+        "Name": "Pendulum",
+        "Description": "There seems to be some use for this...",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "206A": {
+        "Name": "Amulet",
+        "Description": "There seems to be some use for this...",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "206B": {
+        "Name": "Door to Tomorrow",
+        "Description": "There seems to be some use for this...",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "206C": {
+        "Name": "Wings to Discovery",
+        "Description": "There seems to be some use for this...",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "206D": {
+        "Name": "Gambler\u2019s Spirit",
+        "Description": "There seems to be some use for this...",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "206E": {
+        "Name": "Underdog\u2019s Secret",
+        "Description": "There seems to be some use for this...",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
+      "206F": {
+        "Name": "Winning Formula",
+        "Description": "There seems to be some use for this...",
+        "Kind": "ItemCommand",
+        "DamageType": "Unknown"
+      },
       "3000": {
         "Name": "Attack",
         "Description": "Attack an enemy with equipped weapon.",
@@ -5205,678 +5877,6 @@
         "Description": "Attack",
         "Kind": "BossCommand",
         "DamageType": "Magical"
-      },
-      "2000": {
-        "Name": "Potion",
-        "Description": "Restores 200 HP of one character.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2001": {
-        "Name": "Hi-Potion",
-        "Description": "Restores 1000 HP of one character.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2002": {
-        "Name": "X-Potion",
-        "Description": "Fully restores HP of one character.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2003": {
-        "Name": "Mega-Potion",
-        "Description": "Restores 2000 HP of each party member.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2004": {
-        "Name": "Ether",
-        "Description": "Restores 100 MP of one character.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2005": {
-        "Name": "Turbo Ether",
-        "Description": "Restores 500 MP of one character.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2006": {
-        "Name": "Phoenix Down",
-        "Description": "Revives one character from {CLR:OL_CYAN}KO{CLR:WHITE}.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2007": {
-        "Name": "Mega Phoenix",
-        "Description": "Revives party from {CLR:OL_CYAN}KO{CLR:WHITE}.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2008": {
-        "Name": "Elixir",
-        "Description": "Fully restores one character\u2019s HP \u0026 MP.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2009": {
-        "Name": "Megalixir",
-        "Description": "Fully restores HP \u0026 MP of party.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "200A": {
-        "Name": "Antidote",
-        "Description": "Cures {CLR:OL_CYAN}poison{CLR:WHITE}.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "200B": {
-        "Name": "Soft",
-        "Description": "Cures {CLR:OL_CYAN}petrification{CLR:WHITE}.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "200C": {
-        "Name": "Eye Drops",
-        "Description": "Cures {CLR:OL_CYAN}darkness{CLR:WHITE}.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "200D": {
-        "Name": "Echo Screen",
-        "Description": "Cures {CLR:OL_CYAN}silence{CLR:WHITE}.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "200E": {
-        "Name": "Holy Water",
-        "Description": "Cures {CLR:OL_CYAN}zombie{CLR:WHITE} and {CLR:OL_CYAN}curse{CLR:WHITE}.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "200F": {
-        "Name": "Remedy",
-        "Description": "Cures all status abnormalities.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2010": {
-        "Name": "Power Distiller",
-        "Description": "Makes one enemy drop Power Spheres.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2011": {
-        "Name": "Mana Distiller",
-        "Description": "Makes one enemy drop Mana Spheres.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2012": {
-        "Name": "Speed Distiller",
-        "Description": "Makes one enemy drop Speed Spheres.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2013": {
-        "Name": "Ability Distiller",
-        "Description": "Makes one enemy drop Ability Spheres.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2014": {
-        "Name": "Al Bhed Potion",
-        "Description": "Cures {CLR:OL_CYAN}poison{CLR:WHITE}, {CLR:OL_CYAN}silence{CLR:WHITE}, {CLR:OL_CYAN}petrification{CLR:WHITE}. Gives 1000 HP to all.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2015": {
-        "Name": "Healing Water",
-        "Description": "Fully restores HP of party.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2016": {
-        "Name": "Tetra Elemental",
-        "Description": "Fully restores HP and casts NulAll on party.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2017": {
-        "Name": "Antarctic Wind",
-        "Description": "Deals ice damage to an enemy.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2018": {
-        "Name": "Arctic Wind",
-        "Description": "Deals ice damage to an enemy.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2019": {
-        "Name": "Ice Gem",
-        "Description": "Deals ice damage to all enemies.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "201A": {
-        "Name": "Bomb Fragment",
-        "Description": "Deals fire damage to an enemy.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "201B": {
-        "Name": "Bomb Core",
-        "Description": "Deals fire damage to an enemy.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "201C": {
-        "Name": "Fire Gem",
-        "Description": "Deals fire damage to all enemies.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "201D": {
-        "Name": "Electro Marble",
-        "Description": "Deals lightning damage to an enemy.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "201E": {
-        "Name": "Lightning Marble",
-        "Description": "Deals lightning damage to an enemy.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "201F": {
-        "Name": "Lightning Gem",
-        "Description": "Deals lightning damage to all enemies.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2020": {
-        "Name": "Fish Scale",
-        "Description": "Deals water damage to an enemy.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2021": {
-        "Name": "Dragon Scale",
-        "Description": "Deals water damage to an enemy.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2022": {
-        "Name": "Water Gem",
-        "Description": "Deals water damage to all enemies.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2023": {
-        "Name": "Grenade",
-        "Description": "Damages all enemies.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2024": {
-        "Name": "Frag Grenade",
-        "Description": "Inflicts damage and nullifies {CLR:OL_CYAN}armored{CLR:WHITE} on all enemies.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2025": {
-        "Name": "Sleeping Powder",
-        "Description": "Inflicts damage and {CLR:OL_CYAN}sleep{CLR:WHITE} on all enemies.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2026": {
-        "Name": "Dream Powder",
-        "Description": "Inflicts damage and {CLR:OL_CYAN}sleep{CLR:WHITE} on all enemies.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2027": {
-        "Name": "Silence Grenade",
-        "Description": "Inflicts damage and {CLR:OL_CYAN}silence{CLR:WHITE} on all enemies.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2028": {
-        "Name": "Smoke Bomb",
-        "Description": "Inflicts damage and {CLR:OL_CYAN}darkness{CLR:WHITE} on all enemies.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2029": {
-        "Name": "Shadow Gem",
-        "Description": "Reduces HP of all enemies by half.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "202A": {
-        "Name": "Shining Gem",
-        "Description": "Damages an enemy.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "202B": {
-        "Name": "Blessed Gem",
-        "Description": "Damages an enemy.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "202C": {
-        "Name": "Supreme Gem",
-        "Description": "Damages all enemies.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "202D": {
-        "Name": "Poison Fang",
-        "Description": "Inflicts damage and {CLR:OL_CYAN}poison{CLR:WHITE} on an enemy.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "202E": {
-        "Name": "Silver Hourglass",
-        "Description": "Delays next turn of all enemies.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "202F": {
-        "Name": "Gold Hourglass",
-        "Description": "Damages all enemies and delays their next turn.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2030": {
-        "Name": "Candle of Life",
-        "Description": "Casts {CLR:OL_CYAN}Doom{CLR:WHITE} on an enemy.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2031": {
-        "Name": "Petrify Grenade",
-        "Description": "{CLR:OL_CYAN}Petrifies{CLR:WHITE} all enemies.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2032": {
-        "Name": "Farplane Shadow",
-        "Description": "Inflicts {CLR:OL_CYAN}death{CLR:WHITE} on an enemy.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2033": {
-        "Name": "Farplane Wind",
-        "Description": "Inflicts {CLR:OL_CYAN}death{CLR:WHITE} on all enemies.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2034": {
-        "Name": "Designer Wallet",
-        "Description": "There seems to be some use for this...",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2035": {
-        "Name": "Dark Matter",
-        "Description": "Deals major damage to all enemies.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2036": {
-        "Name": "Chocobo Feather",
-        "Description": "Casts {CLR:OL_CYAN}Haste{CLR:WHITE} on one character.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2037": {
-        "Name": "Chocobo Wing",
-        "Description": "Casts {CLR:OL_CYAN}Haste{CLR:WHITE} on party.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2038": {
-        "Name": "Lunar Curtain",
-        "Description": "Casts {CLR:OL_CYAN}Shell{CLR:WHITE} on one character.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2039": {
-        "Name": "Light Curtain",
-        "Description": "Casts {CLR:OL_CYAN}Protect{CLR:WHITE} on one character.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "203A": {
-        "Name": "Star Curtain",
-        "Description": "Casts {CLR:OL_CYAN}Reflect{CLR:WHITE} on one character.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "203B": {
-        "Name": "Healing Spring",
-        "Description": "Casts {CLR:OL_CYAN}Regen{CLR:WHITE} on one character.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "203C": {
-        "Name": "Mana Spring",
-        "Description": "Absorbs MP from an enemy.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "203D": {
-        "Name": "Stamina Spring",
-        "Description": "Absorbs HP from an enemy.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "203E": {
-        "Name": "Soul Spring",
-        "Description": "Absorbs HP \u0026 MP from an enemy.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "203F": {
-        "Name": "Purifying Salt",
-        "Description": "Damages an enemy and dispels its magic effects.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2040": {
-        "Name": "Stamina Tablet",
-        "Description": "Doubles max HP of one character.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2041": {
-        "Name": "Mana Tablet",
-        "Description": "Doubles max MP of one character.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2042": {
-        "Name": "Twin Stars",
-        "Description": "Reduces MP cost of one character to 0.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2043": {
-        "Name": "Stamina Tonic",
-        "Description": "Doubles max HP of party.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2044": {
-        "Name": "Mana Tonic",
-        "Description": "Doubles max MP of party.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2045": {
-        "Name": "Three Stars",
-        "Description": "Reduces party\u2019s MP cost to 0.",
-        "Kind": "ItemCommand",
-        "DamageType": "Special"
-      },
-      "2046": {
-        "Name": "Power Sphere",
-        "Description": "Activates nodes on Sphere Grid.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2047": {
-        "Name": "Mana Sphere",
-        "Description": "Activates nodes on Sphere Grid.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2048": {
-        "Name": "Speed Sphere",
-        "Description": "Activates nodes on Sphere Grid.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2049": {
-        "Name": "Ability Sphere",
-        "Description": "Activates nodes on Sphere Grid.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "204A": {
-        "Name": "Fortune Sphere",
-        "Description": "Activates nodes on Sphere Grid.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "204B": {
-        "Name": "Attribute Sphere",
-        "Description": "Activates nodes used by allies on Sphere Grid.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "204C": {
-        "Name": "Special Sphere",
-        "Description": "Activates nodes used by allies on Sphere Grid.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "204D": {
-        "Name": "Skill Sphere",
-        "Description": "Activates nodes used by allies on Sphere Grid.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "204E": {
-        "Name": "Wht Magic Sphere",
-        "Description": "Activates nodes used by allies on Sphere Grid.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "204F": {
-        "Name": "Blk Magic Sphere",
-        "Description": "Activates nodes used by allies on Sphere Grid.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2050": {
-        "Name": "Master Sphere",
-        "Description": "Activates any node on Sphere Grid.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2051": {
-        "Name": "Lv. 1 Key Sphere",
-        "Description": "Opens Locks on Sphere Grid.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2052": {
-        "Name": "Lv. 2 Key Sphere",
-        "Description": "Opens Locks on Sphere Grid.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2053": {
-        "Name": "Lv. 3 Key Sphere",
-        "Description": "Opens Locks on Sphere Grid.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2054": {
-        "Name": "Lv. 4 Key Sphere",
-        "Description": "Opens Locks on Sphere Grid.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2055": {
-        "Name": "HP Sphere",
-        "Description": "Fills empty nodes on Sphere Grid.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2056": {
-        "Name": "MP Sphere",
-        "Description": "Fills empty nodes on Sphere Grid.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2057": {
-        "Name": "Strength Sphere",
-        "Description": "Fills empty nodes on Sphere Grid.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2058": {
-        "Name": "Defense Sphere",
-        "Description": "Fills empty nodes on Sphere Grid.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2059": {
-        "Name": "Magic Sphere",
-        "Description": "Fills empty nodes on Sphere Grid.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "205A": {
-        "Name": "Magic Def Sphere",
-        "Description": "Fills empty nodes on Sphere Grid.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "205B": {
-        "Name": "Agility Sphere",
-        "Description": "Fills empty nodes on Sphere Grid.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "205C": {
-        "Name": "Evasion Sphere",
-        "Description": "Fills empty nodes on Sphere Grid.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "205D": {
-        "Name": "Accuracy Sphere",
-        "Description": "Fills empty nodes on Sphere Grid.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "205E": {
-        "Name": "Luck Sphere",
-        "Description": "Fills empty nodes on Sphere Grid.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "205F": {
-        "Name": "Clear Sphere",
-        "Description": "Clears nodes from Sphere Grid.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2060": {
-        "Name": "Return Sphere",
-        "Description": "Changes current location on Sphere Grid.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2061": {
-        "Name": "Friend Sphere",
-        "Description": "Changes current location on Sphere Grid.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2062": {
-        "Name": "Teleport Sphere",
-        "Description": "Changes current location on Sphere Grid.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2063": {
-        "Name": "Warp Sphere",
-        "Description": "Changes current location on Sphere Grid.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2064": {
-        "Name": "Map",
-        "Description": "Displays world map.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2065": {
-        "Name": "Rename Card",
-        "Description": "Renames aeon.",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2066": {
-        "Name": "Musk",
-        "Description": "There seems to be some use for this...",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2067": {
-        "Name": "Hypello Potion",
-        "Description": "There seems to be some use for this...",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2068": {
-        "Name": "Shining Thorn",
-        "Description": "There seems to be some use for this...",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "2069": {
-        "Name": "Pendulum",
-        "Description": "There seems to be some use for this...",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "206A": {
-        "Name": "Amulet",
-        "Description": "There seems to be some use for this...",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "206B": {
-        "Name": "Door to Tomorrow",
-        "Description": "There seems to be some use for this...",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "206C": {
-        "Name": "Wings to Discovery",
-        "Description": "There seems to be some use for this...",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "206D": {
-        "Name": "Gambler\u2019s Spirit",
-        "Description": "There seems to be some use for this...",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "206E": {
-        "Name": "Underdog\u2019s Secret",
-        "Description": "There seems to be some use for this...",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
-      },
-      "206F": {
-        "Name": "Winning Formula",
-        "Description": "There seems to be some use for this...",
-        "Kind": "ItemCommand",
-        "DamageType": "Unknown"
       }
     },
     "AutoAbilities": {
@@ -6618,12 +6618,6 @@
         "Kind": "AutoAbility",
         "DamageType": "Unknown"
       },
-      "807B": {
-        "Name": "",
-        "Description": "",
-        "Kind": "AutoAbility",
-        "DamageType": "Unknown"
-      },
       "807C": {
         "Name": "Distill Power",
         "Description": "Adds Power Distiller effect to attacks and skills.",
@@ -6890,12 +6884,6 @@
         "Kind": "KeyItem",
         "DamageType": "Unknown"
       },
-      "A022": {
-        "Name": "",
-        "Description": "",
-        "Kind": "KeyItem",
-        "DamageType": "Unknown"
-      },
       "A023": {
         "Name": "Sun Crest",
         "Description": "A Celestial Token, fashioned in the shape of the Sun.",
@@ -6995,78 +6983,6 @@
       "A033": {
         "Name": "Flower Scepter",
         "Description": "Seems to have some connection with a hidden aeon...",
-        "Kind": "KeyItem",
-        "DamageType": "Unknown"
-      },
-      "A034": {
-        "Name": "",
-        "Description": "",
-        "Kind": "KeyItem",
-        "DamageType": "Unknown"
-      },
-      "A035": {
-        "Name": "",
-        "Description": "",
-        "Kind": "KeyItem",
-        "DamageType": "Unknown"
-      },
-      "A036": {
-        "Name": "",
-        "Description": "",
-        "Kind": "KeyItem",
-        "DamageType": "Unknown"
-      },
-      "A037": {
-        "Name": "",
-        "Description": "",
-        "Kind": "KeyItem",
-        "DamageType": "Unknown"
-      },
-      "A038": {
-        "Name": "",
-        "Description": "",
-        "Kind": "KeyItem",
-        "DamageType": "Unknown"
-      },
-      "A039": {
-        "Name": "",
-        "Description": "",
-        "Kind": "KeyItem",
-        "DamageType": "Unknown"
-      },
-      "A03A": {
-        "Name": "",
-        "Description": "",
-        "Kind": "KeyItem",
-        "DamageType": "Unknown"
-      },
-      "A03B": {
-        "Name": "",
-        "Description": "",
-        "Kind": "KeyItem",
-        "DamageType": "Unknown"
-      },
-      "A03C": {
-        "Name": "",
-        "Description": "",
-        "Kind": "KeyItem",
-        "DamageType": "Unknown"
-      },
-      "A03D": {
-        "Name": "",
-        "Description": "",
-        "Kind": "KeyItem",
-        "DamageType": "Unknown"
-      },
-      "A03E": {
-        "Name": "",
-        "Description": "",
-        "Kind": "KeyItem",
-        "DamageType": "Unknown"
-      },
-      "A03F": {
-        "Name": "",
-        "Description": "",
         "Kind": "KeyItem",
         "DamageType": "Unknown"
       }
@@ -8858,47 +8774,47 @@
         "Scan": "?"
       },
       "357": {
-        "Name": "(Offset 4688)",
+        "Name": "",
         "Sensor": "",
         "Scan": ""
       },
       "358": {
-        "Name": "(Offset 468F)",
+        "Name": "",
         "Sensor": "",
         "Scan": ""
       },
       "359": {
-        "Name": "(Offset 4696)",
+        "Name": "",
         "Sensor": "",
         "Scan": ""
       },
       "360": {
-        "Name": "(Offset 469D)",
+        "Name": "",
         "Sensor": "",
         "Scan": ""
       },
       "361": {
-        "Name": "(Offset 46A4)",
+        "Name": "",
         "Sensor": "",
         "Scan": ""
       },
       "362": {
-        "Name": "(Offset 46AB)",
+        "Name": "",
         "Sensor": "",
         "Scan": ""
       },
       "363": {
-        "Name": "(Offset 46B2)",
+        "Name": "",
         "Sensor": "",
         "Scan": ""
       },
       "364": {
-        "Name": "(Offset 46B9)",
+        "Name": "",
         "Sensor": "",
         "Scan": ""
       },
       "365": {
-        "Name": "(Offset 46C0)",
+        "Name": "",
         "Sensor": "",
         "Scan": ""
       }

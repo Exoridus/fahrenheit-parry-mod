@@ -55,31 +55,6 @@ internal sealed partial class BuildScript : NukeBuild
     [Parameter(Name = "out")] readonly string Out = ".release/release-notes.txt";
     [Parameter(Name = "deploy-dir")] readonly string DeployDir = ".workspace/fahrenheit/artifacts/deploy/rel";
     [Parameter(Name = "out-dir")] readonly string OutDir = ".release";
-    [Parameter(Name = "parser-repo")] readonly string ParserRepo = "https://github.com/Karifean/FFXDataParser.git";
-    [Parameter(Name = "parser-dir")] readonly string ParserDir = ".workspace/tools/FFXDataParser";
-    [Parameter(Name = "parser-ref")] readonly string ParserRef = string.Empty;
-    [Parameter(Name = "input-dir")] readonly string InputDir = string.Empty;
-    [Parameter(Name = "data-mode")] readonly string DataMode = "READ_ALL_COMMANDS";
-    [Parameter(Name = "data-args")] readonly string DataArgs = string.Empty;
-    [Parameter(Name = "data-batch")] readonly string DataBatch = "READ_ALL_COMMANDS;READ_GEAR_ABILITIES;READ_KEY_ITEMS;READ_MONSTER_LOCALIZATIONS us;READ_MONSTER_LOCALIZATIONS de";
-    [Parameter(Name = "data-out")] readonly string DataOut = ".workspace/data/ffx-dataparser";
-    [Parameter(Name = "map-source")] readonly string MapSource = "mappings/source";
-    [Parameter(Name = "locales")] readonly string[] Locales = ["us", "de"];
-    [Parameter(Name = "map-out")] readonly string MapOut = "mappings/runtime";
-    [Parameter(Name = "map-publish")] readonly string MapPublish = "mappings/runtime";
-    [Parameter(Name = "vbf-api")] readonly string VbfApi = "https://api.github.com/repos/topher-au/VBFTool/releases/latest";
-    [Parameter(Name = "vbf-dir")] readonly string VbfDir = ".workspace/tools/VBFTool";
-    [Parameter(Name = "discord-api")] readonly string DiscordApi = "https://api.github.com/repos/Tyrrrz/DiscordChatExporter/releases/latest";
-    [Parameter(Name = "ghidra-api")] readonly string GhidraApi = "https://api.github.com/repos/NationalSecurityAgency/ghidra/releases/latest";
-    [Parameter(Name = "ghidra-dir")] readonly string GhidraDir = ".workspace/tools/ghidra";
-    [Parameter(Name = "vbf-game-dir")] readonly string VbfGameDir = string.Empty;
-    [Parameter(Name = "extract-out")] readonly string ExtractOut = ".workspace/data";
-    [Parameter(Name = "extract-meta-menu")] readonly bool ExtractMetaMenu = true;
-    [Parameter(Name = "data-root-dir")] readonly string DataRootDir = ".workspace/data";
-    [Parameter(Name = "folders")] readonly string Folders = string.Empty;
-    [Parameter(Name = "nas-dir")] readonly string NasDir = string.Empty;
-    [Parameter(Name = "offload-mode")] readonly string OffloadMode = "move";
-    [Parameter(Name = "keep-data-junction")] readonly bool KeepDataJunction;
 
     public static int Main() => Execute<BuildScript>(x => x.Help);
 
@@ -114,8 +89,6 @@ internal sealed partial class BuildScript : NukeBuild
 
     bool CleanToolsRequested => CleanTools;
 
-    string RequestedInputDir =>
-        InputDir;
 
     Target Help => _ => _
         .Executes(() =>
@@ -311,7 +284,7 @@ internal sealed partial class BuildScript : NukeBuild
         }
 
         WriteHelpLine(string.Empty);
-        WriteHelpLine("  tools.cmd    Local-only research/tooling workflows (discord/data/ghidra)");
+        WriteHelpLine("  tools.cmd    Local-only tooling workflows (data/discord/ghidra moved to ffx-forensics-pipeline)");
         WriteHelpLine("  Use: build.cmd -h <workflow> for detailed parameters and examples.");
     }
     void ShowHelpWorkflow(string workflowRaw)

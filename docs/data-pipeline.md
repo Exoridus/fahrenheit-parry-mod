@@ -1,75 +1,88 @@
 # Data Pipeline Guide
 
-This project uses external game data exports to build localized mapping bundles consumed at runtime.
+The mod ships locale-specific mapping bundles under `mappings/runtime/` that
+are loaded at runtime to resolve command / monster / battle / event display
+text. The extraction and parsing of FFX game data that ultimately produces
+that reference data is **no longer owned by this repo**. See
+[REPO_BOUNDARY.md](../REPO_BOUNDARY.md) for the ownership split.
 
-## Workflow Order
+## Where the data lives now
 
-```bash
-.\tools.cmd data-setup
-.\tools.cmd data-extract --vbf-game-dir "C:\\Games\\Final Fantasy X-X2 - HD Remaster\\data"
-.\tools.cmd data-parse-all --input-dir ".workspace/data"
-.\tools.cmd map-import --locales us,de,fr,it,sp,jp,ch,kr
-.\tools.cmd map-build --locales us,de,fr,it,sp,jp,ch,kr
+All FFX game-data extraction, parsing, and analysis lives in the sibling
+pipeline repo: `../ffx-forensics-pipeline`. That repo owns:
+
+- Raw VBF extraction (`build.cmd data-extract`)
+- FFXDataParser invocation (`build.cmd data-parse`, `data-parse-all`,
+  `run-dataparser-commands`, `run-dataparser-scripts`)
+- Canonical base and localized JSONs under
+  `ffx-forensics-pipeline/output/ffx/game_data/`:
+  `commands_base.json` + `commands_localized/<locale>.json`,
+  `monsters_base.json` + `monsters_localized/<locale>.json`,
+  `gear_abilities_base.json`, `items_base.json`, `key_items_base.json`,
+  `monster_abilities_base.json`, `weapon_names.json`, etc.
+- Crossrefs (`output/ffx/crossref/`), scripts (`output/ffx/scripts/`),
+  community findings (`output/ffx/community/`), and packs (`packs/ffx/`).
+
+See `ffx-forensics-pipeline/README.md` for the full workflow list and
+example queries.
+
+## Runtime mapping bundles (this repo)
+
+This repo still owns the runtime bundle format under `mappings/runtime/`:
+
+- `mappings/runtime/ffx-mappings.json` — US alias
+- `mappings/runtime/ffx-mappings.{locale}.json` — per-locale bundle
+  (`us`, `de`, `fr`, `it`, `sp`, `jp`, `ch`, `kr`)
+
+These bundles combine commands, auto-abilities, key items, monsters, battles,
+and events into a single loadable file per locale. They are shipped with the
+mod via `Fahrenheit.Mods.Parry.csproj`:
+
+```xml
+<None Include="mappings/runtime/*.json" CopyToOutputDirectory="Always" />
 ```
 
-## Commands
+And loaded at runtime by `ParryModule.DataMapping.cs` for display-name
+resolution in the overlay and debug UI.
 
-Tooling setup:
+## Bundle regeneration
 
-```bash
-.\tools.cmd data-setup
+The canonical producer is `build.cmd build-mod-runtime-bundles` in the
+sibling pipeline repo:
+
+```
+cd ../ffx-forensics-pipeline
+build.cmd build-mod-runtime-bundles
+# optionally: build.cmd build-mod-runtime-bundles --dry-run
 ```
 
-VBF extraction:
+The workflow reads exclusively from pipeline-owned canonical outputs and
+writes `mappings/runtime/ffx-mappings.<locale>.json` for all 8 locales,
+plus `ffx-mappings.json` (US alias) and `ffx-mappings.provenance.json`.
 
-```bash
-.\tools.cmd data-extract --vbf-game-dir "<GameDir>\\data" --extract-out ".workspace/data"
-```
+Input sources per runtime-bundle domain:
 
-Single parser mode:
+| Runtime domain  | Pipeline input                                           |
+|-----------------|----------------------------------------------------------|
+| `Commands`      | `output/ffx/game_data/items_localized/`, `commands_localized/`, `monster_abilities_localized/` |
+| `AutoAbilities` | `output/ffx/game_data/gear_abilities_localized/`         |
+| `KeyItems`      | `output/ffx/game_data/key_items_localized/`              |
+| `Monsters`      | `output/ffx/game_data/monsters_localized/`               |
+| `Battles`       | `inputs/script_text/<locale>/battles.json` (frozen)      |
+| `Events`        | `inputs/script_text/<locale>/events.json`  (frozen)      |
 
-```bash
-.\tools.cmd data-parse --input-dir ".workspace/data" --data-mode READ_ALL_COMMANDS
-.\tools.cmd data-parse --input-dir ".workspace/data" --data-mode READ_MONSTER_LOCALIZATIONS --data-args "de"
-```
+The `Battles`/`Events` inputs are frozen snapshots committed in the
+pipeline repo under `inputs/script_text/` pending a future canonical
+script-text extractor.
 
-Batch parser modes:
+Do not hand-edit `mappings/runtime/` directly. Run the generator instead.
 
-```bash
-.\tools.cmd data-parse-all --input-dir ".workspace/data"
-```
-
-Import canonical mappings:
-
-```bash
-.\tools.cmd map-import --locales us,de,fr,it,sp,jp,ch,kr --map-source mappings/source
-```
-
-Build runtime bundles:
-
-```bash
-.\tools.cmd map-build --locales us,de,fr,it,sp,jp,ch,kr --map-source mappings/source --map-out mappings/runtime --map-publish mappings/runtime
-```
-
-Inventory and offload:
-
-```bash
-.\tools.cmd data-inventory --data-root-dir ".workspace/data"
-.\tools.cmd data-offload --nas-dir "\\\\10.0.10.50\\data\\archive\\final-fantasy-assets" --offload-mode move --keep-data-junction
-```
-
-## Mapping Layout
-
-Canonical source:
-- `mappings/source/{locale}/{domain}.json`
-
-Runtime bundles:
-- `mappings/runtime/ffx-mappings.{locale}.json`
-- `mappings/runtime/ffx-mappings.json` (US alias)
-
-The mod loads runtime bundles from `mappings/runtime` in deployed output.
+The old `mappings/source/` tree that previously lived in this repo was
+deleted once the pipeline producer moved onto canonical outputs.
 
 ## Notes
 
-- Data extraction/parsing is optional for gameplay; it is only needed when refreshing mapping datasets.
-- Runtime builds and releases consume generated JSON bundles and do not require re-parsing by default.
+- Data extraction/parsing is not required to build or run the mod; the
+  runtime bundles in `mappings/runtime/` are sufficient.
+- Mod releases consume the pre-generated JSON bundles; no re-parsing is
+  performed at build time.

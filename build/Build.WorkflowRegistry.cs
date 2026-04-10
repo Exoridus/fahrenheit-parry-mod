@@ -76,54 +76,7 @@ internal sealed partial class BuildScript
 
     IReadOnlyList<WorkflowDefinition> CreateToolsWorkflowDefinitions()
     {
-        return
-        [
-            new("discord-setup", "Tooling Workflows (local-only)", "Install/update DiscordChatExporter CLI", "Install/update DiscordChatExporter CLI into .workspace/tools/DiscordChatExporter.", ["--discord-api <url> (optional)."], ["tools.cmd discord-setup"], SetupDiscordCore),
-            new("discord-sync", "Tooling Workflows (local-only)", "Export Discord JSON/Markdown + media + enrichment", "Export Discord channels/threads into .workspace/discord.", ["--guild <serverId> (required).", "--channels <id1,id2,...> (optional).", "--full (optional).", "Missing DiscordChatExporter is auto-ensured via tools.cmd discord-setup in interactive mode.", "Workspace config uses strict PascalCase keys in .workspace/config.local.json (DiscordToken, VisionApiUrl, VisionApiKey, VisionModel, FetchRetries).", "Discord workflow config uses strict PascalCase keys in .workspace/discord/config.local.json (Blacklist[], Guilds[])."], ["tools.cmd discord-sync --guild 612363389003366405"], ExecuteDiscordSyncWorkflow),
-            new("data-setup", "Tooling Workflows (local-only)", "Install/update local data tooling", "Install/update data tooling (VBFTool + FFXDataParser).", ["--parser-repo <url> (optional).", "--parser-dir <path> (optional).", "--parser-ref <git-ref> (optional).", "--vbf-api <url> (optional).", "--vbf-dir <path> (optional)."], ["tools.cmd data-setup"], ExecuteDataSetupWorkflow),
-            new("data-extract", "Tooling Workflows (local-only)", "Extract VBF archives", "Extract FFX/FFX-2 data archives with VBFTool.", ["--vbf-game-dir <path> (optional).", "--extract-out <path> (optional).", "--extract-meta-menu or --no-extract-meta-menu (optional)."], ["tools.cmd data-extract"], ExtractGameDataCore),
-            new("data-parse", "Tooling Workflows (local-only)", "Run one parser mode", "Run one parser mode and capture output as txt.", ["--data-mode <MODE> (optional).", "--data-args \"<arg1> <arg2>\" (optional).", "--input-dir <path> (optional).", "--out-dir <path> (optional).", "Missing tooling is auto-ensured via tools.cmd data-setup in interactive mode."], ["tools.cmd data-parse --data-mode READ_ALL_COMMANDS"], ExecuteDataParseWorkflow),
-            new("data-parse-all", "Tooling Workflows (local-only)", "Run parser mode batch", "Run configured parser mode batch and capture all outputs.", ["--data-batch \"MODE1;MODE2 arg\" (optional).", "--input-dir <path> (optional).", "--out-dir <path> (optional).", "Missing tooling is auto-ensured via tools.cmd data-setup in interactive mode."], ["tools.cmd data-parse-all"], ExecuteDataParseAllWorkflow),
-            new("map-import", "Tooling Workflows (local-only)", "Generate canonical mapping JSON", "Generate canonical locale/domain mapping JSON from parser outputs.", ["--map-source <path> (optional).", "--locales us,de,... (optional).", "--out-dir <path> (optional).", "Requires existing parser outputs under --out-dir. Run: .\\tools.cmd data-parse-all"], ["tools.cmd map-import"], ImportLocalizedMappingsCore),
-            new("map-build", "Tooling Workflows (local-only)", "Build runtime mapping bundles", "Build runtime mapping bundles from canonical mapping JSON.", ["--map-source <path> (optional).", "--map-out <path> (optional).", "--map-publish <path> (optional).", "--locales us,de,... (optional)."], ["tools.cmd map-build"], BuildLocalizedBundlesCore),
-            new("data-inventory", "Tooling Workflows (local-only)", "Generate DATA_TREE reports", "Generate DATA_TREE.txt summaries for extracted data folders.", ["--data-root-dir <path> (optional).", "--folders \"name1;name2\" (optional)."], ["tools.cmd data-inventory"], DataInventoryCore),
-            new("data-offload", "Tooling Workflows (local-only)", "Copy/move data folders to NAS", "Move or copy large extracted data folders to NAS and optionally keep junctions.", ["--nas-dir <unc-path> (required).", "--offload-mode move|copy (optional).", "--keep-data-junction or --no-keep-data-junction (optional).", "--data-root-dir <path> (optional).", "--folders \"name1;name2\" (optional)."], ["tools.cmd data-offload --nas-dir \"\\\\10.0.10.50\\data\\archive\\final-fantasy-assets\""], () =>
-            {
-                DataInventoryCore();
-                OffloadDataCore();
-            }),
-            new("ghidra-setup", "Tooling Workflows (local-only)", "Install/update Ghidra", "Install/update Ghidra into a repo-local tools directory.", ["--ghidra-api <url> (optional).", "--ghidra-dir <path> (optional)."], ["tools.cmd ghidra-setup"], SetupGhidraCore),
-            new("ghidra-start", "Tooling Workflows (local-only)", "Start Ghidra", "Start the repo-local Ghidra launcher.", ["--ghidra-dir <path> (optional).", "Missing Ghidra is auto-ensured via tools.cmd ghidra-setup in interactive mode."], ["tools.cmd ghidra-start"], ExecuteGhidraStartWorkflow)
-        ];
-    }
-
-    void ExecuteDiscordSyncWorkflow()
-    {
-        DiscordSyncCore();
-    }
-
-    void ExecuteDataSetupWorkflow()
-    {
-        SetupVbfExtractorCore();
-        SetupDataParserCore();
-    }
-
-    void ExecuteDataParseWorkflow()
-    {
-        EnsureDataToolingReadyForParse("data-parse");
-        ParseDataCore();
-    }
-
-    void ExecuteDataParseAllWorkflow()
-    {
-        EnsureDataToolingReadyForParse("data-parse-all");
-        ParseDataAllCore();
-    }
-
-    void ExecuteGhidraStartWorkflow()
-    {
-        EnsureGhidraReadyForStart();
-        StartGhidraCore();
+        return [];
     }
 
     void ExecuteSetupWorkflow()
