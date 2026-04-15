@@ -228,8 +228,30 @@ public unsafe sealed partial class ParryModule
 
     private bool try_get_game_audio_volume_ratio(out float ratio)
     {
-        ratio = DefaultParryAudioVolumeRatio;
-        return true; // Default to 0.3f until stable game volume reads are wired back in.
+        ratio = 0f;
+        try
+        {
+            uint* pointerCell = FhUtil.ptr_at<uint>(ExternalMemoryOffsetMap.OptionsStruct.PointerAddress);
+            if (pointerCell == null) return false;
+
+            uint settingsBaseAddr = *pointerCell;
+            if (settingsBaseAddr == 0) return false;
+
+            int* settings  = (int*)settingsBaseAddr;
+            int  masterRaw = settings[ExternalMemoryOffsetMap.OptionsStruct.MasterVolumeIndex];
+            int  seRaw     = settings[ExternalMemoryOffsetMap.OptionsStruct.SeVolumeIndex];
+
+            int maxScale = ExternalMemoryOffsetMap.OptionsStruct.VolumeScaleMax;
+            if ((uint)masterRaw > (uint)maxScale) return false;
+            if ((uint)seRaw     > (uint)maxScale) return false;
+
+            ratio = (masterRaw / (float)maxScale) * (seRaw / (float)maxScale);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     private void stop_audio_playback()
