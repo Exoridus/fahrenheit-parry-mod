@@ -90,7 +90,7 @@ internal sealed partial class BuildScript : NukeBuild
     bool CleanToolsRequested => CleanTools;
 
 
-    Target Help => _ => _
+    new Target Help => _ => _
         .Executes(() =>
         {
             ValidateVerbosityFlags();
