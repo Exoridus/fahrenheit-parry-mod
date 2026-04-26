@@ -9,10 +9,19 @@
         <ModId Condition="'$(ModId)' == ''">fhparry</ModId>
 
         <ModProjectPath Condition="'$(ModProjectPath)' == ''">$([MSBuild]::NormalizePath('$(RepoRoot)', 'Fahrenheit.Mods.Parry.csproj'))</ModProjectPath>
-        <ManagedCoreProject>$([MSBuild]::NormalizePath('$(FahrenheitDir)', 'core', 'fh', 'Fahrenheit.csproj'))</ManagedCoreProject>
-        <ManagedRuntimeProject>$([MSBuild]::NormalizePath('$(FahrenheitDir)', 'core', 'runtime', 'Fahrenheit.Runtime.csproj'))</ManagedRuntimeProject>
-        <Stage0Project>$([MSBuild]::NormalizePath('$(FahrenheitDir)', 'core', 'stage0', 'Fahrenheit.Loader.Stage0.vcxproj'))</Stage0Project>
-        <Stage1Project>$([MSBuild]::NormalizePath('$(FahrenheitDir)', 'core', 'stage1', 'Fahrenheit.Loader.Stage1.vcxproj'))</Stage1Project>
+
+        <!-- Default to upstream layout post-fahrenheit#134 ("rearrange source tree"). The
+             ResolveFahrenheitProjects target falls back to the pre-#134 layout if the
+             checked-out fahrenheit ref still uses it. Callers may override via -p:. -->
+        <ManagedCoreProject Condition="'$(ManagedCoreProject)' == ''">$([MSBuild]::NormalizePath('$(FahrenheitDir)', 'src', 'core', 'Fahrenheit.csproj'))</ManagedCoreProject>
+        <ManagedRuntimeProject Condition="'$(ManagedRuntimeProject)' == ''">$([MSBuild]::NormalizePath('$(FahrenheitDir)', 'src', 'runtime', 'Fahrenheit.Runtime.csproj'))</ManagedRuntimeProject>
+        <Stage0Project Condition="'$(Stage0Project)' == ''">$([MSBuild]::NormalizePath('$(FahrenheitDir)', 'src', 'stage0', 'Fahrenheit.Loader.Stage0.vcxproj'))</Stage0Project>
+        <Stage1Project Condition="'$(Stage1Project)' == ''">$([MSBuild]::NormalizePath('$(FahrenheitDir)', 'src', 'stage1', 'Fahrenheit.Loader.Stage1.vcxproj'))</Stage1Project>
+
+        <_LegacyManagedCoreProject>$([MSBuild]::NormalizePath('$(FahrenheitDir)', 'core', 'fh', 'Fahrenheit.csproj'))</_LegacyManagedCoreProject>
+        <_LegacyManagedRuntimeProject>$([MSBuild]::NormalizePath('$(FahrenheitDir)', 'core', 'runtime', 'Fahrenheit.Runtime.csproj'))</_LegacyManagedRuntimeProject>
+        <_LegacyStage0Project>$([MSBuild]::NormalizePath('$(FahrenheitDir)', 'core', 'stage0', 'Fahrenheit.Loader.Stage0.vcxproj'))</_LegacyStage0Project>
+        <_LegacyStage1Project>$([MSBuild]::NormalizePath('$(FahrenheitDir)', 'core', 'stage1', 'Fahrenheit.Loader.Stage1.vcxproj'))</_LegacyStage1Project>
 
         <DeployConfigFolder Condition="'$(Configuration)' == 'Debug'">dbg</DeployConfigFolder>
         <DeployConfigFolder Condition="'$(DeployConfigFolder)' == ''">rel</DeployConfigFolder>
@@ -69,7 +78,31 @@
         <Message Importance="high" Text="Fahrenheit ref: $(FahrenheitRef)" />
     </Target>
 
-    <Target Name="RestoreManagedProjects" DependsOnTargets="EnsureFahrenheitCheckout">
+    <Target Name="ResolveFahrenheitProjects" DependsOnTargets="EnsureFahrenheitCheckout">
+        <PropertyGroup>
+            <ManagedCoreProject Condition="!Exists('$(ManagedCoreProject)') and Exists('$(_LegacyManagedCoreProject)')">$(_LegacyManagedCoreProject)</ManagedCoreProject>
+            <ManagedRuntimeProject Condition="!Exists('$(ManagedRuntimeProject)') and Exists('$(_LegacyManagedRuntimeProject)')">$(_LegacyManagedRuntimeProject)</ManagedRuntimeProject>
+            <Stage0Project Condition="!Exists('$(Stage0Project)') and Exists('$(_LegacyStage0Project)')">$(_LegacyStage0Project)</Stage0Project>
+            <Stage1Project Condition="!Exists('$(Stage1Project)') and Exists('$(_LegacyStage1Project)')">$(_LegacyStage1Project)</Stage1Project>
+        </PropertyGroup>
+
+        <ItemGroup Condition="!Exists('$(ManagedCoreProject)')">
+            <_FoundManagedCoreProject Include="$(FahrenheitDirPath)/**/Fahrenheit.csproj" />
+        </ItemGroup>
+        <PropertyGroup Condition="!Exists('$(ManagedCoreProject)') and '@(_FoundManagedCoreProject->Count())' == '1'">
+            <ManagedCoreProject>@(_FoundManagedCoreProject->'%(FullPath)')</ManagedCoreProject>
+        </PropertyGroup>
+
+        <Error Condition="!Exists('$(ManagedCoreProject)')"
+               Text="Missing Fahrenheit core project. Searched (in order): $(ManagedCoreProject); $(_LegacyManagedCoreProject); recursive scan under '$(FahrenheitDirPath)' (matches: '@(_FoundManagedCoreProject)'). Pass -p:ManagedCoreProject=&lt;path&gt; to override." />
+        <Error Condition="!Exists('$(ManagedRuntimeProject)')"
+               Text="Missing Fahrenheit runtime project. Searched: $(ManagedRuntimeProject); $(_LegacyManagedRuntimeProject). Pass -p:ManagedRuntimeProject=&lt;path&gt; to override." />
+
+        <Message Importance="low" Text="Resolved Fahrenheit core: $(ManagedCoreProject)" />
+        <Message Importance="low" Text="Resolved Fahrenheit runtime: $(ManagedRuntimeProject)" />
+    </Target>
+
+    <Target Name="RestoreManagedProjects" DependsOnTargets="ResolveFahrenheitProjects">
         <Error Condition="!Exists('$(ManagedCoreProject)')" Text="Missing Fahrenheit core project: $(ManagedCoreProject)" />
         <Error Condition="!Exists('$(ManagedRuntimeProject)')" Text="Missing Fahrenheit runtime project: $(ManagedRuntimeProject)" />
 
@@ -107,7 +140,7 @@
                Text="Could not find a usable MSBuild.exe. Install Visual Studio Build Tools with C++ workload, or pass -p:NativeMSBuildExe=&lt;path-to-MSBuild.exe&gt;." />
     </Target>
 
-    <Target Name="BuildNativeLoaders" DependsOnTargets="ResolveNativeMSBuild">
+    <Target Name="BuildNativeLoaders" DependsOnTargets="ResolveNativeMSBuild;ResolveFahrenheitProjects">
         <Error Condition="'$(OS)' != 'Windows_NT'" Text="Full build is only supported on Windows (stage0/stage1 are native VC++ projects)." />
         <Error Condition="!Exists('$(Stage0Project)')" Text="Missing Stage0 project: $(Stage0Project)" />
         <Error Condition="!Exists('$(Stage1Project)')" Text="Missing Stage1 project: $(Stage1Project)" />
