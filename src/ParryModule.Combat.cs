@@ -349,29 +349,15 @@ public unsafe sealed partial class ParryModule
 
     private void handle_parry_input_press(ParryInputContext context)
     {
-        if (!context.HasParryableCue)
-        {
-            log_debug("Parry input ignored (no parryable enemy cue).");
-            return;
-        }
+        // Decision is pure (FINAL_PARRY_SPEC.md, see ParryInputStateTransitions).
+        // The corresponding tests live in tests/Parry.Tests/ParryInputStateTransitionsTests.cs.
+        ParryInputStateTransitions.PressDecision decision =
+            ParryInputStateTransitions.DecidePress(_runtime.InputState, context.HasParryableCue);
 
-        // State gate (FINAL_PARRY_SPEC.md). Fresh presses are only accepted in Ready.
-        // Open / Resolved / WhiffLockout reject with a specific reason, so the player
-        // never silently "re-opens" a window after a whiff or mid-parry.
-        switch (_runtime.InputState)
+        if (!decision.Accepted)
         {
-            case ParryInputState.Ready:
-                break;
-            case ParryInputState.Open:
-                log_debug("Parry input ignored — window already open.");
-                return;
-            case ParryInputState.Resolved:
-                log_debug("Parry input ignored — current attack already parried.");
-                return;
-            case ParryInputState.WhiffLockout:
-                float lockoutRemainingMs = _runtime.WhiffLockoutRemainingSeconds * 1000f;
-                log_debug($"Parry input rejected — in guard recovery ({lockoutRemainingMs:F0}ms remaining).");
-                return;
+            log_press_rejection(decision.RejectReason);
+            return;
         }
 
         AttackCue cue = context.Cue;
@@ -379,6 +365,32 @@ public unsafe sealed partial class ParryModule
         uint partyMask = context.PartyMask;
 
         transition_to_open(cue, cueIndex, partyMask);
+    }
+
+    private void log_press_rejection(string reason)
+    {
+        // Map the pure reason identifier from ParryInputStateTransitions to the
+        // user-facing log message. Centralised so the message text is the only
+        // localisation/UX concern; the underlying decision is testable.
+        switch (reason)
+        {
+            case "no_parryable_cue":
+                log_debug("Parry input ignored (no parryable enemy cue).");
+                return;
+            case "window_already_open":
+                log_debug("Parry input ignored — window already open.");
+                return;
+            case "current_attack_already_parried":
+                log_debug("Parry input ignored — current attack already parried.");
+                return;
+            case "in_guard_recovery":
+                float lockoutRemainingMs = _runtime.WhiffLockoutRemainingSeconds * 1000f;
+                log_debug($"Parry input rejected — in guard recovery ({lockoutRemainingMs:F0}ms remaining).");
+                return;
+            default:
+                log_debug($"Parry input rejected ({reason}).");
+                return;
+        }
     }
 
     private float compute_window_seconds()
@@ -443,7 +455,10 @@ public unsafe sealed partial class ParryModule
         // follows is what gates further R1 presses — not the array values.
         end_parry_window("whiff_lockout", transitionToReady: false);
 
-        if (lockoutSeconds > 0f)
+        // Pure decision — see ParryInputStateTransitions tests.
+        ParryInputState nextState = ParryInputStateTransitions.DecideWindowExpiry(lockoutSeconds);
+
+        if (nextState == ParryInputState.WhiffLockout)
         {
             _runtime.InputState = ParryInputState.WhiffLockout;
             _runtime.WhiffLockoutRemainingSeconds = lockoutSeconds;
