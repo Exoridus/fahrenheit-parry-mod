@@ -9,8 +9,8 @@ internal sealed partial class BuildScript
         var buildDocsPath = ResolvePath("docs/automation.md");
         var toolsDocsPath = ResolvePath("docs/tools-automation.md");
 
-        File.WriteAllText(buildDocsPath, GenerateBuildAutomationDocs());
-        File.WriteAllText(toolsDocsPath, GenerateToolsAutomationDocs());
+        File.WriteAllText(buildDocsPath, NormalizeLineEndings(GenerateBuildAutomationDocs()));
+        File.WriteAllText(toolsDocsPath, NormalizeLineEndings(GenerateToolsAutomationDocs()));
 
         Log.Information($"Updated automation docs: {buildDocsPath}");
         Log.Information($"Updated tools automation docs: {toolsDocsPath}");
@@ -30,12 +30,15 @@ internal sealed partial class BuildScript
             Fail($"Missing generated docs file '{relativePath}'. Run: .\\build.cmd docs-sync");
         }
 
-        var currentContent = File.ReadAllText(fullPath);
-        if (!string.Equals(currentContent, expectedContent, StringComparison.Ordinal))
+        var currentContent = NormalizeLineEndings(File.ReadAllText(fullPath));
+        var normalizedExpected = NormalizeLineEndings(expectedContent);
+        if (!string.Equals(currentContent, normalizedExpected, StringComparison.Ordinal))
         {
             Fail($"Generated docs '{relativePath}' are stale. Run: .\\build.cmd docs-sync");
         }
     }
+
+    static string NormalizeLineEndings(string content) => content.Replace("\r\n", "\n");
 
     string GenerateBuildAutomationDocs()
     {
