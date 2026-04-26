@@ -291,6 +291,16 @@ public unsafe sealed partial class ParryModule : FhModule
     // Persisted as "penalty" for settings backward compatibility; see
     // TIERED_PENALTY_RATIONALE.md (retired) for the historical name.
     private bool _optionWhiffLockout = true;
+    // Native-engine probe channel. When false (default), probe queue is inert
+    // and no native-probe events are recorded. When true, probe-tagged events
+    // are pushed onto _probeRingBuffer during hook execution and drained once
+    // per pre-update tick into the session debug log. Independent of
+    // _optionLogging — enabling probes does NOT enable other logging, and
+    // turning logging on does NOT enable probes.
+    //
+    // No production hook currently emits probe events. The wiring is in place
+    // ahead of Stage-1 observe probes per the KB probe plan.
+    private bool _optionNativeProbeLogging = false;
     private bool _optionStartupSkipForceTitle = true;
     private bool _optionStartupProbeMode = false;
     private bool _optionDebugOverlay =
@@ -596,6 +606,11 @@ public unsafe sealed partial class ParryModule : FhModule
 
         validate_runtime_state();
         process_turn_runtime_events();
+
+        // Drain any deferred native-probe events queued by hooks during this
+        // frame. No-op when _optionNativeProbeLogging is false; the ring is
+        // empty and the early-return inside drain_probe_ring exits cheaply.
+        drain_probe_ring();
     }
 
     public override void render_imgui()
