@@ -218,10 +218,11 @@ public unsafe sealed partial class ParryModule
                 if (snap > 0)
                 {
                     // Diagnostic: read death-state fields before restore to determine
-                    // whether the death latch (0xDCC et al.) is already set at this point.
+                    // whether the death latch (chr+OffsetDeathLatch et al.) is already set
+                    // at this point. See ExternalMemoryOffsetMap.ChrStruct for evidence.
                     byte*   chrB    = (byte*)parryTarget;
-                    byte    dcc_pre = chrB[0xDCC];
-                    ushort  s606_pre = *(ushort*)(chrB + 0x606);
+                    byte    dcc_pre = chrB[ExternalMemoryOffsetMap.ChrStruct.OffsetDeathLatch];
+                    ushort  s606_pre = *(ushort*)(chrB + ExternalMemoryOffsetMap.ChrStruct.OffsetStatusBits);
                     ushort  s700_pre = *(ushort*)(chrB + 0x700);
                     ushort  s702_pre = *(ushort*)(chrB + 0x702);
                     byte    dee_pre  = chrB[0xDEE];
@@ -236,16 +237,18 @@ public unsafe sealed partial class ParryModule
                     parryTarget->stat_will_die = 0;
 
                     // Clear confirmed death-latch fields set by MsDamageCheckDeath.
-                    // Evidence: LethalDiag PRE consistently shows 0xDCC=2 and 0x606=0x0001.
-                    // MsGetChrStatDeath returns 1 when chr+0xDCC != 0, gating all downstream
-                    // death processing. 0x606 bit-0 is the dead-status bit ORed in by the
+                    // Evidence: LethalDiag PRE consistently shows OffsetDeathLatch=2 and
+                    // OffsetStatusBits bit 0 set. MsGetChrStatDeath returns 1 when
+                    // chr+OffsetDeathLatch != 0, gating all downstream death processing;
+                    // bit 0 of chr+OffsetStatusBits is the dead-status bit ORed in by the
                     // same function. Clearing both here prevents death from winning despite
-                    // the HP restore.
-                    chrB[0xDCC] = 0;
-                    *(ushort*)(chrB + 0x606) &= unchecked((ushort)~1u);
+                    // the HP restore. See ExternalMemoryOffsetMap.ChrStruct.
+                    chrB[ExternalMemoryOffsetMap.ChrStruct.OffsetDeathLatch] = 0;
+                    *(ushort*)(chrB + ExternalMemoryOffsetMap.ChrStruct.OffsetStatusBits)
+                        &= unchecked((ushort)~ExternalMemoryOffsetMap.ChrStruct.DeadStatusBitMask);
 
-                    byte    dcc_post = chrB[0xDCC];
-                    ushort  s606_post = *(ushort*)(chrB + 0x606);
+                    byte    dcc_post = chrB[ExternalMemoryOffsetMap.ChrStruct.OffsetDeathLatch];
+                    ushort  s606_post = *(ushort*)(chrB + ExternalMemoryOffsetMap.ChrStruct.OffsetStatusBits);
                     ushort  s700_post = *(ushort*)(chrB + 0x700);
                     ushort  s702_post = *(ushort*)(chrB + 0x702);
                     byte    dee_post  = chrB[0xDEE];
@@ -613,10 +616,12 @@ public unsafe sealed partial class ParryModule
             //
             // Lethal restore: if HP was already ≤ 0 when our hook fires (the unknown native
             // reducer applied damage before MsDamageSetMotion was called), the same native path
-            // may have also set the death latch (0xDCC) and dead-status bit (0x606 bit 0).
-            // Clear both after restoring HP — same fields cleared by the h_ms_set_damage
-            // skipOrigForParry path, moved here because that path is dead code for production
-            // windows (MsSetDamage fires ~2.5s after press, well past the 200ms window).
+            // may have also set the death latch (chr+OffsetDeathLatch) and dead-status bit
+            // (chr+OffsetStatusBits & DeadStatusBitMask). See ExternalMemoryOffsetMap.ChrStruct
+            // for offsets + evidence. Clear both after restoring HP — same fields cleared by
+            // the h_ms_set_damage skipOrigForParry path, moved here because that path is dead
+            // code for production windows (MsSetDamage fires ~2.5s after press, well past the
+            // 200ms window).
             if (_optionNegateDamage)
             {
                 Chr* party = _battleAdapter.GetPlayerCharacters();
@@ -631,9 +636,12 @@ public unsafe sealed partial class ParryModule
 
                     if (wasLethal && targetChr->ram.hp > 0)
                     {
+                        // Clear the same death-latch fields as the h_ms_set_damage path —
+                        // see ExternalMemoryOffsetMap.ChrStruct for evidence + offsets.
                         byte* chrB = (byte*)targetChr;
-                        chrB[0xDCC] = 0;
-                        *(ushort*)(chrB + 0x606) &= unchecked((ushort)~1u);
+                        chrB[ExternalMemoryOffsetMap.ChrStruct.OffsetDeathLatch] = 0;
+                        *(ushort*)(chrB + ExternalMemoryOffsetMap.ChrStruct.OffsetStatusBits)
+                            &= unchecked((ushort)~ExternalMemoryOffsetMap.ChrStruct.DeadStatusBitMask);
                         targetChr->stat_will_die = 0;
 
                         log_debug($"Parry lethal restore (motion) for {format_actor_slot(target)}: HP restored to {(uint)targetChr->ram.hp}, death-latch cleared.");
@@ -932,10 +940,12 @@ public unsafe sealed partial class ParryModule
         if (slot->ram.hp <= 0 || slot->stat_will_die != 0)
             return false;
 
+        // See ExternalMemoryOffsetMap.ChrStruct for offsets + evidence.
         byte* slotB = (byte*)slot;
-        if (slotB[0xDCC] != 0)
+        if (slotB[ExternalMemoryOffsetMap.ChrStruct.OffsetDeathLatch] != 0)
             return false;
-        if ((*(ushort*)(slotB + 0x606) & 0x0001) != 0)
+        if ((*(ushort*)(slotB + ExternalMemoryOffsetMap.ChrStruct.OffsetStatusBits)
+            & ExternalMemoryOffsetMap.ChrStruct.DeadStatusBitMask) != 0)
             return false;
 
         return true;
@@ -1105,7 +1115,8 @@ public unsafe sealed partial class ParryModule
                         write_session_hook_entry(
                             $"[MsSetDamageInternal/slot] f={_debugFrameIndex} slot={param_3} " +
                             $"hp={(uint)slot->ram.hp} dmg_hp={slot->damage_hp} " +
-                            $"0x606=0x{*(ushort*)(slotB + 0x606):X4} 0xDCC={slotB[0xDCC]} " +
+                            $"0x606=0x{*(ushort*)(slotB + ExternalMemoryOffsetMap.ChrStruct.OffsetStatusBits):X4} " +
+                            $"0xDCC={slotB[ExternalMemoryOffsetMap.ChrStruct.OffsetDeathLatch]} " +
                             $"btl0_att={slotB[0x776]} btl0_cmd=0x{slotB[0x777]:X2} " +
                             $"btl1_att={slotB[0xA4E]} btl1_cmd=0x{slotB[0xA4F]:X2}");
                     }
