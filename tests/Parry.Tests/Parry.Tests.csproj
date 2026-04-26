@@ -14,8 +14,10 @@
 
   <ItemGroup>
     <Compile Include="..\..\src\combat\ParryDifficultyModel.cs" Link="combat\ParryDifficultyModel.cs" />
-    <Compile Include="..\..\src\combat\ParrySpamController.cs" Link="combat\ParrySpamController.cs" />
+    <Compile Include="..\..\src\combat\ParryInputState.cs" Link="combat\ParryInputState.cs" />
+    <Compile Include="..\..\src\combat\ParryInputStateTransitions.cs" Link="combat\ParryInputStateTransitions.cs" />
     <Compile Include="..\..\src\combat\ParryTurnStateMachine.cs" Link="combat\ParryTurnStateMachine.cs" />
+    <Compile Include="..\..\src\debug\NativeProbeRing.cs" Link="debug\NativeProbeRing.cs" />
     <Compile Include="..\..\src\debug\ParryTurnTimelineTracker.cs" Link="debug\ParryTurnTimelineTracker.cs" />
   </ItemGroup>
 </Project>

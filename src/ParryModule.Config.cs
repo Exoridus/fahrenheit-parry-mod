@@ -13,6 +13,11 @@ public unsafe sealed partial class ParryModule
         public bool? Penalty { get; set; }
         public bool? StartupSkipForceTitle { get; set; }
         public bool? DebugOverlay { get; set; }
+        // Native-engine probe channel (separate from general Logging). Default-off.
+        // When true, probe-tagged events are queued into the frame-deferred ring
+        // and flushed once per pre-update tick. Future Stage-1 observe probes
+        // will route through this; the existing logging path is unchanged.
+        public bool? NativeProbeLogging { get; set; }
         public string? Difficulty { get; set; }
     }
 
@@ -50,9 +55,12 @@ public unsafe sealed partial class ParryModule
             if (persisted.Logging.HasValue) _optionLogging = persisted.Logging.Value;
             if (persisted.OverdriveBoost.HasValue) _optionOverdriveBoost = persisted.OverdriveBoost.Value;
             if (persisted.NegateDamage.HasValue) _optionNegateDamage = persisted.NegateDamage.Value;
-            if (persisted.Penalty.HasValue) _optionPenaltyEnabled = persisted.Penalty.Value;
+            // Persisted as "penalty" for backward compatibility with earlier settings files.
+            // The semantic is now "whiff recovery lockout enabled" (see FINAL_PARRY_SPEC.md).
+            if (persisted.Penalty.HasValue) _optionWhiffLockout = persisted.Penalty.Value;
             if (persisted.StartupSkipForceTitle.HasValue) _optionStartupSkipForceTitle = persisted.StartupSkipForceTitle.Value;
             if (persisted.DebugOverlay.HasValue) _optionDebugOverlay = persisted.DebugOverlay.Value;
+            if (persisted.NativeProbeLogging.HasValue) _optionNativeProbeLogging = persisted.NativeProbeLogging.Value;
 
             if (ParryDifficultyModel.TryParsePersistedDifficulty(persisted.Difficulty, out ParryDifficulty difficulty))
             {
@@ -92,9 +100,10 @@ public unsafe sealed partial class ParryModule
                 Logging = _optionLogging,
                 OverdriveBoost = _optionOverdriveBoost,
                 NegateDamage = _optionNegateDamage,
-                Penalty = _optionPenaltyEnabled,
+                Penalty = _optionWhiffLockout,
                 StartupSkipForceTitle = _optionStartupSkipForceTitle,
                 DebugOverlay = _optionDebugOverlay,
+                NativeProbeLogging = _optionNativeProbeLogging,
                 Difficulty = _optionDifficulty.ToString()
             };
 

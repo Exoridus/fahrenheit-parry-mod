@@ -11,6 +11,7 @@ public unsafe sealed partial class ParryModule
     private static readonly Vector4 StateTextSucceededColor = new(0.28f, 0.92f, 0.42f, 1.0f);
     private static readonly Vector4 StateTextMissedColor = new(0.96f, 0.34f, 0.34f, 1.0f);
     private static readonly Vector4 StateTextStatusBlockColor = new(0.95f, 0.75f, 0.30f, 1.0f);
+    private static readonly Vector4 StateTextRecoveryColor = new(0.90f, 0.60f, 0.25f, 1.0f);
     private static readonly Vector4 StateBackgroundColor = new(0f, 0f, 0f, 0.45f);
     private const ulong OverlayProjectionRetryFrames = 120;
 
@@ -86,62 +87,41 @@ public unsafe sealed partial class ParryModule
             return ("-", StateTextDashColor);
         }
 
-        string tierLine = format_spam_tier_line();
+        // WhiffLockout is the visible guard-recovery state: show it even across
+        // turn boundaries so the player understands why R1 is rejected.
+        if (_runtime.InputState == ParryInputState.WhiffLockout)
+        {
+            string lockoutLabel = $"Recovering\n{(_runtime.WhiffLockoutRemainingSeconds * 1000f):F0}ms";
+            return (lockoutLabel, StateTextRecoveryColor);
+        }
 
         if (_runtime.ParriedTextRemainingSeconds > 0f)
         {
-            return ("Succeeded" + tierLine, StateTextSucceededColor);
+            return ("Succeeded", StateTextSucceededColor);
         }
 
         if (_runtime.StatusBlockTextRemainingSeconds > 0f && !string.IsNullOrEmpty(_runtime.StatusBlockLabel))
         {
-            return (_runtime.StatusBlockLabel + tierLine, StateTextStatusBlockColor);
+            return (_runtime.StatusBlockLabel, StateTextStatusBlockColor);
         }
 
         if (_runtime.ParryMissedTextRemainingSeconds > 0f)
         {
-            return ("Missed" + tierLine, StateTextMissedColor);
+            return ("Missed", StateTextMissedColor);
         }
 
-        if (_runtime.ParryWindowActive)
+        if (_runtime.InputState == ParryInputState.Open)
         {
-            return ("Open" + tierLine, StateTextOpenColor);
+            // "Guard" rather than "Open" surfaces the intended visible stance metaphor.
+            return ("Guard", StateTextOpenColor);
         }
 
         if (_runtime.AwaitingTurnEnd && _runtime.CurrentPartyTargetMask != 0)
         {
-            return ("Waiting" + tierLine, StateTextWaitingColor);
+            return ("Waiting", StateTextWaitingColor);
         }
 
-        return ("-" + tierLine, StateTextDashColor);
-    }
-
-    private string format_spam_tier_line()
-    {
-        if (!_optionPenaltyEnabled)
-        {
-            return "\nPenalty Off";
-        }
-
-        int tierIndex = _spamController.TierIndex;
-
-        if (tierIndex >= ParryDifficultyModel.MaxSpamTierIndex)
-        {
-            return "\nPENALTY";
-        }
-
-        if (tierIndex == 0)
-        {
-            return string.Empty;
-        }
-
-        float remaining = _spamController.CalmResetRemainingSeconds;
-        if (remaining > 0f)
-        {
-            return $"\nT{tierIndex + 1} {remaining:F1}s";
-        }
-
-        return string.Empty;
+        return ("-", StateTextDashColor);
     }
 
     private void render_parry_window_overlay()

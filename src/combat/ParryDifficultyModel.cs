@@ -14,15 +14,33 @@ public enum ParryDifficulty
 #endif
 }
 
+/// <summary>
+///     Difficulty presets for the press-based parry window and its animation-backed
+///     whiff recovery lockout.
+///
+///     The mod no longer uses a tiered anti-spam window; a single window duration is
+///     applied on every fresh press, and a whiff that does not connect enters a
+///     time-bounded recovery lockout that approximates the visible native
+///     "return to guard stance" animation. See <c>FINAL_PARRY_SPEC.md</c> and
+///     <c>TIERED_PENALTY_RATIONALE.md</c> (retired) for background.
+/// </summary>
 public static class ParryDifficultyModel
 {
-    public const int MaxSpamTierIndex = 3;
-    public const float SpamTierResetCooldownSeconds = 0.50f;
+    // Window durations (milliseconds). A single value per difficulty — no tiers.
+    private const float DebugWindowMs  = 500f;
+    private const float EasyWindowMs   = 350f;
+    private const float NormalWindowMs = 200f;
+    private const float ExpertWindowMs = 150f;
 
-    private static readonly float[] DebugTierDurationsMs = [500f, 200f, 100f, 0f];
-    private static readonly float[] EasyTierDurationsMs = [350f, 200f, 100f, 0f];
-    private static readonly float[] NormalTierDurationsMs = [200f, 100f, 67f, 0f];
-    private static readonly float[] ExpertTierDurationsMs = [150f, 75f, 33f, 0f];
+    // Whiff recovery lockout durations (milliseconds). These approximate the visible
+    // guard-stance recovery animation commitment; exact native-motion wiring is not
+    // yet available, so the values are tuned to feel committed without being cheap.
+    // Harder difficulties commit to a slightly longer recovery to match their tighter
+    // windows; Easy feels looser.
+    private const float DebugLockoutMs  = 300f;
+    private const float EasyLockoutMs   = 450f;
+    private const float NormalLockoutMs = 600f;
+    private const float ExpertLockoutMs = 750f;
 
 #if DEBUG
     private static readonly ParryDifficulty[] SelectableDifficulties =
@@ -61,26 +79,24 @@ public static class ParryDifficultyModel
         _ => FormatName(DefaultDifficulty)
     };
 
-    public static int ClampTierIndex(int tierIndex)
+    /// <summary>
+    ///     Returns the parry window duration in seconds for the given difficulty.
+    ///     A single value — there are no tiers.
+    /// </summary>
+    public static float GetWindowSeconds(ParryDifficulty difficulty)
     {
-        return Math.Clamp(tierIndex, 0, MaxSpamTierIndex);
+        return get_window_ms(difficulty) / 1000f;
     }
 
-    public static float GetWindowSeconds(ParryDifficulty difficulty, int tierIndex)
+    /// <summary>
+    ///     Returns the whiff recovery lockout duration in seconds for the given
+    ///     difficulty. This is the time a whiffed R1 press commits the player to
+    ///     before another press is accepted — approximating the "return to normal
+    ///     stance" animation.
+    /// </summary>
+    public static float GetWhiffLockoutSeconds(ParryDifficulty difficulty)
     {
-        ReadOnlySpan<float> tiers = get_tiers_ms(difficulty);
-        int idx = ClampTierIndex(tierIndex);
-        return tiers[idx] / 1000f;
-    }
-
-    public static float GetBaseWindowSeconds(ParryDifficulty difficulty)
-    {
-        return GetWindowSeconds(difficulty, tierIndex: 0);
-    }
-
-    public static int IncreaseSpamTier(int currentTierIndex)
-    {
-        return Math.Min(ClampTierIndex(currentTierIndex) + 1, MaxSpamTierIndex);
+        return get_lockout_ms(difficulty) / 1000f;
     }
 
     public static ReadOnlySpan<ParryDifficulty> GetSelectableDifficulties()
@@ -156,14 +172,25 @@ public static class ParryDifficultyModel
         return true;
     }
 
-    private static ReadOnlySpan<float> get_tiers_ms(ParryDifficulty difficulty) => difficulty switch
+    private static float get_window_ms(ParryDifficulty difficulty) => difficulty switch
     {
 #if DEBUG
-        ParryDifficulty.Debug => DebugTierDurationsMs,
+        ParryDifficulty.Debug => DebugWindowMs,
 #endif
-        ParryDifficulty.Easy => EasyTierDurationsMs,
-        ParryDifficulty.Normal => NormalTierDurationsMs,
-        ParryDifficulty.Expert => ExpertTierDurationsMs,
-        _ => get_tiers_ms(DefaultDifficulty)
+        ParryDifficulty.Easy => EasyWindowMs,
+        ParryDifficulty.Normal => NormalWindowMs,
+        ParryDifficulty.Expert => ExpertWindowMs,
+        _ => get_window_ms(DefaultDifficulty)
+    };
+
+    private static float get_lockout_ms(ParryDifficulty difficulty) => difficulty switch
+    {
+#if DEBUG
+        ParryDifficulty.Debug => DebugLockoutMs,
+#endif
+        ParryDifficulty.Easy => EasyLockoutMs,
+        ParryDifficulty.Normal => NormalLockoutMs,
+        ParryDifficulty.Expert => ExpertLockoutMs,
+        _ => get_lockout_ms(DefaultDifficulty)
     };
 }

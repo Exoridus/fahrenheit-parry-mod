@@ -347,25 +347,16 @@ public unsafe sealed partial class ParryModule
             partyMask: partyMask);
     }
 
-    private void handle_parry_input_release(ParryInputContext context)
-    {
-        if (!context.HasParryableCue)
-        {
-            log_debug("Parry release ignored (no active parryable enemy cue).");
-            return;
-        }
-
-        if (_optionPenaltyEnabled)
-        {
-            _spamController.ArmOnQualifyingRelease();
-        }
-    }
-
     private void handle_parry_input_press(ParryInputContext context)
     {
-        if (!context.HasParryableCue)
+        // Decision is pure (FINAL_PARRY_SPEC.md, see ParryInputStateTransitions).
+        // The corresponding tests live in tests/Parry.Tests/ParryInputStateTransitionsTests.cs.
+        ParryInputStateTransitions.PressDecision decision =
+            ParryInputStateTransitions.DecidePress(_runtime.InputState, context.HasParryableCue);
+
+        if (!decision.Accepted)
         {
-            log_debug("Parry input ignored (no parryable enemy cue).");
+            log_press_rejection(decision.RejectReason);
             return;
         }
 
@@ -373,37 +364,57 @@ public unsafe sealed partial class ParryModule
         byte cueIndex = context.CueIndex;
         uint partyMask = context.PartyMask;
 
-        // Guard: suppress re-arm if this attack context was already successfully parried.
-        // The cue can remain live in the battle queue for several frames between parry
-        // resolution (visual impact) and finalization_complete. Without this guard, a
-        // fresh R1 press during that gap re-opens the window for the same attack.
-        if (_runtime.ParryWindowSucceeded
-            && _runtime.AwaitingTurnEnd
-            && cue.attacker_id == _runtime.CurrentAttackerId
-            && cueIndex == _runtime.CurrentCueIndex)
-        {
-            log_debug("Parry re-arm suppressed (context already parried).");
-            return;
-        }
+        transition_to_open(cue, cueIndex, partyMask);
+    }
 
-        if (_optionPenaltyEnabled)
+    private void log_press_rejection(string reason)
+    {
+        // Map the pure reason identifier from ParryInputStateTransitions to the
+        // user-facing log message. Centralised so the message text is the only
+        // localisation/UX concern; the underlying decision is testable.
+        switch (reason)
         {
-            ParrySpamTransition spamTransition = _spamController.OnQualifyingPress();
-            if (spamTransition.TierChanged)
-            {
-                int fromTier = spamTransition.PreviousTier + 1;
-                int toTier = spamTransition.CurrentTier + 1;
-                log_debug($"Anti-spam tier {fromTier} -> {toTier} (tap/re-engage).");
-            }
+            case "no_parryable_cue":
+                log_debug("Parry input ignored (no parryable enemy cue).");
+                return;
+            case "window_already_open":
+                log_debug("Parry input ignored — window already open.");
+                return;
+            case "current_attack_already_parried":
+                log_debug("Parry input ignored — current attack already parried.");
+                return;
+            case "in_guard_recovery":
+                float lockoutRemainingMs = _runtime.WhiffLockoutRemainingSeconds * 1000f;
+                log_debug($"Parry input rejected — in guard recovery ({lockoutRemainingMs:F0}ms remaining).");
+                return;
+            default:
+                log_debug($"Parry input rejected ({reason}).");
+                return;
         }
+    }
 
+    private float compute_window_seconds()
+    {
+        return ParryDifficultyModel.GetWindowSeconds(_optionDifficulty);
+    }
+
+    private float compute_whiff_lockout_seconds()
+    {
+        if (!_optionWhiffLockout) return 0f;
+        return ParryDifficultyModel.GetWhiffLockoutSeconds(_optionDifficulty);
+    }
+
+    private void transition_to_open(AttackCue cue, byte cueIndex, uint partyMask)
+    {
+        float windowDurationSeconds = compute_window_seconds();
+
+        _runtime.InputState = ParryInputState.Open;
         _runtime.AwaitingTurnEnd = true;
         _runtime.CurrentAttackerId = cue.attacker_id;
         _runtime.CurrentCueIndex = cueIndex;
         _runtime.CurrentPartyTargetMask = partyMask;
         _runtime.ParryWindowActive = true;
-        int spamTier = ParryDifficultyModel.ClampTierIndex(_spamController.TierIndex);
-        _runtime.ParryWindowRemainingSeconds = ParryWindowBackstopSeconds;
+        _runtime.ParryWindowRemainingSeconds = windowDurationSeconds;
         _runtime.ParryWindowElapsedSeconds = 0f;
         _runtime.ParryWindowSucceeded = false;
         _runtime.SuccessIndicatorActive = false;
@@ -412,11 +423,10 @@ public unsafe sealed partial class ParryModule
         _runtime.ParriedTextRemainingSeconds = 0f;
         _runtime.WindowOpenFrame = _debugFrameIndex;
         _runtime.WindowOpenTimestampSeconds = (float)_simulationClockSeconds;
-        _runtime.WindowDurationSecondsAtOpen = compute_window_seconds_for_tier(spamTier);
+        _runtime.WindowDurationSecondsAtOpen = windowDurationSeconds;
 
         mark_active_turn_open();
 
-        float windowDurationSeconds = compute_window_seconds_for_tier(spamTier);
         long expiry = DateTime.UtcNow.Ticks + (long)(windowDurationSeconds * TimeSpan.TicksPerSecond);
         for (int i = 0; i < PartyActorCapacity; i++)
         {
@@ -427,32 +437,54 @@ public unsafe sealed partial class ParryModule
             }
         }
 
+        // Guard-stance feedback marker: the player has committed to the parry
+        // stance for this window. The "enter guard stance" visual is approximated
+        // here via the overlay HUD state ("Open") and log entry; real native
+        // motion wiring (MsSetMotion for party guard) is a future enhancement.
         float windowMs = windowDurationSeconds * 1000f;
-        log_debug($"Parry input armed for {format_actor_slot(cue.attacker_id)} (q{cueIndex}) for {windowMs:F0}ms [{ParryDifficultyModel.FormatName(_optionDifficulty)} T{spamTier + 1}].");
+        log_debug($"Parry input armed for {format_actor_slot(cue.attacker_id)} (q{cueIndex}) — guard stance, {windowMs:F0}ms window [{ParryDifficultyModel.FormatName(_optionDifficulty)}].");
     }
 
-    private float compute_window_seconds_for_tier(int tierIndex)
+    private void transition_to_whiff_lockout()
     {
-        return ParryDifficultyModel.GetWindowSeconds(_optionDifficulty, tierIndex);
-    }
+        string attackerLabel = format_actor_slot(_runtime.CurrentAttackerId);
+        float lockoutSeconds = compute_whiff_lockout_seconds();
 
-    private void advance_spam_penalty_timers(float deltaSeconds)
-    {
-        ParrySpamTransition transition = _spamController.Tick(deltaSeconds);
-        if (transition.Reset && string.Equals(transition.Reason, "calm", StringComparison.Ordinal))
+        // Clear the open-window arrays (per-slot expiry, telemetry, feedback pending)
+        // so hooks no longer treat this window as live. The InputState flip that
+        // follows is what gates further R1 presses — not the array values.
+        end_parry_window("whiff_lockout", transitionToReady: false);
+
+        // Pure decision — see ParryInputStateTransitions tests.
+        ParryInputState nextState = ParryInputStateTransitions.DecideWindowExpiry(lockoutSeconds);
+
+        if (nextState == ParryInputState.WhiffLockout)
         {
-            reset_spam_tier("calm", logTransition: true, alreadyReset: true);
+            _runtime.InputState = ParryInputState.WhiffLockout;
+            _runtime.WhiffLockoutRemainingSeconds = lockoutSeconds;
+            _runtime.WhiffLockoutTotalSeconds = lockoutSeconds;
+            mark_active_turn_missed("parry window expired without a hit");
+            trigger_failure_feedback();
+            log_debug($"Parry whiff ({attackerLabel}) — returning to normal stance, {(lockoutSeconds * 1000f):F0}ms recovery.");
+        }
+        else
+        {
+            // Lockout disabled — transition straight back to Ready with no recovery.
+            _runtime.InputState = ParryInputState.Ready;
+            _runtime.WhiffLockoutRemainingSeconds = 0f;
+            _runtime.WhiffLockoutTotalSeconds = 0f;
+            mark_active_turn_missed("parry window expired without a hit");
+            trigger_failure_feedback();
+            log_debug($"Parry whiff ({attackerLabel}) — lockout disabled, immediately ready.");
         }
     }
 
-    private void reset_spam_tier(string reason, bool logTransition, bool alreadyReset = false)
+    private void transition_whiff_lockout_to_ready()
     {
-        ParrySpamTransition transition = alreadyReset ? default : _spamController.Reset(reason);
-        bool changed = alreadyReset ? true : transition.Reset;
-        if (logTransition && changed)
-        {
-            log_debug($"Anti-spam tier reset ({reason}).");
-        }
+        _runtime.WhiffLockoutRemainingSeconds = 0f;
+        _runtime.WhiffLockoutTotalSeconds = 0f;
+        _runtime.InputState = ParryInputState.Ready;
+        log_debug("Guard recovery complete — ready for next parry.");
     }
 
     private bool try_get_parryable_enemy_cue(out AttackCue cue, out byte cueIndex, out Chr* attacker, out uint partyMask)
@@ -554,7 +586,13 @@ public unsafe sealed partial class ParryModule
         Array.Clear(_attackTelemetry);
     }
 
-    private void end_parry_window(string reason)
+    /// <summary>
+    ///     Tears down the open parry window's per-slot state (expiry, feedback pending,
+    ///     telemetry, snapshots). Does NOT own the input-state machine transition:
+    ///     callers decide whether to flip to <see cref="ParryInputState.Ready"/> or
+    ///     stay in a different state (e.g. <see cref="ParryInputState.WhiffLockout"/>).
+    /// </summary>
+    private void end_parry_window(string reason, bool transitionToReady = true)
     {
         if (_runtime.ParryWindowActive)
             log_debug($"Parry window closed for {format_actor_slot(_runtime.CurrentAttackerId)} ({reason}).");
@@ -577,6 +615,11 @@ public unsafe sealed partial class ParryModule
         _runtime.ParryWindowSucceeded = false;
         _runtime.SuccessIndicatorActive = false;
         _runtime.LastParriedTargetMask = 0;
+
+        if (transitionToReady && _runtime.InputState != ParryInputState.WhiffLockout)
+        {
+            _runtime.InputState = ParryInputState.Ready;
+        }
     }
 
     private void clear_awaiting_turn_end(string reason)
@@ -612,6 +655,15 @@ public unsafe sealed partial class ParryModule
         _runtime.WindowDurationSecondsAtOpen = 0f;
         _runtime.TurnImpactMissedSeen = false;
         _runtime.TurnImpactMissedAttackerId = 0;
+
+        // Turn boundaries do not break an active guard recovery: the player committed
+        // to the stance and the approximated recovery animation still has to finish.
+        // Only Open / Resolved states collapse back to Ready here.
+        if (_runtime.InputState == ParryInputState.Open || _runtime.InputState == ParryInputState.Resolved)
+        {
+            _runtime.InputState = ParryInputState.Ready;
+        }
+
         log_debug(reason);
     }
 
@@ -701,6 +753,7 @@ public unsafe sealed partial class ParryModule
             negate_damage_on_impact(target);
         }
 
+        _runtime.InputState = ParryInputState.Resolved;
         _runtime.ParryWindowSucceeded = true;
         _runtime.SuccessIndicatorActive = true;
         _runtime.ParriedTextRemainingSeconds = ParriedTextSeconds;
@@ -724,12 +777,13 @@ public unsafe sealed partial class ParryModule
         if (BitOperations.PopCount(_runtime.LastParriedTargetMask) == 1)
         {
             play_feedback_sound();
-            reset_spam_tier("success", logTransition: true);
         }
 
         if (closeWindow)
         {
-            end_parry_window("impact_parried");
+            // Close the window but stay in Resolved until the cue clears; clear_awaiting_turn_end
+            // will promote us back to Ready so a fresh press can immediately begin the next parry.
+            end_parry_window("impact_parried", transitionToReady: false);
         }
     }
 

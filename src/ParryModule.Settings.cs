@@ -74,12 +74,16 @@ public unsafe sealed partial class ParryModule
 
     private void render_setting_penalty()
     {
-        if (ImGui.Checkbox("##fhparry.penalty", ref _optionPenaltyEnabled))
+        if (ImGui.Checkbox("##fhparry.penalty", ref _optionWhiffLockout))
         {
             persist_settings();
-            if (!_optionPenaltyEnabled)
+            if (!_optionWhiffLockout && _runtime.InputState == ParryInputState.WhiffLockout)
             {
-                reset_spam_tier("penalty_disabled", logTransition: true);
+                // Disabling mid-lockout immediately releases the player.
+                _runtime.InputState = ParryInputState.Ready;
+                _runtime.WhiffLockoutRemainingSeconds = 0f;
+                _runtime.WhiffLockoutTotalSeconds = 0f;
+                log_debug("Whiff lockout disabled mid-recovery; returning to Ready.");
             }
         }
     }
@@ -111,7 +115,6 @@ public unsafe sealed partial class ParryModule
         {
             _optionDifficulty = ParryDifficultyModel.DifficultyFromComboIndex(idx);
             persist_settings();
-            reset_spam_tier("difficulty_changed", logTransition: true);
             log_debug($"Difficulty changed to {ParryDifficultyModel.FormatName(_optionDifficulty)}.");
         }
     }
