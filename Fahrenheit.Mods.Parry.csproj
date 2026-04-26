@@ -48,8 +48,14 @@
     - Fahrenheit's in-tree mods/parry path.
     -->
     <PropertyGroup>
-        <FahrenheitRootDir Condition="Exists('$(MSBuildThisFileDirectory)..\..\core\fh\Fahrenheit.csproj')">$(MSBuildThisFileDirectory)..\..\</FahrenheitRootDir>
+        <!-- Probe upstream layout post-fahrenheit#134 ("rearrange source tree") first, then pre-#134. -->
+        <FahrenheitRootDir Condition="Exists('$(MSBuildThisFileDirectory)..\..\src\core\Fahrenheit.csproj')">$(MSBuildThisFileDirectory)..\..\</FahrenheitRootDir>
+        <FahrenheitRootDir Condition="'$(FahrenheitRootDir)' == '' and Exists('$(MSBuildThisFileDirectory)..\..\core\fh\Fahrenheit.csproj')">$(MSBuildThisFileDirectory)..\..\</FahrenheitRootDir>
+        <FahrenheitRootDir Condition="'$(FahrenheitRootDir)' == '' and Exists('$(MSBuildThisFileDirectory).workspace\fahrenheit\src\core\Fahrenheit.csproj')">$(MSBuildThisFileDirectory).workspace\fahrenheit\</FahrenheitRootDir>
         <FahrenheitRootDir Condition="'$(FahrenheitRootDir)' == '' and Exists('$(MSBuildThisFileDirectory).workspace\fahrenheit\core\fh\Fahrenheit.csproj')">$(MSBuildThisFileDirectory).workspace\fahrenheit\</FahrenheitRootDir>
+
+        <FahrenheitCoreProjectRelative Condition="'$(FahrenheitRootDir)' != '' and Exists('$(FahrenheitRootDir)src\core\Fahrenheit.csproj')">src\core\Fahrenheit.csproj</FahrenheitCoreProjectRelative>
+        <FahrenheitCoreProjectRelative Condition="'$(FahrenheitCoreProjectRelative)' == ''">core\fh\Fahrenheit.csproj</FahrenheitCoreProjectRelative>
     </PropertyGroup>
 
     <!-- SDK REFERENCES -->
@@ -79,7 +85,7 @@
     Project references MUST have Private set to "false" and ExcludeAssets set to "runtime;native".
     -->
     <ItemGroup>
-        <ProjectReference Include="$(FahrenheitRootDir)core\fh\Fahrenheit.csproj">
+        <ProjectReference Include="$(FahrenheitRootDir)$(FahrenheitCoreProjectRelative)">
             <Private>false</Private>
             <ExcludeAssets>runtime;native</ExcludeAssets>
             <GlobalPropertiesToRemove>BaseOutputPath;BaseIntermediateOutputPath</GlobalPropertiesToRemove>
