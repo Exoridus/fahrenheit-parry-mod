@@ -534,6 +534,8 @@ public unsafe sealed partial class ParryModule : FhModule
             _logger.Warning($"[Parry] Could not hook isNeedShowJapanLogo (startup logo skip reduced): {ex.Message}");
         }
 
+        install_stage1_probes();
+
         _logger.Info("ParryPrototype ready. Adjust options via Mod Config (F7).");
         return true;
     }
