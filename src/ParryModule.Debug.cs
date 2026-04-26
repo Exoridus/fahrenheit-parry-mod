@@ -677,10 +677,10 @@ public unsafe sealed partial class ParryModule
                 "Frame", $"F{_debugFrameIndex:D7}");
             render_state_row_pair(
                 "Difficulty", ParryDifficultyModel.FormatName(_optionDifficulty),
-                "Spam Tier", format_spam_state());
+                "Input State", format_input_state());
             render_state_row_pair(
-                "Spam Armed", bool_to_yes_no(_spamController.ReleaseArmed),
-                "Spam Calm", _spamController.CalmResetRemainingSeconds > 0f ? "Active" : "Idle");
+                "Lockout", format_whiff_lockout_state(),
+                "Recovery", _optionWhiffLockout ? "Enabled" : "Disabled");
             render_state_row_pair(
                 "Battle Time", battleTime,
                 "Queue", $"Engine {attackCueSize} / Tracked {_debugCueSnapshots.Count}");
@@ -980,16 +980,24 @@ public unsafe sealed partial class ParryModule
     private static string bool_to_on_off(bool value) => value ? "On" : "Off";
     private static string bool_to_yes_no(bool value) => value ? "Yes" : "No";
 
-    private string format_spam_state()
+    private string format_input_state() => _runtime.InputState switch
     {
-        int tier = _spamController.TierIndex + 1;
-        float resetMs = _spamController.CalmResetRemainingSeconds * 1000f;
-        if (_spamController.CalmResetRemainingSeconds <= 0f)
-        {
-            return $"T{tier} (idle)";
-        }
+        ParryInputState.Ready        => "Ready",
+        ParryInputState.Open         => "Open (guard)",
+        ParryInputState.Resolved     => "Resolved",
+        ParryInputState.WhiffLockout => "WhiffLockout",
+        _                            => "Unknown"
+    };
 
-        return $"T{tier} (reset {resetMs:F0}ms)";
+    private string format_whiff_lockout_state()
+    {
+        if (_runtime.InputState != ParryInputState.WhiffLockout)
+        {
+            return "Idle";
+        }
+        float remainingMs = _runtime.WhiffLockoutRemainingSeconds * 1000f;
+        float totalMs = _runtime.WhiffLockoutTotalSeconds * 1000f;
+        return $"{remainingMs:F0}/{totalMs:F0}ms";
     }
 
     private string format_window_status_summary()

@@ -1090,7 +1090,7 @@ public unsafe sealed partial class ParryModule
             }
         }
 
-        if (_optionLogging)
+        if (_optionLogging && _runtime.ParryWindowActive)
         {
             // Slot-level pre-commit state: log BEFORE calling orig so we see pre-commit snapshot.
             if (isPartySlot)
@@ -1112,7 +1112,7 @@ public unsafe sealed partial class ParryModule
                 }
             }
 
-            // Raw params — always logged when logging is enabled.
+            // Raw params — only logged during an active parry window.
             write_session_hook_entry(
                 $"[MsSetDamageInternal] f={_debugFrameIndex} p1={param_1} p2={param_2} p3={param_3} p4={param_4} p5={param_5} " +
                 $"attacker={_runtime.CurrentAttackerId} targetMask={_runtime.CurrentPartyTargetMask} windowActive={_runtime.ParryWindowActive}");

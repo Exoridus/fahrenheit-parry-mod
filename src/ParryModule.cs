@@ -14,7 +14,6 @@ public unsafe sealed partial class ParryModule : FhModule
     private const float ParriedTextSeconds = 1.0f;
     private const float ParryMissedTextSeconds = 1.0f;
     private const float OverdriveBoostPercent = 0.05f;
-    private const float ParryWindowBackstopSeconds = 10f;
     private const int DebugLogRingCapacity = 500;
     private const int CueHistoryRingCapacity = 64;
     private const int DebugTurnRowCapacity = 500;
@@ -221,12 +220,20 @@ public unsafe sealed partial class ParryModule : FhModule
     // Runtime-only mutable state lives here to keep transitions centralized and auditable.
     private struct ParryRuntimeState
     {
+        // Canonical press-based parry state machine (FINAL_PARRY_SPEC.md).
+        // All R1-press gating goes through InputState. ParryWindowActive is a legacy
+        // convenience mirror kept true while InputState == Open.
+        public ParryInputState InputState;
         public bool ParryWindowActive;
         public byte CurrentAttackerId;
         public byte CurrentCueIndex;
         public uint CurrentPartyTargetMask;
         public uint CurrentCueSignature;
         public float ParryWindowRemainingSeconds;
+        // Whiff recovery lockout: countdown that approximates the "return to normal
+        // stance" animation commitment. Non-zero only while InputState == WhiffLockout.
+        public float WhiffLockoutRemainingSeconds;
+        public float WhiffLockoutTotalSeconds;
         public bool AwaitingTurnEnd;
         public float ParryWindowElapsedSeconds;
         public bool ParryWindowSucceeded;
@@ -261,6 +268,7 @@ public unsafe sealed partial class ParryModule : FhModule
 
         public static ParryRuntimeState CreateDefault() => new()
         {
+            InputState = ParryInputState.Ready,
             LastParriedTargetMask = 0,
             LastDispatchConsumedQueueIndex = 0xFF,
             StatusBlockLabel = string.Empty
@@ -278,7 +286,11 @@ public unsafe sealed partial class ParryModule : FhModule
     private bool _optionParryStateHud = true;
     private bool _optionOverdriveBoost = true;
     private bool _optionNegateDamage = true;
-    private bool _optionPenaltyEnabled = true;
+    // Enables the animation-approximated whiff recovery lockout. When disabled, a
+    // whiffed window transitions straight back to Ready with no commitment penalty.
+    // Persisted as "penalty" for settings backward compatibility; see
+    // TIERED_PENALTY_RATIONALE.md (retired) for the historical name.
+    private bool _optionWhiffLockout = true;
     private bool _optionStartupSkipForceTitle = true;
     private bool _optionStartupProbeMode = false;
     private bool _optionDebugOverlay =
@@ -322,7 +334,6 @@ public unsafe sealed partial class ParryModule : FhModule
     private readonly List<TurnTimelineEvent> _debugTimelineEventScratch = new(64);
     private readonly List<TurnTimelineRuntimeSignal> _debugRuntimeSignalScratch = new(128);
     private readonly Dictionary<string, ulong> _debugMessageLastEmitFrame = new(StringComparer.Ordinal);
-    private readonly ParrySpamController _spamController = new();
     private readonly Dictionary<string, int> _impactCorrelationRejectCounts = new(StringComparer.Ordinal);
     private int _impactCorrelationMatchedCount;
     private int _impactCorrelationRejectedCount;
@@ -539,37 +550,39 @@ public unsafe sealed partial class ParryModule : FhModule
 
         bool hasEnemyCue = monitor_attack_cues();
         update_parried_text_timer(deltaSeconds);
-        advance_spam_penalty_timers(deltaSeconds);
 
         ParryInputContext parryInput = capture_parry_input_context();
-
-        // Handle release first so if both release/press are visible in the same polling step,
-        // we treat it as a tap-spam cycle and allow escalation.
-        if (FhApi.Input.r1.just_released)
-        {
-            handle_parry_input_release(parryInput);
-        }
 
         if (FhApi.Input.r1.just_pressed)
         {
             handle_parry_input_press(parryInput);
         }
 
-        // Poll damage after input so that a pre-held R1 window (armed inside
-        // monitor_attack_cues on cue identity change) is visible here.
+        // Poll damage after input so the open window set by the press is visible.
         monitor_damage_resolves();
 
-        if (_runtime.ParryWindowActive)
+        // Parry input state machine tick (FINAL_PARRY_SPEC.md).
+        //
+        //   Open          -> WhiffLockout  on window expiry without a hit
+        //   WhiffLockout  -> Ready         when recovery timer elapses
+        //
+        // Resolved -> Ready is handled when the cue clears or the hit finalizes
+        // (see clear_awaiting_turn_end / end_parry_window).
+        if (_runtime.InputState == ParryInputState.Open && _runtime.ParryWindowActive)
         {
-            // Window stays open until the attack resolves (cue clears via clear_awaiting_turn_end
-            // or damage lands via on_impact_detected). Track elapsed time for telemetry only.
             _runtime.ParryWindowElapsedSeconds += deltaSeconds;
-
             _runtime.ParryWindowRemainingSeconds -= deltaSeconds;
             if (_runtime.ParryWindowRemainingSeconds <= 0f)
             {
-                log_debug($"Parry window expired ({format_actor_slot(_runtime.CurrentAttackerId)}, no hit).");
-                end_parry_window("backstop_expired");
+                transition_to_whiff_lockout();
+            }
+        }
+        else if (_runtime.InputState == ParryInputState.WhiffLockout)
+        {
+            _runtime.WhiffLockoutRemainingSeconds -= deltaSeconds;
+            if (_runtime.WhiffLockoutRemainingSeconds <= 0f)
+            {
+                transition_whiff_lockout_to_ready();
             }
         }
 
@@ -595,14 +608,16 @@ public unsafe sealed partial class ParryModule : FhModule
     private void reset_runtime_state(string timingReason, bool clearFeedbackFlashes, bool clearDamageFlags)
     {
         stop_audio_playback();
-        _spamController.Reset("runtime_reset");
 
+        _runtime.InputState = ParryInputState.Ready;
         _runtime.ParryWindowActive = false;
         _runtime.CurrentAttackerId = 0;
         _runtime.CurrentCueIndex = 0;
         _runtime.CurrentPartyTargetMask = 0;
         _runtime.CurrentCueSignature = 0;
         _runtime.ParryWindowRemainingSeconds = 0f;
+        _runtime.WhiffLockoutRemainingSeconds = 0f;
+        _runtime.WhiffLockoutTotalSeconds = 0f;
         _runtime.AwaitingTurnEnd = false;
         _runtime.ParryWindowElapsedSeconds = 0f;
         _runtime.ParryWindowSucceeded = false;
@@ -681,6 +696,7 @@ public unsafe sealed partial class ParryModule : FhModule
     {
         _runtime.ParryWindowRemainingSeconds = MathF.Max(0f, _runtime.ParryWindowRemainingSeconds);
         _runtime.ParryWindowElapsedSeconds = MathF.Max(0f, _runtime.ParryWindowElapsedSeconds);
+        _runtime.WhiffLockoutRemainingSeconds = MathF.Max(0f, _runtime.WhiffLockoutRemainingSeconds);
         _runtime.ParriedTextRemainingSeconds = MathF.Max(0f, _runtime.ParriedTextRemainingSeconds);
         _runtime.ParryMissedTextRemainingSeconds = MathF.Max(0f, _runtime.ParryMissedTextRemainingSeconds);
         _runtime.StatusBlockTextRemainingSeconds = MathF.Max(0f, _runtime.StatusBlockTextRemainingSeconds);
@@ -689,6 +705,12 @@ public unsafe sealed partial class ParryModule : FhModule
         {
             _runtime.ParryWindowRemainingSeconds = 0f;
             _runtime.ParryWindowElapsedSeconds = 0f;
+        }
+
+        if (_runtime.InputState != ParryInputState.WhiffLockout && _runtime.WhiffLockoutRemainingSeconds > 0f)
+        {
+            _runtime.WhiffLockoutRemainingSeconds = 0f;
+            _runtime.WhiffLockoutTotalSeconds = 0f;
         }
 
         if (!_runtime.AwaitingTurnEnd && _runtime.CurrentPartyTargetMask != 0)

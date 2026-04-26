@@ -50,7 +50,9 @@ public unsafe sealed partial class ParryModule
             if (persisted.Logging.HasValue) _optionLogging = persisted.Logging.Value;
             if (persisted.OverdriveBoost.HasValue) _optionOverdriveBoost = persisted.OverdriveBoost.Value;
             if (persisted.NegateDamage.HasValue) _optionNegateDamage = persisted.NegateDamage.Value;
-            if (persisted.Penalty.HasValue) _optionPenaltyEnabled = persisted.Penalty.Value;
+            // Persisted as "penalty" for backward compatibility with earlier settings files.
+            // The semantic is now "whiff recovery lockout enabled" (see FINAL_PARRY_SPEC.md).
+            if (persisted.Penalty.HasValue) _optionWhiffLockout = persisted.Penalty.Value;
             if (persisted.StartupSkipForceTitle.HasValue) _optionStartupSkipForceTitle = persisted.StartupSkipForceTitle.Value;
             if (persisted.DebugOverlay.HasValue) _optionDebugOverlay = persisted.DebugOverlay.Value;
 
@@ -92,7 +94,7 @@ public unsafe sealed partial class ParryModule
                 Logging = _optionLogging,
                 OverdriveBoost = _optionOverdriveBoost,
                 NegateDamage = _optionNegateDamage,
-                Penalty = _optionPenaltyEnabled,
+                Penalty = _optionWhiffLockout,
                 StartupSkipForceTitle = _optionStartupSkipForceTitle,
                 DebugOverlay = _optionDebugOverlay,
                 Difficulty = _optionDifficulty.ToString()
