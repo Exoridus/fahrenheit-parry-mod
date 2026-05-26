@@ -36,26 +36,6 @@ public unsafe sealed partial class ParryModule
         }
     }
 
-    private void render_setting_startup_skip()
-    {
-        if (ImGui.Checkbox("##fhparry.startup_skip", ref _optionStartupSkipForceTitle))
-        {
-            persist_settings();
-            _startupForceAttemptCount = 0;
-            _startupForceLastAttemptFrame = 0;
-            _startupTest20PatchApplied = false;
-            _startupTest20PatchMismatchLogged = false;
-            if (_optionStartupSkipForceTitle)
-            {
-                log_debug("Startup force-title skip enabled.");
-            }
-            else
-            {
-                log_debug("Startup force-title skip disabled.");
-            }
-        }
-    }
-
     private void render_setting_overdrive_boost()
     {
         if (ImGui.Checkbox("##fhparry.ctb", ref _optionOverdriveBoost))
@@ -88,6 +68,66 @@ public unsafe sealed partial class ParryModule
         }
     }
 
+    private void render_setting_battle_camera_lock_mode()
+    {
+        string[] labels = { "Off", "Enemy Turns Only", "All Turns" };
+        string[] tooltips =
+        {
+            "Vanilla FFX camera behavior. No lock applied.",
+            "Camera stays put while an enemy is acting (parry-friendly). Your party's turns still pan/zoom as in vanilla.",
+            "Camera stays put for every character's turn — yours and theirs. Most static; best for hardcore parry timing.",
+        };
+        BattleCameraLockMode[] values = { BattleCameraLockMode.Off, BattleCameraLockMode.EnemyTurnsOnly, BattleCameraLockMode.AllTurns };
+
+        int currentIndex = Array.IndexOf(values, _optionBattleCameraLockMode);
+        if (currentIndex < 0) currentIndex = 1;  // EnemyTurnsOnly fallback
+
+        if (ImGui.BeginCombo("##fhparry.battle_camera_lock_mode", labels[currentIndex]))
+        {
+            for (int i = 0; i < labels.Length; i++)
+            {
+                bool selected = i == currentIndex;
+                if (ImGui.Selectable(labels[i], selected))
+                {
+                    _optionBattleCameraLockMode = values[i];
+                    persist_settings();
+                    _enemyCameraLockSuppressCount = 0;
+                    _enemyMagicCameraLockSuppressCount = 0;
+                    _battleSpecialCameraLockSuppressCount = 0;
+                    log_debug($"Battle camera lock mode = {_optionBattleCameraLockMode}.");
+                }
+                if (ImGui.IsItemHovered())
+                {
+                    ImGui.SetTooltip(tooltips[i]);
+                }
+                if (selected) ImGui.SetItemDefaultFocus();
+            }
+            ImGui.EndCombo();
+        }
+
+        ImGui.TextDisabled("Cinematic cameras (boss / summon / overdrive) are never blocked.");
+    }
+
+    private void render_setting_parry_effect()
+    {
+        if (ImGui.Checkbox("##fhparry.parry_effect", ref _optionParryEffect))
+        {
+            persist_settings();
+            string state = _optionParryEffect ? "enabled" : "disabled";
+            log_debug($"Parry-success visual effect {state}.");
+        }
+    }
+
+    private void render_setting_streak_counter()
+    {
+        if (ImGui.Checkbox("##fhparry.streak_counter", ref _optionStreakCounter))
+        {
+            persist_settings();
+            string state = _optionStreakCounter ? "enabled (queues counter)" : "disabled (log-only)";
+            log_debug($"Streak counter attack {state}.");
+        }
+    }
+
     private void render_setting_logging()
     {
         if (ImGui.Checkbox("##fhparry.logging", ref _optionLogging))
@@ -116,6 +156,16 @@ public unsafe sealed partial class ParryModule
             _optionDifficulty = ParryDifficultyModel.DifficultyFromComboIndex(idx);
             persist_settings();
             log_debug($"Difficulty changed to {ParryDifficultyModel.FormatName(_optionDifficulty)}.");
+        }
+    }
+
+    private void render_setting_disable_native_evasion()
+    {
+        if (ImGui.Checkbox("##fhparry.disable_native_evasion", ref _optionDisableNativeEvasion))
+        {
+            persist_settings();
+            string state = _optionDisableNativeEvasion ? "enabled" : "disabled";
+            log_debug($"Disable native evasion {state}. (Override: HIT={(_checkHitHitValue?.ToString() ?? "auto")}, MISS={(_checkHitMissValue?.ToString() ?? "auto")})");
         }
     }
 

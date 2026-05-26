@@ -1147,4 +1147,213 @@ public unsafe sealed partial class ParryModule
         head = scratch[0];
         return true;
     }
+
+    /// <summary>
+    ///     Active hook on MsAtelRequestCamera (FFX.exe+0x397BD0).
+    ///
+    ///     The function is the central gate for in-game camera change requests
+    ///     (called from 12 sites — battle camera setup, scene transitions, etc.).
+    ///     We intercept and short-circuit the call when both:
+    ///       - the user has the enemy-turn camera lock enabled (default-on);
+    ///       - and an enemy turn is currently in progress (cue active, attacker id
+    ///         outside party slot range 0..PartyActorCapacity-1).
+    ///
+    ///     Result: during enemy turns the camera stays at whatever position the
+    ///     game left it in for the player, keeping incoming attack animations
+    ///     readable for parry timing. Player turns and out-of-battle camera
+    ///     changes pass through unchanged.
+    ///
+    ///     Return value at all 12 observed call sites is unused, so returning 0
+    ///     on suppression is safe.
+    /// </summary>
+    private int h_ms_atel_request_camera(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8)
+    {
+        bool isAnyTurnActive  = _runtime.AwaitingTurnEnd;
+        bool isEnemyTurnActive = isAnyTurnActive && _runtime.CurrentAttackerId >= PartyActorCapacity;
+
+        bool shouldSuppress = _optionEnabled && _optionBattleCameraLockMode switch
+        {
+            BattleCameraLockMode.AllTurns       => isAnyTurnActive,
+            BattleCameraLockMode.EnemyTurnsOnly => isEnemyTurnActive,
+            _                                    => false,
+        };
+
+        if (shouldSuppress)
+        {
+            _enemyCameraLockSuppressCount++;
+            if (_optionLogging)
+            {
+                log_debug(
+                    $"[CameraLock] Suppressed MsAtelRequestCamera(p1={p1:X}, p2={p2:X}, p3={p3:X}) "
+                    + $"(mode={_optionBattleCameraLockMode}, attacker={_runtime.CurrentAttackerId}, count={_enemyCameraLockSuppressCount}).");
+            }
+            return 0;
+        }
+
+        return _hMsAtelRequestCamera.orig_fptr.Invoke(p1, p2, p3, p4, p5, p6, p7, p8);
+    }
+
+    /// <summary>
+    ///     Active hook on MsAtelRequestMagicCamera (FFX.exe+0x398010). Sibling of
+    ///     the MsAtelRequestCamera lock — same gating logic, separate camera path.
+    ///     Magic spell camera changes (enemy spells like Fire/Thunder/Demi) route
+    ///     through this function instead of MsAtelRequestCamera, so a parallel
+    ///     hook is needed for the enemy-turn camera lock to cover both paths.
+    ///
+    ///     On suppression returns 0xFF — the engine's "no camera assigned"
+    ///     sentinel (engine line 841782 default), which is the safe no-op value
+    ///     for callers that store the returned camera-id.
+    /// </summary>
+    private byte h_ms_atel_request_magic_camera(int p1, int p2, uint p3, int p4, int p5, int p6, uint p7, int p8, int p9)
+    {
+        bool isAnyTurnActive  = _runtime.AwaitingTurnEnd;
+        bool isEnemyTurnActive = isAnyTurnActive && _runtime.CurrentAttackerId >= PartyActorCapacity;
+
+        bool shouldSuppress = _optionEnabled && _optionBattleCameraLockMode switch
+        {
+            BattleCameraLockMode.AllTurns       => isAnyTurnActive,
+            BattleCameraLockMode.EnemyTurnsOnly => isEnemyTurnActive,
+            _                                    => false,
+        };
+
+        if (shouldSuppress)
+        {
+            _enemyMagicCameraLockSuppressCount++;
+            if (_optionLogging)
+            {
+                log_debug(
+                    $"[CameraLock] Suppressed MsAtelRequestMagicCamera(p1={p1:X}, p2={p2:X}, p3={p3:X}) "
+                    + $"(mode={_optionBattleCameraLockMode}, attacker={_runtime.CurrentAttackerId}, count={_enemyMagicCameraLockSuppressCount}).");
+            }
+            return 0xFF;
+        }
+
+        return _hMsAtelRequestMagicCamera.orig_fptr.Invoke(p1, p2, p3, p4, p5, p6, p7, p8, p9);
+    }
+
+    /// <summary>
+    ///     Active hook on MsBattleSpecialCameraPause (FFX.exe+0x39DDD0). The third
+    ///     sibling of the Battle Camera Lock — covers the cinematic camera path
+    ///     used by boss / overdrive-class enemy attacks (high-cue 0x40XX commands)
+    ///     that bypass MsAtelRequestCamera and MsAtelRequestMagicCamera entirely.
+    ///
+    ///     Suppression is a bare <c>return</c> (no call to original). Engine-level
+    ///     safety: btl._24_1_ stays 0, so the partner MsBattleSpecialCameraFree
+    ///     becomes a no-op via its own early guard. No soft-lock risk.
+    /// </summary>
+    private void h_ms_battle_special_camera_pause(byte mode)
+    {
+        bool isAnyTurnActive  = _runtime.AwaitingTurnEnd;
+        bool isEnemyTurnActive = isAnyTurnActive && _runtime.CurrentAttackerId >= PartyActorCapacity;
+
+        bool shouldSuppress = _optionEnabled && _optionBattleCameraLockMode switch
+        {
+            BattleCameraLockMode.AllTurns       => isAnyTurnActive,
+            BattleCameraLockMode.EnemyTurnsOnly => isEnemyTurnActive,
+            _                                    => false,
+        };
+
+        if (shouldSuppress)
+        {
+            _battleSpecialCameraLockSuppressCount++;
+            if (_optionLogging)
+            {
+                log_debug(
+                    $"[CameraLock] Suppressed MsBattleSpecialCameraPause(mode=0x{mode:X2}) "
+                    + $"(lock_mode={_optionBattleCameraLockMode}, attacker={_runtime.CurrentAttackerId}, count={_battleSpecialCameraLockSuppressCount}).");
+            }
+            return;
+        }
+
+        _hMsBattleSpecialCameraPause.orig_fptr.Invoke(mode);
+    }
+
+    /// <summary>
+    ///     Active hook on MsDmgCalc_CheckHit (FFX.exe+0x38A950). The engine's
+    ///     accuracy/evasion roll. Always invokes the original to preserve battle
+    ///     RNG state, then conditionally overrides MISS → HIT when:
+    ///       - the option is enabled,
+    ///       - the target is a real PC (not monster, not aeon),
+    ///       - and we've auto-cached the HIT enum integer value.
+    ///
+    ///     The hook also runs auto-discovery for the CheckHitResult enum integers
+    ///     by observing returns. Logs every PC-target invocation when logging is on
+    ///     so the user can manually verify HIT/MISS values from the session log.
+    /// </summary>
+    private int h_ms_dmg_calc_check_hit(Chr* user, Chr* target, void* command, void* info, int counter)
+    {
+        int result = _hMsDmgCalcCheckHit.orig_fptr.Invoke(user, target, command, info, counter);
+
+        if (target == null) return result;  // defensive — never observed but cheap
+
+        // Chr has TWO id fields:
+        //   - id     at 0xC: engine slot index (0..0x1B), what MsGetRamChrMonster operates on.
+        //   - chr_id at 0xE: character/monster *template* id (e.g. 0x10CF = Cactuar).
+        // Slot is what gates monster/PC discrimination; template is informational only.
+        ushort targetSlot = target->id;
+        ushort targetTemplate = target->chr_id;
+        bool isMonster = (uint)(targetSlot - 0x14u) < 8u;   // matches MsGetRamChrMonster
+        bool isAeon = target->ram.is_aeon;
+        bool isRealPC = !isMonster && !isAeon;
+
+        if (!isRealPC) return result;  // monsters & aeons keep vanilla evade
+
+        _checkHitObservationCount++;
+
+        // Auto-discovery: track candidate HIT value (most-common observation).
+        if (_checkHitHitValue == null)
+        {
+            if (_checkHitFirstObservedValue == null || _checkHitFirstObservedValue.Value != result)
+            {
+                _checkHitFirstObservedValue = result;
+                _checkHitConsecutiveSameCount = 1;
+            }
+            else
+            {
+                _checkHitConsecutiveSameCount++;
+                if (_checkHitConsecutiveSameCount >= 5)
+                {
+                    _checkHitHitValue = _checkHitFirstObservedValue;
+                    if (_optionLogging)
+                    {
+                        log_debug($"[CheckHit] Auto-cached HIT enum value = {_checkHitHitValue.Value} after {_checkHitConsecutiveSameCount} consecutive PC-target observations.");
+                    }
+                }
+            }
+        }
+        else if (_checkHitMissValue == null && result != _checkHitHitValue.Value)
+        {
+            // Got a value that differs from cached HIT — could be MISS or MISS_ALIVE.
+            // MISS_ALIVE only fires for status-only commands (the early-return at
+            // engine line 830189) so it's quite rare. We can't perfectly disambiguate
+            // here without inspecting command->flags_misc; for the override we don't
+            // care — only MISS gets flipped to HIT. Record as MISS (the user can
+            // always pre-seed both via persisted settings if auto-discovery misfires).
+            _checkHitMissValue = result;
+            if (_optionLogging)
+            {
+                log_debug($"[CheckHit] Auto-cached MISS enum value = {_checkHitMissValue.Value} (HIT={_checkHitHitValue.Value}). Override active for PC targets.");
+            }
+        }
+
+        if (_optionLogging)
+        {
+            ushort userSlot = user != null ? user->id : (ushort)0;
+            ushort userTemplate = user != null ? user->chr_id : (ushort)0;
+            log_debug($"[CheckHit] user_slot={userSlot:X2} user_tpl={userTemplate:X4} target_slot={targetSlot:X2} target_tpl={targetTemplate:X4} is_aeon={isAeon} result={result} (obs#{_checkHitObservationCount}, hit={_checkHitHitValue?.ToString() ?? "?"}, miss={_checkHitMissValue?.ToString() ?? "?"})");
+        }
+
+        if (!_optionDisableNativeEvasion) return result;
+        if (_checkHitHitValue == null) return result;
+        if (_checkHitMissValue == null) return result;
+        if (result != _checkHitMissValue.Value) return result;
+
+        _checkHitOverrideCount++;
+        if (_optionLogging)
+        {
+            log_debug($"[CheckHit] Overrode MISS → HIT for PC target_slot={targetSlot:X2} target_tpl={targetTemplate:X4} (override#{_checkHitOverrideCount}).");
+        }
+        return _checkHitHitValue.Value;
+    }
+
 }

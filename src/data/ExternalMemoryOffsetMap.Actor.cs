@@ -72,5 +72,14 @@ public static partial class ExternalMemoryOffsetMap
         ///     <c>value &amp;= ~DeadStatusBitMask</c>.
         /// </summary>
         public const ushort DeadStatusBitMask = 0x0001;
+
+        /// <summary>
+        ///     Confuse-status mask within the 16-bit field at
+        ///     <see cref="OffsetStatusBits"/>. Battle traces show the Confuse
+        ///     status can be staged here before <c>status_suffer</c> reflects it,
+        ///     so the parry "non-parryable" check reads this bit as a fallback
+        ///     ahead of the canonical flag.
+        /// </summary>
+        public const ushort ConfuseStatusBitMask = 0x0100;
     }
 }

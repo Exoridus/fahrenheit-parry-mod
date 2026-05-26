@@ -7,8 +7,6 @@
     "fhparry.audio.desc": "Play random custom Parry_0x.wav clips on successful parries.",
     "fhparry.parry_state_hud.name": "Parry State HUD",
     "fhparry.parry_state_hud.desc": "Show a top-center text indicator for current parry state (-, Waiting, Open, Succeeded, Missed).",
-    "fhparry.startup_skip.name": "Startup Skip (Experimental)",
-    "fhparry.startup_skip.desc": "One-shot force-load shortcut to jump to title/menu faster on startup.",
     "fhparry.ctb.name": "Boost Overdrive Gauge",
     "fhparry.ctb.desc": "Grant a small Overdrive gain to defenders on a successful parry.",
     "fhparry.negate.name": "Negate Damage",
@@ -19,6 +17,12 @@
     "fhparry.debug_overlay.desc": "Display a live event feed and mapped runtime state panel in-game.",
     "fhparry.difficulty.name": "Parry Difficulty",
     "fhparry.difficulty.desc": "Select preset parry timing windows and anti-spam behavior (Easy, Normal, Expert, Debug).",
+    "fhparry.battle_camera_lock_mode.name": "Battle Camera Lock",
+    "fhparry.battle_camera_lock_mode.desc": "Controls which turns suppress camera movement. Enemy Turns Only (default): camera holds during enemy actions. All Turns: camera holds for everyone. Off: vanilla FFX behavior. Cinematic cameras for boss / summon / overdrive sequences are never blocked.",
+    "fhparry.parry_effect.name": "Parry Visual Effect",
+    "fhparry.parry_effect.desc": "Fire a NulShock-style shield flash on the parrying character on a successful parry. Pure visual feedback — no gameplay state effect.",
+    "fhparry.streak_counter.name": "Streak Counter Attack",
+    "fhparry.streak_counter.desc": "When a slot completes a defensive streak (every targeted slot in a cue parried at least once and the cumulative streak reaches the threshold), automatically queue a basic Attack from the parrier onto the original attacker. Uses the engine's own auto-counter cue insertion path so CTB scheduling stays consistent.",
     "fhparry.future.name": "Future Features",
     "fhparry.future.desc": "Reserved for upcoming auto-counter options."
 }

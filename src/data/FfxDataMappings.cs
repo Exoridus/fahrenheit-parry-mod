@@ -2,6 +2,16 @@ namespace Fahrenheit.Mods.Parry;
 
 internal sealed class FfxDataMappings
 {
+    /// <summary>
+    ///     Schema version this consumer is built against. Mirrors the
+    ///     <c>SchemaVersion</c> field the pipeline writes into the runtime bundle
+    ///     header (see <c>ffx-knowledge-base/build/Build.BuildModRuntimeBundles.cs</c>).
+    ///     A mismatch is logged but does not abort the load — the consumer reads
+    ///     fields defensively, so unknown future fields are ignored and missing
+    ///     legacy fields fall back to empty/zero. The warning surfaces drift early.
+    /// </summary>
+    private const int ExpectedBundleSchemaVersion = 1;
+
     private static readonly Regex _commandDumpRegex = new(
         pattern: @"^\s*(?<id>[0-9A-Fa-f]{4})\s*\(Offset\s*[0-9A-Fa-f]+\)\s*-\s*(?<payload>.+)$",
         options: RegexOptions.Compiled | RegexOptions.CultureInvariant);
@@ -556,6 +566,20 @@ internal sealed class FfxDataMappings
             using JsonDocument document = JsonDocument.Parse(stream);
 
             JsonElement root = document.RootElement;
+
+            // Surface schema drift early. Loader keeps going either way — see
+            // ExpectedBundleSchemaVersion docs above for the load-defensive contract.
+            if (root.TryGetProperty("SchemaVersion", out JsonElement schemaVersion)
+                && schemaVersion.ValueKind == JsonValueKind.Number
+                && schemaVersion.TryGetInt32(out int actualVersion)
+                && actualVersion != ExpectedBundleSchemaVersion)
+            {
+                warnLog?.Invoke(
+                    $"Runtime bundle schema mismatch in {Path.GetFileName(path)}: " +
+                    $"expected SchemaVersion={ExpectedBundleSchemaVersion}, got {actualVersion}. " +
+                    "Continuing with best-effort field reads.");
+            }
+
             if (root.TryGetProperty("Domains", out JsonElement domains) && domains.ValueKind == JsonValueKind.Object)
             {
                 mapped += merge_runtime_bundle_domains(domains);

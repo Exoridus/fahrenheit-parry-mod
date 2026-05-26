@@ -682,6 +682,9 @@ public unsafe sealed partial class ParryModule
                 "Lockout", format_whiff_lockout_state(),
                 "Recovery", _optionWhiffLockout ? "Enabled" : "Disabled");
             render_state_row_pair(
+                "Streak", format_parry_streak_state(),
+                "Threshold", $"≥ {ParryStreakObserveThreshold}");
+            render_state_row_pair(
                 "Battle Time", battleTime,
                 "Queue", $"Engine {attackCueSize} / Tracked {_debugCueSnapshots.Count}");
             render_state_row_pair(
@@ -998,6 +1001,24 @@ public unsafe sealed partial class ParryModule
         float remainingMs = _runtime.WhiffLockoutRemainingSeconds * 1000f;
         float totalMs = _runtime.WhiffLockoutTotalSeconds * 1000f;
         return $"{remainingMs:F0}/{totalMs:F0}ms";
+    }
+
+    private string format_parry_streak_state()
+    {
+        // Compact per-slot list, omitting zero-streak slots so the row stays
+        // readable. Empty result when no slot has a live streak.
+        StringBuilder sb = new();
+        for (int i = 0; i < PartyActorCapacity; i++)
+        {
+            byte streak = _consecutiveParriesPerSlot[i];
+            if (streak == 0) continue;
+            if (sb.Length > 0) sb.Append(' ');
+            sb.Append(format_actor_slot((byte)i));
+            sb.Append(':');
+            sb.Append(streak);
+            if (streak >= ParryStreakObserveThreshold) sb.Append('!');
+        }
+        return sb.Length == 0 ? "-" : sb.ToString();
     }
 
     private string format_window_status_summary()

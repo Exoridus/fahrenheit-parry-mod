@@ -7,8 +7,6 @@
     "fhparry.audio.desc": "Spielt bei erfolgreicher Parade zufaellige eigene Parry_0x.wav Dateien ab.",
     "fhparry.parry_state_hud.name": "Parry-Statusanzeige",
     "fhparry.parry_state_hud.desc": "Zeigt oben mittig einen Text zum aktuellen Parry-Status (-, Waiting, Open, Succeeded, Missed).",
-    "fhparry.startup_skip.name": "Startup-Skip (Experimentell)",
-    "fhparry.startup_skip.desc": "Einmaliger Force-Load-Shortcut, um beim Start schneller zum Titelmenue zu springen.",
     "fhparry.ctb.name": "Ekstaseleiste erhoehen",
     "fhparry.ctb.desc": "Gibt Verteidigern bei erfolgreicher Parade einen kleinen Ekstase-Bonus.",
     "fhparry.negate.name": "Schaden negieren",
@@ -19,6 +17,12 @@
     "fhparry.debug_overlay.desc": "Zeigt einen Live-Ereignisfeed und ein zugeordnetes Laufzeit-Zustandspanel im Spiel an.",
     "fhparry.difficulty.name": "Parier-Schwierigkeit",
     "fhparry.difficulty.desc": "Waehlt vordefinierte Parierfenster und Anti-Spam-Verhalten (Easy, Normal, Expert, Debug).",
+    "fhparry.battle_camera_lock_mode.name": "Kampfkamera-Sperre",
+    "fhparry.battle_camera_lock_mode.desc": "Steuert, bei welchen Zuegen die Kamerabewegung unterdrueckt wird. Nur Gegnerzuege (Standard): Kamera haelt waehrend gegnerischer Aktionen. Alle Zuege: Kamera haelt fuer alle. Aus: normales FFX-Verhalten. Kinematische Kameras fuer Bosse, Beschwoerungs- und Overdrive-Sequenzen werden nie blockiert.",
+    "fhparry.parry_effect.name": "Parade-Visualeffekt",
+    "fhparry.parry_effect.desc": "Spielt bei erfolgreicher Parade einen NulShock-aehnlichen Schild-Effekt auf dem parierenden Charakter ab. Reines visuelles Feedback — keine Spielmechanik-Auswirkung.",
+    "fhparry.streak_counter.name": "Konter-Angriff bei Streak",
+    "fhparry.streak_counter.desc": "Wenn ein Slot eine Verteidigungs-Streak abschliesst (alle anvisierten Slots in einer Cue mindestens einmal pariert und die kumulative Streak den Schwellenwert erreicht), wird automatisch ein einfacher Angriff vom Pareur auf den urspruenglichen Angreifer eingereiht. Nutzt den engine-eigenen Auto-Konter-Cue-Pfad, damit das CTB-Scheduling konsistent bleibt.",
     "fhparry.future.name": "Zukuenftige Funktionen",
     "fhparry.future.desc": "Reserviert fuer kommende Auto-Konter-Optionen."
 }

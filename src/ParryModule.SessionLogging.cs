@@ -35,11 +35,6 @@ public unsafe sealed partial class ParryModule
 
             _sessionDebugLogWriter = create_session_writer(debugPath);
             _sessionTimelineLogWriter = create_session_writer(timelinePath);
-            if (_optionStartupProbeMode)
-            {
-                string startupProbePath = Path.Combine(_sessionLogsRoot, $"{_sessionLogPrefix}_startup-probe.tsv");
-                _sessionStartupProbeWriter = create_session_writer(startupProbePath);
-            }
 
             string startedLocal = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture);
             _sessionDebugLogWriter.WriteLine($"# fhparry session: {_sessionLogPrefix}");
@@ -54,7 +49,7 @@ public unsafe sealed partial class ParryModule
             _sessionTimelineLogWriter.WriteLine(
                 "Time\tFrame\tEvent\tRowId\tTurn\tActor\tAction\tTargets\tParryable\tParry\tLifecycle\tQueue\tAttacker\tCommand\tCommandMeta\tMessage");
 
-            if (_optionLogging || _optionStartupProbeMode)
+            if (_optionLogging)
             {
                 _logger.Info($"[Parry] Session logging enabled. Prefix: {_sessionLogPrefix}, Dir: {_sessionLogsRoot}");
             }
@@ -64,7 +59,6 @@ public unsafe sealed partial class ParryModule
             _sessionLogDisabled = true;
             _sessionDebugLogWriter = null;
             _sessionTimelineLogWriter = null;
-            _sessionStartupProbeWriter = null;
             _logger.Warning($"[Parry] Session logging disabled: {ex.Message}");
         }
     }
@@ -291,69 +285,8 @@ public unsafe sealed partial class ParryModule
             // ignored
         }
 
-        try
-        {
-            _sessionStartupProbeWriter?.Flush();
-            _sessionStartupProbeWriter?.Dispose();
-        }
-        catch
-        {
-            // ignored
-        }
-
         _sessionDebugLogWriter = null;
         _sessionTimelineLogWriter = null;
-        _sessionStartupProbeWriter = null;
-    }
-
-    private void write_session_startup_probe_header_if_needed()
-    {
-        if (_sessionLogDisabled || _sessionStartupProbeWriter == null || _startupProbeHeaderWritten) return;
-
-        try
-        {
-            _sessionStartupProbeWriter.WriteLine(
-                "Time\tFrame\tReason\tEventId\tEventName\tMenuState_0xF407E4\tNeedAutoSave\tMoviePlay_0xD2A008\tState_0xD36FA0\tState_0xD36FA4\tSaveData0C88\tGameplayReadyOverlay\tGameplayReadyStartup\tBattleActive");
-            _startupProbeHeaderWritten = true;
-        }
-        catch (Exception ex)
-        {
-            disable_session_logging($"startup probe header write failed: {ex.Message}");
-        }
-    }
-
-    private void write_session_startup_probe_entry(
-        DateTime timestampLocal,
-        ulong frameIndex,
-        string reason,
-        int eventId,
-        string eventName,
-        int menuState,
-        int needAutoSave,
-        int moviePlay,
-        int stateD36FA0,
-        int stateD36FA4,
-        int saveData0C88,
-        bool gameplayReadyOverlay,
-        bool gameplayReadyStartup,
-        bool battleActive)
-    {
-        if (_sessionLogDisabled || _sessionStartupProbeWriter == null) return;
-
-        write_session_startup_probe_header_if_needed();
-        if (_sessionLogDisabled || _sessionStartupProbeWriter == null) return;
-
-        try
-        {
-            string time = format_gameplay_timestamp(timestampLocal);
-            string frame = $"F{frameIndex:D7}";
-            _sessionStartupProbeWriter.WriteLine(
-                $"{tsv(time)}\t{tsv(frame)}\t{tsv(reason)}\t{eventId}\t{tsv(eventName)}\t{menuState}\t{needAutoSave}\t{moviePlay}\t{stateD36FA0}\t{stateD36FA4}\t{saveData0C88}\t{(gameplayReadyOverlay ? 1 : 0)}\t{(gameplayReadyStartup ? 1 : 0)}\t{(battleActive ? 1 : 0)}");
-        }
-        catch (Exception ex)
-        {
-            disable_session_logging($"startup probe write failed: {ex.Message}");
-        }
     }
 
     private void prune_old_session_logs_if_needed()

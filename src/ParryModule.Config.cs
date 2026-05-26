@@ -11,13 +11,19 @@ public unsafe sealed partial class ParryModule
         public bool? OverdriveBoost { get; set; }
         public bool? NegateDamage { get; set; }
         public bool? Penalty { get; set; }
-        public bool? StartupSkipForceTitle { get; set; }
         public bool? DebugOverlay { get; set; }
         // Native-engine probe channel (separate from general Logging). Default-off.
         // When true, probe-tagged events are queued into the frame-deferred ring
         // and flushed once per pre-update tick. Future Stage-1 observe probes
         // will route through this; the existing logging path is unchanged.
         public bool? NativeProbeLogging { get; set; }
+        public string? BattleCameraLockMode { get; set; }  // canonical — human-readable enum name
+        public bool? EnemyCameraLock { get; set; }          // legacy — migrated on load, never written
+        public bool? ParryEffect { get; set; }
+        public bool? StreakCounter { get; set; }
+        public bool? DisableNativeEvasion { get; set; }
+        public int? CheckHitHitValue { get; set; }
+        public int? CheckHitMissValue { get; set; }
         public string? Difficulty { get; set; }
     }
 
@@ -58,9 +64,28 @@ public unsafe sealed partial class ParryModule
             // Persisted as "penalty" for backward compatibility with earlier settings files.
             // The semantic is now "whiff recovery lockout enabled" (see FINAL_PARRY_SPEC.md).
             if (persisted.Penalty.HasValue) _optionWhiffLockout = persisted.Penalty.Value;
-            if (persisted.StartupSkipForceTitle.HasValue) _optionStartupSkipForceTitle = persisted.StartupSkipForceTitle.Value;
             if (persisted.DebugOverlay.HasValue) _optionDebugOverlay = persisted.DebugOverlay.Value;
             if (persisted.NativeProbeLogging.HasValue) _optionNativeProbeLogging = persisted.NativeProbeLogging.Value;
+            if (persisted.BattleCameraLockMode != null
+                && Enum.TryParse(persisted.BattleCameraLockMode, ignoreCase: true, out BattleCameraLockMode parsedMode))
+            {
+                _optionBattleCameraLockMode = parsedMode;
+            }
+            else if (persisted.EnemyCameraLock.HasValue)
+            {
+                // Legacy migration: old bool → new enum. true → EnemyTurnsOnly (preserves prior
+                // behaviour); false → Off. New installs without either field default to
+                // EnemyTurnsOnly via the field initializer.
+                _optionBattleCameraLockMode = persisted.EnemyCameraLock.Value
+                    ? BattleCameraLockMode.EnemyTurnsOnly
+                    : BattleCameraLockMode.Off;
+                _logger.Info($"[Parry] Migrated legacy EnemyCameraLock={persisted.EnemyCameraLock.Value} → BattleCameraLockMode={_optionBattleCameraLockMode}.");
+            }
+            if (persisted.ParryEffect.HasValue) _optionParryEffect = persisted.ParryEffect.Value;
+            if (persisted.StreakCounter.HasValue) _optionStreakCounter = persisted.StreakCounter.Value;
+            if (persisted.DisableNativeEvasion.HasValue) _optionDisableNativeEvasion = persisted.DisableNativeEvasion.Value;
+            if (persisted.CheckHitHitValue.HasValue) _checkHitHitValue = persisted.CheckHitHitValue.Value;
+            if (persisted.CheckHitMissValue.HasValue) _checkHitMissValue = persisted.CheckHitMissValue.Value;
 
             if (ParryDifficultyModel.TryParsePersistedDifficulty(persisted.Difficulty, out ParryDifficulty difficulty))
             {
@@ -101,9 +126,14 @@ public unsafe sealed partial class ParryModule
                 OverdriveBoost = _optionOverdriveBoost,
                 NegateDamage = _optionNegateDamage,
                 Penalty = _optionWhiffLockout,
-                StartupSkipForceTitle = _optionStartupSkipForceTitle,
                 DebugOverlay = _optionDebugOverlay,
                 NativeProbeLogging = _optionNativeProbeLogging,
+                BattleCameraLockMode = _optionBattleCameraLockMode.ToString(),
+                ParryEffect = _optionParryEffect,
+                StreakCounter = _optionStreakCounter,
+                DisableNativeEvasion = _optionDisableNativeEvasion,
+                CheckHitHitValue = _checkHitHitValue,
+                CheckHitMissValue = _checkHitMissValue,
                 Difficulty = _optionDifficulty.ToString()
             };
 

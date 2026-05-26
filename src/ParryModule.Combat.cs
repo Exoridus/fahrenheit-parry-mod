@@ -43,10 +43,11 @@ public unsafe sealed partial class ParryModule
         if (target == null || !target->stat_exist_flag) return false;
         if (target->ram.status_suffer.HasFlag(StatusPermanentFlags.CONFUSE)) return true;
 
-        // Runtime fallback: battle traces show Confuse can be staged in chr+0x606 (bit 0x0100)
+        // Runtime fallback: battle traces show Confuse can be staged in the
+        // status-bits half-word (chr+OffsetStatusBits, bit ConfuseStatusBitMask)
         // before status_suffer flags are fully reflected.
-        ushort status606 = *(ushort*)((byte*)target + 0x606);
-        return (status606 & 0x0100) != 0;
+        ushort statusBits = *(ushort*)((byte*)target + ExternalMemoryOffsetMap.ChrStruct.OffsetStatusBits);
+        return (statusBits & ExternalMemoryOffsetMap.ChrStruct.ConfuseStatusBitMask) != 0;
     }
 
     private static bool is_target_non_parryable(Chr* target)
@@ -134,6 +135,13 @@ public unsafe sealed partial class ParryModule
         trigger_failure_feedback();
         _runtime.TurnImpactMissedSeen = true;
         _runtime.TurnImpactMissedAttackerId = _runtime.CurrentAttackerId;
+
+        // Streak reset is performed per-cue at clear_awaiting_turn_end via
+        // resolve_streak_at_cue_clear(); per-slot reset on hit was removed
+        // because user-case "multi-target attack hits at least one char →
+        // failed streak for ALL targeted slots" needs the cue-wide context
+        // that only the cue-clear boundary has.
+
         log_debug($"Impact hit {format_actor_slot((byte)slotIndex)} outside parry window. {timingTag}");
     }
 
@@ -450,6 +458,10 @@ public unsafe sealed partial class ParryModule
         string attackerLabel = format_actor_slot(_runtime.CurrentAttackerId);
         float lockoutSeconds = compute_whiff_lockout_seconds();
 
+        // Streak reset is performed per-cue at clear_awaiting_turn_end via
+        // resolve_streak_at_cue_clear(). A whiff is a cue-wide failure for
+        // every slot in the target mask; that handler covers it.
+
         // Clear the open-window arrays (per-slot expiry, telemetry, feedback pending)
         // so hooks no longer treat this window as live. The InputState flip that
         // follows is what gates further R1 presses — not the array values.
@@ -624,6 +636,11 @@ public unsafe sealed partial class ParryModule
 
     private void clear_awaiting_turn_end(string reason)
     {
+        // Resolve streak BEFORE clearing the per-cue masks below — needs both
+        // CurrentPartyTargetMask (slots targeted this cue) and LastParriedTargetMask
+        // (slots that successfully parried at least one hit).
+        resolve_streak_at_cue_clear();
+
         flush_attack_telemetry(reason);
         _runtime.AwaitingTurnEnd = false;
         Array.Clear(_parryExpiry);
@@ -671,6 +688,175 @@ public unsafe sealed partial class ParryModule
     {
         _runtime.ParriedTextRemainingSeconds = 0f;
         _runtime.ParryMissedTextRemainingSeconds = ParryMissedTextSeconds;
+    }
+
+    /// <summary>
+    ///     Per-cue streak resolution. Called once at cue-clear time (i.e. when the
+    ///     enemy's turn fully resolves), BEFORE the per-cue masks are cleared.
+    ///
+    ///     Implements the case-handling spec from the parry roadmap:
+    ///       - Multi-target attack hits at least one targeted slot
+    ///         → streak failure for ALL targeted slots in this cue
+    ///         (a partial-defense doesn't reward anyone — the team failed).
+    ///       - All targeted slots successfully parried at least once
+    ///         → streak +1 for each targeted slot.
+    ///       - Random-target attack collapses to a single slot (others not in mask)
+    ///         → only the single targeted slot is considered.
+    ///       - Random-target attack hits 2 of 3 chars
+    ///         → both targeted slots resolve via the multi-target rule above.
+    ///
+    ///     When a slot's streak crosses <see cref="ParryStreakObserveThreshold"/>,
+    ///     the counter-attack queue marker fires (currently log-only; native
+    ///     command insertion path is the next implementation step). The
+    ///     consuming slot's streak resets to 0 after the counter is queued so
+    ///     the chain restarts from zero.
+    /// </summary>
+    private void resolve_streak_at_cue_clear()
+    {
+        uint targetedMask = _runtime.CurrentPartyTargetMask;
+        if (targetedMask == 0)
+        {
+            // No party slots were involved in this cue — nothing to resolve.
+            return;
+        }
+
+        uint parriedMask = _runtime.LastParriedTargetMask;
+        uint failedMask  = targetedMask & ~parriedMask;
+        bool anyFailure  = failedMask != 0;
+
+        if (anyFailure)
+        {
+            // Multi-target rule: at least one targeted slot failed (took a hit
+            // or was never parried). Streak resets for every slot in the cue —
+            // even slots that DID parry don't get credit because the team's
+            // overall defensive pass failed.
+            for (int i = 0; i < PartyActorCapacity; i++)
+            {
+                if ((targetedMask & (1u << i)) == 0) continue;
+                if (_consecutiveParriesPerSlot[i] == 0) continue;
+                log_debug($"Streak reset (cue failure): {format_actor_slot((byte)i)} (was {_consecutiveParriesPerSlot[i]}× — cue had {BitOperations.PopCount(failedMask)} failed slot(s)).");
+                _consecutiveParriesPerSlot[i] = 0;
+            }
+            return;
+        }
+
+        // Full success: every targeted slot parried at least once. Increment
+        // each slot's streak, and check whether any crossed the threshold so
+        // the counter-attack queue marker fires.
+        for (int i = 0; i < PartyActorCapacity; i++)
+        {
+            if ((targetedMask & (1u << i)) == 0) continue;
+
+            byte before = _consecutiveParriesPerSlot[i];
+            byte after  = before == byte.MaxValue ? before : (byte)(before + 1);
+            _consecutiveParriesPerSlot[i] = after;
+
+            if (before < ParryStreakObserveThreshold && after >= ParryStreakObserveThreshold)
+            {
+                log_debug($"Streak ready: {format_actor_slot((byte)i)} parried {after}× consecutively (threshold {ParryStreakObserveThreshold}).");
+            }
+
+            // Counter-attack trigger gate: fire once per crossing-or-beyond.
+            // Currently log-only — native command insertion path (the actual
+            // queue-an-Attack-command call into the engine) is the next
+            // implementation step. When the wiring lands, replace the log
+            // with the native call (build an AttackCue targeting
+            // _runtime.CurrentAttackerId from slot i and inject) and KEEP
+            // the streak reset so the chain restarts.
+            if (after >= ParryStreakObserveThreshold)
+            {
+                queue_streak_counter_attack(slotIndex: i, targetEnemySlot: _runtime.CurrentAttackerId);
+                _consecutiveParriesPerSlot[i] = 0;
+            }
+        }
+    }
+
+    /// <summary>
+    ///     Streak-completion counter-attack trigger. Queues a basic Attack
+    ///     (command id 0x4000 — no MP cost, universally available) from the
+    ///     parrying party slot onto the original attacker via the engine's
+    ///     <c>MsInsertBtlCommand</c> path.
+    ///     <br/><br/>
+    ///     Cue layout follows the engine's own auto-counter pattern (see
+    ///     <c>MsAutoRelifeProcess</c> at FFX.exe+0x38C780 in the decompile
+    ///     snapshot): zeroed AttackCue, attacker_id = parrier slot,
+    ///     command_count = 1, command_list[0].command_ids = {0x4000, 0xFF},
+    ///     command_list[0].targets = bitmask of the original enemy slot.
+    ///     The 4th param to MsInsertBtlCommand is the chr_id "context" — the
+    ///     engine's auto-counter passes the original incoming attacker, so we
+    ///     do the same.
+    ///     <br/><br/>
+    ///     When <see cref="_optionStreakCounter"/> is off, this falls through
+    ///     to log-only mode (the streak observation still runs).
+    /// </summary>
+    private void queue_streak_counter_attack(int slotIndex, byte targetEnemySlot)
+    {
+        // Always log + emit telemetry — observation is independent of the actual
+        // queue insertion (so users can monitor the streak feature even when the
+        // native counter is disabled).
+        log_debug(
+            $"[StreakCounter] Slot {format_actor_slot((byte)slotIndex)} streak threshold reached — "
+            + $"countering {format_actor_slot(targetEnemySlot)} "
+            + (_optionStreakCounter ? "(firing native Attack)." : "(log-only — counter disabled)."));
+
+        _turnRuntimeEvents.EmitDispatchConsumed(
+            attackerId: targetEnemySlot,
+            queueIndex: 0xFE, // sentinel — "streak counter pseudo-event"
+            timestampLocal: current_gameplay_timestamp(),
+            frameIndex: _debugFrameIndex,
+            reason: $"streak counter ready (slot {slotIndex})");
+
+        if (!_optionStreakCounter)
+        {
+            return;
+        }
+
+        try
+        {
+            // Build the AttackCue on the stack. `default` zero-initialises every
+            // byte of the struct so unused fields stay at the default the engine
+            // expects (mirroring MsStructClear(&local_50, 0x48) in the engine's
+            // auto-counter code).
+            AttackCue cue = default;
+
+            cue.attacker_id   = (byte)slotIndex;
+            cue.command_count = 1;
+
+            // command_list[0] sits at offset 0x8 in AttackCue. Inside each
+            // AttackCommandInfo (size 0x10), the engine writes:
+            //   offset 0x0: command_ids[0] (u16) — primary command id
+            //   offset 0x2: command_ids[1] (u16) — sentinel 0xFF
+            //   offset 0x8: targets (u32)        — bitmask of slot ids
+            // The Fahrenheit AttackCue struct only formally exposes `targets`
+            // at the AttackCommandInfo offset, so we write the command_ids via
+            // direct byte-pointer arithmetic at the documented offsets.
+            const int CommandListBaseOffset = 0x8;
+            const ushort AttackCommandId = 0x4000; // basic Attack — no MP, universal
+            const ushort CommandIdSentinel = 0xFF;
+
+            byte* commandInfo0 = (byte*)&cue + CommandListBaseOffset;
+            *(ushort*)(commandInfo0 + 0x0) = AttackCommandId;
+            *(ushort*)(commandInfo0 + 0x2) = CommandIdSentinel;
+            *(uint*)(commandInfo0 + 0x8)   = 1u << targetEnemySlot;
+
+            int result = FhUtil.get_fptr<MsInsertBtlCommandProbe>(
+                ExternalMemoryOffsetMap.Functions.MsInsertBtlCommand)(&cue, 0, 1, targetEnemySlot);
+
+            if (result != 0)
+            {
+                log_debug($"[StreakCounter] MsInsertBtlCommand returned {result} (validation failed) — counter not queued.");
+            }
+            else if (_optionLogging)
+            {
+                log_debug($"[StreakCounter] Queued: attacker={format_actor_slot((byte)slotIndex)} target={format_actor_slot(targetEnemySlot)} cmd=0x{AttackCommandId:X4}.");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Defensive: never let a counter-queue failure interrupt the
+            // current parry-resolution / cue-clear path.
+            log_debug($"[StreakCounter] Exception during MsInsertBtlCommand: {ex.Message}");
+        }
     }
 
     private void apply_overdrive_boost(uint mask)
@@ -774,16 +960,59 @@ public unsafe sealed partial class ParryModule
         log_debug($"Parry resolved ({sourceLabel}) for {format_actor_slot((byte)slotIndex)}.");
         apply_overdrive_boost(1u << slotIndex);
 
+        // Streak increment is per-cue, not per-hit — performed at cue-clear time
+        // in resolve_streak_at_cue_clear() so multi-hit attacks count as one
+        // defensive success per slot. Per-hit increment here overcounted those
+        // and was removed.
+
         if (BitOperations.PopCount(_runtime.LastParriedTargetMask) == 1)
         {
             play_feedback_sound();
         }
+
+        // Visual feedback: fire the Sentinel barrier visual on the parrying
+        // character via MsBtlSetHitEffect (global-handle path, PC-safe).
+        // Default-on; toggleable via the "Parry Effect Visual" setting.
+        fire_parry_visual_effect((byte)slotIndex);
 
         if (closeWindow)
         {
             // Close the window but stay in Resolved until the cue clears; clear_awaiting_turn_end
             // will promote us back to Ready so a fresh press can immediately begin the next parry.
             end_parry_window("impact_parried", transitionToReady: false);
+        }
+    }
+
+    private void fire_parry_visual_effect(byte slotIndex)
+    {
+        if (!_optionParryEffect)
+        {
+            return;
+        }
+
+        try
+        {
+            // 0x4A is the Sentinel barrier resource ID: a global-handle-resolved
+            // spatial particle (golden ring / shield-of-air). Confirmed PC-safe —
+            // the engine fires this exact call on party actors when an attack lands
+            // on a Sentinel-statused PC (forensic ref: FUN_0079E530).
+            // Alternative: 0x48 (Shield status) gives a similar but subtler
+            // blue-dome variant.
+            const int ParrySuccessEffectId = 0x4A;
+
+            FhUtil.get_fptr<MsBtlSetHitEffectProbe>(
+                ExternalMemoryOffsetMap.Functions.MsBtlSetHitEffect)(slotIndex, 0, ParrySuccessEffectId, 1);
+
+            if (_optionLogging)
+            {
+                log_debug($"[ParryEffect] Fired hit effect 0x{ParrySuccessEffectId:X2} on {format_actor_slot(slotIndex)}.");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Defensive: never let a visual-effect failure interrupt the parry
+            // resolution path. Log and move on.
+            log_debug($"[ParryEffect] Failed to fire visual effect: {ex.Message}");
         }
     }
 

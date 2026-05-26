@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <!-- CS0649: Nuke [Parameter] fields are assigned via reflection at runtime -->
     <NoWarn>$(NoWarn);CS0649</NoWarn>
-    <NukeTelemetryVersion>0</NukeTelemetryVersion>
+    <NukeTelemetryVersion>1</NukeTelemetryVersion>
   </PropertyGroup>
 
   <ItemGroup>

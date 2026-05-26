@@ -36,6 +36,12 @@ public unsafe sealed partial class ParryModule
         if (!_optionParryStateHud) return;
         if (!_debugGameplayReady) return;
 
+        // Hide the centered parry-state indicator outside of battles. The HUD is
+        // only meaningful while the player is in combat (Ready/Open/Resolved/...
+        // states all describe per-battle parry input). When no Btl context is
+        // live (overworld, menus, cutscenes), suppressing it removes screen clutter.
+        if (_battleAdapter.GetBattle() == null) return;
+
         Vector2 displaySize = ImGui.GetIO().DisplaySize;
         if (displaySize.X <= 1f || displaySize.Y <= 1f) return;
 
@@ -267,10 +273,10 @@ public unsafe sealed partial class ParryModule
         cameraBackup = default;
         screenBackup = default;
 
-        uint* rawCamera = FhFfx.FhCall.ms_camera_matrix;
-        uint* rawScreen = FhFfx.FhCall.ms_screen_matrix;
-        uint* rawCameraBackup = FhFfx.FhCall.ms_camera_matrix_backup;
-        uint* rawScreenBackup = FhFfx.FhCall.ms_screen_matrix_backup;
+        uint* rawCamera = (uint*)FhFfx.FhCall.ms_camera_matrix;
+        uint* rawScreen = (uint*)FhFfx.FhCall.ms_screen_matrix;
+        uint* rawCameraBackup = (uint*)FhFfx.FhCall.ms_camera_matrix_backup;
+        uint* rawScreenBackup = (uint*)FhFfx.FhCall.ms_screen_matrix_backup;
         if (rawCamera == null || rawScreen == null)
         {
             return false;
