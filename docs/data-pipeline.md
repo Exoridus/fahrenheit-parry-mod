@@ -9,13 +9,13 @@ that reference data is **no longer owned by this repo**. See
 ## Where the data lives now
 
 All FFX game-data extraction, parsing, and analysis lives in the sibling
-pipeline repo: `../ffx-forensics-pipeline`. That repo owns:
+pipeline repo: `../ffx-knowledge-base`. That repo owns:
 
 - Raw VBF extraction (`build.cmd data-extract`)
 - FFXDataParser invocation (`build.cmd data-parse`, `data-parse-all`,
   `run-dataparser-commands`, `run-dataparser-scripts`)
 - Canonical base and localized JSONs under
-  `ffx-forensics-pipeline/output/ffx/game_data/`:
+  `ffx-knowledge-base/output/ffx/game_data/`:
   `commands_base.json` + `commands_localized/<locale>.json`,
   `monsters_base.json` + `monsters_localized/<locale>.json`,
   `gear_abilities_base.json`, `items_base.json`, `key_items_base.json`,
@@ -23,7 +23,7 @@ pipeline repo: `../ffx-forensics-pipeline`. That repo owns:
 - Crossrefs (`output/ffx/crossref/`), scripts (`output/ffx/scripts/`),
   community findings (`output/ffx/community/`), and packs (`packs/ffx/`).
 
-See `ffx-forensics-pipeline/README.md` for the full workflow list and
+See `ffx-knowledge-base/README.md` for the full workflow list and
 example queries.
 
 ## Runtime mapping bundles (this repo)
@@ -51,7 +51,7 @@ The canonical producer is `build.cmd build-mod-runtime-bundles` in the
 sibling pipeline repo:
 
 ```
-cd ../ffx-forensics-pipeline
+cd ../ffx-knowledge-base
 build.cmd build-mod-runtime-bundles
 # optionally: build.cmd build-mod-runtime-bundles --dry-run
 ```
@@ -68,12 +68,12 @@ Input sources per runtime-bundle domain:
 | `AutoAbilities` | `output/ffx/game_data/gear_abilities_localized/`         |
 | `KeyItems`      | `output/ffx/game_data/key_items_localized/`              |
 | `Monsters`      | `output/ffx/game_data/monsters_localized/`               |
-| `Battles`       | `inputs/script_text/<locale>/battles.json` (frozen)      |
-| `Events`        | `inputs/script_text/<locale>/events.json`  (frozen)      |
+| `Battles`       | `canonical/ffx/scripts/text/<locale>/battles.json` (frozen)      |
+| `Events`        | `canonical/ffx/scripts/text/<locale>/events.json`  (frozen)      |
 
 The `Battles`/`Events` inputs are frozen snapshots committed in the
-pipeline repo under `inputs/script_text/` pending a future canonical
-script-text extractor.
+pipeline repo under `canonical/ffx/scripts/text/` pending a future
+canonical script-text extractor.
 
 Do not hand-edit `mappings/runtime/` directly. Run the generator instead.
 

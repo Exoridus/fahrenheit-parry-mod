@@ -37,7 +37,7 @@ At runtime, mapping lookups are locale-aware:
 The legacy `map-import` / `map-build` workflow (previously `build/Build.Data.cs`)
 was removed as part of the pipeline-vs-mod boundary cleanup. The canonical
 FFX data extraction, parsing, and per-locale JSON generation now lives in
-the sibling `ffx-forensics-pipeline` repo — see
+the sibling `ffx-knowledge-base` repo — see
 [`docs/data-pipeline.md`](data-pipeline.md) and
 [`REPO_BOUNDARY.md`](../REPO_BOUNDARY.md) for the split.
 
@@ -46,5 +46,5 @@ runtime-loaded format consumed by `ParryModule.DataMapping.cs`. The
 canonical producer is `build.cmd build-mod-runtime-bundles` in the
 sibling pipeline repo. It reads exclusively from pipeline-owned canonical
 outputs (`output/ffx/game_data/*_localized/`) and frozen script-text
-snapshots (`inputs/script_text/`). Run it after any pipeline data refresh
-to regenerate all 8 locale bundles.
+snapshots (`canonical/ffx/scripts/text/`). Run it after any pipeline data
+refresh to regenerate all 8 locale bundles.
