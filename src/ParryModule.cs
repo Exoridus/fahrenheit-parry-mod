@@ -433,33 +433,33 @@ public unsafe sealed partial class ParryModule : FhModule
     private ImFontPtr _overlayFont;
     private bool _overlayFontsInitialized;
     private bool _overlayFontWarningIssued;
-    private readonly FhMethodHandle<FhFfx.FhCall.MsExeInputCue> _hMsExeInputCue;
-    private readonly FhMethodHandle<MsSetDamageProbe> _hMsSetDamage;
-    private readonly FhMethodHandle<MsDamageSetMotionProbe> _hMsDamageSetMotion;
-    private readonly FhMethodHandle<MsCalcDamageProbe> _hMsCalcDamage;
-    private readonly FhMethodHandle<DmgCalcArmoredProbe> _hDmgCalcArmored;
-    private readonly FhMethodHandle<MsCalcDamageInternalProbe> _hMsCalcDamageInternal;
-    private readonly FhMethodHandle<MsSetDamageInternalProbe> _hMsSetDamageInternal;
-    private readonly FhMethodHandle<MsAtelRequestCameraProbe> _hMsAtelRequestCamera;
-    private readonly FhMethodHandle<MsAtelRequestMagicCameraProbe> _hMsAtelRequestMagicCamera;
-    private readonly FhMethodHandle<MsBattleSpecialCameraPauseProbe> _hMsBattleSpecialCameraPause;
-    private readonly FhMethodHandle<MsDmgCalcCheckHitProbe> _hMsDmgCalcCheckHit;
+    private readonly ParryHook<FhFfx.FhCall.MsExeInputCue> _hMsExeInputCue;
+    private readonly ParryHook<MsSetDamageProbe> _hMsSetDamage;
+    private readonly ParryHook<MsDamageSetMotionProbe> _hMsDamageSetMotion;
+    private readonly ParryHook<MsCalcDamageProbe> _hMsCalcDamage;
+    private readonly ParryHook<DmgCalcArmoredProbe> _hDmgCalcArmored;
+    private readonly ParryHook<MsCalcDamageInternalProbe> _hMsCalcDamageInternal;
+    private readonly ParryHook<MsSetDamageInternalProbe> _hMsSetDamageInternal;
+    private readonly ParryHook<MsAtelRequestCameraProbe> _hMsAtelRequestCamera;
+    private readonly ParryHook<MsAtelRequestMagicCameraProbe> _hMsAtelRequestMagicCamera;
+    private readonly ParryHook<MsBattleSpecialCameraPauseProbe> _hMsBattleSpecialCameraPause;
+    private readonly ParryHook<MsDmgCalcCheckHitProbe> _hMsDmgCalcCheckHit;
 
     public ParryModule()
     {
-        _hMsExeInputCue = new FhMethodHandle<FhFfx.FhCall.MsExeInputCue>(this, "FFX.exe", FhFfx.FhCall.__addr_MsExeInputCue, h_ms_exe_input_cue);
-        _hMsSetDamage = new FhMethodHandle<MsSetDamageProbe>(this, "FFX.exe", FhFfx.FhCall.__addr_MsSetDamage, h_ms_set_damage);
-        _hMsDamageSetMotion = new FhMethodHandle<MsDamageSetMotionProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsDamageSetMotion, h_ms_damage_set_motion);
-        _hMsCalcDamage = new FhMethodHandle<MsCalcDamageProbe>(this, "FFX.exe", FhFfx.FhCall.__addr_MsCalcDamage, h_ms_calc_damage);
-        _hDmgCalcArmored = new FhMethodHandle<DmgCalcArmoredProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.DmgCalcArmored, h_dmg_calc_armored);
-        _hMsCalcDamageInternal = new FhMethodHandle<MsCalcDamageInternalProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsCalcDamageInternal, h_ms_calc_damage_internal);
-        _hMsSetDamageInternal = new FhMethodHandle<MsSetDamageInternalProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.DiscordCandidates.FnMsSetDamageInternal, h_ms_set_damage_internal);
-        _hMsAtelRequestCamera = new FhMethodHandle<MsAtelRequestCameraProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsAtelRequestCamera, h_ms_atel_request_camera); // MsAtelRequestCamera — gates camera changes; intercepted to lock camera during enemy turns
-        _hMsAtelRequestMagicCamera = new FhMethodHandle<MsAtelRequestMagicCameraProbe>(
-            this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsAtelRequestMagicCamera, h_ms_atel_request_magic_camera);
-        _hMsBattleSpecialCameraPause = new FhMethodHandle<MsBattleSpecialCameraPauseProbe>(
-            this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsBattleSpecialCameraPause, h_ms_battle_special_camera_pause);
-        _hMsDmgCalcCheckHit = new FhMethodHandle<MsDmgCalcCheckHitProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsDmgCalcCheckHit, h_ms_dmg_calc_check_hit); // MsDmgCalc_CheckHit — accuracy/evasion roll; intercepted to disable native evasion for real PCs
+        _hMsExeInputCue = new ParryHook<FhFfx.FhCall.MsExeInputCue>(this,ExternalMemoryOffsetMap.Functions.MsExeInputCue, h_ms_exe_input_cue);
+        _hMsSetDamage = new ParryHook<MsSetDamageProbe>(this,ExternalMemoryOffsetMap.Functions.MsSetDamage, h_ms_set_damage);
+        _hMsDamageSetMotion = new ParryHook<MsDamageSetMotionProbe>(this,ExternalMemoryOffsetMap.Functions.MsDamageSetMotion, h_ms_damage_set_motion);
+        _hMsCalcDamage = new ParryHook<MsCalcDamageProbe>(this,ExternalMemoryOffsetMap.Functions.MsCalcDamage, h_ms_calc_damage);
+        _hDmgCalcArmored = new ParryHook<DmgCalcArmoredProbe>(this,ExternalMemoryOffsetMap.Functions.DmgCalcArmored, h_dmg_calc_armored);
+        _hMsCalcDamageInternal = new ParryHook<MsCalcDamageInternalProbe>(this,ExternalMemoryOffsetMap.Functions.MsCalcDamageInternal, h_ms_calc_damage_internal);
+        _hMsSetDamageInternal = new ParryHook<MsSetDamageInternalProbe>(this,ExternalMemoryOffsetMap.DiscordCandidates.FnMsSetDamageInternal, h_ms_set_damage_internal);
+        _hMsAtelRequestCamera = new ParryHook<MsAtelRequestCameraProbe>(this,ExternalMemoryOffsetMap.Functions.MsAtelRequestCamera, h_ms_atel_request_camera); // MsAtelRequestCamera — gates camera changes; intercepted to lock camera during enemy turns
+        _hMsAtelRequestMagicCamera = new ParryHook<MsAtelRequestMagicCameraProbe>(
+            this,ExternalMemoryOffsetMap.Functions.MsAtelRequestMagicCamera, h_ms_atel_request_magic_camera);
+        _hMsBattleSpecialCameraPause = new ParryHook<MsBattleSpecialCameraPauseProbe>(
+            this,ExternalMemoryOffsetMap.Functions.MsBattleSpecialCameraPause, h_ms_battle_special_camera_pause);
+        _hMsDmgCalcCheckHit = new ParryHook<MsDmgCalcCheckHitProbe>(this,ExternalMemoryOffsetMap.Functions.MsDmgCalcCheckHit, h_ms_dmg_calc_check_hit); // MsDmgCalc_CheckHit — accuracy/evasion roll; intercepted to disable native evasion for real PCs
 
         settings = new FhSettingsCategory("fhparry", [
             new FhSettingCustomRenderer("enabled", render_setting_enabled),
@@ -495,7 +495,7 @@ public unsafe sealed partial class ParryModule : FhModule
 
         try
         {
-            _hMsExeInputCue.hook();
+            _hMsExeInputCue.install();
         }
         catch (Exception ex)
         {
@@ -504,7 +504,7 @@ public unsafe sealed partial class ParryModule : FhModule
 
         try
         {
-            _hMsSetDamage.hook();
+            _hMsSetDamage.install();
         }
         catch (Exception ex)
         {
@@ -513,7 +513,7 @@ public unsafe sealed partial class ParryModule : FhModule
 
         try
         {
-            _hMsDamageSetMotion.hook();
+            _hMsDamageSetMotion.install();
         }
         catch (Exception ex)
         {
@@ -522,7 +522,7 @@ public unsafe sealed partial class ParryModule : FhModule
 
         try
         {
-            _hDmgCalcArmored.hook();
+            _hDmgCalcArmored.install();
         }
         catch (Exception ex)
         {
@@ -531,7 +531,7 @@ public unsafe sealed partial class ParryModule : FhModule
 
         try
         {
-            _hMsCalcDamageInternal.hook();
+            _hMsCalcDamageInternal.install();
         }
         catch (Exception ex)
         {
@@ -540,7 +540,7 @@ public unsafe sealed partial class ParryModule : FhModule
 
         try
         {
-            _hMsSetDamageInternal.hook();
+            _hMsSetDamageInternal.install();
         }
         catch (Exception ex)
         {
@@ -549,7 +549,7 @@ public unsafe sealed partial class ParryModule : FhModule
 
         try
         {
-            _hMsCalcDamage.hook();
+            _hMsCalcDamage.install();
         }
         catch (Exception ex)
         {
@@ -558,7 +558,7 @@ public unsafe sealed partial class ParryModule : FhModule
 
         try
         {
-            _hMsAtelRequestCamera.hook();
+            _hMsAtelRequestCamera.install();
         }
         catch (Exception ex)
         {
@@ -567,7 +567,7 @@ public unsafe sealed partial class ParryModule : FhModule
 
         try
         {
-            _hMsAtelRequestMagicCamera.hook();
+            _hMsAtelRequestMagicCamera.install();
         }
         catch (Exception ex)
         {
@@ -576,7 +576,7 @@ public unsafe sealed partial class ParryModule : FhModule
 
         try
         {
-            _hMsBattleSpecialCameraPause.hook();
+            _hMsBattleSpecialCameraPause.install();
         }
         catch (Exception ex)
         {
@@ -585,7 +585,7 @@ public unsafe sealed partial class ParryModule : FhModule
 
         try
         {
-            _hMsDmgCalcCheckHit.hook();
+            _hMsDmgCalcCheckHit.install();
         }
         catch (Exception ex)
         {

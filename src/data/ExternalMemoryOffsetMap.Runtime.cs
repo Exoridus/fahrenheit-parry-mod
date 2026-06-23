@@ -29,6 +29,9 @@ public static partial class ExternalMemoryOffsetMap
     public static class Functions
     {
         // Expected type: Action<byte, int, int> (MsDamageSetMotion)
+        // MsDamageSetMotion (FUN_0078cae0, runtime 0x38CAE0) is the flinch-motion selector
+        // on the damage path. Do NOT "fix" this to the SDK's __addr_MsSetDamageMotion
+        // (0x38DC30) — that is a different function. 0x38CAE0 is correct for the flinch hook.
         public const int MsDamageSetMotion = 0x0038CAE0;
         
         // Expected type: Func<Chr*, Chr*, Command*, int, int*, int, int> (DmgCalcArmored)
@@ -39,6 +42,26 @@ public static partial class ExternalMemoryOffsetMap
 
         // Expected type: Func<uint, char*> (AtelGetEventName)
         public const int AtelGetEventName = 0x004796e0;
+
+        // --- alpha11 (d6a2fa3) regression recovery ------------------------------------
+        // In alpha10 these functions were exposed as Fahrenheit.FFX.FhCall.__addr_<name>
+        // (nint) constants. At d6a2fa3 the FhCall generator dropped the raw __addr_
+        // constants and now emits only `h_<name>` handle properties, with the offset
+        // embedded in a FhMethodLocation (e.g. src/core/ffx/call_8.g.cs:
+        //   h_MsExeInputCue => new( new FhMethodLocation("FFX.exe", 0x3B22A0) )).
+        // This mod hooks these with its own delegate ABIs (not the upstream delegate
+        // types), so it owns the raw offsets here. Values mirror the upstream h_<name>
+        // handles at d6a2fa3 1:1.
+        public const int MsExeInputCue                  = 0x003B22A0;
+        public const int MsSetDamage                    = 0x0038DA40;
+        public const int MsCalcDamage                   = 0x00389800;
+        public const int MsActionRequest                = 0x003ACEC0;
+        public const int MsCalcCommand                  = 0x003893A0;
+        public const int MsCheckStatusBeforeAction      = 0x003AF500;
+        public const int MsLimitTypeDamageCheck         = 0x003B0D60;
+        public const int MsSetMotion                    = 0x003AB380;
+        public const int op_et_battle_genko_counter_get = 0x003FB160;
+        // ------------------------------------------------------------------------------
 
         // MsAtelRequestCamera at FFX.exe+0x397BD0 — gate for in-game camera changes
         // (called from 12 sites including battle camera setup, scene transitions).

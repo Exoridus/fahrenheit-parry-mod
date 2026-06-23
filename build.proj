@@ -3,6 +3,11 @@
         <RepoRoot>$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)'))</RepoRoot>
         <FahrenheitRepo Condition="'$(FahrenheitRepo)' == ''">https://github.com/peppy-enterprises/fahrenheit.git</FahrenheitRepo>
         <FahrenheitDir Condition="'$(FahrenheitDir)' == ''">$([MSBuild]::NormalizeDirectory('$(RepoRoot)', '.workspace', 'fahrenheit'))</FahrenheitDir>
+        <!-- Pin to the committed Fahrenheit ref by default so builds (incl. CI) are
+             deterministic instead of silently tracking origin/main. Explicit
+             -p:FahrenheitRef=... still overrides. Falls back to origin/main only if the
+             pin file is missing. -->
+        <FahrenheitRef Condition="'$(FahrenheitRef)' == '' and Exists('$(RepoRoot)fahrenheit.release.ref')">$([System.IO.File]::ReadAllText('$(RepoRoot)fahrenheit.release.ref').Trim())</FahrenheitRef>
         <FahrenheitRef Condition="'$(FahrenheitRef)' == ''">origin/main</FahrenheitRef>
         <FahrenheitDirPath>$([System.Text.RegularExpressions.Regex]::Replace('$([MSBuild]::NormalizePath('$(FahrenheitDir)'))', '[\\/]+$$', ''))</FahrenheitDirPath>
         <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
@@ -151,8 +156,14 @@
     </Target>
 
     <Target Name="PublishManagedComponents">
+        <!-- Fahrenheit alpha11 (d6a2fa3) wires `__FhPublishAfterBuild` (AfterTargets=Build,
+             DependsOnTargets=Publish) in its Directory.Build.targets, so invoking `Publish`
+             directly on the framework projects creates a static target cycle (MSB4006:
+             Publish<-__FhPublishAfterBuild<-_PublishBuildAlternative<-Publish). The framework
+             builds itself via the default `Build` target (see Fahrenheit README) and lets the
+             AfterBuild hook publish. Mirror that: Build the framework, publish happens via hook. -->
         <MSBuild Projects="$(ManagedCoreProject);$(ManagedRuntimeProject)"
-                 Targets="Publish"
+                 Targets="Build"
                  Properties="Configuration=$(Configuration);SolutionDir=$(SolutionDirForBuild)" />
         <MSBuild Projects="$(ModProjectPath)"
                  Targets="Publish"
