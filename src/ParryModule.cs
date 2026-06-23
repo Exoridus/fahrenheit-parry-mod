@@ -461,6 +461,11 @@ public unsafe sealed partial class ParryModule : FhModule
             this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsBattleSpecialCameraPause, h_ms_battle_special_camera_pause);
         _hMsDmgCalcCheckHit = new FhMethodHandle<MsDmgCalcCheckHitProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsDmgCalcCheckHit, h_ms_dmg_calc_check_hit); // MsDmgCalc_CheckHit — accuracy/evasion roll; intercepted to disable native evasion for real PCs
 
+        _hStartupAtelEventSetUp    = new FhMethodHandle<StartupAtelEventSetUp>(this, "FFX.exe", StartupOffsets.AtelEventSetUp, h_startup_event_setup);
+        _hStartupNeedShowJapanLogo = new FhMethodHandle<StartupNeedShowJapanLogo>(this, "FFX.exe", StartupOffsets.NeedShowJapanLogo, h_startup_need_show_japan_logo);
+        _hStartupBootFmvSkip       = new FhMethodHandle<StartupFmvSkipPoll>(this, "FFX.exe", StartupOffsets.FmvSkipPoll, h_startup_boot_fmv_skip);
+        _hStartupShellExecuteW     = new FhMethodHandle<StartupShellExecuteW>(this, "shell32.dll", "ShellExecuteW", h_startup_shell_execute_w);
+
         settings = new FhSettingsCategory("fhparry", [
             new FhSettingCustomRenderer("enabled", render_setting_enabled),
             new FhSettingCustomRenderer("difficulty", render_setting_difficulty),
@@ -593,6 +598,7 @@ public unsafe sealed partial class ParryModule : FhModule
         }
 
         install_stage1_probes();
+        install_startup_skip_hooks();
 
         _logger.Info("ParryPrototype ready. Adjust options via Mod Config (F7).");
         return true;
@@ -603,6 +609,10 @@ public unsafe sealed partial class ParryModule : FhModule
         _debugFrameIndex++;
         float deltaSeconds = e.delta;
         _simulationClockSeconds += deltaSeconds;
+
+        // Bundled startup-skip convenience runs regardless of the parry-enabled gate below.
+        tick_startup_skip();
+
         update_debug_save_loaded_state();
         update_debug_battle_session_state();
         if (_optionDebugOverlay || _optionLogging)
