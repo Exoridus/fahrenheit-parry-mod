@@ -688,6 +688,19 @@ internal sealed partial class BuildScript : NukeBuild
             return pinned;
         }
 
+        // Default builds pin to the committed ref (fahrenheit.release.ref) so a plain
+        // `build.cmd build` is deterministic and does NOT silently drift to origin/main
+        // (currently the in-flight alpha11 line). Explicit --fahrenheit-ref still overrides;
+        // origin/main remains the fallback only if the pin file is missing/empty.
+        if (File.Exists(ReleaseFahrenheitRefPath))
+        {
+            var committed = File.ReadAllText(ReleaseFahrenheitRefPath).Trim();
+            if (!string.IsNullOrWhiteSpace(committed))
+            {
+                return committed;
+            }
+        }
+
         return "origin/main";
     }
 

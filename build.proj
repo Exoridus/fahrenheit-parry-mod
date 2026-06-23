@@ -3,6 +3,10 @@
         <RepoRoot>$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)'))</RepoRoot>
         <FahrenheitRepo Condition="'$(FahrenheitRepo)' == ''">https://github.com/peppy-enterprises/fahrenheit.git</FahrenheitRepo>
         <FahrenheitDir Condition="'$(FahrenheitDir)' == ''">$([MSBuild]::NormalizeDirectory('$(RepoRoot)', '.workspace', 'fahrenheit'))</FahrenheitDir>
+        <!-- Pin to the committed ref (fahrenheit.release.ref) by default so a plain build is
+             deterministic and does NOT silently drift to origin/main (which is currently the
+             in-flight alpha11 line). Explicit -p:FahrenheitRef=... still overrides. -->
+        <FahrenheitRef Condition="'$(FahrenheitRef)' == '' and Exists('$(RepoRoot)fahrenheit.release.ref')">$([System.IO.File]::ReadAllText('$(RepoRoot)fahrenheit.release.ref').Trim())</FahrenheitRef>
         <FahrenheitRef Condition="'$(FahrenheitRef)' == ''">origin/main</FahrenheitRef>
         <FahrenheitDirPath>$([System.Text.RegularExpressions.Regex]::Replace('$([MSBuild]::NormalizePath('$(FahrenheitDir)'))', '[\\/]+$$', ''))</FahrenheitDirPath>
         <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
