@@ -80,6 +80,29 @@
         <Exec Condition="Exists('$(FahrenheitGitDir)')"
               Command="git -C &quot;$(FahrenheitDirPath)&quot; submodule update --init --recursive" />
 
+        <!-- alpha11 (d6a2fa3) hand-commits a CUSTOMIZED CsWin32 output for IDXGISwapChain
+             (src/core/native/Windows.Win32.IDXGISwapChain.g.cs, with `lpVtbl` made internal so
+             the runtime's imgui.cs can reach it) AND still lists IDXGISwapChain in
+             NativeMethods.txt. On a CLEAN build the Microsoft.Windows.CsWin32 0.3.275 generator
+             hits the pre-existing type and aborts, emitting NONE of the Windows.Win32.* types
+             (a wall of CS0234 Foundation/IComIID/IVTable/DXGI/...). The framework's own CI image
+             tolerates this; our newer SDK/Roslyn does not. Drop the IDXGISwapChain request from
+             NativeMethods.txt after checkout so the generator skips it (the hand-committed file
+             stays the sole provider) and generates everything else cleanly. Incremental builds
+             masked this by reusing cached generator output. Tied to the pinned ref; revisit when
+             the pin moves to a release that resolves this upstream. -->
+        <PropertyGroup>
+          <_NativeMethodsTxt>$(FahrenheitDirPath)/src/core/native/NativeMethods.txt</_NativeMethodsTxt>
+        </PropertyGroup>
+        <ReadLinesFromFile File="$(_NativeMethodsTxt)" Condition="Exists('$(_NativeMethodsTxt)')">
+          <Output TaskParameter="Lines" ItemName="_NativeMethodsLines" />
+        </ReadLinesFromFile>
+        <ItemGroup>
+          <_NativeMethodsKept Include="@(_NativeMethodsLines)" Condition="'%(Identity)' != 'IDXGISwapChain'" />
+        </ItemGroup>
+        <WriteLinesToFile File="$(_NativeMethodsTxt)" Lines="@(_NativeMethodsKept)" Overwrite="true"
+                          Encoding="UTF-8" Condition="Exists('$(_NativeMethodsTxt)')" />
+
         <Message Importance="high" Text="Fahrenheit ref: $(FahrenheitRef)" />
     </Target>
 
@@ -161,10 +184,15 @@
              directly on the framework projects creates a static target cycle (MSB4006:
              Publish<-__FhPublishAfterBuild<-_PublishBuildAlternative<-Publish). The framework
              builds itself via the default `Build` target (see Fahrenheit README) and lets the
-             AfterBuild hook publish. Mirror that: Build the framework, publish happens via hook. -->
-        <MSBuild Projects="$(ManagedCoreProject);$(ManagedRuntimeProject)"
-                 Targets="Build"
-                 Properties="Configuration=$(Configuration);SolutionDir=$(SolutionDirForBuild)" />
+             AfterBuild hook publish.
+
+             We invoke the framework build through `dotnet build` (a fresh top-level process)
+             rather than the in-proc <MSBuild> task. The CsWin32 0.3.275 source generator does
+             NOT run under the nested in-proc build — it silently emits nothing, so all
+             Windows.Win32.* types go missing (CS0246 'Windows' in src/core/usings.cs). A
+             top-level `dotnet build` generates correctly. Core first, then runtime. -->
+        <Exec Command="dotnet build &quot;$(ManagedCoreProject)&quot; -c $(Configuration) -p:SolutionDir=&quot;$(SolutionDirForBuild)&quot; --nologo -v:minimal" />
+        <Exec Command="dotnet build &quot;$(ManagedRuntimeProject)&quot; -c $(Configuration) -p:SolutionDir=&quot;$(SolutionDirForBuild)&quot; --nologo -v:minimal" />
         <MSBuild Projects="$(ModProjectPath)"
                  Targets="Publish"
                  Properties="Configuration=$(Configuration);SolutionDir=$(SolutionDirForBuild);PublishDir=$(DeployModDir);BuildProjectReferences=false" />
