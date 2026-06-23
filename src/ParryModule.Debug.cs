@@ -600,6 +600,87 @@ public unsafe sealed partial class ParryModule
         return false;
     }
 
+    // ── FX / Motion Lab (debug, in-battle ID browser) ─────────────────────────
+    // Lets you step through hit-effect IDs and "canned motion state" codes live and
+    // watch them on a chosen battler, so the right parry/guard/dodge visual can be
+    // picked by eye instead of a probe-log loop. Effect = MsBtlSetHitEffect (the same
+    // safe call the parry success visual uses). Motion = a raw write to chr->field_0xdfb,
+    // the engine's per-tick "play this canned motion" field (MsSetMotionAttackWait writes
+    // 0x0F, MsSetMotionReturn writes 0x07) — a plain memory write, no risky engine call.
+    private int  _labTargetSlot;
+    private int  _labEffectId = 0x4A;   // Sentinel barrier (current parry effect)
+    private int  _labMotionCode = 0x0F; // 0x0F = attack-wait (a known-good canned state)
+    private bool _labHoldMotion;
+
+    private static readonly int[] LabEffectQuickPicks = [0x48, 0x49, 0x4A, 0x4B];
+
+    private void render_fx_motion_lab()
+    {
+        if (!ImGui.CollapsingHeader("FX / Motion Lab (parry visual + animation browser)")) return;
+
+        ImGui.Text($"Target slot: {_labTargetSlot}  (0-9 party, 10-19 enemy)");
+        ImGui.SameLine(); if (ImGui.Button("-##labslot")) _labTargetSlot = Math.Max(0, _labTargetSlot - 1);
+        ImGui.SameLine(); if (ImGui.Button("+##labslot")) _labTargetSlot = Math.Min(19, _labTargetSlot + 1);
+
+        ImGui.Separator();
+        ImGui.Text($"Hit effect id: 0x{_labEffectId:X2}");
+        ImGui.SameLine(); if (ImGui.Button("-##labfx")) _labEffectId = Math.Max(0, _labEffectId - 1);
+        ImGui.SameLine(); if (ImGui.Button("+##labfx")) _labEffectId = Math.Min(0xFF, _labEffectId + 1);
+        ImGui.SameLine(); if (ImGui.Button("Fire effect")) lab_fire_effect();
+        foreach (int pick in LabEffectQuickPicks)
+        {
+            ImGui.SameLine();
+            if (ImGui.Button($"0x{pick:X2}##labfxpick")) { _labEffectId = pick; lab_fire_effect(); }
+        }
+        ImGui.Text("defensive family: 0x48 Shield, 0x4A Sentinel, 0x49/0x4B neighbours; 0x02-0x07/0x0D/0x0E/0x15 mitigation");
+
+        ImGui.Separator();
+        ImGui.Text($"Motion state (chr+0xDFB): 0x{_labMotionCode:X2}");
+        ImGui.SameLine(); if (ImGui.Button("-##labmot")) _labMotionCode = Math.Max(0, _labMotionCode - 1);
+        ImGui.SameLine(); if (ImGui.Button("+##labmot")) _labMotionCode = Math.Min(0xFF, _labMotionCode + 1);
+        ImGui.SameLine(); if (ImGui.Button("Play motion")) lab_play_motion();
+        ImGui.SameLine(); ImGui.Checkbox("Hold each frame", ref _labHoldMotion);
+        ImGui.Text("known: 0x07 = return/idle, 0x0F = attack-wait. Use Hold to keep a pose visible.");
+    }
+
+    private void lab_fire_effect()
+    {
+        try
+        {
+            Chr* chr = try_get_chr((byte)_labTargetSlot);
+            if (chr == null) { log_debug($"[Lab] No live actor at slot {_labTargetSlot}."); return; }
+            FhUtil.get_fptr<MsBtlSetHitEffectProbe>(
+                ExternalMemoryOffsetMap.Functions.MsBtlSetHitEffect)((byte)_labTargetSlot, 0, _labEffectId, 1);
+            log_debug($"[Lab] Fired hit effect 0x{_labEffectId:X2} on slot {_labTargetSlot}.");
+        }
+        catch (Exception ex) { log_debug($"[Lab] Fire effect failed: {ex.Message}"); }
+    }
+
+    private void lab_play_motion()
+    {
+        try
+        {
+            Chr* chr = try_get_chr((byte)_labTargetSlot);
+            if (chr == null) { log_debug($"[Lab] No live actor at slot {_labTargetSlot}."); return; }
+            *((byte*)chr + 0xdfb) = (byte)_labMotionCode;
+            log_debug($"[Lab] Wrote motion-state 0x{_labMotionCode:X2} to slot {_labTargetSlot} (chr+0xDFB).");
+        }
+        catch (Exception ex) { log_debug($"[Lab] Play motion failed: {ex.Message}"); }
+    }
+
+    // Called from on_pre_update: while Hold is on, keep re-writing the motion-state field
+    // so the engine's per-tick motion logic does not immediately overwrite the chosen pose.
+    private void tick_fx_motion_lab_hold()
+    {
+        if (!_labHoldMotion || !_optionDebugOverlay) return;
+        try
+        {
+            Chr* chr = try_get_chr((byte)_labTargetSlot);
+            if (chr != null) *((byte*)chr + 0xdfb) = (byte)_labMotionCode;
+        }
+        catch { /* slot transiently invalid between battles — ignore */ }
+    }
+
     private void render_debug_overlay()
     {
         if (!_optionDebugOverlay) return;
@@ -618,6 +699,7 @@ public unsafe sealed partial class ParryModule
             | ImGuiWindowFlags.NoNavFocus;
         if (ImGui.Begin("Parry Debug Overlay###fhparry.debug.overlay", overlayFlags))
         {
+            render_fx_motion_lab();
             render_debug_activity_panels(MathF.Max(0f, ImGui.GetContentRegionAvail().Y));
         }
 

@@ -636,6 +636,11 @@ public unsafe sealed partial class ParryModule : FhModule
 
         update_debug_save_loaded_state();
         update_debug_battle_session_state();
+
+        // Debug FX/Motion Lab: keep re-writing the held motion-state so the engine's
+        // per-tick motion logic doesn't immediately overwrite the previewed pose.
+        tick_fx_motion_lab_hold();
+
         if (_optionDebugOverlay || _optionLogging)
         {
             monitor_cue_transitions();
