@@ -5,7 +5,7 @@ internal sealed class FfxDataMappings
     /// <summary>
     ///     Schema version this consumer is built against. Mirrors the
     ///     <c>SchemaVersion</c> field the pipeline writes into the runtime bundle
-    ///     header (see <c>ffx-knowledge-base/build/Build.BuildModRuntimeBundles.cs</c>).
+    ///     header (see the data-pipeline bundle generator).
     ///     A mismatch is logged but does not abort the load — the consumer reads
     ///     fields defensively, so unknown future fields are ignored and missing
     ///     legacy fields fall back to empty/zero. The warning surfaces drift early.

@@ -4,8 +4,7 @@ public unsafe sealed partial class ParryModule
 {
     // ── Stage-1 native observe probes ────────────────────────────────────────
     //
-    // Log-only hooks for the seven entry points listed in the KB probe plan
-    // (docs/fahrenheit-parry-probe-plan.md in ffx-knowledge-base):
+    // Log-only hooks for the seven entry points listed in the FFX engine probe plan:
     //
     //   MsActionRequest, MsCalcCommand, MsCheckStatusBeforeAction,
     //   MsLimitTypeDamageCheck, MsAtelRequestMagicCamera,

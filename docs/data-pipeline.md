@@ -8,14 +8,14 @@ that reference data is **no longer owned by this repo**. See
 
 ## Where the data lives now
 
-All FFX game-data extraction, parsing, and analysis lives in the sibling
-pipeline repo: `../ffx-forensics-pipeline`. That repo owns:
+All FFX game-data extraction, parsing, and analysis lives in the external
+FFX data pipeline. The data-pipeline repo owns:
 
 - Raw VBF extraction (`build.cmd data-extract`)
 - FFXDataParser invocation (`build.cmd data-parse`, `data-parse-all`,
   `run-dataparser-commands`, `run-dataparser-scripts`)
 - Canonical base and localized JSONs under
-  `ffx-forensics-pipeline/output/ffx/game_data/`:
+  `output/ffx/game_data/`:
   `commands_base.json` + `commands_localized/<locale>.json`,
   `monsters_base.json` + `monsters_localized/<locale>.json`,
   `gear_abilities_base.json`, `items_base.json`, `key_items_base.json`,
@@ -23,7 +23,7 @@ pipeline repo: `../ffx-forensics-pipeline`. That repo owns:
 - Crossrefs (`output/ffx/crossref/`), scripts (`output/ffx/scripts/`),
   community findings (`output/ffx/community/`), and packs (`packs/ffx/`).
 
-See `ffx-forensics-pipeline/README.md` for the full workflow list and
+See the data-pipeline repo's `README.md` for the full workflow list and
 example queries.
 
 ## Runtime mapping bundles (this repo)
@@ -48,10 +48,10 @@ resolution in the overlay and debug UI.
 ## Bundle regeneration
 
 The canonical producer is `build.cmd build-mod-runtime-bundles` in the
-sibling pipeline repo:
+data-pipeline repo:
 
 ```
-cd ../ffx-forensics-pipeline
+# In the data-pipeline repo:
 build.cmd build-mod-runtime-bundles
 # optionally: build.cmd build-mod-runtime-bundles --dry-run
 ```

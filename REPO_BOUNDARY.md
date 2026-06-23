@@ -1,7 +1,7 @@
-# Repo Boundary — fahrenheit-parry-mod ↔ ffx-forensics-pipeline
+# Repo Boundary — fahrenheit-parry-mod ↔ FFX Data Pipeline
 
 This document describes the intended split between this repository and the
-sibling `ffx-forensics-pipeline` repo.
+external FFX data pipeline repo.
 
 ## This repo (fahrenheit-parry-mod) owns
 
@@ -16,11 +16,11 @@ sibling `ffx-forensics-pipeline` repo.
   and repository rules.
 - **Mod runtime config** — `GameDir` (where to install the built mod),
   `AutoDeploy`, `DeployPreservePaths`, build-mode defaults.
-- **Deployed knowledge packs as read-only consumption** under
-  `.workspace/knowledge-base/ffx-pipeline/`. These are published here by
-  the pipeline repo's `deploy` workflow, not regenerated locally.
+- **Deployed pipeline packs as read-only consumption** under
+  `.workspace/ffx-pipeline/`. These are published here by
+  the data-pipeline repo's `deploy` workflow, not regenerated locally.
 
-## The pipeline repo (ffx-forensics-pipeline) owns
+## The data-pipeline repo owns
 
 - **Extraction, parsing, and analysis** of FFX binary game data and the
   decompilation snapshots.
@@ -28,23 +28,23 @@ sibling `ffx-forensics-pipeline` repo.
   crossrefs, community findings).
 - **Discord processing** (export via DiscordChatExporter, OCR enrichment,
   refs extraction, finding crossrefs).
-- **Pipeline tooling** under `ffx-forensics-pipeline/tools/`:
+- **Pipeline tooling** under its `tools/` directory:
   FFXDataParser, VBFTool, DiscordChatExporter, Tesseract, Ghidra.
 - **Compact knowledge packs** under `packs/ffx/` — the deployable output.
-- **All pipeline config** in `ffx-forensics-pipeline/config.json`.
+- **All pipeline config** in the data-pipeline repo's `config.json`.
 
 ## Clear rules
 
-1. **Pipeline workflows run from the pipeline repo.** If you want to run
+1. **Pipeline workflows run from the data-pipeline repo.** If you want to run
    `data-parse`, `discord-sync`, `crossref-*`, `extract-*`, or similar,
-   `cd ../ffx-forensics-pipeline` and run `build.cmd <workflow>` there.
+   switch to the data-pipeline repo and run `build.cmd <workflow>` there.
    This repo's `build.cmd` only handles mod-build concerns.
-2. **Deploy is pulled from the pipeline repo.** To refresh the packs under
-   `.workspace/knowledge-base/ffx-pipeline/`, go to the pipeline repo and
+2. **Deploy is pulled from the data-pipeline repo.** To refresh the packs under
+   `.workspace/ffx-pipeline/`, go to the data-pipeline repo and
    run `build.cmd deploy`. Do not regenerate packs locally here.
-3. **Pipeline settings belong in the pipeline repo's `config.json`.**
+3. **Pipeline settings belong in the data-pipeline repo's `config.json`.**
    Discord tokens, Vision API keys, FFX data paths — these live in the
-   pipeline repo, not in `.workspace/config.local.json`.
+   data-pipeline repo, not in `.workspace/config.local.json`.
 
 ## Current state
 
@@ -64,7 +64,8 @@ The boundary is fully enforced:
 The following are mod-owned and still live:
 
 - `.workspace/fahrenheit/` — cloned Fahrenheit runtime (mod build dependency)
-- `.workspace/knowledge-base/` — deployed packs + mod design docs
+- `.workspace/ffx-pipeline/` — deployed pipeline packs (read-only consumption)
+- `.workspace/kb/` — mod design docs and KB files
 - `.workspace/config.local.json` — mod build settings (GameDir, AutoDeploy, etc.)
 - `.workspace/external/` — reference repos (if present)
 - `.workspace/logs/` — transient mod debug logs
@@ -72,8 +73,8 @@ The following are mod-owned and still live:
 ## Runtime mappings (`mappings/`)
 
 The mod ships locale-specific mapping bundles that it loads at runtime for
-command/monster/battle/event name resolution. These are **not** knowledge-base
-artifacts — they are a runtime-consumed, mod-specific bundle format.
+command/monster/battle/event name resolution. These are **not** pipeline-generated
+research artifacts — they are a runtime-consumed, mod-specific bundle format.
 
 **This repo now only contains `mappings/runtime/`.** The old
 `mappings/source/` tree was deleted once the pipeline-side producer moved
@@ -90,11 +91,10 @@ off of it.
 ### Regeneration path
 
 The canonical producer is `build.cmd build-mod-runtime-bundles` in the
-sibling `ffx-forensics-pipeline` repo. Run it after any pipeline data
-refresh:
+data-pipeline repo. Run it after any pipeline data refresh:
 
 ```
-cd ../ffx-forensics-pipeline
+# In the data-pipeline repo:
 build.cmd build-mod-runtime-bundles
 ```
 

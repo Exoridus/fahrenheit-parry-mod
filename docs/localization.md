@@ -37,7 +37,7 @@ At runtime, mapping lookups are locale-aware:
 The legacy `map-import` / `map-build` workflow (previously `build/Build.Data.cs`)
 was removed as part of the pipeline-vs-mod boundary cleanup. The canonical
 FFX data extraction, parsing, and per-locale JSON generation now lives in
-the sibling `ffx-forensics-pipeline` repo — see
+the FFX data pipeline — see
 [`docs/data-pipeline.md`](data-pipeline.md) and
 [`REPO_BOUNDARY.md`](../REPO_BOUNDARY.md) for the split.
 

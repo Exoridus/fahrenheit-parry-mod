@@ -284,7 +284,7 @@ internal sealed partial class BuildScript : NukeBuild
         }
 
         WriteHelpLine(string.Empty);
-        WriteHelpLine("  tools.cmd    Local-only tooling workflows (data/discord/ghidra moved to ffx-forensics-pipeline)");
+        WriteHelpLine("  tools.cmd    Local-only tooling workflows (data/discord/ghidra moved to the external data pipeline)");
         WriteHelpLine("  Use: build.cmd -h <workflow> for detailed parameters and examples.");
     }
     void ShowHelpWorkflow(string workflowRaw)

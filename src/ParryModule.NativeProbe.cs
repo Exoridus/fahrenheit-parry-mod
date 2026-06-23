@@ -4,8 +4,7 @@ public unsafe sealed partial class ParryModule
 {
     // ── Frame-deferred native-probe logger ───────────────────────────────────
     //
-    // Stage-1 observe probes (per the KB probe plan at
-    // docs/fahrenheit-parry-probe-plan.md in the knowledge-base repo) need a
+    // Stage-1 observe probes (per the FFX engine probe plan) need a
     // logging path that does NOT block the hot hook on synchronous I/O. The
     // existing `write_session_hook_entry` does a `WriteLine` against an
     // `AutoFlush=true` `StreamWriter` — fine for mid-frequency damage hooks,

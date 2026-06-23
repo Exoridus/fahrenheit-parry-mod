@@ -1,8 +1,7 @@
 # Stage-1 Native Observe Probes
 
 Log-only hooks for the seven Stage-1 entry points listed in the FFX
-knowledge-base probe plan
-(`docs/fahrenheit-parry-probe-plan.md` in `ffx-knowledge-base`). They
+engine probe plan. They
 exist to gather call-order and frame-timing evidence for the action /
 camera / motion paths next to the existing damage hooks. **They never
 mutate game state, never inject input, and never change parry

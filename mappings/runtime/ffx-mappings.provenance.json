@@ -1,7 +1,7 @@
 {
   "workflow": "build-mod-runtime-bundles",
   "generated_at": "2026-04-09T23:28:23.7553056Z",
-  "generator": "ffx-forensics-pipeline",
+  "generator": "ffx-data-pipeline",
   "sibling_repo": "C:\\Users\\User\\Development\\fahrenheit-parry-mod",
   "locales_built": 8,
   "locale_set": [

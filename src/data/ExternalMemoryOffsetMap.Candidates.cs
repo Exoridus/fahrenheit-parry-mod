@@ -34,7 +34,7 @@ public static partial class ExternalMemoryOffsetMap
 
         // ── KB-sourced future-probe candidates ────────────────────────────────
         //
-        // Names sourced from the ffx-knowledge-base repo (specifically
+        // Names sourced from the FFX engine research (specifically
         // canonical/ffx/research/engine_hook_candidates.json + the curated
         // inputs/mappings/function_renames.json — provenance =
         // ghidra-server:ffx-v3 unless noted otherwise). NOT in the upstream
