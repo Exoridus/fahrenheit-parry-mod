@@ -100,6 +100,15 @@ public unsafe sealed partial class ParryModule : FhModule
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate void MsBtlSetHitEffectProbe(byte chr_id, int p1, int effect_id, int p3);
 
+    // MsEtEffectStop — frees all active battle hit effects (FX-lab Stop / auto-off).
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate void MsEtEffectStopProbe();
+
+    // MsSetMotion — battler motion setter. Safe call shape (engine's own Defend code):
+    // MsSetMotion(slot, motion_id, 0, 0, 1, 0, 0). Used by the FX/Motion lab to preview poses.
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate int MsSetMotionProbe(int slot, int motion_id, int chr_id, byte p4, int p5, int p6, int p7);
+
     // MsInsertBtlCommand — engine call to queue a battle command for a chr to
     // execute as the next available action. Used directly (no hook) by the
     // streak counter-attack feature to inject a basic Attack from the parrier
@@ -637,9 +646,8 @@ public unsafe sealed partial class ParryModule : FhModule
         update_debug_save_loaded_state();
         update_debug_battle_session_state();
 
-        // Debug FX/Motion Lab: keep re-writing the held motion-state so the engine's
-        // per-tick motion logic doesn't immediately overwrite the previewed pose.
-        tick_fx_motion_lab_hold();
+        // Debug FX/Motion Lab: run the hit-effect auto-off countdown.
+        tick_fx_motion_lab();
 
         if (_optionDebugOverlay || _optionLogging)
         {

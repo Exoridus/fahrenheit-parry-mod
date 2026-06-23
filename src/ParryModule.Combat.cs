@@ -992,13 +992,10 @@ public unsafe sealed partial class ParryModule
 
         try
         {
-            // 0x4A is the Sentinel barrier resource ID: a global-handle-resolved
-            // spatial particle (golden ring / shield-of-air). Confirmed PC-safe —
-            // the engine fires this exact call on party actors when an attack lands
-            // on a Sentinel-statused PC (forensic ref: FUN_0079E530).
-            // Alternative: 0x48 (Shield status) gives a similar but subtler
-            // blue-dome variant.
-            const int ParrySuccessEffectId = 0x4A;
+            // Effect id chosen by eye in the in-battle FX lab (defensive-barrier family,
+            // forensic ref: FUN_0079E530 / op_et_eff). 0x4B reads cleanest as a parry.
+            // Neighbours: 0x4A Sentinel barrier, 0x48 Shield, 0x49 (the other family members).
+            const int ParrySuccessEffectId = 0x4B;
 
             FhUtil.get_fptr<MsBtlSetHitEffectProbe>(
                 ExternalMemoryOffsetMap.Functions.MsBtlSetHitEffect)(slotIndex, 0, ParrySuccessEffectId, 1);

@@ -601,16 +601,17 @@ public unsafe sealed partial class ParryModule
     }
 
     // ── FX / Motion Lab (debug, in-battle ID browser) ─────────────────────────
-    // Lets you step through hit-effect IDs and "canned motion state" codes live and
-    // watch them on a chosen battler, so the right parry/guard/dodge visual can be
-    // picked by eye instead of a probe-log loop. Effect = MsBtlSetHitEffect (the same
-    // safe call the parry success visual uses). Motion = a raw write to chr->field_0xdfb,
-    // the engine's per-tick "play this canned motion" field (MsSetMotionAttackWait writes
-    // 0x0F, MsSetMotionReturn writes 0x07) — a plain memory write, no risky engine call.
+    // Step through hit-effect ids and motion ids live and watch them on a chosen
+    // battler, so the right parry/guard/dodge visual is picked by eye. Effect =
+    // MsBtlSetHitEffect (the same safe call the parry success visual uses); Stop /
+    // auto-off = MsEtEffectStop. Motion = MsSetMotion(slot, id, 0,0,1,0,0) — the exact
+    // crash-safe shape the engine's own Defend code (MsDefenseStartProcess) uses.
     private int  _labTargetSlot;
-    private int  _labEffectId = 0x4A;   // Sentinel barrier (current parry effect)
-    private int  _labMotionCode = 0x0F; // 0x0F = attack-wait (a known-good canned state)
-    private bool _labHoldMotion;
+    private int  _labEffectId = 0x4B;  // current parry-visual favourite
+    private int  _labMotionId = 0x3C;  // 0x3C/0x3D = guard brace, 0x34 = covered (engine Defend poses)
+    private bool _labEffectAutoOff = true;
+    private int  _labEffectAutoOffFrames; // countdown to auto-stop; 0 = idle
+    private const int LabEffectAutoOffDurationFrames = 75; // ~2.5s @ 30fps
 
     private static readonly int[] LabEffectQuickPicks = [0x48, 0x49, 0x4A, 0x4B];
 
@@ -618,67 +619,102 @@ public unsafe sealed partial class ParryModule
     {
         if (!ImGui.CollapsingHeader("FX / Motion Lab (parry visual + animation browser)")) return;
 
-        ImGui.Text($"Target slot: {_labTargetSlot}  (0-9 party, 10-19 enemy)");
-        ImGui.SameLine(); if (ImGui.Button("-##labslot")) _labTargetSlot = Math.Max(0, _labTargetSlot - 1);
-        ImGui.SameLine(); if (ImGui.Button("+##labslot")) _labTargetSlot = Math.Min(19, _labTargetSlot + 1);
+        ImGui.Text($"Target: {lab_slot_label(_labTargetSlot)}");
+        ImGui.SameLine(); if (ImGui.Button("<##labslot")) _labTargetSlot = lab_step_slot(-1);
+        ImGui.SameLine(); if (ImGui.Button(">##labslot")) _labTargetSlot = lab_step_slot(+1);
 
         ImGui.Separator();
-        ImGui.Text($"Hit effect id: 0x{_labEffectId:X2}");
-        ImGui.SameLine(); if (ImGui.Button("-##labfx")) _labEffectId = Math.Max(0, _labEffectId - 1);
-        ImGui.SameLine(); if (ImGui.Button("+##labfx")) _labEffectId = Math.Min(0xFF, _labEffectId + 1);
-        ImGui.SameLine(); if (ImGui.Button("Fire effect")) lab_fire_effect();
+        ImGui.Text($"Hit effect: 0x{_labEffectId:X2}");
+        ImGui.SameLine(); if (ImGui.Button("-##labfx")) { _labEffectId = Math.Max(0x00, _labEffectId - 1); lab_fire_effect(); }
+        ImGui.SameLine(); if (ImGui.Button("+##labfx")) { _labEffectId = Math.Min(0xFF, _labEffectId + 1); lab_fire_effect(); }
+        ImGui.SameLine(); if (ImGui.Button("Fire##labfx")) lab_fire_effect();
+        ImGui.SameLine(); if (ImGui.Button("Stop##labfx")) lab_stop_effect();
         foreach (int pick in LabEffectQuickPicks)
         {
             ImGui.SameLine();
             if (ImGui.Button($"0x{pick:X2}##labfxpick")) { _labEffectId = pick; lab_fire_effect(); }
         }
-        ImGui.Text("defensive family: 0x48 Shield, 0x4A Sentinel, 0x49/0x4B neighbours; 0x02-0x07/0x0D/0x0E/0x15 mitigation");
+        ImGui.Checkbox("auto-off after ~2.5s##labfx", ref _labEffectAutoOff);
+        ImGui.SameLine(); ImGui.Text("family: 0x48 Shield  0x4A Sentinel  0x49/0x4B neighbours  0x02-0x07/0x0D/0x0E/0x15 mitigation");
 
         ImGui.Separator();
-        ImGui.Text($"Motion state (chr+0xDFB): 0x{_labMotionCode:X2}");
-        ImGui.SameLine(); if (ImGui.Button("-##labmot")) _labMotionCode = Math.Max(0, _labMotionCode - 1);
-        ImGui.SameLine(); if (ImGui.Button("+##labmot")) _labMotionCode = Math.Min(0xFF, _labMotionCode + 1);
-        ImGui.SameLine(); if (ImGui.Button("Play motion")) lab_play_motion();
-        ImGui.SameLine(); ImGui.Checkbox("Hold each frame", ref _labHoldMotion);
-        ImGui.Text("known: 0x07 = return/idle, 0x0F = attack-wait. Use Hold to keep a pose visible.");
+        ImGui.Text($"Motion id: 0x{_labMotionId:X2}");
+        ImGui.SameLine(); if (ImGui.Button("-##labmot")) { _labMotionId = Math.Max(0x00, _labMotionId - 1); lab_play_motion(); }
+        ImGui.SameLine(); if (ImGui.Button("+##labmot")) { _labMotionId = Math.Min(0xFF, _labMotionId + 1); lab_play_motion(); }
+        ImGui.SameLine(); if (ImGui.Button("Play##labmot")) lab_play_motion();
+        ImGui.SameLine(); ImGui.Text("guard brace 0x3C/0x3D  covered 0x34  (engine Defend poses)");
+    }
+
+    // Slot label: resolve the live battler at a slot to its character / monster name.
+    private string lab_slot_label(int slot)
+    {
+        try
+        {
+            Chr* chr = try_get_chr((byte)slot);
+            if (chr == null) return $"slot {slot} (empty)";
+            if (slot < PartyActorCapacity)
+                return try_map_party_chr_id_to_name(chr->chr_id, out string pn) ? $"{pn}  (slot {slot})" : $"party slot {slot}";
+            return try_map_enemy_chr_id_to_name(chr->chr_id, out string en) ? $"{en}  (slot {slot})" : $"enemy slot {slot}";
+        }
+        catch { return $"slot {slot}"; }
+    }
+
+    // Step to the next slot that has a live actor (wraps 0..19); plain step as fallback.
+    private int lab_step_slot(int dir)
+    {
+        for (int i = 1; i <= 20; i++)
+        {
+            int cand = (((_labTargetSlot + dir * i) % 20) + 20) % 20;
+            try { if (try_get_chr((byte)cand) != null) return cand; } catch { /* ignore */ }
+        }
+        return (((_labTargetSlot + dir) % 20) + 20) % 20;
     }
 
     private void lab_fire_effect()
     {
         try
         {
-            Chr* chr = try_get_chr((byte)_labTargetSlot);
-            if (chr == null) { log_debug($"[Lab] No live actor at slot {_labTargetSlot}."); return; }
+            if (try_get_chr((byte)_labTargetSlot) == null) { log_debug($"[Lab] No live actor at slot {_labTargetSlot}."); return; }
             FhUtil.get_fptr<MsBtlSetHitEffectProbe>(
                 ExternalMemoryOffsetMap.Functions.MsBtlSetHitEffect)((byte)_labTargetSlot, 0, _labEffectId, 1);
+            if (_labEffectAutoOff) _labEffectAutoOffFrames = LabEffectAutoOffDurationFrames;
             log_debug($"[Lab] Fired hit effect 0x{_labEffectId:X2} on slot {_labTargetSlot}.");
         }
         catch (Exception ex) { log_debug($"[Lab] Fire effect failed: {ex.Message}"); }
+    }
+
+    private void lab_stop_effect()
+    {
+        try
+        {
+            FhUtil.get_fptr<MsEtEffectStopProbe>(ExternalMemoryOffsetMap.Functions.MsEtEffectStop)();
+            _labEffectAutoOffFrames = 0;
+            log_debug("[Lab] Stopped all active hit effects.");
+        }
+        catch (Exception ex) { log_debug($"[Lab] Stop effect failed: {ex.Message}"); }
     }
 
     private void lab_play_motion()
     {
         try
         {
-            Chr* chr = try_get_chr((byte)_labTargetSlot);
-            if (chr == null) { log_debug($"[Lab] No live actor at slot {_labTargetSlot}."); return; }
-            *((byte*)chr + 0xdfb) = (byte)_labMotionCode;
-            log_debug($"[Lab] Wrote motion-state 0x{_labMotionCode:X2} to slot {_labTargetSlot} (chr+0xDFB).");
+            if (try_get_chr((byte)_labTargetSlot) == null) { log_debug($"[Lab] No live actor at slot {_labTargetSlot}."); return; }
+            FhUtil.get_fptr<MsSetMotionProbe>(
+                ExternalMemoryOffsetMap.Functions.MsSetMotion)(_labTargetSlot, _labMotionId, 0, 0, 1, 0, 0);
+            log_debug($"[Lab] Played motion 0x{_labMotionId:X2} on slot {_labTargetSlot}.");
         }
         catch (Exception ex) { log_debug($"[Lab] Play motion failed: {ex.Message}"); }
     }
 
-    // Called from on_pre_update: while Hold is on, keep re-writing the motion-state field
-    // so the engine's per-tick motion logic does not immediately overwrite the chosen pose.
-    private void tick_fx_motion_lab_hold()
+    // Called each frame: run the hit-effect auto-off countdown (clears lingering previews).
+    private void tick_fx_motion_lab()
     {
-        if (!_labHoldMotion || !_optionDebugOverlay) return;
-        try
+        if (_labEffectAutoOffFrames <= 0) return;
+        if (--_labEffectAutoOffFrames == 0)
         {
-            Chr* chr = try_get_chr((byte)_labTargetSlot);
-            if (chr != null) *((byte*)chr + 0xdfb) = (byte)_labMotionCode;
+            try { FhUtil.get_fptr<MsEtEffectStopProbe>(ExternalMemoryOffsetMap.Functions.MsEtEffectStop)(); }
+            catch { /* between battles — ignore */ }
         }
-        catch { /* slot transiently invalid between battles — ignore */ }
     }
 
     private void render_debug_overlay()

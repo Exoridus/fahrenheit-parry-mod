@@ -104,6 +104,24 @@ public static partial class ExternalMemoryOffsetMap
         // character on a successful parry.
         public const int MsBtlSetHitEffect = 0x0039ec60;
 
+        // MsEtEffectStop — FUN_0079e7d0 at FFX.exe+0x39E7D0 (Ghidra VA 0x0079e7d0).
+        // Nullary `void(void)`: frees all currently-active battle hit effects via
+        // op_et_battle_effect_free() (keeps the effect system itself alive — unlike
+        // MsEtEffectFree which also frees the eff_data buffer). Used as the FX-lab
+        // "Stop" button and the auto-off timer to clear lingering parry-visual previews.
+        public const int MsEtEffectStop = 0x0039e7d0;
+
+        // MsSetMotion — FUN_007ab380 at FFX.exe+0x3AB380 (Ghidra VA 0x007ab380). The
+        // engine's battler motion setter. Signature (cdecl):
+        //   undefined4 MsSetMotion(int slot, int motion_id, int chr_id, byte p4,
+        //                          int p5, int p6, int p7)
+        // Engine's own Defend code (MsDefenseStartProcess) calls it as
+        //   MsSetMotion(slot, 0x3C|statusbit, 0, 0, 1, 0, 0)   // 0x3C/0x3D = guard brace
+        //   MsSetMotion(slot, 0x34,           0, 0, 1, 0, 0)   // 0x34     = covered pose
+        // i.e. the last two args are 0 (no context / no out-ptr) — that exact pattern is
+        // the safe call shape used by the FX/Motion lab to preview arbitrary motion ids.
+        public const int MsSetMotion = 0x003ab380;
+
         // MsInsertBtlCommand at FFX.exe+0x3929D0 — engine-public "queue a battle
         // command for a chr to execute as the next available action".
         //
