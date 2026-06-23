@@ -613,7 +613,11 @@ public unsafe sealed partial class ParryModule
     private int  _labEffectAutoOffFrames; // countdown to auto-stop; 0 = idle
     private const int LabEffectAutoOffDurationFrames = 75; // ~2.5s @ 30fps
 
-    private static readonly int[] LabEffectQuickPicks = [0x48, 0x49, 0x4A, 0x4B];
+    // Confirmed-safe quick-picks only. 0x48 (Shield) crashes natively in some battles
+    // (it follows a resource/sub-reference that may not be loaded — op_et_eff derefs it
+    // before its graceful-fail path), and a native access violation can't be caught by
+    // managed try/catch. Stepping with -/+ can still reach risky ids; that's deliberate.
+    private static readonly int[] LabEffectQuickPicks = [0x4A, 0x4B];
 
     private void render_fx_motion_lab()
     {
@@ -635,14 +639,14 @@ public unsafe sealed partial class ParryModule
             if (ImGui.Button($"0x{pick:X2}##labfxpick")) { _labEffectId = pick; lab_fire_effect(); }
         }
         ImGui.Checkbox("auto-off after ~2.5s##labfx", ref _labEffectAutoOff);
-        ImGui.SameLine(); ImGui.Text("family: 0x48 Shield  0x4A Sentinel  0x49/0x4B neighbours  0x02-0x07/0x0D/0x0E/0x15 mitigation");
+        ImGui.SameLine(); ImGui.Text("safe: 0x4A 0x4B.  WARNING: stepping ids can CRASH (native, uncatchable) — e.g. 0x48 Shield.");
 
         ImGui.Separator();
         ImGui.Text($"Motion id: 0x{_labMotionId:X2}");
         ImGui.SameLine(); if (ImGui.Button("-##labmot")) { _labMotionId = Math.Max(0x00, _labMotionId - 1); lab_play_motion(); }
         ImGui.SameLine(); if (ImGui.Button("+##labmot")) { _labMotionId = Math.Min(0xFF, _labMotionId + 1); lab_play_motion(); }
         ImGui.SameLine(); if (ImGui.Button("Play##labmot")) lab_play_motion();
-        ImGui.SameLine(); ImGui.Text("guard brace 0x3C/0x3D  covered 0x34  (engine Defend poses)");
+        ImGui.SameLine(); ImGui.Text("safe: 0x34 0x3C 0x3D (engine Defend poses).  WARNING: stepping ids can crash on invalid motions.");
     }
 
     // Slot label: resolve the live battler at a slot to its character / monster name.
