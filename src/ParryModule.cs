@@ -84,6 +84,14 @@ public unsafe sealed partial class ParryModule : FhModule
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate void MsBattleSpecialCameraPauseProbe(byte mode);
 
+    // MsBattleCameraTick — FUN_007be090, the per-frame battle-camera APPLY driver
+    // (nullary void, called once/frame from Sg_MainLoop). Hooked + skip-orig'd while
+    // the Battle Camera Lock is engaged so scripted-special cameras (Cactuar needles
+    // etc.) — which write the camera target directly into ms_camera, bypassing the
+    // three Request hooks — cannot pan. 0-arg void → calling-convention-safe.
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate void MsBattleCameraTickProbe();
+
     // MsBtlSetHitEffect — engine's registered-hit-effect emitter (global handle).
     // Used directly (no hook) on parry success to fire the Sentinel barrier
     // visual (effect 0x4A) on the parrying character. Routes through the global
@@ -443,7 +451,9 @@ public unsafe sealed partial class ParryModule : FhModule
     private readonly FhMethodHandle<MsAtelRequestCameraProbe> _hMsAtelRequestCamera;
     private readonly FhMethodHandle<MsAtelRequestMagicCameraProbe> _hMsAtelRequestMagicCamera;
     private readonly FhMethodHandle<MsBattleSpecialCameraPauseProbe> _hMsBattleSpecialCameraPause;
+    private readonly FhMethodHandle<MsBattleCameraTickProbe> _hMsBattleCameraTick;
     private readonly FhMethodHandle<MsDmgCalcCheckHitProbe> _hMsDmgCalcCheckHit;
+    private long _battleCameraTickSuppressCount;
 
     public ParryModule()
     {
@@ -459,6 +469,8 @@ public unsafe sealed partial class ParryModule : FhModule
             this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsAtelRequestMagicCamera, h_ms_atel_request_magic_camera);
         _hMsBattleSpecialCameraPause = new FhMethodHandle<MsBattleSpecialCameraPauseProbe>(
             this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsBattleSpecialCameraPause, h_ms_battle_special_camera_pause);
+        _hMsBattleCameraTick = new FhMethodHandle<MsBattleCameraTickProbe>(
+            this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsBattleCameraTick, h_ms_battle_camera_tick); // per-frame camera apply; skip-orig'd under the lock so scripted-special cameras can't pan
         _hMsDmgCalcCheckHit = new FhMethodHandle<MsDmgCalcCheckHitProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsDmgCalcCheckHit, h_ms_dmg_calc_check_hit); // MsDmgCalc_CheckHit — accuracy/evasion roll; intercepted to disable native evasion for real PCs
 
         _hStartupAtelEventSetUp    = new FhMethodHandle<StartupAtelEventSetUp>(this, "FFX.exe", StartupOffsets.AtelEventSetUp, h_startup_event_setup);
@@ -586,6 +598,15 @@ public unsafe sealed partial class ParryModule : FhModule
         catch (Exception ex)
         {
             _logger.Warning($"[Parry] Could not hook MsBattleSpecialCameraPause (boss cinematic camera lock unavailable): {ex.Message}");
+        }
+
+        try
+        {
+            _hMsBattleCameraTick.hook();
+        }
+        catch (Exception ex)
+        {
+            _logger.Warning($"[Parry] Could not hook MsBattleCameraTick (scripted-special camera lock coverage unavailable): {ex.Message}");
         }
 
         try

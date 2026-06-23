@@ -1269,6 +1269,50 @@ public unsafe sealed partial class ParryModule
     }
 
     /// <summary>
+    ///     Active hook on the per-frame battle-camera APPLY driver (FUN_007be090,
+    ///     FFX.exe+0x3BE090, nullary void, called once per frame from Sg_MainLoop).
+    ///
+    ///     The three Request hooks above only suppress the camera <i>request queue</i>.
+    ///     Scripted monster specials (e.g. Cactuar needle attacks) write the camera
+    ///     target directly into the shared <c>ms_camera</c> work-area via ATEL
+    ///     funcspace-6 opcodes / MsBattleSpecial self-math; this driver then applies
+    ///     it every frame, bypassing the request hooks. While the Battle Camera Lock
+    ///     is engaged (identical gating to the three Request hooks) we skip-orig this
+    ///     so the per-frame apply is frozen and those scripted cameras cannot pan.
+    ///
+    ///     Decomp-confirmed camera-only (walks ms_camera slots, MsCameraGetNum, world
+    ///     matrix) — skipping it holds the camera, it does not stall battle state. The
+    ///     existing lock-mode <c>Off</c> is the rollback.
+    /// </summary>
+    private void h_ms_battle_camera_tick()
+    {
+        bool isAnyTurnActive  = _runtime.AwaitingTurnEnd;
+        bool isEnemyTurnActive = isAnyTurnActive && _runtime.CurrentAttackerId >= PartyActorCapacity;
+
+        bool shouldSuppress = _optionEnabled && _optionBattleCameraLockMode switch
+        {
+            BattleCameraLockMode.AllTurns       => isAnyTurnActive,
+            BattleCameraLockMode.EnemyTurnsOnly => isEnemyTurnActive,
+            _                                    => false,
+        };
+
+        if (shouldSuppress)
+        {
+            _battleCameraTickSuppressCount++;
+            // Per-frame hook: throttle logging hard (first few, then every ~4s @ 30fps).
+            if (_optionLogging && (_battleCameraTickSuppressCount <= 3 || (_battleCameraTickSuppressCount % 120) == 0))
+            {
+                log_debug(
+                    $"[CameraLock] Suppressed MsBattleCameraTick per-frame apply "
+                    + $"(lock_mode={_optionBattleCameraLockMode}, attacker={_runtime.CurrentAttackerId}, count={_battleCameraTickSuppressCount}).");
+            }
+            return;
+        }
+
+        _hMsBattleCameraTick.orig_fptr.Invoke();
+    }
+
+    /// <summary>
     ///     Active hook on MsDmgCalc_CheckHit (FFX.exe+0x38A950). The engine's
     ///     accuracy/evasion roll. Always invokes the original to preserve battle
     ///     RNG state, then conditionally overrides MISS → HIT when:

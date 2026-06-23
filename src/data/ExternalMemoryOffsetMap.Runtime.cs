@@ -63,6 +63,17 @@ public static partial class ExternalMemoryOffsetMap
         // suppress Pause, Free becomes a no-op naturally — no soft-lock risk.
         public const int MsBattleSpecialCameraPause = 0x0039ddd0;
 
+        // MsBattleCameraTick — FUN_007be090 at FFX.exe+0x3BE090 (Ghidra VA 0x007be090).
+        // The per-frame battle-camera APPLY driver, called once per frame from Sg_MainLoop.
+        // Decomp-confirmed camera-only: it walks the shared `ms_camera` work-area slots
+        // (MsCameraGetNum, world-matrix writes). The three Request hooks above only suppress
+        // the camera *request queue*; scripted monster specials (e.g. Cactuar needles) write
+        // the camera target directly via ATEL funcspace-6 opcodes / MsBattleSpecial self-math
+        // into `ms_camera`, then this driver applies it — bypassing the request hooks. Hooking
+        // and skip-orig'ing this while the Battle Camera Lock is engaged freezes the per-frame
+        // apply so those scripted cameras cannot pan. Nullary `void(void)` → cc-safe.
+        public const int MsBattleCameraTick = 0x003be090;
+
         // MsAtelRequestMagicCamera at FFX.exe+0x398010 (absolute 0x00798010) — sibling
         // of MsAtelRequestCamera, called from 6 sites during magic spell casts to
         // request the spell-specific camera animation. Bypasses MsAtelRequestCamera
