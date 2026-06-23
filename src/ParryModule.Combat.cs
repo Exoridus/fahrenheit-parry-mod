@@ -375,6 +375,20 @@ public unsafe sealed partial class ParryModule
         transition_to_open(cue, cueIndex, partyMask);
     }
 
+    // alpha11 routes player input through FhModule.handle_input(), invoked from the
+    // framework's input-handler hook right after FhInput.update() snapshots the previous
+    // state and the game refreshes the raw input (see runtime/lifecycle.cs h_update_input).
+    // This is the only point where FhApi.Input.*.just_pressed reflects a real one-frame edge;
+    // reading it in PreUpdate (as before) is now mistimed against update() and drops most
+    // presses, so the R1 parry press is detected here instead.
+    public override void handle_input()
+    {
+        if (!_optionEnabled) return;
+        if (!FhApi.Input.r1.just_pressed) return;
+
+        handle_parry_input_press(capture_parry_input_context());
+    }
+
     private void log_press_rejection(string reason)
     {
         // Map the pure reason identifier from ParryInputStateTransitions to the

@@ -461,6 +461,11 @@ public unsafe sealed partial class ParryModule : FhModule
             this,ExternalMemoryOffsetMap.Functions.MsBattleSpecialCameraPause, h_ms_battle_special_camera_pause);
         _hMsDmgCalcCheckHit = new ParryHook<MsDmgCalcCheckHitProbe>(this,ExternalMemoryOffsetMap.Functions.MsDmgCalcCheckHit, h_ms_dmg_calc_check_hit); // MsDmgCalc_CheckHit — accuracy/evasion roll; intercepted to disable native evasion for real PCs
 
+        _hStartupAtelEventSetUp    = new ParryHook<StartupAtelEventSetUp>(this, StartupOffsets.AtelEventSetUp, h_startup_event_setup);
+        _hStartupNeedShowJapanLogo = new ParryHook<StartupNeedShowJapanLogo>(this, StartupOffsets.NeedShowJapanLogo, h_startup_need_show_japan_logo);
+        _hStartupBootFmvSkip       = new ParryHook<StartupFmvSkipPoll>(this, StartupOffsets.FmvSkipPoll, h_startup_boot_fmv_skip);
+        _hStartupShellExecuteW     = new ParryHook<StartupShellExecuteW>(this, "shell32.dll", "ShellExecuteW", h_startup_shell_execute_w);
+
         settings = new FhSettingsCategory("fhparry", [
             new FhSettingCustomRenderer("enabled", render_setting_enabled),
             new FhSettingCustomRenderer("difficulty", render_setting_difficulty),
@@ -593,6 +598,7 @@ public unsafe sealed partial class ParryModule : FhModule
         }
 
         install_stage1_probes();
+        install_startup_skip_hooks();
 
         _logger.Info("ParryPrototype ready. Adjust options via Mod Config (F7).");
         return true;
@@ -603,6 +609,10 @@ public unsafe sealed partial class ParryModule : FhModule
         _debugFrameIndex++;
         float deltaSeconds = e.delta;
         _simulationClockSeconds += deltaSeconds;
+
+        // Bundled startup-skip convenience runs regardless of the parry-enabled gate below.
+        tick_startup_skip();
+
         update_debug_save_loaded_state();
         update_debug_battle_session_state();
         if (_optionDebugOverlay || _optionLogging)
@@ -620,14 +630,10 @@ public unsafe sealed partial class ParryModule : FhModule
         bool hasEnemyCue = monitor_attack_cues();
         update_parried_text_timer(deltaSeconds);
 
-        ParryInputContext parryInput = capture_parry_input_context();
-
-        if (FhApi.Input.r1.just_pressed)
-        {
-            handle_parry_input_press(parryInput);
-        }
-
-        // Poll damage after input so the open window set by the press is visible.
+        // R1 press detection lives in handle_input() (alpha11 input model): just_pressed is
+        // only reliable there, immediately after the framework's FhInput.update() snapshot.
+        // Reading it here in PreUpdate is mistimed against update() and drops most presses.
+        // The window opened by the press is visible to the damage poll below.
         monitor_damage_resolves();
 
         // Parry input state machine tick (FINAL_PARRY_SPEC.md).
