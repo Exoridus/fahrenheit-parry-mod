@@ -103,6 +103,25 @@
         <WriteLinesToFile File="$(_NativeMethodsTxt)" Lines="@(_NativeMethodsKept)" Overwrite="true"
                           Encoding="UTF-8" Condition="Exists('$(_NativeMethodsTxt)')" />
 
+        <!-- alpha11 (#152 "Rework method handles", still present in the pinned d6a2fa3) carries a
+             runtime regression in src/runtime/lifecycle.cs: FhCoreModule.init() hooks the game's
+             input / Atel-exec function (AtelExec_Internal_871D10 — the ATEL script interpreter core)
+             with the EMPTY base virtual FhModule.handle_input instead of the real dispatcher
+             h_update_input. The empty detour (a) never dispatches handle_input() to modules and
+             (b) never chains to the original via chain_from, so the ATEL interpreter is bypassed.
+             In-game effect: every mod's handle_input() is dead (our R1 parry press never fires) AND
+             field event scripts break (e.g. pressing X on a save sphere does nothing). Battle and
+             menus use other input paths and stay functional. The framework devs flagged the runtime
+             as "temporarily regressed" during the FhCall rework. We patch the single mis-targeted
+             call after checkout so our build is correct. Idempotent (the search string is gone once
+             applied). Tied to the pinned ref; drop this when the pin moves to an upstream commit that
+             fixes lifecycle.cs. -->
+        <PropertyGroup>
+          <_LifecycleCs>$(FahrenheitDirPath)/src/runtime/lifecycle.cs</_LifecycleCs>
+        </PropertyGroup>
+        <Exec Condition="Exists('$(_LifecycleCs)')"
+              Command="powershell -NoProfile -ExecutionPolicy Bypass -Command &quot;$p='$(_LifecycleCs)'; $o=[IO.File]::ReadAllText($p); $n=$o.Replace('hook(this, handle_input)','hook(this, h_update_input)'); if ($n -ne $o) { [IO.File]::WriteAllText($p,$n); Write-Host '[parry-patch] lifecycle.cs input hook fixed: handle_input -> h_update_input'; } else { Write-Host '[parry-patch] lifecycle.cs input hook already correct/absent'; }&quot;" />
+
         <Message Importance="high" Text="Fahrenheit ref: $(FahrenheitRef)" />
     </Target>
 
