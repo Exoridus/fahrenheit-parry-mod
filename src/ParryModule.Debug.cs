@@ -626,6 +626,7 @@ public unsafe sealed partial class ParryModule
         ImGui.Text($"Target: {lab_slot_label(_labTargetSlot)}");
         ImGui.SameLine(); if (ImGui.Button("<##labslot")) _labTargetSlot = lab_step_slot(-1);
         ImGui.SameLine(); if (ImGui.Button(">##labslot")) _labTargetSlot = lab_step_slot(+1);
+        ImGui.SameLine(); if (ImGui.Button("Restore char##labslot")) lab_restore_char(); // re-show a model a status/death effect hid (experimental)
 
         ImGui.Separator();
         ImGui.Text($"Hit effect: 0x{_labEffectId:X2}");
@@ -682,6 +683,21 @@ public unsafe sealed partial class ParryModule
             log_debug($"[Lab] Fired hit effect 0x{_labEffectId:X2} on slot {_labTargetSlot}.");
         }
         catch (Exception ex) { log_debug($"[Lab] Fire effect failed: {ex.Message}"); }
+    }
+
+    // Experimental: re-show a battler model that a status/death effect (e.g. petrify-shatter)
+    // hid, via the engine's own MsSetChrVisible(slot, 1). A focused visibility setter — unlike
+    // the effect-batch free/init, which depends on battle-lifecycle state and crashed.
+    private void lab_restore_char()
+    {
+        try
+        {
+            if (try_get_chr((byte)_labTargetSlot) == null) { log_debug($"[Lab] No live actor at slot {_labTargetSlot}."); return; }
+            FhUtil.get_fptr<MsSetChrVisibleProbe>(
+                ExternalMemoryOffsetMap.Functions.MsSetChrVisible)(_labTargetSlot, 1);
+            log_debug($"[Lab] Restored visibility on slot {_labTargetSlot}.");
+        }
+        catch (Exception ex) { log_debug($"[Lab] Restore char failed: {ex.Message}"); }
     }
 
     private void lab_play_motion()

@@ -105,6 +105,10 @@ public unsafe sealed partial class ParryModule : FhModule
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate int MsSetMotionProbe(int slot, int motion_id, int chr_id, byte p4, int p5, int p6, int p7);
 
+    // MsSetChrVisible(slot, visible) — re-show a battler model hidden by a status/death effect.
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate void MsSetChrVisibleProbe(int slot, int visible);
+
     // MsInsertBtlCommand — engine call to queue a battle command for a chr to
     // execute as the next available action. Used directly (no hook) by the
     // streak counter-attack feature to inject a basic Attack from the parrier

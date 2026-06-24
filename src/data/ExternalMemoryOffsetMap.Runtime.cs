@@ -115,6 +115,13 @@ public static partial class ExternalMemoryOffsetMap
         // the safe call shape used by the FX/Motion lab to preview arbitrary motion ids.
         public const int MsSetMotion = 0x003ab380;
 
+        // MsSetChrVisible — FUN_00796670 at FFX.exe+0x396670 (Ghidra VA 0x00796670).
+        // Dedicated battler-visibility setter: void MsSetChrVisible(int slot, int visible)
+        // (thin wrapper over FUN_00797090(slot, 2, visible)). Engine usage shows (slot, 0)
+        // to hide and (slot, flag) to show. Used by the FX lab's experimental "Restore char"
+        // button to re-show a model that a status/death effect (e.g. petrify-shatter) hid.
+        public const int MsSetChrVisible = 0x00396670;
+
         // MsInsertBtlCommand at FFX.exe+0x3929D0 — engine-public "queue a battle
         // command for a chr to execute as the next available action".
         //
