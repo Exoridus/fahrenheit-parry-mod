@@ -104,15 +104,6 @@ public static partial class ExternalMemoryOffsetMap
         // character on a successful parry.
         public const int MsBtlSetHitEffect = 0x0039ec60;
 
-        // Effect-batch free/init pair (the engine uses MsEtEffectSet at battle start,
-        // MsEtEffectStop at battle end). Calling Stop then Set mid-battle is a clean RESET:
-        // op_et_battle_effect_free() clears all active hit effects, op_et_battle_effect_init()
-        // re-arms the batch (+ re-points btl._140_4_) so the next MsBtlSetHitEffect is safe.
-        // Stop WITHOUT the paired Set leaves the batch freed-but-uninitialised → next fire
-        // crashes; always call them together. Used by the FX lab to stop/auto-clear previews.
-        public const int MsEtEffectStop = 0x0039e7d0; // FUN_0079e7d0 (op_et_battle_effect_free)
-        public const int MsEtEffectSet  = 0x0039e7c0; // FUN_0079e7c0 (op_et_battle_effect_init + repoint)
-
         // MsSetMotion — FUN_007ab380 at FFX.exe+0x3AB380 (Ghidra VA 0x007ab380). The
         // engine's battler motion setter. Signature (cdecl):
         //   undefined4 MsSetMotion(int slot, int motion_id, int chr_id, byte p4,

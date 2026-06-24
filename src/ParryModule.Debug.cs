@@ -607,17 +607,13 @@ public unsafe sealed partial class ParryModule
     // MsSetMotion(slot, id, 0,0,1,0,0) — the exact crash-safe shape the engine's own
     // Defend code (MsDefenseStartProcess) uses.
     //
-    // Hit effects loop and STACK (each fire registers a new instance), so the lab clears
-    // them via lab_reset_effects() = MsEtEffectStop + MsEtEffectSet (free + re-init — the
-    // pair the engine uses at battle teardown/start). We reset before each fire (one effect
-    // at a time, no stacking) and auto-clear a short time after firing. Stop WITHOUT the
-    // paired Set leaves the batch uninitialised → next fire crashes, so always call both.
+    // NOTE: there is intentionally NO effect "Stop"/auto-off. MsEtEffectStop frees the
+    // effect batch WITHOUT re-initialising it (op_et_battle_effect_init / MsEtEffectSet),
+    // after which the next MsBtlSetHitEffect operates on a freed batch and crashes the
+    // game. Hit effects despawn on their own; a real stop would need the Free+Init pair.
     private int  _labTargetSlot;
     private int  _labEffectId = 0x4B;  // current parry-visual favourite
     private int  _labMotionId = 0x3C;  // 0x3C/0x3D = guard brace, 0x34 = covered (engine Defend poses)
-    private bool _labEffectAutoOff = true;
-    private int  _labEffectAutoOffFrames; // frames until auto-clear; 0 = idle
-    private const int LabEffectAutoOffDurationFrames = 45; // ~1.5s @ 30fps
 
     // Quick-picks (confirmed-safe in testing). Stepping with -/+ fires as you go and can
     // still reach an unloaded effect id, which crashes natively — that risk is on the user.
@@ -636,14 +632,12 @@ public unsafe sealed partial class ParryModule
         ImGui.SameLine(); if (ImGui.Button("-##labfx")) { _labEffectId = Math.Max(0x00, _labEffectId - 1); lab_fire_effect(); }
         ImGui.SameLine(); if (ImGui.Button("+##labfx")) { _labEffectId = Math.Min(0xFF, _labEffectId + 1); lab_fire_effect(); }
         ImGui.SameLine(); if (ImGui.Button("Fire##labfx")) lab_fire_effect();
-        ImGui.SameLine(); if (ImGui.Button("Clear##labfx")) lab_reset_effects();
         foreach (int pick in LabEffectQuickPicks)
         {
             ImGui.SameLine();
             if (ImGui.Button($"0x{pick:X2}##labfx{pick}")) { _labEffectId = pick; lab_fire_effect(); }
         }
-        ImGui.Checkbox("auto-clear ~1.5s after fire##labfx", ref _labEffectAutoOff);
-        ImGui.SameLine(); ImGui.Text("quick-picks 0x4A 0x4B.  WARNING: -/+ fire as you step; an unloaded id crashes natively.");
+        ImGui.Text("quick-picks 0x4A 0x4B.  WARNING: -/+ fire as you step; an unloaded id crashes natively (uncatchable).");
 
         ImGui.Separator();
         ImGui.Text($"Motion id: 0x{_labMotionId:X2}");
@@ -683,33 +677,11 @@ public unsafe sealed partial class ParryModule
         try
         {
             if (try_get_chr((byte)_labTargetSlot) == null) { log_debug($"[Lab] No live actor at slot {_labTargetSlot}."); return; }
-            lab_reset_effects(); // clear any prior preview first so effects don't stack
             FhUtil.get_fptr<MsBtlSetHitEffectProbe>(
                 ExternalMemoryOffsetMap.Functions.MsBtlSetHitEffect)((byte)_labTargetSlot, 0, _labEffectId, 1);
-            _labEffectAutoOffFrames = _labEffectAutoOff ? LabEffectAutoOffDurationFrames : 0;
             log_debug($"[Lab] Fired hit effect 0x{_labEffectId:X2} on slot {_labTargetSlot}.");
         }
         catch (Exception ex) { log_debug($"[Lab] Fire effect failed: {ex.Message}"); }
-    }
-
-    // Clear all active hit effects and re-arm the effect batch. MsEtEffectStop (free) MUST be
-    // paired with MsEtEffectSet (init) — Stop alone leaves a freed batch and the next fire crashes.
-    private void lab_reset_effects()
-    {
-        try
-        {
-            FhUtil.get_fptr<MsEtEffectStopProbe>(ExternalMemoryOffsetMap.Functions.MsEtEffectStop)();
-            FhUtil.get_fptr<MsEtEffectSetProbe>(ExternalMemoryOffsetMap.Functions.MsEtEffectSet)();
-            _labEffectAutoOffFrames = 0;
-        }
-        catch (Exception ex) { log_debug($"[Lab] Reset effects failed: {ex.Message}"); }
-    }
-
-    // Called each frame: auto-clear the hit-effect preview a short time after firing.
-    private void tick_fx_motion_lab()
-    {
-        if (_labEffectAutoOffFrames <= 0) return;
-        if (--_labEffectAutoOffFrames == 0) lab_reset_effects();
     }
 
     private void lab_play_motion()
