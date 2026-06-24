@@ -603,20 +603,20 @@ public unsafe sealed partial class ParryModule
     // ── FX / Motion Lab (debug, in-battle ID browser) ─────────────────────────
     // Step through hit-effect ids and motion ids live and watch them on a chosen
     // battler, so the right parry/guard/dodge visual is picked by eye. Effect =
-    // MsBtlSetHitEffect (the same safe call the parry success visual uses); Stop /
-    // auto-off = MsEtEffectStop. Motion = MsSetMotion(slot, id, 0,0,1,0,0) — the exact
-    // crash-safe shape the engine's own Defend code (MsDefenseStartProcess) uses.
+    // MsBtlSetHitEffect (the same safe call the parry success visual uses). Motion =
+    // MsSetMotion(slot, id, 0,0,1,0,0) — the exact crash-safe shape the engine's own
+    // Defend code (MsDefenseStartProcess) uses.
+    //
+    // NOTE: there is intentionally NO effect "Stop"/auto-off. MsEtEffectStop frees the
+    // effect batch WITHOUT re-initialising it (op_et_battle_effect_init / MsEtEffectSet),
+    // after which the next MsBtlSetHitEffect operates on a freed batch and crashes the
+    // game. Hit effects despawn on their own; a real stop would need the Free+Init pair.
     private int  _labTargetSlot;
     private int  _labEffectId = 0x4B;  // current parry-visual favourite
     private int  _labMotionId = 0x3C;  // 0x3C/0x3D = guard brace, 0x34 = covered (engine Defend poses)
-    private bool _labEffectAutoOff = true;
-    private int  _labEffectAutoOffFrames; // countdown to auto-stop; 0 = idle
-    private const int LabEffectAutoOffDurationFrames = 75; // ~2.5s @ 30fps
 
-    // Confirmed-safe quick-picks only. 0x48 (Shield) crashes natively in some battles
-    // (it follows a resource/sub-reference that may not be loaded — op_et_eff derefs it
-    // before its graceful-fail path), and a native access violation can't be caught by
-    // managed try/catch. Stepping with -/+ can still reach risky ids; that's deliberate.
+    // Quick-picks (confirmed-safe in testing). Stepping with -/+ fires as you go and can
+    // still reach an unloaded effect id, which crashes natively — that risk is on the user.
     private static readonly int[] LabEffectQuickPicks = [0x4A, 0x4B];
 
     private void render_fx_motion_lab()
@@ -632,14 +632,12 @@ public unsafe sealed partial class ParryModule
         ImGui.SameLine(); if (ImGui.Button("-##labfx")) { _labEffectId = Math.Max(0x00, _labEffectId - 1); lab_fire_effect(); }
         ImGui.SameLine(); if (ImGui.Button("+##labfx")) { _labEffectId = Math.Min(0xFF, _labEffectId + 1); lab_fire_effect(); }
         ImGui.SameLine(); if (ImGui.Button("Fire##labfx")) lab_fire_effect();
-        ImGui.SameLine(); if (ImGui.Button("Stop##labfx")) lab_stop_effect();
         foreach (int pick in LabEffectQuickPicks)
         {
             ImGui.SameLine();
-            if (ImGui.Button($"0x{pick:X2}##labfxpick")) { _labEffectId = pick; lab_fire_effect(); }
+            if (ImGui.Button($"0x{pick:X2}##labfx{pick}")) { _labEffectId = pick; lab_fire_effect(); }
         }
-        ImGui.Checkbox("auto-off after ~2.5s##labfx", ref _labEffectAutoOff);
-        ImGui.SameLine(); ImGui.Text("safe: 0x4A 0x4B.  WARNING: stepping ids can CRASH (native, uncatchable) — e.g. 0x48 Shield.");
+        ImGui.Text("quick-picks 0x4A 0x4B.  WARNING: -/+ fire as you step; an unloaded id crashes natively (uncatchable).");
 
         ImGui.Separator();
         ImGui.Text($"Motion id: 0x{_labMotionId:X2}");
@@ -681,21 +679,9 @@ public unsafe sealed partial class ParryModule
             if (try_get_chr((byte)_labTargetSlot) == null) { log_debug($"[Lab] No live actor at slot {_labTargetSlot}."); return; }
             FhUtil.get_fptr<MsBtlSetHitEffectProbe>(
                 ExternalMemoryOffsetMap.Functions.MsBtlSetHitEffect)((byte)_labTargetSlot, 0, _labEffectId, 1);
-            if (_labEffectAutoOff) _labEffectAutoOffFrames = LabEffectAutoOffDurationFrames;
             log_debug($"[Lab] Fired hit effect 0x{_labEffectId:X2} on slot {_labTargetSlot}.");
         }
         catch (Exception ex) { log_debug($"[Lab] Fire effect failed: {ex.Message}"); }
-    }
-
-    private void lab_stop_effect()
-    {
-        try
-        {
-            FhUtil.get_fptr<MsEtEffectStopProbe>(ExternalMemoryOffsetMap.Functions.MsEtEffectStop)();
-            _labEffectAutoOffFrames = 0;
-            log_debug("[Lab] Stopped all active hit effects.");
-        }
-        catch (Exception ex) { log_debug($"[Lab] Stop effect failed: {ex.Message}"); }
     }
 
     private void lab_play_motion()
@@ -708,17 +694,6 @@ public unsafe sealed partial class ParryModule
             log_debug($"[Lab] Played motion 0x{_labMotionId:X2} on slot {_labTargetSlot}.");
         }
         catch (Exception ex) { log_debug($"[Lab] Play motion failed: {ex.Message}"); }
-    }
-
-    // Called each frame: run the hit-effect auto-off countdown (clears lingering previews).
-    private void tick_fx_motion_lab()
-    {
-        if (_labEffectAutoOffFrames <= 0) return;
-        if (--_labEffectAutoOffFrames == 0)
-        {
-            try { FhUtil.get_fptr<MsEtEffectStopProbe>(ExternalMemoryOffsetMap.Functions.MsEtEffectStop)(); }
-            catch { /* between battles — ignore */ }
-        }
     }
 
     private void render_debug_overlay()
