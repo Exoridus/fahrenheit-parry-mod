@@ -109,6 +109,10 @@ public unsafe sealed partial class ParryModule : FhModule
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate void MsSetChrVisibleProbe(int slot, int visible);
 
+    // MsResetBindEffect(slot) — engine's per-character effect reset (used in MsBtlChrFree).
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate void MsResetBindEffectProbe(byte slot);
+
     // MsInsertBtlCommand — engine call to queue a battle command for a chr to
     // execute as the next available action. Used directly (no hook) by the
     // streak counter-attack feature to inject a basic Attack from the parrier

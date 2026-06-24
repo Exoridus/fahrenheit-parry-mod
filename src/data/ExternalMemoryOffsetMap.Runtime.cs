@@ -122,6 +122,14 @@ public static partial class ExternalMemoryOffsetMap
         // button to re-show a model that a status/death effect (e.g. petrify-shatter) hid.
         public const int MsSetChrVisible = 0x00396670;
 
+        // MsResetBindEffect — FUN_00788f20 at FFX.exe+0x388F20 (Ghidra VA 0x00788f20).
+        // Per-character effect reset: void MsResetBindEffect(byte slot). Clears the slot's
+        // own effect object (field_0x1f=0; Ch_EffectSetEffectLevel(obj,0); op_et_bindeff_off_signal).
+        // This is the engine's own per-char teardown (called from MsBtlChrFree) — a TARGETED
+        // clear, unlike the global op_et_battle_effect_free/init (MsEtEffectStop/Set) that
+        // depends on battle-lifecycle state and crashed. Worst case here is a no-op, not a crash.
+        public const int MsResetBindEffect = 0x00388f20;
+
         // MsInsertBtlCommand at FFX.exe+0x3929D0 — engine-public "queue a battle
         // command for a chr to execute as the next available action".
         //

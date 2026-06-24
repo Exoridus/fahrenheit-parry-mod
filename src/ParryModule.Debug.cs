@@ -627,6 +627,7 @@ public unsafe sealed partial class ParryModule
         ImGui.SameLine(); if (ImGui.Button("<##labslot")) _labTargetSlot = lab_step_slot(-1);
         ImGui.SameLine(); if (ImGui.Button(">##labslot")) _labTargetSlot = lab_step_slot(+1);
         ImGui.SameLine(); if (ImGui.Button("Restore char##labslot")) lab_restore_char(); // re-show a model a status/death effect hid (experimental)
+        ImGui.SameLine(); if (ImGui.Button("Clear FX##labslot")) lab_clear_char_fx();    // per-char effect reset, like the engine's own teardown (experimental)
 
         ImGui.Separator();
         ImGui.Text($"Hit effect: 0x{_labEffectId:X2}");
@@ -698,6 +699,21 @@ public unsafe sealed partial class ParryModule
             log_debug($"[Lab] Restored visibility on slot {_labTargetSlot}.");
         }
         catch (Exception ex) { log_debug($"[Lab] Restore char failed: {ex.Message}"); }
+    }
+
+    // Experimental: clear the selected char's active effects via the engine's own per-character
+    // teardown MsResetBindEffect(slot) (the same call MsBtlChrFree uses). Targeted (one char),
+    // not the global op_et_battle_effect_free/init that crashed — worst case is a no-op.
+    private void lab_clear_char_fx()
+    {
+        try
+        {
+            if (try_get_chr((byte)_labTargetSlot) == null) { log_debug($"[Lab] No live actor at slot {_labTargetSlot}."); return; }
+            FhUtil.get_fptr<MsResetBindEffectProbe>(
+                ExternalMemoryOffsetMap.Functions.MsResetBindEffect)((byte)_labTargetSlot);
+            log_debug($"[Lab] Reset bind-effects on slot {_labTargetSlot}.");
+        }
+        catch (Exception ex) { log_debug($"[Lab] Clear FX failed: {ex.Message}"); }
     }
 
     private void lab_play_motion()
