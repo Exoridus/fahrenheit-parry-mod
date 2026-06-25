@@ -615,6 +615,14 @@ public unsafe sealed partial class ParryModule
     private int  _labEffectId = 0x4B;  // current parry-visual favourite
     private int  _labMotionId = 0x3C;  // 0x3C/0x3D = guard brace, 0x34 = covered (engine Defend poses)
 
+    // Crash-safe motion browsing: before each MsSetMotion we persist the id and flush to disk.
+    // If that call crashes the game, the pending file survives; on next launch the id is moved
+    // to the persistent blocklist (_motionBlocklist) and skipped from then on.
+    private readonly HashSet<int> _motionBlocklist = [];
+    private string _motionPendingPath = string.Empty;
+    private string _motionBlocklistPath = string.Empty;
+    private bool   _motionBlocklistReady;
+
     // Quick-picks (confirmed-safe in testing). Stepping with -/+ fires as you go and can
     // still reach an unloaded effect id, which crashes natively — that risk is on the user.
     private static readonly int[] LabEffectQuickPicks = [0x4A, 0x4B];
@@ -642,11 +650,15 @@ public unsafe sealed partial class ParryModule
         ImGui.Text("quick-picks 0x4A 0x4B.  WARNING: -/+ fire as you step; an unloaded id crashes natively (uncatchable).");
 
         ImGui.Separator();
-        ImGui.Text($"Motion id: 0x{_labMotionId:X2}");
-        ImGui.SameLine(); if (ImGui.Button("-##labmot")) { _labMotionId = Math.Max(0x00, _labMotionId - 1); lab_play_motion(); }
-        ImGui.SameLine(); if (ImGui.Button("+##labmot")) { _labMotionId = Math.Min(0xFF, _labMotionId + 1); lab_play_motion(); }
+        bool motionBlocked = _motionBlocklist.Contains(_labMotionId);
+        ImGui.Text($"Motion id: 0x{_labMotionId:X2}{(motionBlocked ? "  [BLOCKED]" : string.Empty)}");
+        ImGui.SameLine(); if (ImGui.Button("-##labmot")) _labMotionId = Math.Max(0x00, _labMotionId - 1); // step only — Play to fire
+        ImGui.SameLine(); if (ImGui.Button("+##labmot")) _labMotionId = Math.Min(0xFF, _labMotionId + 1);
         ImGui.SameLine(); if (ImGui.Button("Play##labmot")) lab_play_motion();
-        ImGui.SameLine(); ImGui.Text("safe: 0x34 0x3C 0x3D (engine Defend poses).  WARNING: stepping ids can crash on invalid motions.");
+        ImGui.SameLine(); ImGui.Text($"blocklist: {_motionBlocklist.Count}");
+        ImGui.SameLine(); if (ImGui.Button("Clear blocklist##labmot")) { _motionBlocklist.Clear(); save_motion_blocklist(); }
+        ImGui.Text("known: 0x09 magic-hit  0x0C hit  0x1B flinch  0x30 heavy  0x34 covered  0x3C/0x3D guard  0x40 death  0x43 armored  0x4F stone");
+        ImGui.Text("-/+ steps only; Play fires. A motion that crashes the game is auto-blocklisted on the next launch and then skipped.");
     }
 
     // Slot label: resolve the live battler at a slot to its character / monster name.
@@ -720,12 +732,98 @@ public unsafe sealed partial class ParryModule
     {
         try
         {
+            if (_motionBlocklist.Contains(_labMotionId)) { log_debug($"[Lab] Motion 0x{_labMotionId:X2} is blocklisted (crashed before) — skipped."); return; }
             if (try_get_chr((byte)_labTargetSlot) == null) { log_debug($"[Lab] No live actor at slot {_labTargetSlot}."); return; }
+
+            // Persist + flush the id we're about to set BEFORE the native call. If MsSetMotion
+            // crashes the process, the pending file survives and the id is blocklisted next launch.
+            int attempted = _labMotionId;
+            write_motion_pending(attempted);
+
             FhUtil.get_fptr<MsSetMotionProbe>(
-                ExternalMemoryOffsetMap.Functions.MsSetMotion)(_labTargetSlot, _labMotionId, 0, 0, 1, 0, 0);
-            log_debug($"[Lab] Played motion 0x{_labMotionId:X2} on slot {_labTargetSlot}.");
+                ExternalMemoryOffsetMap.Functions.MsSetMotion)(_labTargetSlot, attempted, 0, 0, 1, 0, 0);
+
+            clear_motion_pending(); // returned without crashing → this id is fine
+            log_debug($"[Lab] Played motion 0x{attempted:X2} on slot {_labTargetSlot}.");
         }
-        catch (Exception ex) { log_debug($"[Lab] Play motion failed: {ex.Message}"); }
+        catch (Exception ex) { clear_motion_pending(); log_debug($"[Lab] Play motion failed: {ex.Message}"); }
+    }
+
+    // ── motion crash-recovery blocklist ───────────────────────────────────────
+    // The crash itself is the signal: if MsSetMotion takes down the process, the flushed
+    // pending file is still on disk next launch, so that id is moved to the blocklist.
+    private void initialize_motion_blocklist()
+    {
+        try
+        {
+            string? dir = string.IsNullOrWhiteSpace(_settingsFilePath) ? null : Path.GetDirectoryName(_settingsFilePath);
+            if (string.IsNullOrWhiteSpace(dir)) { _logger.Warning("[Lab] Motion blocklist disabled (no settings dir)."); return; }
+
+            _motionBlocklistPath = Path.Combine(dir, "fhparry-motion-blocklist.txt");
+            _motionPendingPath   = Path.Combine(dir, "fhparry-motion-pending.txt");
+            _motionBlocklistReady = true;
+
+            if (File.Exists(_motionBlocklistPath))
+            {
+                foreach (string line in File.ReadAllLines(_motionBlocklistPath))
+                    if (try_parse_motion_id(line, out int id)) _motionBlocklist.Add(id);
+            }
+
+            // A leftover pending file means the previous MsSetMotion call never returned.
+            if (File.Exists(_motionPendingPath))
+            {
+                string pending = File.ReadAllText(_motionPendingPath).Trim();
+                File.Delete(_motionPendingPath);
+                if (try_parse_motion_id(pending, out int crashedId) && _motionBlocklist.Add(crashedId))
+                {
+                    save_motion_blocklist();
+                    _logger.Info($"[Lab] Motion 0x{crashedId:X2} crashed the game last session — added to the blocklist.");
+                }
+            }
+
+            _logger.Info($"[Lab] Motion blocklist ready ({_motionBlocklist.Count} ids).");
+        }
+        catch (Exception ex) { _logger.Warning($"[Lab] Motion blocklist init failed: {ex.Message}"); }
+    }
+
+    private void save_motion_blocklist()
+    {
+        if (!_motionBlocklistReady) return;
+        try
+        {
+            List<int> ids = [.. _motionBlocklist];
+            ids.Sort();
+            File.WriteAllLines(_motionBlocklistPath, ids.Select(id => $"0x{id:X2}"));
+        }
+        catch (Exception ex) { log_debug($"[Lab] Save motion blocklist failed: {ex.Message}"); }
+    }
+
+    private void write_motion_pending(int id)
+    {
+        if (!_motionBlocklistReady) return;
+        try
+        {
+            using FileStream fs = new(_motionPendingPath, FileMode.Create, FileAccess.Write, FileShare.Read);
+            byte[] bytes = Encoding.ASCII.GetBytes($"0x{id:X2}");
+            fs.Write(bytes, 0, bytes.Length);
+            fs.Flush(true); // flush to disk so the record survives a hard native crash
+        }
+        catch { /* best effort */ }
+    }
+
+    private void clear_motion_pending()
+    {
+        if (!_motionBlocklistReady) return;
+        try { if (File.Exists(_motionPendingPath)) File.Delete(_motionPendingPath); }
+        catch { /* best effort */ }
+    }
+
+    private static bool try_parse_motion_id(string s, out int id)
+    {
+        s = s.Trim();
+        if (s.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
+            return int.TryParse(s.AsSpan(2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out id);
+        return int.TryParse(s, NumberStyles.Integer, CultureInfo.InvariantCulture, out id);
     }
 
     private void render_debug_overlay()

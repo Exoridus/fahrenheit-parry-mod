@@ -514,6 +514,7 @@ public unsafe sealed partial class ParryModule : FhModule
         _settingsFilePath = mod_context.Paths.SettingsPath;
         load_persistent_settings();
         initialize_session_logging(mod_context);
+        initialize_motion_blocklist();
         _audioResourcesDir = Path.Combine(mod_context.Paths.ResourcesDir.FullName, "audio");
         _fontResourcesDir = Path.Combine(mod_context.Paths.ResourcesDir.FullName, "fonts");
         initialize_overlay_fonts();
