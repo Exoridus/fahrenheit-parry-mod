@@ -974,6 +974,7 @@ public unsafe sealed partial class ParryModule
         // character via MsBtlSetHitEffect (global-handle path, PC-safe).
         // Default-on; toggleable via the "Parry Effect Visual" setting.
         fire_parry_visual_effect((byte)slotIndex);
+        play_parry_block_motion((byte)slotIndex);
 
         if (closeWindow)
         {
@@ -1010,6 +1011,34 @@ public unsafe sealed partial class ParryModule
             // Defensive: never let a visual-effect failure interrupt the parry
             // resolution path. Log and move on.
             log_debug($"[ParryEffect] Failed to fire visual effect: {ex.Message}");
+        }
+    }
+
+    // Animated parry feedback: play the short "block" reaction (motion 0x43) on the parrying
+    // character. 0x43 is a brief one-shot that returns to idle on its own — unlike the 0x3C/0x3D
+    // guard brace, which holds until another motion is set — so it reads cleanly as a parry beat.
+    // Gated by the same "Parry Effect Visual" setting as the barrier visual.
+    private void play_parry_block_motion(byte slotIndex)
+    {
+        if (!_optionParryEffect)
+        {
+            return;
+        }
+
+        try
+        {
+            const int ParryBlockMotionId = 0x43; // chosen by eye in the FX/Motion lab
+            FhUtil.get_fptr<MsSetMotionProbe>(
+                ExternalMemoryOffsetMap.Functions.MsSetMotion)(slotIndex, ParryBlockMotionId, 0, 0, 1, 0, 0);
+
+            if (_optionLogging)
+            {
+                log_debug($"[ParryEffect] Played block motion 0x{ParryBlockMotionId:X2} on {format_actor_slot(slotIndex)}.");
+            }
+        }
+        catch (Exception ex)
+        {
+            log_debug($"[ParryEffect] Failed to play block motion: {ex.Message}");
         }
     }
 
