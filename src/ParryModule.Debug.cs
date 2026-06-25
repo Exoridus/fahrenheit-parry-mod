@@ -623,6 +623,11 @@ public unsafe sealed partial class ParryModule
     private string _motionBlocklistPath = string.Empty;
     private bool   _motionBlocklistReady;
 
+    // Evade probe (read-only): logs a party battler's move/avoid state transitions so a native
+    // evade reveals the engine's real move-mode (back-hop vs. walk-back) — see tick_evade_probe.
+    private bool _labEvadeProbe;
+    private readonly ulong[] _evadeProbePrev = new ulong[PartyActorCapacity];
+
     // Quick-picks (confirmed-safe in testing). Stepping with -/+ fires as you go and can
     // still reach an unloaded effect id, which crashes natively — that risk is on the user.
     private static readonly int[] LabEffectQuickPicks = [0x4A, 0x4B];
@@ -658,6 +663,14 @@ public unsafe sealed partial class ParryModule
         ImGui.SameLine(); ImGui.Text($"blocklist: {_motionBlocklist.Count}");
         ImGui.SameLine(); if (ImGui.Button("Clear blocklist##labmot")) { _motionBlocklist.Clear(); save_motion_blocklist(); }
         ImGui.Text("known: 0x09 magic-hit  0x0C hit  0x1B flinch  0x30 heavy  0x34 covered  0x3C/0x3D guard  0x40 death  0x43 armored  0x4F stone");
+        // Dodge step-back testing. Safe = a motion only (visual, no displacement — the native
+        // evade is positional, so there is no real "dodge motion"; this just plays the chosen id).
+        // The Evade probe (read-only) logs the engine's true move-mode/avoid during a native evade
+        // — turn it on, then let a PC dodge an enemy hit — so the real move-engine back-step can be
+        // built from confirmed values instead of inferred offsets.
+        if (ImGui.Button("Dodge (motion, safe)##labdodge")) lab_play_motion();
+        ImGui.SameLine(); ImGui.Checkbox("Evade probe##labdodge", ref _labEvadeProbe);
+        ImGui.SameLine(); ImGui.Text("real move-engine dodge: deferred until the probe captures the move-mode");
         ImGui.Text("-/+ steps only; Play fires. A motion that crashes the game is auto-blocklisted on the next launch and then skipped.");
     }
 
@@ -817,6 +830,32 @@ public unsafe sealed partial class ParryModule
         if (!_motionBlocklistReady) return;
         try { if (File.Exists(_motionPendingPath)) File.Delete(_motionPendingPath); }
         catch { /* best effort */ }
+    }
+
+    // Observe-only: while the Evade probe is on, poll each party battler's move/avoid state
+    // (Chr+0x4AC motion_type, +0x415 move-mode, +0x425 avoid flag, offsets from the evade-
+    // choreography RE) and log transitions. Captured during a native evade, this reveals the
+    // real move-mode of the back-hop vs. the walk-back (mode 1) — the data needed to build a
+    // true move-engine dodge from confirmed values. Reads only; never writes.
+    private void tick_evade_probe()
+    {
+        if (!_labEvadeProbe) return;
+        for (byte slot = 0; slot < PartyActorCapacity; slot++)
+        {
+            Chr* chr = try_get_chr(slot);
+            if (chr == null) { _evadeProbePrev[slot] = 0; continue; }
+
+            uint motionType = *(uint*)((byte*)chr + 0x4AC);
+            byte moveMode = (byte)(*((byte*)chr + 0x415) & 0x7F);
+            byte avoid = *((byte*)chr + 0x425);
+
+            ulong key = ((ulong)moveMode << 8) | avoid;
+            if (key == _evadeProbePrev[slot]) continue;
+            _evadeProbePrev[slot] = key;
+
+            if (moveMode != 0 || avoid != 0)
+                log_debug($"[EvadeProbe] {format_actor_slot(slot)} move_mode=0x{moveMode:X2} avoid=0x{avoid:X2} motion_type=0x{motionType:X4}");
+        }
     }
 
     private static bool try_parse_motion_id(string s, out int id)
