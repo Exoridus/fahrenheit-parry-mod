@@ -130,6 +130,13 @@ public static partial class ExternalMemoryOffsetMap
         // depends on battle-lifecycle state and crashed. Worst case here is a no-op, not a crash.
         public const int MsResetBindEffect = 0x00388f20;
 
+        // MsEffectEndMotion — FUN_00787a10 at FFX.exe+0x387A10 (Ghidra VA 0x00787a10).
+        // The engine's "a battler's motion just finished" handler: void(uint chr_id, int mode).
+        // Hooked observe-only (call orig + log) to measure how long a played motion runs — the
+        // data we need to decide whether the parry window / whiff recovery should be driven by
+        // the real animation length instead of the static FINAL_PARRY_SPEC windows.
+        public const int MsEffectEndMotion = 0x00387a10;
+
         // MsInsertBtlCommand at FFX.exe+0x3929D0 — engine-public "queue a battle
         // command for a chr to execute as the next available action".
         //

@@ -1313,6 +1313,29 @@ public unsafe sealed partial class ParryModule
     }
 
     /// <summary>
+    ///     Observe-only hook on MsEffectEndMotion (FFX.exe+0x387A10) — the engine's
+    ///     "a battler's motion just finished" handler. Always calls the original, then
+    ///     (when logging is on) logs how long ago we played a motion on that slot via
+    ///     the FX/Motion lab or the parry block reaction. This measures the real motion
+    ///     run length so we can decide whether to drive the parry window / whiff recovery
+    ///     from the animation instead of the static FINAL_PARRY_SPEC durations.
+    /// </summary>
+    private void h_ms_effect_end_motion(uint chr_id, int mode)
+    {
+        _hMsEffectEndMotion.orig_fptr.Invoke(chr_id, mode);
+
+        if (!_optionLogging) return;
+        uint slot = chr_id & 0xff;
+        if (slot >= PartyActorCapacity) return;
+        ulong startFrame = _motionPlayFrame[slot];
+        if (startFrame == 0) return; // only report motions we played, so the log stays correlated
+        _motionPlayFrame[slot] = 0;
+        ulong frames = _debugFrameIndex - startFrame;
+        double ms = frames * (1000.0 / BattleFrameRate);
+        log_debug($"[MotionEnd] {format_actor_slot((byte)slot)} motion ended after {frames} frames (~{ms:F0} ms @ {BattleFrameRate:F0}fps, mode={mode}).");
+    }
+
+    /// <summary>
     ///     Active hook on MsDmgCalc_CheckHit (FFX.exe+0x38A950). The engine's
     ///     accuracy/evasion roll. Always invokes the original to preserve battle
     ///     RNG state, then conditionally overrides MISS → HIT when:

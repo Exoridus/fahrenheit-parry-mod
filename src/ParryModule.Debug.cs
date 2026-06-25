@@ -744,6 +744,7 @@ public unsafe sealed partial class ParryModule
                 ExternalMemoryOffsetMap.Functions.MsSetMotion)(_labTargetSlot, attempted, 0, 0, 1, 0, 0);
 
             clear_motion_pending(); // returned without crashing → this id is fine
+            if (_labTargetSlot < PartyActorCapacity) _motionPlayFrame[_labTargetSlot] = _debugFrameIndex; // MsEffectEndMotion duration probe
             log_debug($"[Lab] Played motion 0x{attempted:X2} on slot {_labTargetSlot}.");
         }
         catch (Exception ex) { clear_motion_pending(); log_debug($"[Lab] Play motion failed: {ex.Message}"); }

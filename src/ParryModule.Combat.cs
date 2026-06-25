@@ -1031,6 +1031,8 @@ public unsafe sealed partial class ParryModule
             FhUtil.get_fptr<MsSetMotionProbe>(
                 ExternalMemoryOffsetMap.Functions.MsSetMotion)(slotIndex, ParryBlockMotionId, 0, 0, 1, 0, 0);
 
+            if (slotIndex < PartyActorCapacity) _motionPlayFrame[slotIndex] = _debugFrameIndex; // MsEffectEndMotion duration probe
+
             if (_optionLogging)
             {
                 log_debug($"[ParryEffect] Played block motion 0x{ParryBlockMotionId:X2} on {format_actor_slot(slotIndex)}.");

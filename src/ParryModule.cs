@@ -113,6 +113,11 @@ public unsafe sealed partial class ParryModule : FhModule
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate void MsResetBindEffectProbe(byte slot);
 
+    // MsEffectEndMotion(chr_id, mode) — engine's "battler motion finished" handler. Hooked
+    // observe-only to measure played-motion durations (animation-driven-timing research).
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate void MsEffectEndMotionProbe(uint chr_id, int mode);
+
     // MsInsertBtlCommand — engine call to queue a battle command for a chr to
     // execute as the next available action. Used directly (no hook) by the
     // streak counter-attack feature to inject a basic Attack from the parrier
@@ -333,9 +338,10 @@ public unsafe sealed partial class ParryModule : FhModule
     // _checkHitObserved*).
     //
     // This is the prep step for the upcoming manual-dodge system that will replace
-    // native evasion. Default-off until the dodge mechanic ships and the HIT/MISS
-    // enum integers have been observed in-game.
-    private bool _optionDisableNativeEvasion = false;
+    // native evasion. Default-ON: the override still only fires once the HIT/MISS enum
+    // integers have been auto-observed in-game (see _checkHit* below), so enabling it by
+    // default is safe — it simply starts disabling PC evasion as soon as those are learned.
+    private bool _optionDisableNativeEvasion = true;
     // Counter for suppressed camera requests, reset on mode change — surfaced
     // in debug logging only when both _optionLogging and _optionBattleCameraLockMode
     // is not Off, to avoid log spam in release builds.
@@ -466,7 +472,11 @@ public unsafe sealed partial class ParryModule : FhModule
     private readonly FhMethodHandle<MsBattleSpecialCameraPauseProbe> _hMsBattleSpecialCameraPause;
     private readonly FhMethodHandle<MsBattleCameraTickProbe> _hMsBattleCameraTick;
     private readonly FhMethodHandle<MsDmgCalcCheckHitProbe> _hMsDmgCalcCheckHit;
+    private readonly FhMethodHandle<MsEffectEndMotionProbe> _hMsEffectEndMotion;
     private long _battleCameraTickSuppressCount;
+    // Frame a motion was last played per party slot (lab Play / parry block), 0 = none.
+    // Read by the observe-only MsEffectEndMotion hook to log the motion's run length.
+    private readonly ulong[] _motionPlayFrame = new ulong[PartyActorCapacity];
 
     public ParryModule()
     {
@@ -485,6 +495,7 @@ public unsafe sealed partial class ParryModule : FhModule
         _hMsBattleCameraTick = new FhMethodHandle<MsBattleCameraTickProbe>(
             this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsBattleCameraTick, h_ms_battle_camera_tick); // per-frame camera apply; skip-orig'd under the lock so scripted-special cameras can't pan
         _hMsDmgCalcCheckHit = new FhMethodHandle<MsDmgCalcCheckHitProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsDmgCalcCheckHit, h_ms_dmg_calc_check_hit); // MsDmgCalc_CheckHit — accuracy/evasion roll; intercepted to disable native evasion for real PCs
+        _hMsEffectEndMotion = new FhMethodHandle<MsEffectEndMotionProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsEffectEndMotion, h_ms_effect_end_motion); // observe-only: measure played-motion durations
 
         _hStartupAtelEventSetUp    = new FhMethodHandle<StartupAtelEventSetUp>(this, "FFX.exe", StartupOffsets.AtelEventSetUp, h_startup_event_setup);
         _hStartupNeedShowJapanLogo = new FhMethodHandle<StartupNeedShowJapanLogo>(this, "FFX.exe", StartupOffsets.NeedShowJapanLogo, h_startup_need_show_japan_logo);
@@ -621,6 +632,15 @@ public unsafe sealed partial class ParryModule : FhModule
         catch (Exception ex)
         {
             _logger.Warning($"[Parry] Could not hook MsBattleCameraTick (scripted-special camera lock coverage unavailable): {ex.Message}");
+        }
+
+        try
+        {
+            _hMsEffectEndMotion.hook();
+        }
+        catch (Exception ex)
+        {
+            _logger.Warning($"[Parry] Could not hook MsEffectEndMotion (motion-duration observe unavailable): {ex.Message}");
         }
 
         try
