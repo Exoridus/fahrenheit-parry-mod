@@ -625,6 +625,17 @@ public unsafe sealed partial class ParryModule : FhModule
     private bool _debugGameplayReady;
     private bool _debugAutoScroll = true;
     private float _debugStatePanelRatio = 0.50f;
+
+    // Overlay window chrome. The window carries no title bar; it collapses to a small square
+    // caret, and its opacity eases toward opaque only while the mouse is near it. The rect is
+    // captured each frame from the live window and read back the next frame (ImGui only reports
+    // geometry after Begin), which is what the proximity test and the collapse toggle align to.
+    private bool _overlayCollapsed;
+    private float _overlayBgAlpha = 0.55f;
+    private float _overlayContentAlpha = 1.0f;
+    private Vector2 _overlayWindowPos = new(20f, 20f);
+    private Vector2 _overlayPrevRectMin = new(20f, 20f);
+    private Vector2 _overlayPrevRectMax = new(20f, 20f);
     private int _debugCueTurnId;
     private string _dataMappingStatus = "No data mappings loaded.";
     private readonly Random _rng = new();

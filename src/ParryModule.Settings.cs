@@ -157,6 +157,21 @@ public unsafe sealed partial class ParryModule
             persist_settings();
             log_debug($"Difficulty changed to {ParryDifficultyModel.FormatName(_optionDifficulty)}.");
         }
+
+        render_difficulty_timing_info();
+    }
+
+    // The selected preset's timing, in battle frames (30 Hz ticks) with the nominal wall-clock ms.
+    // Commitment is the parry window plus the whiff-recovery lockout — the full cost of a press.
+    private void render_difficulty_timing_info()
+    {
+        int parry  = ParryDifficultyModel.GetParryWindowTicks(_optionDifficulty);
+        int dodge  = ParryDifficultyModel.GetDodgeWindowTicks(_optionDifficulty);
+        int commit = ParryDifficultyModel.GetTotalCommitmentTicks(_optionDifficulty);
+        ImGui.TextDisabled(
+            $"Parry {parry}f ({ParryDifficultyModel.TicksToMs(parry):F0} ms)   ·   "
+            + $"Dodge {dodge}f ({ParryDifficultyModel.TicksToMs(dodge):F0} ms)   ·   "
+            + $"Commitment {commit}f ({ParryDifficultyModel.TicksToMs(commit):F0} ms)");
     }
 
 }

@@ -941,58 +941,133 @@ public unsafe sealed partial class ParryModule
     /// </summary>
     private void render_debug_overlay()
     {
-        ImGui.SetNextWindowBgAlpha(0.55f);
-        ImGui.SetNextWindowPos(new Vector2(20f, 20f), ImGuiCond.FirstUseEver);
+        update_overlay_proximity_opacity();
+
+        if (_overlayCollapsed)
+        {
+            render_overlay_collapsed_caret();
+            return;
+        }
+
+        ImGui.SetNextWindowPos(_overlayWindowPos, ImGuiCond.Appearing);
 #if DEBUG
         ImGui.SetNextWindowSize(new Vector2(1020f, 620f), ImGuiCond.FirstUseEver);
 #else
         ImGui.SetNextWindowSize(new Vector2(420f, 520f), ImGuiCond.FirstUseEver);
 #endif
+        ImGui.SetNextWindowBgAlpha(_overlayBgAlpha);
 
-        ImGui.PushStyleColor(ImGuiCol.WindowBg, new Vector4(0f, 0f, 0f, 0.55f));
+        ImGui.PushStyleColor(ImGuiCol.WindowBg, new Vector4(0f, 0f, 0f, _overlayBgAlpha));
+        ImGui.PushStyleVar(ImGuiStyleVar.Alpha, _overlayContentAlpha);
         const ImGuiWindowFlags overlayFlags =
-            ImGuiWindowFlags.NoFocusOnAppearing
+            ImGuiWindowFlags.NoTitleBar
+            | ImGuiWindowFlags.NoFocusOnAppearing
             | ImGuiWindowFlags.NoBringToFrontOnFocus
             | ImGuiWindowFlags.NoNavInputs
             | ImGuiWindowFlags.NoNavFocus;
-        if (ImGui.Begin("Parry###fhparry.window", overlayFlags) && ImGui.BeginTabBar("###fhparry.tabs"))
+        if (ImGui.Begin("###fhparry.window", overlayFlags))
         {
-            if (ImGui.BeginTabItem("Settings"))
+            capture_overlay_rect();
+
+            if (ImGui.SmallButton("v###fhparry.collapse")) _overlayCollapsed = true;
+            ImGui.SameLine();
+            ImGui.TextUnformatted("Parry");
+
+            if (ImGui.BeginTabBar("###fhparry.tabs"))
             {
-                render_settings_tab();
-                ImGui.EndTabItem();
-            }
+                if (ImGui.BeginTabItem("Settings"))
+                {
+                    render_settings_tab();
+                    ImGui.EndTabItem();
+                }
 
 #if DEBUG
-            bool liveReady = _optionDebugOverlay && _debugGameSaveLoaded && _debugGameplayReady;
+                bool liveReady = _optionDebugOverlay && _debugGameSaveLoaded && _debugGameplayReady;
 
-            if (ImGui.BeginTabItem("Live"))
-            {
-                if (liveReady) render_debug_activity_panels(MathF.Max(0f, ImGui.GetContentRegionAvail().Y));
-                else           render_debug_tab_placeholder();
-                ImGui.EndTabItem();
-            }
+                if (ImGui.BeginTabItem("Live"))
+                {
+                    if (liveReady) render_debug_activity_panels(MathF.Max(0f, ImGui.GetContentRegionAvail().Y));
+                    else           render_debug_tab_placeholder();
+                    ImGui.EndTabItem();
+                }
 
-            if (ImGui.BeginTabItem("Lab"))
-            {
-                if (liveReady) render_fx_motion_lab();
-                else           render_debug_tab_placeholder();
-                ImGui.EndTabItem();
-            }
+                if (ImGui.BeginTabItem("Lab"))
+                {
+                    if (liveReady) render_fx_motion_lab();
+                    else           render_debug_tab_placeholder();
+                    ImGui.EndTabItem();
+                }
 
-            if (ImGui.BeginTabItem("Shake"))
-            {
-                if (liveReady) render_shake_sweep_panel();
-                else           render_debug_tab_placeholder();
-                ImGui.EndTabItem();
-            }
+                if (ImGui.BeginTabItem("Shake"))
+                {
+                    if (liveReady) render_shake_sweep_panel();
+                    else           render_debug_tab_placeholder();
+                    ImGui.EndTabItem();
+                }
 #endif
 
-            ImGui.EndTabBar();
+                ImGui.EndTabBar();
+            }
         }
 
         ImGui.End();
+        ImGui.PopStyleVar();
         ImGui.PopStyleColor();
+    }
+
+    // Collapsed state: a small square caret in place of the window. Clicking it re-expands. Shares
+    // _overlayWindowPos with the full window so it reappears exactly where the window was.
+    private void render_overlay_collapsed_caret()
+    {
+        ImGui.SetNextWindowPos(_overlayWindowPos, ImGuiCond.Appearing);
+        ImGui.SetNextWindowBgAlpha(_overlayBgAlpha);
+
+        ImGui.PushStyleColor(ImGuiCol.WindowBg, new Vector4(0f, 0f, 0f, _overlayBgAlpha));
+        ImGui.PushStyleVar(ImGuiStyleVar.Alpha, _overlayContentAlpha);
+        ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new Vector2(3f, 3f));
+        const ImGuiWindowFlags caretFlags =
+            ImGuiWindowFlags.NoTitleBar
+            | ImGuiWindowFlags.NoResize
+            | ImGuiWindowFlags.AlwaysAutoResize
+            | ImGuiWindowFlags.NoFocusOnAppearing
+            | ImGuiWindowFlags.NoBringToFrontOnFocus
+            | ImGuiWindowFlags.NoNavInputs
+            | ImGuiWindowFlags.NoNavFocus;
+        if (ImGui.Begin("###fhparry.caret", caretFlags))
+        {
+            capture_overlay_rect();
+            if (ImGui.Button(">###fhparry.expand", new Vector2(16f, 16f))) _overlayCollapsed = false;
+        }
+        ImGui.End();
+        ImGui.PopStyleVar(2);
+        ImGui.PopStyleColor();
+    }
+
+    // Eases the window's background and content opacity toward opaque while the mouse is within a
+    // 40 px margin of last frame's window rect, and toward faint when it is away. Exponential,
+    // frame-rate independent, ~150 ms time constant.
+    private void update_overlay_proximity_opacity()
+    {
+        Vector2 mouse = ImGui.GetIO().MousePos;
+        const float margin = 40f;
+        bool near =
+            mouse.X >= _overlayPrevRectMin.X - margin && mouse.X <= _overlayPrevRectMax.X + margin &&
+            mouse.Y >= _overlayPrevRectMin.Y - margin && mouse.Y <= _overlayPrevRectMax.Y + margin;
+
+        float targetBg      = near ? 0.55f : 0.15f;
+        float targetContent = near ? 1.0f  : 0.75f;
+
+        float dt = ImGui.GetIO().DeltaTime;
+        float k = dt > 0f ? 1f - MathF.Exp(-dt / 0.15f) : 1f;
+        _overlayBgAlpha      += (targetBg - _overlayBgAlpha) * k;
+        _overlayContentAlpha += (targetContent - _overlayContentAlpha) * k;
+    }
+
+    private void capture_overlay_rect()
+    {
+        _overlayWindowPos = ImGui.GetWindowPos();
+        _overlayPrevRectMin = _overlayWindowPos;
+        _overlayPrevRectMax = _overlayWindowPos + ImGui.GetWindowSize();
     }
 
 #if DEBUG
