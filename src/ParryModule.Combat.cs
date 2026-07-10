@@ -120,7 +120,7 @@ public unsafe sealed partial class ParryModule
         }
         else if (_runtime.ParryWindowActive)
         {
-            windowRemainingAtImpactMs = _runtime.ParryWindowRemainingSeconds * 1000f;
+            windowRemainingAtImpactMs = ParryDifficultyModel.TicksToMs(_runtime.ParryWindowRemainingTicks);
         }
         string timingTag = $"[cue+{cueToImpactFrames}F win+{windowOpenToImpactFrames}F rem={windowRemainingAtImpactMs:F0}ms]";
 
@@ -226,6 +226,15 @@ public unsafe sealed partial class ParryModule
                 && cue.attacker_id != _runtime.CurrentAttackerId)
             {
                 end_parry_window("attacker changed");
+            }
+
+            // A different enemy action begins here while the turn context is still open (chained
+            // cues never empty the list, so clear_awaiting_turn_end will not run between them).
+            // Close out the outgoing action before the new cue overwrites CurrentPartyTargetMask,
+            // which resolve_streak_at_cue_clear reads.
+            if (cueIdentityChanged && _runtime.AwaitingTurnEnd)
+            {
+                end_enemy_action($"attacker {_runtime.CurrentAttackerId} -> {cue.attacker_id}");
             }
 
             if (_debugBattleActive && !_debugBattleSessionFirstCueSeen)
@@ -407,9 +416,15 @@ public unsafe sealed partial class ParryModule
             return;
         }
 
-        // Whiffout: optional extra recovery after a step-out (0 by default; slider dodge_whiffout).
-        if (_dodgeWhiffoutRemainingSeconds > 0f)
+        // Dodge cooldown: paces multi-press without automating the timing. Tiered by difficulty
+        // and zero on Debug. This existed as the `dodge_whiffout` slider, which defaulted to 0 and
+        // was therefore inert from the day it was written.
+        if (_dodgeCooldownRemainingTicks > 0)
         {
+            if (_optionLogging)
+            {
+                log_debug($"[Dodge] Ignored — cooldown ({_dodgeCooldownRemainingTicks} ticks left).");
+            }
             return;
         }
 
@@ -443,7 +458,7 @@ public unsafe sealed partial class ParryModule
         // the parry-path cue tracking, not this dodge path; context.PartyMask is the authoritative
         // in-hand set here and matches the step-out loop precisely.)
         _dodgeArmedTargetMask = context.PartyMask;
-        _dodgeWindowRemainingSeconds = DodgeWindowSeconds;
+        _dodgeWindowRemainingTicks = ParryDifficultyModel.GetDodgeWindowTicks(_optionDifficulty);
 
         // Step-out for each targeted PC — WITHOUT MsDamageSetMotion: set only the avoid move-mode
         // (Chr+0x425, what FUN_0078f090 sets) + play the evade animation (motion 0xC). This skips
@@ -463,7 +478,16 @@ public unsafe sealed partial class ParryModule
             // is passed. MsDamageSetMotion case 1 refreshes it from the attacker right before the
             // motion call; without this the step-out aims at whoever attacked last.
             ((byte*)chr)[ChrLastAttackerIdOffset] = context.Cue.attacker_id;
+            // A press must react NOW, not wait for the previous animation. But re-issuing MsSetMotion
+            // on a live script only restarts it and leaves the flags half-torn, which is what let the
+            // old dodge-spam keep an actor permanently "animating". So end the previous motion through
+            // the engine's own path first, then start a fresh one.
+            try_end_battle_motion(slot, "press_restart");
+
             ((byte*)chr)[ChrEvadeMoveModeOffset] = 1;
+            // 3rd arg 0 = non-blocking: do not hold Chr+0x432 ourselves. The ATEL worker sets it while
+            // the motion actually plays, and we now terminate deterministically, so holding it would
+            // only widen the window in which other actors wait on us.
             FhUtil.get_fptr<MsSetMotionProbe>(
                 ExternalMemoryOffsetMap.Functions.MsSetMotion)(slot, EvadeMotionId, 0, 0, 1, 0, 0);
             _dodgeProbeSlotsMask |= 1u << slot;
@@ -474,7 +498,7 @@ public unsafe sealed partial class ParryModule
         }
 
         _dodgeProbeFramesLeft = 40;
-        _dodgeWhiffoutRemainingSeconds = _dodgeWhiffoutMs / 1000f;
+        _dodgeCooldownRemainingTicks = ParryDifficultyModel.GetDodgeCooldownTicks(_optionDifficulty);
     }
 
     // After a step-out, log Chr+0x415/0x425/0x4AC (move-mode / avoid / motion-type) + world
@@ -498,9 +522,21 @@ public unsafe sealed partial class ParryModule
                 byte f415 = b[0x415];
                 byte f425 = b[0x425];
                 uint f4AC = *(uint*)(b + 0x4AC);
+
+                // The motion-system flags, so we can stop guessing which one our non-blocking
+                // MsSetMotion actually sets. 0x432 = motion-active, 0x433 = hit-reaction pending
+                // (the global barrier), 0x3f3 = motion-disable (gates MsEffectResetMotionDisable,
+                // and is 0 in every sample so far), 0xdf2 = the motion request the *blocking*
+                // MsSetMotion variant writes.
+                byte f432 = b[0x432];
+                byte f433 = b[0x433];
+                byte f3F3 = b[0x3f3];
+                byte fDF2 = b[0xdf2];
+
                 float px = chr->actor != null ? chr->actor->chr_pos_vec.X : 0f;
                 float pz = chr->actor != null ? chr->actor->chr_pos_vec.Z : 0f;
-                log_debug($"[EvadeFields] {format_actor_slot((byte)slot)} 0x415={f415:X2} 0x425={f425:X2} 0x4AC={f4AC:X8} pos=({px:F2},{pz:F2})");
+                log_debug($"[EvadeFields] {format_actor_slot((byte)slot)} 0x415={f415:X2} 0x425={f425:X2} 0x4AC={f4AC:X8} " +
+                          $"0x432={f432:X2} 0x433={f433:X2} 0x3f3={f3F3:X2} 0xdf2={fDF2:X2} pos=({px:F2},{pz:F2})");
             }
         }
 
@@ -534,7 +570,7 @@ public unsafe sealed partial class ParryModule
                 log_debug("Parry input ignored — current attack already parried.");
                 return;
             case "in_guard_recovery":
-                float lockoutRemainingMs = _runtime.WhiffLockoutRemainingSeconds * 1000f;
+                float lockoutRemainingMs = ParryDifficultyModel.TicksToMs(_runtime.WhiffLockoutRemainingTicks);
                 log_debug($"Parry input rejected — in guard recovery ({lockoutRemainingMs:F0}ms remaining).");
                 return;
             default:
@@ -543,9 +579,9 @@ public unsafe sealed partial class ParryModule
         }
     }
 
-    private float compute_window_seconds()
+    private int parry_window_ticks()
     {
-        return ParryDifficultyModel.GetWindowSeconds(_optionDifficulty);
+        return ParryDifficultyModel.GetParryWindowTicks(_optionDifficulty);
     }
 
     // Both windows open on the press, and the parry window is the tighter one. A dodge is
@@ -558,13 +594,13 @@ public unsafe sealed partial class ParryModule
     {
         if (!_dodgeWindowActive) return false;
 
-        float pressToHitSeconds = DodgeWindowSeconds - _dodgeWindowRemainingSeconds;
-        return pressToHitSeconds <= compute_window_seconds();
+        int pressToHitTicks = ParryDifficultyModel.GetDodgeWindowTicks(_optionDifficulty) - _dodgeWindowRemainingTicks;
+        return pressToHitTicks <= parry_window_ticks();
     }
 
     // Single entry point for "this slot has evaded". Idempotent per cue: the durable marker gates
     // the commit passes, and the perfect grade is awarded exactly once, at the first impact —
-    // while _dodgeWindowRemainingSeconds still carries the press-to-hit timing.
+    // while _dodgeWindowRemainingTicks still carries the press-to-hit timing.
     //
     // A perfect dodge grades PERFECT and takes the gold label, but grants no overdrive charge and no
     // counter. Overdrive is the parry's reward alone: evading a hit removes it from the fight, while
@@ -575,6 +611,11 @@ public unsafe sealed partial class ParryModule
         bool firstImpact = (_dodgeResolvedAtImpactMask & bit) == 0;
         _dodgeResolvedAtImpactMask |= bit;
         if (!firstImpact) return;
+
+        // The hit is evaded: end the evade animation now instead of waiting for it to run out. The
+        // move machine (Chr+0x415) keeps running, so the character still slides home while whatever
+        // was waiting on this actor's motion can proceed.
+        try_end_battle_motion(slotIndex, "dodge_hit");
 
         if (is_perfect_dodge())
         {
@@ -588,15 +629,17 @@ public unsafe sealed partial class ParryModule
         }
     }
 
-    private float compute_whiff_lockout_seconds()
+    private int whiff_lockout_ticks()
     {
-        if (!_optionWhiffLockout) return 0f;
-        return ParryDifficultyModel.GetWhiffLockoutSeconds(_optionDifficulty);
+        return ParryDifficultyModel.GetWhiffLockoutTicks(_optionDifficulty);
     }
 
     private void transition_to_open(AttackCue cue, byte cueIndex, uint partyMask)
     {
-        float windowDurationSeconds = compute_window_seconds();
+        int windowDurationTicks = parry_window_ticks();
+        // Seconds are derived for the wall-clock per-slot expiry (read by the damage hooks, which
+        // fire outside PreUpdate) and for display/telemetry only — the window itself counts ticks.
+        float windowDurationSeconds = ParryDifficultyModel.TicksToSeconds(windowDurationTicks);
 
         _runtime.InputState = ParryInputState.Open;
         _runtime.AwaitingTurnEnd = true;
@@ -604,8 +647,8 @@ public unsafe sealed partial class ParryModule
         _runtime.CurrentCueIndex = cueIndex;
         _runtime.CurrentPartyTargetMask = partyMask;
         _runtime.ParryWindowActive = true;
-        _runtime.ParryWindowRemainingSeconds = windowDurationSeconds;
-        _runtime.ParryWindowElapsedSeconds = 0f;
+        _runtime.ParryWindowRemainingTicks = windowDurationTicks;
+        _runtime.ParryWindowElapsedTicks = 0;
         _runtime.ParryWindowSucceeded = false;
         _runtime.SuccessIndicatorActive = false;
         if (_runtime.TurnImpactMissedSeen && _runtime.TurnImpactMissedAttackerId != _runtime.CurrentAttackerId)
@@ -638,7 +681,7 @@ public unsafe sealed partial class ParryModule
     private void transition_to_whiff_lockout()
     {
         string attackerLabel = format_actor_slot(_runtime.CurrentAttackerId);
-        float lockoutSeconds = compute_whiff_lockout_seconds();
+        int lockoutTicks = whiff_lockout_ticks();
 
         // Streak reset is performed per-cue at clear_awaiting_turn_end via
         // resolve_streak_at_cue_clear(). A whiff is a cue-wide failure for
@@ -649,24 +692,25 @@ public unsafe sealed partial class ParryModule
         // follows is what gates further R1 presses — not the array values.
         end_parry_window("whiff_lockout", transitionToReady: false);
 
-        // Pure decision — see ParryInputStateTransitions tests.
-        ParryInputState nextState = ParryInputStateTransitions.DecideWindowExpiry(lockoutSeconds);
+        // Pure decision — see ParryInputStateTransitions tests. A positive tick count means a
+        // lockout is armed (the same > 0 semantics the float overload uses).
+        ParryInputState nextState = ParryInputStateTransitions.DecideWindowExpiry(lockoutTicks);
 
         if (nextState == ParryInputState.WhiffLockout)
         {
             _runtime.InputState = ParryInputState.WhiffLockout;
-            _runtime.WhiffLockoutRemainingSeconds = lockoutSeconds;
-            _runtime.WhiffLockoutTotalSeconds = lockoutSeconds;
+            _runtime.WhiffLockoutRemainingTicks = lockoutTicks;
+            _runtime.WhiffLockoutTotalTicks = lockoutTicks;
             mark_active_turn_missed("parry window expired without a hit");
             trigger_failure_feedback();
-            log_debug($"Parry whiff ({attackerLabel}) — returning to normal stance, {(lockoutSeconds * 1000f):F0}ms recovery.");
+            log_debug($"Parry whiff ({attackerLabel}) — returning to normal stance, {ParryDifficultyModel.TicksToMs(lockoutTicks):F0}ms recovery.");
         }
         else
         {
-            // Lockout disabled — transition straight back to Ready with no recovery.
+            // Difficulty carries no whiff lockout — transition straight back to Ready with no recovery.
             _runtime.InputState = ParryInputState.Ready;
-            _runtime.WhiffLockoutRemainingSeconds = 0f;
-            _runtime.WhiffLockoutTotalSeconds = 0f;
+            _runtime.WhiffLockoutRemainingTicks = 0;
+            _runtime.WhiffLockoutTotalTicks = 0;
             mark_active_turn_missed("parry window expired without a hit");
             trigger_failure_feedback();
             log_debug($"Parry whiff ({attackerLabel}) — lockout disabled, immediately ready.");
@@ -675,8 +719,8 @@ public unsafe sealed partial class ParryModule
 
     private void transition_whiff_lockout_to_ready()
     {
-        _runtime.WhiffLockoutRemainingSeconds = 0f;
-        _runtime.WhiffLockoutTotalSeconds = 0f;
+        _runtime.WhiffLockoutRemainingTicks = 0;
+        _runtime.WhiffLockoutTotalTicks = 0;
         _runtime.InputState = ParryInputState.Ready;
         log_debug("Guard recovery complete — ready for next parry.");
     }
@@ -804,16 +848,51 @@ public unsafe sealed partial class ParryModule
         _parryResolvedAtImpactMask = 0;
         Array.Clear(_preHitHpSnapshot);
         _runtime.ParryWindowActive = false;
-        _runtime.ParryWindowRemainingSeconds = 0f;
-        _runtime.ParryWindowElapsedSeconds = 0f;
+        _runtime.ParryWindowRemainingTicks = 0;
+        _runtime.ParryWindowElapsedTicks = 0;
         _runtime.ParryWindowSucceeded = false;
         _runtime.SuccessIndicatorActive = false;
-        _runtime.LastParriedTargetMask = 0;
+
+        // LastParriedTargetMask is deliberately NOT cleared here. It is the durable, per-action-window
+        // record of which slots parried, and it outlives the window: clear_awaiting_turn_end reads it
+        // to run the overdrive learn countdown, and the PARRIED overlay reads it to know whom to label.
+        // resolve_successful_parry sets the bit and then calls us with closeWindow: true — so clearing
+        // it here wiped the very evidence the parry had just produced. That is why 8 resolved parries
+        // in a battle produced 0 overdrive decrements. It is cleared at cue-clear (after the read) and
+        // by reset_runtime_state.
 
         if (transitionToReady && _runtime.InputState != ParryInputState.WhiffLockout)
         {
             _runtime.InputState = ParryInputState.Ready;
         }
+    }
+
+    /// <summary>
+    ///     Ends one enemy ACTION (cue) without ending the turn context.
+    ///
+    ///     clear_awaiting_turn_end only runs when the cue LIST empties. When several enemies
+    ///     act back-to-back their cues chain inside one AwaitingTurnEnd span, so nothing reset
+    ///     the per-action parry state between them: LastParriedTargetMask kept a slot's bit from
+    ///     an earlier attacker, and every later hit on that slot was silently skipped as
+    ///     "already resolved" — damage negated, no PARRIED text, no sound, no effect. The same
+    ///     stale bit made resolve_streak_at_cue_clear see failedMask == 0 for a cue the slot
+    ///     never parried, inflating the streak until the counter-attack fired.
+    ///
+    ///     Order matters: resolve streak and overdrive learning FIRST (both read the outgoing
+    ///     cue's CurrentPartyTargetMask and LastParriedTargetMask), only then clear. This is the
+    ///     same read-before-clear invariant clear_awaiting_turn_end relies on.
+    /// </summary>
+    private void end_enemy_action(string reason)
+    {
+        resolve_streak_at_cue_clear();
+        resolve_overdrive_learning_at_cue_clear(_runtime.LastParriedTargetMask);
+
+        _runtime.LastParriedTargetMask = 0;
+        _parryResolvedAtImpactMask = 0;
+        _dodgeResolvedAtImpactMask = 0;
+        Array.Clear(_preHitHpSnapshot);
+
+        log_debug($"Enemy action ended ({reason}) — per-action parry state cleared.");
     }
 
     private void clear_awaiting_turn_end(string reason)
@@ -846,8 +925,8 @@ public unsafe sealed partial class ParryModule
         {
             // Turn context ended; silently cancel any lingering open window.
             _runtime.ParryWindowActive = false;
-            _runtime.ParryWindowRemainingSeconds = 0f;
-            _runtime.ParryWindowElapsedSeconds = 0f;
+            _runtime.ParryWindowRemainingTicks = 0;
+            _runtime.ParryWindowElapsedTicks = 0;
         }
 
         _runtime.ParryWindowSucceeded = false;
@@ -871,7 +950,31 @@ public unsafe sealed partial class ParryModule
             _runtime.InputState = ParryInputState.Ready;
         }
 
+        // The streak lives inside ONE run of consecutive enemy actions and dies with it. This
+        // is where the cue list emptied, so control is about to return to the player.
+        //
+        // Without this, a parry on the enemy's turn, then a player turn, then a parry on the
+        // next enemy turn read as "two consecutive parries" and fired the counter. With a lone
+        // enemy attacking once per round that made the counter guaranteed rather than earned.
+        // resolve_streak_at_cue_clear() already ran at the top of this method, so a streak that
+        // genuinely reached the threshold inside the block has fired before we clear it.
+        reset_parry_streak("enemy turn block ended");
+
         log_debug(reason);
+    }
+
+    /// <summary>
+    ///     Ends the current streak on every slot. A streak is a property of one run of
+    ///     consecutive enemy actions; it does not survive the player regaining control.
+    /// </summary>
+    private void reset_parry_streak(string reason)
+    {
+        for (int i = 0; i < PartyActorCapacity; i++)
+        {
+            if (_consecutiveParriesPerSlot[i] == 0) continue;
+            log_debug($"Streak reset ({reason}): {format_actor_slot((byte)i)} (was {_consecutiveParriesPerSlot[i]}×).");
+            _consecutiveParriesPerSlot[i] = 0;
+        }
     }
 
     private void trigger_failure_feedback()
@@ -1049,42 +1152,6 @@ public unsafe sealed partial class ParryModule
         }
     }
 
-    private void apply_overdrive_boost(uint mask)
-    {
-        if (!_optionOverdriveBoost) return;
-
-        Chr* party = _battleAdapter.GetPlayerCharacters();
-        if (party == null) return;
-
-        uint effectiveMask = mask == 0 ? PlayerTargetMask : mask;
-
-        for (int i = 0; i < PartyActorCapacity; i++)
-        {
-            uint bit = 1u << i;
-            if ((effectiveMask & bit) == 0) continue;
-
-            Chr* chr = party + i;
-            if (!chr->stat_exist_flag || chr->ram.hp <= 0) continue;
-
-            byte maxCharge = chr->ram.limit_charge_max;
-            if (maxCharge == 0) continue;
-
-            int before = chr->ram.limit_charge;
-            uint delta = (uint)Math.Max(1, (int)MathF.Round(maxCharge * OverdriveBoostPercent));
-
-            // Native charge primitive: clamps against limit_charge_max, honours the engine's
-            // never_charge_overdrive debug flag, and applies Double/Triple Overdrive plus the
-            // aura multipliers. Writing limit_charge directly bypassed all three.
-            uint applied = FhUtil.get_fptr<MsLimitUpProbe>(
-                ExternalMemoryOffsetMap.Functions.MsLimitUp)((uint)i, chr, delta);
-
-            int after = chr->ram.limit_charge;
-            if (after == before) continue;
-
-            log_debug($"Increased overdrive for {format_actor_slot((byte)i)} from {before} to {after} (asked {delta}, applied {applied}).");
-        }
-    }
-
     private void update_parried_text_timer(float deltaSeconds)
     {
         if (_runtime.ParriedTextRemainingSeconds > 0f)
@@ -1182,6 +1249,49 @@ public unsafe sealed partial class ParryModule
         }
     }
 
+    // Ends a slot's running battle motion through the engine's own completion path.
+    //
+    // MsEffectEndMotion -> MsEffectResetMotionDisable -> MsTerminateMotion clears Chr+0x432
+    // (motion-active) and +0x433 in one u16, clears the motion request +0xdf2, and re-issues the
+    // idle motion — which, because MsSetMotion resets the target ATEL script, also cancels the
+    // running motion script. It is the engine's own "this motion is over" transition, reached early.
+    //
+    // MsEffectResetMotionDisable is gated on Chr+0x3f3, which the ATEL worker sets only once it has
+    // actually started the motion. Calling before that is a silent no-op, so we check it ourselves
+    // and say so in the log rather than pretending the call did something.
+    private bool try_end_battle_motion(int slotIndex, string reason)
+    {
+        Chr* party = _battleAdapter.GetPlayerCharacters();
+        Chr* chr = party != null ? party + slotIndex : null;
+        if (chr == null || !chr->stat_exist_flag) return false;
+
+        if (((byte*)chr)[ChrMotionDisableOffset] == 0)
+        {
+            if (_optionLogging)
+            {
+                log_debug($"[DodgeMotion] {format_actor_slot((byte)slotIndex)}: motion not started yet (0x3f3=0), nothing to end ({reason}).");
+            }
+            return false;
+        }
+
+        try
+        {
+            FhUtil.get_fptr<MsEffectEndMotionProbe>(
+                ExternalMemoryOffsetMap.Functions.MsEffectEndMotion)((uint)slotIndex, DodgeEndMotionMode);
+
+            if (_optionLogging)
+            {
+                log_debug($"[DodgeMotion] Ended motion for {format_actor_slot((byte)slotIndex)} via MsEffectEndMotion(mode={DodgeEndMotionMode}) ({reason}).");
+            }
+            return true;
+        }
+        catch (Exception ex)
+        {
+            log_debug($"[DodgeMotion] MsEffectEndMotion failed for slot {slotIndex}: {ex.Message}");
+            return false;
+        }
+    }
+
     // Fires the engine's own screen shake when a hit is *met* — i.e. on a successful parry, and
     // only there. A dodge (perfect or not) avoids the hit, so nothing lands and nothing shakes.
     // MsScreenSetShake stores a decaying envelope (mode 1) and the engine's per-frame applier
@@ -1190,22 +1300,35 @@ public unsafe sealed partial class ParryModule
     private void fire_impact_screen_shake(string source)
     {
         if (!_optionImpactShake) return;
+
+        // A whole-party parry — all three active PCs parried the same attack — earns a longer,
+        // heavier shake than a single-slot parry. LastParriedTargetMask accumulates the parried
+        // slots for the current action and clears at cue-clear, so a 3-bit mask is one big moment.
+        bool wholeParty = BitOperations.PopCount(_runtime.LastParriedTargetMask) >= FullPartyParryCount;
+        uint duration = wholeParty ? ImpactShakeDurationWholeParty : ImpactShakeDuration;
+        fire_screen_shake_ticks(duration, wholeParty ? $"{source}, whole-party" : source);
+    }
+
+    // Core screen-shake fire for a given duration in ticks. No _optionImpactShake gate — the parry
+    // path checks that; the Lab test buttons call this directly and fire unconditionally.
+    private void fire_screen_shake_ticks(uint duration, string source)
+    {
         if (!try_get_live_battle_context(out _)) return;
 
         try
         {
-            FhUtil.get_fptr<MsScreenSetShakeProbe>(ExternalMemoryOffsetMap.Functions.MsScreenSetShake)(
-                ImpactShakeScreenId,
-                ImpactShakeAxisMask,
-                ImpactShakeModeDecay,
-                ImpactShakeFrequency,
-                ImpactShakeDuration,
-                ImpactShakeAmplitude,
-                ImpactShakeRandomness);
+            var shake = FhUtil.get_fptr<MsScreenSetShakeProbe>(ExternalMemoryOffsetMap.Functions.MsScreenSetShake);
+
+            // Two calls, one per axis. A single axis_mask = 3 call would give both axes the same
+            // phase and frequency, collapsing the shake onto a diagonal line.
+            shake(ImpactShakeScreenId, ImpactShakeAxisA, ImpactShakeModeDecay,
+                  ImpactShakeFreqA, duration, ImpactShakeAmpA, ImpactShakeRandomness);
+            shake(ImpactShakeScreenId, ImpactShakeAxisB, ImpactShakeModeDecay,
+                  ImpactShakeFreqB, duration, ImpactShakeAmpB, ImpactShakeRandomness);
 
             if (_optionLogging)
             {
-                log_debug($"[ImpactShake] amp={ImpactShakeAmplitude} dur={ImpactShakeDuration} freq={ImpactShakeFrequency} ({source}).");
+                log_debug($"[ImpactShake] dur={duration} ({duration / BattleFrameRate:F2}s) A(amp={ImpactShakeAmpA} freq={ImpactShakeFreqA}) B(amp={ImpactShakeAmpB} freq={ImpactShakeFreqB}) ({source}).");
             }
         }
         catch (Exception ex)

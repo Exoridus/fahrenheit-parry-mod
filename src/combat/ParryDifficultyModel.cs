@@ -21,26 +21,78 @@ public enum ParryDifficulty
 ///     The mod no longer uses a tiered anti-spam window; a single window duration is
 ///     applied on every fresh press, and a whiff that does not connect enters a
 ///     time-bounded recovery lockout that approximates the visible native
-///     "return to guard stance" animation. See <c>FINAL_PARRY_SPEC.md</c> and
-///     <c>TIERED_PENALTY_RATIONALE.md</c> (retired) for background.
+///     "return to guard stance" animation.
+///
+///     <para>
+///         Everything is counted in <b>battle ticks</b>; milliseconds are derived, never stored.
+///         Both endpoints of a parry are tick-locked. The press is read from the game's own input
+///         word, which the game refreshes once per tick, so a press at 0.6 of a frame becomes
+///         visible on the next one — the 0.6 never exists. The impact arrives from
+///         MsSetDamageInternal, also on a tick. The only continuous quantity in the old model was
+///         the real elapsed time subtracted from the window each frame, and that injected
+///         wall-clock drift into a tick-based simulation: one dropped frame burns two ticks of
+///         window while the enemy animation and the impact stall with it.
+///     </para>
+///     <para>
+///         A window of W ms admits exactly <c>floor(W / 33.33) + 1</c> impacts, and the fraction
+///         beyond that does nothing — except when W lands exactly on a tick, where float residue
+///         and frame pacing decide. Normal's old 200 ms was exactly 6.0 ticks. Counting ticks
+///         removes the coin flip.
+///     </para>
+///     <para>
+///         <b>Difficulty no longer moves the window.</b> At 30 Hz a tighter window punishes
+///         perception and hardware rather than skill. Difficulty stays on the windows — the tiers
+///         below reproduce the values the mod shipped with, which played well — but the arithmetic
+///         is now honest, and two accidents of the old model are gone. Debug is not a difficulty;
+///         it is a testing aid.
+///     </para>
+///     <para>
+///         <b>Accident one:</b> the dodge window had no tiers at all. It was two constants,
+///         <c>350 ms</c> for release and <c>800 ms</c> for DEBUG, selected by build configuration
+///         rather than by difficulty.
+///     </para>
+///     <para>
+///         <b>Accident two:</b> Expert paid twice — the tightest window *and* the longest recovery
+///         (750 ms against Normal's 600). Its lockout is now 500 ms. Total commitment is no longer
+///         the authored number; with per-tier windows the lockout is what you tune, and the
+///         commitment is what falls out of it.
+///     </para>
 /// </summary>
 public static class ParryDifficultyModel
 {
-    // Window durations (milliseconds). A single value per difficulty — no tiers.
-    private const float DebugWindowMs  = 500f;
-    private const float EasyWindowMs   = 350f;
-    private const float NormalWindowMs = 200f;
-    private const float ExpertWindowMs = 150f;
+    /// <summary>The battle logic tick rate. Both the input word and the impact hook live on it.</summary>
+    public const int TicksPerSecond = 30;
 
-    // Whiff recovery lockout durations (milliseconds). These approximate the visible
-    // guard-stance recovery animation commitment; exact native-motion wiring is not
-    // yet available, so the values are tuned to feel committed without being cheap.
-    // Harder difficulties commit to a slightly longer recovery to match their tighter
-    // windows; Easy feels looser.
-    private const float DebugLockoutMs  = 300f;
-    private const float EasyLockoutMs   = 450f;
-    private const float NormalLockoutMs = 600f;
-    private const float ExpertLockoutMs = 750f;
+    private const float TickSeconds = 1f / TicksPerSecond;
+
+    // Parry window. The old millisecond values closed after ceil(ms / 33.33) ticks, so Easy's
+    // 350 ms really bought eleven ticks and Expert's 150 ms bought five — not ten and a half,
+    // and not four and a half. These reproduce that exactly.
+    private const int DebugParryTicks  = 15; // 500 ms
+    private const int EasyParryTicks   = 11; // 367 ms  (was 350)
+    private const int NormalParryTicks = 6;  // 200 ms
+    private const int ExpertParryTicks = 5;  // 167 ms  (was 150)
+
+    // Dodge window: wider than the parry window on every tier — safer, but it grants neither the
+    // counter nor the overdrive charge. Easy keeps the old flat 350 ms; the tiers below it are new.
+    private const int DebugDodgeTicks  = 24; // 800 ms
+    private const int EasyDodgeTicks   = 11; // 367 ms
+    private const int NormalDodgeTicks = 9;  // 300 ms
+    private const int ExpertDodgeTicks = 7;  // 233 ms
+
+    // Whiff recovery: the commitment a press that hits nothing costs. Authored per tier.
+    private const int DebugLockoutTicks  = 9;  // 300 ms
+    private const int EasyLockoutTicks   = 14; // 467 ms  (was 450)
+    private const int NormalLockoutTicks = 18; // 600 ms
+    private const int ExpertLockoutTicks = 15; // 500 ms  (was 767 — the double punishment)
+
+    // Cooldown between two dodges. Paces multi-press without automating the timing. This existed
+    // as `dodge_whiffout`, defaulted to 0, and was therefore inert from the day it was written.
+    private const int DebugDodgeCooldownTicks  = 0;  // off — testing aid
+    private const int EasyDodgeCooldownTicks   = 9;  // 300 ms
+    private const int NormalDodgeCooldownTicks = 12; // 400 ms
+    private const int ExpertDodgeCooldownTicks = 15; // 500 ms
+
 
 #if DEBUG
     private static readonly ParryDifficulty[] SelectableDifficulties =
@@ -79,25 +131,80 @@ public static class ParryDifficultyModel
         _ => FormatName(DefaultDifficulty)
     };
 
-    /// <summary>
-    ///     Returns the parry window duration in seconds for the given difficulty.
-    ///     A single value — there are no tiers.
-    /// </summary>
-    public static float GetWindowSeconds(ParryDifficulty difficulty)
+    /// <summary>Parry window, in battle ticks. The window admits impacts on ticks 0..N-1 after the press.</summary>
+    public static int GetParryWindowTicks(ParryDifficulty difficulty) => difficulty switch
     {
-        return get_window_ms(difficulty) / 1000f;
-    }
+#if DEBUG
+        ParryDifficulty.Debug => DebugParryTicks,
+#endif
+        ParryDifficulty.Easy => EasyParryTicks,
+        ParryDifficulty.Normal => NormalParryTicks,
+        ParryDifficulty.Expert => ExpertParryTicks,
+        _ => GetParryWindowTicks(DefaultDifficulty)
+    };
+
+    /// <summary>Dodge window, in battle ticks. Wider than the parry window: safer, but it grants neither counter nor overdrive.</summary>
+    public static int GetDodgeWindowTicks(ParryDifficulty difficulty) => difficulty switch
+    {
+#if DEBUG
+        ParryDifficulty.Debug => DebugDodgeTicks,
+#endif
+        ParryDifficulty.Easy => EasyDodgeTicks,
+        ParryDifficulty.Normal => NormalDodgeTicks,
+        ParryDifficulty.Expert => ExpertDodgeTicks,
+        _ => GetDodgeWindowTicks(DefaultDifficulty)
+    };
 
     /// <summary>
-    ///     Returns the whiff recovery lockout duration in seconds for the given
-    ///     difficulty. This is the time a whiffed R1 press commits the player to
-    ///     before another press is accepted — approximating the "return to normal
-    ///     stance" animation.
+    ///     Whiff recovery lockout, in battle ticks — the time a press that hits nothing commits
+    ///     the player to before another is accepted. Authored per tier.
     /// </summary>
-    public static float GetWhiffLockoutSeconds(ParryDifficulty difficulty)
+    public static int GetWhiffLockoutTicks(ParryDifficulty difficulty) => difficulty switch
     {
-        return get_lockout_ms(difficulty) / 1000f;
-    }
+#if DEBUG
+        ParryDifficulty.Debug => DebugLockoutTicks,
+#endif
+        ParryDifficulty.Easy => EasyLockoutTicks,
+        ParryDifficulty.Normal => NormalLockoutTicks,
+        ParryDifficulty.Expert => ExpertLockoutTicks,
+        _ => GetWhiffLockoutTicks(DefaultDifficulty)
+    };
+
+    /// <summary>
+    ///     Cooldown between two dodges, in battle ticks. Paces multi-press. Zero on Debug.
+    /// </summary>
+    public static int GetDodgeCooldownTicks(ParryDifficulty difficulty) => difficulty switch
+    {
+#if DEBUG
+        ParryDifficulty.Debug => DebugDodgeCooldownTicks,
+#endif
+        ParryDifficulty.Easy => EasyDodgeCooldownTicks,
+        ParryDifficulty.Normal => NormalDodgeCooldownTicks,
+        ParryDifficulty.Expert => ExpertDodgeCooldownTicks,
+        _ => GetDodgeCooldownTicks(DefaultDifficulty)
+    };
+
+    /// <summary>
+    ///     Total commitment from the press: the parry window plus the recovery that follows a
+    ///     whiff. Derived, for display — the lockout is what you tune.
+    /// </summary>
+    public static int GetTotalCommitmentTicks(ParryDifficulty difficulty)
+        => GetParryWindowTicks(difficulty) + GetWhiffLockoutTicks(difficulty);
+
+    /// <summary>Nominal wall-clock duration of a tick count. For display only — never for a gameplay decision.</summary>
+    public static float TicksToSeconds(int ticks) => ticks * TickSeconds;
+
+    /// <summary>Nominal wall-clock duration of a tick count, in milliseconds. Display only.</summary>
+    public static float TicksToMs(int ticks) => ticks * (1000f / TicksPerSecond);
+
+    public static float GetWindowSeconds(ParryDifficulty difficulty)
+        => TicksToSeconds(GetParryWindowTicks(difficulty));
+
+    public static float GetDodgeWindowSeconds(ParryDifficulty difficulty)
+        => TicksToSeconds(GetDodgeWindowTicks(difficulty));
+
+    public static float GetWhiffLockoutSeconds(ParryDifficulty difficulty)
+        => TicksToSeconds(GetWhiffLockoutTicks(difficulty));
 
     public static ReadOnlySpan<ParryDifficulty> GetSelectableDifficulties()
     {
@@ -172,25 +279,4 @@ public static class ParryDifficultyModel
         return true;
     }
 
-    private static float get_window_ms(ParryDifficulty difficulty) => difficulty switch
-    {
-#if DEBUG
-        ParryDifficulty.Debug => DebugWindowMs,
-#endif
-        ParryDifficulty.Easy => EasyWindowMs,
-        ParryDifficulty.Normal => NormalWindowMs,
-        ParryDifficulty.Expert => ExpertWindowMs,
-        _ => get_window_ms(DefaultDifficulty)
-    };
-
-    private static float get_lockout_ms(ParryDifficulty difficulty) => difficulty switch
-    {
-#if DEBUG
-        ParryDifficulty.Debug => DebugLockoutMs,
-#endif
-        ParryDifficulty.Easy => EasyLockoutMs,
-        ParryDifficulty.Normal => NormalLockoutMs,
-        ParryDifficulty.Expert => ExpertLockoutMs,
-        _ => get_lockout_ms(DefaultDifficulty)
-    };
 }

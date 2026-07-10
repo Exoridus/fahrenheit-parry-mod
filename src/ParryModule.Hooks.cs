@@ -8,7 +8,7 @@ public unsafe sealed partial class ParryModule
         ulong frame = _debugFrameIndex;
         DateTime now = current_gameplay_timestamp();
 
-        _hMsExeInputCue.orig_fptr.Invoke();
+        orig_ms_exe_input_cue();
 
         bool hasAfter = try_get_head_cue_snapshot(_debugHookCueScratch, out DebugCueSnapshot after);
         bool changed = !hadBefore || !hasAfter || !before.EqualsSemantic(after);
@@ -265,7 +265,7 @@ public unsafe sealed partial class ParryModule
         }
         else
         {
-            result = _hMsSetDamage.orig_fptr.Invoke(param_1, param_2, param_3);
+            result = orig_ms_set_damage(param_1, param_2, param_3);
         }
 
         // Telemetry: snapshot HP after finalization.
@@ -539,7 +539,7 @@ public unsafe sealed partial class ParryModule
             }
         }
 
-        int result = _hMsCalcDamage.orig_fptr.Invoke(
+        int result = orig_ms_calc_damage(
             user_id, user_chr, target_id, target_chr,
             command, command_id,
             p7, p8, p9, p10, p11);
@@ -624,7 +624,7 @@ public unsafe sealed partial class ParryModule
 
         if (!defended)
         {
-            _hMsDamageSetMotion.orig_fptr.Invoke(target, p2, p3);
+            orig_ms_damage_set_motion(target, p2, p3);
         }
         else
         {
@@ -655,12 +655,12 @@ public unsafe sealed partial class ParryModule
                     byte* ramGuard = (byte*)&blockChr->ram + ChrRamGuardReactFlagOffset;
                     byte prevGuard = *ramGuard;
                     *ramGuard = 1;
-                    _hMsDamageSetMotion.orig_fptr.Invoke(target, p2, p3);
+                    orig_ms_damage_set_motion(target, p2, p3);
                     *ramGuard = prevGuard;
                 }
                 else
                 {
-                    _hMsDamageSetMotion.orig_fptr.Invoke(target, p2, p3);
+                    orig_ms_damage_set_motion(target, p2, p3);
                 }
                 if (target < PartyActorCapacity) _parryBlockPlayedFrame[target] = _debugFrameIndex;
                 log_debug($"Parry native block for {format_actor_slot(target)} (guard flag → engine plays 0x43).");
@@ -776,7 +776,7 @@ public unsafe sealed partial class ParryModule
 
     private int h_dmg_calc_armored(Chr* user, Chr* target, Command* command, int p4, int* p5, int damage)
     {
-        int result = _hDmgCalcArmored.orig_fptr.Invoke(user, target, command, p4, p5, damage);
+        int result = orig_dmg_calc_armored(user, target, command, p4, p5, damage);
 
         if (_optionLogging)
         {
@@ -838,7 +838,7 @@ public unsafe sealed partial class ParryModule
             }
         }
 
-        int result = _hMsCalcDamageInternal.orig_fptr.Invoke(
+        int result = orig_ms_calc_damage_internal(
             user_id, user_chr, target_id, target_chr,
             command, command_id,
             p7, p8, p9, p10, p11);
@@ -1265,7 +1265,7 @@ public unsafe sealed partial class ParryModule
                 $"attacker={_runtime.CurrentAttackerId} targetMask={_runtime.CurrentPartyTargetMask} windowActive={_runtime.ParryWindowActive}");
         }
 
-        int result = _hMsSetDamageInternal.orig_fptr.Invoke(param_1, param_2, param_3, param_4, param_5);
+        int result = orig_ms_set_damage_internal(param_1, param_2, param_3, param_4, param_5);
 
         return result;
     }
@@ -1311,17 +1311,129 @@ public unsafe sealed partial class ParryModule
         log_debug($"[CameraProbe] {fn}({args}) turn_active={anyTurn} enemy_turn={enemyTurn} attacker={_runtime.CurrentAttackerId} lock_mode={_optionBattleCameraLockMode} suppress={suppress}");
     }
 
+    // Debug writer probe: logs the ATEL opcodes that actually move the battle camera.
+    // Distinct from probe_camera_call, which covers the *request* path (MsAtelRequestCamera
+    // and siblings) — those only enqueue camera scripts and never touch camera state, which
+    // is why an enemy pan runs straight past all three of them. Gated on "camera_probe".
+    private void probe_camera_writer(string fn, string args)
+    {
+        if (!_optionCameraProbe) return;
+
+        bool anyTurn   = _runtime.AwaitingTurnEnd;
+        bool enemyTurn = anyTurn && _runtime.CurrentAttackerId >= PartyActorCapacity;
+        log_debug($"[CameraWriter] {fn}({args}) turn_active={anyTurn} enemy_turn={enemyTurn} attacker={_runtime.CurrentAttackerId}");
+    }
+
+    // The two wrapper constants FUN_007bad30 receives identify the calling opcode exactly.
+    private static string polar_opcode_name(int isCam, int variant) => (isCam, variant) switch
+    {
+        (1, 1) => "camSetBtlPolar",
+        (0, 1) => "refSetBtlPolar",
+        (1, 2) => "camSetBtlPolar2",
+        (0, 2) => "refSetBtlPolar2",
+        (1, 3) => "camSetChrPolar",
+        (1, 4) => "camSetChrPolar2",
+        _      => $"unknownPolar(isCam={isCam},variant={variant})",
+    };
+
+    /// <summary>
+    ///     True while the battle camera lock should hold the camera hard — the AllTurns mode. In
+    ///     that mode, suppressing camera *requests* is not enough: the request lock only fires while
+    ///     a turn is active (AwaitingTurnEnd), and the ATEL position writers that pan the camera on
+    ///     the player's own turn run with AwaitingTurnEnd false, so they slip past it. So AllTurns
+    ///     also stops those writers directly. EnemyTurnsOnly leaves them alone — the writer probe
+    ///     shows they never fire during an enemy action, so the request lock covers that mode.
+    /// </summary>
+    private bool camera_hard_lock_engaged()
+        => _optionEnabled
+        && _optionBattleCameraLockMode == BattleCameraLockMode.AllTurns
+        && try_get_live_battle_context(out _);
+
+    // Whether to suppress a camera writer this call. Always tries to cache the battle camera id (the
+    // freecam needs it). Suppresses when the hard lock is engaged — except while the freecam is on
+    // but the id is still unresolved, when the write is let through so the game resolves the id.
+    // True while we should hold the battle camera still (AllTurns). Immediately when we have a pose to
+    // hold (freecam or a saved start camera); otherwise only after the settle grace, so the game frames
+    // the battle at its correct default first. This drives BOTH the writer suppression and the request
+    // suppression: with requests held too, an ability's camera script — which also drives the
+    // zoom/depth writers we do not hook — never queues, so the camera cannot zoom out from under us.
+    private bool should_hold_camera()
+    {
+        if (!camera_hard_lock_engaged()) return false;
+        if (_freecamActive) return true;
+        return _cameraSettleSeconds == 0f;
+    }
+
+    private bool should_suppress_camera_writer(int worker)
+    {
+        capture_battle_camera_id(worker);
+        if (_battleCameraId == 0) return false;   // let the game's write through so the camera id resolves
+        return should_hold_camera();
+    }
+
+    /// <summary>
+    ///     Replicate a suppressed camera writer's ATEL stack pops without applying the write, so the
+    ///     VM stack stays balanced — an unbalanced pop desyncs it. Each value must be popped with the
+    ///     same primitive the callee used (the pop functions check a per-value type byte), in the
+    ///     same order: floats first, then ints. `size` is at offset 0 of AtelStack, so the one
+    ///     `stack` pointer serves both pops. Verified against FUN_007bad30 (4 float + 2 int) and
+    ///     FUN_007bb620 (3 float).
+    /// </summary>
+    private void drain_camera_writer_stack(int worker, int stack, int floats, int ints)
+    {
+        _popStackFloat   ??= FhUtil.get_fptr<AtelPopStackFloatFn>(ExternalMemoryOffsetMap.Functions.AtelPopStackFloat);
+        _popStackInteger ??= FhUtil.get_fptr<AtelPopStackIntegerFn>(ExternalMemoryOffsetMap.Functions.AtelPopStackInteger);
+        for (int i = 0; i < floats; i++) _popStackFloat(worker, stack);
+        for (int i = 0; i < ints; i++)   _popStackInteger(worker, stack);
+    }
+
+    /// <summary>
+    ///     Hook on FUN_007bad30 (FFX.exe+0x3BAD30) — the actor-relative polar camera writer shared by
+    ///     all six camSetBtlPolar/refSetBtlPolar/camSetChrPolar variants. Observe-only unless the
+    ///     hard lock is engaged, in which case the write is suppressed: the callee's stack pops
+    ///     (4x float, then 2x int) are replicated so the ATEL stack stays balanced, and the original
+    ///     — which is what actually moves the camera — is skipped.
+    /// </summary>
+    private int h_atel_camera_polar_set(int worker, int p2, int stack, int isCam, int variant)
+    {
+        probe_camera_writer(polar_opcode_name(isCam, variant), $"isCam={isCam},variant={variant}");
+        if (should_suppress_camera_writer(worker))
+        {
+            drain_camera_writer_stack(worker, stack, floats: 4, ints: 2);
+            _cameraWriterSuppressCount++;
+            return 0;
+        }
+        return orig_atel_camera_polar_set(worker, p2, stack, isCam, variant);
+    }
+
+    /// <summary>
+    ///     Hook on FUN_007bb620 (FFX.exe+0x3BB620) — the absolute-position camera writer behind
+    ///     camSetPos, the dominant writer outside enemy turns. Observe-only unless the hard lock is
+    ///     engaged, in which case the write is suppressed: the callee pops 3 floats off the ATEL
+    ///     stack (no ints), replicated here, and the original is skipped.
+    /// </summary>
+    private void h_atel_camera_pos_set(int worker, int p2, int stack, int p4)
+    {
+        probe_camera_writer("camSetPos", $"p4={p4}");
+        if (should_suppress_camera_writer(worker))
+        {
+            drain_camera_writer_stack(worker, stack, floats: 3, ints: 0);
+            _cameraWriterSuppressCount++;
+            return;
+        }
+        orig_atel_camera_pos_set(worker, p2, stack, p4);
+    }
+
     private int h_ms_atel_request_camera(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8)
     {
         bool isAnyTurnActive  = _runtime.AwaitingTurnEnd;
         bool isEnemyTurnActive = isAnyTurnActive && _runtime.CurrentAttackerId >= PartyActorCapacity;
 
-        bool shouldSuppress = _optionEnabled && _optionBattleCameraLockMode switch
-        {
-            BattleCameraLockMode.AllTurns       => isAnyTurnActive,
-            BattleCameraLockMode.EnemyTurnsOnly => isEnemyTurnActive,
-            _                                    => false,
-        };
+        // AllTurns now suppresses whenever we hold the camera (after the settle grace), not just on
+        // enemy turns — so ability camera scripts that pan/zoom on the player's own turn never queue.
+        bool shouldSuppress = _optionBattleCameraLockMode == BattleCameraLockMode.EnemyTurnsOnly
+            ? _optionEnabled && isEnemyTurnActive
+            : _battleCameraId != 0 && should_hold_camera();
 
         probe_camera_call("MsAtelRequestCamera", $"p1={p1:X},p2={p2:X},p3={p3:X},p4={p4:X}", isAnyTurnActive, isEnemyTurnActive, shouldSuppress);
 
@@ -1334,10 +1446,23 @@ public unsafe sealed partial class ParryModule
                     $"[CameraLock] Suppressed MsAtelRequestCamera(p1={p1:X}, p2={p2:X}, p3={p3:X}) "
                     + $"(mode={_optionBattleCameraLockMode}, attacker={_runtime.CurrentAttackerId}, count={_enemyCameraLockSuppressCount}).");
             }
-            return 0;
+
+            // -1, not 0. MsAtelRequestCamera returns the id of the request it queues via
+            // MsAtelRequestExe, and the engine's OWN suppression path — the guard on btl.debug._6_1_
+            // (FFX.exe.c:841575) — falls straight through to `return 0xffffffff` (:841607). So -1 is
+            // the sanctioned "I queued nothing" value that every caller already handles.
+            //
+            // 0 is a VALID request id. Returning it told callers a request existed, so a script that
+            // waits on its scripted camera waited on a request that was never queued: a hang, not a
+            // crash — exactly the freeze seen when an enemy starts a special move, broken only by Esc.
+            //
+            // To abort a request that HAS been queued, the engine provides MsAtelRequestCancel
+            // (FFX.exe.c:841612): AtelSkipReqLevel2 + AtelExecReturn2, then
+            // AtelDecodeSignal(req, 0xffffffff), which releases whoever waits on the signal.
+            return -1;
         }
 
-        return _hMsAtelRequestCamera.orig_fptr.Invoke(p1, p2, p3, p4, p5, p6, p7, p8);
+        return orig_ms_atel_request_camera(p1, p2, p3, p4, p5, p6, p7, p8);
     }
 
     /// <summary>
@@ -1356,12 +1481,11 @@ public unsafe sealed partial class ParryModule
         bool isAnyTurnActive  = _runtime.AwaitingTurnEnd;
         bool isEnemyTurnActive = isAnyTurnActive && _runtime.CurrentAttackerId >= PartyActorCapacity;
 
-        bool shouldSuppress = _optionEnabled && _optionMagicCameraLock && _optionBattleCameraLockMode switch
-        {
-            BattleCameraLockMode.AllTurns       => isAnyTurnActive,
-            BattleCameraLockMode.EnemyTurnsOnly => isEnemyTurnActive,
-            _                                    => false,
-        };
+        // AllTurns now suppresses whenever we hold the camera (after the settle grace), not just on
+        // enemy turns — so ability camera scripts that pan/zoom on the player's own turn never queue.
+        bool shouldSuppress = _optionBattleCameraLockMode == BattleCameraLockMode.EnemyTurnsOnly
+            ? _optionEnabled && isEnemyTurnActive
+            : _battleCameraId != 0 && should_hold_camera();
 
         probe_camera_call("MsAtelRequestMagicCamera", $"p1={p1:X},p2={p2:X},p3={p3:X}", isAnyTurnActive, isEnemyTurnActive, shouldSuppress);
 
@@ -1377,7 +1501,7 @@ public unsafe sealed partial class ParryModule
             return 0xFF;
         }
 
-        return _hMsAtelRequestMagicCamera.orig_fptr.Invoke(p1, p2, p3, p4, p5, p6, p7, p8, p9);
+        return orig_ms_atel_request_magic_camera(p1, p2, p3, p4, p5, p6, p7, p8, p9);
     }
 
     /// <summary>
@@ -1395,12 +1519,11 @@ public unsafe sealed partial class ParryModule
         bool isAnyTurnActive  = _runtime.AwaitingTurnEnd;
         bool isEnemyTurnActive = isAnyTurnActive && _runtime.CurrentAttackerId >= PartyActorCapacity;
 
-        bool shouldSuppress = _optionEnabled && _optionBattleCameraLockMode switch
-        {
-            BattleCameraLockMode.AllTurns       => isAnyTurnActive,
-            BattleCameraLockMode.EnemyTurnsOnly => isEnemyTurnActive,
-            _                                    => false,
-        };
+        // AllTurns now suppresses whenever we hold the camera (after the settle grace), not just on
+        // enemy turns — so ability camera scripts that pan/zoom on the player's own turn never queue.
+        bool shouldSuppress = _optionBattleCameraLockMode == BattleCameraLockMode.EnemyTurnsOnly
+            ? _optionEnabled && isEnemyTurnActive
+            : _battleCameraId != 0 && should_hold_camera();
 
         probe_camera_call("MsBattleSpecialCameraPause", $"mode=0x{mode:X2}", isAnyTurnActive, isEnemyTurnActive, shouldSuppress);
 
@@ -1416,7 +1539,7 @@ public unsafe sealed partial class ParryModule
             return;
         }
 
-        _hMsBattleSpecialCameraPause.orig_fptr.Invoke(mode);
+        orig_ms_battle_special_camera_pause(mode);
     }
 
     /// <summary>
@@ -1429,7 +1552,7 @@ public unsafe sealed partial class ParryModule
     /// </summary>
     private void h_ms_effect_end_motion(uint chr_id, int mode)
     {
-        _hMsEffectEndMotion.orig_fptr.Invoke(chr_id, mode);
+        orig_ms_effect_end_motion(chr_id, mode);
 
         if (!_optionLogging) return;
         uint slot = chr_id & 0xff;
@@ -1454,9 +1577,23 @@ public unsafe sealed partial class ParryModule
     ///     by observing returns. Logs every PC-target invocation when logging is on
     ///     so the user can manually verify HIT/MISS values from the session log.
     /// </summary>
-    private int h_ms_dmg_calc_check_hit(Chr* user, Chr* target, void* command, void* info, int counter)
+    /// <summary>
+    ///     MISS_ALIVE is returned by exactly one early-return in the engine
+    ///     (`_DmgCalc_CheckHit`, decomp :830187): the command is revive-class
+    ///     (`flags_misc` bit 23) and the target is neither zombie nor dead — a Phoenix
+    ///     Down or Life aimed at a living character. Its caller (:833532) then `goto`s
+    ///     past the entire damage and status chain.
+    ///
+    ///     It is therefore **not** an evade, and must never be flipped to HIT: doing so
+    ///     would land a revive on a healthy party member. It has nothing to do with
+    ///     status resistance either — petrify and friends are decided later, in
+    ///     `_DmgCalc_InflictStatus` against `status_resists`.
+    /// </summary>
+    private const uint CommandFlagsMiscReviveClass = 0x800000;
+
+    private int h_ms_dmg_calc_check_hit(Chr* user, Chr* target, Command* command, void* info, int counter)
     {
-        int result = _hMsDmgCalcCheckHit.orig_fptr.Invoke(user, target, command, info, counter);
+        int result = orig_ms_dmg_calc_check_hit(user, target, command, info, counter);
 
         if (target == null) return result;  // defensive — never observed but cheap
 
@@ -1495,39 +1632,30 @@ public unsafe sealed partial class ParryModule
                 }
             }
         }
-        else if (_checkHitMissValue == null && result != _checkHitHitValue.Value)
-        {
-            // Got a value that differs from cached HIT — could be MISS or MISS_ALIVE.
-            // MISS_ALIVE only fires for status-only commands (the early-return at
-            // engine line 830189) so it's quite rare. We can't perfectly disambiguate
-            // here without inspecting command->flags_misc; for the override we don't
-            // care — only MISS gets flipped to HIT. Record as MISS (the user can
-            // always pre-seed both via persisted settings if auto-discovery misfires).
-            _checkHitMissValue = result;
-            if (_optionLogging)
-            {
-                log_debug($"[CheckHit] Auto-cached MISS enum value = {_checkHitMissValue.Value} (HIT={_checkHitHitValue.Value}). Override active for PC targets.");
-            }
-        }
-
         if (_optionLogging)
         {
             ushort userSlot = user != null ? user->id : (ushort)0;
             ushort userTemplate = user != null ? user->chr_id : (ushort)0;
-            log_debug($"[CheckHit] user_slot={userSlot:X2} user_tpl={userTemplate:X4} target_slot={targetSlot:X2} target_tpl={targetTemplate:X4} is_aeon={isAeon} result={result} (obs#{_checkHitObservationCount}, hit={_checkHitHitValue?.ToString() ?? "?"}, miss={_checkHitMissValue?.ToString() ?? "?"})");
+            log_debug($"[CheckHit] user_slot={userSlot:X2} user_tpl={userTemplate:X4} target_slot={targetSlot:X2} target_tpl={targetTemplate:X4} is_aeon={isAeon} result={result} (obs#{_checkHitObservationCount}, hit={_checkHitHitValue?.ToString() ?? "?"})");
         }
 
-        // Native PC evasion stays disabled (see _optionDisableNativeEvasion): a PC that evades
-        // natively never reaches our impact path. The override only engages once both enum values
-        // have been observed in-game, so it is inert until then.
+        // Native PC evasion stays disabled: a PC that evades natively never reaches our impact
+        // path, so the player's parry/dodge is the only way to avoid a hit. Inert until HIT has
+        // been observed.
         if (_checkHitHitValue == null) return result;
-        if (_checkHitMissValue == null) return result;
-        if (result != _checkHitMissValue.Value) return result;
+        if (result == _checkHitHitValue.Value) return result;
+
+        // Do NOT gate on the auto-discovered MISS value. The enum has three members, and the
+        // discovery caches whichever non-HIT value it happens to see first — on this profile it
+        // caught MISS_ALIVE (2) and then never overrode the real MISS (1), letting PCs evade on
+        // their own. MISS_ALIVE is identifiable structurally instead: it is returned iff the
+        // command is revive-class. Everything else that is not HIT is a genuine evasion roll.
+        if (command != null && (command->flags_misc & CommandFlagsMiscReviveClass) != 0) return result;
 
         _checkHitOverrideCount++;
         if (_optionLogging)
         {
-            log_debug($"[CheckHit] Overrode MISS → HIT for PC target_slot={targetSlot:X2} target_tpl={targetTemplate:X4} (override#{_checkHitOverrideCount}).");
+            log_debug($"[CheckHit] Overrode MISS ({result}) → HIT for PC target_slot={targetSlot:X2} target_tpl={targetTemplate:X4} (override#{_checkHitOverrideCount}).");
         }
         return _checkHitHitValue.Value;
     }

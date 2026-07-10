@@ -2,9 +2,60 @@ namespace Fahrenheit.Mods.Parry;
 
 public unsafe sealed partial class ParryModule
 {
+    // Localized display name / hover description for a setting id, from the fhparry.<id>.name /
+    // .desc keys in lang/*.json. Fahrenheit's own settings panel used to draw these for us; since
+    // alpha11 removed FhSettingCustomRenderer we draw the chrome ourselves.
+    private static string setting_label(string id) => FhApi.Localization.localize($"fhparry.{id}.name");
+
+    private static void setting_tooltip(string id)
+    {
+        if (ImGui.IsItemHovered())
+        {
+            ImGui.SetTooltip(FhApi.Localization.localize($"fhparry.{id}.desc"));
+        }
+    }
+
+    /// <summary>
+    ///     The Settings tab. Replaces the FhSettingsCategory registration that alpha11 removed;
+    ///     persistence is unaffected — the mod has always written its own fhparry.config.json.
+    ///     Layout: the master toggle and the two combos run full width; the feedback toggles pack
+    ///     into a two-column grid so the checkbox and its label sit side by side, not stacked.
+    /// </summary>
+    private void render_settings_tab()
+    {
+        render_setting_enabled();
+
+        ImGui.Spacing();
+        labeled_combo("difficulty", render_setting_difficulty);
+
+        ImGui.SeparatorText("Feedback");
+        if (ImGui.BeginTable("##fhparry.toggles", 2, ImGuiTableFlags.SizingStretchSame))
+        {
+            ImGui.TableNextColumn(); render_setting_audio();
+            ImGui.TableNextColumn(); render_setting_parry_effect();
+            ImGui.TableNextColumn(); render_setting_impact_shake();
+            ImGui.TableNextColumn(); render_setting_streak_counter();
+            ImGui.EndTable();
+        }
+
+        ImGui.SeparatorText("Camera");
+        labeled_combo("battle_camera_lock_mode", render_setting_battle_camera_lock_mode);
+    }
+
+    // A combo (or combo-like renderer) preceded by its label on the same line, the widget filling
+    // the remaining width. The renderer draws a hidden-label combo and may trail extra lines.
+    private static void labeled_combo(string id, Action widget)
+    {
+        ImGui.TextUnformatted(setting_label(id));
+        setting_tooltip(id);
+        ImGui.SameLine();
+        ImGui.SetNextItemWidth(-1f);
+        widget();
+    }
+
     private void render_setting_enabled()
     {
-        if (ImGui.Checkbox("##fhparry.enabled", ref _optionEnabled))
+        if (ImGui.Checkbox(setting_label("enabled") + "##fhparry.enabled", ref _optionEnabled))
         {
             persist_settings();
             log_debug($"Master toggle changed: {_optionEnabled}.");
@@ -14,11 +65,12 @@ public unsafe sealed partial class ParryModule
                 log_debug("Disabled while active; runtime state reset.");
             }
         }
+        setting_tooltip("enabled");
     }
 
     private void render_setting_audio()
     {
-        if (ImGui.Checkbox("##fhparry.audio", ref _optionSound))
+        if (ImGui.Checkbox(setting_label("audio") + "##fhparry.audio", ref _optionSound))
         {
             persist_settings();
             if (!_optionSound)
@@ -26,30 +78,65 @@ public unsafe sealed partial class ParryModule
                 stop_audio_playback();
             }
         }
+        setting_tooltip("audio");
     }
 
-    private void render_setting_overdrive_boost()
+    private void render_setting_parry_effect()
     {
-        if (ImGui.Checkbox("##fhparry.ctb", ref _optionOverdriveBoost))
+        if (ImGui.Checkbox(setting_label("parry_effect") + "##fhparry.parry_effect", ref _optionParryEffect))
         {
             persist_settings();
+            string state = _optionParryEffect ? "enabled" : "disabled";
+            log_debug($"Parry-success visual effect {state}.");
         }
+        setting_tooltip("parry_effect");
     }
 
-    private void render_setting_penalty()
+    private void render_setting_impact_shake()
     {
-        if (ImGui.Checkbox("##fhparry.penalty", ref _optionWhiffLockout))
+        if (ImGui.Checkbox(setting_label("impact_shake") + "##fhparry.impact_shake", ref _optionImpactShake))
         {
             persist_settings();
-            if (!_optionWhiffLockout && _runtime.InputState == ParryInputState.WhiffLockout)
-            {
-                // Disabling mid-lockout immediately releases the player.
-                _runtime.InputState = ParryInputState.Ready;
-                _runtime.WhiffLockoutRemainingSeconds = 0f;
-                _runtime.WhiffLockoutTotalSeconds = 0f;
-                log_debug("Whiff lockout disabled mid-recovery; returning to Ready.");
-            }
+            log_debug($"Impact screen shake {(_optionImpactShake ? "enabled" : "disabled")}.");
         }
+        setting_tooltip("impact_shake");
+    }
+
+    private void render_setting_streak_counter()
+    {
+        if (ImGui.Checkbox(setting_label("streak_counter") + "##fhparry.streak_counter", ref _optionStreakCounter))
+        {
+            persist_settings();
+            string state = _optionStreakCounter ? "enabled (queues counter)" : "disabled (log-only)";
+            log_debug($"Streak counter attack {state}.");
+        }
+        setting_tooltip("streak_counter");
+    }
+
+    private void render_setting_difficulty()
+    {
+        int idx = ParryDifficultyModel.GetComboIndex(_optionDifficulty);
+        if (ImGui.Combo("##fhparry.difficulty", ref idx, ParryDifficultyModel.GetComboItems()))
+        {
+            _optionDifficulty = ParryDifficultyModel.DifficultyFromComboIndex(idx);
+            persist_settings();
+            log_debug($"Difficulty changed to {ParryDifficultyModel.FormatName(_optionDifficulty)}.");
+        }
+
+        render_difficulty_timing_info();
+    }
+
+    // The selected preset's timing, in battle frames (30 Hz ticks) with the nominal wall-clock ms.
+    // Commitment is the parry window plus the whiff-recovery lockout — the full cost of a press.
+    private void render_difficulty_timing_info()
+    {
+        int parry  = ParryDifficultyModel.GetParryWindowTicks(_optionDifficulty);
+        int dodge  = ParryDifficultyModel.GetDodgeWindowTicks(_optionDifficulty);
+        int commit = ParryDifficultyModel.GetTotalCommitmentTicks(_optionDifficulty);
+        ImGui.TextDisabled(
+            $"Parry {parry}f ({ParryDifficultyModel.TicksToMs(parry):F0} ms)   ·   "
+            + $"Dodge {dodge}f ({ParryDifficultyModel.TicksToMs(dodge):F0} ms)   ·   "
+            + $"Commitment {commit}f ({ParryDifficultyModel.TicksToMs(commit):F0} ms)");
     }
 
     private void render_setting_battle_camera_lock_mode()
@@ -90,111 +177,5 @@ public unsafe sealed partial class ParryModule
         }
 
         ImGui.TextDisabled("Cinematic cameras (boss / summon / overdrive) are never blocked.");
-    }
-
-    private void render_setting_magic_camera_lock()
-    {
-        if (ImGui.Checkbox("##fhparry.magic_camera_lock", ref _optionMagicCameraLock))
-        {
-            persist_settings();
-            _enemyMagicCameraLockSuppressCount = 0;
-            log_debug($"Magic camera lock = {_optionMagicCameraLock}.");
-        }
-    }
-
-    private void render_setting_parry_effect()
-    {
-        if (ImGui.Checkbox("##fhparry.parry_effect", ref _optionParryEffect))
-        {
-            persist_settings();
-            string state = _optionParryEffect ? "enabled" : "disabled";
-            log_debug($"Parry-success visual effect {state}.");
-        }
-    }
-
-    private void render_setting_impact_shake()
-    {
-        if (ImGui.Checkbox("##fhparry.impact_shake", ref _optionImpactShake))
-        {
-            persist_settings();
-            log_debug($"Impact screen shake {(_optionImpactShake ? "enabled" : "disabled")}.");
-        }
-    }
-
-    private void render_setting_streak_counter()
-    {
-        if (ImGui.Checkbox("##fhparry.streak_counter", ref _optionStreakCounter))
-        {
-            persist_settings();
-            string state = _optionStreakCounter ? "enabled (queues counter)" : "disabled (log-only)";
-            log_debug($"Streak counter attack {state}.");
-        }
-    }
-
-    private void render_setting_logging()
-    {
-        if (ImGui.Checkbox("##fhparry.logging", ref _optionLogging))
-        {
-            persist_settings();
-            string state = _optionLogging ? "enabled" : "disabled";
-            _logger.Info($"[Parry] Debug logging {state} via settings.");
-        }
-    }
-
-    private void render_setting_debug_overlay()
-    {
-        if (ImGui.Checkbox("##fhparry.debug_overlay", ref _optionDebugOverlay))
-        {
-            persist_settings();
-            string state = _optionDebugOverlay ? "enabled" : "disabled";
-            log_debug($"Debug overlay {state}.");
-        }
-    }
-
-    private void render_setting_difficulty()
-    {
-        int idx = ParryDifficultyModel.GetComboIndex(_optionDifficulty);
-        if (ImGui.Combo("##fhparry.difficulty", ref idx, ParryDifficultyModel.GetComboItems()))
-        {
-            _optionDifficulty = ParryDifficultyModel.DifficultyFromComboIndex(idx);
-            persist_settings();
-            log_debug($"Difficulty changed to {ParryDifficultyModel.FormatName(_optionDifficulty)}.");
-        }
-    }
-
-    private void render_setting_dodge_window()
-    {
-        if (ImGui.SliderFloat("##fhparry.dodge_window", ref _dodgeWindowMs, DodgeWindowMsMin, DodgeWindowMsMax, "%.0f ms"))
-        {
-            _dodgeWindowMs = Math.Clamp(_dodgeWindowMs, DodgeWindowMsMin, DodgeWindowMsMax);
-            persist_settings();
-            log_debug($"Dodge window set to {_dodgeWindowMs:F0} ms.");
-        }
-    }
-
-    private void render_setting_dodge_whiffout()
-    {
-        if (ImGui.SliderFloat("##fhparry.dodge_whiffout", ref _dodgeWhiffoutMs, DodgeWhiffoutMsMin, DodgeWhiffoutMsMax, "%.0f ms"))
-        {
-            _dodgeWhiffoutMs = Math.Clamp(_dodgeWhiffoutMs, DodgeWhiffoutMsMin, DodgeWhiffoutMsMax);
-            persist_settings();
-            log_debug($"Dodge whiffout set to {_dodgeWhiffoutMs:F0} ms.");
-        }
-    }
-
-    private void render_setting_camera_probe()
-    {
-        if (ImGui.Checkbox("##fhparry.camera_probe", ref _optionCameraProbe))
-        {
-            persist_settings();
-            log_debug($"Camera probe {(_optionCameraProbe ? "enabled" : "disabled")}.");
-        }
-    }
-
-    private void render_setting_future()
-    {
-        ImGui.BeginDisabled(true);
-        ImGui.TextWrapped("Auto-counter customization coming soon.");
-        ImGui.EndDisabled();
     }
 }

@@ -105,17 +105,17 @@ public unsafe sealed partial class ParryModule
         }
 
         _hStage1MsActionRequest = new FhMethodHandle<MsActionRequestProbeDelegate>(
-            this, "FFX.exe", FhFfx.FhCall.__addr_MsActionRequest, h_stage1_ms_action_request);
+            this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsActionRequest, h_stage1_ms_action_request);
         _hStage1MsCalcCommand = new FhMethodHandle<MsCalcCommandProbeDelegate>(
-            this, "FFX.exe", FhFfx.FhCall.__addr_MsCalcCommand, h_stage1_ms_calc_command);
+            this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsCalcCommand, h_stage1_ms_calc_command);
         _hStage1MsCheckStatusBeforeAction = new FhMethodHandle<MsCheckStatusBeforeActionProbeDelegate>(
-            this, "FFX.exe", FhFfx.FhCall.__addr_MsCheckStatusBeforeAction, h_stage1_ms_check_status_before_action);
+            this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsCheckStatusBeforeAction, h_stage1_ms_check_status_before_action);
         _hStage1MsLimitTypeDamageCheck = new FhMethodHandle<MsLimitTypeDamageCheckProbeDelegate>(
-            this, "FFX.exe", FhFfx.FhCall.__addr_MsLimitTypeDamageCheck, h_stage1_ms_limit_type_damage_check);
+            this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsLimitTypeDamageCheck, h_stage1_ms_limit_type_damage_check);
         _hStage1OpEtBattleGenkoCounterGet = new FhMethodHandle<OpEtBattleGenkoCounterGetProbeDelegate>(
-            this, "FFX.exe", FhFfx.FhCall.__addr_op_et_battle_genko_counter_get, h_stage1_op_et_battle_genko_counter_get);
+            this, "FFX.exe", ExternalMemoryOffsetMap.Functions.OpEtBattleGenkoCounterGet, h_stage1_op_et_battle_genko_counter_get);
         _hStage1MsSetMotion = new FhMethodHandle<MsSetMotionProbeDelegate>(
-            this, "FFX.exe", FhFfx.FhCall.__addr_MsSetMotion, h_stage1_ms_set_motion);
+            this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsSetMotion, h_stage1_ms_set_motion);
 
         try_install_one_stage1_probe(_hStage1MsActionRequest,           "MsActionRequest");
         try_install_one_stage1_probe(_hStage1MsCalcCommand,             "MsCalcCommand");
@@ -143,7 +143,7 @@ public unsafe sealed partial class ParryModule
 
     private uint h_stage1_ms_action_request(int target_id, int attacker_id, int p3, int p4, int p5, int p6)
     {
-        uint result = _hStage1MsActionRequest!.orig_fptr.Invoke(target_id, attacker_id, p3, p4, p5, p6);
+        uint result = orig_stage1_ms_action_request(target_id, attacker_id, p3, p4, p5, p6);
 
         if (_optionNativeProbeLogging
             && _throttleMsActionRequest.ShouldEmit(_debugFrameIndex, Stage1ProbeMaxPerFrame))
@@ -166,7 +166,7 @@ public unsafe sealed partial class ParryModule
 
     private void h_stage1_ms_calc_command()
     {
-        _hStage1MsCalcCommand!.orig_fptr.Invoke();
+        orig_stage1_ms_calc_command();
 
         if (_optionNativeProbeLogging
             && _throttleMsCalcCommand.ShouldEmit(_debugFrameIndex, Stage1ProbeMaxPerFrame))
@@ -186,7 +186,7 @@ public unsafe sealed partial class ParryModule
 
     private int h_stage1_ms_check_status_before_action()
     {
-        int result = _hStage1MsCheckStatusBeforeAction!.orig_fptr.Invoke();
+        int result = orig_stage1_ms_check_status_before_action();
 
         if (_optionNativeProbeLogging
             && _throttleMsCheckStatusBeforeAction.ShouldEmit(_debugFrameIndex, Stage1ProbeMaxPerFrame))
@@ -210,7 +210,7 @@ public unsafe sealed partial class ParryModule
     private int h_stage1_ms_limit_type_damage_check(
         int attacker_id, nint attacker, int target_id, nint target, int p5, int p6, int p7)
     {
-        int result = _hStage1MsLimitTypeDamageCheck!.orig_fptr.Invoke(
+        int result = orig_stage1_ms_limit_type_damage_check(
             attacker_id, attacker, target_id, target, p5, p6, p7);
 
         if (_optionNativeProbeLogging
@@ -234,7 +234,7 @@ public unsafe sealed partial class ParryModule
 
     private int h_stage1_op_et_battle_genko_counter_get()
     {
-        int result = _hStage1OpEtBattleGenkoCounterGet!.orig_fptr.Invoke();
+        int result = orig_stage1_op_et_battle_genko_counter_get();
 
         if (_optionNativeProbeLogging
             && _throttleOpEtBattleGenkoCounterGet.ShouldEmit(_debugFrameIndex, Stage1ProbeMaxPerFrame))
@@ -258,7 +258,7 @@ public unsafe sealed partial class ParryModule
     private int h_stage1_ms_set_motion(
         int p1, int p2, int chr_id, byte p4, int p5, int p6, int p7)
     {
-        int result = _hStage1MsSetMotion!.orig_fptr.Invoke(p1, p2, chr_id, p4, p5, p6, p7);
+        int result = orig_stage1_ms_set_motion(p1, p2, chr_id, p4, p5, p6, p7);
 
         if (_optionNativeProbeLogging
             && _throttleMsSetMotion.ShouldEmit(_debugFrameIndex, Stage1ProbeMaxPerFrame))

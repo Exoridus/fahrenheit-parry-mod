@@ -160,17 +160,9 @@ public unsafe sealed partial class ParryModule
                 // so that it fires only when the first actionable cue is observed,
                 // not at the earlier gameplay-ready/battle-context transition.
 
-                // Read-only overdrive-mask probe: the save structure is populated by
-                // the time a live battle context exists, so this is the first safe
-                // point to read limit_modes_obtained and correlate it with the menu.
-                log_overdrive_modes_probe_once();
-
-                // Immediately after the read-only probe logs the before-state, initialise the
-                // custom-overdrive learn countdown. Fired on the same battle-begin edge so one log
-                // shows the before-state and the init in order. Init only ever writes the counter
-                // (never bit 17, never 0), so firing every battle is safe and idempotent for an
-                // already-armed character.
-                apply_overdrive_learning_init();
+                // This is the battle-begin edge. Gameplay that needs it hangs off
+                // on_battle_session_begin() rather than off this debug tracker.
+                on_battle_session_begin();
             }
             else
             {
@@ -257,73 +249,6 @@ public unsafe sealed partial class ParryModule
         return save->current_room_id != 0 || save->saved_current_room_id != 0;
     }
 
-    private void monitor_cue_transitions()
-    {
-        _debugCueScratch.Clear();
-        collect_live_cues(_debugCueScratch, out _);
-
-        if (_debugCueSnapshots.Count == 0 && _debugCueScratch.Count > 0)
-        {
-            _debugCueTurnId++;
-        }
-
-        int maxCount = Math.Max(_debugCueSnapshots.Count, _debugCueScratch.Count);
-        for (int i = 0; i < maxCount; i++)
-        {
-            bool hasPrev = i < _debugCueSnapshots.Count;
-            bool hasCur = i < _debugCueScratch.Count;
-
-            if (!hasPrev && hasCur)
-            {
-                DebugCueSnapshot added = _debugCueScratch[i];
-                log_debug($"Cue+ q{added.QueueIndex}: {format_cue_brief(added)}");
-                append_cue_history("ADD", added);
-                continue;
-            }
-
-            if (hasPrev && !hasCur)
-            {
-                DebugCueSnapshot removed = _debugCueSnapshots[i];
-                log_debug($"Cue- q{removed.QueueIndex}: {format_cue_brief(removed)}");
-                append_cue_history("DEL", removed, "Consumed", "-");
-                continue;
-            }
-
-            DebugCueSnapshot previous = _debugCueSnapshots[i];
-            DebugCueSnapshot current = _debugCueScratch[i];
-            if (!current.EqualsSemantic(previous))
-            {
-                if (is_cue_ownership_change(previous, current))
-                {
-                    // Queue slot ownership changed (for example party/system -> enemy/system).
-                    // Treat this as replacement, not in-place mutation, to keep turn attribution clear.
-                    log_debug($"Cue- q{previous.QueueIndex}: {format_cue_brief(previous)}");
-                    append_cue_history("DEL", previous, "Consumed", "-");
-
-                    log_debug($"Cue+ q{current.QueueIndex}: {format_cue_brief(current)}");
-                    append_cue_history("ADD", current);
-                }
-                else
-                {
-                    log_debug($"Cue~ q{current.QueueIndex}: {format_cue_brief(previous)} -> {format_cue_brief(current)}");
-                    append_cue_history("UPD", current);
-                }
-            }
-        }
-
-        if (_debugCueSnapshots.Count > 0 && _debugCueScratch.Count == 0)
-        {
-            log_debug("Cue queue flushed.");
-            append_cue_flush_history();
-            _turnRuntimeEvents.EmitQueueFlushed(_debugCueTurnId, current_gameplay_timestamp(), _debugFrameIndex);
-        }
-
-        sync_turn_timeline_from_cues();
-
-        _debugCueSnapshots.Clear();
-        _debugCueSnapshots.AddRange(_debugCueScratch);
-    }
-
     private static bool is_cue_ownership_change(in DebugCueSnapshot previous, in DebugCueSnapshot current)
     {
         return previous.AttackerId != current.AttackerId
@@ -397,73 +322,6 @@ public unsafe sealed partial class ParryModule
     private void mark_active_turn_missed(string reason)
     {
         _turnRuntimeEvents.EmitParryMissed(current_gameplay_timestamp(), _debugFrameIndex, reason);
-    }
-
-    private void process_turn_runtime_events()
-    {
-        _debugRuntimeSignalScratch.Clear();
-        _turnRuntimeEvents.Drain(_debugRuntimeSignalScratch);
-
-        for (int i = 0; i < _debugRuntimeSignalScratch.Count; i++)
-        {
-            TurnTimelineRuntimeSignal signal = _debugRuntimeSignalScratch[i];
-            switch (signal.Kind)
-            {
-                case TurnTimelineRuntimeSignalKind.CueSnapshot:
-                    _turnTimeline.UpdateCues(
-                        cues: signal.Cues ?? Array.Empty<TurnTimelineCueObservation>(),
-                        cueTurnId: signal.CueTurnId,
-                        timestampLocal: signal.TimestampLocal,
-                        frameIndex: signal.FrameIndex,
-                        parryWindowActive: signal.ParryWindowActive);
-                    break;
-                case TurnTimelineRuntimeSignalKind.DispatchStarted:
-                    _turnTimeline.CorrelateDispatchStarted(
-                        attackerId: signal.AttackerId,
-                        queueIndex: signal.QueueIndex < 0 ? 0 : signal.QueueIndex,
-                        timestampLocal: signal.TimestampLocal,
-                        frameIndex: signal.FrameIndex,
-                        parryWindowActive: signal.ParryWindowActive);
-                    break;
-                case TurnTimelineRuntimeSignalKind.DispatchConsumed:
-                    _turnTimeline.CorrelateDispatchConsumed(
-                        attackerId: signal.AttackerId,
-                        queueIndex: signal.QueueIndex,
-                        timestampLocal: signal.TimestampLocal,
-                        frameIndex: signal.FrameIndex,
-                        reason: string.IsNullOrWhiteSpace(signal.Reason) ? "consumed" : signal.Reason);
-                    break;
-                case TurnTimelineRuntimeSignalKind.DamageResolved:
-                    string targetLabel = signal.TargetSlot >= 0
-                        ? format_actor_slot((byte)signal.TargetSlot)
-                        : "Unknown target";
-                    _turnTimeline.CorrelateDamageResolved(
-                        targetSlot: signal.TargetSlot,
-                        timestampLocal: signal.TimestampLocal,
-                        frameIndex: signal.FrameIndex,
-                        attackerId: signal.AttackerId,
-                        queueIndex: signal.QueueIndex,
-                        commandId: signal.CommandId,
-                        commandLabel: signal.CommandLabel,
-                        sourceStage: signal.SourceStage,
-                        targetLabel: targetLabel);
-                    break;
-                case TurnTimelineRuntimeSignalKind.ParryWindowOpened:
-                    _turnTimeline.MarkActiveParryOpen(signal.TimestampLocal, signal.FrameIndex);
-                    break;
-                case TurnTimelineRuntimeSignalKind.ParrySucceeded:
-                    _turnTimeline.MarkActiveParried(signal.TimestampLocal, signal.FrameIndex);
-                    break;
-                case TurnTimelineRuntimeSignalKind.ParryMissed:
-                    _turnTimeline.MarkActiveMissed(signal.Reason, signal.TimestampLocal, signal.FrameIndex);
-                    break;
-                case TurnTimelineRuntimeSignalKind.QueueFlushed:
-                    _turnTimeline.AppendFlushMarker(signal.CueTurnId, signal.TimestampLocal, signal.FrameIndex);
-                    break;
-            }
-        }
-
-        flush_turn_timeline_events_to_log();
     }
 
     private static TurnTimelineParryability classify_turn_parryability(DebugCueSnapshot cue)
@@ -649,13 +507,20 @@ public unsafe sealed partial class ParryModule
 
     private void render_fx_motion_lab()
     {
-        if (!ImGui.CollapsingHeader("FX / Motion Lab (parry visual + animation browser)")) return;
-
         ImGui.Text($"Target: {lab_slot_label(_labTargetSlot)}");
         ImGui.SameLine(); if (ImGui.Button("<##labslot")) _labTargetSlot = lab_step_slot(-1);
         ImGui.SameLine(); if (ImGui.Button(">##labslot")) _labTargetSlot = lab_step_slot(+1);
         ImGui.SameLine(); if (ImGui.Button("Restore char##labslot")) lab_restore_char(); // re-show a model a status/death effect hid (experimental)
         ImGui.SameLine(); if (ImGui.Button("Clear FX##labslot")) lab_clear_char_fx();    // per-char effect reset, like the engine's own teardown (experimental)
+
+        ImGui.Separator();
+        ImGui.Text("Screen shake:");
+        ImGui.SameLine();
+        if (ImGui.Button($"Single ({ImpactShakeDuration / BattleFrameRate:F2}s)##labshake"))
+            fire_screen_shake_ticks(ImpactShakeDuration, "lab single");
+        ImGui.SameLine();
+        if (ImGui.Button($"Whole-party ({ImpactShakeDurationWholeParty / BattleFrameRate:F2}s)##labshakewp"))
+            fire_screen_shake_ticks(ImpactShakeDurationWholeParty, "lab whole-party");
 
         ImGui.Separator();
         ImGui.Text($"Hit effect: 0x{_labEffectId:X2}");
@@ -881,31 +746,180 @@ public unsafe sealed partial class ParryModule
         return int.TryParse(s, NumberStyles.Integer, CultureInfo.InvariantCulture, out id);
     }
 
+    // Impact-shake duration sweep. Only the duration varies; amplitude and both frequencies are
+    // fixed, so each parry differs in exactly one dimension. Stages come from a shuffled bag, so the
+    // order is unpredictable and no stage repeats back-to-back — a rising or falling sequence would
+    // invite judging each shake against its neighbour instead of on its own.
+    /// <summary>
+    ///     The mod's own window. It exists because alpha11 removes FhSettingCustomRenderer
+    ///     and offers no boolean or combo setting type, so there is nowhere in Fahrenheit's
+    ///     settings panel left to draw our 17 controls.
+    ///
+    ///     Settings render unconditionally — you must be able to change the difficulty from
+    ///     the main menu, before any save is loaded. The debug tabs carry the old gates
+    ///     (save loaded, gameplay ready); they show a placeholder rather than vanishing, so
+    ///     the tab bar does not reflow under the cursor. That matters most for the Lab tab,
+    ///     whose widgets fire MsSetMotion and MsBtlSetHitEffect natively and crash
+    ///     uncatchably on an unloaded id — with no gameplay it draws no widgets at all.
+    /// </summary>
     private void render_debug_overlay()
     {
-        if (!_optionDebugOverlay) return;
-        if (!_debugGameSaveLoaded) return;
-        if (!_debugGameplayReady) return;
+        update_overlay_proximity_opacity();
+        drive_camera();
 
-        ImGui.SetNextWindowBgAlpha(0.55f);
-        ImGui.SetNextWindowPos(new Vector2(20f, 20f), ImGuiCond.FirstUseEver);
-        ImGui.SetNextWindowSize(new Vector2(1020f, 620f), ImGuiCond.FirstUseEver);
+        if (_overlayCollapsed)
+        {
+            render_overlay_collapsed_caret();
+            return;
+        }
 
-        ImGui.PushStyleColor(ImGuiCol.WindowBg, new Vector4(0f, 0f, 0f, 0.55f));
+        ImGui.SetNextWindowPos(_overlayWindowPos, ImGuiCond.Appearing);
+        ImGui.SetNextWindowSize(_overlayWindowSize, ImGuiCond.Appearing);
+        ImGui.SetNextWindowBgAlpha(_overlayBgAlpha);
+
+        ImGui.PushStyleColor(ImGuiCol.WindowBg, new Vector4(0f, 0f, 0f, _overlayBgAlpha));
+        ImGui.PushStyleVar(ImGuiStyleVar.Alpha, _overlayContentAlpha);
         const ImGuiWindowFlags overlayFlags =
-            ImGuiWindowFlags.NoFocusOnAppearing
+            ImGuiWindowFlags.NoTitleBar
+            | ImGuiWindowFlags.NoFocusOnAppearing
             | ImGuiWindowFlags.NoBringToFrontOnFocus
             | ImGuiWindowFlags.NoNavInputs
             | ImGuiWindowFlags.NoNavFocus;
-        if (ImGui.Begin("Parry Debug Overlay###fhparry.debug.overlay", overlayFlags))
+        if (ImGui.Begin("###fhparry.window", overlayFlags))
         {
-            render_fx_motion_lab();
-            render_debug_activity_panels(MathF.Max(0f, ImGui.GetContentRegionAvail().Y));
+            capture_overlay_rect();
+
+            if (ImGui.BeginTabBar("###fhparry.tabs"))
+            {
+                // Collapse caret, pinned to the top-right of the shared tab-bar header.
+                if (ImGui.TabItemButton("v###fhparry.collapse", ImGuiTabItemFlags.Trailing | ImGuiTabItemFlags.NoTooltip))
+                {
+                    _overlayCollapsed = true;
+                }
+
+                if (ImGui.BeginTabItem("Settings"))
+                {
+                    render_settings_tab();
+                    ImGui.EndTabItem();
+                }
+
+#if DEBUG
+                bool liveReady = _optionDebugOverlay && _debugGameSaveLoaded && _debugGameplayReady;
+
+                if (ImGui.BeginTabItem("Live"))
+                {
+                    if (liveReady) render_debug_activity_panels(MathF.Max(0f, ImGui.GetContentRegionAvail().Y));
+                    else           render_debug_tab_placeholder();
+                    ImGui.EndTabItem();
+                }
+
+                if (ImGui.BeginTabItem("Lab"))
+                {
+                    if (liveReady) render_fx_motion_lab();
+                    else           render_debug_tab_placeholder();
+                    ImGui.EndTabItem();
+                }
+
+                if (ImGui.BeginTabItem("Camera"))
+                {
+                    if (liveReady) render_camera_tab();
+                    else           render_debug_tab_placeholder();
+                    ImGui.EndTabItem();
+                }
+#endif
+
+                ImGui.EndTabBar();
+            }
         }
 
         ImGui.End();
+        ImGui.PopStyleVar();
         ImGui.PopStyleColor();
     }
+
+    // Collapsed state: a small square caret pinned to the top-right corner where the window's
+    // header was, derived from the last captured window pos+size. Clicking it reopens the window
+    // in place, at its previous size.
+    private void render_overlay_collapsed_caret()
+    {
+        Vector2 caretPos;
+        if (_overlayPositioned)
+        {
+            // After the window has been opened once, sit at its top-right corner.
+            caretPos = new(_overlayWindowPos.X + _overlayWindowSize.X - OverlayCaretSize - 4f, _overlayWindowPos.Y);
+        }
+        else
+        {
+            // Default (never opened): the screen's top-right corner.
+            Vector2 disp = ImGui.GetIO().DisplaySize;
+            caretPos = new(disp.X - OverlayCaretSize - 10f, 10f);
+        }
+        ImGui.SetNextWindowPos(caretPos, ImGuiCond.Always);
+        ImGui.SetNextWindowBgAlpha(_overlayBgAlpha);
+
+        ImGui.PushStyleColor(ImGuiCol.WindowBg, new Vector4(0f, 0f, 0f, _overlayBgAlpha));
+        ImGui.PushStyleVar(ImGuiStyleVar.Alpha, _overlayContentAlpha);
+        ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new Vector2(2f, 2f));
+        const ImGuiWindowFlags caretFlags =
+            ImGuiWindowFlags.NoTitleBar
+            | ImGuiWindowFlags.NoResize
+            | ImGuiWindowFlags.AlwaysAutoResize
+            | ImGuiWindowFlags.NoFocusOnAppearing
+            | ImGuiWindowFlags.NoBringToFrontOnFocus
+            | ImGuiWindowFlags.NoNavInputs
+            | ImGuiWindowFlags.NoNavFocus;
+        if (ImGui.Begin("###fhparry.caret", caretFlags))
+        {
+            // Proximity fade follows the caret's own rect while collapsed.
+            _overlayPrevRectMin = ImGui.GetWindowPos();
+            _overlayPrevRectMax = _overlayPrevRectMin + ImGui.GetWindowSize();
+            if (ImGui.Button("<###fhparry.expand", new Vector2(OverlayCaretSize, OverlayCaretSize)))
+            {
+                _overlayCollapsed = false;
+            }
+        }
+        ImGui.End();
+        ImGui.PopStyleVar(2);
+        ImGui.PopStyleColor();
+    }
+
+    // Eases the window's background and content opacity toward opaque while the mouse is within a
+    // 40 px margin of last frame's window rect, and toward faint when it is away. Exponential,
+    // frame-rate independent, ~150 ms time constant.
+    private void update_overlay_proximity_opacity()
+    {
+        Vector2 mouse = ImGui.GetIO().MousePos;
+        const float margin = 40f;
+        bool near =
+            mouse.X >= _overlayPrevRectMin.X - margin && mouse.X <= _overlayPrevRectMax.X + margin &&
+            mouse.Y >= _overlayPrevRectMin.Y - margin && mouse.Y <= _overlayPrevRectMax.Y + margin;
+
+        float targetBg      = near ? 0.55f : 0.15f;
+        float targetContent = near ? 1.0f  : 0.75f;
+
+        float dt = ImGui.GetIO().DeltaTime;
+        float k = dt > 0f ? 1f - MathF.Exp(-dt / 0.15f) : 1f;
+        _overlayBgAlpha      += (targetBg - _overlayBgAlpha) * k;
+        _overlayContentAlpha += (targetContent - _overlayContentAlpha) * k;
+    }
+
+    private void capture_overlay_rect()
+    {
+        _overlayWindowPos = ImGui.GetWindowPos();
+        _overlayWindowSize = ImGui.GetWindowSize();
+        _overlayPrevRectMin = _overlayWindowPos;
+        _overlayPrevRectMax = _overlayWindowPos + _overlayWindowSize;
+        _overlayPositioned = true;
+    }
+
+#if DEBUG
+    private void render_debug_tab_placeholder()
+    {
+        if (!_optionDebugOverlay)      ImGui.TextDisabled("Debug overlay is off (Settings -> Diagnostics).");
+        else if (!_debugGameSaveLoaded) ImGui.TextDisabled("Waiting for a save to load.");
+        else                            ImGui.TextDisabled("Waiting for gameplay.");
+    }
+#endif
 
     private void render_debug_state_panel(float panelHeight)
     {
@@ -922,11 +936,7 @@ public unsafe sealed partial class ParryModule
         string battleTime = format_battle_time(_debugBattleFrameIndex);
         int flushIndex = find_last_flush_index();
         int sinceFlush = Math.Max(0, _debugCueHistory.Count - (flushIndex + 1));
-        bool hasNextThreat = try_get_next_enemy_party_cue(out DebugCueSnapshot nextCue, out string nextDecision, out string nextReason);
-        string nextActor = hasNextThreat ? format_actor_slot(nextCue.AttackerId) : "None";
-        string nextType = hasNextThreat ? format_cue_category(nextCue.Category) : "None";
-        string nextTarget = hasNextThreat ? format_party_target_mask(nextCue.PartyMask) : "None";
-        string nextQueue = hasNextThreat ? $"Queue {nextCue.QueueIndex + 1}" : "None";
+        bool hasNextThreat = try_get_next_enemy_party_cue(out _, out string nextDecision, out string nextReason);
         string timingValue = format_window_status_summary();
         string battleSummary = format_current_battle_summary();
         string lastCommandSummary = format_last_command_summary();
@@ -941,16 +951,10 @@ public unsafe sealed partial class ParryModule
 
             render_state_row_pair(
                 "Window", bool_to_on_off(_runtime.ParryWindowActive),
-                "Parried Text", _runtime.ParriedTextRemainingSeconds > 0f ? "Visible" : "Hidden");
+                "Input State", format_input_state());
             render_state_row_pair(
                 "Impact Context", bool_to_yes_no(_runtime.AwaitingTurnEnd),
                 "Parry Success", bool_to_yes_no(_runtime.ParryWindowSucceeded));
-            render_state_row_pair(
-                "Next Actor", nextActor,
-                "Next Type", nextType);
-            render_state_row_pair(
-                "Next Target", nextTarget,
-                "Next Queue", nextQueue);
             render_state_row_pair(
                 "Decision", hasNextThreat ? nextDecision : "None",
                 "Gate", hasNextThreat ? nextReason : "Ready");
@@ -958,11 +962,8 @@ public unsafe sealed partial class ParryModule
                 "Timing", timingValue,
                 "Frame", $"F{_debugFrameIndex:D7}");
             render_state_row_pair(
-                "Difficulty", ParryDifficultyModel.FormatName(_optionDifficulty),
-                "Input State", format_input_state());
-            render_state_row_pair(
                 "Lockout", format_whiff_lockout_state(),
-                "Recovery", _optionWhiffLockout ? "Enabled" : "Disabled");
+                "Recovery", "Enabled");
             render_state_row_pair(
                 "Streak", format_parry_streak_state(),
                 "Threshold", $"≥ {ParryStreakObserveThreshold}");
@@ -981,12 +982,6 @@ public unsafe sealed partial class ParryModule
             render_state_row_pair(
                 "Since Flush", sinceFlush.ToString(CultureInfo.InvariantCulture),
                 "Mode", "Input -> Active Window -> Impact Resolve");
-            render_state_row_pair(
-                "CSV Map", _dataMappings.HasAny ? "Loaded" : "Not loaded",
-                "Coverage", $"cmd:{_dataMappings.CommandCount} auto:{_dataMappings.AutoAbilityCount} key:{_dataMappings.KeyItemCount} mon:{_dataMappings.MonsterCount} btl:{_dataMappings.BattleCount} evt:{_dataMappings.EventCount}");
-            render_state_row_pair(
-                "Map Source", truncate_display(_dataMappings.SourceSummary, 44),
-                "Map Status", truncate_display(_dataMappingStatus, 44));
 
             ImGui.EndTable();
         }
@@ -1016,13 +1011,13 @@ public unsafe sealed partial class ParryModule
         }
 
         const float splitterHeight = 6f;
-        const float minCueHeight = 140f;
+        const float minStateHeight = 140f;
         const float minLogHeight = 110f;
 
         float availableHeight = ImGui.GetContentRegionAvail().Y;
-        if (availableHeight <= (minCueHeight + minLogHeight + splitterHeight))
+        if (availableHeight <= (minStateHeight + minLogHeight + splitterHeight))
         {
-            render_debug_cue_preview_panel(Math.Max(minCueHeight, availableHeight * 0.6f));
+            render_debug_state_panel(Math.Max(minStateHeight, availableHeight * 0.5f));
             ImGui.Separator();
             render_debug_log_panel(Math.Max(minLogHeight, ImGui.GetContentRegionAvail().Y));
             ImGui.EndChild();
@@ -1030,25 +1025,24 @@ public unsafe sealed partial class ParryModule
         }
 
         float movableHeight = availableHeight - splitterHeight;
-        float minRatio = minCueHeight / movableHeight;
+        float minRatio = minStateHeight / movableHeight;
         float maxRatio = 1f - (minLogHeight / movableHeight);
-        _debugCuePanelRatio = Math.Clamp(_debugCuePanelRatio, minRatio, maxRatio);
+        _debugStatePanelRatio = Math.Clamp(_debugStatePanelRatio, minRatio, maxRatio);
 
-        float cueHeight = movableHeight * _debugCuePanelRatio;
-        float logHeight = movableHeight - cueHeight;
+        float stateHeight = movableHeight * _debugStatePanelRatio;
+        float logHeight = movableHeight - stateHeight;
 
-        render_debug_cue_preview_panel(cueHeight);
+        render_debug_state_panel(stateHeight);
 
         Vector2 splitterSize = new(ImGui.GetContentRegionAvail().X, splitterHeight);
         ImGui.PushStyleColor(ImGuiCol.Button, new Vector4(0.25f, 0.25f, 0.25f, 0.9f));
         ImGui.PushStyleColor(ImGuiCol.ButtonHovered, new Vector4(0.38f, 0.38f, 0.38f, 0.95f));
         ImGui.PushStyleColor(ImGuiCol.ButtonActive, new Vector4(0.5f, 0.5f, 0.5f, 1f));
         ImGui.Button("###fhparry.debug.splitter", splitterSize);
-        bool splitterActive = ImGui.IsItemActive();
-        if (splitterActive)
+        if (ImGui.IsItemActive())
         {
             float delta = ImGui.GetIO().MouseDelta.Y;
-            _debugCuePanelRatio = Math.Clamp(_debugCuePanelRatio + (delta / movableHeight), minRatio, maxRatio);
+            _debugStatePanelRatio = Math.Clamp(_debugStatePanelRatio + (delta / movableHeight), minRatio, maxRatio);
         }
 
         ImGui.PopStyleColor(3);
@@ -1056,181 +1050,23 @@ public unsafe sealed partial class ParryModule
         ImGui.EndChild();
     }
 
-    private void render_debug_cue_preview_panel(float panelHeight)
-    {
-        if (!ImGui.BeginChild("###fhparry.debug.cues", new Vector2(0f, panelHeight), ImGuiChildFlags.Borders, ImGuiWindowFlags.None))
-        {
-            ImGui.EndChild();
-            return;
-        }
-
-        int liveCount = 0;
-        int completedCount = 0;
-        for (int i = 0; i < _turnTimeline.RowCount; i++)
-        {
-            TurnTimelineRow row = _turnTimeline.GetRowAt(i);
-            if (row.IsFlushMarker) continue;
-            if (row.Lifecycle == TurnTimelineLifecycleState.Completed) completedCount++;
-            else liveCount++;
-        }
-        ImGui.TextUnformatted($"Turn Timeline: active/pending={liveCount}, completed={completedCount}, stored={_turnTimeline.RowCount}/{_turnTimeline.Capacity}");
-
-        Vector2 tableSize = new(0f, ImGui.GetContentRegionAvail().Y - 2f);
-        const ImGuiTableFlags tableFlags =
-            ImGuiTableFlags.Borders
-            | ImGuiTableFlags.RowBg
-            | ImGuiTableFlags.ScrollY
-            | ImGuiTableFlags.SizingStretchProp
-            | ImGuiTableFlags.Resizable;
-
-        if (ImGui.BeginTable("###fhparry.debug.cue.table", 8, tableFlags, tableSize))
-        {
-            float scrollY = ImGui.GetScrollY();
-            float maxScrollY = ImGui.GetScrollMaxY();
-            bool wasAtBottom = maxScrollY <= 0f || scrollY >= maxScrollY - 2f;
-
-            ImGui.TableSetupColumn("Time", ImGuiTableColumnFlags.WidthStretch, 1.2f);
-            ImGui.TableSetupColumn("Turn", ImGuiTableColumnFlags.WidthFixed, 92f);
-            ImGui.TableSetupColumn("Actor", ImGuiTableColumnFlags.WidthStretch, 1.0f);
-            ImGui.TableSetupColumn("Action", ImGuiTableColumnFlags.WidthStretch, 0.8f);
-            ImGui.TableSetupColumn("Target", ImGuiTableColumnFlags.WidthStretch, 1.6f);
-            ImGui.TableSetupColumn("Parryable", ImGuiTableColumnFlags.WidthFixed, 92f);
-            ImGui.TableSetupColumn("Parry", ImGuiTableColumnFlags.WidthFixed, 90f);
-            ImGui.TableSetupColumn("Lifecycle", ImGuiTableColumnFlags.WidthStretch, 1.0f);
-            ImGui.TableSetupScrollFreeze(0, 1);
-            ImGui.TableHeadersRow();
-
-            for (int i = 0; i < _turnTimeline.RowCount; i++)
-            {
-                TurnTimelineRow row = _turnTimeline.GetRowAt(i);
-                ImGui.TableNextRow();
-                bool isMarker = row.IsFlushMarker || row.IsDiagnosticMarker;
-                if (row.IsFlushMarker)
-                {
-                    uint rowColor = ImGui.ColorConvertFloat4ToU32(new Vector4(0.35f, 0.3f, 0.15f, 0.2f));
-                    ImGui.TableSetBgColor(ImGuiTableBgTarget.RowBg0, rowColor);
-                }
-                else if (row.IsDiagnosticMarker)
-                {
-                    uint rowColor = ImGui.ColorConvertFloat4ToU32(new Vector4(0.4f, 0.12f, 0.12f, 0.22f));
-                    ImGui.TableSetBgColor(ImGuiTableBgTarget.RowBg0, rowColor);
-                }
-
-                ImGui.TableSetColumnIndex(0);
-                ImGui.TextUnformatted($"{format_gameplay_timestamp(row.TimestampLocal)} F{row.FrameIndex:D6}");
-                ImGui.TableSetColumnIndex(1);
-                ImGui.TextUnformatted(isMarker ? "-" : format_turn_id(row));
-                ImGui.TableSetColumnIndex(2);
-                ImGui.TextUnformatted(row.IsFlushMarker ? "Queue Flush" : (row.IsDiagnosticMarker ? "Warning" : row.Actor));
-                if (!isMarker && ImGui.IsItemHovered())
-                {
-                    ImGui.BeginTooltip();
-                    ImGui.TextUnformatted($"slot={row.AttackerId} rowId={row.RowId}");
-                    ImGui.TextUnformatted($"queue={row.QueuePosition}/{row.QueueTotal}");
-                    if (row.Command.CommandId != 0)
-                    {
-                        string commandKind = string.IsNullOrWhiteSpace(row.Command.Kind) ? "command" : row.Command.Kind;
-                        string commandLabel = !string.IsNullOrWhiteSpace(row.Command.Label) ? row.Command.Label : "(unmapped)";
-                        ImGui.TextUnformatted($"cmd=0x{row.Command.CommandId:X4} ({commandKind})");
-                        ImGui.TextWrapped($"label={truncate_display(commandLabel, 180)}");
-                        ImGui.TextUnformatted($"source={row.Command.Source}, confidence={row.Command.Confidence}");
-                    }
-                    if (row.AttackerId >= PartyActorCapacity)
-                    {
-                        Chr* enemy = try_get_chr(row.AttackerId);
-                        if (enemy != null)
-                        {
-                            if (_dataMappings.TryResolveMonsterSensor(enemy->chr_id, out string sensor))
-                            {
-                                ImGui.Separator();
-                                ImGui.TextWrapped($"Sensor: {truncate_display(sensor, 180)}");
-                            }
-
-                            if (_dataMappings.TryResolveMonsterScan(enemy->chr_id, out string scan))
-                            {
-                                ImGui.TextWrapped($"Scan: {truncate_display(scan, 180)}");
-                            }
-                        }
-                    }
-                    ImGui.EndTooltip();
-                }
-                ImGui.TableSetColumnIndex(3);
-                ImGui.TextUnformatted(row.Action);
-                ImGui.TableSetColumnIndex(4);
-                ImGui.TextUnformatted(row.Targets);
-                ImGui.TableSetColumnIndex(5);
-                ImGui.TextUnformatted(isMarker ? "-" : format_parryability(row.Parryability));
-                ImGui.TableSetColumnIndex(6);
-                ImGui.TextUnformatted(isMarker ? "-" : format_parry_state(row.ParryState));
-                ImGui.TableSetColumnIndex(7);
-                ImGui.TextUnformatted(isMarker ? "Completed" : format_lifecycle(row.Lifecycle, row));
-            }
-
-            if (_debugCueAutoScroll && wasAtBottom && _turnTimeline.RowCount > 0)
-            {
-                ImGui.SetScrollHereY(1f);
-            }
-
-            ImGui.EndTable();
-        }
-
-        ImGui.EndChild();
-    }
-
     private void render_debug_log_panel(float panelHeight)
     {
-        ImGui.PushStyleColor(ImGuiCol.ChildBg, new Vector4(0f, 0f, 0f, 0.45f));
-        if (ImGui.BeginChild("###fhparry.debug.log", new Vector2(0f, panelHeight), ImGuiChildFlags.Borders, ImGuiWindowFlags.AlwaysVerticalScrollbar))
+        // A read-only multiline box so the log can be selected and copied. Just the frame index and
+        // the message — no wall-clock timestamp. (Per-line colours are traded for selectable text.)
+        StringBuilder sb = new();
+        for (int i = 0; i < _debugLog.Count; i++)
         {
-            float scrollY = ImGui.GetScrollY();
-            float maxScrollY = ImGui.GetScrollMaxY();
-            bool wasAtBottom = maxScrollY <= 0f || scrollY >= maxScrollY - 2f;
-
-            for (int i = 0; i < _debugLog.Count; i++)
-            {
-                DebugLogEntry entry = _debugLog[i];
-                bool isCueFlush = entry.Message.StartsWith("Cue queue flushed.", StringComparison.Ordinal);
-                string prefix = format_log_prefix(entry);
-                string suffix = entry.RepeatCount > 1 ? $" (x{entry.RepeatCount})" : string.Empty;
-
-                if (isCueFlush)
-                {
-                    ImGui.SeparatorText("Cue Flush");
-                    ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(0.95f, 0.85f, 0.35f, 1f));
-                }
-
-                Vector4? logColor = get_log_color(entry.Message);
-                if (logColor.HasValue)
-                {
-                    ImGui.PushStyleColor(ImGuiCol.Text, logColor.Value);
-                }
-
-                ImGui.TextUnformatted(prefix);
-                ImGui.SameLine();
-                float wrapPos = ImGui.GetCursorPosX();
-                ImGui.PushTextWrapPos();
-                ImGui.SetCursorPosX(wrapPos);
-                ImGui.TextWrapped(entry.Message + suffix);
-                ImGui.PopTextWrapPos();
-
-                if (logColor.HasValue)
-                {
-                    ImGui.PopStyleColor();
-                }
-
-                if (isCueFlush)
-                {
-                    ImGui.PopStyleColor();
-                }
-            }
-
-            if (_debugAutoScroll && wasAtBottom)
-            {
-                ImGui.SetScrollHereY(1f);
-            }
+            DebugLogEntry entry = _debugLog[i];
+            sb.Append('F').Append(entry.FrameIndex.ToString("D7", CultureInfo.InvariantCulture)).Append(' ').Append(entry.Message);
+            if (entry.RepeatCount > 1) sb.Append(" (x").Append(entry.RepeatCount).Append(')');
+            sb.Append('\n');
         }
+        _debugLogTextBuf = sb.ToString();
 
-        ImGui.EndChild();
+        ImGui.PushStyleColor(ImGuiCol.FrameBg, new Vector4(0f, 0f, 0f, 0.45f));
+        ImGui.InputTextMultiline("##fhparry.debug.log", ref _debugLogTextBuf, (uint)_debugLogTextBuf.Length + 16,
+            new Vector2(-1f, panelHeight), ImGuiInputTextFlags.ReadOnly);
         ImGui.PopStyleColor();
     }
 
@@ -1280,8 +1116,8 @@ public unsafe sealed partial class ParryModule
         {
             return "Idle";
         }
-        float remainingMs = _runtime.WhiffLockoutRemainingSeconds * 1000f;
-        float totalMs = _runtime.WhiffLockoutTotalSeconds * 1000f;
+        float remainingMs = ParryDifficultyModel.TicksToMs(_runtime.WhiffLockoutRemainingTicks);
+        float totalMs = ParryDifficultyModel.TicksToMs(_runtime.WhiffLockoutTotalTicks);
         return $"{remainingMs:F0}/{totalMs:F0}ms";
     }
 
@@ -1307,7 +1143,7 @@ public unsafe sealed partial class ParryModule
     {
         if (!_runtime.ParryWindowActive) return "Closed";
 
-        float elapsedSeconds = Math.Max(_runtime.ParryWindowElapsedSeconds, 0f);
+        float elapsedSeconds = ParryDifficultyModel.TicksToSeconds(Math.Max(_runtime.ParryWindowElapsedTicks, 0));
         return $"Open (lifecycle, elapsed {elapsedSeconds:F2}s)";
     }
 
@@ -1772,279 +1608,6 @@ public unsafe sealed partial class ParryModule
         return !string.IsNullOrWhiteSpace(name);
     }
 
-    /// <summary>
-    ///     Read-only diagnostic: logs each permanent party character's
-    ///     <c>limit_modes_obtained</c> bitmask (and the adjacent
-    ///     <c>limit_mode_index</c>) so the derived <see cref="ExternalMemoryOffsetMap.SaveData"/>
-    ///     offsets can be checked against the in-game Overdrive menu before any
-    ///     write is considered.
-    ///
-    ///     <para>
-    ///         Reads only — no writes anywhere. Each per-character read is wrapped so
-    ///         a bad address logs a warning instead of taking down the game. Fires at
-    ///         most once per process via <see cref="_saveDataOverdriveProbeFired"/>.
-    ///         Bounded to the seven permanent playable members (char ids 0..6, the
-    ///         set the mod already names) rather than the full name table, because
-    ///         the <c>PlySave</c> array length past those entries is not verified and
-    ///         a wrong stride would read unrelated memory.
-    ///     </para>
-    /// </summary>
-    private void log_overdrive_modes_probe_once()
-    {
-        if (_saveDataOverdriveProbeFired) return;
-        _saveDataOverdriveProbeFired = true;
-
-        if (!_optionLogging) return;
-
-        // char ids 0..6: Tidus, Yuna, Auron, Kimahri, Wakka, Lulu, Rikku.
-        const int probeCharCount = 7;
-
-        log_debug("[SaveProbe] Reading limit_modes_obtained (read-only; offsets DERIVED, verify vs Overdrive menu).");
-
-        // Accumulates every character's learn counters so the closing summary line can
-        // report min/median/max over the learnable ones (excludes learned=0 and n/a=0xFFFF).
-        var allCounters = new List<short>(probeCharCount * ExternalMemoryOffsetMap.SaveData.LimitModeCounterCount);
-
-        for (int charId = 0; charId < probeCharCount; charId++)
-        {
-            string name = try_map_party_chr_id_to_name(charId, out string resolved) ? resolved : "?";
-            try
-            {
-                int entryRva = ExternalMemoryOffsetMap.SaveData.PlyArr0
-                             + charId * ExternalMemoryOffsetMap.SaveData.PlySaveStride;
-
-                uint* maskPtr  = FhUtil.ptr_at<uint>(entryRva + ExternalMemoryOffsetMap.SaveData.LimitModesObtained);
-                byte* indexPtr = FhUtil.ptr_at<byte>(entryRva + ExternalMemoryOffsetMap.SaveData.LimitModeIndex);
-
-                if (maskPtr == null || indexPtr == null)
-                {
-                    log_debug($"[SaveProbe] slot {charId} ({name}) — null pointer from ptr_at, read skipped.");
-                    continue;
-                }
-
-                uint mask = *maskPtr;
-                byte index = *indexPtr;
-
-                log_debug(
-                    $"[SaveProbe] slot {charId} ({name}) limit_modes_obtained=0x{mask:X8} "
-                    + $"set_bits=[{OverdriveMaskFormatter.FormatSetBits(mask)}] limit_mode_index={index}");
-
-                // limit_mode_counters: 20 shorts, each a per-mode learn countdown (start
-                // value was the threshold, decrements per qualifying event). Read as short,
-                // never written. 0 = learned, 0xFFFF (-1) = the character can never learn it.
-                short* countersPtr = FhUtil.ptr_at<short>(entryRva + ExternalMemoryOffsetMap.SaveData.LimitModeCounters);
-                if (countersPtr == null)
-                {
-                    log_debug($"[SaveProbe] slot {charId} ({name}) counters — null pointer from ptr_at, read skipped.");
-                    continue;
-                }
-
-                var counterLine = new StringBuilder($"[SaveProbe] slot {charId} ({name}) counters:");
-                for (int mode = 0; mode < ExternalMemoryOffsetMap.SaveData.LimitModeCounterCount; mode++)
-                {
-                    short raw = countersPtr[mode];
-                    allCounters.Add(raw);
-                    counterLine.Append(' ')
-                        .Append(OverdriveCounterFormatter.ModeName(mode))
-                        .Append('=')
-                        .Append(OverdriveCounterFormatter.FormatValue(raw));
-                }
-
-                log_debug(counterLine.ToString());
-            }
-            catch (Exception ex)
-            {
-                log_debug($"[SaveProbe] slot {charId} ({name}) — read failed: {ex.GetType().Name}: {ex.Message}");
-            }
-        }
-
-        // One summary line: min/median/max across all characters' learnable counters — the
-        // number the custom "learn by parrying N times" mode will be calibrated against.
-        if (OverdriveCounterFormatter.TryComputeStats(allCounters, out int min, out double median, out int max))
-        {
-            log_debug(
-                $"[SaveProbe] counter stats (learnable only, excludes learned=0 and n/a=0xFFFF): "
-                + $"min={min} median={median.ToString("0.#", CultureInfo.InvariantCulture)} max={max} "
-                + $"over {allCounters.Count} slots read.");
-        }
-        else
-        {
-            log_debug("[SaveProbe] counter stats: no learnable counters observed (all learned or n/a).");
-        }
-    }
-
-    // ── Custom-overdrive "learn by parrying" (unconditional feature of the mod) ──
-    //
-    // The custom overdrive mode (index 0x11 / bit 17) is learned the way FFX teaches its own
-    // modes: a per-character learn countdown in limit_mode_counters[0x11] that decrements per
-    // successful parry and grants the mode (sets bit 17) when it reaches zero. The pure decision
-    // policy lives in OverdriveLearnPolicy; this file is the save_ram I/O boundary.
-    //
-    // THIS WRITES INTO save_ram. Every write below goes into the live PlySave block: init writes
-    // the per-character learn counter, counting decrements it, and the grant sets bit 17 of
-    // limit_modes_obtained. If the player saves the game afterwards, the learn progress AND the
-    // eventual unlock become permanent in that save file. This is intentional and always on.
-    //
-    // Char id set: 0..6 (Tidus, Yuna, Auron, Kimahri, Wakka, Lulu, Rikku) — the permanent
-    // playable members, exactly the set the read-only SaveProbe enumerates. Summoned aeons
-    // (chr_id >= 8) are skipped: they never appear in this counter path and the PlySave stride
-    // past char 6 is not live-verified.
-    //
-    // Safety discipline:
-    //   - Every read/write goes through FhUtil.ptr_at<T> with offset-map constants (rule §9), and
-    //     is null-checked (try_get_overdrive_learn_slots) and bounds-checked before any write —
-    //     these checks, not an opt-in setting, are what keep a bad offset off the player's save.
-    //   - Never-zero-while-unset invariant: a grant sets bit 17 FIRST, then writes the counter
-    //     to 0. Initialisation never writes 0. Counting never bare-decrements to 0.
-    //   - Per-character try/catch: a failure logs a warning and cannot take down the game.
-    private const int OverdriveLearnCharCount = 7;
-
-    // Initialisation, at the battle-begin edge. Applies OverdriveLearnPolicy.DecideInitialisation
-    // per character: arms an uninitialised (0xFFFF) or out-of-range counter to the threshold,
-    // repairs the unsafe (counter 0 / bit unset) state with a warning, and leaves in-progress and
-    // already-learned characters untouched.
-    private void apply_overdrive_learning_init()
-    {
-        for (int charId = 0; charId < OverdriveLearnCharCount; charId++)
-        {
-            string name = try_map_party_chr_id_to_name(charId, out string resolved) ? resolved : "?";
-            try
-            {
-                if (!try_get_overdrive_learn_slots(charId, out uint* maskPtr, out short* counterPtr))
-                {
-                    _logger.Warning($"[OverdriveLearn] slot {charId} ({name}) — null pointer from ptr_at, init skipped.");
-                    continue;
-                }
-
-                bool bitSet = ((*maskPtr) & (1u << ExternalMemoryOffsetMap.SaveData.CustomOverdriveModeIndex)) != 0;
-                short counter = *counterPtr;
-
-                OverdriveLearnPolicy.InitDecision decision = OverdriveLearnPolicy.DecideInitialisation(counter, bitSet);
-                switch (decision.Action)
-                {
-                    case OverdriveLearnPolicy.InitAction.Initialise:
-                        *counterPtr = decision.WriteValue;
-                        if (_optionLogging)
-                            log_debug($"[OverdriveLearn] init slot {charId} ({name}) counter {counter} -> {decision.WriteValue} ({decision.Reason}).");
-                        break;
-
-                    case OverdriveLearnPolicy.InitAction.InitialiseWithWarning:
-                        *counterPtr = decision.WriteValue;
-                        _logger.Warning($"[OverdriveLearn] slot {charId} ({name}) — {decision.Reason} (counter {counter} -> {decision.WriteValue}).");
-                        if (_optionLogging)
-                            log_debug($"[OverdriveLearn] init slot {charId} ({name}) counter {counter} -> {decision.WriteValue} (WARN: {decision.Reason}).");
-                        break;
-
-                    default:
-                        // NothingToDo / LeaveInProgress — no write.
-                        if (_optionLogging)
-                            log_debug($"[OverdriveLearn] init slot {charId} ({name}) — no change ({decision.Reason}).");
-                        break;
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.Warning($"[OverdriveLearn] slot {charId} ({name}) — init failed: {ex.GetType().Name}: {ex.Message}");
-            }
-        }
-    }
-
-    // Counting. Called once per enemy action window (cue-clear), reading the durable
-    // LastParriedTargetMask BEFORE it is cleared, so a multi-hit attack the player parries counts
-    // exactly once per character — matching the native counters, which are de-bounced to at most
-    // one decrement per action window. A perfect dodge never sets this mask, so dodges are
-    // excluded automatically (they charge the mode later, but do not teach it). Enemy attackers
-    // and non-party slots are never in this party mask.
-    private void resolve_overdrive_learning_at_cue_clear(uint parriedMask)
-    {
-        if (parriedMask == 0) return;
-
-        Chr* party = _battleAdapter.GetPlayerCharacters();
-        if (party == null) return;
-
-        uint mask = parriedMask & PlayerTargetMask;
-        while (mask != 0)
-        {
-            int slot = BitOperations.TrailingZeroCount(mask);
-            mask &= mask - 1;
-
-            Chr* chr = party + slot;
-            if (chr == null || !chr->stat_exist_flag) continue;
-
-            // Map the battle slot to the character TEMPLATE id (chr_id @0xE), which indexes the
-            // PlySave array — NOT the slot/id field @0xC. Only the permanent members 0..6 learn.
-            int charId = chr->chr_id;
-            if (charId < 0 || charId >= OverdriveLearnCharCount) continue;
-
-            count_overdrive_parry_for_char(charId, slot);
-        }
-    }
-
-    // Applies one de-bounced successful parry to a character's counter[0x11] via
-    // OverdriveLearnPolicy.DecideParry. The grant path sets bit 17 first, then writes the counter
-    // to 0 — the write ordering the never-zero-while-unset invariant depends on.
-    private void count_overdrive_parry_for_char(int charId, int slot)
-    {
-        string name = try_map_party_chr_id_to_name(charId, out string resolved) ? resolved : "?";
-        try
-        {
-            if (!try_get_overdrive_learn_slots(charId, out uint* maskPtr, out short* counterPtr))
-            {
-                _logger.Warning($"[OverdriveLearn] slot {charId} ({name}) — null pointer from ptr_at, parry count skipped.");
-                return;
-            }
-
-            bool bitSet = ((*maskPtr) & (1u << ExternalMemoryOffsetMap.SaveData.CustomOverdriveModeIndex)) != 0;
-            short counter = *counterPtr;
-
-            OverdriveLearnPolicy.ParryDecision decision = OverdriveLearnPolicy.DecideParry(counter, bitSet);
-            switch (decision.Action)
-            {
-                case OverdriveLearnPolicy.ParryAction.Grant:
-                    // Order is load-bearing: bit 17 FIRST, then counter 0. Reversing it opens the
-                    // window where MsLimitTypeProcess sees counter 0 with the bit unset and grants
-                    // the mode incidentally.
-                    *maskPtr = OverdriveMaskFormatter.WithModeBitSet(*maskPtr, ExternalMemoryOffsetMap.SaveData.CustomOverdriveModeIndex);
-                    *counterPtr = decision.WriteCounterValue; // 0
-                    if (_optionLogging)
-                        log_debug($"[OverdriveLearn] GRANT slot {charId} ({name}) via {format_actor_slot((byte)slot)} — bit 17 set, counter -> 0 ({decision.Reason}).");
-                    break;
-
-                case OverdriveLearnPolicy.ParryAction.Decrement:
-                    *counterPtr = decision.WriteCounterValue;
-                    if (_optionLogging)
-                        log_debug($"[OverdriveLearn] decrement slot {charId} ({name}) via {format_actor_slot((byte)slot)} — counter {counter} -> {decision.WriteCounterValue} ({decision.WriteCounterValue} remaining).");
-                    break;
-
-                default:
-                    // AlreadyLearned / NotLearnable — no write.
-                    if (_optionLogging)
-                        log_debug($"[OverdriveLearn] slot {charId} ({name}) — no change ({decision.Reason}).");
-                    break;
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger.Warning($"[OverdriveLearn] slot {charId} ({name}) — parry count failed: {ex.GetType().Name}: {ex.Message}");
-        }
-    }
-
-    // Resolves the mask + counter[0x11] pointers for one character's PlySave entry. Both go
-    // through FhUtil.ptr_at<T> with offset-map constants (rule §9). counter[0x11] address:
-    //   PlyArr0 + charId*PlySaveStride + LimitModeCounters (0x60) + 0x11*2 (0x22) = entry + 0x82.
-    private bool try_get_overdrive_learn_slots(int charId, out uint* maskPtr, out short* counterPtr)
-    {
-        int entryRva = ExternalMemoryOffsetMap.SaveData.PlyArr0
-                     + charId * ExternalMemoryOffsetMap.SaveData.PlySaveStride;
-
-        maskPtr = FhUtil.ptr_at<uint>(entryRva + ExternalMemoryOffsetMap.SaveData.LimitModesObtained);
-        short* countersBase = FhUtil.ptr_at<short>(entryRva + ExternalMemoryOffsetMap.SaveData.LimitModeCounters);
-        counterPtr = countersBase != null
-            ? countersBase + ExternalMemoryOffsetMap.SaveData.CustomOverdriveModeIndex
-            : null;
-
-        return maskPtr != null && counterPtr != null;
-    }
 
     private static uint extract_non_party_target_mask(AttackCue cue)
     {

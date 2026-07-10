@@ -13,7 +13,6 @@ public unsafe sealed partial class ParryModule : FhModule
     private const float FrameDurationSeconds = 1f / BattleFrameRate;
     private const float ParriedTextSeconds = 1.0f;
     private const float ParryMissedTextSeconds = 1.0f;
-    private const float OverdriveBoostPercent = 0.05f;
     // Number of consecutive parries on a single slot at which the observe-only
     // streak path emits a "STREAK READY" log entry. Tuning point for the future
     // counter-attack feature; kept const for now so the threshold is one obvious
@@ -29,6 +28,12 @@ public unsafe sealed partial class ParryModule : FhModule
     // param_3 = 0 for setup/target calls, 0x400 (1024) for finalization (triggers MsAfterDamageProcess)
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate int MsSetDamageProbe(byte param_1, int param_2, int param_3);
+
+    // MsExeInputCue — `void ()`, __cdecl. Carried locally rather than using
+    // FhFfx.FhCall.MsExeInputCue: upstream is prefixing every generated delegate with
+    // `d_` ahead of alpha11, and this mod no longer depends on the FhCall surface at all.
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate void MsExeInputCueProbe();
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate void MsDamageSetMotionProbe(byte target, int p2, int p3);
@@ -84,6 +89,29 @@ public unsafe sealed partial class ParryModule : FhModule
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate void MsBattleSpecialCameraPauseProbe(byte mode);
 
+    // FUN_007bad30 — the actor-relative polar camera writer shared by all six
+    // camSetBtlPolar/refSetBtlPolar/camSetChrPolar variants. Observe-only: this is
+    // where a monster attack script actually moves the camera, so the probe tells us
+    // which opcode drives a given pan. The six script floats live on the ATEL stack,
+    // not in the parameter list — `isCam` and `variant` are the wrapper constants and
+    // identify the opcode on their own. See ExternalMemoryOffsetMap.AtelCameraPolarSet.
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate int AtelCameraPolarSetProbe(int worker, int p2, int stack, int isCam, int variant);
+
+    // FUN_007bb620 — the absolute-position sibling, behind camSetPos. Observe-only.
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate void AtelCameraPosSetProbe(int worker, int p2, int stack, int p4);
+
+    // ATEL stack pops, called (not hooked) to balance the stack when a camera writer is suppressed.
+    // `size` is at offset 0 of AtelStack, so the same pointer serves the float pop's int* and the
+    // int pop's AtelStack*. Cached (see _popStackFloat/_popStackInteger) because the writers fire
+    // many times per frame and get_fptr allocates a delegate each call.
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate float AtelPopStackFloatFn(int worker, int stack);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate int AtelPopStackIntegerFn(int worker, int stack);
+
     // MsBtlSetHitEffect — engine's registered-hit-effect emitter (global handle).
     // Used directly (no hook) on parry success to fire the Sentinel barrier
     // visual (effect 0x4A) on the parrying character. Routes through the global
@@ -100,10 +128,18 @@ public unsafe sealed partial class ParryModule : FhModule
     private delegate void MsScreenSetShakeProbe(
         uint screen_id, uint axis_mask, uint mode, float freq, uint duration, uint amplitude, uint randomness);
 
-    // MsSetMotion — battler motion setter. Safe call shape (engine's own Defend code):
-    // MsSetMotion(slot, motion_id, 0, 0, 1, 0, 0). Used by the FX/Motion lab to preview poses.
+    // MsSetMotion — battler motion setter. It enqueues an ATEL motion script onto the actor's own
+    // execspace (slot+5) plus a shared control execspace (3); different actors therefore animate in
+    // parallel, and a second call on the same actor *restarts* its script rather than queueing.
+    //
+    // The 3rd parameter is NOT a chr_id. Ghidra names it that only because MsDamageSetMotion happens
+    // to pass its own chr_id through; MsSetMotion merely tests it against zero (FFX.exe.c:857945):
+    //   != 0  -> "hold": writes field_0xdf2 and holds field_0x432 (motion-active) until MsTerminateMotion
+    //   == 0  -> clears field_0x432 again at the tail
+    // The engine's Defend code passes 0 (a guard brace should not make anyone wait); the native
+    // damage reaction passes non-zero. We inherited the 0 from the Defend call shape.
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    private delegate int MsSetMotionProbe(int slot, int motion_id, int chr_id, byte p4, int p5, int p6, int p7);
+    private delegate int MsSetMotionProbe(int slot, int motion_id, int hold_motion_active, byte p4, int p5, int p6, int p7);
 
     // MsSetChrVisible(slot, visible) — re-show a battler model hidden by a status/death effect.
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -135,7 +171,7 @@ public unsafe sealed partial class ParryModule : FhModule
     // the manual dodge system replaces it. RNG state is preserved by always
     // invoking the original first; only the return value is overridden.
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    private delegate int MsDmgCalcCheckHitProbe(Chr* user, Chr* target, void* command, void* info, int counter);
+    private delegate int MsDmgCalcCheckHitProbe(Chr* user, Chr* target, Command* command, void* info, int counter);
 
     private enum CommandIdSource
     {
@@ -237,13 +273,13 @@ public unsafe sealed partial class ParryModule : FhModule
         public byte CurrentCueIndex;
         public uint CurrentPartyTargetMask;
         public uint CurrentCueSignature;
-        public float ParryWindowRemainingSeconds;
-        // Whiff recovery lockout: countdown that approximates the "return to normal
-        // stance" animation commitment. Non-zero only while InputState == WhiffLockout.
-        public float WhiffLockoutRemainingSeconds;
-        public float WhiffLockoutTotalSeconds;
+        public int ParryWindowRemainingTicks;
+        // Whiff recovery lockout: countdown (in battle ticks) that approximates the "return to
+        // normal stance" animation commitment. Non-zero only while InputState == WhiffLockout.
+        public int WhiffLockoutRemainingTicks;
+        public int WhiffLockoutTotalTicks;
         public bool AwaitingTurnEnd;
-        public float ParryWindowElapsedSeconds;
+        public int ParryWindowElapsedTicks;
         public bool ParryWindowSucceeded;
         public bool SuccessIndicatorActive;
 
@@ -291,16 +327,10 @@ public unsafe sealed partial class ParryModule : FhModule
 #else
         false;
 #endif
-    private bool _optionOverdriveBoost = true;
     // Not a toggle: damage negation IS the mod. With it off a successful parry does nothing,
     // which is what the "enabled" master switch is for. Kept as a named constant so the guard
     // sites keep documenting where negation applies.
     private const bool _optionNegateDamage = true;
-    // Enables the animation-approximated whiff recovery lockout. When disabled, a
-    // whiffed window transitions straight back to Ready with no commitment penalty.
-    // Persisted as "penalty" for settings backward compatibility; see
-    // TIERED_PENALTY_RATIONALE.md (retired) for the historical name.
-    private bool _optionWhiffLockout = true;
     // Native-engine probe channel. When false (default), probe queue is inert
     // and no native-probe events are recorded. When true, probe-tagged events
     // are pushed onto _probeRingBuffer during hook execution and drained once
@@ -314,22 +344,22 @@ public unsafe sealed partial class ParryModule : FhModule
     // (install_stage1_probes) that are a separate research feature and crash at battle start when
     // untested. Camera/overlay debugging does NOT need this — use _optionCameraProbe + logging.
     private bool _optionNativeProbeLogging = false;
-    // Controls which turns trigger battle-camera suppression. EnemyTurnsOnly (default)
-    // preserves the prior bool-true behaviour. AllTurns extends suppression to all
-    // AwaitingTurnEnd windows. Off passes every call through to the engine unchanged.
-    // MsBattleSpecialCameraPause (cinematic path) is never touched by any mode.
+    // Controls which turns trigger battle-camera suppression. Off passes every call through to
+    // the engine unchanged.
+    //
+    // AllTurns is the default, because EnemyTurnsOnly leaves the two pans that hurt most. The
+    // camera-writer probe shows why: across three logged fights, not one cam*/ref* opcode ever
+    // fired while an enemy action was in flight — every write landed at turn_active=False. The
+    // pans a player actually complains about are a finishing blow (the player's own turn) and an
+    // item-use swing, and both are invisible to a lock that only watches enemy turns. You cannot
+    // time an attack you are not looking at.
     private enum BattleCameraLockMode
     {
         Off = 0,
         EnemyTurnsOnly = 1,
         AllTurns = 2,
     }
-    private BattleCameraLockMode _optionBattleCameraLockMode = BattleCameraLockMode.EnemyTurnsOnly;
-    // Splits MsAtelRequestMagicCamera out of the Battle Camera Lock so it can be switched off on
-    // its own. Enemy spell casts route their camera through that function; suppressing it without
-    // calling orig is suspected of also swallowing the spell VFX. Default true keeps the previous
-    // behaviour, so this is a measurement switch, not a fix.
-    private bool _optionMagicCameraLock = true;
+    private BattleCameraLockMode _optionBattleCameraLockMode = BattleCameraLockMode.AllTurns;
     // Visual feedback effect on a successful parry: fires the Sentinel barrier
     // visual (effect 0x4A — golden ring / shield-of-air spatial particle) on
     // the parrying character via the global-handle emitter MsBtlSetHitEffect
@@ -338,6 +368,23 @@ public unsafe sealed partial class ParryModule : FhModule
     // FUN_0079E530). Default-on.
     private bool _optionParryEffect = true;
 
+    // Deterministic motion termination for the dodge. The dodge's ATEL motion script is restarted by
+    // every press and, left alone, only ends when it runs out — which is why spamming the button used
+    // to stall the enemy's charging cast. Instead of swallowing presses, we guarantee that every dodge
+    // *terminates*: on a new press (clean restart), on the resolving hit, and on window expiry.
+    //
+    // MsEffectEndMotion is the engine's own end-of-motion entry. It is a NO-OP unless the ATEL worker
+    // has actually started the motion, which it signals by setting Chr+0x3f3 (motion-disable) — so we
+    // gate on that byte rather than guessing.
+    private const int ChrMotionDisableOffset = 0x3f3;
+
+    // MsEffectEndMotion's `mode`: 3 issues the return-to-idle motion but SKIPS MsSetChrMoveFlag(chr,0)
+    // (FFX.exe.c:827958). That matters because motion != move: the step-out and walk-back are driven by
+    // the move machine (Chr+0x415), not by the animation. Mode 3 should end the animation while leaving
+    // the walk-back running; mode 0 would clear the move flag and risk stranding the actor. Untested —
+    // this const exists so both can be compared in-game.
+    private const int DodgeEndMotionMode = 3;
+
     // Impact screen shake: fire the engine's own decaying screen shake when a hit is *met* —
     // on a successful parry, and only there. Every dodge avoids the hit, PERFECT included; PERFECT
     // merely reports that the dodge landed inside the parry window. Do NOT read
@@ -345,16 +392,36 @@ public unsafe sealed partial class ParryModule : FhModule
     // hit" — it groups them by timing readability, not by impact. Default-on.
     private bool _optionImpactShake = true;
 
-    // Shake parameters, passed straight to MsScreenSetShake. Chosen by reasoning about the
-    // evaluator (offset = sin(phase) * amplitude * jitter * remaining/total), NOT measured:
-    // these are a starting point to tune in-game, not recovered vanilla values.
+    // Shake parameters for MsScreenSetShake. The engine evaluates, per axis:
+    //   offset = sin(phase) * amplitude * (32 + jitter)/32 * (remaining/total)
+    // with `phase += freq` once per frame and per-axis phase/freq slots (+0x13C/+0x144 and
+    // +0x140/+0x148). Both phases start at 0, so firing ONE call with axis_mask = 3 gives both axes
+    // the same phase, frequency and amplitude — the offset then traces a straight 45° line, not a
+    // shake. That is the bug the first version shipped; it read as "very vertical, both-sided".
+    //
+    // We therefore fire the two axes SEPARATELY with decorrelated frequencies. The shape of the
+    // values follows standard game-feel practice for an impact shake (Squirrel Eiserloh, GDC 2016,
+    // "Juicing Your Cameras With Math"): short, high-frequency, low-amplitude, decaying, with
+    // independent axes. Cinemachine's default impulse is likewise ~0.2 s.
+    //
+    // Converting to this engine: Hz = freq * 30 / (2*PI) at the 30 fps battle tick, and Nyquist caps
+    // us at 15 Hz — so the usual 10-20 Hz impact band has to sit at its lower edge.
     private const uint ImpactShakeScreenId   = 0;      // screen_id must be < 3
-    private const uint ImpactShakeAxisMask   = 3;      // both axes
+    private const uint ImpactShakeAxisA      = 1;      // axis_mask bit 0
+    private const uint ImpactShakeAxisB      = 2;      // axis_mask bit 1
     private const uint ImpactShakeModeDecay  = 1;      // envelope = remaining/total → fades out
-    private const float ImpactShakeFrequency = 0.9f;   // phase step per frame (~7 frames/cycle)
-    private const uint ImpactShakeDuration   = 10;     // ticks; battle runs at 30 fps → ~0.33 s
-    private const uint ImpactShakeAmplitude  = 8;
-    private const uint ImpactShakeRandomness = 8;      // jitter ±4 around the amplitude
+
+    private const float ImpactShakeFreqA     = 1.7f;   // ~8.1 Hz
+    private const float ImpactShakeFreqB     = 2.3f;   // ~11.0 Hz — ratio 1.35, so the axes never relock
+    private const uint ImpactShakeAmpA       = 9;      // a parry is a lateral impact: favour one axis
+    private const uint ImpactShakeAmpB       = 5;
+    private const uint ImpactShakeDuration   = 12;     // ticks at 30 fps ≈ 0.40 s — a single-slot parry (fires often; kept snappy)
+    private const uint ImpactShakeRandomness = 8;      // the engine's own jitter: ±4 around the amplitude
+
+    // A whole-party parry (all three active PCs parried the same attack) fires a longer, heavier
+    // shake to sell the moment. 24 ticks ≈ 0.80 s — double the single-parry shake.
+    private const uint ImpactShakeDurationWholeParty = 24;  // ticks @30fps ≈ 0.80 s
+    private const int FullPartyParryCount = 3;
 
     // Streak counter attack: when a slot completes a defensive streak (every
     // targeted slot in a cue parried at least once and cumulative streak ≥
@@ -380,6 +447,10 @@ public unsafe sealed partial class ParryModule : FhModule
     private long _enemyCameraLockSuppressCount;
     private int _enemyMagicCameraLockSuppressCount = 0;
     private int _battleSpecialCameraLockSuppressCount = 0;
+    private long _cameraWriterSuppressCount;
+    // Cached ATEL stack-pop function pointers, resolved once on first camera-writer suppression.
+    private AtelPopStackFloatFn? _popStackFloat;
+    private AtelPopStackIntegerFn? _popStackInteger;
     // CheckHitResult enum auto-discovery. The enum has 3 members (HIT/MISS/MISS_ALIVE)
     // but the integer values weren't exported by Ghidra's datatype dumper. We learn
     // them by observation:
@@ -392,7 +463,6 @@ public unsafe sealed partial class ParryModule : FhModule
     // Settings file may also pre-seed these via persisted values (set by the user
     // after observing logs). Default null = unknown.
     private int? _checkHitHitValue = null;
-    private int? _checkHitMissValue = null;
     private int _checkHitConsecutiveSameCount = 0;
     private int? _checkHitFirstObservedValue = null;
     private long _checkHitOverrideCount = 0;
@@ -407,7 +477,11 @@ public unsafe sealed partial class ParryModule : FhModule
     // path (no counterattack). The engine drives the return/walk-back.
     private bool _optionDodgeEnabled = true;
     private bool _dodgeWindowActive = false;
-    private float _dodgeWindowRemainingSeconds = 0f;
+    private int _dodgeWindowRemainingTicks = 0;
+    // Ticks left before another step-out is accepted. Armed from the difficulty model after a
+    // successful one; zero on Debug. Counts down in on_pre_update, unconditionally — a cooldown
+    // that only ran while a cue was live would not survive the gap between two enemy actions.
+    private int _dodgeCooldownRemainingTicks = 0;
     private byte _dodgeArmedAttackerId = 0;
     // CueFirstSeenFrame of the attack the dodge was armed for — the negation only applies to THIS
     // attack instance, so a multi-hit of the same attack is fully dodged but a fresh attack from
@@ -445,25 +519,8 @@ public unsafe sealed partial class ParryModule : FhModule
     // step-out away from that attacker. Never read from C code — only written there.
     private const int ChrLastAttackerIdOffset = 0xdef;
     private const int EvadeMotionId = 0xC;
-    private const float DodgeWindowMsNormal = 350f;   // release default (parry Normal = 200ms)
-    private const float DodgeWindowMsDebug  = 800f;    // DEBUG default — generous for testing
-    private const float DodgeWindowMsMin = 100f;
-    private const float DodgeWindowMsMax = 1200f;
-    // Adjustable at runtime via the "dodge_window" setting (slider, persisted). Defaults to the
-    // DEBUG window in DEBUG builds, the normal window otherwise.
-    private float _dodgeWindowMs =
-#if DEBUG
-        DodgeWindowMsDebug;
-#else
-        DodgeWindowMsNormal;
-#endif
-    private float DodgeWindowSeconds => _dodgeWindowMs / 1000f;
-    // Dodge whiffout: a short recovery after a step-out before the next one is allowed — paces
-    // multi-press. Adjustable via the "dodge_whiffout" setting (0 = no cooldown).
-    private const float DodgeWhiffoutMsMin = 0f;
-    private const float DodgeWhiffoutMsMax = 2000f;
-    private float _dodgeWhiffoutMs = 0f;
-    private float _dodgeWhiffoutRemainingSeconds = 0f;
+    // The dodge window is armed from ParryDifficultyModel.GetDodgeWindowTicks(_optionDifficulty)
+    // and counts down in battle ticks, once per PreUpdate — same as the parry window.
     // "DODGE" success text overlay (mirrors the parry "PARRIED" overlay), per targeted slot.
     private float _dodgeTextRemainingSeconds = 0f;
     private uint _dodgeTextTargetMask = 0;
@@ -565,16 +622,27 @@ public unsafe sealed partial class ParryModule : FhModule
     private double _simulationClockSeconds;
     private ulong _debugFrameIndex;
     private ulong _debugBattleFrameIndex;
+    private string _debugLogTextBuf = string.Empty;   // rebuilt each frame for the selectable log box
     private bool _debugBattleActive;
     private bool _debugBattleSessionFirstCueSeen;
-    // One-shot guard for the read-only overdrive-mask save probe: fires exactly
-    // once, the first time a live battle context exists in the process.
-    private bool _saveDataOverdriveProbeFired;
     private bool _debugGameSaveLoaded;
     private bool _debugGameplayReady;
-    private bool _debugAutoScroll = true;
-    private bool _debugCueAutoScroll = true;
-    private float _debugCuePanelRatio = 0.50f;
+    private float _debugStatePanelRatio = 0.50f;
+
+    // Overlay window chrome. No title bar — the tab bar is the header, with a collapse caret
+    // pinned to its top-right corner. Collapsed by default, it shows just that square caret at the
+    // same corner. Opacity eases toward opaque only while the mouse is near. Window pos+size are
+    // captured each frame so the caret can be derived from the window's corner and the window
+    // reopens where and how big it was; the prev-rect is what the proximity test reads back.
+    private const float OverlayCaretSize = 16f;
+    private bool _overlayCollapsed = true;
+    private float _overlayBgAlpha = 0.55f;
+    private float _overlayContentAlpha = 1.0f;
+    private Vector2 _overlayWindowPos = new(20f, 20f);
+    private Vector2 _overlayWindowSize = new(420f, 520f);
+    private Vector2 _overlayPrevRectMin = new(20f, 20f);
+    private Vector2 _overlayPrevRectMax = new(20f, 20f);
+    private bool _overlayPositioned;   // set once the full window has been shown; until then the collapsed caret starts in the screen's top-right corner
     private int _debugCueTurnId;
     private string _dataMappingStatus = "No data mappings loaded.";
     private readonly Random _rng = new();
@@ -592,7 +660,7 @@ public unsafe sealed partial class ParryModule : FhModule
     private ImFontPtr _overlayFont;
     private bool _overlayFontsInitialized;
     private bool _overlayFontWarningIssued;
-    private readonly FhMethodHandle<FhFfx.FhCall.MsExeInputCue> _hMsExeInputCue;
+    private readonly FhMethodHandle<MsExeInputCueProbe> _hMsExeInputCue;
     private readonly FhMethodHandle<MsSetDamageProbe> _hMsSetDamage;
     private readonly FhMethodHandle<MsDamageSetMotionProbe> _hMsDamageSetMotion;
     private readonly FhMethodHandle<MsCalcDamageProbe> _hMsCalcDamage;
@@ -602,6 +670,8 @@ public unsafe sealed partial class ParryModule : FhModule
     private readonly FhMethodHandle<MsAtelRequestCameraProbe> _hMsAtelRequestCamera;
     private readonly FhMethodHandle<MsAtelRequestMagicCameraProbe> _hMsAtelRequestMagicCamera;
     private readonly FhMethodHandle<MsBattleSpecialCameraPauseProbe> _hMsBattleSpecialCameraPause;
+    private readonly FhMethodHandle<AtelCameraPolarSetProbe> _hAtelCameraPolarSet;
+    private readonly FhMethodHandle<AtelCameraPosSetProbe> _hAtelCameraPosSet;
     private readonly FhMethodHandle<MsDmgCalcCheckHitProbe> _hMsDmgCalcCheckHit;
     private readonly FhMethodHandle<MsEffectEndMotionProbe> _hMsEffectEndMotion;
     // Frame a motion was last played per party slot (lab Play / parry block), 0 = none.
@@ -623,10 +693,10 @@ public unsafe sealed partial class ParryModule : FhModule
 
     public ParryModule()
     {
-        _hMsExeInputCue = new FhMethodHandle<FhFfx.FhCall.MsExeInputCue>(this, "FFX.exe", FhFfx.FhCall.__addr_MsExeInputCue, h_ms_exe_input_cue);
-        _hMsSetDamage = new FhMethodHandle<MsSetDamageProbe>(this, "FFX.exe", FhFfx.FhCall.__addr_MsSetDamage, h_ms_set_damage);
+        _hMsExeInputCue = new FhMethodHandle<MsExeInputCueProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsExeInputCue, h_ms_exe_input_cue);
+        _hMsSetDamage = new FhMethodHandle<MsSetDamageProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsSetDamage, h_ms_set_damage);
         _hMsDamageSetMotion = new FhMethodHandle<MsDamageSetMotionProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsDamageSetMotion, h_ms_damage_set_motion);
-        _hMsCalcDamage = new FhMethodHandle<MsCalcDamageProbe>(this, "FFX.exe", FhFfx.FhCall.__addr_MsCalcDamage, h_ms_calc_damage);
+        _hMsCalcDamage = new FhMethodHandle<MsCalcDamageProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsCalcDamage, h_ms_calc_damage);
         _hDmgCalcArmored = new FhMethodHandle<DmgCalcArmoredProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.DmgCalcArmored, h_dmg_calc_armored);
         _hMsCalcDamageInternal = new FhMethodHandle<MsCalcDamageInternalProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsCalcDamageInternal, h_ms_calc_damage_internal);
         _hMsSetDamageInternal = new FhMethodHandle<MsSetDamageInternalProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.DiscordCandidates.FnMsSetDamageInternal, h_ms_set_damage_internal);
@@ -635,6 +705,10 @@ public unsafe sealed partial class ParryModule : FhModule
             this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsAtelRequestMagicCamera, h_ms_atel_request_magic_camera);
         _hMsBattleSpecialCameraPause = new FhMethodHandle<MsBattleSpecialCameraPauseProbe>(
             this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsBattleSpecialCameraPause, h_ms_battle_special_camera_pause);
+        _hAtelCameraPolarSet = new FhMethodHandle<AtelCameraPolarSetProbe>(
+            this, "FFX.exe", ExternalMemoryOffsetMap.Functions.AtelCameraPolarSet, h_atel_camera_polar_set); // observe-only: which cam*/ref* opcode moves the camera
+        _hAtelCameraPosSet = new FhMethodHandle<AtelCameraPosSetProbe>(
+            this, "FFX.exe", ExternalMemoryOffsetMap.Functions.AtelCameraPosSet, h_atel_camera_pos_set);     // observe-only: camSetPos path
         _hMsDmgCalcCheckHit = new FhMethodHandle<MsDmgCalcCheckHitProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsDmgCalcCheckHit, h_ms_dmg_calc_check_hit); // MsDmgCalc_CheckHit — accuracy/evasion roll; intercepted to disable native evasion for real PCs
         _hMsEffectEndMotion = new FhMethodHandle<MsEffectEndMotionProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsEffectEndMotion, h_ms_effect_end_motion); // observe-only: measure played-motion durations
 
@@ -643,27 +717,15 @@ public unsafe sealed partial class ParryModule : FhModule
         _hStartupBootFmvSkip       = new FhMethodHandle<StartupFmvSkipPoll>(this, "FFX.exe", StartupOffsets.FmvSkipPoll, h_startup_boot_fmv_skip);
         _hStartupShellExecuteW     = new FhMethodHandle<StartupShellExecuteW>(this, "shell32.dll", "ShellExecuteW", h_startup_shell_execute_w);
 
-        settings = new FhSettingsCategory("fhparry", [
-            new FhSettingCustomRenderer("enabled", render_setting_enabled),
-            new FhSettingCustomRenderer("difficulty", render_setting_difficulty),
-            new FhSettingCustomRenderer("audio", render_setting_audio),
-            new FhSettingCustomRenderer("ctb", render_setting_overdrive_boost),
-            new FhSettingCustomRenderer("penalty", render_setting_penalty),
-            new FhSettingCustomRenderer("battle_camera_lock_mode", render_setting_battle_camera_lock_mode),
-            new FhSettingCustomRenderer("magic_camera_lock", render_setting_magic_camera_lock),
-            new FhSettingCustomRenderer("parry_effect", render_setting_parry_effect),
-            new FhSettingCustomRenderer("impact_shake", render_setting_impact_shake),
-            new FhSettingCustomRenderer("streak_counter", render_setting_streak_counter),
-            new FhSettingCustomRenderer("dodge_window", render_setting_dodge_window),
-            new FhSettingCustomRenderer("dodge_whiffout", render_setting_dodge_whiffout),
-#if DEBUG
-            // Diagnostics — not shipped. Release builds have no UI for these.
-            new FhSettingCustomRenderer("logging", render_setting_logging),
-            new FhSettingCustomRenderer("debug_overlay", render_setting_debug_overlay),
-            new FhSettingCustomRenderer("camera_probe", render_setting_camera_probe),
-#endif
-            new FhSettingCustomRenderer("future", render_setting_future)
-        ]);
+        // No FhSettingsCategory. alpha11 removes FhSettingCustomRenderer and its replacement
+        // surface (FhSettingsCategory / FhSettingText / FhSettingNumber<T>) has no boolean and
+        // no combo type — 15 of our 17 controls have nowhere to live. A mod cannot supply its
+        // own type either: FhSetting.render() is `internal abstract` and InternalsVisibleTo is
+        // granted to the runtime alone.
+        //
+        // So the controls moved into the mod's own window (render_settings_tab, drawn from the
+        // same fhparry.<id>.name/.desc keys). Persistence never depended on Fahrenheit: the mod
+        // has always written its own fhparry.config.json.
     }
 
     public override bool init(FhModContext mod_context, FileStream global_state_file)
@@ -774,6 +836,16 @@ public unsafe sealed partial class ParryModule : FhModule
 
         try
         {
+            _hAtelCameraPolarSet.hook();
+            _hAtelCameraPosSet.hook();
+        }
+        catch (Exception ex)
+        {
+            _logger.Warning($"[Parry] Could not hook the ATEL camera writers (writer probe + hard camera lock unavailable): {ex.Message}");
+        }
+
+        try
+        {
             _hMsEffectEndMotion.hook();
         }
         catch (Exception ex)
@@ -849,40 +921,53 @@ public unsafe sealed partial class ParryModule : FhModule
         // (see clear_awaiting_turn_end / end_parry_window).
         if (_runtime.InputState == ParryInputState.Open && _runtime.ParryWindowActive)
         {
-            _runtime.ParryWindowElapsedSeconds += deltaSeconds;
-            _runtime.ParryWindowRemainingSeconds -= deltaSeconds;
-            if (_runtime.ParryWindowRemainingSeconds <= 0f)
+            _runtime.ParryWindowElapsedTicks++;
+            _runtime.ParryWindowRemainingTicks--;
+            if (_runtime.ParryWindowRemainingTicks <= 0)
             {
                 transition_to_whiff_lockout();
             }
         }
         else if (_runtime.InputState == ParryInputState.WhiffLockout)
         {
-            _runtime.WhiffLockoutRemainingSeconds -= deltaSeconds;
-            if (_runtime.WhiffLockoutRemainingSeconds <= 0f)
+            _runtime.WhiffLockoutRemainingTicks--;
+            if (_runtime.WhiffLockoutRemainingTicks <= 0)
             {
                 transition_whiff_lockout_to_ready();
             }
         }
 
-        // Dodge window tick (independent of the parry state machine). Expires by time; a
+        if (_dodgeCooldownRemainingTicks > 0)
+        {
+            _dodgeCooldownRemainingTicks--;
+        }
+
+        // Dodge window tick (independent of the parry state machine). Expires by tick count; a
         // successful dodge is not "consumed" so a multi-hit / AoE swing is fully evaded.
         if (_dodgeWindowActive)
         {
-            _dodgeWindowRemainingSeconds -= deltaSeconds;
-            if (_dodgeWindowRemainingSeconds <= 0f)
+            _dodgeWindowRemainingTicks--;
+            if (_dodgeWindowRemainingTicks <= 0)
             {
                 _dodgeWindowActive = false;
+
+                // Nothing hit us. End the evade animation deterministically rather than letting it run
+                // out — together with the press-restart and hit paths this guarantees the dodge motion
+                // always terminates, which is what stops a spammed dodge from leaving an actor
+                // permanently "animating" and stalling an enemy's charging cast.
+                uint stepped = _dodgeProbeSlotsMask;
+                while (stepped != 0)
+                {
+                    int slot = BitOperations.TrailingZeroCount(stepped);
+                    stepped &= stepped - 1;
+                    try_end_battle_motion(slot, "window_expired");
+                }
+
                 if (_optionLogging)
                 {
                     log_debug("[Dodge] Window expired without a hit.");
                 }
             }
-        }
-
-        if (_dodgeWhiffoutRemainingSeconds > 0f)
-        {
-            _dodgeWhiffoutRemainingSeconds = MathF.Max(0f, _dodgeWhiffoutRemainingSeconds - deltaSeconds);
         }
 
         if (_dodgeTextRemainingSeconds > 0f)
@@ -931,11 +1016,11 @@ public unsafe sealed partial class ParryModule : FhModule
         _runtime.CurrentCueIndex = 0;
         _runtime.CurrentPartyTargetMask = 0;
         _runtime.CurrentCueSignature = 0;
-        _runtime.ParryWindowRemainingSeconds = 0f;
-        _runtime.WhiffLockoutRemainingSeconds = 0f;
-        _runtime.WhiffLockoutTotalSeconds = 0f;
+        _runtime.ParryWindowRemainingTicks = 0;
+        _runtime.WhiffLockoutRemainingTicks = 0;
+        _runtime.WhiffLockoutTotalTicks = 0;
         _runtime.AwaitingTurnEnd = false;
-        _runtime.ParryWindowElapsedSeconds = 0f;
+        _runtime.ParryWindowElapsedTicks = 0;
         _runtime.ParryWindowSucceeded = false;
         _runtime.SuccessIndicatorActive = false;
         _runtime.LastDispatchConsumedFrame = 0;
@@ -947,7 +1032,8 @@ public unsafe sealed partial class ParryModule : FhModule
         _runtime.WindowOpenTimestampSeconds = 0f;
         _runtime.WindowDurationSecondsAtOpen = 0f;
         _dodgeWindowActive = false;
-        _dodgeWindowRemainingSeconds = 0f;
+        _dodgeWindowRemainingTicks = 0;
+        _dodgeCooldownRemainingTicks = 0;
         _dodgeArmedAttackerId = 0;
         _dodgeArmedCueFrame = 0;
         _dodgeArmedTargetMask = 0;
@@ -1019,23 +1105,23 @@ public unsafe sealed partial class ParryModule : FhModule
 
     private void validate_runtime_state()
     {
-        _runtime.ParryWindowRemainingSeconds = MathF.Max(0f, _runtime.ParryWindowRemainingSeconds);
-        _runtime.ParryWindowElapsedSeconds = MathF.Max(0f, _runtime.ParryWindowElapsedSeconds);
-        _runtime.WhiffLockoutRemainingSeconds = MathF.Max(0f, _runtime.WhiffLockoutRemainingSeconds);
+        _runtime.ParryWindowRemainingTicks = Math.Max(0, _runtime.ParryWindowRemainingTicks);
+        _runtime.ParryWindowElapsedTicks = Math.Max(0, _runtime.ParryWindowElapsedTicks);
+        _runtime.WhiffLockoutRemainingTicks = Math.Max(0, _runtime.WhiffLockoutRemainingTicks);
         _runtime.ParriedTextRemainingSeconds = MathF.Max(0f, _runtime.ParriedTextRemainingSeconds);
         _runtime.ParryMissedTextRemainingSeconds = MathF.Max(0f, _runtime.ParryMissedTextRemainingSeconds);
         _runtime.StatusBlockTextRemainingSeconds = MathF.Max(0f, _runtime.StatusBlockTextRemainingSeconds);
 
-        if (!_runtime.ParryWindowActive && (_runtime.ParryWindowRemainingSeconds > 0f || _runtime.ParryWindowElapsedSeconds > 0f))
+        if (!_runtime.ParryWindowActive && (_runtime.ParryWindowRemainingTicks > 0 || _runtime.ParryWindowElapsedTicks > 0))
         {
-            _runtime.ParryWindowRemainingSeconds = 0f;
-            _runtime.ParryWindowElapsedSeconds = 0f;
+            _runtime.ParryWindowRemainingTicks = 0;
+            _runtime.ParryWindowElapsedTicks = 0;
         }
 
-        if (_runtime.InputState != ParryInputState.WhiffLockout && _runtime.WhiffLockoutRemainingSeconds > 0f)
+        if (_runtime.InputState != ParryInputState.WhiffLockout && _runtime.WhiffLockoutRemainingTicks > 0)
         {
-            _runtime.WhiffLockoutRemainingSeconds = 0f;
-            _runtime.WhiffLockoutTotalSeconds = 0f;
+            _runtime.WhiffLockoutRemainingTicks = 0;
+            _runtime.WhiffLockoutTotalTicks = 0;
         }
 
         if (!_runtime.AwaitingTurnEnd && _runtime.CurrentPartyTargetMask != 0)

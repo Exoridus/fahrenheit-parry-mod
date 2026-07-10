@@ -72,6 +72,57 @@ public static partial class ExternalMemoryOffsetMap
         // (0x7c0650): it sets ms_matrix_flag, FUN_007bc090 then skips the rebuild and the
         // interpreter writes its slot fields back from the same preset — both stay coherent.
 
+        // AtelCameraPolarSet — FUN_007bad30 at FFX.exe+0x3BAD30 (absolute 0x007BAD30).
+        // The actor-relative POLAR camera writer: the single body behind all six of
+        // camSetBtlPolar / refSetBtlPolar / camSetBtlPolar2 / refSetBtlPolar2 /
+        // camSetChrPolar / camSetChrPolar2 (wrappers at 0x007B8690..0x007B8730).
+        //
+        // Signature: int (AtelBasicWorker* worker, int p2, AtelStack* stack, int isCam, int variant) __cdecl
+        //
+        // The six script floats are NOT parameters — they are popped off the ATEL stack
+        // inside (4x AtelPopStackFloat, then 2x AtelPopStackInteger; pops run reverse to
+        // pushes, giving Square Enix's own prototype `(int, int, float, float, float, float)`).
+        // A hook at entry therefore sees only the two wrapper constants, which are enough
+        // to identify the opcode exactly:
+        //     isCam=1 variant=1 -> camSetBtlPolar     isCam=0 variant=1 -> refSetBtlPolar
+        //     isCam=1 variant=2 -> camSetBtlPolar2    isCam=0 variant=2 -> refSetBtlPolar2
+        //     isCam=1 variant=3 -> camSetChrPolar     isCam=1 variant=4 -> camSetChrPolar2
+        //
+        // This — not MsAtelRequestCamera and not FUN_007bddd0 — is where a monster attack
+        // script puts the camera. FUN_007bddd0/FUN_007bd7e0 only write per-axis tween
+        // descriptors (mode, duration, elapsed); gating those makes the camera snap, not stop.
+        public const int AtelCameraPolarSet = 0x003bad30;
+
+        // AtelCameraPosSet — FUN_007bb620 at FFX.exe+0x3BB620 (absolute 0x007BB620).
+        // The absolute-position sibling, behind camSetPos (wrapper 0x007B91A0, passes p4=1).
+        // Signature: void (AtelBasicWorker* worker, int p2, int* stack, int p4) __cdecl.
+        // Same stack discipline: coordinates are popped inside, not passed.
+        public const int AtelCameraPosSet = 0x003bb620;
+
+        // ATEL stack pop primitives — needed to *suppress* a camera writer cleanly. A writer pops
+        // its script args off the ATEL stack inside the callee; skipping the writer without those
+        // pops desyncs the VM. Replicating them (same count, same order, same pop fn per value) keeps
+        // the stack balanced. `size` is at offset 0 of AtelStack, so the AtelStack* doubles as the
+        // int* the float pop wants — one pointer serves both.
+        //   float AtelPopStackFloat  (AtelBasicWorker* worker, int*       ref_size) __cdecl  (decomp L991484)
+        //   int   AtelPopStackInteger(AtelBasicWorker* work,   AtelStack* stack)    __cdecl  (decomp L991522)
+        public const int AtelPopStackFloat   = 0x0046dde0;  // FUN_0086dde0 (absolute 0x0086dde0)
+        public const int AtelPopStackInteger = 0x0046de90;  // FUN_0086de90 (absolute 0x0086de90)
+
+        // Freecam write path. MsCameraSetRect stamps a 4-float vec into a camera bank; param_2 bit 0
+        // selects the eye bank (camSetPos, mode 1) vs the look-at/ref bank (mode 0). It validates the
+        // id via MsCameraIDcheck and no-ops on a bad one, so a stale id cannot crash. camId comes from
+        // the ATEL camera work slot: AtelGetCameraWorkAdrs(worker) returns a pointer whose *value is
+        // the resolved id (0 until the game runs a real camera write).
+        //   void MsCameraSetRect     (uint camId, uint mode, float* vec4) __cdecl  (decomp L874617)
+        //   int  AtelGetCameraWorkAdrs(AtelBasicWorker* worker)           __cdecl  (returns int*)
+        public const int MsCameraSetRect       = 0x003bf8c0;  // FUN_007bf8c0 (absolute 0x007bf8c0)
+        public const int AtelGetCameraWorkAdrs = 0x0046ade0;  // FUN_0086ade0 (absolute 0x0086ade0)
+
+        // int MsGetBattleScene(void) — the current battle scene/map id (e.g. 0xd40000). Tagged onto
+        // a captured freecam angle so a hand-found camera can be pinned to the map it was found on.
+        public const int MsGetBattleScene = 0x00382a30;  // FUN_00782a30 (absolute 0x00782a30)
+
         // MsLimitUp at FFX.exe+0x3B15A0 (absolute 0x007B15A0) — the engine's overdrive charge
         // primitive, and the only correct way to add gauge. Signature (decomp L863356):
         //   uint MsLimitUp(uint chr_id, Chr* chr, uint amount)  __cdecl, returns the applied amount
@@ -203,5 +254,21 @@ public static partial class ExternalMemoryOffsetMap
         // Used by the disable-native-evasion feature to override MISS → HIT for PC
         // targets only (aeons and monsters fall through to vanilla evade).
         public const int MsDmgCalcCheckHit = 0x0038a950;
+
+        // ---------------------------------------------------------------------
+        // Adopted from Fahrenheit's generated `FhFfx.FhCall.__addr_*` constants so the
+        // mod owns every address it hooks. Upstream is renaming the FhCall surface ahead
+        // of alpha11 (`h_METHOD` -> `METHOD`, delegates gain a `d_` prefix); by carrying
+        // these ourselves the rename cannot reach us. Values are byte-identical to
+        // alpha10's call.g.cs.
+        // ---------------------------------------------------------------------
+        public const int MsExeInputCue             = 0x003b22a0;
+        public const int MsSetDamage               = 0x0038da40;
+        public const int MsCalcDamage              = 0x00389800;
+        public const int MsActionRequest           = 0x003acec0;
+        public const int MsCalcCommand             = 0x003893a0;
+        public const int MsCheckStatusBeforeAction = 0x003af500;
+        public const int MsLimitTypeDamageCheck    = 0x003b0d60;
+        public const int OpEtBattleGenkoCounterGet = 0x003fb160;
     }
 }

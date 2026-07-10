@@ -7,8 +7,6 @@ public unsafe sealed partial class ParryModule
         public bool? Enabled { get; set; }
         public bool? Sound { get; set; }
         public bool? Logging { get; set; }
-        public bool? OverdriveBoost { get; set; }
-        public bool? Penalty { get; set; }
         public bool? DebugOverlay { get; set; }
         // Native-engine probe channel (separate from general Logging). Default-off.
         // When true, probe-tagged events are queued into the frame-deferred ring
@@ -16,18 +14,14 @@ public unsafe sealed partial class ParryModule
         // will route through this; the existing logging path is unchanged.
         public bool? NativeProbeLogging { get; set; }
         public string? BattleCameraLockMode { get; set; }  // canonical — human-readable enum name
-        public bool? MagicCameraLock { get; set; }
         public bool? EnemyCameraLock { get; set; }          // legacy — migrated on load, never written
         public bool? ParryEffect { get; set; }
         public bool? ImpactShake { get; set; }
         public bool? StreakCounter { get; set; }
         public bool? DodgeEnabled { get; set; }
         public bool? ParryNativeBlock { get; set; }
-        public float? DodgeWindowMs { get; set; }
-        public float? DodgeWhiffoutMs { get; set; }
         public bool? CameraProbe { get; set; }
         public int? CheckHitHitValue { get; set; }
-        public int? CheckHitMissValue { get; set; }
         public string? Difficulty { get; set; }
     }
 
@@ -37,7 +31,8 @@ public unsafe sealed partial class ParryModule
         WriteIndented = true
     };
 
-    // alpha09's mod_context.Paths.SettingsPath is empty or points at the DEPLOYED MOD FOLDER, which
+    // Through alpha10, mod_context.Paths.SettingsPath is empty or points at the DEPLOYED MOD FOLDER
+    // (alpha10 resolves it to Path.Join(mod_dir, "<mod_name>.config.json")), which
     // `build.cmd deploy` mirrors — anything written there is deleted on the next deploy. We instead
     // use the mod's global-state directory (state/global/<mod>/): the framework hands us a FileStream
     // into it at init, so its directory is a stable home for our files.
@@ -95,10 +90,6 @@ public unsafe sealed partial class ParryModule
             if (persisted.Enabled.HasValue) _optionEnabled = persisted.Enabled.Value;
             if (persisted.Sound.HasValue) _optionSound = persisted.Sound.Value;
             if (persisted.Logging.HasValue) _optionLogging = persisted.Logging.Value;
-            if (persisted.OverdriveBoost.HasValue) _optionOverdriveBoost = persisted.OverdriveBoost.Value;
-            // Persisted as "penalty" for backward compatibility with earlier settings files.
-            // The semantic is now "whiff recovery lockout enabled" (see FINAL_PARRY_SPEC.md).
-            if (persisted.Penalty.HasValue) _optionWhiffLockout = persisted.Penalty.Value;
             if (persisted.DebugOverlay.HasValue) _optionDebugOverlay = persisted.DebugOverlay.Value;
             if (persisted.NativeProbeLogging.HasValue) _optionNativeProbeLogging = persisted.NativeProbeLogging.Value;
             if (persisted.BattleCameraLockMode != null
@@ -116,17 +107,13 @@ public unsafe sealed partial class ParryModule
                     : BattleCameraLockMode.Off;
                 _logger.Info($"[Parry] Migrated legacy EnemyCameraLock={persisted.EnemyCameraLock.Value} → BattleCameraLockMode={_optionBattleCameraLockMode}.");
             }
-            if (persisted.MagicCameraLock.HasValue) _optionMagicCameraLock = persisted.MagicCameraLock.Value;
             if (persisted.ParryEffect.HasValue) _optionParryEffect = persisted.ParryEffect.Value;
             if (persisted.ImpactShake.HasValue) _optionImpactShake = persisted.ImpactShake.Value;
             if (persisted.StreakCounter.HasValue) _optionStreakCounter = persisted.StreakCounter.Value;
             if (persisted.DodgeEnabled.HasValue) _optionDodgeEnabled = persisted.DodgeEnabled.Value;
             if (persisted.ParryNativeBlock.HasValue) _optionParryNativeBlock = persisted.ParryNativeBlock.Value;
-            if (persisted.DodgeWindowMs.HasValue) _dodgeWindowMs = Math.Clamp(persisted.DodgeWindowMs.Value, DodgeWindowMsMin, DodgeWindowMsMax);
-            if (persisted.DodgeWhiffoutMs.HasValue) _dodgeWhiffoutMs = Math.Clamp(persisted.DodgeWhiffoutMs.Value, DodgeWhiffoutMsMin, DodgeWhiffoutMsMax);
             if (persisted.CameraProbe.HasValue) _optionCameraProbe = persisted.CameraProbe.Value;
             if (persisted.CheckHitHitValue.HasValue) _checkHitHitValue = persisted.CheckHitHitValue.Value;
-            if (persisted.CheckHitMissValue.HasValue) _checkHitMissValue = persisted.CheckHitMissValue.Value;
 
             if (ParryDifficultyModel.TryParsePersistedDifficulty(persisted.Difficulty, out ParryDifficulty difficulty))
             {
@@ -164,22 +151,16 @@ public unsafe sealed partial class ParryModule
                 Enabled = _optionEnabled,
                 Sound = _optionSound,
                 Logging = _optionLogging,
-                OverdriveBoost = _optionOverdriveBoost,
-                Penalty = _optionWhiffLockout,
                 DebugOverlay = _optionDebugOverlay,
                 NativeProbeLogging = _optionNativeProbeLogging,
                 BattleCameraLockMode = _optionBattleCameraLockMode.ToString(),
-                MagicCameraLock = _optionMagicCameraLock,
                 ParryEffect = _optionParryEffect,
                 ImpactShake = _optionImpactShake,
                 StreakCounter = _optionStreakCounter,
                 DodgeEnabled = _optionDodgeEnabled,
                 ParryNativeBlock = _optionParryNativeBlock,
-                DodgeWindowMs = _dodgeWindowMs,
-                DodgeWhiffoutMs = _dodgeWhiffoutMs,
                 CameraProbe = _optionCameraProbe,
                 CheckHitHitValue = _checkHitHitValue,
-                CheckHitMissValue = _checkHitMissValue,
                 Difficulty = _optionDifficulty.ToString()
             };
 
