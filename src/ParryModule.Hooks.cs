@@ -1358,10 +1358,10 @@ public unsafe sealed partial class ParryModule
         if (!camera_hard_lock_engaged()) return false;
         if (_battleCameraId == 0) return false;   // let the game's write through so the camera id resolves
 
-        // With a pose of our own to hold (freecam, or an anchor for this encounter) suppress at once.
-        // Otherwise let the game frame the battle for a short grace, then freeze the settled default —
-        // suppressing from frame 1 would instead freeze the pre-battle / uninitialised camera.
-        bool immediate = _freecamActive || (_optionStaticCameraAnchor && _currentEncounterHasAnchor);
+        // With a pose of our own to hold (freecam, or a saved start camera for this encounter)
+        // suppress at once. Otherwise let the game frame the battle for a short grace, then freeze the
+        // settled default — suppressing from frame 1 would instead freeze the pre-battle camera.
+        bool immediate = _freecamActive || _currentEncounterHasAnchor;
         if (!immediate && _cameraSettleSeconds != 0f) return false;
         return true;
     }

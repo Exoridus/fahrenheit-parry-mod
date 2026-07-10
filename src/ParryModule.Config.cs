@@ -23,8 +23,6 @@ public unsafe sealed partial class ParryModule
         public bool? CameraProbe { get; set; }
         public int? CheckHitHitValue { get; set; }
         public string? Difficulty { get; set; }
-        public bool? StaticCameraAnchor { get; set; }
-        public bool? FollowCam { get; set; }
         public List<CameraAnchorEntry>? CameraAnchors { get; set; }
     }
 
@@ -137,8 +135,6 @@ public unsafe sealed partial class ParryModule
                 _optionDifficulty = ParryDifficultyModel.NormalizeDifficulty(_optionDifficulty);
             }
 
-            if (persisted.StaticCameraAnchor.HasValue) _optionStaticCameraAnchor = persisted.StaticCameraAnchor.Value;
-            if (persisted.FollowCam.HasValue) _optionFollowCam = persisted.FollowCam.Value;
             if (persisted.CameraAnchors != null)
             {
                 _cameraAnchors.Clear();
@@ -187,8 +183,6 @@ public unsafe sealed partial class ParryModule
                 CameraProbe = _optionCameraProbe,
                 CheckHitHitValue = _checkHitHitValue,
                 Difficulty = _optionDifficulty.ToString(),
-                StaticCameraAnchor = _optionStaticCameraAnchor,
-                FollowCam = _optionFollowCam,
                 CameraAnchors = _cameraAnchors.Select(kv => new CameraAnchorEntry
                 {
                     Key = kv.Key, PosX = kv.Value.Pos.X, PosY = kv.Value.Pos.Y, PosZ = kv.Value.Pos.Z,
