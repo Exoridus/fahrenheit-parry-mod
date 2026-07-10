@@ -230,5 +230,21 @@ public static partial class ExternalMemoryOffsetMap
         // Used by the disable-native-evasion feature to override MISS → HIT for PC
         // targets only (aeons and monsters fall through to vanilla evade).
         public const int MsDmgCalcCheckHit = 0x0038a950;
+
+        // ---------------------------------------------------------------------
+        // Adopted from Fahrenheit's generated `FhFfx.FhCall.__addr_*` constants so the
+        // mod owns every address it hooks. Upstream is renaming the FhCall surface ahead
+        // of alpha11 (`h_METHOD` -> `METHOD`, delegates gain a `d_` prefix); by carrying
+        // these ourselves the rename cannot reach us. Values are byte-identical to
+        // alpha10's call.g.cs.
+        // ---------------------------------------------------------------------
+        public const int MsExeInputCue             = 0x003b22a0;
+        public const int MsSetDamage               = 0x0038da40;
+        public const int MsCalcDamage              = 0x00389800;
+        public const int MsActionRequest           = 0x003acec0;
+        public const int MsCalcCommand             = 0x003893a0;
+        public const int MsCheckStatusBeforeAction = 0x003af500;
+        public const int MsLimitTypeDamageCheck    = 0x003b0d60;
+        public const int OpEtBattleGenkoCounterGet = 0x003fb160;
     }
 }

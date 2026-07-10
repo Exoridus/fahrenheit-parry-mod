@@ -30,6 +30,12 @@ public unsafe sealed partial class ParryModule : FhModule
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate int MsSetDamageProbe(byte param_1, int param_2, int param_3);
 
+    // MsExeInputCue — `void ()`, __cdecl. Carried locally rather than using
+    // FhFfx.FhCall.MsExeInputCue: upstream is prefixing every generated delegate with
+    // `d_` ahead of alpha11, and this mod no longer depends on the FhCall surface at all.
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate void MsExeInputCueProbe();
+
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate void MsDamageSetMotionProbe(byte target, int p2, int p3);
     // Community-confirmed signature for MsCalcDamage (March 2026 Discord findings).
@@ -661,7 +667,7 @@ public unsafe sealed partial class ParryModule : FhModule
     private ImFontPtr _overlayFont;
     private bool _overlayFontsInitialized;
     private bool _overlayFontWarningIssued;
-    private readonly FhMethodHandle<FhFfx.FhCall.MsExeInputCue> _hMsExeInputCue;
+    private readonly FhMethodHandle<MsExeInputCueProbe> _hMsExeInputCue;
     private readonly FhMethodHandle<MsSetDamageProbe> _hMsSetDamage;
     private readonly FhMethodHandle<MsDamageSetMotionProbe> _hMsDamageSetMotion;
     private readonly FhMethodHandle<MsCalcDamageProbe> _hMsCalcDamage;
@@ -694,10 +700,10 @@ public unsafe sealed partial class ParryModule : FhModule
 
     public ParryModule()
     {
-        _hMsExeInputCue = new FhMethodHandle<FhFfx.FhCall.MsExeInputCue>(this, "FFX.exe", FhFfx.FhCall.__addr_MsExeInputCue, h_ms_exe_input_cue);
-        _hMsSetDamage = new FhMethodHandle<MsSetDamageProbe>(this, "FFX.exe", FhFfx.FhCall.__addr_MsSetDamage, h_ms_set_damage);
+        _hMsExeInputCue = new FhMethodHandle<MsExeInputCueProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsExeInputCue, h_ms_exe_input_cue);
+        _hMsSetDamage = new FhMethodHandle<MsSetDamageProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsSetDamage, h_ms_set_damage);
         _hMsDamageSetMotion = new FhMethodHandle<MsDamageSetMotionProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsDamageSetMotion, h_ms_damage_set_motion);
-        _hMsCalcDamage = new FhMethodHandle<MsCalcDamageProbe>(this, "FFX.exe", FhFfx.FhCall.__addr_MsCalcDamage, h_ms_calc_damage);
+        _hMsCalcDamage = new FhMethodHandle<MsCalcDamageProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsCalcDamage, h_ms_calc_damage);
         _hDmgCalcArmored = new FhMethodHandle<DmgCalcArmoredProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.DmgCalcArmored, h_dmg_calc_armored);
         _hMsCalcDamageInternal = new FhMethodHandle<MsCalcDamageInternalProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsCalcDamageInternal, h_ms_calc_damage_internal);
         _hMsSetDamageInternal = new FhMethodHandle<MsSetDamageInternalProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.DiscordCandidates.FnMsSetDamageInternal, h_ms_set_damage_internal);

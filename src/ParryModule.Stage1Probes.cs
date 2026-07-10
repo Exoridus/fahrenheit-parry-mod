@@ -105,17 +105,17 @@ public unsafe sealed partial class ParryModule
         }
 
         _hStage1MsActionRequest = new FhMethodHandle<MsActionRequestProbeDelegate>(
-            this, "FFX.exe", FhFfx.FhCall.__addr_MsActionRequest, h_stage1_ms_action_request);
+            this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsActionRequest, h_stage1_ms_action_request);
         _hStage1MsCalcCommand = new FhMethodHandle<MsCalcCommandProbeDelegate>(
-            this, "FFX.exe", FhFfx.FhCall.__addr_MsCalcCommand, h_stage1_ms_calc_command);
+            this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsCalcCommand, h_stage1_ms_calc_command);
         _hStage1MsCheckStatusBeforeAction = new FhMethodHandle<MsCheckStatusBeforeActionProbeDelegate>(
-            this, "FFX.exe", FhFfx.FhCall.__addr_MsCheckStatusBeforeAction, h_stage1_ms_check_status_before_action);
+            this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsCheckStatusBeforeAction, h_stage1_ms_check_status_before_action);
         _hStage1MsLimitTypeDamageCheck = new FhMethodHandle<MsLimitTypeDamageCheckProbeDelegate>(
-            this, "FFX.exe", FhFfx.FhCall.__addr_MsLimitTypeDamageCheck, h_stage1_ms_limit_type_damage_check);
+            this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsLimitTypeDamageCheck, h_stage1_ms_limit_type_damage_check);
         _hStage1OpEtBattleGenkoCounterGet = new FhMethodHandle<OpEtBattleGenkoCounterGetProbeDelegate>(
-            this, "FFX.exe", FhFfx.FhCall.__addr_op_et_battle_genko_counter_get, h_stage1_op_et_battle_genko_counter_get);
+            this, "FFX.exe", ExternalMemoryOffsetMap.Functions.OpEtBattleGenkoCounterGet, h_stage1_op_et_battle_genko_counter_get);
         _hStage1MsSetMotion = new FhMethodHandle<MsSetMotionProbeDelegate>(
-            this, "FFX.exe", FhFfx.FhCall.__addr_MsSetMotion, h_stage1_ms_set_motion);
+            this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsSetMotion, h_stage1_ms_set_motion);
 
         try_install_one_stage1_probe(_hStage1MsActionRequest,           "MsActionRequest");
         try_install_one_stage1_probe(_hStage1MsCalcCommand,             "MsCalcCommand");
