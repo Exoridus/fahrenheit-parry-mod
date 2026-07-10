@@ -578,8 +578,12 @@ public unsafe sealed partial class ParryModule
 
         if (is_perfect_dodge())
         {
+            // A perfect dodge is still a DODGE: the hit is avoided, not met. All it shares with a
+            // parry is the *window* — is_perfect_dodge() tests the same difficulty-scaled parry
+            // timing — so the player can see that a parry press would have landed, and ramp up from
+            // the looser dodge window. It gets no impact feedback (no screen shake) and no parry
+            // consequences: the overdrive charge and the counter both bind to a real parry.
             _dodgeTextPerfectMask |= bit;
-            fire_impact_screen_shake("perfect_dodge");
             log_debug($"Perfect dodge for {format_actor_slot((byte)slotIndex)} (inside the parry window).");
         }
     }
@@ -1178,7 +1182,8 @@ public unsafe sealed partial class ParryModule
         }
     }
 
-    // Fires the engine's own screen shake on a hit that was *met* on time (parry / perfect dodge).
+    // Fires the engine's own screen shake when a hit is *met* — i.e. on a successful parry, and
+    // only there. A dodge (perfect or not) avoids the hit, so nothing lands and nothing shakes.
     // MsScreenSetShake stores a decaying envelope (mode 1) and the engine's per-frame applier
     // (FUN_007bc090) runs it down to zero and stops by itself — we fire once and never clean up.
     // ATEL drives this same setter for scripted quakes, so a battle context is a valid caller.

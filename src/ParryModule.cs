@@ -338,9 +338,11 @@ public unsafe sealed partial class ParryModule : FhModule
     // FUN_0079E530). Default-on.
     private bool _optionParryEffect = true;
 
-    // Impact screen shake: fire the engine's own decaying screen shake when a hit is *met* on
-    // time — a parry or a perfect dodge. A plain dodge avoids the hit entirely, so it does not
-    // shake; this mirrors the DODGE / PARRIED+PERFECT split in CombatLabelPalette. Default-on.
+    // Impact screen shake: fire the engine's own decaying screen shake when a hit is *met* —
+    // on a successful parry, and only there. Every dodge avoids the hit, PERFECT included; PERFECT
+    // merely reports that the dodge landed inside the parry window. Do NOT read
+    // CombatLabelPalette.preciseTiming (which tints PARRIED and PERFECT alike) as "both met the
+    // hit" — it groups them by timing readability, not by impact. Default-on.
     private bool _optionImpactShake = true;
 
     // Shake parameters, passed straight to MsScreenSetShake. Chosen by reasoning about the

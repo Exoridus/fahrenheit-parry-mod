@@ -132,8 +132,8 @@ public unsafe sealed partial class ParryModule
     {
         // Each appearance perturbs its entry params a little (per seed + slot) so no two labels
         // land identically. NOTE: this variety is a deliberate style choice, not a substitute for
-        // a screen shake — FFX does have a native one (MsScreenSetShake / ATEL camSetShake), and
-        // the mod now fires it on parry and perfect dodge. See fire_impact_screen_shake.
+        // a screen shake — FFX does have a native one (MsScreenSetShake / ATEL camSetShake), which
+        // the mod fires on a successful parry only. See fire_impact_screen_shake.
         float r0 = hash01(seed, slot, 1);
         float r1 = hash01(seed, slot, 2);
         float r2 = hash01(seed, slot, 3);
