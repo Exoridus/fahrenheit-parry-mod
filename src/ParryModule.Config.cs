@@ -23,17 +23,6 @@ public unsafe sealed partial class ParryModule
         public bool? CameraProbe { get; set; }
         public int? CheckHitHitValue { get; set; }
         public string? Difficulty { get; set; }
-        public List<CameraAnchorEntry>? CameraAnchors { get; set; }
-    }
-
-    private sealed class CameraAnchorEntry
-    {
-        public string? Key { get; set; }
-        public float PosX { get; set; }
-        public float PosY { get; set; }
-        public float PosZ { get; set; }
-        public float Yaw { get; set; }
-        public float Pitch { get; set; }
     }
 
     private static readonly JsonSerializerOptions PersistedSettingsJsonOptions = new()
@@ -134,16 +123,6 @@ public unsafe sealed partial class ParryModule
             {
                 _optionDifficulty = ParryDifficultyModel.NormalizeDifficulty(_optionDifficulty);
             }
-
-            if (persisted.CameraAnchors != null)
-            {
-                _cameraAnchors.Clear();
-                foreach (CameraAnchorEntry e in persisted.CameraAnchors)
-                {
-                    if (!string.IsNullOrWhiteSpace(e.Key))
-                        _cameraAnchors[e.Key] = new AnchorPose(new Vector3(e.PosX, e.PosY, e.PosZ), e.Yaw, e.Pitch);
-                }
-            }
         }
         catch (Exception ex)
         {
@@ -182,12 +161,7 @@ public unsafe sealed partial class ParryModule
                 ParryNativeBlock = _optionParryNativeBlock,
                 CameraProbe = _optionCameraProbe,
                 CheckHitHitValue = _checkHitHitValue,
-                Difficulty = _optionDifficulty.ToString(),
-                CameraAnchors = _cameraAnchors.Select(kv => new CameraAnchorEntry
-                {
-                    Key = kv.Key, PosX = kv.Value.Pos.X, PosY = kv.Value.Pos.Y, PosZ = kv.Value.Pos.Z,
-                    Yaw = kv.Value.Yaw, Pitch = kv.Value.Pitch
-                }).ToList()
+                Difficulty = _optionDifficulty.ToString()
             };
 
             string json = JsonSerializer.Serialize(payload, PersistedSettingsJsonOptions);

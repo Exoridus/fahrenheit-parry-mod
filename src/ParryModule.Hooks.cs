@@ -1360,7 +1360,7 @@ public unsafe sealed partial class ParryModule
     private bool should_hold_camera()
     {
         if (!camera_hard_lock_engaged()) return false;
-        if (_freecamActive || _currentEncounterHasAnchor) return true;
+        if (_freecamActive) return true;
         return _cameraSettleSeconds == 0f;
     }
 

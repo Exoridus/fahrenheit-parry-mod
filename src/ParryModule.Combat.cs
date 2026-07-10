@@ -1307,7 +1307,6 @@ public unsafe sealed partial class ParryModule
         bool wholeParty = BitOperations.PopCount(_runtime.LastParriedTargetMask) >= FullPartyParryCount;
         uint duration = wholeParty ? ImpactShakeDurationWholeParty : ImpactShakeDuration;
         fire_screen_shake_ticks(duration, wholeParty ? $"{source}, whole-party" : source);
-        trigger_zoom_punch(wholeParty);
     }
 
     // Core screen-shake fire for a given duration in ticks. No _optionImpactShake gate — the parry
