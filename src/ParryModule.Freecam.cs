@@ -43,6 +43,34 @@ public unsafe sealed partial class ParryModule
     private Vector3 _followLook;
     private bool _followInit;
 
+    // Zoom-punch: a quick dolly of the eye toward the look-at on a parry, easing back. Value is a
+    // fraction of the eye→target distance; whole-party punches harder, a single parry is subtle.
+    // Only applies while we own the eye (anchor / follow-with-anchor) — not raw freecam.
+    private const float ZoomPunchDuration    = 0.35f;
+    private const float ZoomPunchSingle      = 0.12f;
+    private const float ZoomPunchWholeParty  = 0.30f;
+    private float _zoomPunchRemaining;
+    private float _zoomPunchStrength;
+
+    private void trigger_zoom_punch(bool wholeParty)
+    {
+        _zoomPunchRemaining = ZoomPunchDuration;
+        _zoomPunchStrength  = wholeParty ? ZoomPunchWholeParty : ZoomPunchSingle;
+    }
+
+    private void tick_zoom_punch()
+    {
+        if (_zoomPunchRemaining > 0f)
+            _zoomPunchRemaining = MathF.Max(0f, _zoomPunchRemaining - ImGui.GetIO().DeltaTime);
+    }
+
+    private float zoom_punch_factor()
+    {
+        if (_zoomPunchRemaining <= 0f) return 0f;
+        float n = _zoomPunchRemaining / ZoomPunchDuration;   // 1 → 0
+        return _zoomPunchStrength * n * n;                    // snap in, ease out
+    }
+
     private readonly struct AnchorPose
     {
         public readonly Vector3 Pos;
@@ -72,6 +100,7 @@ public unsafe sealed partial class ParryModule
     {
         if (!try_get_live_battle_context(out _)) { _battleCameraId = 0; _followInit = false; return; }
         if (_battleCameraId == 0) return;
+        tick_zoom_punch();
 
         if (_freecamActive)
         {
@@ -97,12 +126,20 @@ public unsafe sealed partial class ParryModule
             _followInit = true;
 
             _camSetRect ??= FhUtil.get_fptr<MsCameraSetRectFn>(ExternalMemoryOffsetMap.Functions.MsCameraSetRect);
-            if (haveAnchor) write_camera_bank(CameraEyeBank, anchor.Pos);  // else keep the frozen default eye
+            // else keep the frozen default eye; with an anchor, the zoom-punch dollies it toward the gaze.
+            if (haveAnchor) write_camera_bank(CameraEyeBank, Vector3.Lerp(anchor.Pos, _followLook, zoom_punch_factor()));
             write_camera_bank(CameraRefBank, _followLook);
             return;
         }
 
-        if (haveAnchor) stamp_camera(anchor.Pos, anchor.Yaw, anchor.Pitch);
+        if (haveAnchor)
+        {
+            Vector3 target = anchor_look_point(anchor);
+            Vector3 eye = Vector3.Lerp(anchor.Pos, target, zoom_punch_factor());
+            _camSetRect ??= FhUtil.get_fptr<MsCameraSetRectFn>(ExternalMemoryOffsetMap.Functions.MsCameraSetRect);
+            write_camera_bank(CameraEyeBank, eye);
+            write_camera_bank(CameraRefBank, target);
+        }
     }
 
     // World position of the current attacker while an enemy is acting, from Chr->actor->chr_pos_vec.
