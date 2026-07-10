@@ -100,10 +100,18 @@ public unsafe sealed partial class ParryModule : FhModule
     private delegate void MsScreenSetShakeProbe(
         uint screen_id, uint axis_mask, uint mode, float freq, uint duration, uint amplitude, uint randomness);
 
-    // MsSetMotion — battler motion setter. Safe call shape (engine's own Defend code):
-    // MsSetMotion(slot, motion_id, 0, 0, 1, 0, 0). Used by the FX/Motion lab to preview poses.
+    // MsSetMotion — battler motion setter. It enqueues an ATEL motion script onto the actor's own
+    // execspace (slot+5) plus a shared control execspace (3); different actors therefore animate in
+    // parallel, and a second call on the same actor *restarts* its script rather than queueing.
+    //
+    // The 3rd parameter is NOT a chr_id. Ghidra names it that only because MsDamageSetMotion happens
+    // to pass its own chr_id through; MsSetMotion merely tests it against zero (FFX.exe.c:857945):
+    //   != 0  -> "hold": writes field_0xdf2 and holds field_0x432 (motion-active) until MsTerminateMotion
+    //   == 0  -> clears field_0x432 again at the tail
+    // The engine's Defend code passes 0 (a guard brace should not make anyone wait); the native
+    // damage reaction passes non-zero. We inherited the 0 from the Defend call shape.
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    private delegate int MsSetMotionProbe(int slot, int motion_id, int chr_id, byte p4, int p5, int p6, int p7);
+    private delegate int MsSetMotionProbe(int slot, int motion_id, int hold_motion_active, byte p4, int p5, int p6, int p7);
 
     // MsSetChrVisible(slot, visible) — re-show a battler model hidden by a status/death effect.
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -337,6 +345,24 @@ public unsafe sealed partial class ParryModule : FhModule
     // actors when an attack lands on a Sentinel-statused PC (forensic ref:
     // FUN_0079E530). Default-on.
     private bool _optionParryEffect = true;
+
+    // Deterministic motion termination for the dodge. The dodge's ATEL motion script is restarted by
+    // every press and, left alone, only ends when it runs out — which is why spamming the button used
+    // to stall the enemy's charging cast. Instead of swallowing presses, we guarantee that every dodge
+    // *terminates*: on a new press (clean restart), on the resolving hit, and on window expiry.
+    //
+    // MsEffectEndMotion is the engine's own end-of-motion entry. It is a NO-OP unless the ATEL worker
+    // has actually started the motion, which it signals by setting Chr+0x3f3 (motion-disable) — so we
+    // gate on that byte rather than guessing.
+    private const int ChrMotionDisableOffset = 0x3f3;
+
+    // MsEffectEndMotion's `mode`: 3 issues the return-to-idle motion but SKIPS MsSetChrMoveFlag(chr,0)
+    // (FFX.exe.c:827958). That matters because motion != move: the step-out and walk-back are driven by
+    // the move machine (Chr+0x415), not by the animation. Mode 3 should end the animation while leaving
+    // the walk-back running; mode 0 would clear the move flag and risk stranding the actor. Untested —
+    // this const exists so both can be compared in-game.
+    private const int DodgeEndMotionMode = 3;
+    private bool _optionDodgeMotionCancel = true;
 
     // Impact screen shake: fire the engine's own decaying screen shake when a hit is *met* —
     // on a successful parry, and only there. Every dodge avoids the hit, PERFECT included; PERFECT
@@ -653,6 +679,7 @@ public unsafe sealed partial class ParryModule : FhModule
             new FhSettingCustomRenderer("magic_camera_lock", render_setting_magic_camera_lock),
             new FhSettingCustomRenderer("parry_effect", render_setting_parry_effect),
             new FhSettingCustomRenderer("impact_shake", render_setting_impact_shake),
+            new FhSettingCustomRenderer("dodge_motion_cancel", render_setting_dodge_motion_cancel),
             new FhSettingCustomRenderer("streak_counter", render_setting_streak_counter),
             new FhSettingCustomRenderer("dodge_window", render_setting_dodge_window),
             new FhSettingCustomRenderer("dodge_whiffout", render_setting_dodge_whiffout),
@@ -873,6 +900,19 @@ public unsafe sealed partial class ParryModule : FhModule
             if (_dodgeWindowRemainingSeconds <= 0f)
             {
                 _dodgeWindowActive = false;
+
+                // Nothing hit us. End the evade animation deterministically rather than letting it run
+                // out — together with the press-restart and hit paths this guarantees the dodge motion
+                // always terminates, which is what stops a spammed dodge from leaving an actor
+                // permanently "animating" and stalling an enemy's charging cast.
+                uint stepped = _dodgeProbeSlotsMask;
+                while (stepped != 0)
+                {
+                    int slot = BitOperations.TrailingZeroCount(stepped);
+                    stepped &= stepped - 1;
+                    try_end_battle_motion(slot, "window_expired");
+                }
+
                 if (_optionLogging)
                 {
                     log_debug("[Dodge] Window expired without a hit.");

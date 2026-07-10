@@ -463,7 +463,16 @@ public unsafe sealed partial class ParryModule
             // is passed. MsDamageSetMotion case 1 refreshes it from the attacker right before the
             // motion call; without this the step-out aims at whoever attacked last.
             ((byte*)chr)[ChrLastAttackerIdOffset] = context.Cue.attacker_id;
+            // A press must react NOW, not wait for the previous animation. But re-issuing MsSetMotion
+            // on a live script only restarts it and leaves the flags half-torn, which is what let the
+            // old dodge-spam keep an actor permanently "animating". So end the previous motion through
+            // the engine's own path first, then start a fresh one.
+            try_end_battle_motion(slot, "press_restart");
+
             ((byte*)chr)[ChrEvadeMoveModeOffset] = 1;
+            // 3rd arg 0 = non-blocking: do not hold Chr+0x432 ourselves. The ATEL worker sets it while
+            // the motion actually plays, and we now terminate deterministically, so holding it would
+            // only widen the window in which other actors wait on us.
             FhUtil.get_fptr<MsSetMotionProbe>(
                 ExternalMemoryOffsetMap.Functions.MsSetMotion)(slot, EvadeMotionId, 0, 0, 1, 0, 0);
             _dodgeProbeSlotsMask |= 1u << slot;
@@ -575,6 +584,11 @@ public unsafe sealed partial class ParryModule
         bool firstImpact = (_dodgeResolvedAtImpactMask & bit) == 0;
         _dodgeResolvedAtImpactMask |= bit;
         if (!firstImpact) return;
+
+        // The hit is evaded: end the evade animation now instead of waiting for it to run out. The
+        // move machine (Chr+0x415) keeps running, so the character still slides home while whatever
+        // was waiting on this actor's motion can proceed.
+        try_end_battle_motion(slotIndex, "dodge_hit");
 
         if (is_perfect_dodge())
         {
@@ -1179,6 +1193,51 @@ public unsafe sealed partial class ParryModule
             // Close the window but stay in Resolved until the cue clears; clear_awaiting_turn_end
             // will promote us back to Ready so a fresh press can immediately begin the next parry.
             end_parry_window("impact_parried", transitionToReady: false);
+        }
+    }
+
+    // Ends a slot's running battle motion through the engine's own completion path.
+    //
+    // MsEffectEndMotion -> MsEffectResetMotionDisable -> MsTerminateMotion clears Chr+0x432
+    // (motion-active) and +0x433 in one u16, clears the motion request +0xdf2, and re-issues the
+    // idle motion — which, because MsSetMotion resets the target ATEL script, also cancels the
+    // running motion script. It is the engine's own "this motion is over" transition, reached early.
+    //
+    // MsEffectResetMotionDisable is gated on Chr+0x3f3, which the ATEL worker sets only once it has
+    // actually started the motion. Calling before that is a silent no-op, so we check it ourselves
+    // and say so in the log rather than pretending the call did something.
+    private bool try_end_battle_motion(int slotIndex, string reason)
+    {
+        if (!_optionDodgeMotionCancel) return false;
+
+        Chr* party = _battleAdapter.GetPlayerCharacters();
+        Chr* chr = party != null ? party + slotIndex : null;
+        if (chr == null || !chr->stat_exist_flag) return false;
+
+        if (((byte*)chr)[ChrMotionDisableOffset] == 0)
+        {
+            if (_optionLogging)
+            {
+                log_debug($"[DodgeMotion] {format_actor_slot((byte)slotIndex)}: motion not started yet (0x3f3=0), nothing to end ({reason}).");
+            }
+            return false;
+        }
+
+        try
+        {
+            FhUtil.get_fptr<MsEffectEndMotionProbe>(
+                ExternalMemoryOffsetMap.Functions.MsEffectEndMotion)((uint)slotIndex, DodgeEndMotionMode);
+
+            if (_optionLogging)
+            {
+                log_debug($"[DodgeMotion] Ended motion for {format_actor_slot((byte)slotIndex)} via MsEffectEndMotion(mode={DodgeEndMotionMode}) ({reason}).");
+            }
+            return true;
+        }
+        catch (Exception ex)
+        {
+            log_debug($"[DodgeMotion] MsEffectEndMotion failed for slot {slotIndex}: {ex.Message}");
+            return false;
         }
     }
 

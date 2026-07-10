@@ -112,6 +112,15 @@ public unsafe sealed partial class ParryModule
         }
     }
 
+    private void render_setting_dodge_motion_cancel()
+    {
+        if (ImGui.Checkbox("##fhparry.dodge_motion_cancel", ref _optionDodgeMotionCancel))
+        {
+            persist_settings();
+            log_debug($"Dodge motion cancel {(_optionDodgeMotionCancel ? "enabled" : "disabled")}.");
+        }
+    }
+
     private void render_setting_impact_shake()
     {
         if (ImGui.Checkbox("##fhparry.impact_shake", ref _optionImpactShake))
