@@ -37,12 +37,17 @@ public unsafe sealed partial class ParryModule
         WriteIndented = true
     };
 
-    // alpha09's mod_context.Paths.SettingsPath is empty or points at the DEPLOYED MOD FOLDER —
-    // and `build.cmd deploy` mirrors that folder, so anything we write there (settings, the motion
-    // blocklist) is deleted on the next deploy and silently resets. Prefer the mod's global-state
-    // directory (state/global/<mod>/), which the deploy never touches: the framework hands us a
-    // FileStream into it at init, so its directory is the stable home for our files. The old
-    // locations remain as fallbacks for hosts that don't supply a global state file.
+    // alpha09's mod_context.Paths.SettingsPath is empty or points at the DEPLOYED MOD FOLDER, which
+    // `build.cmd deploy` mirrors — anything written there is deleted on the next deploy. We instead
+    // use the mod's global-state directory (state/global/<mod>/): the framework hands us a FileStream
+    // into it at init, so its directory is a stable home for our files.
+    //
+    // A full deploy mirrors the ENTIRE Fahrenheit tree, state/ included, and deletes whatever the
+    // source lacks. That directory therefore only survives because "state" is listed in
+    // DeployPreservePaths (build/Build.cs). Remove it from that list and every deploy silently
+    // resets the user's settings — which is exactly what happened before 2026-07-10.
+    //
+    // The old locations remain as fallbacks for hosts that don't supply a global state file.
     private static string resolve_settings_path(FhModContext mod_context, FileStream? global_state_file)
     {
         string? stateDir = null;

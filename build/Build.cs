@@ -76,7 +76,10 @@ internal sealed partial class BuildScript : NukeBuild
         "\"installdir\"\\s*\"(?<dir>[^\"]+)\"",
         RegexOptions.IgnoreCase | RegexOptions.Compiled);
     const string SteamAppIdFfx = "359870";
-    static readonly string[] DefaultPreservePaths = ["mods/loadorder", "saves"];
+    // A full deploy mirrors the whole Fahrenheit tree and deletes whatever the source lacks.
+    // "state" holds Fahrenheit's runtime state and every mod's persisted settings, so leaving it
+    // out silently resets user configuration on each deploy. "logs" is the session log directory.
+    static readonly string[] DefaultPreservePaths = ["logs", "mods/loadorder", "saves", "state"];
     bool _isCapturingWorkflowHelp;
     WorkflowHelpBlock? _capturedWorkflowHelp;
     BuildLogVerbosity? _resolvedLogVerbosity;
