@@ -8,7 +8,7 @@ document exists so the next mod author does not silently collide with us.
 | Index | Mode | Owner |
 |---|---|---|
 | `0x00`–`0x10` | Warrior, Comrade, Stoic, Healer, Tactician, Victim, Dancer, Avenger, Slayer, Hero, Rook, Victor, Coward, Ally, Sufferer, Daredevil, Loner | FFX |
-| `0x11` | Riposte — charges on parry and perfect dodge | **fhparry** |
+| `0x11` | Riposte — learned by parrying, charges on parry | **fhparry** |
 | `0x12` | *(free)* | **deliberately unclaimed** |
 | `0x13` | Aeons — not learnable, always on for aeons | FFX |
 
@@ -28,9 +28,10 @@ There is no third free index. The engine's menu-build loop is hard-capped at `i 
 ## What fhparry does not do with `0x12`
 
 Nothing. It is left free on purpose, so another Fahrenheit mod can add an overdrive mode without
-fighting us for the last slot. A dodge-focused mode was considered and rejected: fhparry's `0x11`
-already charges on perfect dodge, and splitting one defensive skill across two mutually exclusive
-modes would weaken both.
+fighting us for the last slot. A dodge-focused mode was considered and rejected: there are only two
+free indices in the whole game, and spending both on one mod would leave the next author nowhere to
+go. Dodging is already rewarded in fhparry — a perfect dodge negates the hit outright and reads
+PERFECT on screen. Overdrive is the parry's reward.
 
 ## If you are that other mod author
 
