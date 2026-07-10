@@ -88,14 +88,14 @@ public unsafe sealed partial class ParryModule
         Vector3 fwd   = new(cp * sy, sp, cp * cy);
         Vector3 right = new(cy, 0f, -sy);
 
-        // Numpad, to dodge the battle hotkeys on WASD / arrows (A swaps a party member, arrows drive
-        // the menu). Right-mouse turns; numpad moves.
-        if (ImGui.IsKeyDown(ImGuiKey.Keypad8)) _freecamPos += fwd * move;
-        if (ImGui.IsKeyDown(ImGuiKey.Keypad2)) _freecamPos -= fwd * move;
-        if (ImGui.IsKeyDown(ImGuiKey.Keypad6)) _freecamPos += right * move;
-        if (ImGui.IsKeyDown(ImGuiKey.Keypad4)) _freecamPos -= right * move;
-        if (ImGui.IsKeyDown(ImGuiKey.KeypadAdd))      _freecamPos.Y += move;
-        if (ImGui.IsKeyDown(ImGuiKey.KeypadSubtract)) _freecamPos.Y -= move;
+        // WASD move (right-mouse turns). It reads best natively; the trade-off is that battle
+        // hotkeys on these keys (e.g. A swaps a party member) still fire underneath.
+        if (ImGui.IsKeyDown(ImGuiKey.W)) _freecamPos += fwd * move;
+        if (ImGui.IsKeyDown(ImGuiKey.S)) _freecamPos -= fwd * move;
+        if (ImGui.IsKeyDown(ImGuiKey.D)) _freecamPos += right * move;
+        if (ImGui.IsKeyDown(ImGuiKey.A)) _freecamPos -= right * move;
+        if (ImGui.IsKeyDown(ImGuiKey.E)) _freecamPos.Y += move;
+        if (ImGui.IsKeyDown(ImGuiKey.Q)) _freecamPos.Y -= move;
     }
 
     // Stamp a pose (eye + look-at) into the camera. Look direction from yaw/pitch; handedness is a
@@ -135,7 +135,7 @@ public unsafe sealed partial class ParryModule
         ImGui.DragFloat3("pos##fhparry.freecam.pos", ref _freecamPos, 0.5f);
         ImGui.DragFloat("yaw##fhparry.freecam.yaw", ref _freecamYaw, 0.01f);
         ImGui.DragFloat("pitch##fhparry.freecam.pitch", ref _freecamPitch, 0.01f);
-        ImGui.TextDisabled("Numpad 8/2 dolly · 4/6 strafe · +/- up-down · right-drag turn (V inverted).");
+        ImGui.TextDisabled("WASD move · Q down / E up · right-drag turn (V inverted).");
 
         ImGui.Separator();
         if (ImGui.Checkbox("Hold anchor from battle start##fhparry.freecam.anchor", ref _optionStaticCameraAnchor))
