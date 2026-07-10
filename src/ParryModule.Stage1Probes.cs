@@ -4,12 +4,11 @@ public unsafe sealed partial class ParryModule
 {
     // ── Stage-1 native observe probes ────────────────────────────────────────
     //
-    // Log-only hooks for the seven entry points listed in the KB probe plan
+    // Log-only hooks for six of the seven entry points listed in the KB probe plan
     // (docs/fahrenheit-parry-probe-plan.md in ffx-knowledge-base):
     //
     //   MsActionRequest, MsCalcCommand, MsCheckStatusBeforeAction,
-    //   MsLimitTypeDamageCheck, MsAtelRequestMagicCamera,
-    //   op_et_battle_genko_counter_get, MsSetMotion
+    //   MsLimitTypeDamageCheck, op_et_battle_genko_counter_get, MsSetMotion
     //
     // Each hook body MUST: call orig exactly once, preserve its return value,
     // not mutate args, and not touch parry runtime state. Output is gated by
@@ -17,14 +16,25 @@ public unsafe sealed partial class ParryModule
     // probe handles are not even hooked in init(), so probe-disabled play is
     // identical to a build without this file.
     //
-    // Signatures come from the upstream Fahrenheit __addr_* table where one
-    // exists; the actual argument shapes/types come from the engine Ghidra
-    // export (.workspace/intermediate/ghidra-server/ffx-v3/functions.tsv).
-    // Three of the seven (MsActionRequest, MsLimitTypeDamageCheck, MsSetMotion)
-    // resolve to __stdcall in Ghidra and are declared as such here. The other
-    // four are declared cdecl/0-arg per Ghidra's "unknown" convention; if a
-    // future signature refinement says otherwise, this file is the single
-    // place to update.
+    // ── SIGNATURES ARE NOT ALL VERIFIED. READ THIS BEFORE ENABLING. ──
+    //
+    // A wrong arity or calling convention here does not fail loudly: the detour
+    // installs, and the stack unbalances on the first call. Enabling this option
+    // crashed battle start on 2026-07-10, twice over:
+    //
+    //   * The seventh probe, MsAtelRequestMagicCamera, was declared cdecl/void()
+    //     while the function takes nine arguments and returns a byte — as this
+    //     mod's own working hook in ParryModule.Hooks.cs proves. It also hooked a
+    //     function the camera lock already hooks. It has been removed; the camera
+    //     lock's hook already logs that call site through the CameraProbe channel.
+    //   * MsSetMotion was declared __stdcall/uint from Ghidra, contradicting the
+    //     cdecl/int shape this mod calls every battle for the dodge step-out. It is
+    //     now cdecl/int, matching the caller that demonstrably works.
+    //
+    // MsCalcCommand, MsCheckStatusBeforeAction and op_et_battle_genko_counter_get
+    // are still declared cdecl/0-arg from Ghidra's "unknown" convention. That is a
+    // guess. Verify each against the decompilation before trusting a session that
+    // ran with this option on.
 
     /// <summary>
     ///     Per-probe per-frame ceiling. With seven probes this is a worst-case
@@ -48,20 +58,19 @@ public unsafe sealed partial class ParryModule
         int attacker_id, nint attacker, int target_id, nint target, int p5, int p6, int p7);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    private delegate void MsAtelRequestMagicCameraProbeDelegate();
-
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate int OpEtBattleGenkoCounterGetProbeDelegate();
 
-    [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    private delegate uint MsSetMotionProbeDelegate(
+    // Cdecl/int, matching MsSetMotionProbe in ParryModule.cs — the shape the dodge step-out and the
+    // FX lab call every battle. Ghidra reported __stdcall/uint here, which cannot both be right:
+    // a stdcall detour on a cdecl function unbalances the stack on the first enemy motion.
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate int MsSetMotionProbeDelegate(
         int p1, int p2, int chr_id, byte p4, int p5, int p6, int p7);
 
     private FhMethodHandle<MsActionRequestProbeDelegate>?           _hStage1MsActionRequest;
     private FhMethodHandle<MsCalcCommandProbeDelegate>?             _hStage1MsCalcCommand;
     private FhMethodHandle<MsCheckStatusBeforeActionProbeDelegate>? _hStage1MsCheckStatusBeforeAction;
     private FhMethodHandle<MsLimitTypeDamageCheckProbeDelegate>?    _hStage1MsLimitTypeDamageCheck;
-    private FhMethodHandle<MsAtelRequestMagicCameraProbeDelegate>?  _hStage1MsAtelRequestMagicCamera;
     private FhMethodHandle<OpEtBattleGenkoCounterGetProbeDelegate>? _hStage1OpEtBattleGenkoCounterGet;
     private FhMethodHandle<MsSetMotionProbeDelegate>?               _hStage1MsSetMotion;
 
@@ -69,7 +78,6 @@ public unsafe sealed partial class ParryModule
     private PerFrameProbeThrottle _throttleMsCalcCommand;
     private PerFrameProbeThrottle _throttleMsCheckStatusBeforeAction;
     private PerFrameProbeThrottle _throttleMsLimitTypeDamageCheck;
-    private PerFrameProbeThrottle _throttleMsAtelRequestMagicCamera;
     private PerFrameProbeThrottle _throttleOpEtBattleGenkoCounterGet;
     private PerFrameProbeThrottle _throttleMsSetMotion;
 
@@ -104,8 +112,6 @@ public unsafe sealed partial class ParryModule
             this, "FFX.exe", FhFfx.FhCall.__addr_MsCheckStatusBeforeAction, h_stage1_ms_check_status_before_action);
         _hStage1MsLimitTypeDamageCheck = new FhMethodHandle<MsLimitTypeDamageCheckProbeDelegate>(
             this, "FFX.exe", FhFfx.FhCall.__addr_MsLimitTypeDamageCheck, h_stage1_ms_limit_type_damage_check);
-        _hStage1MsAtelRequestMagicCamera = new FhMethodHandle<MsAtelRequestMagicCameraProbeDelegate>(
-            this, "FFX.exe", FhFfx.FhCall.__addr_MsAtelRequestMagicCamera, h_stage1_ms_atel_request_magic_camera);
         _hStage1OpEtBattleGenkoCounterGet = new FhMethodHandle<OpEtBattleGenkoCounterGetProbeDelegate>(
             this, "FFX.exe", FhFfx.FhCall.__addr_op_et_battle_genko_counter_get, h_stage1_op_et_battle_genko_counter_get);
         _hStage1MsSetMotion = new FhMethodHandle<MsSetMotionProbeDelegate>(
@@ -115,7 +121,6 @@ public unsafe sealed partial class ParryModule
         try_install_one_stage1_probe(_hStage1MsCalcCommand,             "MsCalcCommand");
         try_install_one_stage1_probe(_hStage1MsCheckStatusBeforeAction, "MsCheckStatusBeforeAction");
         try_install_one_stage1_probe(_hStage1MsLimitTypeDamageCheck,    "MsLimitTypeDamageCheck");
-        try_install_one_stage1_probe(_hStage1MsAtelRequestMagicCamera,  "MsAtelRequestMagicCamera");
         try_install_one_stage1_probe(_hStage1OpEtBattleGenkoCounterGet, "op_et_battle_genko_counter_get");
         try_install_one_stage1_probe(_hStage1MsSetMotion,               "MsSetMotion");
 
@@ -227,26 +232,6 @@ public unsafe sealed partial class ParryModule
         return result;
     }
 
-    private void h_stage1_ms_atel_request_magic_camera()
-    {
-        _hStage1MsAtelRequestMagicCamera!.orig_fptr.Invoke();
-
-        if (_optionNativeProbeLogging
-            && _throttleMsAtelRequestMagicCamera.ShouldEmit(_debugFrameIndex, Stage1ProbeMaxPerFrame))
-        {
-            try
-            {
-                enqueue_probe_event(Stage1ProbeFormatter.Format(
-                    "MsAtelRequestMagicCamera", string.Empty, _debugFrameIndex,
-                    _runtime.InputState, _runtime.CurrentAttackerId, _runtime.ParryWindowActive));
-            }
-            catch (Exception ex)
-            {
-                enqueue_probe_event(Stage1ProbeFormatter.FormatFailure("MsAtelRequestMagicCamera", _debugFrameIndex, ex.Message));
-            }
-        }
-    }
-
     private int h_stage1_op_et_battle_genko_counter_get()
     {
         int result = _hStage1OpEtBattleGenkoCounterGet!.orig_fptr.Invoke();
@@ -270,10 +255,10 @@ public unsafe sealed partial class ParryModule
         return result;
     }
 
-    private uint h_stage1_ms_set_motion(
+    private int h_stage1_ms_set_motion(
         int p1, int p2, int chr_id, byte p4, int p5, int p6, int p7)
     {
-        uint result = _hStage1MsSetMotion!.orig_fptr.Invoke(p1, p2, chr_id, p4, p5, p6, p7);
+        int result = _hStage1MsSetMotion!.orig_fptr.Invoke(p1, p2, chr_id, p4, p5, p6, p7);
 
         if (_optionNativeProbeLogging
             && _throttleMsSetMotion.ShouldEmit(_debugFrameIndex, Stage1ProbeMaxPerFrame))

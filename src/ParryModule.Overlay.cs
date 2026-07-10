@@ -2,7 +2,6 @@ namespace Fahrenheit.Mods.Parry;
 
 public unsafe sealed partial class ParryModule
 {
-    private static readonly Vector4 OverlayShadowColor = new(0f, 0f, 0f, 0.75f);
     private static readonly Vector4 OverlayOutlineColor = new(0f, 0f, 0f, 0.9f);
 
     private void render_parry_window_overlay()
