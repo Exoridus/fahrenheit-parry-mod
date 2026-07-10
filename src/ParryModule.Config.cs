@@ -20,6 +20,9 @@ public unsafe sealed partial class ParryModule
         public bool? EnemyCameraLock { get; set; }          // legacy — migrated on load, never written
         public bool? ParryEffect { get; set; }
         public bool? StreakCounter { get; set; }
+        public bool? LearnCustomOverdrive { get; set; }
+        // Legacy key (pre-2026-07-10): the setting used to mean "unlock now". Its meaning is now
+        // "enable learning by parrying". Migrated on load, never written back.
         public bool? UnlockCustomOverdrive { get; set; }
         public bool? DodgeEnabled { get; set; }
         public bool? ParryNativeBlock { get; set; }
@@ -119,7 +122,14 @@ public unsafe sealed partial class ParryModule
             if (persisted.MagicCameraLock.HasValue) _optionMagicCameraLock = persisted.MagicCameraLock.Value;
             if (persisted.ParryEffect.HasValue) _optionParryEffect = persisted.ParryEffect.Value;
             if (persisted.StreakCounter.HasValue) _optionStreakCounter = persisted.StreakCounter.Value;
-            if (persisted.UnlockCustomOverdrive.HasValue) _optionUnlockCustomOverdrive = persisted.UnlockCustomOverdrive.Value;
+            if (persisted.LearnCustomOverdrive.HasValue) _optionLearnCustomOverdrive = persisted.LearnCustomOverdrive.Value;
+            else if (persisted.UnlockCustomOverdrive.HasValue)
+            {
+                // Legacy migration: old "unlock" flag → new "learn by parrying" enable. Both are
+                // the same default-off opt-in for the custom-overdrive feature.
+                _optionLearnCustomOverdrive = persisted.UnlockCustomOverdrive.Value;
+                _logger.Info($"[Parry] Migrated legacy UnlockCustomOverdrive={persisted.UnlockCustomOverdrive.Value} → LearnCustomOverdrive.");
+            }
             if (persisted.DodgeEnabled.HasValue) _optionDodgeEnabled = persisted.DodgeEnabled.Value;
             if (persisted.ParryNativeBlock.HasValue) _optionParryNativeBlock = persisted.ParryNativeBlock.Value;
             if (persisted.DodgeWindowMs.HasValue) _dodgeWindowMs = Math.Clamp(persisted.DodgeWindowMs.Value, DodgeWindowMsMin, DodgeWindowMsMax);
@@ -172,7 +182,7 @@ public unsafe sealed partial class ParryModule
                 MagicCameraLock = _optionMagicCameraLock,
                 ParryEffect = _optionParryEffect,
                 StreakCounter = _optionStreakCounter,
-                UnlockCustomOverdrive = _optionUnlockCustomOverdrive,
+                LearnCustomOverdrive = _optionLearnCustomOverdrive,
                 DodgeEnabled = _optionDodgeEnabled,
                 ParryNativeBlock = _optionParryNativeBlock,
                 DodgeWindowMs = _dodgeWindowMs,

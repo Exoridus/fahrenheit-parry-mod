@@ -815,6 +815,12 @@ public unsafe sealed partial class ParryModule
         // (slots that successfully parried at least one hit).
         resolve_streak_at_cue_clear();
 
+        // Count successful parries toward the custom-overdrive learn countdown, also
+        // BEFORE the masks are cleared. Reads LastParriedTargetMask (the slots that
+        // parried at least one hit this action window), so a multi-hit attack counts
+        // exactly once per character. Default-off; no-op unless learning is enabled.
+        resolve_overdrive_learning_at_cue_clear(_runtime.LastParriedTargetMask);
+
         flush_attack_telemetry(reason);
         _runtime.AwaitingTurnEnd = false;
         Array.Clear(_parryExpiry);

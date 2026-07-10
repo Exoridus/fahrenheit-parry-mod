@@ -165,11 +165,12 @@ public unsafe sealed partial class ParryModule
                 // point to read limit_modes_obtained and correlate it with the menu.
                 log_overdrive_modes_probe_once();
 
-                // Immediately after the read-only probe logs the before-state, apply the
-                // custom-overdrive unlock write (default-off; no-op unless the setting is on).
+                // Immediately after the read-only probe logs the before-state, initialise the
+                // custom-overdrive learn countdown (default-off; no-op unless the setting is on).
                 // Fired on the same battle-begin edge so one log shows the before-state and the
-                // write in order. The write is idempotent, so firing every battle is harmless.
-                apply_custom_overdrive_unlock_if_enabled();
+                // init in order. Init only ever writes the counter (never bit 17, never 0), so
+                // firing every battle is safe and idempotent for an already-armed character.
+                apply_overdrive_learning_init_if_enabled();
             }
             else
             {
@@ -1872,70 +1873,173 @@ public unsafe sealed partial class ParryModule
         }
     }
 
-    // Custom-overdrive unlock (default-off, opt-in via _optionUnlockCustomOverdrive).
+    // ── Custom-overdrive "learn by parrying" (default-off, opt-in via _optionLearnCustomOverdrive) ──
     //
-    // Sets bit 17 (overdrive mode index 0x11) in each party character's persisted
-    // limit_modes_obtained mask so the engine will offer that mode in the Overdrive menu
-    // (the display-order table at RVA 0x88765c already contains 0x11). This is a WRITE into
-    // save_ram: if the player saves the game afterwards, the unlock persists into the save
-    // file — that is intended.
+    // The custom overdrive mode (index 0x11 / bit 17) is learned the way FFX teaches its own
+    // modes: a per-character learn countdown in limit_mode_counters[0x11] that decrements per
+    // successful parry and grants the mode (sets bit 17) when it reaches zero. The pure decision
+    // policy lives in OverdriveLearnPolicy; this file is the save_ram I/O boundary.
     //
-    // Safety discipline:
+    // Char id set: 0..6 (Tidus, Yuna, Auron, Kimahri, Wakka, Lulu, Rikku) — the permanent
+    // playable members, exactly the set the read-only SaveProbe enumerates. Summoned aeons
+    // (chr_id >= 8) are skipped: they never appear in this counter path and the PlySave stride
+    // past char 6 is not live-verified.
+    //
+    // Safety discipline (this WRITES into save_ram; saving the game persists it):
     //   - Gated on the setting: when off, nothing is written at all.
-    //   - Same character set the read-only save probe enumerates (char ids 0..6).
-    //   - Read-modify-write of the whole 4-byte mask via OverdriveMaskFormatter.WithModeBitSet,
-    //     which ORs in exactly bit 17 and preserves every other bit. Never a blind constant write.
-    //   - Idempotent: if the bit is already set, WithModeBitSet returns the same value, so we
-    //     compare before == after and skip both the write and the log line (no noise).
+    //   - Every read/write goes through FhUtil.ptr_at<T> with offset-map constants (rule §9).
+    //   - Never-zero-while-unset invariant: a grant sets bit 17 FIRST, then writes the counter
+    //     to 0. Initialisation never writes 0. Counting never bare-decrements to 0.
     //   - Per-character try/catch: a failure logs a warning and cannot take down the game.
-    //   - The before/after log line is gated on _optionLogging; the write itself is not.
-    private void apply_custom_overdrive_unlock_if_enabled()
+    private const int OverdriveLearnCharCount = 7;
+
+    // Initialisation, at the battle-begin edge, when learning is enabled. Applies
+    // OverdriveLearnPolicy.DecideInitialisation per character: arms an uninitialised (0xFFFF) or
+    // out-of-range counter to the threshold, repairs the unsafe (counter 0 / bit unset) state with
+    // a warning, and leaves in-progress and already-learned characters untouched.
+    private void apply_overdrive_learning_init_if_enabled()
     {
-        if (!_optionUnlockCustomOverdrive) return;
+        if (!_optionLearnCustomOverdrive) return;
 
-        // char ids 0..6: Tidus, Yuna, Auron, Kimahri, Wakka, Lulu, Rikku — the same set the
-        // read-only SaveProbe reads in log_overdrive_modes_probe_once.
-        const int probeCharCount = 7;
-        // Overdrive mode index 0x11 → bit 17 → mask |= 0x00020000.
-        const int customOverdriveModeIndex = 0x11;
-
-        for (int charId = 0; charId < probeCharCount; charId++)
+        for (int charId = 0; charId < OverdriveLearnCharCount; charId++)
         {
             string name = try_map_party_chr_id_to_name(charId, out string resolved) ? resolved : "?";
             try
             {
-                int entryRva = ExternalMemoryOffsetMap.SaveData.PlyArr0
-                             + charId * ExternalMemoryOffsetMap.SaveData.PlySaveStride;
-
-                uint* maskPtr = FhUtil.ptr_at<uint>(entryRva + ExternalMemoryOffsetMap.SaveData.LimitModesObtained);
-                if (maskPtr == null)
+                if (!try_get_overdrive_learn_slots(charId, out uint* maskPtr, out short* counterPtr))
                 {
-                    _logger.Warning($"[OverdriveUnlock] slot {charId} ({name}) — null pointer from ptr_at, write skipped.");
+                    _logger.Warning($"[OverdriveLearn] slot {charId} ({name}) — null pointer from ptr_at, init skipped.");
                     continue;
                 }
 
-                uint before = *maskPtr;
-                uint after = OverdriveMaskFormatter.WithModeBitSet(before, customOverdriveModeIndex);
-                if (after == before)
-                {
-                    // Bit 17 already set — nothing to write, and no log noise.
-                    continue;
-                }
+                bool bitSet = ((*maskPtr) & (1u << ExternalMemoryOffsetMap.SaveData.CustomOverdriveModeIndex)) != 0;
+                short counter = *counterPtr;
 
-                *maskPtr = after;
-
-                if (_optionLogging)
+                OverdriveLearnPolicy.InitDecision decision = OverdriveLearnPolicy.DecideInitialisation(counter, bitSet);
+                switch (decision.Action)
                 {
-                    log_debug(
-                        $"[OverdriveUnlock] slot {charId} ({name}) limit_modes_obtained "
-                        + $"0x{before:X8} -> 0x{after:X8} (set bit 17, mode 0x11)");
+                    case OverdriveLearnPolicy.InitAction.Initialise:
+                        *counterPtr = decision.WriteValue;
+                        if (_optionLogging)
+                            log_debug($"[OverdriveLearn] init slot {charId} ({name}) counter {counter} -> {decision.WriteValue} ({decision.Reason}).");
+                        break;
+
+                    case OverdriveLearnPolicy.InitAction.InitialiseWithWarning:
+                        *counterPtr = decision.WriteValue;
+                        _logger.Warning($"[OverdriveLearn] slot {charId} ({name}) — {decision.Reason} (counter {counter} -> {decision.WriteValue}).");
+                        if (_optionLogging)
+                            log_debug($"[OverdriveLearn] init slot {charId} ({name}) counter {counter} -> {decision.WriteValue} (WARN: {decision.Reason}).");
+                        break;
+
+                    default:
+                        // NothingToDo / LeaveInProgress — no write.
+                        if (_optionLogging)
+                            log_debug($"[OverdriveLearn] init slot {charId} ({name}) — no change ({decision.Reason}).");
+                        break;
                 }
             }
             catch (Exception ex)
             {
-                _logger.Warning($"[OverdriveUnlock] slot {charId} ({name}) — write failed: {ex.GetType().Name}: {ex.Message}");
+                _logger.Warning($"[OverdriveLearn] slot {charId} ({name}) — init failed: {ex.GetType().Name}: {ex.Message}");
             }
         }
+    }
+
+    // Counting. Called once per enemy action window (cue-clear), reading the durable
+    // LastParriedTargetMask BEFORE it is cleared, so a multi-hit attack the player parries counts
+    // exactly once per character — matching the native counters, which are de-bounced to at most
+    // one decrement per action window. A perfect dodge never sets this mask, so dodges are
+    // excluded automatically (they charge the mode later, but do not teach it). Enemy attackers
+    // and non-party slots are never in this party mask.
+    private void resolve_overdrive_learning_at_cue_clear(uint parriedMask)
+    {
+        if (!_optionLearnCustomOverdrive || parriedMask == 0) return;
+
+        Chr* party = _battleAdapter.GetPlayerCharacters();
+        if (party == null) return;
+
+        uint mask = parriedMask & PlayerTargetMask;
+        while (mask != 0)
+        {
+            int slot = BitOperations.TrailingZeroCount(mask);
+            mask &= mask - 1;
+
+            Chr* chr = party + slot;
+            if (chr == null || !chr->stat_exist_flag) continue;
+
+            // Map the battle slot to the character TEMPLATE id (chr_id @0xE), which indexes the
+            // PlySave array — NOT the slot/id field @0xC. Only the permanent members 0..6 learn.
+            int charId = chr->chr_id;
+            if (charId < 0 || charId >= OverdriveLearnCharCount) continue;
+
+            count_overdrive_parry_for_char(charId, slot);
+        }
+    }
+
+    // Applies one de-bounced successful parry to a character's counter[0x11] via
+    // OverdriveLearnPolicy.DecideParry. The grant path sets bit 17 first, then writes the counter
+    // to 0 — the write ordering the never-zero-while-unset invariant depends on.
+    private void count_overdrive_parry_for_char(int charId, int slot)
+    {
+        string name = try_map_party_chr_id_to_name(charId, out string resolved) ? resolved : "?";
+        try
+        {
+            if (!try_get_overdrive_learn_slots(charId, out uint* maskPtr, out short* counterPtr))
+            {
+                _logger.Warning($"[OverdriveLearn] slot {charId} ({name}) — null pointer from ptr_at, parry count skipped.");
+                return;
+            }
+
+            bool bitSet = ((*maskPtr) & (1u << ExternalMemoryOffsetMap.SaveData.CustomOverdriveModeIndex)) != 0;
+            short counter = *counterPtr;
+
+            OverdriveLearnPolicy.ParryDecision decision = OverdriveLearnPolicy.DecideParry(counter, bitSet);
+            switch (decision.Action)
+            {
+                case OverdriveLearnPolicy.ParryAction.Grant:
+                    // Order is load-bearing: bit 17 FIRST, then counter 0. Reversing it opens the
+                    // window where MsLimitTypeProcess sees counter 0 with the bit unset and grants
+                    // the mode incidentally.
+                    *maskPtr = OverdriveMaskFormatter.WithModeBitSet(*maskPtr, ExternalMemoryOffsetMap.SaveData.CustomOverdriveModeIndex);
+                    *counterPtr = decision.WriteCounterValue; // 0
+                    if (_optionLogging)
+                        log_debug($"[OverdriveLearn] GRANT slot {charId} ({name}) via {format_actor_slot((byte)slot)} — bit 17 set, counter -> 0 ({decision.Reason}).");
+                    break;
+
+                case OverdriveLearnPolicy.ParryAction.Decrement:
+                    *counterPtr = decision.WriteCounterValue;
+                    if (_optionLogging)
+                        log_debug($"[OverdriveLearn] decrement slot {charId} ({name}) via {format_actor_slot((byte)slot)} — counter {counter} -> {decision.WriteCounterValue} ({decision.WriteCounterValue} remaining).");
+                    break;
+
+                default:
+                    // AlreadyLearned / NotLearnable — no write.
+                    if (_optionLogging)
+                        log_debug($"[OverdriveLearn] slot {charId} ({name}) — no change ({decision.Reason}).");
+                    break;
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.Warning($"[OverdriveLearn] slot {charId} ({name}) — parry count failed: {ex.GetType().Name}: {ex.Message}");
+        }
+    }
+
+    // Resolves the mask + counter[0x11] pointers for one character's PlySave entry. Both go
+    // through FhUtil.ptr_at<T> with offset-map constants (rule §9). counter[0x11] address:
+    //   PlyArr0 + charId*PlySaveStride + LimitModeCounters (0x60) + 0x11*2 (0x22) = entry + 0x82.
+    private bool try_get_overdrive_learn_slots(int charId, out uint* maskPtr, out short* counterPtr)
+    {
+        int entryRva = ExternalMemoryOffsetMap.SaveData.PlyArr0
+                     + charId * ExternalMemoryOffsetMap.SaveData.PlySaveStride;
+
+        maskPtr = FhUtil.ptr_at<uint>(entryRva + ExternalMemoryOffsetMap.SaveData.LimitModesObtained);
+        short* countersBase = FhUtil.ptr_at<short>(entryRva + ExternalMemoryOffsetMap.SaveData.LimitModeCounters);
+        counterPtr = countersBase != null
+            ? countersBase + ExternalMemoryOffsetMap.SaveData.CustomOverdriveModeIndex
+            : null;
+
+        return maskPtr != null && counterPtr != null;
     }
 
     private static uint extract_non_party_target_mask(AttackCue cue)

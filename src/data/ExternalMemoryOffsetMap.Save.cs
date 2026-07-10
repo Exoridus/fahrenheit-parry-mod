@@ -85,5 +85,20 @@ public static partial class ExternalMemoryOffsetMap
         ///     field angle.
         /// </summary>
         public const int LimitModeIndex = 0x38;
+
+        /// <summary>
+        ///     Overdrive-mode index the custom "learn by parrying" mode occupies:
+        ///     index <c>0x11</c> = bit 17 in <see cref="LimitModesObtained"/> and slot
+        ///     <c>0x11</c> (byte offset <c>+0x22</c>) in <see cref="LimitModeCounters"/>.
+        ///
+        ///     <para>
+        ///         We own this index: the engine's own learn loop (<c>FUN_007b10d0</c>)
+        ///         is gated on <c>mode &lt; 0x11</c>, so it never touches this counter.
+        ///         <c>MsLimitTypeProcess</c> does iterate <c>i &lt; 0x14</c> and visits
+        ///         it, which is why the never-zero-while-unset invariant is enforced
+        ///         (see <c>OverdriveLearnPolicy</c>).
+        ///     </para>
+        /// </summary>
+        public const int CustomOverdriveModeIndex = 0x11;
     }
 }

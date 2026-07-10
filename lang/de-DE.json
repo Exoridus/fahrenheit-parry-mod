@@ -21,8 +21,8 @@
     "fhparry.parry_effect.desc": "Spielt bei erfolgreicher Parade einen NulShock-aehnlichen Schild-Effekt auf dem parierenden Charakter ab. Reines visuelles Feedback — keine Spielmechanik-Auswirkung.",
     "fhparry.streak_counter.name": "Konter-Angriff bei Streak",
     "fhparry.streak_counter.desc": "Wenn ein Slot eine Verteidigungs-Streak abschliesst (alle anvisierten Slots in einer Cue mindestens einmal pariert und die kumulative Streak den Schwellenwert erreicht), wird automatisch ein einfacher Angriff vom Pareur auf den urspruenglichen Angreifer eingereiht. Nutzt den engine-eigenen Auto-Konter-Cue-Pfad, damit das CTB-Scheduling konsistent bleibt.",
-    "fhparry.unlock_custom_overdrive.name": "Eigenen Overdrive-Modus freischalten",
-    "fhparry.unlock_custom_overdrive.desc": "Macht den eigenen Overdrive-Modus (Index 0x11) im Overdrive-Menue fuer jedes Party-Mitglied auswaehlbar. WARNUNG: Diese Option schreibt zu Beginn jedes Kampfes ein Freischalt-Bit direkt in die Speicherdaten. Wenn du danach speicherst, wird die Freischaltung in diesem Speicherstand dauerhaft. Standardmaessig aus.",
+    "fhparry.learn_custom_overdrive.name": "Eigenen Overdrive-Modus erlernen",
+    "fhparry.learn_custom_overdrive.desc": "Laesst jedes Party-Mitglied den eigenen Overdrive-Modus (Index 0x11) durch Parieren erlernen, so wie FFX seine eigenen Modi lehrt: nach 100 erfolgreichen Paraden dieses Charakters wird der Modus im Overdrive-Menue auswaehlbar. WARNUNG: Diese Option schreibt den Lernfortschritt direkt in die Speicherdaten und schaltet den Modus dort frei, sobald ein Charakter 100 erreicht. Wenn du danach speicherst, werden dieser Fortschritt und jede Freischaltung in diesem Speicherstand dauerhaft. Standardmaessig aus.",
     "fhparry.future.name": "Zukuenftige Funktionen",
     "fhparry.future.desc": "Reserviert fuer kommende Auto-Konter-Optionen."
 }

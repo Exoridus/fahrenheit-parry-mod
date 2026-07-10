@@ -20,6 +20,7 @@
     <Compile Include="..\..\src\combat\ParryTurnStateMachine.cs" Link="combat\ParryTurnStateMachine.cs" />
     <Compile Include="..\..\src\debug\NativeProbeRing.cs" Link="debug\NativeProbeRing.cs" />
     <Compile Include="..\..\src\debug\OverdriveCounterFormatter.cs" Link="debug\OverdriveCounterFormatter.cs" />
+    <Compile Include="..\..\src\debug\OverdriveLearnPolicy.cs" Link="debug\OverdriveLearnPolicy.cs" />
     <Compile Include="..\..\src\debug\OverdriveMaskFormatter.cs" Link="debug\OverdriveMaskFormatter.cs" />
     <Compile Include="..\..\src\debug\ParryTurnTimelineTracker.cs" Link="debug\ParryTurnTimelineTracker.cs" />
     <Compile Include="..\..\src\debug\PerFrameProbeThrottle.cs" Link="debug\PerFrameProbeThrottle.cs" />
