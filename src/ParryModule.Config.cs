@@ -37,7 +37,8 @@ public unsafe sealed partial class ParryModule
         WriteIndented = true
     };
 
-    // alpha09's mod_context.Paths.SettingsPath is empty or points at the DEPLOYED MOD FOLDER, which
+    // Through alpha10, mod_context.Paths.SettingsPath is empty or points at the DEPLOYED MOD FOLDER
+    // (alpha10 resolves it to Path.Join(mod_dir, "<mod_name>.config.json")), which
     // `build.cmd deploy` mirrors — anything written there is deleted on the next deploy. We instead
     // use the mod's global-state directory (state/global/<mod>/): the framework hands us a FileStream
     // into it at init, so its directory is a stable home for our files.
