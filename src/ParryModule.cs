@@ -13,7 +13,6 @@ public unsafe sealed partial class ParryModule : FhModule
     private const float FrameDurationSeconds = 1f / BattleFrameRate;
     private const float ParriedTextSeconds = 1.0f;
     private const float ParryMissedTextSeconds = 1.0f;
-    private const float OverdriveBoostPercent = 0.05f;
     // Number of consecutive parries on a single slot at which the observe-only
     // streak path emits a "STREAK READY" log entry. Tuning point for the future
     // counter-attack feature; kept const for now so the threshold is one obvious
@@ -642,9 +641,6 @@ public unsafe sealed partial class ParryModule : FhModule
     private ulong _debugBattleFrameIndex;
     private bool _debugBattleActive;
     private bool _debugBattleSessionFirstCueSeen;
-    // One-shot guard for the read-only overdrive-mask save probe: fires exactly
-    // once, the first time a live battle context exists in the process.
-    private bool _saveDataOverdriveProbeFired;
     private bool _debugGameSaveLoaded;
     private bool _debugGameplayReady;
     private bool _debugAutoScroll = true;
