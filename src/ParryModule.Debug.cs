@@ -159,6 +159,11 @@ public unsafe sealed partial class ParryModule
                 // "Battle session detected." log is deferred to monitor_attack_cues()
                 // so that it fires only when the first actionable cue is observed,
                 // not at the earlier gameplay-ready/battle-context transition.
+
+                // Read-only overdrive-mask probe: the save structure is populated by
+                // the time a live battle context exists, so this is the first safe
+                // point to read limit_modes_obtained and correlate it with the menu.
+                log_overdrive_modes_probe_once();
             }
             else
             {
@@ -1758,6 +1763,66 @@ public unsafe sealed partial class ParryModule
         };
 
         return !string.IsNullOrWhiteSpace(name);
+    }
+
+    /// <summary>
+    ///     Read-only diagnostic: logs each permanent party character's
+    ///     <c>limit_modes_obtained</c> bitmask (and the adjacent
+    ///     <c>limit_mode_index</c>) so the derived <see cref="ExternalMemoryOffsetMap.SaveData"/>
+    ///     offsets can be checked against the in-game Overdrive menu before any
+    ///     write is considered.
+    ///
+    ///     <para>
+    ///         Reads only — no writes anywhere. Each per-character read is wrapped so
+    ///         a bad address logs a warning instead of taking down the game. Fires at
+    ///         most once per process via <see cref="_saveDataOverdriveProbeFired"/>.
+    ///         Bounded to the seven permanent playable members (char ids 0..6, the
+    ///         set the mod already names) rather than the full name table, because
+    ///         the <c>PlySave</c> array length past those entries is not verified and
+    ///         a wrong stride would read unrelated memory.
+    ///     </para>
+    /// </summary>
+    private void log_overdrive_modes_probe_once()
+    {
+        if (_saveDataOverdriveProbeFired) return;
+        _saveDataOverdriveProbeFired = true;
+
+        if (!_optionLogging) return;
+
+        // char ids 0..6: Tidus, Yuna, Auron, Kimahri, Wakka, Lulu, Rikku.
+        const int probeCharCount = 7;
+
+        log_debug("[SaveProbe] Reading limit_modes_obtained (read-only; offsets DERIVED, verify vs Overdrive menu).");
+
+        for (int charId = 0; charId < probeCharCount; charId++)
+        {
+            string name = try_map_party_chr_id_to_name(charId, out string resolved) ? resolved : "?";
+            try
+            {
+                int entryRva = ExternalMemoryOffsetMap.SaveData.PlyArr0
+                             + charId * ExternalMemoryOffsetMap.SaveData.PlySaveStride;
+
+                uint* maskPtr  = FhUtil.ptr_at<uint>(entryRva + ExternalMemoryOffsetMap.SaveData.LimitModesObtained);
+                byte* indexPtr = FhUtil.ptr_at<byte>(entryRva + ExternalMemoryOffsetMap.SaveData.LimitModeIndex);
+
+                if (maskPtr == null || indexPtr == null)
+                {
+                    log_debug($"[SaveProbe] slot {charId} ({name}) — null pointer from ptr_at, read skipped.");
+                    continue;
+                }
+
+                uint mask = *maskPtr;
+                byte index = *indexPtr;
+
+                log_debug(
+                    $"[SaveProbe] slot {charId} ({name}) limit_modes_obtained=0x{mask:X8} "
+                    + $"set_bits=[{OverdriveMaskFormatter.FormatSetBits(mask)}] limit_mode_index={index}");
+            }
+            catch (Exception ex)
+            {
+                log_debug($"[SaveProbe] slot {charId} ({name}) — read failed: {ex.GetType().Name}: {ex.Message}");
+            }
+        }
     }
 
     private static uint extract_non_party_target_mask(AttackCue cue)

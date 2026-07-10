@@ -532,6 +532,9 @@ public unsafe sealed partial class ParryModule : FhModule
     private ulong _debugBattleFrameIndex;
     private bool _debugBattleActive;
     private bool _debugBattleSessionFirstCueSeen;
+    // One-shot guard for the read-only overdrive-mask save probe: fires exactly
+    // once, the first time a live battle context exists in the process.
+    private bool _saveDataOverdriveProbeFired;
     private bool _debugGameSaveLoaded;
     private bool _debugGameplayReady;
     private bool _debugAutoScroll = true;
