@@ -394,8 +394,23 @@ public unsafe sealed partial class ParryModule : FhModule
     private const float ImpactShakeFreqB     = 2.3f;   // ~11.0 Hz — ratio 1.35, so the axes never relock
     private const uint ImpactShakeAmpA       = 9;      // a parry is a lateral impact: favour one axis
     private const uint ImpactShakeAmpB       = 5;
-    private const uint ImpactShakeDuration   = 8;      // ticks at 30 fps ≈ 0.27 s
+    private const uint ImpactShakeDuration   = 8;      // ticks at 30 fps ≈ 0.27 s — used when the sweep is off
     private const uint ImpactShakeRandomness = 8;      // the engine's own jitter: ±4 around the amplitude
+
+    // Duration sweep, for dialling the shake in by feel. ONLY the duration varies — amplitude and the
+    // two frequencies stay fixed, so each shake differs in exactly one dimension and the comparison
+    // stays clean. Stages are drawn from a shuffled bag rather than in order: a rising or falling
+    // sequence would let you compare each shake against its neighbour instead of judging it on its
+    // own, and the same stage never lands twice in a row.
+    private static readonly uint[] ImpactShakeDurationPresets = [5, 8, 12, 16, 22];   // ticks @30fps
+    private static readonly string[] ImpactShakeDurationLabels = ["A", "B", "C", "D", "E"];
+    private const int ImpactShakeDefaultPreset = 1;    // "B" = 8 ticks, the value the sweep replaces
+
+    private bool _optionImpactShakeSweep = true;
+    private int[] _shakeBag = [];
+    private int _shakeBagPos;
+    private int _lastShakePreset = -1;
+    private readonly int[] _shakePresetCounts = new int[5];
 
     // Streak counter attack: when a slot completes a defensive streak (every
     // targeted slot in a cue parried at least once and cumulative streak ≥

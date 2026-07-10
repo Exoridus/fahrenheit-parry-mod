@@ -881,6 +881,60 @@ public unsafe sealed partial class ParryModule
         return int.TryParse(s, NumberStyles.Integer, CultureInfo.InvariantCulture, out id);
     }
 
+    // Impact-shake duration sweep. Only the duration varies; amplitude and both frequencies are
+    // fixed, so each parry differs in exactly one dimension. Stages come from a shuffled bag, so the
+    // order is unpredictable and no stage repeats back-to-back — a rising or falling sequence would
+    // invite judging each shake against its neighbour instead of on its own.
+    private void render_shake_sweep_panel()
+    {
+        if (!ImGui.CollapsingHeader("Impact shake — duration sweep###fhparry.debug.shakesweep")) return;
+
+        ImGui.TextDisabled($"Fixed: ampA={ImpactShakeAmpA} freqA={ImpactShakeFreqA:F2} ({ImpactShakeFreqA * BattleFrameRate / MathF.Tau:F1} Hz)  |  " +
+                           $"ampB={ImpactShakeAmpB} freqB={ImpactShakeFreqB:F2} ({ImpactShakeFreqB * BattleFrameRate / MathF.Tau:F1} Hz)");
+
+        if (ImGui.Checkbox("Randomise duration (shuffled bag)###fhparry.debug.shakesweep.on", ref _optionImpactShakeSweep))
+        {
+            persist_settings();
+        }
+
+        if (!_optionImpactShakeSweep)
+        {
+            ImGui.TextDisabled($"Sweep off — every parry uses preset {ImpactShakeDurationLabels[ImpactShakeDefaultPreset]} " +
+                               $"({ImpactShakeDurationPresets[ImpactShakeDefaultPreset]} ticks).");
+        }
+
+        if (ImGui.BeginTable("###fhparry.debug.shakesweep.table", 4, ImGuiTableFlags.Borders | ImGuiTableFlags.SizingStretchProp))
+        {
+            ImGui.TableSetupColumn("Preset");
+            ImGui.TableSetupColumn("Ticks");
+            ImGui.TableSetupColumn("Seconds");
+            ImGui.TableSetupColumn("Fired");
+            ImGui.TableHeadersRow();
+
+            for (int i = 0; i < ImpactShakeDurationPresets.Length; i++)
+            {
+                ImGui.TableNextRow();
+                ImGui.TableNextColumn();
+                bool isLast = i == _lastShakePreset;
+                if (isLast) ImGui.TextColored(new Vector4(1f, 0.85f, 0.3f, 1f), $"{ImpactShakeDurationLabels[i]}  <-- last");
+                else        ImGui.Text(ImpactShakeDurationLabels[i]);
+
+                ImGui.TableNextColumn(); ImGui.Text(ImpactShakeDurationPresets[i].ToString());
+                ImGui.TableNextColumn(); ImGui.Text($"{ImpactShakeDurationPresets[i] / BattleFrameRate:F2}");
+                ImGui.TableNextColumn(); ImGui.Text(_shakePresetCounts[i].ToString());
+            }
+            ImGui.EndTable();
+        }
+
+        if (ImGui.Button("Reset counts###fhparry.debug.shakesweep.reset"))
+        {
+            Array.Clear(_shakePresetCounts);
+            _lastShakePreset = -1;
+        }
+
+        ImGui.TextDisabled("Every parry also logs its preset: [ImpactShake] preset=C dur=12 (0.40s) ...");
+    }
+
     private void render_debug_overlay()
     {
         if (!_optionDebugOverlay) return;
@@ -899,6 +953,7 @@ public unsafe sealed partial class ParryModule
             | ImGuiWindowFlags.NoNavFocus;
         if (ImGui.Begin("Parry Debug Overlay###fhparry.debug.overlay", overlayFlags))
         {
+            render_shake_sweep_panel();
             render_fx_motion_lab();
             render_debug_activity_panels(MathF.Max(0f, ImGui.GetContentRegionAvail().Y));
         }
