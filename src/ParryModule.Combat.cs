@@ -938,7 +938,31 @@ public unsafe sealed partial class ParryModule
             _runtime.InputState = ParryInputState.Ready;
         }
 
+        // The streak lives inside ONE run of consecutive enemy actions and dies with it. This
+        // is where the cue list emptied, so control is about to return to the player.
+        //
+        // Without this, a parry on the enemy's turn, then a player turn, then a parry on the
+        // next enemy turn read as "two consecutive parries" and fired the counter. With a lone
+        // enemy attacking once per round that made the counter guaranteed rather than earned.
+        // resolve_streak_at_cue_clear() already ran at the top of this method, so a streak that
+        // genuinely reached the threshold inside the block has fired before we clear it.
+        reset_parry_streak("enemy turn block ended");
+
         log_debug(reason);
+    }
+
+    /// <summary>
+    ///     Ends the current streak on every slot. A streak is a property of one run of
+    ///     consecutive enemy actions; it does not survive the player regaining control.
+    /// </summary>
+    private void reset_parry_streak(string reason)
+    {
+        for (int i = 0; i < PartyActorCapacity; i++)
+        {
+            if (_consecutiveParriesPerSlot[i] == 0) continue;
+            log_debug($"Streak reset ({reason}): {format_actor_slot((byte)i)} (was {_consecutiveParriesPerSlot[i]}×).");
+            _consecutiveParriesPerSlot[i] = 0;
+        }
     }
 
     private void trigger_failure_feedback()

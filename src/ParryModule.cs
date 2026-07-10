@@ -340,17 +340,22 @@ public unsafe sealed partial class ParryModule : FhModule
     // (install_stage1_probes) that are a separate research feature and crash at battle start when
     // untested. Camera/overlay debugging does NOT need this — use _optionCameraProbe + logging.
     private bool _optionNativeProbeLogging = false;
-    // Controls which turns trigger battle-camera suppression. EnemyTurnsOnly (default)
-    // preserves the prior bool-true behaviour. AllTurns extends suppression to all
-    // AwaitingTurnEnd windows. Off passes every call through to the engine unchanged.
-    // MsBattleSpecialCameraPause (cinematic path) is never touched by any mode.
+    // Controls which turns trigger battle-camera suppression. Off passes every call through to
+    // the engine unchanged.
+    //
+    // AllTurns is the default, because EnemyTurnsOnly leaves the two pans that hurt most. The
+    // camera-writer probe shows why: across three logged fights, not one cam*/ref* opcode ever
+    // fired while an enemy action was in flight — every write landed at turn_active=False. The
+    // pans a player actually complains about are a finishing blow (the player's own turn) and an
+    // item-use swing, and both are invisible to a lock that only watches enemy turns. You cannot
+    // time an attack you are not looking at.
     private enum BattleCameraLockMode
     {
         Off = 0,
         EnemyTurnsOnly = 1,
         AllTurns = 2,
     }
-    private BattleCameraLockMode _optionBattleCameraLockMode = BattleCameraLockMode.EnemyTurnsOnly;
+    private BattleCameraLockMode _optionBattleCameraLockMode = BattleCameraLockMode.AllTurns;
     // Splits MsAtelRequestMagicCamera out of the Battle Camera Lock so it can be switched off on
     // its own. Enemy spell casts route their camera through that function; suppressing it without
     // calling orig is suspected of also swallowing the spell VFX. Default true keeps the previous
