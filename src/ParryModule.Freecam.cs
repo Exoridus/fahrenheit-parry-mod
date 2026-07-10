@@ -36,6 +36,13 @@ public unsafe sealed partial class ParryModule
     private readonly Dictionary<string, AnchorPose> _cameraAnchors = new();
     private MsGetBattleSceneFn? _getBattleScene;
 
+    // Follow-cam (persisted): keep the static eye (anchor if set, else the frozen default battle
+    // camera) but swing the look-at onto the acting enemy, damped, and ease back to the resting gaze
+    // when no enemy is acting. Works with or without a saved anchor.
+    private bool _optionFollowCam;
+    private Vector3 _followLook;
+    private bool _followInit;
+
     private readonly struct AnchorPose
     {
         public readonly Vector3 Pos;
@@ -63,18 +70,67 @@ public unsafe sealed partial class ParryModule
     // on, the saved pose is held. Both no-op unless a battle is live and the camera id is resolved.
     private void drive_camera()
     {
-        if (!try_get_live_battle_context(out _)) { _battleCameraId = 0; return; }
+        if (!try_get_live_battle_context(out _)) { _battleCameraId = 0; _followInit = false; return; }
         if (_battleCameraId == 0) return;
 
         if (_freecamActive)
         {
             read_freecam_input();
             stamp_camera(_freecamPos, _freecamYaw, _freecamPitch);
+            return;
         }
-        else if (_optionStaticCameraAnchor && _cameraAnchors.TryGetValue(current_battle_camera_key(), out AnchorPose a))
+
+        AnchorPose anchor = default;
+        bool haveAnchor = _optionStaticCameraAnchor
+            && _cameraAnchors.TryGetValue(current_battle_camera_key(), out anchor);
+
+        if (_optionFollowCam)
         {
-            stamp_camera(a.Pos, a.Yaw, a.Pitch);
+            // Aim at the acting enemy; ease back to the anchor's resting gaze when none is acting.
+            Vector3 desired;
+            if (try_get_attacker_world_pos(out Vector3 atkPos)) desired = atkPos;
+            else if (haveAnchor) desired = anchor_look_point(anchor);
+            else return;  // no attacker and no anchor default — nothing to aim at yet
+
+            float k = 1f - MathF.Exp(-ImGui.GetIO().DeltaTime / 0.18f);
+            _followLook = _followInit ? Vector3.Lerp(_followLook, desired, k) : desired;
+            _followInit = true;
+
+            _camSetRect ??= FhUtil.get_fptr<MsCameraSetRectFn>(ExternalMemoryOffsetMap.Functions.MsCameraSetRect);
+            if (haveAnchor) write_camera_bank(CameraEyeBank, anchor.Pos);  // else keep the frozen default eye
+            write_camera_bank(CameraRefBank, _followLook);
+            return;
         }
+
+        if (haveAnchor) stamp_camera(anchor.Pos, anchor.Yaw, anchor.Pitch);
+    }
+
+    // World position of the current attacker while an enemy is acting, from Chr->actor->chr_pos_vec.
+    private bool try_get_attacker_world_pos(out Vector3 pos)
+    {
+        pos = default;
+        if (!_runtime.AwaitingTurnEnd) return false;
+        int atk = _runtime.CurrentAttackerId;
+        if (atk < PartyActorCapacity) return false;   // enemies only
+        Chr* chr = try_get_chr((byte)atk);
+        if (chr == null || chr->actor == null) return false;
+        Vector4 p = chr->actor->chr_pos_vec;
+        pos = new Vector3(p.X, p.Y, p.Z);
+        return true;
+    }
+
+    private static Vector3 anchor_look_point(AnchorPose a)
+    {
+        float cp = MathF.Cos(a.Pitch), sp = MathF.Sin(a.Pitch);
+        float cy = MathF.Cos(a.Yaw),   sy = MathF.Sin(a.Yaw);
+        return a.Pos + new Vector3(cp * sy, sp, cp * cy);
+    }
+
+    private void write_camera_bank(uint mode, Vector3 v)
+    {
+        float* buf = stackalloc float[4];
+        buf[0] = v.X; buf[1] = v.Y; buf[2] = v.Z; buf[3] = 0f;
+        _camSetRect!((uint)_battleCameraId, mode, buf);
     }
 
     // Key for the current encounter: battle map id + the sorted enemy chr_ids. Same map with a
@@ -138,13 +194,8 @@ public unsafe sealed partial class ParryModule
 
         float cp = MathF.Cos(pitch), sp = MathF.Sin(pitch);
         float cy = MathF.Cos(yaw),   sy = MathF.Sin(yaw);
-        Vector3 target = pos + new Vector3(cp * sy, sp, cp * cy);
-
-        float* buf = stackalloc float[4];
-        buf[0] = pos.X; buf[1] = pos.Y; buf[2] = pos.Z; buf[3] = 0f;
-        _camSetRect((uint)_battleCameraId, CameraEyeBank, buf);
-        buf[0] = target.X; buf[1] = target.Y; buf[2] = target.Z; buf[3] = 0f;
-        _camSetRect((uint)_battleCameraId, CameraRefBank, buf);
+        write_camera_bank(CameraEyeBank, pos);
+        write_camera_bank(CameraRefBank, pos + new Vector3(cp * sy, sp, cp * cy));
     }
 
     // Lab-tab panel: toggle, live coordinates (copy them once the angle looks right), and drag fields
@@ -182,6 +233,11 @@ public unsafe sealed partial class ParryModule
         bool hasAnchor = _cameraAnchors.ContainsKey(current_battle_camera_key());
         ImGui.TextDisabled($"encounter: {current_battle_camera_key()}  ·  this one: {(hasAnchor ? "saved" : "none")}  ·  {_cameraAnchors.Count} total");
         ImGui.TextDisabled("Keyed by map + enemy group. Holds even with freecam off; snaps back after effect pans.");
+
+        if (ImGui.Checkbox("Follow attacker##fhparry.freecam.follow", ref _optionFollowCam))
+            persist_settings();
+        ImGui.SameLine();
+        ImGui.TextDisabled("look-at eases onto the acting enemy (anchor or default eye), back when idle");
     }
 
     // Camera tab: the freecam controls on top, then a table of the anchors saved for the current
