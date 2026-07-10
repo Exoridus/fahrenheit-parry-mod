@@ -2,6 +2,72 @@ namespace Fahrenheit.Mods.Parry;
 
 public unsafe sealed partial class ParryModule
 {
+    /// <summary>
+    ///     Draws one setting: its localized name, then the widget indented beneath it,
+    ///     with the localized description as a hover tooltip.
+    ///
+    ///     The widgets themselves use hidden labels (`##fhparry.x`) because Fahrenheit's
+    ///     settings panel used to draw the name and description for us. It no longer can:
+    ///     `FhSettingCustomRenderer` is gone on alpha11 and the replacement surface offers
+    ///     no boolean or combo type. So we draw the chrome ourselves, from the same
+    ///     `fhparry.<id>.name` / `.desc` keys in lang/*.json.
+    ///
+    ///     The name is drawn above rather than beside the widget because several renderers
+    ///     emit more than one line (the camera-lock combo trails a TextDisabled note), and
+    ///     ImGui.SameLine would attach the label to whatever they drew last.
+    /// </summary>
+    private static void setting_row(string id, Action widget)
+    {
+        ImGui.TextUnformatted(FhApi.Localization.localize($"fhparry.{id}.name"));
+        if (ImGui.IsItemHovered())
+        {
+            ImGui.SetTooltip(FhApi.Localization.localize($"fhparry.{id}.desc"));
+        }
+
+        ImGui.Indent();
+        widget();
+        ImGui.Unindent();
+        ImGui.Spacing();
+    }
+
+    /// <summary>
+    ///     The Settings tab. Replaces the FhSettingsCategory registration that alpha11
+    ///     removed. Persistence is unaffected — the mod has always written its own
+    ///     fhparry.config.json.
+    /// </summary>
+    private void render_settings_tab()
+    {
+        ImGui.SeparatorText("Core");
+        setting_row("enabled",    render_setting_enabled);
+        setting_row("difficulty", render_setting_difficulty);
+
+        ImGui.SeparatorText("Dodge");
+        setting_row("dodge_window",        render_setting_dodge_window);
+        setting_row("dodge_whiffout",      render_setting_dodge_whiffout);
+        setting_row("dodge_motion_cancel", render_setting_dodge_motion_cancel);
+
+        ImGui.SeparatorText("Reward");
+        setting_row("ctb",            render_setting_overdrive_boost);
+        setting_row("streak_counter", render_setting_streak_counter);
+        setting_row("penalty",        render_setting_penalty);
+
+        ImGui.SeparatorText("Feedback");
+        setting_row("audio",        render_setting_audio);
+        setting_row("parry_effect", render_setting_parry_effect);
+        setting_row("impact_shake", render_setting_impact_shake);
+
+        ImGui.SeparatorText("Camera");
+        setting_row("battle_camera_lock_mode", render_setting_battle_camera_lock_mode);
+        setting_row("magic_camera_lock",       render_setting_magic_camera_lock);
+
+#if DEBUG
+        ImGui.SeparatorText("Diagnostics");
+        setting_row("logging",       render_setting_logging);
+        setting_row("debug_overlay", render_setting_debug_overlay);
+        setting_row("camera_probe",  render_setting_camera_probe);
+#endif
+    }
+
     private void render_setting_enabled()
     {
         if (ImGui.Checkbox("##fhparry.enabled", ref _optionEnabled))
@@ -200,10 +266,4 @@ public unsafe sealed partial class ParryModule
         }
     }
 
-    private void render_setting_future()
-    {
-        ImGui.BeginDisabled(true);
-        ImGui.TextWrapped("Auto-counter customization coming soon.");
-        ImGui.EndDisabled();
-    }
 }

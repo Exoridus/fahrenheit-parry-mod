@@ -724,28 +724,15 @@ public unsafe sealed partial class ParryModule : FhModule
         _hStartupBootFmvSkip       = new FhMethodHandle<StartupFmvSkipPoll>(this, "FFX.exe", StartupOffsets.FmvSkipPoll, h_startup_boot_fmv_skip);
         _hStartupShellExecuteW     = new FhMethodHandle<StartupShellExecuteW>(this, "shell32.dll", "ShellExecuteW", h_startup_shell_execute_w);
 
-        settings = new FhSettingsCategory("fhparry", [
-            new FhSettingCustomRenderer("enabled", render_setting_enabled),
-            new FhSettingCustomRenderer("difficulty", render_setting_difficulty),
-            new FhSettingCustomRenderer("audio", render_setting_audio),
-            new FhSettingCustomRenderer("ctb", render_setting_overdrive_boost),
-            new FhSettingCustomRenderer("penalty", render_setting_penalty),
-            new FhSettingCustomRenderer("battle_camera_lock_mode", render_setting_battle_camera_lock_mode),
-            new FhSettingCustomRenderer("magic_camera_lock", render_setting_magic_camera_lock),
-            new FhSettingCustomRenderer("parry_effect", render_setting_parry_effect),
-            new FhSettingCustomRenderer("impact_shake", render_setting_impact_shake),
-            new FhSettingCustomRenderer("dodge_motion_cancel", render_setting_dodge_motion_cancel),
-            new FhSettingCustomRenderer("streak_counter", render_setting_streak_counter),
-            new FhSettingCustomRenderer("dodge_window", render_setting_dodge_window),
-            new FhSettingCustomRenderer("dodge_whiffout", render_setting_dodge_whiffout),
-#if DEBUG
-            // Diagnostics — not shipped. Release builds have no UI for these.
-            new FhSettingCustomRenderer("logging", render_setting_logging),
-            new FhSettingCustomRenderer("debug_overlay", render_setting_debug_overlay),
-            new FhSettingCustomRenderer("camera_probe", render_setting_camera_probe),
-#endif
-            new FhSettingCustomRenderer("future", render_setting_future)
-        ]);
+        // No FhSettingsCategory. alpha11 removes FhSettingCustomRenderer and its replacement
+        // surface (FhSettingsCategory / FhSettingText / FhSettingNumber<T>) has no boolean and
+        // no combo type — 15 of our 17 controls have nowhere to live. A mod cannot supply its
+        // own type either: FhSetting.render() is `internal abstract` and InternalsVisibleTo is
+        // granted to the runtime alone.
+        //
+        // So the controls moved into the mod's own window (render_settings_tab, drawn from the
+        // same fhparry.<id>.name/.desc keys). Persistence never depended on Fahrenheit: the mod
+        // has always written its own fhparry.config.json.
     }
 
     public override bool init(FhModContext mod_context, FileStream global_state_file)

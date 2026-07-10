@@ -935,15 +935,27 @@ public unsafe sealed partial class ParryModule
         ImGui.TextDisabled("Every parry also logs its preset: [ImpactShake] preset=C dur=12 (0.40s) ...");
     }
 
+    /// <summary>
+    ///     The mod's own window. It exists because alpha11 removes FhSettingCustomRenderer
+    ///     and offers no boolean or combo setting type, so there is nowhere in Fahrenheit's
+    ///     settings panel left to draw our 17 controls.
+    ///
+    ///     Settings render unconditionally — you must be able to change the difficulty from
+    ///     the main menu, before any save is loaded. The debug tabs carry the old gates
+    ///     (save loaded, gameplay ready); they show a placeholder rather than vanishing, so
+    ///     the tab bar does not reflow under the cursor. That matters most for the Lab tab,
+    ///     whose widgets fire MsSetMotion and MsBtlSetHitEffect natively and crash
+    ///     uncatchably on an unloaded id — with no gameplay it draws no widgets at all.
+    /// </summary>
     private void render_debug_overlay()
     {
-        if (!_optionDebugOverlay) return;
-        if (!_debugGameSaveLoaded) return;
-        if (!_debugGameplayReady) return;
-
         ImGui.SetNextWindowBgAlpha(0.55f);
         ImGui.SetNextWindowPos(new Vector2(20f, 20f), ImGuiCond.FirstUseEver);
+#if DEBUG
         ImGui.SetNextWindowSize(new Vector2(1020f, 620f), ImGuiCond.FirstUseEver);
+#else
+        ImGui.SetNextWindowSize(new Vector2(420f, 520f), ImGuiCond.FirstUseEver);
+#endif
 
         ImGui.PushStyleColor(ImGuiCol.WindowBg, new Vector4(0f, 0f, 0f, 0.55f));
         const ImGuiWindowFlags overlayFlags =
@@ -951,16 +963,54 @@ public unsafe sealed partial class ParryModule
             | ImGuiWindowFlags.NoBringToFrontOnFocus
             | ImGuiWindowFlags.NoNavInputs
             | ImGuiWindowFlags.NoNavFocus;
-        if (ImGui.Begin("Parry Debug Overlay###fhparry.debug.overlay", overlayFlags))
+        if (ImGui.Begin("Parry###fhparry.window", overlayFlags) && ImGui.BeginTabBar("###fhparry.tabs"))
         {
-            render_shake_sweep_panel();
-            render_fx_motion_lab();
-            render_debug_activity_panels(MathF.Max(0f, ImGui.GetContentRegionAvail().Y));
+            if (ImGui.BeginTabItem("Settings"))
+            {
+                render_settings_tab();
+                ImGui.EndTabItem();
+            }
+
+#if DEBUG
+            bool liveReady = _optionDebugOverlay && _debugGameSaveLoaded && _debugGameplayReady;
+
+            if (ImGui.BeginTabItem("Live"))
+            {
+                if (liveReady) render_debug_activity_panels(MathF.Max(0f, ImGui.GetContentRegionAvail().Y));
+                else           render_debug_tab_placeholder();
+                ImGui.EndTabItem();
+            }
+
+            if (ImGui.BeginTabItem("Lab"))
+            {
+                if (liveReady) render_fx_motion_lab();
+                else           render_debug_tab_placeholder();
+                ImGui.EndTabItem();
+            }
+
+            if (ImGui.BeginTabItem("Shake"))
+            {
+                if (liveReady) render_shake_sweep_panel();
+                else           render_debug_tab_placeholder();
+                ImGui.EndTabItem();
+            }
+#endif
+
+            ImGui.EndTabBar();
         }
 
         ImGui.End();
         ImGui.PopStyleColor();
     }
+
+#if DEBUG
+    private void render_debug_tab_placeholder()
+    {
+        if (!_optionDebugOverlay)      ImGui.TextDisabled("Debug overlay is off (Settings -> Diagnostics).");
+        else if (!_debugGameSaveLoaded) ImGui.TextDisabled("Waiting for a save to load.");
+        else                            ImGui.TextDisabled("Waiting for gameplay.");
+    }
+#endif
 
     private void render_debug_state_panel(float panelHeight)
     {
