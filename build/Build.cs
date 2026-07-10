@@ -760,6 +760,20 @@ internal sealed partial class BuildScript : NukeBuild
 
     void PinReleaseFahrenheitRef()
     {
+        // Honor a deliberately committed pin: if the release ref file already holds a
+        // concrete 40-char commit SHA, keep it. Only auto-resolve Fahrenheit main HEAD
+        // when the pin is missing, empty, or symbolic (e.g. a branch name). Without this,
+        // release-bump silently drags every release onto Fahrenheit main HEAD.
+        if (File.Exists(ReleaseFahrenheitRefPath))
+        {
+            var existing = File.ReadAllText(ReleaseFahrenheitRefPath).Trim();
+            if (existing.Length == 40 && existing.All(Uri.IsHexDigit))
+            {
+                Log.Information($"Keeping committed release Fahrenheit ref: {existing}");
+                return;
+            }
+        }
+
         var lsRemote = RunProcess(
             "git",
             $"ls-remote {Quote(FahrenheitRepo)} refs/heads/main",
