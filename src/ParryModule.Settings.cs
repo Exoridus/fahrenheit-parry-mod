@@ -42,8 +42,6 @@ public unsafe sealed partial class ParryModule
         setting_row("difficulty", render_setting_difficulty);
 
         ImGui.SeparatorText("Dodge");
-        setting_row("dodge_window",        render_setting_dodge_window);
-        setting_row("dodge_whiffout",      render_setting_dodge_whiffout);
         setting_row("dodge_motion_cancel", render_setting_dodge_motion_cancel);
 
         ImGui.SeparatorText("Reward");
@@ -111,8 +109,8 @@ public unsafe sealed partial class ParryModule
             {
                 // Disabling mid-lockout immediately releases the player.
                 _runtime.InputState = ParryInputState.Ready;
-                _runtime.WhiffLockoutRemainingSeconds = 0f;
-                _runtime.WhiffLockoutTotalSeconds = 0f;
+                _runtime.WhiffLockoutRemainingTicks = 0;
+                _runtime.WhiffLockoutTotalTicks = 0;
                 log_debug("Whiff lockout disabled mid-recovery; returning to Ready.");
             }
         }
@@ -234,26 +232,6 @@ public unsafe sealed partial class ParryModule
             _optionDifficulty = ParryDifficultyModel.DifficultyFromComboIndex(idx);
             persist_settings();
             log_debug($"Difficulty changed to {ParryDifficultyModel.FormatName(_optionDifficulty)}.");
-        }
-    }
-
-    private void render_setting_dodge_window()
-    {
-        if (ImGui.SliderFloat("##fhparry.dodge_window", ref _dodgeWindowMs, DodgeWindowMsMin, DodgeWindowMsMax, "%.0f ms"))
-        {
-            _dodgeWindowMs = Math.Clamp(_dodgeWindowMs, DodgeWindowMsMin, DodgeWindowMsMax);
-            persist_settings();
-            log_debug($"Dodge window set to {_dodgeWindowMs:F0} ms.");
-        }
-    }
-
-    private void render_setting_dodge_whiffout()
-    {
-        if (ImGui.SliderFloat("##fhparry.dodge_whiffout", ref _dodgeWhiffoutMs, DodgeWhiffoutMsMin, DodgeWhiffoutMsMax, "%.0f ms"))
-        {
-            _dodgeWhiffoutMs = Math.Clamp(_dodgeWhiffoutMs, DodgeWhiffoutMsMin, DodgeWhiffoutMsMax);
-            persist_settings();
-            log_debug($"Dodge whiffout set to {_dodgeWhiffoutMs:F0} ms.");
         }
     }
 

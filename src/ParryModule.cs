@@ -263,13 +263,13 @@ public unsafe sealed partial class ParryModule : FhModule
         public byte CurrentCueIndex;
         public uint CurrentPartyTargetMask;
         public uint CurrentCueSignature;
-        public float ParryWindowRemainingSeconds;
-        // Whiff recovery lockout: countdown that approximates the "return to normal
-        // stance" animation commitment. Non-zero only while InputState == WhiffLockout.
-        public float WhiffLockoutRemainingSeconds;
-        public float WhiffLockoutTotalSeconds;
+        public int ParryWindowRemainingTicks;
+        // Whiff recovery lockout: countdown (in battle ticks) that approximates the "return to
+        // normal stance" animation commitment. Non-zero only while InputState == WhiffLockout.
+        public int WhiffLockoutRemainingTicks;
+        public int WhiffLockoutTotalTicks;
         public bool AwaitingTurnEnd;
-        public float ParryWindowElapsedSeconds;
+        public int ParryWindowElapsedTicks;
         public bool ParryWindowSucceeded;
         public bool SuccessIndicatorActive;
 
@@ -481,7 +481,7 @@ public unsafe sealed partial class ParryModule : FhModule
     // path (no counterattack). The engine drives the return/walk-back.
     private bool _optionDodgeEnabled = true;
     private bool _dodgeWindowActive = false;
-    private float _dodgeWindowRemainingSeconds = 0f;
+    private int _dodgeWindowRemainingTicks = 0;
     private byte _dodgeArmedAttackerId = 0;
     // CueFirstSeenFrame of the attack the dodge was armed for — the negation only applies to THIS
     // attack instance, so a multi-hit of the same attack is fully dodged but a fresh attack from
@@ -519,25 +519,8 @@ public unsafe sealed partial class ParryModule : FhModule
     // step-out away from that attacker. Never read from C code — only written there.
     private const int ChrLastAttackerIdOffset = 0xdef;
     private const int EvadeMotionId = 0xC;
-    private const float DodgeWindowMsNormal = 350f;   // release default (parry Normal = 200ms)
-    private const float DodgeWindowMsDebug  = 800f;    // DEBUG default — generous for testing
-    private const float DodgeWindowMsMin = 100f;
-    private const float DodgeWindowMsMax = 1200f;
-    // Adjustable at runtime via the "dodge_window" setting (slider, persisted). Defaults to the
-    // DEBUG window in DEBUG builds, the normal window otherwise.
-    private float _dodgeWindowMs =
-#if DEBUG
-        DodgeWindowMsDebug;
-#else
-        DodgeWindowMsNormal;
-#endif
-    private float DodgeWindowSeconds => _dodgeWindowMs / 1000f;
-    // Dodge whiffout: a short recovery after a step-out before the next one is allowed — paces
-    // multi-press. Adjustable via the "dodge_whiffout" setting (0 = no cooldown).
-    private const float DodgeWhiffoutMsMin = 0f;
-    private const float DodgeWhiffoutMsMax = 2000f;
-    private float _dodgeWhiffoutMs = 0f;
-    private float _dodgeWhiffoutRemainingSeconds = 0f;
+    // The dodge window is armed from ParryDifficultyModel.GetDodgeWindowTicks(_optionDifficulty)
+    // and counts down in battle ticks, once per PreUpdate — same as the parry window.
     // "DODGE" success text overlay (mirrors the parry "PARRIED" overlay), per targeted slot.
     private float _dodgeTextRemainingSeconds = 0f;
     private uint _dodgeTextTargetMask = 0;
@@ -924,28 +907,28 @@ public unsafe sealed partial class ParryModule : FhModule
         // (see clear_awaiting_turn_end / end_parry_window).
         if (_runtime.InputState == ParryInputState.Open && _runtime.ParryWindowActive)
         {
-            _runtime.ParryWindowElapsedSeconds += deltaSeconds;
-            _runtime.ParryWindowRemainingSeconds -= deltaSeconds;
-            if (_runtime.ParryWindowRemainingSeconds <= 0f)
+            _runtime.ParryWindowElapsedTicks++;
+            _runtime.ParryWindowRemainingTicks--;
+            if (_runtime.ParryWindowRemainingTicks <= 0)
             {
                 transition_to_whiff_lockout();
             }
         }
         else if (_runtime.InputState == ParryInputState.WhiffLockout)
         {
-            _runtime.WhiffLockoutRemainingSeconds -= deltaSeconds;
-            if (_runtime.WhiffLockoutRemainingSeconds <= 0f)
+            _runtime.WhiffLockoutRemainingTicks--;
+            if (_runtime.WhiffLockoutRemainingTicks <= 0)
             {
                 transition_whiff_lockout_to_ready();
             }
         }
 
-        // Dodge window tick (independent of the parry state machine). Expires by time; a
+        // Dodge window tick (independent of the parry state machine). Expires by tick count; a
         // successful dodge is not "consumed" so a multi-hit / AoE swing is fully evaded.
         if (_dodgeWindowActive)
         {
-            _dodgeWindowRemainingSeconds -= deltaSeconds;
-            if (_dodgeWindowRemainingSeconds <= 0f)
+            _dodgeWindowRemainingTicks--;
+            if (_dodgeWindowRemainingTicks <= 0)
             {
                 _dodgeWindowActive = false;
 
@@ -966,11 +949,6 @@ public unsafe sealed partial class ParryModule : FhModule
                     log_debug("[Dodge] Window expired without a hit.");
                 }
             }
-        }
-
-        if (_dodgeWhiffoutRemainingSeconds > 0f)
-        {
-            _dodgeWhiffoutRemainingSeconds = MathF.Max(0f, _dodgeWhiffoutRemainingSeconds - deltaSeconds);
         }
 
         if (_dodgeTextRemainingSeconds > 0f)
@@ -1019,11 +997,11 @@ public unsafe sealed partial class ParryModule : FhModule
         _runtime.CurrentCueIndex = 0;
         _runtime.CurrentPartyTargetMask = 0;
         _runtime.CurrentCueSignature = 0;
-        _runtime.ParryWindowRemainingSeconds = 0f;
-        _runtime.WhiffLockoutRemainingSeconds = 0f;
-        _runtime.WhiffLockoutTotalSeconds = 0f;
+        _runtime.ParryWindowRemainingTicks = 0;
+        _runtime.WhiffLockoutRemainingTicks = 0;
+        _runtime.WhiffLockoutTotalTicks = 0;
         _runtime.AwaitingTurnEnd = false;
-        _runtime.ParryWindowElapsedSeconds = 0f;
+        _runtime.ParryWindowElapsedTicks = 0;
         _runtime.ParryWindowSucceeded = false;
         _runtime.SuccessIndicatorActive = false;
         _runtime.LastDispatchConsumedFrame = 0;
@@ -1035,7 +1013,7 @@ public unsafe sealed partial class ParryModule : FhModule
         _runtime.WindowOpenTimestampSeconds = 0f;
         _runtime.WindowDurationSecondsAtOpen = 0f;
         _dodgeWindowActive = false;
-        _dodgeWindowRemainingSeconds = 0f;
+        _dodgeWindowRemainingTicks = 0;
         _dodgeArmedAttackerId = 0;
         _dodgeArmedCueFrame = 0;
         _dodgeArmedTargetMask = 0;
@@ -1107,23 +1085,23 @@ public unsafe sealed partial class ParryModule : FhModule
 
     private void validate_runtime_state()
     {
-        _runtime.ParryWindowRemainingSeconds = MathF.Max(0f, _runtime.ParryWindowRemainingSeconds);
-        _runtime.ParryWindowElapsedSeconds = MathF.Max(0f, _runtime.ParryWindowElapsedSeconds);
-        _runtime.WhiffLockoutRemainingSeconds = MathF.Max(0f, _runtime.WhiffLockoutRemainingSeconds);
+        _runtime.ParryWindowRemainingTicks = Math.Max(0, _runtime.ParryWindowRemainingTicks);
+        _runtime.ParryWindowElapsedTicks = Math.Max(0, _runtime.ParryWindowElapsedTicks);
+        _runtime.WhiffLockoutRemainingTicks = Math.Max(0, _runtime.WhiffLockoutRemainingTicks);
         _runtime.ParriedTextRemainingSeconds = MathF.Max(0f, _runtime.ParriedTextRemainingSeconds);
         _runtime.ParryMissedTextRemainingSeconds = MathF.Max(0f, _runtime.ParryMissedTextRemainingSeconds);
         _runtime.StatusBlockTextRemainingSeconds = MathF.Max(0f, _runtime.StatusBlockTextRemainingSeconds);
 
-        if (!_runtime.ParryWindowActive && (_runtime.ParryWindowRemainingSeconds > 0f || _runtime.ParryWindowElapsedSeconds > 0f))
+        if (!_runtime.ParryWindowActive && (_runtime.ParryWindowRemainingTicks > 0 || _runtime.ParryWindowElapsedTicks > 0))
         {
-            _runtime.ParryWindowRemainingSeconds = 0f;
-            _runtime.ParryWindowElapsedSeconds = 0f;
+            _runtime.ParryWindowRemainingTicks = 0;
+            _runtime.ParryWindowElapsedTicks = 0;
         }
 
-        if (_runtime.InputState != ParryInputState.WhiffLockout && _runtime.WhiffLockoutRemainingSeconds > 0f)
+        if (_runtime.InputState != ParryInputState.WhiffLockout && _runtime.WhiffLockoutRemainingTicks > 0)
         {
-            _runtime.WhiffLockoutRemainingSeconds = 0f;
-            _runtime.WhiffLockoutTotalSeconds = 0f;
+            _runtime.WhiffLockoutRemainingTicks = 0;
+            _runtime.WhiffLockoutTotalTicks = 0;
         }
 
         if (!_runtime.AwaitingTurnEnd && _runtime.CurrentPartyTargetMask != 0)

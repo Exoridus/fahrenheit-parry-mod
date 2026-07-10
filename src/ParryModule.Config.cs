@@ -25,8 +25,6 @@ public unsafe sealed partial class ParryModule
         public bool? StreakCounter { get; set; }
         public bool? DodgeEnabled { get; set; }
         public bool? ParryNativeBlock { get; set; }
-        public float? DodgeWindowMs { get; set; }
-        public float? DodgeWhiffoutMs { get; set; }
         public bool? CameraProbe { get; set; }
         public int? CheckHitHitValue { get; set; }
         public int? CheckHitMissValue { get; set; }
@@ -127,8 +125,6 @@ public unsafe sealed partial class ParryModule
             if (persisted.StreakCounter.HasValue) _optionStreakCounter = persisted.StreakCounter.Value;
             if (persisted.DodgeEnabled.HasValue) _optionDodgeEnabled = persisted.DodgeEnabled.Value;
             if (persisted.ParryNativeBlock.HasValue) _optionParryNativeBlock = persisted.ParryNativeBlock.Value;
-            if (persisted.DodgeWindowMs.HasValue) _dodgeWindowMs = Math.Clamp(persisted.DodgeWindowMs.Value, DodgeWindowMsMin, DodgeWindowMsMax);
-            if (persisted.DodgeWhiffoutMs.HasValue) _dodgeWhiffoutMs = Math.Clamp(persisted.DodgeWhiffoutMs.Value, DodgeWhiffoutMsMin, DodgeWhiffoutMsMax);
             if (persisted.CameraProbe.HasValue) _optionCameraProbe = persisted.CameraProbe.Value;
             if (persisted.CheckHitHitValue.HasValue) _checkHitHitValue = persisted.CheckHitHitValue.Value;
             if (persisted.CheckHitMissValue.HasValue) _checkHitMissValue = persisted.CheckHitMissValue.Value;
@@ -182,8 +178,6 @@ public unsafe sealed partial class ParryModule
                 StreakCounter = _optionStreakCounter,
                 DodgeEnabled = _optionDodgeEnabled,
                 ParryNativeBlock = _optionParryNativeBlock,
-                DodgeWindowMs = _dodgeWindowMs,
-                DodgeWhiffoutMs = _dodgeWhiffoutMs,
                 CameraProbe = _optionCameraProbe,
                 CheckHitHitValue = _checkHitHitValue,
                 CheckHitMissValue = _checkHitMissValue,

@@ -1377,8 +1377,8 @@ public unsafe sealed partial class ParryModule
         {
             return "Idle";
         }
-        float remainingMs = _runtime.WhiffLockoutRemainingSeconds * 1000f;
-        float totalMs = _runtime.WhiffLockoutTotalSeconds * 1000f;
+        float remainingMs = ParryDifficultyModel.TicksToMs(_runtime.WhiffLockoutRemainingTicks);
+        float totalMs = ParryDifficultyModel.TicksToMs(_runtime.WhiffLockoutTotalTicks);
         return $"{remainingMs:F0}/{totalMs:F0}ms";
     }
 
@@ -1404,7 +1404,7 @@ public unsafe sealed partial class ParryModule
     {
         if (!_runtime.ParryWindowActive) return "Closed";
 
-        float elapsedSeconds = Math.Max(_runtime.ParryWindowElapsedSeconds, 0f);
+        float elapsedSeconds = ParryDifficultyModel.TicksToSeconds(Math.Max(_runtime.ParryWindowElapsedTicks, 0));
         return $"Open (lifecycle, elapsed {elapsedSeconds:F2}s)";
     }
 

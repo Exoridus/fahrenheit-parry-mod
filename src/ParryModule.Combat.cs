@@ -120,7 +120,7 @@ public unsafe sealed partial class ParryModule
         }
         else if (_runtime.ParryWindowActive)
         {
-            windowRemainingAtImpactMs = _runtime.ParryWindowRemainingSeconds * 1000f;
+            windowRemainingAtImpactMs = ParryDifficultyModel.TicksToMs(_runtime.ParryWindowRemainingTicks);
         }
         string timingTag = $"[cue+{cueToImpactFrames}F win+{windowOpenToImpactFrames}F rem={windowRemainingAtImpactMs:F0}ms]";
 
@@ -416,12 +416,6 @@ public unsafe sealed partial class ParryModule
             return;
         }
 
-        // Whiffout: optional extra recovery after a step-out (0 by default; slider dodge_whiffout).
-        if (_dodgeWhiffoutRemainingSeconds > 0f)
-        {
-            return;
-        }
-
         // Move-state whiffout (primary pacing): don't start a new step-out while a targeted char is
         // still in the evade move (Chr 0x415 != 0: 0x09 = stepping out, 0x01 = walking back). Waits
         // until the char has returned home — this paces multi-press to the actual move duration and
@@ -452,7 +446,7 @@ public unsafe sealed partial class ParryModule
         // the parry-path cue tracking, not this dodge path; context.PartyMask is the authoritative
         // in-hand set here and matches the step-out loop precisely.)
         _dodgeArmedTargetMask = context.PartyMask;
-        _dodgeWindowRemainingSeconds = DodgeWindowSeconds;
+        _dodgeWindowRemainingTicks = ParryDifficultyModel.GetDodgeWindowTicks(_optionDifficulty);
 
         // Step-out for each targeted PC — WITHOUT MsDamageSetMotion: set only the avoid move-mode
         // (Chr+0x425, what FUN_0078f090 sets) + play the evade animation (motion 0xC). This skips
@@ -492,7 +486,6 @@ public unsafe sealed partial class ParryModule
         }
 
         _dodgeProbeFramesLeft = 40;
-        _dodgeWhiffoutRemainingSeconds = _dodgeWhiffoutMs / 1000f;
     }
 
     // After a step-out, log Chr+0x415/0x425/0x4AC (move-mode / avoid / motion-type) + world
@@ -564,7 +557,7 @@ public unsafe sealed partial class ParryModule
                 log_debug("Parry input ignored — current attack already parried.");
                 return;
             case "in_guard_recovery":
-                float lockoutRemainingMs = _runtime.WhiffLockoutRemainingSeconds * 1000f;
+                float lockoutRemainingMs = ParryDifficultyModel.TicksToMs(_runtime.WhiffLockoutRemainingTicks);
                 log_debug($"Parry input rejected — in guard recovery ({lockoutRemainingMs:F0}ms remaining).");
                 return;
             default:
@@ -573,9 +566,9 @@ public unsafe sealed partial class ParryModule
         }
     }
 
-    private float compute_window_seconds()
+    private int parry_window_ticks()
     {
-        return ParryDifficultyModel.GetWindowSeconds(_optionDifficulty);
+        return ParryDifficultyModel.GetParryWindowTicks(_optionDifficulty);
     }
 
     // Both windows open on the press, and the parry window is the tighter one. A dodge is
@@ -588,13 +581,13 @@ public unsafe sealed partial class ParryModule
     {
         if (!_dodgeWindowActive) return false;
 
-        float pressToHitSeconds = DodgeWindowSeconds - _dodgeWindowRemainingSeconds;
-        return pressToHitSeconds <= compute_window_seconds();
+        int pressToHitTicks = ParryDifficultyModel.GetDodgeWindowTicks(_optionDifficulty) - _dodgeWindowRemainingTicks;
+        return pressToHitTicks <= parry_window_ticks();
     }
 
     // Single entry point for "this slot has evaded". Idempotent per cue: the durable marker gates
     // the commit passes, and the perfect grade is awarded exactly once, at the first impact —
-    // while _dodgeWindowRemainingSeconds still carries the press-to-hit timing.
+    // while _dodgeWindowRemainingTicks still carries the press-to-hit timing.
     //
     // A perfect dodge grades PERFECT and takes the gold label, but grants no overdrive charge and no
     // counter. Overdrive is the parry's reward alone: evading a hit removes it from the fight, while
@@ -623,15 +616,18 @@ public unsafe sealed partial class ParryModule
         }
     }
 
-    private float compute_whiff_lockout_seconds()
+    private int whiff_lockout_ticks()
     {
-        if (!_optionWhiffLockout) return 0f;
-        return ParryDifficultyModel.GetWhiffLockoutSeconds(_optionDifficulty);
+        if (!_optionWhiffLockout) return 0;
+        return ParryDifficultyModel.GetWhiffLockoutTicks(_optionDifficulty);
     }
 
     private void transition_to_open(AttackCue cue, byte cueIndex, uint partyMask)
     {
-        float windowDurationSeconds = compute_window_seconds();
+        int windowDurationTicks = parry_window_ticks();
+        // Seconds are derived for the wall-clock per-slot expiry (read by the damage hooks, which
+        // fire outside PreUpdate) and for display/telemetry only — the window itself counts ticks.
+        float windowDurationSeconds = ParryDifficultyModel.TicksToSeconds(windowDurationTicks);
 
         _runtime.InputState = ParryInputState.Open;
         _runtime.AwaitingTurnEnd = true;
@@ -639,8 +635,8 @@ public unsafe sealed partial class ParryModule
         _runtime.CurrentCueIndex = cueIndex;
         _runtime.CurrentPartyTargetMask = partyMask;
         _runtime.ParryWindowActive = true;
-        _runtime.ParryWindowRemainingSeconds = windowDurationSeconds;
-        _runtime.ParryWindowElapsedSeconds = 0f;
+        _runtime.ParryWindowRemainingTicks = windowDurationTicks;
+        _runtime.ParryWindowElapsedTicks = 0;
         _runtime.ParryWindowSucceeded = false;
         _runtime.SuccessIndicatorActive = false;
         if (_runtime.TurnImpactMissedSeen && _runtime.TurnImpactMissedAttackerId != _runtime.CurrentAttackerId)
@@ -673,7 +669,7 @@ public unsafe sealed partial class ParryModule
     private void transition_to_whiff_lockout()
     {
         string attackerLabel = format_actor_slot(_runtime.CurrentAttackerId);
-        float lockoutSeconds = compute_whiff_lockout_seconds();
+        int lockoutTicks = whiff_lockout_ticks();
 
         // Streak reset is performed per-cue at clear_awaiting_turn_end via
         // resolve_streak_at_cue_clear(). A whiff is a cue-wide failure for
@@ -684,24 +680,25 @@ public unsafe sealed partial class ParryModule
         // follows is what gates further R1 presses — not the array values.
         end_parry_window("whiff_lockout", transitionToReady: false);
 
-        // Pure decision — see ParryInputStateTransitions tests.
-        ParryInputState nextState = ParryInputStateTransitions.DecideWindowExpiry(lockoutSeconds);
+        // Pure decision — see ParryInputStateTransitions tests. A positive tick count means a
+        // lockout is armed (the same > 0 semantics the float overload uses).
+        ParryInputState nextState = ParryInputStateTransitions.DecideWindowExpiry(lockoutTicks);
 
         if (nextState == ParryInputState.WhiffLockout)
         {
             _runtime.InputState = ParryInputState.WhiffLockout;
-            _runtime.WhiffLockoutRemainingSeconds = lockoutSeconds;
-            _runtime.WhiffLockoutTotalSeconds = lockoutSeconds;
+            _runtime.WhiffLockoutRemainingTicks = lockoutTicks;
+            _runtime.WhiffLockoutTotalTicks = lockoutTicks;
             mark_active_turn_missed("parry window expired without a hit");
             trigger_failure_feedback();
-            log_debug($"Parry whiff ({attackerLabel}) — returning to normal stance, {(lockoutSeconds * 1000f):F0}ms recovery.");
+            log_debug($"Parry whiff ({attackerLabel}) — returning to normal stance, {ParryDifficultyModel.TicksToMs(lockoutTicks):F0}ms recovery.");
         }
         else
         {
             // Lockout disabled — transition straight back to Ready with no recovery.
             _runtime.InputState = ParryInputState.Ready;
-            _runtime.WhiffLockoutRemainingSeconds = 0f;
-            _runtime.WhiffLockoutTotalSeconds = 0f;
+            _runtime.WhiffLockoutRemainingTicks = 0;
+            _runtime.WhiffLockoutTotalTicks = 0;
             mark_active_turn_missed("parry window expired without a hit");
             trigger_failure_feedback();
             log_debug($"Parry whiff ({attackerLabel}) — lockout disabled, immediately ready.");
@@ -710,8 +707,8 @@ public unsafe sealed partial class ParryModule
 
     private void transition_whiff_lockout_to_ready()
     {
-        _runtime.WhiffLockoutRemainingSeconds = 0f;
-        _runtime.WhiffLockoutTotalSeconds = 0f;
+        _runtime.WhiffLockoutRemainingTicks = 0;
+        _runtime.WhiffLockoutTotalTicks = 0;
         _runtime.InputState = ParryInputState.Ready;
         log_debug("Guard recovery complete — ready for next parry.");
     }
@@ -839,8 +836,8 @@ public unsafe sealed partial class ParryModule
         _parryResolvedAtImpactMask = 0;
         Array.Clear(_preHitHpSnapshot);
         _runtime.ParryWindowActive = false;
-        _runtime.ParryWindowRemainingSeconds = 0f;
-        _runtime.ParryWindowElapsedSeconds = 0f;
+        _runtime.ParryWindowRemainingTicks = 0;
+        _runtime.ParryWindowElapsedTicks = 0;
         _runtime.ParryWindowSucceeded = false;
         _runtime.SuccessIndicatorActive = false;
 
@@ -916,8 +913,8 @@ public unsafe sealed partial class ParryModule
         {
             // Turn context ended; silently cancel any lingering open window.
             _runtime.ParryWindowActive = false;
-            _runtime.ParryWindowRemainingSeconds = 0f;
-            _runtime.ParryWindowElapsedSeconds = 0f;
+            _runtime.ParryWindowRemainingTicks = 0;
+            _runtime.ParryWindowElapsedTicks = 0;
         }
 
         _runtime.ParryWindowSucceeded = false;
