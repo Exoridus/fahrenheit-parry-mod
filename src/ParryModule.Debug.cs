@@ -1800,6 +1800,10 @@ public unsafe sealed partial class ParryModule
 
         log_debug("[SaveProbe] Reading limit_modes_obtained (read-only; offsets DERIVED, verify vs Overdrive menu).");
 
+        // Accumulates every character's learn counters so the closing summary line can
+        // report min/median/max over the learnable ones (excludes learned=0 and n/a=0xFFFF).
+        var allCounters = new List<short>(probeCharCount * ExternalMemoryOffsetMap.SaveData.LimitModeCounterCount);
+
         for (int charId = 0; charId < probeCharCount; charId++)
         {
             string name = try_map_party_chr_id_to_name(charId, out string resolved) ? resolved : "?";
@@ -1823,11 +1827,48 @@ public unsafe sealed partial class ParryModule
                 log_debug(
                     $"[SaveProbe] slot {charId} ({name}) limit_modes_obtained=0x{mask:X8} "
                     + $"set_bits=[{OverdriveMaskFormatter.FormatSetBits(mask)}] limit_mode_index={index}");
+
+                // limit_mode_counters: 20 shorts, each a per-mode learn countdown (start
+                // value was the threshold, decrements per qualifying event). Read as short,
+                // never written. 0 = learned, 0xFFFF (-1) = the character can never learn it.
+                short* countersPtr = FhUtil.ptr_at<short>(entryRva + ExternalMemoryOffsetMap.SaveData.LimitModeCounters);
+                if (countersPtr == null)
+                {
+                    log_debug($"[SaveProbe] slot {charId} ({name}) counters — null pointer from ptr_at, read skipped.");
+                    continue;
+                }
+
+                var counterLine = new StringBuilder($"[SaveProbe] slot {charId} ({name}) counters:");
+                for (int mode = 0; mode < ExternalMemoryOffsetMap.SaveData.LimitModeCounterCount; mode++)
+                {
+                    short raw = countersPtr[mode];
+                    allCounters.Add(raw);
+                    counterLine.Append(' ')
+                        .Append(OverdriveCounterFormatter.ModeName(mode))
+                        .Append('=')
+                        .Append(OverdriveCounterFormatter.FormatValue(raw));
+                }
+
+                log_debug(counterLine.ToString());
             }
             catch (Exception ex)
             {
                 log_debug($"[SaveProbe] slot {charId} ({name}) — read failed: {ex.GetType().Name}: {ex.Message}");
             }
+        }
+
+        // One summary line: min/median/max across all characters' learnable counters — the
+        // number the custom "learn by parrying N times" mode will be calibrated against.
+        if (OverdriveCounterFormatter.TryComputeStats(allCounters, out int min, out double median, out int max))
+        {
+            log_debug(
+                $"[SaveProbe] counter stats (learnable only, excludes learned=0 and n/a=0xFFFF): "
+                + $"min={min} median={median.ToString("0.#", CultureInfo.InvariantCulture)} max={max} "
+                + $"over {allCounters.Count} slots read.");
+        }
+        else
+        {
+            log_debug("[SaveProbe] counter stats: no learnable counters observed (all learned or n/a).");
         }
     }
 

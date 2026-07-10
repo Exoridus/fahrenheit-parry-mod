@@ -43,6 +43,35 @@ public static partial class ExternalMemoryOffsetMap
         public const int PlySaveStride = 0x94;
 
         /// <summary>
+        ///     Offset of <c>limit_mode_counters</c> within a <c>PlySave</c> entry.
+        ///     <b>20 shorts</b> (2 bytes each, 40 bytes total, spanning
+        ///     <c>+0x60..+0x87</c>) — not 20 bytes. <c>FUN_007b10d0</c> indexes it as
+        ///     <c>*(short*)(base + mode*2)</c>; a Ghidra struct export that typed this
+        ///     as a 20-byte array was wrong.
+        ///
+        ///     <para>
+        ///         Each element is a per-mode learn <b>countdown</b> whose start value
+        ///         in the new-game template was the learn threshold: it decrements by 1
+        ///         per qualifying event, <c>0</c> means the mode is already learned, and
+        ///         <c>0xFFFF</c> (<c>-1</c> as a signed short) means the character can
+        ///         never learn that mode. It is not a threshold table.
+        ///     </para>
+        ///
+        ///     <para>
+        ///         Cross-validation: the 40-byte span ends exactly where
+        ///         <see cref="LimitModesObtained"/> begins —
+        ///         <c>0x60 + 20 * 2 == 0x88</c> — which anchors both offsets.
+        ///     </para>
+        /// </summary>
+        public const int LimitModeCounters = 0x60;
+
+        /// <summary>
+        ///     Number of <c>short</c> slots in <see cref="LimitModeCounters"/> (overdrive
+        ///     mode indices <c>0x00..0x13</c>).
+        /// </summary>
+        public const int LimitModeCounterCount = 20;
+
+        /// <summary>
         ///     Offset of <c>limit_modes_obtained</c> within a <c>PlySave</c> entry.
         ///     4 bytes, little-endian bitmask; bit N = overdrive mode index N learned.
         ///     Custom overdrive mode work targets index <c>0x11</c> (bit 17).
