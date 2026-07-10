@@ -601,8 +601,17 @@ public unsafe sealed partial class ParryModule
         }
 
         // Dodge (L1) resolves at impact, symmetric to parry: if the window is still valid for
-        // this attacker and real damage is pending, negate it and run the engine's own evade.
-        bool dodgeActive = targetIsParty && p3 == 1 && is_dodge_window_valid();
+        // this attacker, this slot was among the armed targets, and real damage is pending, negate
+        // it and run the engine's own evade. The target-mask check keeps an untargeted party slot
+        // from resolving off the cue-wide window/attacker gate (mirrors DodgeCommitGate at p5=0).
+        bool dodgeActive = targetIsParty && p3 == 1
+            && DodgeCommitGate.MayResolveAtImpact(
+                _optionDodgeEnabled,
+                _dodgeWindowActive && _runtime.CueFirstSeenFrame == _dodgeArmedCueFrame,
+                _dodgeArmedAttackerId,
+                _runtime.CurrentAttackerId,
+                _dodgeArmedTargetMask,
+                target);
         bool dodgeSuppress = false;
         if (dodgeActive)
         {
@@ -1043,15 +1052,22 @@ public unsafe sealed partial class ParryModule
             // late. The evade animation was already triggered on press, so skipping is clean.
             // Two ways in: the wall-clock window is still live, or this slot already resolved as
             // evaded earlier in this cue (durable marker). The marker is what carries a dodge
-            // across a chargeup longer than the window, and across cue mutation mid-cast.
+            // across a chargeup longer than the window, and across cue mutation mid-cast. Either
+            // way the slot must also be in _dodgeArmedTargetMask (checked by MayResolveAtImpact):
+            // the engine drives this p5=0 commit for every party slot, so the window/attacker gate
+            // is cue-wide and would otherwise resolve an evade for slots the attack never targeted.
             bool dodgeWindowLive = _dodgeWindowActive
                 && _runtime.CueFirstSeenFrame == _dodgeArmedCueFrame;
             bool dodgeMarkerSet = (_dodgeResolvedAtImpactMask & (1u << param_3)) != 0;
 
             if (param_5 == 0
-                && _optionDodgeEnabled
-                && (dodgeWindowLive || dodgeMarkerSet)
-                && _dodgeArmedAttackerId == (byte)param_1)
+                && DodgeCommitGate.MayResolveAtImpact(
+                    _optionDodgeEnabled,
+                    dodgeWindowLive || dodgeMarkerSet,
+                    _dodgeArmedAttackerId,
+                    (byte)param_1,
+                    _dodgeArmedTargetMask,
+                    param_3))
             {
                 _dodgeEvadeCount++;
                 mark_dodge_resolved(param_3);   // durable marker + perfect grade (idempotent per cue)

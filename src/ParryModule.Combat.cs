@@ -436,6 +436,13 @@ public unsafe sealed partial class ParryModule
         _dodgeWindowActive = true;
         _dodgeArmedAttackerId = context.Cue.attacker_id;
         _dodgeArmedCueFrame = _runtime.CueFirstSeenFrame;
+        // Snapshot exactly the slots that receive the step-out below (context.PartyMask, the cue's
+        // filtered parryable target mask). A fresh press re-arms this alongside the other
+        // _dodgeArmed* fields, so it always tracks the current cue's targets — never an untargeted
+        // slot. (_runtime.CurrentPartyTargetMask is the raw, unfiltered mask and is maintained by
+        // the parry-path cue tracking, not this dodge path; context.PartyMask is the authoritative
+        // in-hand set here and matches the step-out loop precisely.)
+        _dodgeArmedTargetMask = context.PartyMask;
         _dodgeWindowRemainingSeconds = DodgeWindowSeconds;
 
         // Step-out for each targeted PC — WITHOUT MsDamageSetMotion: set only the avoid move-mode
@@ -819,6 +826,7 @@ public unsafe sealed partial class ParryModule
         Array.Clear(_latePreOpenP5ZeroCommitAttackerId);
         _parryResolvedAtImpactMask = 0;
         _dodgeResolvedAtImpactMask = 0;
+        _dodgeArmedTargetMask = 0;
         Array.Clear(_preHitHpSnapshot);
         if (_runtime.ParryWindowActive)
         {

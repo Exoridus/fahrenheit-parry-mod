@@ -25,4 +25,34 @@ public static class DodgeCommitGate
         => dodgeEnabled
         && markerSet
         && armedAttackerId == commitAttackerId;
+
+    /// <summary>
+    ///     Gate for a slot FIRST resolving a dodge at impact (the p5=0 skip in
+    ///     <c>MsSetDamageInternal</c> and the <c>MsDamageSetMotion</c> negation).
+    ///
+    ///     <see cref="ShouldSkipCommit"/> trusts the durable marker, which is only ever set for a
+    ///     targeted slot once this gate has passed. This gate is the point where that marker is
+    ///     established, so it must also reject slots the attack never targeted: the engine invokes
+    ///     the commit for every party slot, and the window/attacker checks alone are cue-wide, not
+    ///     per-slot. <paramref name="armedTargetMask"/> is the snapshot of the cue's targeted slots
+    ///     taken when the window was armed, so an untargeted slot cannot ride the shared gate.
+    /// </summary>
+    /// <param name="dodgeEnabled">The <c>dodgeEnabled</c> setting.</param>
+    /// <param name="windowLiveOrMarker">Wall-clock dodge window still live for this cue, OR the
+    ///     slot already carries the durable evade marker.</param>
+    /// <param name="armedAttackerId">Attacker the dodge window was armed against.</param>
+    /// <param name="impactAttackerId">Attacker driving the impact under inspection.</param>
+    /// <param name="armedTargetMask">Party slots the window was armed for (bit per slot).</param>
+    /// <param name="slotIndex">Party slot under inspection.</param>
+    public static bool MayResolveAtImpact(
+        bool dodgeEnabled,
+        bool windowLiveOrMarker,
+        byte armedAttackerId,
+        byte impactAttackerId,
+        uint armedTargetMask,
+        int slotIndex)
+        => dodgeEnabled
+        && windowLiveOrMarker
+        && armedAttackerId == impactAttackerId
+        && (armedTargetMask & (1u << slotIndex)) != 0;
 }

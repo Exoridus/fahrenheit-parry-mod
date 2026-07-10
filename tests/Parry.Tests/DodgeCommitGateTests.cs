@@ -38,4 +38,56 @@ public sealed class DodgeCommitGateTests
         Assert.False(DodgeCommitGate.ShouldSkipCommit(
             dodgeEnabled: false, markerSet: true, armedAttackerId: 22, commitAttackerId: 22));
     }
+
+    // MayResolveAtImpact decides whether a slot may FIRST resolve a dodge at impact (p5=0 and
+    // the MsDamageSetMotion path). Unlike ShouldSkipCommit — which trusts the durable marker —
+    // this predicate must additionally reject slots the attack never targeted, so a shared
+    // window/attacker gate cannot resolve an evade for an untargeted party slot.
+    [Fact]
+    public void MayResolveAtImpact_TargetedSlot_Resolves()
+    {
+        // Slot 1 targeted, window live, armed attacker matches the impact attacker.
+        Assert.True(DodgeCommitGate.MayResolveAtImpact(
+            dodgeEnabled: true, windowLiveOrMarker: true,
+            armedAttackerId: 22, impactAttackerId: 22,
+            armedTargetMask: 0b0010u, slotIndex: 1));
+    }
+
+    [Fact]
+    public void MayResolveAtImpact_UntargetedSlot_DoesNotResolve()
+    {
+        // Only slot 0 was targeted; slot 1 must not ride the shared window/attacker gate.
+        Assert.False(DodgeCommitGate.MayResolveAtImpact(
+            dodgeEnabled: true, windowLiveOrMarker: true,
+            armedAttackerId: 22, impactAttackerId: 22,
+            armedTargetMask: 0b0001u, slotIndex: 1));
+    }
+
+    [Fact]
+    public void MayResolveAtImpact_TargetedSlotDifferentAttacker_DoesNotResolve()
+    {
+        // A different attacker's hit must not resolve as this cue's dodge, even for a targeted slot.
+        Assert.False(DodgeCommitGate.MayResolveAtImpact(
+            dodgeEnabled: true, windowLiveOrMarker: true,
+            armedAttackerId: 22, impactAttackerId: 23,
+            armedTargetMask: 0b0010u, slotIndex: 1));
+    }
+
+    [Fact]
+    public void MayResolveAtImpact_DodgeDisabled_DoesNotResolve()
+    {
+        Assert.False(DodgeCommitGate.MayResolveAtImpact(
+            dodgeEnabled: false, windowLiveOrMarker: true,
+            armedAttackerId: 22, impactAttackerId: 22,
+            armedTargetMask: 0b0010u, slotIndex: 1));
+    }
+
+    [Fact]
+    public void MayResolveAtImpact_NoWindowOrMarker_DoesNotResolve()
+    {
+        Assert.False(DodgeCommitGate.MayResolveAtImpact(
+            dodgeEnabled: true, windowLiveOrMarker: false,
+            armedAttackerId: 22, impactAttackerId: 22,
+            armedTargetMask: 0b0010u, slotIndex: 1));
+    }
 }

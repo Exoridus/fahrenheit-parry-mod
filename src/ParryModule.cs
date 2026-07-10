@@ -386,6 +386,13 @@ public unsafe sealed partial class ParryModule : FhModule
     // attack instance, so a multi-hit of the same attack is fully dodged but a fresh attack from
     // the same attacker landing in the still-open window is NOT auto-dodged without a new press.
     private ulong _dodgeArmedCueFrame = 0;
+    // Party slots the dodge was armed for, snapshotted at press time from the cue's filtered,
+    // parryable target mask (the same set that receives the step-out). A slot may resolve as
+    // evaded at impact only if its bit is set here — the engine drives the p5=0/motion commit for
+    // EVERY party slot, so the cue-wide window/attacker checks alone cannot keep an untargeted slot
+    // from resolving. Mirrors the parry's per-slot _parryExpiry discipline. Refreshed on each fresh
+    // press; cleared with _dodgeResolvedAtImpactMask at cue end and on runtime reset.
+    private uint _dodgeArmedTargetMask = 0;
     // Slots that have resolved as evaded for the current cue. The dodge equivalent of the parry's
     // LastParriedTargetMask: durable, survives the wall-clock window and any cue mutation, and is
     // cleared only at cue end. Gates BOTH MsSetDamageInternal commit passes (p5=0 and p5=1024), so
@@ -914,6 +921,7 @@ public unsafe sealed partial class ParryModule : FhModule
         _dodgeWindowRemainingSeconds = 0f;
         _dodgeArmedAttackerId = 0;
         _dodgeArmedCueFrame = 0;
+        _dodgeArmedTargetMask = 0;
         _dodgeResolvedAtImpactMask = 0;
         _impactCorrelationMatchedCount = 0;
         _impactCorrelationRejectedCount = 0;
