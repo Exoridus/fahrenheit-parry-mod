@@ -122,6 +122,18 @@ public unsafe sealed partial class ParryModule
         }
     }
 
+    private void render_setting_unlock_custom_overdrive()
+    {
+        if (ImGui.Checkbox("##fhparry.unlock_custom_overdrive", ref _optionUnlockCustomOverdrive))
+        {
+            persist_settings();
+            // The mask write happens at the next battle-begin edge (see
+            // apply_custom_overdrive_unlock_if_enabled), not here — this only records the toggle.
+            string state = _optionUnlockCustomOverdrive ? "enabled" : "disabled";
+            log_debug($"Unlock custom overdrive (mode 0x11) {state}.");
+        }
+    }
+
     private void render_setting_logging()
     {
         if (ImGui.Checkbox("##fhparry.logging", ref _optionLogging))

@@ -164,6 +164,12 @@ public unsafe sealed partial class ParryModule
                 // the time a live battle context exists, so this is the first safe
                 // point to read limit_modes_obtained and correlate it with the menu.
                 log_overdrive_modes_probe_once();
+
+                // Immediately after the read-only probe logs the before-state, apply the
+                // custom-overdrive unlock write (default-off; no-op unless the setting is on).
+                // Fired on the same battle-begin edge so one log shows the before-state and the
+                // write in order. The write is idempotent, so firing every battle is harmless.
+                apply_custom_overdrive_unlock_if_enabled();
             }
             else
             {
@@ -1821,6 +1827,72 @@ public unsafe sealed partial class ParryModule
             catch (Exception ex)
             {
                 log_debug($"[SaveProbe] slot {charId} ({name}) — read failed: {ex.GetType().Name}: {ex.Message}");
+            }
+        }
+    }
+
+    // Custom-overdrive unlock (default-off, opt-in via _optionUnlockCustomOverdrive).
+    //
+    // Sets bit 17 (overdrive mode index 0x11) in each party character's persisted
+    // limit_modes_obtained mask so the engine will offer that mode in the Overdrive menu
+    // (the display-order table at RVA 0x88765c already contains 0x11). This is a WRITE into
+    // save_ram: if the player saves the game afterwards, the unlock persists into the save
+    // file — that is intended.
+    //
+    // Safety discipline:
+    //   - Gated on the setting: when off, nothing is written at all.
+    //   - Same character set the read-only save probe enumerates (char ids 0..6).
+    //   - Read-modify-write of the whole 4-byte mask via OverdriveMaskFormatter.WithModeBitSet,
+    //     which ORs in exactly bit 17 and preserves every other bit. Never a blind constant write.
+    //   - Idempotent: if the bit is already set, WithModeBitSet returns the same value, so we
+    //     compare before == after and skip both the write and the log line (no noise).
+    //   - Per-character try/catch: a failure logs a warning and cannot take down the game.
+    //   - The before/after log line is gated on _optionLogging; the write itself is not.
+    private void apply_custom_overdrive_unlock_if_enabled()
+    {
+        if (!_optionUnlockCustomOverdrive) return;
+
+        // char ids 0..6: Tidus, Yuna, Auron, Kimahri, Wakka, Lulu, Rikku — the same set the
+        // read-only SaveProbe reads in log_overdrive_modes_probe_once.
+        const int probeCharCount = 7;
+        // Overdrive mode index 0x11 → bit 17 → mask |= 0x00020000.
+        const int customOverdriveModeIndex = 0x11;
+
+        for (int charId = 0; charId < probeCharCount; charId++)
+        {
+            string name = try_map_party_chr_id_to_name(charId, out string resolved) ? resolved : "?";
+            try
+            {
+                int entryRva = ExternalMemoryOffsetMap.SaveData.PlyArr0
+                             + charId * ExternalMemoryOffsetMap.SaveData.PlySaveStride;
+
+                uint* maskPtr = FhUtil.ptr_at<uint>(entryRva + ExternalMemoryOffsetMap.SaveData.LimitModesObtained);
+                if (maskPtr == null)
+                {
+                    _logger.Warning($"[OverdriveUnlock] slot {charId} ({name}) — null pointer from ptr_at, write skipped.");
+                    continue;
+                }
+
+                uint before = *maskPtr;
+                uint after = OverdriveMaskFormatter.WithModeBitSet(before, customOverdriveModeIndex);
+                if (after == before)
+                {
+                    // Bit 17 already set — nothing to write, and no log noise.
+                    continue;
+                }
+
+                *maskPtr = after;
+
+                if (_optionLogging)
+                {
+                    log_debug(
+                        $"[OverdriveUnlock] slot {charId} ({name}) limit_modes_obtained "
+                        + $"0x{before:X8} -> 0x{after:X8} (set bit 17, mode 0x11)");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Warning($"[OverdriveUnlock] slot {charId} ({name}) — write failed: {ex.GetType().Name}: {ex.Message}");
             }
         }
     }

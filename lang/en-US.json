@@ -21,6 +21,8 @@
     "fhparry.parry_effect.desc": "Fire a NulShock-style shield flash on the parrying character on a successful parry. Pure visual feedback — no gameplay state effect.",
     "fhparry.streak_counter.name": "Streak Counter Attack",
     "fhparry.streak_counter.desc": "When a slot completes a defensive streak (every targeted slot in a cue parried at least once and the cumulative streak reaches the threshold), automatically queue a basic Attack from the parrier onto the original attacker. Uses the engine's own auto-counter cue insertion path so CTB scheduling stays consistent.",
+    "fhparry.unlock_custom_overdrive.name": "Unlock Custom Overdrive Mode",
+    "fhparry.unlock_custom_overdrive.desc": "Makes the custom overdrive mode (index 0x11) selectable in the Overdrive menu for every party member. WARNING: enabling this writes an unlock bit directly into the save data at the start of each battle. If you then save the game, the unlock becomes permanent in that save file. Default off.",
     "fhparry.future.name": "Future Features",
     "fhparry.future.desc": "Reserved for upcoming auto-counter options."
 }

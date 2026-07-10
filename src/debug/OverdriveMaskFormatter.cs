@@ -28,4 +28,27 @@ internal static class OverdriveMaskFormatter
 
         return string.Join(", ", indices);
     }
+
+    /// <summary>
+    ///     Returns <paramref name="mask"/> with the bit for overdrive mode
+    ///     <paramref name="modeIndex"/> set (bit N = mode index N, matching
+    ///     <see cref="FormatSetBits"/>). Idempotent and bit-preserving: if the bit is
+    ///     already set the identical value is returned, and every other bit is left
+    ///     untouched — the caller compares <c>before == after</c> to decide whether a
+    ///     write is needed. Kept pure so the save-write's bit logic is unit-tested
+    ///     without a live memory read.
+    /// </summary>
+    /// <exception cref="System.ArgumentOutOfRangeException">
+    ///     <paramref name="modeIndex"/> is outside the 0..31 range of a 32-bit mask.
+    /// </exception>
+    public static uint WithModeBitSet(uint mask, int modeIndex)
+    {
+        if (modeIndex is < 0 or > 31)
+        {
+            throw new System.ArgumentOutOfRangeException(
+                nameof(modeIndex), modeIndex, "Overdrive mode index must be in the 0..31 range of the 32-bit mask.");
+        }
+
+        return mask | (1u << modeIndex);
+    }
 }
