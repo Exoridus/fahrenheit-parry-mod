@@ -405,12 +405,12 @@ public unsafe sealed partial class ParryModule : FhModule
     private const float ImpactShakeFreqB     = 2.3f;   // ~11.0 Hz — ratio 1.35, so the axes never relock
     private const uint ImpactShakeAmpA       = 9;      // a parry is a lateral impact: favour one axis
     private const uint ImpactShakeAmpB       = 5;
-    private const uint ImpactShakeDuration   = 8;      // ticks at 30 fps ≈ 0.27 s — a single-slot parry
+    private const uint ImpactShakeDuration   = 12;     // ticks at 30 fps ≈ 0.40 s — a single-slot parry (fires often; kept snappy)
     private const uint ImpactShakeRandomness = 8;      // the engine's own jitter: ±4 around the amplitude
 
     // A whole-party parry (all three active PCs parried the same attack) fires a longer, heavier
-    // shake to sell the moment. 15 ticks ≈ 0.50 s; flip to 12 for ≈ 0.40 s if it reads as too long.
-    private const uint ImpactShakeDurationWholeParty = 15;  // ticks @30fps ≈ 0.50 s
+    // shake to sell the moment — the "E" duration the sweep landed on. 22 ticks ≈ 0.73 s.
+    private const uint ImpactShakeDurationWholeParty = 22;  // ticks @30fps ≈ 0.73 s
     private const int FullPartyParryCount = 3;
 
     // Streak counter attack: when a slot completes a defensive streak (every
