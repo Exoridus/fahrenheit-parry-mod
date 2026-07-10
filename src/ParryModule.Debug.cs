@@ -507,8 +507,6 @@ public unsafe sealed partial class ParryModule
 
     private void render_fx_motion_lab()
     {
-        if (!ImGui.CollapsingHeader("FX / Motion Lab (parry visual + animation browser)")) return;
-
         ImGui.Text($"Target: {lab_slot_label(_labTargetSlot)}");
         ImGui.SameLine(); if (ImGui.Button("<##labslot")) _labTargetSlot = lab_step_slot(-1);
         ImGui.SameLine(); if (ImGui.Button(">##labslot")) _labTargetSlot = lab_step_slot(+1);
@@ -743,56 +741,6 @@ public unsafe sealed partial class ParryModule
     // fixed, so each parry differs in exactly one dimension. Stages come from a shuffled bag, so the
     // order is unpredictable and no stage repeats back-to-back — a rising or falling sequence would
     // invite judging each shake against its neighbour instead of on its own.
-    private void render_shake_sweep_panel()
-    {
-        if (!ImGui.CollapsingHeader("Impact shake — duration sweep###fhparry.debug.shakesweep")) return;
-
-        ImGui.TextDisabled($"Fixed: ampA={ImpactShakeAmpA} freqA={ImpactShakeFreqA:F2} ({ImpactShakeFreqA * BattleFrameRate / MathF.Tau:F1} Hz)  |  " +
-                           $"ampB={ImpactShakeAmpB} freqB={ImpactShakeFreqB:F2} ({ImpactShakeFreqB * BattleFrameRate / MathF.Tau:F1} Hz)");
-
-        if (ImGui.Checkbox("Randomise duration (shuffled bag)###fhparry.debug.shakesweep.on", ref _optionImpactShakeSweep))
-        {
-            persist_settings();
-        }
-
-        if (!_optionImpactShakeSweep)
-        {
-            ImGui.TextDisabled($"Sweep off — every parry uses preset {ImpactShakeDurationLabels[ImpactShakeDefaultPreset]} " +
-                               $"({ImpactShakeDurationPresets[ImpactShakeDefaultPreset]} ticks).");
-        }
-
-        if (ImGui.BeginTable("###fhparry.debug.shakesweep.table", 4, ImGuiTableFlags.Borders | ImGuiTableFlags.SizingStretchProp))
-        {
-            ImGui.TableSetupColumn("Preset");
-            ImGui.TableSetupColumn("Ticks");
-            ImGui.TableSetupColumn("Seconds");
-            ImGui.TableSetupColumn("Fired");
-            ImGui.TableHeadersRow();
-
-            for (int i = 0; i < ImpactShakeDurationPresets.Length; i++)
-            {
-                ImGui.TableNextRow();
-                ImGui.TableNextColumn();
-                bool isLast = i == _lastShakePreset;
-                if (isLast) ImGui.TextColored(new Vector4(1f, 0.85f, 0.3f, 1f), $"{ImpactShakeDurationLabels[i]}  <-- last");
-                else        ImGui.Text(ImpactShakeDurationLabels[i]);
-
-                ImGui.TableNextColumn(); ImGui.Text(ImpactShakeDurationPresets[i].ToString());
-                ImGui.TableNextColumn(); ImGui.Text($"{ImpactShakeDurationPresets[i] / BattleFrameRate:F2}");
-                ImGui.TableNextColumn(); ImGui.Text(_shakePresetCounts[i].ToString());
-            }
-            ImGui.EndTable();
-        }
-
-        if (ImGui.Button("Reset counts###fhparry.debug.shakesweep.reset"))
-        {
-            Array.Clear(_shakePresetCounts);
-            _lastShakePreset = -1;
-        }
-
-        ImGui.TextDisabled("Every parry also logs its preset: [ImpactShake] preset=C dur=12 (0.40s) ...");
-    }
-
     /// <summary>
     ///     The mod's own window. It exists because alpha11 removes FhSettingCustomRenderer
     ///     and offers no boolean or combo setting type, so there is nowhere in Fahrenheit's
@@ -816,11 +764,7 @@ public unsafe sealed partial class ParryModule
         }
 
         ImGui.SetNextWindowPos(_overlayWindowPos, ImGuiCond.Appearing);
-#if DEBUG
-        ImGui.SetNextWindowSize(new Vector2(1020f, 620f), ImGuiCond.FirstUseEver);
-#else
-        ImGui.SetNextWindowSize(new Vector2(420f, 520f), ImGuiCond.FirstUseEver);
-#endif
+        ImGui.SetNextWindowSize(_overlayWindowSize, ImGuiCond.Appearing);
         ImGui.SetNextWindowBgAlpha(_overlayBgAlpha);
 
         ImGui.PushStyleColor(ImGuiCol.WindowBg, new Vector4(0f, 0f, 0f, _overlayBgAlpha));
@@ -835,12 +779,14 @@ public unsafe sealed partial class ParryModule
         {
             capture_overlay_rect();
 
-            if (ImGui.SmallButton("v###fhparry.collapse")) _overlayCollapsed = true;
-            ImGui.SameLine();
-            ImGui.TextUnformatted("Parry");
-
             if (ImGui.BeginTabBar("###fhparry.tabs"))
             {
+                // Collapse caret, pinned to the top-right of the shared tab-bar header.
+                if (ImGui.TabItemButton("v###fhparry.collapse", ImGuiTabItemFlags.Trailing | ImGuiTabItemFlags.NoTooltip))
+                {
+                    _overlayCollapsed = true;
+                }
+
                 if (ImGui.BeginTabItem("Settings"))
                 {
                     render_settings_tab();
@@ -863,13 +809,6 @@ public unsafe sealed partial class ParryModule
                     else           render_debug_tab_placeholder();
                     ImGui.EndTabItem();
                 }
-
-                if (ImGui.BeginTabItem("Shake"))
-                {
-                    if (liveReady) render_shake_sweep_panel();
-                    else           render_debug_tab_placeholder();
-                    ImGui.EndTabItem();
-                }
 #endif
 
                 ImGui.EndTabBar();
@@ -881,16 +820,20 @@ public unsafe sealed partial class ParryModule
         ImGui.PopStyleColor();
     }
 
-    // Collapsed state: a small square caret in place of the window. Clicking it re-expands. Shares
-    // _overlayWindowPos with the full window so it reappears exactly where the window was.
+    // Collapsed state: a small square caret pinned to the top-right corner where the window's
+    // header was, derived from the last captured window pos+size. Clicking it reopens the window
+    // in place, at its previous size.
     private void render_overlay_collapsed_caret()
     {
-        ImGui.SetNextWindowPos(_overlayWindowPos, ImGuiCond.Appearing);
+        Vector2 caretPos = new(
+            _overlayWindowPos.X + _overlayWindowSize.X - OverlayCaretSize - 4f,
+            _overlayWindowPos.Y);
+        ImGui.SetNextWindowPos(caretPos, ImGuiCond.Always);
         ImGui.SetNextWindowBgAlpha(_overlayBgAlpha);
 
         ImGui.PushStyleColor(ImGuiCol.WindowBg, new Vector4(0f, 0f, 0f, _overlayBgAlpha));
         ImGui.PushStyleVar(ImGuiStyleVar.Alpha, _overlayContentAlpha);
-        ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new Vector2(3f, 3f));
+        ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new Vector2(2f, 2f));
         const ImGuiWindowFlags caretFlags =
             ImGuiWindowFlags.NoTitleBar
             | ImGuiWindowFlags.NoResize
@@ -901,8 +844,13 @@ public unsafe sealed partial class ParryModule
             | ImGuiWindowFlags.NoNavFocus;
         if (ImGui.Begin("###fhparry.caret", caretFlags))
         {
-            capture_overlay_rect();
-            if (ImGui.Button(">###fhparry.expand", new Vector2(16f, 16f))) _overlayCollapsed = false;
+            // Proximity fade follows the caret's own rect while collapsed.
+            _overlayPrevRectMin = ImGui.GetWindowPos();
+            _overlayPrevRectMax = _overlayPrevRectMin + ImGui.GetWindowSize();
+            if (ImGui.Button("<###fhparry.expand", new Vector2(OverlayCaretSize, OverlayCaretSize)))
+            {
+                _overlayCollapsed = false;
+            }
         }
         ImGui.End();
         ImGui.PopStyleVar(2);
@@ -932,8 +880,9 @@ public unsafe sealed partial class ParryModule
     private void capture_overlay_rect()
     {
         _overlayWindowPos = ImGui.GetWindowPos();
+        _overlayWindowSize = ImGui.GetWindowSize();
         _overlayPrevRectMin = _overlayWindowPos;
-        _overlayPrevRectMax = _overlayWindowPos + ImGui.GetWindowSize();
+        _overlayPrevRectMax = _overlayWindowPos + _overlayWindowSize;
     }
 
 #if DEBUG

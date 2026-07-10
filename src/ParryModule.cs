@@ -405,23 +405,13 @@ public unsafe sealed partial class ParryModule : FhModule
     private const float ImpactShakeFreqB     = 2.3f;   // ~11.0 Hz — ratio 1.35, so the axes never relock
     private const uint ImpactShakeAmpA       = 9;      // a parry is a lateral impact: favour one axis
     private const uint ImpactShakeAmpB       = 5;
-    private const uint ImpactShakeDuration   = 8;      // ticks at 30 fps ≈ 0.27 s — used when the sweep is off
+    private const uint ImpactShakeDuration   = 8;      // ticks at 30 fps ≈ 0.27 s — a single-slot parry
     private const uint ImpactShakeRandomness = 8;      // the engine's own jitter: ±4 around the amplitude
 
-    // Duration sweep, for dialling the shake in by feel. ONLY the duration varies — amplitude and the
-    // two frequencies stay fixed, so each shake differs in exactly one dimension and the comparison
-    // stays clean. Stages are drawn from a shuffled bag rather than in order: a rising or falling
-    // sequence would let you compare each shake against its neighbour instead of judging it on its
-    // own, and the same stage never lands twice in a row.
-    private static readonly uint[] ImpactShakeDurationPresets = [5, 8, 12, 16, 22];   // ticks @30fps
-    private static readonly string[] ImpactShakeDurationLabels = ["A", "B", "C", "D", "E"];
-    private const int ImpactShakeDefaultPreset = 1;    // "B" = 8 ticks, the value the sweep replaces
-
-    private bool _optionImpactShakeSweep = true;
-    private int[] _shakeBag = [];
-    private int _shakeBagPos;
-    private int _lastShakePreset = -1;
-    private readonly int[] _shakePresetCounts = new int[5];
+    // A whole-party parry (all three active PCs parried the same attack) fires a longer, heavier
+    // shake to sell the moment. 15 ticks ≈ 0.50 s; flip to 12 for ≈ 0.40 s if it reads as too long.
+    private const uint ImpactShakeDurationWholeParty = 15;  // ticks @30fps ≈ 0.50 s
+    private const int FullPartyParryCount = 3;
 
     // Streak counter attack: when a slot completes a defensive streak (every
     // targeted slot in a cue parried at least once and cumulative streak ≥
@@ -625,14 +615,17 @@ public unsafe sealed partial class ParryModule : FhModule
     private bool _debugAutoScroll = true;
     private float _debugStatePanelRatio = 0.50f;
 
-    // Overlay window chrome. The window carries no title bar; it collapses to a small square
-    // caret, and its opacity eases toward opaque only while the mouse is near it. The rect is
-    // captured each frame from the live window and read back the next frame (ImGui only reports
-    // geometry after Begin), which is what the proximity test and the collapse toggle align to.
-    private bool _overlayCollapsed;
+    // Overlay window chrome. No title bar — the tab bar is the header, with a collapse caret
+    // pinned to its top-right corner. Collapsed by default, it shows just that square caret at the
+    // same corner. Opacity eases toward opaque only while the mouse is near. Window pos+size are
+    // captured each frame so the caret can be derived from the window's corner and the window
+    // reopens where and how big it was; the prev-rect is what the proximity test reads back.
+    private const float OverlayCaretSize = 16f;
+    private bool _overlayCollapsed = true;
     private float _overlayBgAlpha = 0.55f;
     private float _overlayContentAlpha = 1.0f;
     private Vector2 _overlayWindowPos = new(20f, 20f);
+    private Vector2 _overlayWindowSize = new(420f, 520f);
     private Vector2 _overlayPrevRectMin = new(20f, 20f);
     private Vector2 _overlayPrevRectMax = new(20f, 20f);
     private int _debugCueTurnId;

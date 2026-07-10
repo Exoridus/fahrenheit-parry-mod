@@ -1292,42 +1292,6 @@ public unsafe sealed partial class ParryModule
         }
     }
 
-    // Draws the next duration preset from a shuffled bag: every stage appears equally often, the
-    // order is unpredictable, and a stage never repeats back-to-back. A plain random draw would
-    // cluster; walking the stages in order would let you judge each shake against its predecessor
-    // rather than on its own.
-    private int next_shake_preset()
-    {
-        if (!_optionImpactShakeSweep) return ImpactShakeDefaultPreset;
-
-        if (_shakeBag.Length == 0 || _shakeBagPos >= _shakeBag.Length)
-        {
-            int n = ImpactShakeDurationPresets.Length;
-            if (_shakeBag.Length != n) _shakeBag = new int[n];
-            for (int i = 0; i < n; i++) _shakeBag[i] = i;
-
-            // Fisher-Yates.
-            for (int i = n - 1; i > 0; i--)
-            {
-                int j = _labelRng.Next(i + 1);
-                (_shakeBag[i], _shakeBag[j]) = (_shakeBag[j], _shakeBag[i]);
-            }
-
-            // Never repeat across the bag seam.
-            if (n > 1 && _shakeBag[0] == _lastShakePreset)
-            {
-                (_shakeBag[0], _shakeBag[n - 1]) = (_shakeBag[n - 1], _shakeBag[0]);
-            }
-
-            _shakeBagPos = 0;
-        }
-
-        int preset = _shakeBag[_shakeBagPos++];
-        _lastShakePreset = preset;
-        _shakePresetCounts[preset]++;
-        return preset;
-    }
-
     // Fires the engine's own screen shake when a hit is *met* — i.e. on a successful parry, and
     // only there. A dodge (perfect or not) avoids the hit, so nothing lands and nothing shakes.
     // MsScreenSetShake stores a decaying envelope (mode 1) and the engine's per-frame applier
@@ -1338,8 +1302,11 @@ public unsafe sealed partial class ParryModule
         if (!_optionImpactShake) return;
         if (!try_get_live_battle_context(out _)) return;
 
-        int preset = next_shake_preset();
-        uint duration = ImpactShakeDurationPresets[preset];
+        // A whole-party parry — all three active PCs parried the same attack — earns a longer,
+        // heavier shake than a single-slot parry. LastParriedTargetMask accumulates the parried
+        // slots for the current action and clears at cue-clear, so a 3-bit mask is one big moment.
+        bool wholeParty = BitOperations.PopCount(_runtime.LastParriedTargetMask) >= FullPartyParryCount;
+        uint duration = wholeParty ? ImpactShakeDurationWholeParty : ImpactShakeDuration;
 
         try
         {
@@ -1354,7 +1321,7 @@ public unsafe sealed partial class ParryModule
 
             if (_optionLogging)
             {
-                string tag = _optionImpactShakeSweep ? $"preset={ImpactShakeDurationLabels[preset]} " : "";
+                string tag = wholeParty ? "whole-party " : "";
                 log_debug($"[ImpactShake] {tag}dur={duration} ({duration / BattleFrameRate:F2}s) A(amp={ImpactShakeAmpA} freq={ImpactShakeFreqA}) B(amp={ImpactShakeAmpB} freq={ImpactShakeFreqB}) ({source}).");
             }
         }
