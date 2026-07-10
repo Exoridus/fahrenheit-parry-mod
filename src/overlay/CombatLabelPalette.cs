@@ -9,17 +9,18 @@ namespace Fahrenheit.Mods.Parry;
 ///     game's assets. Treat the exact channel values as a design choice, not as measured
 ///     truth.
 ///
-///     The gold tint is deliberately faint. In Expedition 33 a strong gold flare marks
-///     the Jump prompt, i.e. an attack that can be neither dodged nor parried; using that
-///     same signal colour for a reward would invert its meaning.
+///     Both fills sit close to white: on a busy battlefield the labels have to read as text
+///     first and as a signal second. The gold on PARRIED and PERFECT is a tint, not a colour —
+///     in Expedition 33 a strong gold flare marks the Jump prompt, i.e. an attack that can be
+///     neither dodged nor parried, so a saturated gold reward would invert that meaning.
 /// </summary>
 public static class CombatLabelPalette
 {
-    /// <summary>Warm cream. Used by DODGE — a solid block, no overdrive boost.</summary>
-    public static readonly Vector4 Plain = new(0.96f, 0.93f, 0.86f, 1.0f);
+    /// <summary>Near-white with a trace of warmth. Used by DODGE.</summary>
+    public static readonly Vector4 Plain = new(0.98f, 0.97f, 0.94f, 1.0f);
 
-    /// <summary>Cream with a gold tint. Used by PARRIED and PERFECT, which both grant the boost.</summary>
-    public static readonly Vector4 PreciseTiming = new(0.98f, 0.89f, 0.68f, 1.0f);
+    /// <summary>Near-white with a gold tint. Used by PARRIED and PERFECT — a hit met on time.</summary>
+    public static readonly Vector4 PreciseTiming = new(1.00f, 0.96f, 0.84f, 1.0f);
 
     /// <param name="preciseTiming">
     ///     <c>true</c> for PARRIED and PERFECT — a hit answered inside the tight parry window.

@@ -563,8 +563,12 @@ public unsafe sealed partial class ParryModule
     }
 
     // Single entry point for "this slot has evaded". Idempotent per cue: the durable marker gates
-    // the commit passes, and the perfect grade + overdrive boost are awarded exactly once, at the
-    // first impact — while _dodgeWindowRemainingSeconds still carries the press-to-hit timing.
+    // the commit passes, and the perfect grade is awarded exactly once, at the first impact —
+    // while _dodgeWindowRemainingSeconds still carries the press-to-hit timing.
+    //
+    // A perfect dodge grades PERFECT and takes the gold label, but grants no overdrive charge and no
+    // counter. Overdrive is the parry's reward alone: evading a hit removes it from the fight, while
+    // parrying answers it. Only the parry feeds the custom overdrive mode's learn counter.
     private void mark_dodge_resolved(int slotIndex)
     {
         uint bit = 1u << slotIndex;
@@ -575,7 +579,6 @@ public unsafe sealed partial class ParryModule
         if (is_perfect_dodge())
         {
             _dodgeTextPerfectMask |= bit;
-            apply_overdrive_boost(bit);   // same reward as a parry; a dodge still grants no counter
             log_debug($"Perfect dodge for {format_actor_slot((byte)slotIndex)} (inside the parry window).");
         }
     }
