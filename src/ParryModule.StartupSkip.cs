@@ -50,12 +50,7 @@ public unsafe sealed partial class ParryModule
         [MarshalAs(UnmanagedType.LPWStr)] string? lpDirectory,
         int nShowCmd);
 
-    // ── hooks + state ────────────────────────────────────────────────────────
-    private readonly FhMethodHandle<StartupAtelEventSetUp>    _hStartupAtelEventSetUp;
-    private readonly FhMethodHandle<StartupNeedShowJapanLogo> _hStartupNeedShowJapanLogo;
-    private readonly FhMethodHandle<StartupFmvSkipPoll>       _hStartupBootFmvSkip;
-    private readonly FhMethodHandle<StartupShellExecuteW>     _hStartupShellExecuteW;
-
+    // ── state ────────────────────────────────────────────────────────────────
     private bool  _startupSkipStatusLogged;
     private int   _startupForceAttemptCount;
     private ulong _startupForceLastAttemptFrame;
@@ -63,23 +58,13 @@ public unsafe sealed partial class ParryModule
     private long  _startupBootSkipFireCount;
     private long  _startupLauncherSuppressCount;
 
-    // The four hook fields above are assigned in the ParryModule constructor
-    // (ParryModule.cs), mirroring how the other production hooks are constructed there.
-
     // ── install (called from init) ───────────────────────────────────────────
     private void install_startup_skip_hooks()
     {
-        try   { _hStartupAtelEventSetUp.hook(); }
-        catch (Exception ex) { _logger.Warning($"[Parry][StartupSkip] Could not hook AtelEventSetUp (splash skip unavailable): {ex.Message}"); }
-
-        try   { _hStartupNeedShowJapanLogo.hook(); }
-        catch (Exception ex) { _logger.Warning($"[Parry][StartupSkip] Could not hook NeedShowJapanLogo (Japan logo skip reduced): {ex.Message}"); }
-
-        try   { _hStartupBootFmvSkip.hook(); }
-        catch (Exception ex) { _logger.Warning($"[Parry][StartupSkip] Could not hook FmvSkipPoll (boot FMV skip unavailable): {ex.Message}"); }
-
-        try   { _hStartupShellExecuteW.hook(); }
-        catch (Exception ex) { _logger.Warning($"[Parry][StartupSkip] Could not hook ShellExecuteW (launcher-relaunch suppression unavailable): {ex.Message}"); }
+        install_hook(loc_startup_atel_event_setup(), h_startup_event_setup, "[StartupSkip] AtelEventSetUp (splash skip unavailable)");
+        install_hook(loc_startup_need_show_japan_logo(), h_startup_need_show_japan_logo, "[StartupSkip] NeedShowJapanLogo (Japan logo skip reduced)");
+        install_hook(loc_startup_boot_fmv_skip(), h_startup_boot_fmv_skip, "[StartupSkip] FmvSkipPoll (boot FMV skip unavailable)");
+        install_hook(loc_startup_shell_execute_w(), h_startup_shell_execute_w, "[StartupSkip] ShellExecuteW (launcher-relaunch suppression unavailable)");
 
         _logger.Info("[Parry][StartupSkip] Splash/launcher skip ready.");
     }
