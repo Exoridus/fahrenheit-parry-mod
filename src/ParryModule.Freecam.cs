@@ -28,13 +28,20 @@ public unsafe sealed partial class ParryModule
     private MsCameraSetRectFn? _camSetRect;
     private AtelGetCameraWorkAdrsFn? _getCamWorkAdrs;
 
-    // Saved anchor pose (persisted). When the anchor toggle is on, this pose is stamped every frame
-    // from battle start — a static "E33" camera that also snaps back after any effect pan. Set it
-    // from the current freecam pose with the panel button.
+    // Saved anchor poses (persisted), keyed by battle map + enemy constellation so each encounter
+    // gets its own hand-tuned camera. When the anchor toggle is on, the pose matching the current
+    // encounter is stamped every frame from battle start — a static "E33" camera that also snaps
+    // back after any effect pan. Set it from the current freecam pose with the panel button.
     private bool _optionStaticCameraAnchor;
-    private Vector3 _anchorPos = new(0f, 80f, 260f);
-    private float _anchorYaw;
-    private float _anchorPitch;
+    private readonly Dictionary<string, AnchorPose> _cameraAnchors = new();
+    private MsGetBattleSceneFn? _getBattleScene;
+
+    private readonly struct AnchorPose
+    {
+        public readonly Vector3 Pos;
+        public readonly float Yaw, Pitch;
+        public AnchorPose(Vector3 pos, float yaw, float pitch) { Pos = pos; Yaw = yaw; Pitch = pitch; }
+    }
 
     private const uint CameraEyeBank = 1;   // MsCameraSetRect mode: camSetPos (eye) bank
     private const uint CameraRefBank = 0;   // the look-at / ref bank
@@ -64,10 +71,34 @@ public unsafe sealed partial class ParryModule
             read_freecam_input();
             stamp_camera(_freecamPos, _freecamYaw, _freecamPitch);
         }
-        else if (_optionStaticCameraAnchor)
+        else if (_optionStaticCameraAnchor && _cameraAnchors.TryGetValue(current_battle_camera_key(), out AnchorPose a))
         {
-            stamp_camera(_anchorPos, _anchorYaw, _anchorPitch);
+            stamp_camera(a.Pos, a.Yaw, a.Pitch);
         }
+    }
+
+    // Key for the current encounter: battle map id + the sorted enemy chr_ids. Same map with a
+    // different enemy formation keys to a different anchor. The game defines both deterministically,
+    // so the key is stable across visits.
+    private string current_battle_camera_key()
+    {
+        _getBattleScene ??= FhUtil.get_fptr<MsGetBattleSceneFn>(ExternalMemoryOffsetMap.Functions.MsGetBattleScene);
+        return $"{_getBattleScene():X8}|{format_enemy_constellation()}";
+    }
+
+    private string format_enemy_constellation()
+    {
+        Chr* enemies = _battleAdapter.GetMonsterCharacters();
+        if (enemies == null) return "none";
+        List<ushort> ids = [];
+        for (int i = 0; i < EnemyActorCapacity; i++)
+        {
+            Chr* e = enemies + i;
+            if (e->stat_exist_flag) ids.Add(e->chr_id);
+        }
+        if (ids.Count == 0) return "none";
+        ids.Sort();
+        return string.Join("-", ids.Select(static id => id.ToString("X4")));
     }
 
     private void read_freecam_input()
@@ -141,13 +172,16 @@ public unsafe sealed partial class ParryModule
         if (ImGui.Checkbox("Hold anchor from battle start##fhparry.freecam.anchor", ref _optionStaticCameraAnchor))
             persist_settings();
         ImGui.SameLine();
-        if (ImGui.Button("Save current pose as anchor##fhparry.freecam.setanchor"))
+        if (ImGui.Button("Save pose for this encounter##fhparry.freecam.setanchor"))
         {
-            _anchorPos = _freecamPos; _anchorYaw = _freecamYaw; _anchorPitch = _freecamPitch;
+            string key = current_battle_camera_key();
+            _cameraAnchors[key] = new AnchorPose(_freecamPos, _freecamYaw, _freecamPitch);
             persist_settings();
-            log_debug($"[Freecam] anchor saved: pos=({_anchorPos.X:F2},{_anchorPos.Y:F2},{_anchorPos.Z:F2}) yaw={_anchorYaw:F4} pitch={_anchorPitch:F4}");
+            log_debug($"[Freecam] anchor saved for {key}: pos=({_freecamPos.X:F2},{_freecamPos.Y:F2},{_freecamPos.Z:F2}) yaw={_freecamYaw:F4} pitch={_freecamPitch:F4}");
         }
-        ImGui.TextDisabled("Anchor holds even with freecam off; snaps back after effect pans.");
+        bool hasAnchor = _cameraAnchors.ContainsKey(current_battle_camera_key());
+        ImGui.TextDisabled($"encounter: {current_battle_camera_key()}  ·  this one: {(hasAnchor ? "saved" : "none")}  ·  {_cameraAnchors.Count} total");
+        ImGui.TextDisabled("Keyed by map + enemy group. Holds even with freecam off; snaps back after effect pans.");
     }
 
     // Persist the current camera pose and the battle map it was found on, so a hand-tuned angle is
@@ -155,10 +189,8 @@ public unsafe sealed partial class ParryModule
     // next to the config (survives across sessions).
     private void capture_freecam_angle()
     {
-        var getScene = FhUtil.get_fptr<MsGetBattleSceneFn>(ExternalMemoryOffsetMap.Functions.MsGetBattleScene);
-        int scene = getScene();
         string line =
-            $"scene=0x{scene:X8} pos=({_freecamPos.X:F2},{_freecamPos.Y:F2},{_freecamPos.Z:F2}) "
+            $"{current_battle_camera_key()} pos=({_freecamPos.X:F2},{_freecamPos.Y:F2},{_freecamPos.Z:F2}) "
             + $"yaw={_freecamYaw:F4} pitch={_freecamPitch:F4} camId={_battleCameraId} frame=F{_debugFrameIndex:D7}";
         log_debug($"[Freecam] CAPTURED {line}");
 

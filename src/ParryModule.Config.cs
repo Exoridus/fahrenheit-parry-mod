@@ -24,11 +24,17 @@ public unsafe sealed partial class ParryModule
         public int? CheckHitHitValue { get; set; }
         public string? Difficulty { get; set; }
         public bool? StaticCameraAnchor { get; set; }
-        public float? AnchorPosX { get; set; }
-        public float? AnchorPosY { get; set; }
-        public float? AnchorPosZ { get; set; }
-        public float? AnchorYaw { get; set; }
-        public float? AnchorPitch { get; set; }
+        public List<CameraAnchorEntry>? CameraAnchors { get; set; }
+    }
+
+    private sealed class CameraAnchorEntry
+    {
+        public string? Key { get; set; }
+        public float PosX { get; set; }
+        public float PosY { get; set; }
+        public float PosZ { get; set; }
+        public float Yaw { get; set; }
+        public float Pitch { get; set; }
     }
 
     private static readonly JsonSerializerOptions PersistedSettingsJsonOptions = new()
@@ -131,11 +137,15 @@ public unsafe sealed partial class ParryModule
             }
 
             if (persisted.StaticCameraAnchor.HasValue) _optionStaticCameraAnchor = persisted.StaticCameraAnchor.Value;
-            if (persisted.AnchorPosX.HasValue) _anchorPos.X = persisted.AnchorPosX.Value;
-            if (persisted.AnchorPosY.HasValue) _anchorPos.Y = persisted.AnchorPosY.Value;
-            if (persisted.AnchorPosZ.HasValue) _anchorPos.Z = persisted.AnchorPosZ.Value;
-            if (persisted.AnchorYaw.HasValue) _anchorYaw = persisted.AnchorYaw.Value;
-            if (persisted.AnchorPitch.HasValue) _anchorPitch = persisted.AnchorPitch.Value;
+            if (persisted.CameraAnchors != null)
+            {
+                _cameraAnchors.Clear();
+                foreach (CameraAnchorEntry e in persisted.CameraAnchors)
+                {
+                    if (!string.IsNullOrWhiteSpace(e.Key))
+                        _cameraAnchors[e.Key] = new AnchorPose(new Vector3(e.PosX, e.PosY, e.PosZ), e.Yaw, e.Pitch);
+                }
+            }
         }
         catch (Exception ex)
         {
@@ -176,11 +186,11 @@ public unsafe sealed partial class ParryModule
                 CheckHitHitValue = _checkHitHitValue,
                 Difficulty = _optionDifficulty.ToString(),
                 StaticCameraAnchor = _optionStaticCameraAnchor,
-                AnchorPosX = _anchorPos.X,
-                AnchorPosY = _anchorPos.Y,
-                AnchorPosZ = _anchorPos.Z,
-                AnchorYaw = _anchorYaw,
-                AnchorPitch = _anchorPitch
+                CameraAnchors = _cameraAnchors.Select(kv => new CameraAnchorEntry
+                {
+                    Key = kv.Key, PosX = kv.Value.Pos.X, PosY = kv.Value.Pos.Y, PosZ = kv.Value.Pos.Z,
+                    Yaw = kv.Value.Yaw, Pitch = kv.Value.Pitch
+                }).ToList()
             };
 
             string json = JsonSerializer.Serialize(payload, PersistedSettingsJsonOptions);
