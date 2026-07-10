@@ -1019,11 +1019,7 @@ public unsafe sealed partial class ParryModule
         string battleTime = format_battle_time(_debugBattleFrameIndex);
         int flushIndex = find_last_flush_index();
         int sinceFlush = Math.Max(0, _debugCueHistory.Count - (flushIndex + 1));
-        bool hasNextThreat = try_get_next_enemy_party_cue(out DebugCueSnapshot nextCue, out string nextDecision, out string nextReason);
-        string nextActor = hasNextThreat ? format_actor_slot(nextCue.AttackerId) : "None";
-        string nextType = hasNextThreat ? format_cue_category(nextCue.Category) : "None";
-        string nextTarget = hasNextThreat ? format_party_target_mask(nextCue.PartyMask) : "None";
-        string nextQueue = hasNextThreat ? $"Queue {nextCue.QueueIndex + 1}" : "None";
+        bool hasNextThreat = try_get_next_enemy_party_cue(out _, out string nextDecision, out string nextReason);
         string timingValue = format_window_status_summary();
         string battleSummary = format_current_battle_summary();
         string lastCommandSummary = format_last_command_summary();
@@ -1038,25 +1034,16 @@ public unsafe sealed partial class ParryModule
 
             render_state_row_pair(
                 "Window", bool_to_on_off(_runtime.ParryWindowActive),
-                "Parried Text", _runtime.ParriedTextRemainingSeconds > 0f ? "Visible" : "Hidden");
+                "Input State", format_input_state());
             render_state_row_pair(
                 "Impact Context", bool_to_yes_no(_runtime.AwaitingTurnEnd),
                 "Parry Success", bool_to_yes_no(_runtime.ParryWindowSucceeded));
-            render_state_row_pair(
-                "Next Actor", nextActor,
-                "Next Type", nextType);
-            render_state_row_pair(
-                "Next Target", nextTarget,
-                "Next Queue", nextQueue);
             render_state_row_pair(
                 "Decision", hasNextThreat ? nextDecision : "None",
                 "Gate", hasNextThreat ? nextReason : "Ready");
             render_state_row_pair(
                 "Timing", timingValue,
                 "Frame", $"F{_debugFrameIndex:D7}");
-            render_state_row_pair(
-                "Difficulty", ParryDifficultyModel.FormatName(_optionDifficulty),
-                "Input State", format_input_state());
             render_state_row_pair(
                 "Lockout", format_whiff_lockout_state(),
                 "Recovery", "Enabled");
@@ -1078,12 +1065,6 @@ public unsafe sealed partial class ParryModule
             render_state_row_pair(
                 "Since Flush", sinceFlush.ToString(CultureInfo.InvariantCulture),
                 "Mode", "Input -> Active Window -> Impact Resolve");
-            render_state_row_pair(
-                "CSV Map", _dataMappings.HasAny ? "Loaded" : "Not loaded",
-                "Coverage", $"cmd:{_dataMappings.CommandCount} auto:{_dataMappings.AutoAbilityCount} key:{_dataMappings.KeyItemCount} mon:{_dataMappings.MonsterCount} btl:{_dataMappings.BattleCount} evt:{_dataMappings.EventCount}");
-            render_state_row_pair(
-                "Map Source", truncate_display(_dataMappings.SourceSummary, 44),
-                "Map Status", truncate_display(_dataMappingStatus, 44));
 
             ImGui.EndTable();
         }
@@ -1113,13 +1094,13 @@ public unsafe sealed partial class ParryModule
         }
 
         const float splitterHeight = 6f;
-        const float minCueHeight = 140f;
+        const float minStateHeight = 140f;
         const float minLogHeight = 110f;
 
         float availableHeight = ImGui.GetContentRegionAvail().Y;
-        if (availableHeight <= (minCueHeight + minLogHeight + splitterHeight))
+        if (availableHeight <= (minStateHeight + minLogHeight + splitterHeight))
         {
-            render_debug_cue_preview_panel(Math.Max(minCueHeight, availableHeight * 0.6f));
+            render_debug_state_panel(Math.Max(minStateHeight, availableHeight * 0.5f));
             ImGui.Separator();
             render_debug_log_panel(Math.Max(minLogHeight, ImGui.GetContentRegionAvail().Y));
             ImGui.EndChild();
@@ -1127,150 +1108,28 @@ public unsafe sealed partial class ParryModule
         }
 
         float movableHeight = availableHeight - splitterHeight;
-        float minRatio = minCueHeight / movableHeight;
+        float minRatio = minStateHeight / movableHeight;
         float maxRatio = 1f - (minLogHeight / movableHeight);
-        _debugCuePanelRatio = Math.Clamp(_debugCuePanelRatio, minRatio, maxRatio);
+        _debugStatePanelRatio = Math.Clamp(_debugStatePanelRatio, minRatio, maxRatio);
 
-        float cueHeight = movableHeight * _debugCuePanelRatio;
-        float logHeight = movableHeight - cueHeight;
+        float stateHeight = movableHeight * _debugStatePanelRatio;
+        float logHeight = movableHeight - stateHeight;
 
-        render_debug_cue_preview_panel(cueHeight);
+        render_debug_state_panel(stateHeight);
 
         Vector2 splitterSize = new(ImGui.GetContentRegionAvail().X, splitterHeight);
         ImGui.PushStyleColor(ImGuiCol.Button, new Vector4(0.25f, 0.25f, 0.25f, 0.9f));
         ImGui.PushStyleColor(ImGuiCol.ButtonHovered, new Vector4(0.38f, 0.38f, 0.38f, 0.95f));
         ImGui.PushStyleColor(ImGuiCol.ButtonActive, new Vector4(0.5f, 0.5f, 0.5f, 1f));
         ImGui.Button("###fhparry.debug.splitter", splitterSize);
-        bool splitterActive = ImGui.IsItemActive();
-        if (splitterActive)
+        if (ImGui.IsItemActive())
         {
             float delta = ImGui.GetIO().MouseDelta.Y;
-            _debugCuePanelRatio = Math.Clamp(_debugCuePanelRatio + (delta / movableHeight), minRatio, maxRatio);
+            _debugStatePanelRatio = Math.Clamp(_debugStatePanelRatio + (delta / movableHeight), minRatio, maxRatio);
         }
 
         ImGui.PopStyleColor(3);
         render_debug_log_panel(logHeight);
-        ImGui.EndChild();
-    }
-
-    private void render_debug_cue_preview_panel(float panelHeight)
-    {
-        if (!ImGui.BeginChild("###fhparry.debug.cues", new Vector2(0f, panelHeight), ImGuiChildFlags.Borders, ImGuiWindowFlags.None))
-        {
-            ImGui.EndChild();
-            return;
-        }
-
-        int liveCount = 0;
-        int completedCount = 0;
-        for (int i = 0; i < _turnTimeline.RowCount; i++)
-        {
-            TurnTimelineRow row = _turnTimeline.GetRowAt(i);
-            if (row.IsFlushMarker) continue;
-            if (row.Lifecycle == TurnTimelineLifecycleState.Completed) completedCount++;
-            else liveCount++;
-        }
-        ImGui.TextUnformatted($"Turn Timeline: active/pending={liveCount}, completed={completedCount}, stored={_turnTimeline.RowCount}/{_turnTimeline.Capacity}");
-
-        Vector2 tableSize = new(0f, ImGui.GetContentRegionAvail().Y - 2f);
-        const ImGuiTableFlags tableFlags =
-            ImGuiTableFlags.Borders
-            | ImGuiTableFlags.RowBg
-            | ImGuiTableFlags.ScrollY
-            | ImGuiTableFlags.SizingStretchProp
-            | ImGuiTableFlags.Resizable;
-
-        if (ImGui.BeginTable("###fhparry.debug.cue.table", 8, tableFlags, tableSize))
-        {
-            float scrollY = ImGui.GetScrollY();
-            float maxScrollY = ImGui.GetScrollMaxY();
-            bool wasAtBottom = maxScrollY <= 0f || scrollY >= maxScrollY - 2f;
-
-            ImGui.TableSetupColumn("Time", ImGuiTableColumnFlags.WidthStretch, 1.2f);
-            ImGui.TableSetupColumn("Turn", ImGuiTableColumnFlags.WidthFixed, 92f);
-            ImGui.TableSetupColumn("Actor", ImGuiTableColumnFlags.WidthStretch, 1.0f);
-            ImGui.TableSetupColumn("Action", ImGuiTableColumnFlags.WidthStretch, 0.8f);
-            ImGui.TableSetupColumn("Target", ImGuiTableColumnFlags.WidthStretch, 1.6f);
-            ImGui.TableSetupColumn("Parryable", ImGuiTableColumnFlags.WidthFixed, 92f);
-            ImGui.TableSetupColumn("Parry", ImGuiTableColumnFlags.WidthFixed, 90f);
-            ImGui.TableSetupColumn("Lifecycle", ImGuiTableColumnFlags.WidthStretch, 1.0f);
-            ImGui.TableSetupScrollFreeze(0, 1);
-            ImGui.TableHeadersRow();
-
-            for (int i = 0; i < _turnTimeline.RowCount; i++)
-            {
-                TurnTimelineRow row = _turnTimeline.GetRowAt(i);
-                ImGui.TableNextRow();
-                bool isMarker = row.IsFlushMarker || row.IsDiagnosticMarker;
-                if (row.IsFlushMarker)
-                {
-                    uint rowColor = ImGui.ColorConvertFloat4ToU32(new Vector4(0.35f, 0.3f, 0.15f, 0.2f));
-                    ImGui.TableSetBgColor(ImGuiTableBgTarget.RowBg0, rowColor);
-                }
-                else if (row.IsDiagnosticMarker)
-                {
-                    uint rowColor = ImGui.ColorConvertFloat4ToU32(new Vector4(0.4f, 0.12f, 0.12f, 0.22f));
-                    ImGui.TableSetBgColor(ImGuiTableBgTarget.RowBg0, rowColor);
-                }
-
-                ImGui.TableSetColumnIndex(0);
-                ImGui.TextUnformatted($"{format_gameplay_timestamp(row.TimestampLocal)} F{row.FrameIndex:D6}");
-                ImGui.TableSetColumnIndex(1);
-                ImGui.TextUnformatted(isMarker ? "-" : format_turn_id(row));
-                ImGui.TableSetColumnIndex(2);
-                ImGui.TextUnformatted(row.IsFlushMarker ? "Queue Flush" : (row.IsDiagnosticMarker ? "Warning" : row.Actor));
-                if (!isMarker && ImGui.IsItemHovered())
-                {
-                    ImGui.BeginTooltip();
-                    ImGui.TextUnformatted($"slot={row.AttackerId} rowId={row.RowId}");
-                    ImGui.TextUnformatted($"queue={row.QueuePosition}/{row.QueueTotal}");
-                    if (row.Command.CommandId != 0)
-                    {
-                        string commandKind = string.IsNullOrWhiteSpace(row.Command.Kind) ? "command" : row.Command.Kind;
-                        string commandLabel = !string.IsNullOrWhiteSpace(row.Command.Label) ? row.Command.Label : "(unmapped)";
-                        ImGui.TextUnformatted($"cmd=0x{row.Command.CommandId:X4} ({commandKind})");
-                        ImGui.TextWrapped($"label={truncate_display(commandLabel, 180)}");
-                        ImGui.TextUnformatted($"source={row.Command.Source}, confidence={row.Command.Confidence}");
-                    }
-                    if (row.AttackerId >= PartyActorCapacity)
-                    {
-                        Chr* enemy = try_get_chr(row.AttackerId);
-                        if (enemy != null)
-                        {
-                            if (_dataMappings.TryResolveMonsterSensor(enemy->chr_id, out string sensor))
-                            {
-                                ImGui.Separator();
-                                ImGui.TextWrapped($"Sensor: {truncate_display(sensor, 180)}");
-                            }
-
-                            if (_dataMappings.TryResolveMonsterScan(enemy->chr_id, out string scan))
-                            {
-                                ImGui.TextWrapped($"Scan: {truncate_display(scan, 180)}");
-                            }
-                        }
-                    }
-                    ImGui.EndTooltip();
-                }
-                ImGui.TableSetColumnIndex(3);
-                ImGui.TextUnformatted(row.Action);
-                ImGui.TableSetColumnIndex(4);
-                ImGui.TextUnformatted(row.Targets);
-                ImGui.TableSetColumnIndex(5);
-                ImGui.TextUnformatted(isMarker ? "-" : format_parryability(row.Parryability));
-                ImGui.TableSetColumnIndex(6);
-                ImGui.TextUnformatted(isMarker ? "-" : format_parry_state(row.ParryState));
-                ImGui.TableSetColumnIndex(7);
-                ImGui.TextUnformatted(isMarker ? "Completed" : format_lifecycle(row.Lifecycle, row));
-            }
-
-            if (_debugCueAutoScroll && wasAtBottom && _turnTimeline.RowCount > 0)
-            {
-                ImGui.SetScrollHereY(1f);
-            }
-
-            ImGui.EndTable();
-        }
-
         ImGui.EndChild();
     }
 

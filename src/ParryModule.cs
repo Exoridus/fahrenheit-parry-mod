@@ -624,8 +624,7 @@ public unsafe sealed partial class ParryModule : FhModule
     private bool _debugGameSaveLoaded;
     private bool _debugGameplayReady;
     private bool _debugAutoScroll = true;
-    private bool _debugCueAutoScroll = true;
-    private float _debugCuePanelRatio = 0.50f;
+    private float _debugStatePanelRatio = 0.50f;
     private int _debugCueTurnId;
     private string _dataMappingStatus = "No data mappings loaded.";
     private readonly Random _rng = new();
