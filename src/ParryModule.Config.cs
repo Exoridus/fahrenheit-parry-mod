@@ -23,7 +23,6 @@ public unsafe sealed partial class ParryModule
         public bool? ParryNativeBlock { get; set; }
         public bool? CameraProbe { get; set; }
         public int? CheckHitHitValue { get; set; }
-        public int? CheckHitMissValue { get; set; }
         public string? Difficulty { get; set; }
     }
 
@@ -117,7 +116,6 @@ public unsafe sealed partial class ParryModule
             if (persisted.ParryNativeBlock.HasValue) _optionParryNativeBlock = persisted.ParryNativeBlock.Value;
             if (persisted.CameraProbe.HasValue) _optionCameraProbe = persisted.CameraProbe.Value;
             if (persisted.CheckHitHitValue.HasValue) _checkHitHitValue = persisted.CheckHitHitValue.Value;
-            if (persisted.CheckHitMissValue.HasValue) _checkHitMissValue = persisted.CheckHitMissValue.Value;
 
             if (ParryDifficultyModel.TryParsePersistedDifficulty(persisted.Difficulty, out ParryDifficulty difficulty))
             {
@@ -166,7 +164,6 @@ public unsafe sealed partial class ParryModule
                 ParryNativeBlock = _optionParryNativeBlock,
                 CameraProbe = _optionCameraProbe,
                 CheckHitHitValue = _checkHitHitValue,
-                CheckHitMissValue = _checkHitMissValue,
                 Difficulty = _optionDifficulty.ToString()
             };
 

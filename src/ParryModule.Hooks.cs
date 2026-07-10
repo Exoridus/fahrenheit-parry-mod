@@ -1575,26 +1575,11 @@ public unsafe sealed partial class ParryModule
                 }
             }
         }
-        else if (_checkHitMissValue == null && result != _checkHitHitValue.Value)
-        {
-            // Got a value that differs from cached HIT — could be MISS or MISS_ALIVE.
-            // MISS_ALIVE only fires for status-only commands (the early-return at
-            // engine line 830189) so it's quite rare. We can't perfectly disambiguate
-            // here without inspecting command->flags_misc; for the override we don't
-            // care — only MISS gets flipped to HIT. Record as MISS (the user can
-            // always pre-seed both via persisted settings if auto-discovery misfires).
-            _checkHitMissValue = result;
-            if (_optionLogging)
-            {
-                log_debug($"[CheckHit] Auto-cached MISS enum value = {_checkHitMissValue.Value} (HIT={_checkHitHitValue.Value}). Override active for PC targets.");
-            }
-        }
-
         if (_optionLogging)
         {
             ushort userSlot = user != null ? user->id : (ushort)0;
             ushort userTemplate = user != null ? user->chr_id : (ushort)0;
-            log_debug($"[CheckHit] user_slot={userSlot:X2} user_tpl={userTemplate:X4} target_slot={targetSlot:X2} target_tpl={targetTemplate:X4} is_aeon={isAeon} result={result} (obs#{_checkHitObservationCount}, hit={_checkHitHitValue?.ToString() ?? "?"}, miss={_checkHitMissValue?.ToString() ?? "?"})");
+            log_debug($"[CheckHit] user_slot={userSlot:X2} user_tpl={userTemplate:X4} target_slot={targetSlot:X2} target_tpl={targetTemplate:X4} is_aeon={isAeon} result={result} (obs#{_checkHitObservationCount}, hit={_checkHitHitValue?.ToString() ?? "?"})");
         }
 
         // Native PC evasion stays disabled: a PC that evades natively never reaches our impact

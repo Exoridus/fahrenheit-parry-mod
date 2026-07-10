@@ -459,7 +459,6 @@ public unsafe sealed partial class ParryModule : FhModule
     // Settings file may also pre-seed these via persisted values (set by the user
     // after observing logs). Default null = unknown.
     private int? _checkHitHitValue = null;
-    private int? _checkHitMissValue = null;
     private int _checkHitConsecutiveSameCount = 0;
     private int? _checkHitFirstObservedValue = null;
     private long _checkHitOverrideCount = 0;
