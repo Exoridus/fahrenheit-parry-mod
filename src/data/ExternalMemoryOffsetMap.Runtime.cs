@@ -72,6 +72,33 @@ public static partial class ExternalMemoryOffsetMap
         // (0x7c0650): it sets ms_matrix_flag, FUN_007bc090 then skips the rebuild and the
         // interpreter writes its slot fields back from the same preset — both stay coherent.
 
+        // AtelCameraPolarSet — FUN_007bad30 at FFX.exe+0x3BAD30 (absolute 0x007BAD30).
+        // The actor-relative POLAR camera writer: the single body behind all six of
+        // camSetBtlPolar / refSetBtlPolar / camSetBtlPolar2 / refSetBtlPolar2 /
+        // camSetChrPolar / camSetChrPolar2 (wrappers at 0x007B8690..0x007B8730).
+        //
+        // Signature: int (AtelBasicWorker* worker, int p2, AtelStack* stack, int isCam, int variant) __cdecl
+        //
+        // The six script floats are NOT parameters — they are popped off the ATEL stack
+        // inside (4x AtelPopStackFloat, then 2x AtelPopStackInteger; pops run reverse to
+        // pushes, giving Square Enix's own prototype `(int, int, float, float, float, float)`).
+        // A hook at entry therefore sees only the two wrapper constants, which are enough
+        // to identify the opcode exactly:
+        //     isCam=1 variant=1 -> camSetBtlPolar     isCam=0 variant=1 -> refSetBtlPolar
+        //     isCam=1 variant=2 -> camSetBtlPolar2    isCam=0 variant=2 -> refSetBtlPolar2
+        //     isCam=1 variant=3 -> camSetChrPolar     isCam=1 variant=4 -> camSetChrPolar2
+        //
+        // This — not MsAtelRequestCamera and not FUN_007bddd0 — is where a monster attack
+        // script puts the camera. FUN_007bddd0/FUN_007bd7e0 only write per-axis tween
+        // descriptors (mode, duration, elapsed); gating those makes the camera snap, not stop.
+        public const int AtelCameraPolarSet = 0x003bad30;
+
+        // AtelCameraPosSet — FUN_007bb620 at FFX.exe+0x3BB620 (absolute 0x007BB620).
+        // The absolute-position sibling, behind camSetPos (wrapper 0x007B91A0, passes p4=1).
+        // Signature: void (AtelBasicWorker* worker, int p2, int* stack, int p4) __cdecl.
+        // Same stack discipline: coordinates are popped inside, not passed.
+        public const int AtelCameraPosSet = 0x003bb620;
+
         // MsLimitUp at FFX.exe+0x3B15A0 (absolute 0x007B15A0) — the engine's overdrive charge
         // primitive, and the only correct way to add gauge. Signature (decomp L863356):
         //   uint MsLimitUp(uint chr_id, Chr* chr, uint amount)  __cdecl, returns the applied amount

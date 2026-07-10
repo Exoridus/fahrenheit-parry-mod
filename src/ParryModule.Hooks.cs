@@ -1311,6 +1311,59 @@ public unsafe sealed partial class ParryModule
         log_debug($"[CameraProbe] {fn}({args}) turn_active={anyTurn} enemy_turn={enemyTurn} attacker={_runtime.CurrentAttackerId} lock_mode={_optionBattleCameraLockMode} suppress={suppress}");
     }
 
+    // Debug writer probe: logs the ATEL opcodes that actually move the battle camera.
+    // Distinct from probe_camera_call, which covers the *request* path (MsAtelRequestCamera
+    // and siblings) — those only enqueue camera scripts and never touch camera state, which
+    // is why an enemy pan runs straight past all three of them. Gated on "camera_probe".
+    private void probe_camera_writer(string fn, string args)
+    {
+        if (!_optionCameraProbe) return;
+
+        bool anyTurn   = _runtime.AwaitingTurnEnd;
+        bool enemyTurn = anyTurn && _runtime.CurrentAttackerId >= PartyActorCapacity;
+        log_debug($"[CameraWriter] {fn}({args}) turn_active={anyTurn} enemy_turn={enemyTurn} attacker={_runtime.CurrentAttackerId}");
+    }
+
+    // The two wrapper constants FUN_007bad30 receives identify the calling opcode exactly.
+    private static string polar_opcode_name(int isCam, int variant) => (isCam, variant) switch
+    {
+        (1, 1) => "camSetBtlPolar",
+        (0, 1) => "refSetBtlPolar",
+        (1, 2) => "camSetBtlPolar2",
+        (0, 2) => "refSetBtlPolar2",
+        (1, 3) => "camSetChrPolar",
+        (1, 4) => "camSetChrPolar2",
+        _      => $"unknownPolar(isCam={isCam},variant={variant})",
+    };
+
+    /// <summary>
+    ///     Observe-only probe on FUN_007bad30 (FFX.exe+0x3BAD30) — the actor-relative polar
+    ///     camera writer shared by all six camSetBtlPolar/refSetBtlPolar/camSetChrPolar
+    ///     variants. This is the function a monster attack script uses to move the camera,
+    ///     so it is the one place that can tell us which opcode drives a given pan.
+    ///
+    ///     The six script arguments are popped off the ATEL stack inside the callee, so they
+    ///     are not visible here; `isCam`/`variant` are the wrapper constants and are enough
+    ///     to name the opcode. Always calls the original — suppressing here would require
+    ///     replicating the callee's stack pops (4x float, then 2x int) or the ATEL stack desyncs.
+    /// </summary>
+    private int h_atel_camera_polar_set(int worker, int p2, int stack, int isCam, int variant)
+    {
+        probe_camera_writer(polar_opcode_name(isCam, variant), $"isCam={isCam},variant={variant}");
+        return _hAtelCameraPolarSet.orig_fptr.Invoke(worker, p2, stack, isCam, variant);
+    }
+
+    /// <summary>
+    ///     Observe-only probe on FUN_007bb620 (FFX.exe+0x3BB620) — the absolute-position
+    ///     camera writer behind camSetPos. Sibling of the polar path above; a monster pan
+    ///     comes from one or the other.
+    /// </summary>
+    private void h_atel_camera_pos_set(int worker, int p2, int stack, int p4)
+    {
+        probe_camera_writer("camSetPos", $"p4={p4}");
+        _hAtelCameraPosSet.orig_fptr.Invoke(worker, p2, stack, p4);
+    }
+
     private int h_ms_atel_request_camera(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8)
     {
         bool isAnyTurnActive  = _runtime.AwaitingTurnEnd;

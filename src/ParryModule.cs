@@ -84,6 +84,19 @@ public unsafe sealed partial class ParryModule : FhModule
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate void MsBattleSpecialCameraPauseProbe(byte mode);
 
+    // FUN_007bad30 — the actor-relative polar camera writer shared by all six
+    // camSetBtlPolar/refSetBtlPolar/camSetChrPolar variants. Observe-only: this is
+    // where a monster attack script actually moves the camera, so the probe tells us
+    // which opcode drives a given pan. The six script floats live on the ATEL stack,
+    // not in the parameter list — `isCam` and `variant` are the wrapper constants and
+    // identify the opcode on their own. See ExternalMemoryOffsetMap.AtelCameraPolarSet.
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate int AtelCameraPolarSetProbe(int worker, int p2, int stack, int isCam, int variant);
+
+    // FUN_007bb620 — the absolute-position sibling, behind camSetPos. Observe-only.
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate void AtelCameraPosSetProbe(int worker, int p2, int stack, int p4);
+
     // MsBtlSetHitEffect — engine's registered-hit-effect emitter (global handle).
     // Used directly (no hook) on parry success to fire the Sentinel barrier
     // visual (effect 0x4A) on the parrying character. Routes through the global
@@ -658,6 +671,8 @@ public unsafe sealed partial class ParryModule : FhModule
     private readonly FhMethodHandle<MsAtelRequestCameraProbe> _hMsAtelRequestCamera;
     private readonly FhMethodHandle<MsAtelRequestMagicCameraProbe> _hMsAtelRequestMagicCamera;
     private readonly FhMethodHandle<MsBattleSpecialCameraPauseProbe> _hMsBattleSpecialCameraPause;
+    private readonly FhMethodHandle<AtelCameraPolarSetProbe> _hAtelCameraPolarSet;
+    private readonly FhMethodHandle<AtelCameraPosSetProbe> _hAtelCameraPosSet;
     private readonly FhMethodHandle<MsDmgCalcCheckHitProbe> _hMsDmgCalcCheckHit;
     private readonly FhMethodHandle<MsEffectEndMotionProbe> _hMsEffectEndMotion;
     // Frame a motion was last played per party slot (lab Play / parry block), 0 = none.
@@ -691,6 +706,10 @@ public unsafe sealed partial class ParryModule : FhModule
             this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsAtelRequestMagicCamera, h_ms_atel_request_magic_camera);
         _hMsBattleSpecialCameraPause = new FhMethodHandle<MsBattleSpecialCameraPauseProbe>(
             this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsBattleSpecialCameraPause, h_ms_battle_special_camera_pause);
+        _hAtelCameraPolarSet = new FhMethodHandle<AtelCameraPolarSetProbe>(
+            this, "FFX.exe", ExternalMemoryOffsetMap.Functions.AtelCameraPolarSet, h_atel_camera_polar_set); // observe-only: which cam*/ref* opcode moves the camera
+        _hAtelCameraPosSet = new FhMethodHandle<AtelCameraPosSetProbe>(
+            this, "FFX.exe", ExternalMemoryOffsetMap.Functions.AtelCameraPosSet, h_atel_camera_pos_set);     // observe-only: camSetPos path
         _hMsDmgCalcCheckHit = new FhMethodHandle<MsDmgCalcCheckHitProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsDmgCalcCheckHit, h_ms_dmg_calc_check_hit); // MsDmgCalc_CheckHit — accuracy/evasion roll; intercepted to disable native evasion for real PCs
         _hMsEffectEndMotion = new FhMethodHandle<MsEffectEndMotionProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsEffectEndMotion, h_ms_effect_end_motion); // observe-only: measure played-motion durations
 
@@ -827,6 +846,16 @@ public unsafe sealed partial class ParryModule : FhModule
         catch (Exception ex)
         {
             _logger.Warning($"[Parry] Could not hook MsBattleSpecialCameraPause (boss cinematic camera lock unavailable): {ex.Message}");
+        }
+
+        try
+        {
+            _hAtelCameraPolarSet.hook();
+            _hAtelCameraPosSet.hook();
+        }
+        catch (Exception ex)
+        {
+            _logger.Warning($"[Parry] Could not hook the ATEL camera writers (camera-writer probe unavailable): {ex.Message}");
         }
 
         try
