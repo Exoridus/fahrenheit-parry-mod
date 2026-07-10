@@ -7,8 +7,6 @@ public unsafe sealed partial class ParryModule
         public bool? Enabled { get; set; }
         public bool? Sound { get; set; }
         public bool? Logging { get; set; }
-        public bool? OverdriveBoost { get; set; }
-        public bool? Penalty { get; set; }
         public bool? DebugOverlay { get; set; }
         // Native-engine probe channel (separate from general Logging). Default-off.
         // When true, probe-tagged events are queued into the frame-deferred ring
@@ -16,11 +14,9 @@ public unsafe sealed partial class ParryModule
         // will route through this; the existing logging path is unchanged.
         public bool? NativeProbeLogging { get; set; }
         public string? BattleCameraLockMode { get; set; }  // canonical — human-readable enum name
-        public bool? MagicCameraLock { get; set; }
         public bool? EnemyCameraLock { get; set; }          // legacy — migrated on load, never written
         public bool? ParryEffect { get; set; }
         public bool? ImpactShake { get; set; }
-        public bool? DodgeMotionCancel { get; set; }
         public bool? ImpactShakeSweep { get; set; }
         public bool? StreakCounter { get; set; }
         public bool? DodgeEnabled { get; set; }
@@ -96,10 +92,6 @@ public unsafe sealed partial class ParryModule
             if (persisted.Enabled.HasValue) _optionEnabled = persisted.Enabled.Value;
             if (persisted.Sound.HasValue) _optionSound = persisted.Sound.Value;
             if (persisted.Logging.HasValue) _optionLogging = persisted.Logging.Value;
-            if (persisted.OverdriveBoost.HasValue) _optionOverdriveBoost = persisted.OverdriveBoost.Value;
-            // Persisted as "penalty" for backward compatibility with earlier settings files.
-            // The semantic is now "whiff recovery lockout enabled" (see FINAL_PARRY_SPEC.md).
-            if (persisted.Penalty.HasValue) _optionWhiffLockout = persisted.Penalty.Value;
             if (persisted.DebugOverlay.HasValue) _optionDebugOverlay = persisted.DebugOverlay.Value;
             if (persisted.NativeProbeLogging.HasValue) _optionNativeProbeLogging = persisted.NativeProbeLogging.Value;
             if (persisted.BattleCameraLockMode != null
@@ -117,10 +109,8 @@ public unsafe sealed partial class ParryModule
                     : BattleCameraLockMode.Off;
                 _logger.Info($"[Parry] Migrated legacy EnemyCameraLock={persisted.EnemyCameraLock.Value} → BattleCameraLockMode={_optionBattleCameraLockMode}.");
             }
-            if (persisted.MagicCameraLock.HasValue) _optionMagicCameraLock = persisted.MagicCameraLock.Value;
             if (persisted.ParryEffect.HasValue) _optionParryEffect = persisted.ParryEffect.Value;
             if (persisted.ImpactShake.HasValue) _optionImpactShake = persisted.ImpactShake.Value;
-            if (persisted.DodgeMotionCancel.HasValue) _optionDodgeMotionCancel = persisted.DodgeMotionCancel.Value;
             if (persisted.ImpactShakeSweep.HasValue) _optionImpactShakeSweep = persisted.ImpactShakeSweep.Value;
             if (persisted.StreakCounter.HasValue) _optionStreakCounter = persisted.StreakCounter.Value;
             if (persisted.DodgeEnabled.HasValue) _optionDodgeEnabled = persisted.DodgeEnabled.Value;
@@ -165,15 +155,11 @@ public unsafe sealed partial class ParryModule
                 Enabled = _optionEnabled,
                 Sound = _optionSound,
                 Logging = _optionLogging,
-                OverdriveBoost = _optionOverdriveBoost,
-                Penalty = _optionWhiffLockout,
                 DebugOverlay = _optionDebugOverlay,
                 NativeProbeLogging = _optionNativeProbeLogging,
                 BattleCameraLockMode = _optionBattleCameraLockMode.ToString(),
-                MagicCameraLock = _optionMagicCameraLock,
                 ParryEffect = _optionParryEffect,
                 ImpactShake = _optionImpactShake,
-                DodgeMotionCancel = _optionDodgeMotionCancel,
                 ImpactShakeSweep = _optionImpactShakeSweep,
                 StreakCounter = _optionStreakCounter,
                 DodgeEnabled = _optionDodgeEnabled,

@@ -631,7 +631,6 @@ public unsafe sealed partial class ParryModule
 
     private int whiff_lockout_ticks()
     {
-        if (!_optionWhiffLockout) return 0;
         return ParryDifficultyModel.GetWhiffLockoutTicks(_optionDifficulty);
     }
 
@@ -708,7 +707,7 @@ public unsafe sealed partial class ParryModule
         }
         else
         {
-            // Lockout disabled — transition straight back to Ready with no recovery.
+            // Difficulty carries no whiff lockout — transition straight back to Ready with no recovery.
             _runtime.InputState = ParryInputState.Ready;
             _runtime.WhiffLockoutRemainingTicks = 0;
             _runtime.WhiffLockoutTotalTicks = 0;
@@ -1262,8 +1261,6 @@ public unsafe sealed partial class ParryModule
     // and say so in the log rather than pretending the call did something.
     private bool try_end_battle_motion(int slotIndex, string reason)
     {
-        if (!_optionDodgeMotionCancel) return false;
-
         Chr* party = _battleAdapter.GetPlayerCharacters();
         Chr* chr = party != null ? party + slotIndex : null;
         if (chr == null || !chr->stat_exist_flag) return false;

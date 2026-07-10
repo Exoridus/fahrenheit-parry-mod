@@ -1059,7 +1059,7 @@ public unsafe sealed partial class ParryModule
                 "Input State", format_input_state());
             render_state_row_pair(
                 "Lockout", format_whiff_lockout_state(),
-                "Recovery", _optionWhiffLockout ? "Enabled" : "Disabled");
+                "Recovery", "Enabled");
             render_state_row_pair(
                 "Streak", format_parry_streak_state(),
                 "Threshold", $"≥ {ParryStreakObserveThreshold}");

@@ -1422,7 +1422,7 @@ public unsafe sealed partial class ParryModule
         bool isAnyTurnActive  = _runtime.AwaitingTurnEnd;
         bool isEnemyTurnActive = isAnyTurnActive && _runtime.CurrentAttackerId >= PartyActorCapacity;
 
-        bool shouldSuppress = _optionEnabled && _optionMagicCameraLock && _optionBattleCameraLockMode switch
+        bool shouldSuppress = _optionEnabled && _optionBattleCameraLockMode switch
         {
             BattleCameraLockMode.AllTurns       => isAnyTurnActive,
             BattleCameraLockMode.EnemyTurnsOnly => isEnemyTurnActive,

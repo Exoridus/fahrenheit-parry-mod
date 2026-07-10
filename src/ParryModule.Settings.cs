@@ -41,13 +41,8 @@ public unsafe sealed partial class ParryModule
         setting_row("enabled",    render_setting_enabled);
         setting_row("difficulty", render_setting_difficulty);
 
-        ImGui.SeparatorText("Dodge");
-        setting_row("dodge_motion_cancel", render_setting_dodge_motion_cancel);
-
         ImGui.SeparatorText("Reward");
-        setting_row("ctb",            render_setting_overdrive_boost);
         setting_row("streak_counter", render_setting_streak_counter);
-        setting_row("penalty",        render_setting_penalty);
 
         ImGui.SeparatorText("Feedback");
         setting_row("audio",        render_setting_audio);
@@ -56,14 +51,6 @@ public unsafe sealed partial class ParryModule
 
         ImGui.SeparatorText("Camera");
         setting_row("battle_camera_lock_mode", render_setting_battle_camera_lock_mode);
-        setting_row("magic_camera_lock",       render_setting_magic_camera_lock);
-
-#if DEBUG
-        ImGui.SeparatorText("Diagnostics");
-        setting_row("logging",       render_setting_logging);
-        setting_row("debug_overlay", render_setting_debug_overlay);
-        setting_row("camera_probe",  render_setting_camera_probe);
-#endif
     }
 
     private void render_setting_enabled()
@@ -88,30 +75,6 @@ public unsafe sealed partial class ParryModule
             if (!_optionSound)
             {
                 stop_audio_playback();
-            }
-        }
-    }
-
-    private void render_setting_overdrive_boost()
-    {
-        if (ImGui.Checkbox("##fhparry.ctb", ref _optionOverdriveBoost))
-        {
-            persist_settings();
-        }
-    }
-
-    private void render_setting_penalty()
-    {
-        if (ImGui.Checkbox("##fhparry.penalty", ref _optionWhiffLockout))
-        {
-            persist_settings();
-            if (!_optionWhiffLockout && _runtime.InputState == ParryInputState.WhiffLockout)
-            {
-                // Disabling mid-lockout immediately releases the player.
-                _runtime.InputState = ParryInputState.Ready;
-                _runtime.WhiffLockoutRemainingTicks = 0;
-                _runtime.WhiffLockoutTotalTicks = 0;
-                log_debug("Whiff lockout disabled mid-recovery; returning to Ready.");
             }
         }
     }
@@ -156,16 +119,6 @@ public unsafe sealed partial class ParryModule
         ImGui.TextDisabled("Cinematic cameras (boss / summon / overdrive) are never blocked.");
     }
 
-    private void render_setting_magic_camera_lock()
-    {
-        if (ImGui.Checkbox("##fhparry.magic_camera_lock", ref _optionMagicCameraLock))
-        {
-            persist_settings();
-            _enemyMagicCameraLockSuppressCount = 0;
-            log_debug($"Magic camera lock = {_optionMagicCameraLock}.");
-        }
-    }
-
     private void render_setting_parry_effect()
     {
         if (ImGui.Checkbox("##fhparry.parry_effect", ref _optionParryEffect))
@@ -173,15 +126,6 @@ public unsafe sealed partial class ParryModule
             persist_settings();
             string state = _optionParryEffect ? "enabled" : "disabled";
             log_debug($"Parry-success visual effect {state}.");
-        }
-    }
-
-    private void render_setting_dodge_motion_cancel()
-    {
-        if (ImGui.Checkbox("##fhparry.dodge_motion_cancel", ref _optionDodgeMotionCancel))
-        {
-            persist_settings();
-            log_debug($"Dodge motion cancel {(_optionDodgeMotionCancel ? "enabled" : "disabled")}.");
         }
     }
 
@@ -204,26 +148,6 @@ public unsafe sealed partial class ParryModule
         }
     }
 
-    private void render_setting_logging()
-    {
-        if (ImGui.Checkbox("##fhparry.logging", ref _optionLogging))
-        {
-            persist_settings();
-            string state = _optionLogging ? "enabled" : "disabled";
-            _logger.Info($"[Parry] Debug logging {state} via settings.");
-        }
-    }
-
-    private void render_setting_debug_overlay()
-    {
-        if (ImGui.Checkbox("##fhparry.debug_overlay", ref _optionDebugOverlay))
-        {
-            persist_settings();
-            string state = _optionDebugOverlay ? "enabled" : "disabled";
-            log_debug($"Debug overlay {state}.");
-        }
-    }
-
     private void render_setting_difficulty()
     {
         int idx = ParryDifficultyModel.GetComboIndex(_optionDifficulty);
@@ -232,15 +156,6 @@ public unsafe sealed partial class ParryModule
             _optionDifficulty = ParryDifficultyModel.DifficultyFromComboIndex(idx);
             persist_settings();
             log_debug($"Difficulty changed to {ParryDifficultyModel.FormatName(_optionDifficulty)}.");
-        }
-    }
-
-    private void render_setting_camera_probe()
-    {
-        if (ImGui.Checkbox("##fhparry.camera_probe", ref _optionCameraProbe))
-        {
-            persist_settings();
-            log_debug($"Camera probe {(_optionCameraProbe ? "enabled" : "disabled")}.");
         }
     }
 

@@ -325,8 +325,6 @@ public unsafe sealed partial class ParryModule
 
     private void apply_overdrive_boost(uint mask)
     {
-        if (!_optionOverdriveBoost) return;
-
         Chr* party = _battleAdapter.GetPlayerCharacters();
         if (party == null) return;
 

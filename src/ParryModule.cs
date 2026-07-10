@@ -317,16 +317,10 @@ public unsafe sealed partial class ParryModule : FhModule
 #else
         false;
 #endif
-    private bool _optionOverdriveBoost = true;
     // Not a toggle: damage negation IS the mod. With it off a successful parry does nothing,
     // which is what the "enabled" master switch is for. Kept as a named constant so the guard
     // sites keep documenting where negation applies.
     private const bool _optionNegateDamage = true;
-    // Enables the animation-approximated whiff recovery lockout. When disabled, a
-    // whiffed window transitions straight back to Ready with no commitment penalty.
-    // Persisted as "penalty" for settings backward compatibility; see
-    // TIERED_PENALTY_RATIONALE.md (retired) for the historical name.
-    private bool _optionWhiffLockout = true;
     // Native-engine probe channel. When false (default), probe queue is inert
     // and no native-probe events are recorded. When true, probe-tagged events
     // are pushed onto _probeRingBuffer during hook execution and drained once
@@ -356,11 +350,6 @@ public unsafe sealed partial class ParryModule : FhModule
         AllTurns = 2,
     }
     private BattleCameraLockMode _optionBattleCameraLockMode = BattleCameraLockMode.AllTurns;
-    // Splits MsAtelRequestMagicCamera out of the Battle Camera Lock so it can be switched off on
-    // its own. Enemy spell casts route their camera through that function; suppressing it without
-    // calling orig is suspected of also swallowing the spell VFX. Default true keeps the previous
-    // behaviour, so this is a measurement switch, not a fix.
-    private bool _optionMagicCameraLock = true;
     // Visual feedback effect on a successful parry: fires the Sentinel barrier
     // visual (effect 0x4A — golden ring / shield-of-air spatial particle) on
     // the parrying character via the global-handle emitter MsBtlSetHitEffect
@@ -385,7 +374,6 @@ public unsafe sealed partial class ParryModule : FhModule
     // the walk-back running; mode 0 would clear the move flag and risk stranding the actor. Untested —
     // this const exists so both can be compared in-game.
     private const int DodgeEndMotionMode = 3;
-    private bool _optionDodgeMotionCancel = true;
 
     // Impact screen shake: fire the engine's own decaying screen shake when a hit is *met* —
     // on a successful parry, and only there. Every dodge avoids the hit, PERFECT included; PERFECT
