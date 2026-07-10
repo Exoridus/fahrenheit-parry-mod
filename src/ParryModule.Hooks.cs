@@ -1352,18 +1352,23 @@ public unsafe sealed partial class ParryModule
     // Whether to suppress a camera writer this call. Always tries to cache the battle camera id (the
     // freecam needs it). Suppresses when the hard lock is engaged — except while the freecam is on
     // but the id is still unresolved, when the write is let through so the game resolves the id.
+    // True while we should hold the battle camera still (AllTurns). Immediately when we have a pose to
+    // hold (freecam or a saved start camera); otherwise only after the settle grace, so the game frames
+    // the battle at its correct default first. This drives BOTH the writer suppression and the request
+    // suppression: with requests held too, an ability's camera script — which also drives the
+    // zoom/depth writers we do not hook — never queues, so the camera cannot zoom out from under us.
+    private bool should_hold_camera()
+    {
+        if (!camera_hard_lock_engaged()) return false;
+        if (_freecamActive || _currentEncounterHasAnchor) return true;
+        return _cameraSettleSeconds == 0f;
+    }
+
     private bool should_suppress_camera_writer(int worker)
     {
         capture_battle_camera_id(worker);
-        if (!camera_hard_lock_engaged()) return false;
         if (_battleCameraId == 0) return false;   // let the game's write through so the camera id resolves
-
-        // With a pose of our own to hold (freecam, or a saved start camera for this encounter)
-        // suppress at once. Otherwise let the game frame the battle for a short grace, then freeze the
-        // settled default — suppressing from frame 1 would instead freeze the pre-battle camera.
-        bool immediate = _freecamActive || _currentEncounterHasAnchor;
-        if (!immediate && _cameraSettleSeconds != 0f) return false;
-        return true;
+        return should_hold_camera();
     }
 
     /// <summary>
@@ -1424,12 +1429,11 @@ public unsafe sealed partial class ParryModule
         bool isAnyTurnActive  = _runtime.AwaitingTurnEnd;
         bool isEnemyTurnActive = isAnyTurnActive && _runtime.CurrentAttackerId >= PartyActorCapacity;
 
-        bool shouldSuppress = _optionEnabled && _optionBattleCameraLockMode switch
-        {
-            BattleCameraLockMode.AllTurns       => isAnyTurnActive,
-            BattleCameraLockMode.EnemyTurnsOnly => isEnemyTurnActive,
-            _                                    => false,
-        };
+        // AllTurns now suppresses whenever we hold the camera (after the settle grace), not just on
+        // enemy turns — so ability camera scripts that pan/zoom on the player's own turn never queue.
+        bool shouldSuppress = _optionBattleCameraLockMode == BattleCameraLockMode.EnemyTurnsOnly
+            ? _optionEnabled && isEnemyTurnActive
+            : _battleCameraId != 0 && should_hold_camera();
 
         probe_camera_call("MsAtelRequestCamera", $"p1={p1:X},p2={p2:X},p3={p3:X},p4={p4:X}", isAnyTurnActive, isEnemyTurnActive, shouldSuppress);
 
@@ -1477,12 +1481,11 @@ public unsafe sealed partial class ParryModule
         bool isAnyTurnActive  = _runtime.AwaitingTurnEnd;
         bool isEnemyTurnActive = isAnyTurnActive && _runtime.CurrentAttackerId >= PartyActorCapacity;
 
-        bool shouldSuppress = _optionEnabled && _optionBattleCameraLockMode switch
-        {
-            BattleCameraLockMode.AllTurns       => isAnyTurnActive,
-            BattleCameraLockMode.EnemyTurnsOnly => isEnemyTurnActive,
-            _                                    => false,
-        };
+        // AllTurns now suppresses whenever we hold the camera (after the settle grace), not just on
+        // enemy turns — so ability camera scripts that pan/zoom on the player's own turn never queue.
+        bool shouldSuppress = _optionBattleCameraLockMode == BattleCameraLockMode.EnemyTurnsOnly
+            ? _optionEnabled && isEnemyTurnActive
+            : _battleCameraId != 0 && should_hold_camera();
 
         probe_camera_call("MsAtelRequestMagicCamera", $"p1={p1:X},p2={p2:X},p3={p3:X}", isAnyTurnActive, isEnemyTurnActive, shouldSuppress);
 
@@ -1516,12 +1519,11 @@ public unsafe sealed partial class ParryModule
         bool isAnyTurnActive  = _runtime.AwaitingTurnEnd;
         bool isEnemyTurnActive = isAnyTurnActive && _runtime.CurrentAttackerId >= PartyActorCapacity;
 
-        bool shouldSuppress = _optionEnabled && _optionBattleCameraLockMode switch
-        {
-            BattleCameraLockMode.AllTurns       => isAnyTurnActive,
-            BattleCameraLockMode.EnemyTurnsOnly => isEnemyTurnActive,
-            _                                    => false,
-        };
+        // AllTurns now suppresses whenever we hold the camera (after the settle grace), not just on
+        // enemy turns — so ability camera scripts that pan/zoom on the player's own turn never queue.
+        bool shouldSuppress = _optionBattleCameraLockMode == BattleCameraLockMode.EnemyTurnsOnly
+            ? _optionEnabled && isEnemyTurnActive
+            : _battleCameraId != 0 && should_hold_camera();
 
         probe_camera_call("MsBattleSpecialCameraPause", $"mode=0x{mode:X2}", isAnyTurnActive, isEnemyTurnActive, shouldSuppress);
 
