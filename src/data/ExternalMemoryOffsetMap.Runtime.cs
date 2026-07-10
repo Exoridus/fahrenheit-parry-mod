@@ -111,6 +111,29 @@ public static partial class ExternalMemoryOffsetMap
         // character on a successful parry.
         public const int MsBtlSetHitEffect = 0x0039ec60;
 
+        // MsScreenSetShake — FUN_007c5680 at FFX.exe+0x3C5680 (Ghidra VA 0x007c5680). The
+        // engine's native screen shake, exposed to ATEL scripts as the camSetShake family
+        // (camSetShake / camSetShakeB / camSetScreenShake / …; the B variants differ only in
+        // the `mode` the opcode passes). Signature (cdecl, recovered from the opcode handler
+        // FUN_007bb7c0 and the evaluator FUN_007c5080):
+        //   void MsScreenSetShake(uint screen_id, uint axis_mask, byte mode, float freq,
+        //                         ushort duration, ushort amplitude, byte randomness)
+        // screen_id < 3 (bounds-checked); axis_mask & 1 = axis A, & 2 = axis B.
+        // The evaluator computes, per frame and per axis:
+        //   jitter = randomness ? (randomness>>1) - brnd(9) % randomness : 0
+        //   offset = sin(phase) * amplitude * (32 + jitter)/32 * envelope
+        //   mode 1: envelope = remaining/total          -> decays to zero  (impact)
+        //   mode 2: envelope = (total - remaining)/total -> ramps up
+        // `duration` is stored as both remaining and total, which is what drives the envelope.
+        // `freq` is the per-frame phase step, not an amplitude. The applier (FUN_007bc090) runs
+        // every frame and stops on its own once the mode byte is cleared — a mod only has to
+        // fire it once; no per-frame driving, no cleanup.
+        public const int MsScreenSetShake = 0x003c5680;
+
+        // MsScreenResetShake — FFX.exe+0x3C5650 (Ghidra VA 0x007c5650). Clears mode + phase for
+        // both axes of a screen. ATEL: camResetShake. Used to cancel a shake early.
+        public const int MsScreenResetShake = 0x003c5650;
+
         // MsSetMotion — FUN_007ab380 at FFX.exe+0x3AB380 (Ghidra VA 0x007ab380). The
         // engine's battler motion setter. Signature (cdecl):
         //   undefined4 MsSetMotion(int slot, int motion_id, int chr_id, byte p4,

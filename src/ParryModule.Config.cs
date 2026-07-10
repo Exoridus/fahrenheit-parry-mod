@@ -19,6 +19,7 @@ public unsafe sealed partial class ParryModule
         public bool? MagicCameraLock { get; set; }
         public bool? EnemyCameraLock { get; set; }          // legacy — migrated on load, never written
         public bool? ParryEffect { get; set; }
+        public bool? ImpactShake { get; set; }
         public bool? StreakCounter { get; set; }
         public bool? DodgeEnabled { get; set; }
         public bool? ParryNativeBlock { get; set; }
@@ -117,6 +118,7 @@ public unsafe sealed partial class ParryModule
             }
             if (persisted.MagicCameraLock.HasValue) _optionMagicCameraLock = persisted.MagicCameraLock.Value;
             if (persisted.ParryEffect.HasValue) _optionParryEffect = persisted.ParryEffect.Value;
+            if (persisted.ImpactShake.HasValue) _optionImpactShake = persisted.ImpactShake.Value;
             if (persisted.StreakCounter.HasValue) _optionStreakCounter = persisted.StreakCounter.Value;
             if (persisted.DodgeEnabled.HasValue) _optionDodgeEnabled = persisted.DodgeEnabled.Value;
             if (persisted.ParryNativeBlock.HasValue) _optionParryNativeBlock = persisted.ParryNativeBlock.Value;
@@ -169,6 +171,7 @@ public unsafe sealed partial class ParryModule
                 BattleCameraLockMode = _optionBattleCameraLockMode.ToString(),
                 MagicCameraLock = _optionMagicCameraLock,
                 ParryEffect = _optionParryEffect,
+                ImpactShake = _optionImpactShake,
                 StreakCounter = _optionStreakCounter,
                 DodgeEnabled = _optionDodgeEnabled,
                 ParryNativeBlock = _optionParryNativeBlock,

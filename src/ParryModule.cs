@@ -92,6 +92,14 @@ public unsafe sealed partial class ParryModule : FhModule
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate void MsBtlSetHitEffectProbe(byte chr_id, int p1, int effect_id, int p3);
 
+    // MsScreenSetShake — the engine's native screen shake (ATEL: camSetShake family).
+    // The callee truncates mode/duration/amplitude/randomness to byte/ushort itself; they are
+    // declared 32-bit here because that is what the cdecl stack slots actually are.
+    // See ExternalMemoryOffsetMap.Functions.MsScreenSetShake for the recovered semantics.
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate void MsScreenSetShakeProbe(
+        uint screen_id, uint axis_mask, uint mode, float freq, uint duration, uint amplitude, uint randomness);
+
     // MsSetMotion — battler motion setter. Safe call shape (engine's own Defend code):
     // MsSetMotion(slot, motion_id, 0, 0, 1, 0, 0). Used by the FX/Motion lab to preview poses.
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -329,6 +337,23 @@ public unsafe sealed partial class ParryModule : FhModule
     // actors when an attack lands on a Sentinel-statused PC (forensic ref:
     // FUN_0079E530). Default-on.
     private bool _optionParryEffect = true;
+
+    // Impact screen shake: fire the engine's own decaying screen shake when a hit is *met* on
+    // time — a parry or a perfect dodge. A plain dodge avoids the hit entirely, so it does not
+    // shake; this mirrors the DODGE / PARRIED+PERFECT split in CombatLabelPalette. Default-on.
+    private bool _optionImpactShake = true;
+
+    // Shake parameters, passed straight to MsScreenSetShake. Chosen by reasoning about the
+    // evaluator (offset = sin(phase) * amplitude * jitter * remaining/total), NOT measured:
+    // these are a starting point to tune in-game, not recovered vanilla values.
+    private const uint ImpactShakeScreenId   = 0;      // screen_id must be < 3
+    private const uint ImpactShakeAxisMask   = 3;      // both axes
+    private const uint ImpactShakeModeDecay  = 1;      // envelope = remaining/total → fades out
+    private const float ImpactShakeFrequency = 0.9f;   // phase step per frame (~7 frames/cycle)
+    private const uint ImpactShakeDuration   = 10;     // ticks; battle runs at 30 fps → ~0.33 s
+    private const uint ImpactShakeAmplitude  = 8;
+    private const uint ImpactShakeRandomness = 8;      // jitter ±4 around the amplitude
+
     // Streak counter attack: when a slot completes a defensive streak (every
     // targeted slot in a cue parried at least once and cumulative streak ≥
     // ParryStreakObserveThreshold), queues a basic Attack from the parrier
@@ -441,7 +466,8 @@ public unsafe sealed partial class ParryModule : FhModule
     private float _dodgeTextRemainingSeconds = 0f;
     private uint _dodgeTextTargetMask = 0;
     // Per-appearance random seed so each DODGE/PARRIED label's entry (skew/rotation/scale) varies a
-    // little — FFX has no camera shake to add life, so the label supplies its own subtle variety.
+    // little, so no two labels land identically. (An earlier comment here claimed FFX has no
+    // camera shake; it does — see ExternalMemoryOffsetMap.Functions.MsScreenSetShake.)
     private static readonly Random _labelRng = new();
     private float _dodgeTextSeed = 0f;
     private float _parriedTextSeed = 0f;
@@ -624,6 +650,7 @@ public unsafe sealed partial class ParryModule : FhModule
             new FhSettingCustomRenderer("battle_camera_lock_mode", render_setting_battle_camera_lock_mode),
             new FhSettingCustomRenderer("magic_camera_lock", render_setting_magic_camera_lock),
             new FhSettingCustomRenderer("parry_effect", render_setting_parry_effect),
+            new FhSettingCustomRenderer("impact_shake", render_setting_impact_shake),
             new FhSettingCustomRenderer("streak_counter", render_setting_streak_counter),
             new FhSettingCustomRenderer("dodge_window", render_setting_dodge_window),
             new FhSettingCustomRenderer("dodge_whiffout", render_setting_dodge_whiffout),

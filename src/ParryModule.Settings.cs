@@ -112,6 +112,15 @@ public unsafe sealed partial class ParryModule
         }
     }
 
+    private void render_setting_impact_shake()
+    {
+        if (ImGui.Checkbox("##fhparry.impact_shake", ref _optionImpactShake))
+        {
+            persist_settings();
+            log_debug($"Impact screen shake {(_optionImpactShake ? "enabled" : "disabled")}.");
+        }
+    }
+
     private void render_setting_streak_counter()
     {
         if (ImGui.Checkbox("##fhparry.streak_counter", ref _optionStreakCounter))

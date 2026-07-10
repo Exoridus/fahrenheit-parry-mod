@@ -579,6 +579,7 @@ public unsafe sealed partial class ParryModule
         if (is_perfect_dodge())
         {
             _dodgeTextPerfectMask |= bit;
+            fire_impact_screen_shake("perfect_dodge");
             log_debug($"Perfect dodge for {format_actor_slot((byte)slotIndex)} (inside the parry window).");
         }
     }
@@ -1166,6 +1167,7 @@ public unsafe sealed partial class ParryModule
         // character via MsBtlSetHitEffect (global-handle path, PC-safe).
         // Default-on; toggleable via the "Parry Effect Visual" setting.
         fire_parry_visual_effect((byte)slotIndex);
+        fire_impact_screen_shake("parry");
         play_parry_block_motion((byte)slotIndex);
 
         if (closeWindow)
@@ -1173,6 +1175,39 @@ public unsafe sealed partial class ParryModule
             // Close the window but stay in Resolved until the cue clears; clear_awaiting_turn_end
             // will promote us back to Ready so a fresh press can immediately begin the next parry.
             end_parry_window("impact_parried", transitionToReady: false);
+        }
+    }
+
+    // Fires the engine's own screen shake on a hit that was *met* on time (parry / perfect dodge).
+    // MsScreenSetShake stores a decaying envelope (mode 1) and the engine's per-frame applier
+    // (FUN_007bc090) runs it down to zero and stops by itself — we fire once and never clean up.
+    // ATEL drives this same setter for scripted quakes, so a battle context is a valid caller.
+    private void fire_impact_screen_shake(string source)
+    {
+        if (!_optionImpactShake) return;
+        if (!try_get_live_battle_context(out _)) return;
+
+        try
+        {
+            FhUtil.get_fptr<MsScreenSetShakeProbe>(ExternalMemoryOffsetMap.Functions.MsScreenSetShake)(
+                ImpactShakeScreenId,
+                ImpactShakeAxisMask,
+                ImpactShakeModeDecay,
+                ImpactShakeFrequency,
+                ImpactShakeDuration,
+                ImpactShakeAmplitude,
+                ImpactShakeRandomness);
+
+            if (_optionLogging)
+            {
+                log_debug($"[ImpactShake] amp={ImpactShakeAmplitude} dur={ImpactShakeDuration} freq={ImpactShakeFrequency} ({source}).");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Defensive, as with the visual effect: cosmetic feedback must never break the
+            // resolution path it is attached to.
+            log_debug($"[ImpactShake] Failed to fire screen shake: {ex.Message}");
         }
     }
 

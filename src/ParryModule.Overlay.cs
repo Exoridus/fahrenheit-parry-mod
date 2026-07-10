@@ -30,8 +30,8 @@ public unsafe sealed partial class ParryModule
     // Shared animated combat-label renderer. Fill colour comes from CombatLabelPalette:
     // PARRIED and PERFECT take the gold tint, DODGE stays cream. t = 0..1 progress over the
     // label lifetime (ParriedTextSeconds). Each targeted, on-field actor gets one label anchored
-    // to its live engine-projected screen position, transformed (pop-in overshoot, squash, skew
-    // kick, rotation, whip + float, fade) with two ghost echoes.
+    // to its live engine-projected screen position, transformed on entry (skew kick, a little
+    // rotation, scale-in) and faded out at the end. No ghost echoes — they were tried and cut.
     private void render_combat_labels(uint mask, string text, bool preciseTiming, float t, float seed)
     {
         Vector2 displaySize = ImGui.GetIO().DisplaySize;
@@ -125,14 +125,15 @@ public unsafe sealed partial class ParryModule
     }
     private static float lerpf(float a, float b, float t) => a + (b - a) * clamp01(t);
 
-    // Exp33-style DODGE/PARRIED: enter italic (skewed) and slightly small/narrow, de-skew to a
-    // subtle residual lean and grow to full size over the first ~quarter, hold, then fade out. No
-    // overshoot, no rotation, no whip, no ghost smear — restrained and elegant (matches the ref).
+    // Exp33-style DODGE/PARRIED/PERFECT: enter italic (heavily skewed), slightly small and narrow,
+    // with a little rotation; de-skew and level out fast, hold calm, then fade. No overshoot, no
+    // whip, no ghost smear — the punch lives entirely in the entry, matching the reference frames.
     private static LabelAnim compute_label_anim(float t, float seed, int slot)
     {
-        // The strength lives in the ENTRY: extreme skew + a little rotation + italic, resolving
-        // fast to the normal upright text; the hold stays calm, then it fades. FFX has no camera
-        // shake, so each appearance perturbs its entry params a little (per seed + slot) for life.
+        // Each appearance perturbs its entry params a little (per seed + slot) so no two labels
+        // land identically. NOTE: this variety is a deliberate style choice, not a substitute for
+        // a screen shake — FFX does have a native one (MsScreenSetShake / ATEL camSetShake), and
+        // the mod now fires it on parry and perfect dodge. See fire_impact_screen_shake.
         float r0 = hash01(seed, slot, 1);
         float r1 = hash01(seed, slot, 2);
         float r2 = hash01(seed, slot, 3);
