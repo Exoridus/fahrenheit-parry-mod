@@ -1119,42 +1119,6 @@ public unsafe sealed partial class ParryModule
         }
     }
 
-    private void apply_overdrive_boost(uint mask)
-    {
-        if (!_optionOverdriveBoost) return;
-
-        Chr* party = _battleAdapter.GetPlayerCharacters();
-        if (party == null) return;
-
-        uint effectiveMask = mask == 0 ? PlayerTargetMask : mask;
-
-        for (int i = 0; i < PartyActorCapacity; i++)
-        {
-            uint bit = 1u << i;
-            if ((effectiveMask & bit) == 0) continue;
-
-            Chr* chr = party + i;
-            if (!chr->stat_exist_flag || chr->ram.hp <= 0) continue;
-
-            byte maxCharge = chr->ram.limit_charge_max;
-            if (maxCharge == 0) continue;
-
-            int before = chr->ram.limit_charge;
-            uint delta = (uint)Math.Max(1, (int)MathF.Round(maxCharge * OverdriveBoostPercent));
-
-            // Native charge primitive: clamps against limit_charge_max, honours the engine's
-            // never_charge_overdrive debug flag, and applies Double/Triple Overdrive plus the
-            // aura multipliers. Writing limit_charge directly bypassed all three.
-            uint applied = FhUtil.get_fptr<MsLimitUpProbe>(
-                ExternalMemoryOffsetMap.Functions.MsLimitUp)((uint)i, chr, delta);
-
-            int after = chr->ram.limit_charge;
-            if (after == before) continue;
-
-            log_debug($"Increased overdrive for {format_actor_slot((byte)i)} from {before} to {after} (asked {delta}, applied {applied}).");
-        }
-    }
-
     private void update_parried_text_timer(float deltaSeconds)
     {
         if (_runtime.ParriedTextRemainingSeconds > 0f)
