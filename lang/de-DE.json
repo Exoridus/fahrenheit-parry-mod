@@ -11,6 +11,8 @@
     "fhparry.battle_camera_lock_mode.desc": "Steuert, bei welchen Zuegen die Kamerabewegung unterdrueckt wird. Nur Gegnerzuege (Standard): Kamera haelt waehrend gegnerischer Aktionen. Alle Zuege: Kamera haelt fuer alle. Aus: normales FFX-Verhalten. Kinematische Kameras fuer Bosse, Beschwoerungs- und Overdrive-Sequenzen werden nie blockiert.",
     "fhparry.parry_effect.name": "Parade-Visualeffekt",
     "fhparry.parry_effect.desc": "Spielt bei erfolgreicher Parade einen NulShock-aehnlichen Schild-Effekt auf dem parierenden Charakter ab. Reines visuelles Feedback — keine Spielmechanik-Auswirkung.",
+    "fhparry.impact_shake.name": "Impact-Bildschirmwackeln",
+    "fhparry.impact_shake.desc": "Laesst den Bildschirm wackeln, wenn eine Parade den Treffer abfaengt. Eine Parade der ganzen Party (alle drei Charaktere) wackelt staerker.",
     "fhparry.streak_counter.name": "Konter-Angriff bei Streak",
     "fhparry.streak_counter.desc": "Wenn ein Slot eine Verteidigungs-Streak abschliesst (alle anvisierten Slots in einer Cue mindestens einmal pariert und die kumulative Streak den Schwellenwert erreicht), wird automatisch ein einfacher Angriff vom Pareur auf den urspruenglichen Angreifer eingereiht. Nutzt den engine-eigenen Auto-Konter-Cue-Pfad, damit das CTB-Scheduling konsistent bleibt.",
     "fhparry.future.name": "Zukuenftige Funktionen",
