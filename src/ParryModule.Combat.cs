@@ -507,9 +507,21 @@ public unsafe sealed partial class ParryModule
                 byte f415 = b[0x415];
                 byte f425 = b[0x425];
                 uint f4AC = *(uint*)(b + 0x4AC);
+
+                // The motion-system flags, so we can stop guessing which one our non-blocking
+                // MsSetMotion actually sets. 0x432 = motion-active, 0x433 = hit-reaction pending
+                // (the global barrier), 0x3f3 = motion-disable (gates MsEffectResetMotionDisable,
+                // and is 0 in every sample so far), 0xdf2 = the motion request the *blocking*
+                // MsSetMotion variant writes.
+                byte f432 = b[0x432];
+                byte f433 = b[0x433];
+                byte f3F3 = b[0x3f3];
+                byte fDF2 = b[0xdf2];
+
                 float px = chr->actor != null ? chr->actor->chr_pos_vec.X : 0f;
                 float pz = chr->actor != null ? chr->actor->chr_pos_vec.Z : 0f;
-                log_debug($"[EvadeFields] {format_actor_slot((byte)slot)} 0x415={f415:X2} 0x425={f425:X2} 0x4AC={f4AC:X8} pos=({px:F2},{pz:F2})");
+                log_debug($"[EvadeFields] {format_actor_slot((byte)slot)} 0x415={f415:X2} 0x425={f425:X2} 0x4AC={f4AC:X8} " +
+                          $"0x432={f432:X2} 0x433={f433:X2} 0x3f3={f3F3:X2} 0xdf2={fDF2:X2} pos=({px:F2},{pz:F2})");
             }
         }
 
@@ -822,7 +834,14 @@ public unsafe sealed partial class ParryModule
         _runtime.ParryWindowElapsedSeconds = 0f;
         _runtime.ParryWindowSucceeded = false;
         _runtime.SuccessIndicatorActive = false;
-        _runtime.LastParriedTargetMask = 0;
+
+        // LastParriedTargetMask is deliberately NOT cleared here. It is the durable, per-action-window
+        // record of which slots parried, and it outlives the window: clear_awaiting_turn_end reads it
+        // to run the overdrive learn countdown, and the PARRIED overlay reads it to know whom to label.
+        // resolve_successful_parry sets the bit and then calls us with closeWindow: true — so clearing
+        // it here wiped the very evidence the parry had just produced. That is why 8 resolved parries
+        // in a battle produced 0 overdrive decrements. It is cleared at cue-clear (after the read) and
+        // by reset_runtime_state.
 
         if (transitionToReady && _runtime.InputState != ParryInputState.WhiffLockout)
         {
@@ -1253,18 +1272,18 @@ public unsafe sealed partial class ParryModule
 
         try
         {
-            FhUtil.get_fptr<MsScreenSetShakeProbe>(ExternalMemoryOffsetMap.Functions.MsScreenSetShake)(
-                ImpactShakeScreenId,
-                ImpactShakeAxisMask,
-                ImpactShakeModeDecay,
-                ImpactShakeFrequency,
-                ImpactShakeDuration,
-                ImpactShakeAmplitude,
-                ImpactShakeRandomness);
+            var shake = FhUtil.get_fptr<MsScreenSetShakeProbe>(ExternalMemoryOffsetMap.Functions.MsScreenSetShake);
+
+            // Two calls, one per axis. A single axis_mask = 3 call would give both axes the same
+            // phase and frequency, collapsing the shake onto a diagonal line.
+            shake(ImpactShakeScreenId, ImpactShakeAxisA, ImpactShakeModeDecay,
+                  ImpactShakeFreqA, ImpactShakeDuration, ImpactShakeAmpA, ImpactShakeRandomness);
+            shake(ImpactShakeScreenId, ImpactShakeAxisB, ImpactShakeModeDecay,
+                  ImpactShakeFreqB, ImpactShakeDuration, ImpactShakeAmpB, ImpactShakeRandomness);
 
             if (_optionLogging)
             {
-                log_debug($"[ImpactShake] amp={ImpactShakeAmplitude} dur={ImpactShakeDuration} freq={ImpactShakeFrequency} ({source}).");
+                log_debug($"[ImpactShake] A(amp={ImpactShakeAmpA} freq={ImpactShakeFreqA}) B(amp={ImpactShakeAmpB} freq={ImpactShakeFreqB}) dur={ImpactShakeDuration} ({source}).");
             }
         }
         catch (Exception ex)

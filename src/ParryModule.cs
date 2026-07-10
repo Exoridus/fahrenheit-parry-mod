@@ -371,16 +371,31 @@ public unsafe sealed partial class ParryModule : FhModule
     // hit" — it groups them by timing readability, not by impact. Default-on.
     private bool _optionImpactShake = true;
 
-    // Shake parameters, passed straight to MsScreenSetShake. Chosen by reasoning about the
-    // evaluator (offset = sin(phase) * amplitude * jitter * remaining/total), NOT measured:
-    // these are a starting point to tune in-game, not recovered vanilla values.
+    // Shake parameters for MsScreenSetShake. The engine evaluates, per axis:
+    //   offset = sin(phase) * amplitude * (32 + jitter)/32 * (remaining/total)
+    // with `phase += freq` once per frame and per-axis phase/freq slots (+0x13C/+0x144 and
+    // +0x140/+0x148). Both phases start at 0, so firing ONE call with axis_mask = 3 gives both axes
+    // the same phase, frequency and amplitude — the offset then traces a straight 45° line, not a
+    // shake. That is the bug the first version shipped; it read as "very vertical, both-sided".
+    //
+    // We therefore fire the two axes SEPARATELY with decorrelated frequencies. The shape of the
+    // values follows standard game-feel practice for an impact shake (Squirrel Eiserloh, GDC 2016,
+    // "Juicing Your Cameras With Math"): short, high-frequency, low-amplitude, decaying, with
+    // independent axes. Cinemachine's default impulse is likewise ~0.2 s.
+    //
+    // Converting to this engine: Hz = freq * 30 / (2*PI) at the 30 fps battle tick, and Nyquist caps
+    // us at 15 Hz — so the usual 10-20 Hz impact band has to sit at its lower edge.
     private const uint ImpactShakeScreenId   = 0;      // screen_id must be < 3
-    private const uint ImpactShakeAxisMask   = 3;      // both axes
+    private const uint ImpactShakeAxisA      = 1;      // axis_mask bit 0
+    private const uint ImpactShakeAxisB      = 2;      // axis_mask bit 1
     private const uint ImpactShakeModeDecay  = 1;      // envelope = remaining/total → fades out
-    private const float ImpactShakeFrequency = 0.9f;   // phase step per frame (~7 frames/cycle)
-    private const uint ImpactShakeDuration   = 10;     // ticks; battle runs at 30 fps → ~0.33 s
-    private const uint ImpactShakeAmplitude  = 8;
-    private const uint ImpactShakeRandomness = 8;      // jitter ±4 around the amplitude
+
+    private const float ImpactShakeFreqA     = 1.7f;   // ~8.1 Hz
+    private const float ImpactShakeFreqB     = 2.3f;   // ~11.0 Hz — ratio 1.35, so the axes never relock
+    private const uint ImpactShakeAmpA       = 9;      // a parry is a lateral impact: favour one axis
+    private const uint ImpactShakeAmpB       = 5;
+    private const uint ImpactShakeDuration   = 8;      // ticks at 30 fps ≈ 0.27 s
+    private const uint ImpactShakeRandomness = 8;      // the engine's own jitter: ±4 around the amplitude
 
     // Streak counter attack: when a slot completes a defensive streak (every
     // targeted slot in a cue parried at least once and cumulative streak ≥
