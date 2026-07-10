@@ -1334,7 +1334,20 @@ public unsafe sealed partial class ParryModule
                     $"[CameraLock] Suppressed MsAtelRequestCamera(p1={p1:X}, p2={p2:X}, p3={p3:X}) "
                     + $"(mode={_optionBattleCameraLockMode}, attacker={_runtime.CurrentAttackerId}, count={_enemyCameraLockSuppressCount}).");
             }
-            return 0;
+
+            // -1, not 0. MsAtelRequestCamera returns the id of the request it queues via
+            // MsAtelRequestExe, and the engine's OWN suppression path — the guard on btl.debug._6_1_
+            // (FFX.exe.c:841575) — falls straight through to `return 0xffffffff` (:841607). So -1 is
+            // the sanctioned "I queued nothing" value that every caller already handles.
+            //
+            // 0 is a VALID request id. Returning it told callers a request existed, so a script that
+            // waits on its scripted camera waited on a request that was never queued: a hang, not a
+            // crash — exactly the freeze seen when an enemy starts a special move, broken only by Esc.
+            //
+            // To abort a request that HAS been queued, the engine provides MsAtelRequestCancel
+            // (FFX.exe.c:841612): AtelSkipReqLevel2 + AtelExecReturn2, then
+            // AtelDecodeSignal(req, 0xffffffff), which releases whoever waits on the signal.
+            return -1;
         }
 
         return _hMsAtelRequestCamera.orig_fptr.Invoke(p1, p2, p3, p4, p5, p6, p7, p8);
