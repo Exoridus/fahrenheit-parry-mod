@@ -1356,7 +1356,9 @@ public unsafe sealed partial class ParryModule
     {
         capture_battle_camera_id(worker);
         if (!camera_hard_lock_engaged()) return false;
-        if (_freecamActive && _battleCameraId == 0) return false;
+        // The freecam and the static anchor both need the id resolved before they can drive the
+        // camera, so let the game's write through until we have captured it.
+        if ((_freecamActive || _optionStaticCameraAnchor) && _battleCameraId == 0) return false;
         return true;
     }
 

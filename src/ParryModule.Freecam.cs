@@ -28,6 +28,14 @@ public unsafe sealed partial class ParryModule
     private MsCameraSetRectFn? _camSetRect;
     private AtelGetCameraWorkAdrsFn? _getCamWorkAdrs;
 
+    // Saved anchor pose (persisted). When the anchor toggle is on, this pose is stamped every frame
+    // from battle start — a static "E33" camera that also snaps back after any effect pan. Set it
+    // from the current freecam pose with the panel button.
+    private bool _optionStaticCameraAnchor;
+    private Vector3 _anchorPos = new(0f, 80f, 260f);
+    private float _anchorYaw;
+    private float _anchorPitch;
+
     private const uint CameraEyeBank = 1;   // MsCameraSetRect mode: camSetPos (eye) bank
     private const uint CameraRefBank = 0;   // the look-at / ref bank
 
@@ -44,61 +52,65 @@ public unsafe sealed partial class ParryModule
         if (camId != 0) _battleCameraId = camId;
     }
 
-    // Per-frame drive. Reads input, moves/turns the camera, and stamps eye + look-at. No-ops unless
-    // the freecam is on, a battle is live, and the camera id has been resolved.
-    private void drive_freecam()
+    // Per-frame drive. Freecam (user-controlled) takes priority; otherwise, if the anchor toggle is
+    // on, the saved pose is held. Both no-op unless a battle is live and the camera id is resolved.
+    private void drive_camera()
     {
-        if (!_freecamActive) return;
         if (!try_get_live_battle_context(out _)) { _battleCameraId = 0; return; }
         if (_battleCameraId == 0) return;
 
+        if (_freecamActive)
+        {
+            read_freecam_input();
+            stamp_camera(_freecamPos, _freecamYaw, _freecamPitch);
+        }
+        else if (_optionStaticCameraAnchor)
+        {
+            stamp_camera(_anchorPos, _anchorYaw, _anchorPitch);
+        }
+    }
+
+    private void read_freecam_input()
+    {
         ImGuiIOPtr io = ImGui.GetIO();
         float move = _freecamMoveSpeed * MathF.Max(io.DeltaTime * 30f, 0.5f);
 
-        // Turn: right-mouse-drag, plus arrow keys as a no-mouse fallback.
+        // Turn: right-mouse-drag. Vertical is inverted so drag-down looks down.
         if (ImGui.IsMouseDown(ImGuiMouseButton.Right))
         {
             _freecamYaw   += io.MouseDelta.X * _freecamLookSpeed;
-            _freecamPitch -= io.MouseDelta.Y * _freecamLookSpeed;
+            _freecamPitch += io.MouseDelta.Y * _freecamLookSpeed;
         }
-        float turn = _freecamLookSpeed * 4f;
-        if (ImGui.IsKeyDown(ImGuiKey.LeftArrow))  _freecamYaw   -= turn;
-        if (ImGui.IsKeyDown(ImGuiKey.RightArrow)) _freecamYaw   += turn;
-        if (ImGui.IsKeyDown(ImGuiKey.UpArrow))    _freecamPitch += turn;
-        if (ImGui.IsKeyDown(ImGuiKey.DownArrow))  _freecamPitch -= turn;
         _freecamPitch = Math.Clamp(_freecamPitch, -1.5f, 1.5f);
 
-        freecam_basis(out Vector3 fwd, out Vector3 right);
-
-        if (ImGui.IsKeyDown(ImGuiKey.W)) _freecamPos += fwd * move;
-        if (ImGui.IsKeyDown(ImGuiKey.S)) _freecamPos -= fwd * move;
-        if (ImGui.IsKeyDown(ImGuiKey.D)) _freecamPos += right * move;
-        if (ImGui.IsKeyDown(ImGuiKey.A)) _freecamPos -= right * move;
-        if (ImGui.IsKeyDown(ImGuiKey.E)) _freecamPos.Y += move;
-        if (ImGui.IsKeyDown(ImGuiKey.Q)) _freecamPos.Y -= move;
-
-        stamp_freecam();
-    }
-
-    // View forward + horizontal strafe-right from yaw/pitch. Handedness is a guess (tune in-game).
-    private void freecam_basis(out Vector3 fwd, out Vector3 right)
-    {
         float cp = MathF.Cos(_freecamPitch), sp = MathF.Sin(_freecamPitch);
         float cy = MathF.Cos(_freecamYaw),   sy = MathF.Sin(_freecamYaw);
-        fwd   = new Vector3(cp * sy, sp, cp * cy);
-        right = new Vector3(cy, 0f, -sy);
+        Vector3 fwd   = new(cp * sy, sp, cp * cy);
+        Vector3 right = new(cy, 0f, -sy);
+
+        // Numpad, to dodge the battle hotkeys on WASD / arrows (A swaps a party member, arrows drive
+        // the menu). Right-mouse turns; numpad moves.
+        if (ImGui.IsKeyDown(ImGuiKey.Keypad8)) _freecamPos += fwd * move;
+        if (ImGui.IsKeyDown(ImGuiKey.Keypad2)) _freecamPos -= fwd * move;
+        if (ImGui.IsKeyDown(ImGuiKey.Keypad6)) _freecamPos += right * move;
+        if (ImGui.IsKeyDown(ImGuiKey.Keypad4)) _freecamPos -= right * move;
+        if (ImGui.IsKeyDown(ImGuiKey.KeypadAdd))      _freecamPos.Y += move;
+        if (ImGui.IsKeyDown(ImGuiKey.KeypadSubtract)) _freecamPos.Y -= move;
     }
 
-    private void stamp_freecam()
+    // Stamp a pose (eye + look-at) into the camera. Look direction from yaw/pitch; handedness is a
+    // guess (tune in-game). MsCameraSetRect no-ops on a bad id, so a stale id cannot crash.
+    private void stamp_camera(Vector3 pos, float yaw, float pitch)
     {
         if (_battleCameraId == 0) return;
         _camSetRect ??= FhUtil.get_fptr<MsCameraSetRectFn>(ExternalMemoryOffsetMap.Functions.MsCameraSetRect);
 
-        freecam_basis(out Vector3 fwd, out _);
-        Vector3 target = _freecamPos + fwd;
+        float cp = MathF.Cos(pitch), sp = MathF.Sin(pitch);
+        float cy = MathF.Cos(yaw),   sy = MathF.Sin(yaw);
+        Vector3 target = pos + new Vector3(cp * sy, sp, cp * cy);
 
         float* buf = stackalloc float[4];
-        buf[0] = _freecamPos.X; buf[1] = _freecamPos.Y; buf[2] = _freecamPos.Z; buf[3] = 0f;
+        buf[0] = pos.X; buf[1] = pos.Y; buf[2] = pos.Z; buf[3] = 0f;
         _camSetRect((uint)_battleCameraId, CameraEyeBank, buf);
         buf[0] = target.X; buf[1] = target.Y; buf[2] = target.Z; buf[3] = 0f;
         _camSetRect((uint)_battleCameraId, CameraRefBank, buf);
@@ -123,7 +135,19 @@ public unsafe sealed partial class ParryModule
         ImGui.DragFloat3("pos##fhparry.freecam.pos", ref _freecamPos, 0.5f);
         ImGui.DragFloat("yaw##fhparry.freecam.yaw", ref _freecamYaw, 0.01f);
         ImGui.DragFloat("pitch##fhparry.freecam.pitch", ref _freecamPitch, 0.01f);
-        ImGui.TextDisabled("W/S dolly · A/D strafe · Q/E up-down · right-drag or arrows turn.");
+        ImGui.TextDisabled("Numpad 8/2 dolly · 4/6 strafe · +/- up-down · right-drag turn (V inverted).");
+
+        ImGui.Separator();
+        if (ImGui.Checkbox("Hold anchor from battle start##fhparry.freecam.anchor", ref _optionStaticCameraAnchor))
+            persist_settings();
+        ImGui.SameLine();
+        if (ImGui.Button("Save current pose as anchor##fhparry.freecam.setanchor"))
+        {
+            _anchorPos = _freecamPos; _anchorYaw = _freecamYaw; _anchorPitch = _freecamPitch;
+            persist_settings();
+            log_debug($"[Freecam] anchor saved: pos=({_anchorPos.X:F2},{_anchorPos.Y:F2},{_anchorPos.Z:F2}) yaw={_anchorYaw:F4} pitch={_anchorPitch:F4}");
+        }
+        ImGui.TextDisabled("Anchor holds even with freecam off; snaps back after effect pans.");
     }
 
     // Persist the current camera pose and the battle map it was found on, so a hand-tuned angle is

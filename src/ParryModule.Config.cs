@@ -23,6 +23,12 @@ public unsafe sealed partial class ParryModule
         public bool? CameraProbe { get; set; }
         public int? CheckHitHitValue { get; set; }
         public string? Difficulty { get; set; }
+        public bool? StaticCameraAnchor { get; set; }
+        public float? AnchorPosX { get; set; }
+        public float? AnchorPosY { get; set; }
+        public float? AnchorPosZ { get; set; }
+        public float? AnchorYaw { get; set; }
+        public float? AnchorPitch { get; set; }
     }
 
     private static readonly JsonSerializerOptions PersistedSettingsJsonOptions = new()
@@ -123,6 +129,13 @@ public unsafe sealed partial class ParryModule
             {
                 _optionDifficulty = ParryDifficultyModel.NormalizeDifficulty(_optionDifficulty);
             }
+
+            if (persisted.StaticCameraAnchor.HasValue) _optionStaticCameraAnchor = persisted.StaticCameraAnchor.Value;
+            if (persisted.AnchorPosX.HasValue) _anchorPos.X = persisted.AnchorPosX.Value;
+            if (persisted.AnchorPosY.HasValue) _anchorPos.Y = persisted.AnchorPosY.Value;
+            if (persisted.AnchorPosZ.HasValue) _anchorPos.Z = persisted.AnchorPosZ.Value;
+            if (persisted.AnchorYaw.HasValue) _anchorYaw = persisted.AnchorYaw.Value;
+            if (persisted.AnchorPitch.HasValue) _anchorPitch = persisted.AnchorPitch.Value;
         }
         catch (Exception ex)
         {
@@ -161,7 +174,13 @@ public unsafe sealed partial class ParryModule
                 ParryNativeBlock = _optionParryNativeBlock,
                 CameraProbe = _optionCameraProbe,
                 CheckHitHitValue = _checkHitHitValue,
-                Difficulty = _optionDifficulty.ToString()
+                Difficulty = _optionDifficulty.ToString(),
+                StaticCameraAnchor = _optionStaticCameraAnchor,
+                AnchorPosX = _anchorPos.X,
+                AnchorPosY = _anchorPos.Y,
+                AnchorPosZ = _anchorPos.Z,
+                AnchorYaw = _anchorYaw,
+                AnchorPitch = _anchorPitch
             };
 
             string json = JsonSerializer.Serialize(payload, PersistedSettingsJsonOptions);
