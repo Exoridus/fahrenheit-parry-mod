@@ -283,7 +283,6 @@ public unsafe sealed partial class ParryModule : FhModule
 #else
         false;
 #endif
-    private bool _optionParryStateHud = false;
     private bool _optionOverdriveBoost = true;
     // Not a toggle: damage negation IS the mod. With it off a successful parry does nothing,
     // which is what the "enabled" master switch is for. Kept as a named constant so the guard
@@ -620,7 +619,6 @@ public unsafe sealed partial class ParryModule : FhModule
             new FhSettingCustomRenderer("dodge_whiffout", render_setting_dodge_whiffout),
 #if DEBUG
             // Diagnostics — not shipped. Release builds have no UI for these.
-            new FhSettingCustomRenderer("parry_state_hud", render_setting_parry_state_hud),
             new FhSettingCustomRenderer("logging", render_setting_logging),
             new FhSettingCustomRenderer("debug_overlay", render_setting_debug_overlay),
             new FhSettingCustomRenderer("camera_probe", render_setting_camera_probe),
@@ -879,7 +877,6 @@ public unsafe sealed partial class ParryModule : FhModule
 
     public override void render_imgui()
     {
-        render_parry_state_hud();
         render_parry_window_overlay();
         render_dodge_overlay();
         render_debug_overlay();

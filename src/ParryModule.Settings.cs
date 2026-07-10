@@ -28,14 +28,6 @@ public unsafe sealed partial class ParryModule
         }
     }
 
-    private void render_setting_parry_state_hud()
-    {
-        if (ImGui.Checkbox("##fhparry.parry_state_hud", ref _optionParryStateHud))
-        {
-            persist_settings();
-        }
-    }
-
     private void render_setting_overdrive_boost()
     {
         if (ImGui.Checkbox("##fhparry.ctb", ref _optionOverdriveBoost))

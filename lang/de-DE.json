@@ -5,8 +5,6 @@
     "fhparry.enabled.desc": "Hauptschalter fuer die Parierhilfe.",
     "fhparry.audio.name": "Audio-Feedback abspielen",
     "fhparry.audio.desc": "Spielt bei erfolgreicher Parade zufaellige eigene Parry_0x.wav Dateien ab.",
-    "fhparry.parry_state_hud.name": "Parry-Statusanzeige",
-    "fhparry.parry_state_hud.desc": "Zeigt oben mittig einen Text zum aktuellen Parry-Status (-, Waiting, Open, Succeeded, Missed).",
     "fhparry.ctb.name": "Ekstaseleiste erhoehen",
     "fhparry.ctb.desc": "Gibt Verteidigern bei erfolgreicher Parade einen kleinen Ekstase-Bonus.",
     "fhparry.logging.name": "Debug-Protokollierung",

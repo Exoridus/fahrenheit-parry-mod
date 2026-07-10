@@ -6,7 +6,6 @@ public unsafe sealed partial class ParryModule
     {
         public bool? Enabled { get; set; }
         public bool? Sound { get; set; }
-        public bool? ParryStateHud { get; set; }
         public bool? Logging { get; set; }
         public bool? OverdriveBoost { get; set; }
         public bool? Penalty { get; set; }
@@ -94,7 +93,6 @@ public unsafe sealed partial class ParryModule
 
             if (persisted.Enabled.HasValue) _optionEnabled = persisted.Enabled.Value;
             if (persisted.Sound.HasValue) _optionSound = persisted.Sound.Value;
-            if (persisted.ParryStateHud.HasValue) _optionParryStateHud = persisted.ParryStateHud.Value;
             if (persisted.Logging.HasValue) _optionLogging = persisted.Logging.Value;
             if (persisted.OverdriveBoost.HasValue) _optionOverdriveBoost = persisted.OverdriveBoost.Value;
             // Persisted as "penalty" for backward compatibility with earlier settings files.
@@ -163,7 +161,6 @@ public unsafe sealed partial class ParryModule
             {
                 Enabled = _optionEnabled,
                 Sound = _optionSound,
-                ParryStateHud = _optionParryStateHud,
                 Logging = _optionLogging,
                 OverdriveBoost = _optionOverdriveBoost,
                 Penalty = _optionWhiffLockout,
