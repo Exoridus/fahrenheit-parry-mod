@@ -523,9 +523,6 @@ public unsafe sealed partial class ParryModule
             fire_screen_shake_ticks(ImpactShakeDurationWholeParty, "lab whole-party");
 
         ImGui.Separator();
-        render_freecam_panel();
-
-        ImGui.Separator();
         ImGui.Text($"Hit effect: 0x{_labEffectId:X2}");
         ImGui.SameLine(); if (ImGui.Button("-##labfx")) { _labEffectId = Math.Max(0x00, _labEffectId - 1); lab_fire_effect(); }
         ImGui.SameLine(); if (ImGui.Button("+##labfx")) { _labEffectId = Math.Min(0xFF, _labEffectId + 1); lab_fire_effect(); }
@@ -819,6 +816,13 @@ public unsafe sealed partial class ParryModule
                 if (ImGui.BeginTabItem("Lab"))
                 {
                     if (liveReady) render_fx_motion_lab();
+                    else           render_debug_tab_placeholder();
+                    ImGui.EndTabItem();
+                }
+
+                if (ImGui.BeginTabItem("Camera"))
+                {
+                    if (liveReady) render_camera_tab();
                     else           render_debug_tab_placeholder();
                     ImGui.EndTabItem();
                 }

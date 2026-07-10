@@ -184,6 +184,97 @@ public unsafe sealed partial class ParryModule
         ImGui.TextDisabled("Keyed by map + enemy group. Holds even with freecam off; snaps back after effect pans.");
     }
 
+    // Camera tab: the freecam controls on top, then a table of the anchors saved for the current
+    // battle map. The current encounter is always a row (highlighted) even if it has no anchor yet,
+    // so the status column shows at a glance whether this map+group is defined. Phase 1 lists only
+    // what we have saved; a future pass can pre-populate every possible encounter from a joined
+    // formations dataset (needs a runtime-scene to battle-id bridge we do not have yet).
+    private void render_camera_tab()
+    {
+        render_freecam_panel();
+
+        ImGui.SeparatorText("Encounters on this map");
+        if (!try_get_live_battle_context(out _))
+        {
+            ImGui.TextDisabled("Not in battle.");
+            return;
+        }
+
+        _getBattleScene ??= FhUtil.get_fptr<MsGetBattleSceneFn>(ExternalMemoryOffsetMap.Functions.MsGetBattleScene);
+        int scene = _getBattleScene();
+        string scenePrefix = $"{scene:X8}|";
+        string currentKey = current_battle_camera_key();
+
+        List<string> keys = [];
+        foreach (string k in _cameraAnchors.Keys)
+            if (k.StartsWith(scenePrefix, StringComparison.Ordinal)) keys.Add(k);
+        if (!keys.Contains(currentKey)) keys.Add(currentKey);
+        keys.Sort((a, b) => enemy_ids_from_key(b).Count.CompareTo(enemy_ids_from_key(a).Count));
+
+        ImGui.TextDisabled($"map 0x{scene:X8} · {keys.Count} encounter(s) known here");
+
+        const ImGuiTableFlags flags = ImGuiTableFlags.Borders | ImGuiTableFlags.RowBg | ImGuiTableFlags.SizingStretchProp;
+        if (ImGui.BeginTable("##fhparry.cam.encounters", 3, flags))
+        {
+            ImGui.TableSetupColumn("#", ImGuiTableColumnFlags.WidthFixed, 28f);
+            ImGui.TableSetupColumn("Enemies", ImGuiTableColumnFlags.WidthStretch, 1f);
+            ImGui.TableSetupColumn("Anchor", ImGuiTableColumnFlags.WidthFixed, 56f);
+            ImGui.TableHeadersRow();
+
+            for (int i = 0; i < keys.Count; i++)
+            {
+                string k = keys[i];
+                bool isCurrent = k == currentKey;
+                bool hasAnchor = _cameraAnchors.ContainsKey(k);
+
+                ImGui.TableNextRow();
+                if (isCurrent)
+                    ImGui.TableSetBgColor(ImGuiTableBgTarget.RowBg0,
+                        ImGui.ColorConvertFloat4ToU32(new Vector4(0.30f, 0.42f, 0.20f, 0.45f)));
+
+                ImGui.TableSetColumnIndex(0);
+                ImGui.TextUnformatted((i + 1).ToString(CultureInfo.InvariantCulture));
+
+                ImGui.TableSetColumnIndex(1);
+                List<ushort> ids = enemy_ids_from_key(k);
+                if (ids.Count == 0)
+                {
+                    ImGui.TextDisabled("(none)");
+                }
+                else
+                {
+                    for (int e = 0; e < ids.Count; e++)
+                    {
+                        if (e > 0) ImGui.SameLine();
+                        string name = resolve_monster_name(ids[e]);
+                        ImGui.TextUnformatted(truncate_display(name, 10));
+                        if (ImGui.IsItemHovered()) ImGui.SetTooltip(name);
+                    }
+                }
+
+                ImGui.TableSetColumnIndex(2);
+                if (hasAnchor) ImGui.TextColored(new Vector4(0.45f, 0.9f, 0.45f, 1f), "saved");
+                else           ImGui.TextColored(new Vector4(0.9f, 0.45f, 0.45f, 1f), "--");
+            }
+            ImGui.EndTable();
+        }
+    }
+
+    private List<ushort> enemy_ids_from_key(string key)
+    {
+        List<ushort> ids = [];
+        int bar = key.IndexOf('|');
+        if (bar < 0 || bar + 1 >= key.Length) return ids;
+        string cons = key[(bar + 1)..];
+        if (cons == "none") return ids;
+        foreach (string tok in cons.Split('-'))
+            if (ushort.TryParse(tok, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out ushort id)) ids.Add(id);
+        return ids;
+    }
+
+    private string resolve_monster_name(ushort id)
+        => _dataMappings.TryResolveMonsterName(id, out string name) ? name : $"0x{id:X4}";
+
     // Persist the current camera pose and the battle map it was found on, so a hand-tuned angle is
     // not lost. Writes to the session log (visible) and appends one line to a durable captures file
     // next to the config (survives across sessions).
