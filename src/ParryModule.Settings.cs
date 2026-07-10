@@ -122,18 +122,6 @@ public unsafe sealed partial class ParryModule
         }
     }
 
-    private void render_setting_learn_custom_overdrive()
-    {
-        if (ImGui.Checkbox("##fhparry.learn_custom_overdrive", ref _optionLearnCustomOverdrive))
-        {
-            persist_settings();
-            // The learn countdown is initialised at the next battle-begin edge (see
-            // apply_overdrive_learning_init_if_enabled), not here — this only records the toggle.
-            string state = _optionLearnCustomOverdrive ? "enabled" : "disabled";
-            log_debug($"Learn custom overdrive by parrying (mode 0x11) {state}.");
-        }
-    }
-
     private void render_setting_logging()
     {
         if (ImGui.Checkbox("##fhparry.logging", ref _optionLogging))

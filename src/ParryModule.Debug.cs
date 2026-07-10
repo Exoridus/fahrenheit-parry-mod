@@ -166,11 +166,11 @@ public unsafe sealed partial class ParryModule
                 log_overdrive_modes_probe_once();
 
                 // Immediately after the read-only probe logs the before-state, initialise the
-                // custom-overdrive learn countdown (default-off; no-op unless the setting is on).
-                // Fired on the same battle-begin edge so one log shows the before-state and the
-                // init in order. Init only ever writes the counter (never bit 17, never 0), so
-                // firing every battle is safe and idempotent for an already-armed character.
-                apply_overdrive_learning_init_if_enabled();
+                // custom-overdrive learn countdown. Fired on the same battle-begin edge so one log
+                // shows the before-state and the init in order. Init only ever writes the counter
+                // (never bit 17, never 0), so firing every battle is safe and idempotent for an
+                // already-armed character.
+                apply_overdrive_learning_init();
             }
             else
             {
@@ -1873,34 +1873,38 @@ public unsafe sealed partial class ParryModule
         }
     }
 
-    // ── Custom-overdrive "learn by parrying" (default-off, opt-in via _optionLearnCustomOverdrive) ──
+    // ── Custom-overdrive "learn by parrying" (unconditional feature of the mod) ──
     //
     // The custom overdrive mode (index 0x11 / bit 17) is learned the way FFX teaches its own
     // modes: a per-character learn countdown in limit_mode_counters[0x11] that decrements per
     // successful parry and grants the mode (sets bit 17) when it reaches zero. The pure decision
     // policy lives in OverdriveLearnPolicy; this file is the save_ram I/O boundary.
     //
+    // THIS WRITES INTO save_ram. Every write below goes into the live PlySave block: init writes
+    // the per-character learn counter, counting decrements it, and the grant sets bit 17 of
+    // limit_modes_obtained. If the player saves the game afterwards, the learn progress AND the
+    // eventual unlock become permanent in that save file. This is intentional and always on.
+    //
     // Char id set: 0..6 (Tidus, Yuna, Auron, Kimahri, Wakka, Lulu, Rikku) — the permanent
     // playable members, exactly the set the read-only SaveProbe enumerates. Summoned aeons
     // (chr_id >= 8) are skipped: they never appear in this counter path and the PlySave stride
     // past char 6 is not live-verified.
     //
-    // Safety discipline (this WRITES into save_ram; saving the game persists it):
-    //   - Gated on the setting: when off, nothing is written at all.
-    //   - Every read/write goes through FhUtil.ptr_at<T> with offset-map constants (rule §9).
+    // Safety discipline:
+    //   - Every read/write goes through FhUtil.ptr_at<T> with offset-map constants (rule §9), and
+    //     is null-checked (try_get_overdrive_learn_slots) and bounds-checked before any write —
+    //     these checks, not an opt-in setting, are what keep a bad offset off the player's save.
     //   - Never-zero-while-unset invariant: a grant sets bit 17 FIRST, then writes the counter
     //     to 0. Initialisation never writes 0. Counting never bare-decrements to 0.
     //   - Per-character try/catch: a failure logs a warning and cannot take down the game.
     private const int OverdriveLearnCharCount = 7;
 
-    // Initialisation, at the battle-begin edge, when learning is enabled. Applies
-    // OverdriveLearnPolicy.DecideInitialisation per character: arms an uninitialised (0xFFFF) or
-    // out-of-range counter to the threshold, repairs the unsafe (counter 0 / bit unset) state with
-    // a warning, and leaves in-progress and already-learned characters untouched.
-    private void apply_overdrive_learning_init_if_enabled()
+    // Initialisation, at the battle-begin edge. Applies OverdriveLearnPolicy.DecideInitialisation
+    // per character: arms an uninitialised (0xFFFF) or out-of-range counter to the threshold,
+    // repairs the unsafe (counter 0 / bit unset) state with a warning, and leaves in-progress and
+    // already-learned characters untouched.
+    private void apply_overdrive_learning_init()
     {
-        if (!_optionLearnCustomOverdrive) return;
-
         for (int charId = 0; charId < OverdriveLearnCharCount; charId++)
         {
             string name = try_map_party_chr_id_to_name(charId, out string resolved) ? resolved : "?";
@@ -1953,7 +1957,7 @@ public unsafe sealed partial class ParryModule
     // and non-party slots are never in this party mask.
     private void resolve_overdrive_learning_at_cue_clear(uint parriedMask)
     {
-        if (!_optionLearnCustomOverdrive || parriedMask == 0) return;
+        if (parriedMask == 0) return;
 
         Chr* party = _battleAdapter.GetPlayerCharacters();
         if (party == null) return;

@@ -21,7 +21,9 @@ There is no third free index. The engine's menu-build loop is hard-capped at `i 
 - Sets bit 17 of `limit_modes_obtained` (`PlySave + 0x88`) once the character has parried 100 times.
 - Owns `limit_mode_counters[0x11]` (`PlySave + 0x60 + 0x11*2`), which the engine never touches: its
   learn gate is `mode < 0x11`.
-- All of this is behind the `learn_custom_overdrive` setting, which is **off by default**.
+- This runs unconditionally — it is a standard feature of the mod, not an opt-in. It **writes into
+  `save_ram`**: the per-character learn progress, and the eventual unlock (bit 17), are written into
+  the live `PlySave` block, so if the player saves the game they become permanent in that save file.
 
 ## What fhparry does not do with `0x12`
 

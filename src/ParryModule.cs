@@ -337,15 +337,6 @@ public unsafe sealed partial class ParryModule : FhModule
     // layout. Off → log-only behaviour (the observation still runs and the
     // debug overlay still surfaces "streak ready" events).
     private bool _optionStreakCounter = false;
-    // Learn the custom overdrive mode at index 0x11 (bit 17) by parrying, the way FFX teaches
-    // its own modes: a per-character learn countdown in limit_mode_counters[0x11] that decrements
-    // on each successful parry and grants the mode (sets bit 17) at zero. Default-off: enabling it
-    // writes into save_ram, so if the player saves the game afterwards the progress and any grant
-    // become permanent in the save file. See apply_overdrive_learning_init_if_enabled (battle-begin
-    // init) and resolve_overdrive_learning_at_cue_clear (counting); the decision policy is the pure
-    // OverdriveLearnPolicy. This only makes the mode learnable/selectable in the Overdrive menu; it
-    // does NOT wire the mode to any charging behaviour.
-    private bool _optionLearnCustomOverdrive = false;
     // Disable native FFX evasion for real player characters (chr->ram.is_aeon == false
     // and chr->chr_id < 0x14). Aeons and monsters keep vanilla evasion. The hook always
     // invokes the original MsDmgCalc_CheckHit (so the engine's RNG advance is preserved),
@@ -634,7 +625,6 @@ public unsafe sealed partial class ParryModule : FhModule
             new FhSettingCustomRenderer("magic_camera_lock", render_setting_magic_camera_lock),
             new FhSettingCustomRenderer("parry_effect", render_setting_parry_effect),
             new FhSettingCustomRenderer("streak_counter", render_setting_streak_counter),
-            new FhSettingCustomRenderer("learn_custom_overdrive", render_setting_learn_custom_overdrive),
             new FhSettingCustomRenderer("dodge_window", render_setting_dodge_window),
             new FhSettingCustomRenderer("dodge_whiffout", render_setting_dodge_whiffout),
 #if DEBUG

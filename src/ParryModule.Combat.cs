@@ -821,7 +821,7 @@ public unsafe sealed partial class ParryModule
         // Count successful parries toward the custom-overdrive learn countdown, also
         // BEFORE the masks are cleared. Reads LastParriedTargetMask (the slots that
         // parried at least one hit this action window), so a multi-hit attack counts
-        // exactly once per character. Default-off; no-op unless learning is enabled.
+        // exactly once per character.
         resolve_overdrive_learning_at_cue_clear(_runtime.LastParriedTargetMask);
 
         flush_attack_telemetry(reason);
