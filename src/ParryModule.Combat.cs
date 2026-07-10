@@ -131,6 +131,19 @@ public unsafe sealed partial class ParryModule
             return;
         }
 
+        // A valid dodge window handles this hit via the native evade (MsDamageSetMotion hook) —
+        // it is not a parry miss, so suppress the failure feedback / missed-turn marking.
+        if (is_dodge_window_valid())
+        {
+            // Durable resolution, mirroring the parry's LastParriedTargetMask: from here on this
+            // slot counts as evaded for the rest of the cue, even after the wall-clock window
+            // expires. Delayed-finalization attacks (Anfunkeln, Blitzra) commit HP *and status*
+            // long after 350ms, and a wall-clock-only gate lets Petrify/Confuse through.
+            mark_dodge_resolved(slotIndex);
+            log_debug($"Dodge active at impact for {format_actor_slot((byte)slotIndex)} — evaded, not a parry miss. {timingTag}");
+            return;
+        }
+
         mark_active_turn_missed("impact outside active parry window");
         trigger_failure_feedback();
         _runtime.TurnImpactMissedSeen = true;
@@ -375,6 +388,128 @@ public unsafe sealed partial class ParryModule
         transition_to_open(cue, cueIndex, partyMask);
     }
 
+    // Dodge (L1): arm an evade window for the current incoming attack. Unlike parry, this does
+    // not drive the parry state machine and never feeds the streak/counter path — so a dodge
+    // triggers NO counterattack.
+    //
+    // The hit is negated in h_ms_set_damage_internal, which skips the whole native commit
+    // (HP + status + death). h_ms_dmg_calc_check_hit is NOT involved: it forces MISS->HIT to
+    // disable native PC evasion, and there is no force-miss path anywhere in this mod.
+    // The step-out (move-mode 0x425 + motion 0xC) is driven by us, on press, right below.
+    private void handle_dodge_input_press(ParryInputContext context)
+    {
+        if (!context.HasParryableCue)
+        {
+            if (_optionLogging)
+            {
+                log_debug("[Dodge] Ignored — no parryable incoming attack.");
+            }
+            return;
+        }
+
+        // Whiffout: optional extra recovery after a step-out (0 by default; slider dodge_whiffout).
+        if (_dodgeWhiffoutRemainingSeconds > 0f)
+        {
+            return;
+        }
+
+        // Move-state whiffout (primary pacing): don't start a new step-out while a targeted char is
+        // still in the evade move (Chr 0x415 != 0: 0x09 = stepping out, 0x01 = walking back). Waits
+        // until the char has returned home — this paces multi-press to the actual move duration and
+        // prevents stacking ever further backward on repeated presses (whiff OR success).
+        Chr* moveStateParty = _battleAdapter.GetPlayerCharacters();
+        for (int slot = 0; slot < PartyActorCapacity; slot++)
+        {
+            if ((context.PartyMask & (1u << slot)) == 0) continue;
+            Chr* c = moveStateParty != null ? moveStateParty + slot : null;
+            if (c != null && c->stat_exist_flag && ((byte*)c)[ChrEvadeMovePhaseOffset] != 0)
+            {
+                if (_optionLogging)
+                {
+                    log_debug($"[Dodge] Ignored — {format_actor_slot((byte)slot)} still mid-evade (0x415={((byte*)c)[ChrEvadeMovePhaseOffset]:X2}).");
+                }
+                return;
+            }
+        }
+
+        // (Re)arm the negation window so a valid press keeps the dodge live until the hit lands.
+        _dodgeWindowActive = true;
+        _dodgeArmedAttackerId = context.Cue.attacker_id;
+        _dodgeArmedCueFrame = _runtime.CueFirstSeenFrame;
+        _dodgeWindowRemainingSeconds = DodgeWindowSeconds;
+
+        // Step-out for each targeted PC — WITHOUT MsDamageSetMotion: set only the avoid move-mode
+        // (Chr+0x425, what FUN_0078f090 sets) + play the evade animation (motion 0xC). This skips
+        // the hit-terminate flag field_0x433 that MsDamageSetMotion's case 1 also sets, which is
+        // read by battle-update logic and, poked out-of-band during a multi-phase cast chargeup,
+        // desyncs the enemy action → soft-lock. Minimal + re-pressable: each press steps further.
+        Chr* party = _battleAdapter.GetPlayerCharacters();
+        for (int slot = 0; slot < PartyActorCapacity; slot++)
+        {
+            if ((context.PartyMask & (1u << slot)) == 0) continue;
+            Chr* chr = party != null ? party + slot : null;
+            if (chr == null || !chr->stat_exist_flag) continue;
+            // Motion 0xC drives BOTH the evade animation AND the displacement — the move-mode-only
+            // experiment produced no animation and no move, so we keep the motion. (Async via
+            // motion-suppression is a dead end.)
+            // Orientation: motion 0xC steps out away from Chr+0xdef, not from anything MsSetMotion
+            // is passed. MsDamageSetMotion case 1 refreshes it from the attacker right before the
+            // motion call; without this the step-out aims at whoever attacked last.
+            ((byte*)chr)[ChrLastAttackerIdOffset] = context.Cue.attacker_id;
+            ((byte*)chr)[ChrEvadeMoveModeOffset] = 1;
+            FhUtil.get_fptr<MsSetMotionProbe>(
+                ExternalMemoryOffsetMap.Functions.MsSetMotion)(slot, EvadeMotionId, 0, 0, 1, 0, 0);
+            _dodgeProbeSlotsMask |= 1u << slot;
+            if (_optionLogging)
+            {
+                log_debug($"[Dodge] Step-out (attacker 0x{context.Cue.attacker_id:X2} → 0xdef, move-mode 0x425 + motion 0x{EvadeMotionId:X}) for {format_actor_slot((byte)slot)}.");
+            }
+        }
+
+        _dodgeProbeFramesLeft = 40;
+        _dodgeWhiffoutRemainingSeconds = _dodgeWhiffoutMs / 1000f;
+    }
+
+    // After a step-out, log Chr+0x415/0x425/0x4AC (move-mode / avoid / motion-type) + world
+    // position each frame for a short window — captures how the move-mode evolves and how far the
+    // char actually travels, to find a move distance/speed knob for a bigger jump. Debug-only.
+    private void tick_dodge_field_probe()
+    {
+        if (_dodgeProbeFramesLeft <= 0 || _dodgeProbeSlotsMask == 0) return;
+        _dodgeProbeFramesLeft--;
+
+        if (_optionLogging)
+        {
+            uint mask = _dodgeProbeSlotsMask;
+            while (mask != 0)
+            {
+                int slot = BitOperations.TrailingZeroCount(mask);
+                mask &= mask - 1;
+                Chr* chr = try_get_chr((byte)slot);
+                if (chr == null) continue;
+                byte* b = (byte*)chr;
+                byte f415 = b[0x415];
+                byte f425 = b[0x425];
+                uint f4AC = *(uint*)(b + 0x4AC);
+                float px = chr->actor != null ? chr->actor->chr_pos_vec.X : 0f;
+                float pz = chr->actor != null ? chr->actor->chr_pos_vec.Z : 0f;
+                log_debug($"[EvadeFields] {format_actor_slot((byte)slot)} 0x415={f415:X2} 0x425={f425:X2} 0x4AC={f4AC:X8} pos=({px:F2},{pz:F2})");
+            }
+        }
+
+        if (_dodgeProbeFramesLeft <= 0) _dodgeProbeSlotsMask = 0;
+    }
+
+    // True while a dodge window armed by L1 is live AND the current incoming attack is from the
+    // armed attacker. Checked at impact (MsDamageSetMotion hook) and in on_impact_detected to
+    // route the hit to the native evade instead of a parry/miss. Not consumed on use — the
+    // window expires by time — so a multi-hit / AoE swing from that attacker is fully evaded.
+    private bool is_dodge_window_valid()
+        => _optionDodgeEnabled
+        && _dodgeWindowActive
+        && _dodgeArmedAttackerId == _runtime.CurrentAttackerId
+        && _runtime.CueFirstSeenFrame == _dodgeArmedCueFrame;
+
     private void log_press_rejection(string reason)
     {
         // Map the pure reason identifier from ParryInputStateTransitions to the
@@ -404,6 +539,38 @@ public unsafe sealed partial class ParryModule
     private float compute_window_seconds()
     {
         return ParryDifficultyModel.GetWindowSeconds(_optionDifficulty);
+    }
+
+    // Both windows open on the press, and the parry window is the tighter one. A dodge is
+    // "perfect" when the press-to-hit time is at most one parry window long — pressed late
+    // and precisely, not early and hopefully. When the dodge window itself is narrower than
+    // the parry window, every hit inside it is necessarily within one parry window of the
+    // press, so grading it perfect is correct, not a bug: there is no shorter interval left
+    // for a "non-perfect" dodge to land in.
+    private bool is_perfect_dodge()
+    {
+        if (!_dodgeWindowActive) return false;
+
+        float pressToHitSeconds = DodgeWindowSeconds - _dodgeWindowRemainingSeconds;
+        return pressToHitSeconds <= compute_window_seconds();
+    }
+
+    // Single entry point for "this slot has evaded". Idempotent per cue: the durable marker gates
+    // the commit passes, and the perfect grade + overdrive boost are awarded exactly once, at the
+    // first impact — while _dodgeWindowRemainingSeconds still carries the press-to-hit timing.
+    private void mark_dodge_resolved(int slotIndex)
+    {
+        uint bit = 1u << slotIndex;
+        bool firstImpact = (_dodgeResolvedAtImpactMask & bit) == 0;
+        _dodgeResolvedAtImpactMask |= bit;
+        if (!firstImpact) return;
+
+        if (is_perfect_dodge())
+        {
+            _dodgeTextPerfectMask |= bit;
+            apply_overdrive_boost(bit);   // same reward as a parry; a dodge still grants no counter
+            log_debug($"Perfect dodge for {format_actor_slot((byte)slotIndex)} (inside the parry window).");
+        }
     }
 
     private float compute_whiff_lockout_seconds()
@@ -651,6 +818,7 @@ public unsafe sealed partial class ParryModule
         _latePreOpenP5ZeroCommitMask = 0;
         Array.Clear(_latePreOpenP5ZeroCommitAttackerId);
         _parryResolvedAtImpactMask = 0;
+        _dodgeResolvedAtImpactMask = 0;
         Array.Clear(_preHitHpSnapshot);
         if (_runtime.ParryWindowActive)
         {
@@ -880,12 +1048,18 @@ public unsafe sealed partial class ParryModule
             if (maxCharge == 0) continue;
 
             int before = chr->ram.limit_charge;
-            int delta = Math.Max(1, (int)MathF.Round(maxCharge * OverdriveBoostPercent));
-            int after = Math.Clamp(before + delta, 0, maxCharge);
+            uint delta = (uint)Math.Max(1, (int)MathF.Round(maxCharge * OverdriveBoostPercent));
+
+            // Native charge primitive: clamps against limit_charge_max, honours the engine's
+            // never_charge_overdrive debug flag, and applies Double/Triple Overdrive plus the
+            // aura multipliers. Writing limit_charge directly bypassed all three.
+            uint applied = FhUtil.get_fptr<MsLimitUpProbe>(
+                ExternalMemoryOffsetMap.Functions.MsLimitUp)((uint)i, chr, delta);
+
+            int after = chr->ram.limit_charge;
             if (after == before) continue;
 
-            chr->ram.limit_charge = (byte)after;
-            log_debug($"Increased overdrive for {format_actor_slot((byte)i)} from {before} to {after}.");
+            log_debug($"Increased overdrive for {format_actor_slot((byte)i)} from {before} to {after} (asked {delta}, applied {applied}).");
         }
     }
 
@@ -943,6 +1117,7 @@ public unsafe sealed partial class ParryModule
         _runtime.ParryWindowSucceeded = true;
         _runtime.SuccessIndicatorActive = true;
         _runtime.ParriedTextRemainingSeconds = ParriedTextSeconds;
+        _parriedTextSeed = next_label_seed();
         _runtime.ParryMissedTextRemainingSeconds = 0f;
         _runtime.LastParriedTargetMask |= 1u << slotIndex;
 
@@ -974,6 +1149,7 @@ public unsafe sealed partial class ParryModule
         // character via MsBtlSetHitEffect (global-handle path, PC-safe).
         // Default-on; toggleable via the "Parry Effect Visual" setting.
         fire_parry_visual_effect((byte)slotIndex);
+        play_parry_block_motion((byte)slotIndex);
 
         if (closeWindow)
         {
@@ -992,13 +1168,10 @@ public unsafe sealed partial class ParryModule
 
         try
         {
-            // 0x4A is the Sentinel barrier resource ID: a global-handle-resolved
-            // spatial particle (golden ring / shield-of-air). Confirmed PC-safe —
-            // the engine fires this exact call on party actors when an attack lands
-            // on a Sentinel-statused PC (forensic ref: FUN_0079E530).
-            // Alternative: 0x48 (Shield status) gives a similar but subtler
-            // blue-dome variant.
-            const int ParrySuccessEffectId = 0x4A;
+            // Effect id chosen by eye in the in-battle FX lab (defensive-barrier family,
+            // forensic ref: FUN_0079E530 / op_et_eff). 0x4B reads cleanest as a parry.
+            // Neighbours: 0x4A Sentinel barrier, 0x48 Shield, 0x49 (the other family members).
+            const int ParrySuccessEffectId = 0x4B;
 
             FhUtil.get_fptr<MsBtlSetHitEffectProbe>(
                 ExternalMemoryOffsetMap.Functions.MsBtlSetHitEffect)(slotIndex, 0, ParrySuccessEffectId, 1);
@@ -1013,6 +1186,51 @@ public unsafe sealed partial class ParryModule
             // Defensive: never let a visual-effect failure interrupt the parry
             // resolution path. Log and move on.
             log_debug($"[ParryEffect] Failed to fire visual effect: {ex.Message}");
+        }
+    }
+
+    // Animated parry feedback: play the short "block" reaction (motion 0x43) on the parrying
+    // character. 0x43 is a brief one-shot that returns to idle on its own — unlike the 0x3C/0x3D
+    // guard brace, which holds until another motion is set — so it reads cleanly as a parry beat.
+    // Gated by the same "Parry Effect Visual" setting as the barrier visual.
+    private void play_parry_block_motion(byte slotIndex)
+    {
+        if (!_optionParryEffect)
+        {
+            return;
+        }
+
+        // The native block path (guard flag + orig MsDamageSetMotion) only plays 0x43 when
+        // MsDamageSetMotion actually runs. A parry resolved at MsSetDamageInternal returns early
+        // and MsDamageSetMotion — which the engine calls from inside it — never fires, so nothing
+        // plays. Stand down only if the native path already played the block for this slot within
+        // the last few frames; otherwise poke it manually. Exactly one driver per hit, so the old
+        // double-drive "twitch" cannot come back.
+        if (parry_block_recently_played(slotIndex))
+        {
+            return;
+        }
+
+        try
+        {
+            const int ParryBlockMotionId = 0x43; // chosen by eye in the FX/Motion lab
+            FhUtil.get_fptr<MsSetMotionProbe>(
+                ExternalMemoryOffsetMap.Functions.MsSetMotion)(slotIndex, ParryBlockMotionId, 0, 0, 1, 0, 0);
+
+            if (slotIndex < PartyActorCapacity)
+            {
+                _motionPlayFrame[slotIndex] = _debugFrameIndex;       // MsEffectEndMotion duration probe
+                _parryBlockPlayedFrame[slotIndex] = _debugFrameIndex; // stand-down marker for the native path
+            }
+
+            if (_optionLogging)
+            {
+                log_debug($"[ParryEffect] Played block motion 0x{ParryBlockMotionId:X2} on {format_actor_slot(slotIndex)}.");
+            }
+        }
+        catch (Exception ex)
+        {
+            log_debug($"[ParryEffect] Failed to play block motion: {ex.Message}");
         }
     }
 

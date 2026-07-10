@@ -92,6 +92,29 @@ public unsafe sealed partial class ParryModule : FhModule
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate void MsBtlSetHitEffectProbe(byte chr_id, int p1, int effect_id, int p3);
 
+    // MsSetMotion — battler motion setter. Safe call shape (engine's own Defend code):
+    // MsSetMotion(slot, motion_id, 0, 0, 1, 0, 0). Used by the FX/Motion lab to preview poses.
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate int MsSetMotionProbe(int slot, int motion_id, int chr_id, byte p4, int p5, int p6, int p7);
+
+    // MsSetChrVisible(slot, visible) — re-show a battler model hidden by a status/death effect.
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate void MsSetChrVisibleProbe(int slot, int visible);
+
+    // MsResetBindEffect(slot) — engine's per-character effect reset (used in MsBtlChrFree).
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate void MsResetBindEffectProbe(byte slot);
+
+    // MsLimitUp(chr_id, chr, amount) — native overdrive charge. Returns the amount actually
+    // applied (after Double/Triple-Overdrive and aura multipliers). See ExternalMemoryOffsetMap.
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate uint MsLimitUpProbe(uint chr_id, Chr* chr, uint amount);
+
+    // MsEffectEndMotion(chr_id, mode) — engine's "battler motion finished" handler. Hooked
+    // observe-only to measure played-motion durations (animation-driven-timing research).
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate void MsEffectEndMotionProbe(uint chr_id, int mode);
+
     // MsInsertBtlCommand — engine call to queue a battle command for a chr to
     // execute as the next available action. Used directly (no hook) by the
     // streak counter-attack feature to inject a basic Attack from the parrier
@@ -260,9 +283,12 @@ public unsafe sealed partial class ParryModule : FhModule
 #else
         false;
 #endif
-    private bool _optionParryStateHud = true;
+    private bool _optionParryStateHud = false;
     private bool _optionOverdriveBoost = true;
-    private bool _optionNegateDamage = true;
+    // Not a toggle: damage negation IS the mod. With it off a successful parry does nothing,
+    // which is what the "enabled" master switch is for. Kept as a named constant so the guard
+    // sites keep documenting where negation applies.
+    private const bool _optionNegateDamage = true;
     // Enables the animation-approximated whiff recovery lockout. When disabled, a
     // whiffed window transitions straight back to Ready with no commitment penalty.
     // Persisted as "penalty" for settings backward compatibility; see
@@ -277,6 +303,9 @@ public unsafe sealed partial class ParryModule : FhModule
     //
     // No production hook currently emits probe events. The wiring is in place
     // ahead of Stage-1 observe probes per the KB probe plan.
+    // NOTE: leave OFF by default. Enabling this installs 7 additional Stage-1 native probe hooks
+    // (install_stage1_probes) that are a separate research feature and crash at battle start when
+    // untested. Camera/overlay debugging does NOT need this — use _optionCameraProbe + logging.
     private bool _optionNativeProbeLogging = false;
     // Controls which turns trigger battle-camera suppression. EnemyTurnsOnly (default)
     // preserves the prior bool-true behaviour. AllTurns extends suppression to all
@@ -289,6 +318,11 @@ public unsafe sealed partial class ParryModule : FhModule
         AllTurns = 2,
     }
     private BattleCameraLockMode _optionBattleCameraLockMode = BattleCameraLockMode.EnemyTurnsOnly;
+    // Splits MsAtelRequestMagicCamera out of the Battle Camera Lock so it can be switched off on
+    // its own. Enemy spell casts route their camera through that function; suppressing it without
+    // calling orig is suspected of also swallowing the spell VFX. Default true keeps the previous
+    // behaviour, so this is a measurement switch, not a fix.
+    private bool _optionMagicCameraLock = true;
     // Visual feedback effect on a successful parry: fires the Sentinel barrier
     // visual (effect 0x4A — golden ring / shield-of-air spatial particle) on
     // the parrying character via the global-handle emitter MsBtlSetHitEffect
@@ -311,10 +345,9 @@ public unsafe sealed partial class ParryModule : FhModule
     // cached the HIT enum integer value (auto-discovered via observation; see
     // _checkHitObserved*).
     //
-    // This is the prep step for the upcoming manual-dodge system that will replace
-    // native evasion. Default-off until the dodge mechanic ships and the HIT/MISS
-    // enum integers have been observed in-game.
-    private bool _optionDisableNativeEvasion = false;
+    // Native PC evasion is unconditionally disabled by h_ms_dmg_calc_check_hit — the manual dodge
+    // system replaced it, and a PC that evades natively never reaches our impact path. There is
+    // deliberately no toggle: turning it back on is a bug state, not a game mode.
     // Counter for suppressed camera requests, reset on mode change — surfaced
     // in debug logging only when both _optionLogging and _optionBattleCameraLockMode
     // is not Off, to avoid log spam in release builds.
@@ -338,6 +371,95 @@ public unsafe sealed partial class ParryModule : FhModule
     private int? _checkHitFirstObservedValue = null;
     private long _checkHitOverrideCount = 0;
     private long _checkHitObservationCount = 0;
+    // ── Dodge / native-evade (Circle ○) ─────────────────────────────────────
+    // Reactive dodge on Circle: on press, the step-out MOVEMENT starts immediately for each
+    // targeted PC — we call the engine's own case-1 evade (MsDamageSetMotion param_2=1 → avoid
+    // move-mode ram.field_0x425 via FUN_0078f090 → positional step-back + motion 0xC). A cue-based
+    // window is armed at the same time; if a hit from that attacker lands while the window is
+    // valid, the MsDamageSetMotion hook NEGATES the damage + suppresses the flinch (the movement
+    // already plays, so no second trigger). Attacker-keyed → AoE. Never feeds the streak/counter
+    // path (no counterattack). The engine drives the return/walk-back.
+    private bool _optionDodgeEnabled = true;
+    private bool _dodgeWindowActive = false;
+    private float _dodgeWindowRemainingSeconds = 0f;
+    private byte _dodgeArmedAttackerId = 0;
+    // CueFirstSeenFrame of the attack the dodge was armed for — the negation only applies to THIS
+    // attack instance, so a multi-hit of the same attack is fully dodged but a fresh attack from
+    // the same attacker landing in the still-open window is NOT auto-dodged without a new press.
+    private ulong _dodgeArmedCueFrame = 0;
+    // Slots that have resolved as evaded for the current cue. The dodge equivalent of the parry's
+    // LastParriedTargetMask: durable, survives the wall-clock window and any cue mutation, and is
+    // cleared only at cue end. Gates BOTH MsSetDamageInternal commit passes (p5=0 and p5=1024), so
+    // a delayed-finalization attack cannot land HP, death or status after the window closed. Kept
+    // separate from _parryResolvedAtImpactMask so no "PARRIED" text is drawn over the "DODGE" text.
+    private uint _dodgeResolvedAtImpactMask = 0;
+    // Slots whose dodge landed inside the (tighter) parry window — "PERFECT" instead of "DODGE",
+    // plus the same overdrive boost a parry grants. Decided at impact, because the durable dodge
+    // marker lets the damage commit arrive long after the wall-clock window has closed. Lives with
+    // the label (cleared when the DODGE/PERFECT text expires), not with the cue.
+    private uint _dodgeTextPerfectMask = 0;
+    private long _dodgeEvadeCount = 0;
+    // Step-out driven minimally: the avoid move-mode byte (Chr+0x425, what FUN_0078f090 sets)
+    // + the evade animation (motion 0xC). Deliberately NOT via MsDamageSetMotion, whose case 1
+    // also sets the hit-terminate flag field_0x433 — read by battle-update logic and, poked
+    // out-of-band during a multi-phase cast chargeup, it desyncs the enemy action → soft-lock.
+    private const int ChrEvadeMoveModeOffset = 0x425;
+    // Move PHASE byte (Chr+0x415, from the evade-probe log): 0x09 = stepping out, 0x01 = walking
+    // back, 0x00 = idle/home. Used to pace re-presses to the actual move duration.
+    private const int ChrEvadeMovePhaseOffset = 0x415;
+    // Last-attacker id (Chr+0xdef). MsDamageSetMotion's case 1 refreshes it from chr->attacker_id_
+    // right before playing motion 0xC; the motion's battle-ATEL script reads it to orient the
+    // step-out away from that attacker. Never read from C code — only written there.
+    private const int ChrLastAttackerIdOffset = 0xdef;
+    private const int EvadeMotionId = 0xC;
+    private const float DodgeWindowMsNormal = 350f;   // release default (parry Normal = 200ms)
+    private const float DodgeWindowMsDebug  = 800f;    // DEBUG default — generous for testing
+    private const float DodgeWindowMsMin = 100f;
+    private const float DodgeWindowMsMax = 1200f;
+    // Adjustable at runtime via the "dodge_window" setting (slider, persisted). Defaults to the
+    // DEBUG window in DEBUG builds, the normal window otherwise.
+    private float _dodgeWindowMs =
+#if DEBUG
+        DodgeWindowMsDebug;
+#else
+        DodgeWindowMsNormal;
+#endif
+    private float DodgeWindowSeconds => _dodgeWindowMs / 1000f;
+    // Dodge whiffout: a short recovery after a step-out before the next one is allowed — paces
+    // multi-press. Adjustable via the "dodge_whiffout" setting (0 = no cooldown).
+    private const float DodgeWhiffoutMsMin = 0f;
+    private const float DodgeWhiffoutMsMax = 2000f;
+    private float _dodgeWhiffoutMs = 0f;
+    private float _dodgeWhiffoutRemainingSeconds = 0f;
+    // "DODGE" success text overlay (mirrors the parry "PARRIED" overlay), per targeted slot.
+    private float _dodgeTextRemainingSeconds = 0f;
+    private uint _dodgeTextTargetMask = 0;
+    // Per-appearance random seed so each DODGE/PARRIED label's entry (skew/rotation/scale) varies a
+    // little — FFX has no camera shake to add life, so the label supplies its own subtle variety.
+    private static readonly Random _labelRng = new();
+    private float _dodgeTextSeed = 0f;
+    private float _parriedTextSeed = 0f;
+    private float next_label_seed() => (float)_labelRng.NextDouble() * 1000f;
+    // Debug probe: logs Chr+0x415/0x425/0x4AC (move-mode/avoid/motion-type) + world position for
+    // the stepped-out slot(s) for a short window after a step-out — to find the move distance/mode.
+    private uint _dodgeProbeSlotsMask = 0;
+    private int _dodgeProbeFramesLeft = 0;
+    // Native parry block (A): flag the parrying char as guarding (ChrRam+0x19A) so the engine's
+    // MsDamageSetMotion plays the block reaction 0x43 itself at the real impact — the same field
+    // it sets for Sentinel/Defend. When off, falls back to the manual MsSetMotion(0x43) poke.
+    private bool _optionParryNativeBlock = true;
+    // Camera probe (debug): logs EVERY camera hook invocation + the lock-gating state (not just
+    // when suppressed) so an un-locked enemy camera pan reveals which path fired and why the lock
+    // did not engage (turn/attacker gating). Toggle via the "camera_probe" setting.
+    private bool _optionCameraProbe =
+#if DEBUG
+        true;
+#else
+        false;
+#endif
+    // Guard/defend reaction flag, relative to the ChrRam sub-struct (Chr.ram). Set to 1 →
+    // MsDamageSetMotion overrides flinch reactions 9/0x30 to the block motion 0x43.
+    private const int ChrRamGuardReactFlagOffset = 0x19A;
     private bool _optionDebugOverlay =
 #if DEBUG
         true;
@@ -444,6 +566,23 @@ public unsafe sealed partial class ParryModule : FhModule
     private readonly FhMethodHandle<MsAtelRequestMagicCameraProbe> _hMsAtelRequestMagicCamera;
     private readonly FhMethodHandle<MsBattleSpecialCameraPauseProbe> _hMsBattleSpecialCameraPause;
     private readonly FhMethodHandle<MsDmgCalcCheckHitProbe> _hMsDmgCalcCheckHit;
+    private readonly FhMethodHandle<MsEffectEndMotionProbe> _hMsEffectEndMotion;
+    // Frame a motion was last played per party slot (lab Play / parry block), 0 = none.
+    // Read by the observe-only MsEffectEndMotion hook to log the motion's run length.
+    private readonly ulong[] _motionPlayFrame = new ulong[PartyActorCapacity];
+
+    // Frame the parry block reaction (0x43) was last played on a slot, by EITHER the native path
+    // (guard flag + orig MsDamageSetMotion) or the manual MsSetMotion poke. Whichever runs first
+    // stamps it; the other then stands down. That keeps exactly one driver per hit — the
+    // double-drive was the old "parry twitch" — while guaranteeing the block always plays, even
+    // for parries resolved at MsSetDamageInternal (which never reach MsDamageSetMotion at all).
+    private readonly ulong[] _parryBlockPlayedFrame = new ulong[PartyActorCapacity];
+    private const ulong ParryBlockRecentFrames = 3;
+
+    private bool parry_block_recently_played(int slot)
+        => (uint)slot < PartyActorCapacity
+           && _parryBlockPlayedFrame[slot] != 0
+           && _debugFrameIndex - _parryBlockPlayedFrame[slot] <= ParryBlockRecentFrames;
 
     public ParryModule()
     {
@@ -460,6 +599,7 @@ public unsafe sealed partial class ParryModule : FhModule
         _hMsBattleSpecialCameraPause = new FhMethodHandle<MsBattleSpecialCameraPauseProbe>(
             this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsBattleSpecialCameraPause, h_ms_battle_special_camera_pause);
         _hMsDmgCalcCheckHit = new FhMethodHandle<MsDmgCalcCheckHitProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsDmgCalcCheckHit, h_ms_dmg_calc_check_hit); // MsDmgCalc_CheckHit — accuracy/evasion roll; intercepted to disable native evasion for real PCs
+        _hMsEffectEndMotion = new FhMethodHandle<MsEffectEndMotionProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsEffectEndMotion, h_ms_effect_end_motion); // observe-only: measure played-motion durations
 
         _hStartupAtelEventSetUp    = new FhMethodHandle<StartupAtelEventSetUp>(this, "FFX.exe", StartupOffsets.AtelEventSetUp, h_startup_event_setup);
         _hStartupNeedShowJapanLogo = new FhMethodHandle<StartupNeedShowJapanLogo>(this, "FFX.exe", StartupOffsets.NeedShowJapanLogo, h_startup_need_show_japan_logo);
@@ -470,25 +610,32 @@ public unsafe sealed partial class ParryModule : FhModule
             new FhSettingCustomRenderer("enabled", render_setting_enabled),
             new FhSettingCustomRenderer("difficulty", render_setting_difficulty),
             new FhSettingCustomRenderer("audio", render_setting_audio),
-            new FhSettingCustomRenderer("parry_state_hud", render_setting_parry_state_hud),
             new FhSettingCustomRenderer("ctb", render_setting_overdrive_boost),
-            new FhSettingCustomRenderer("logging", render_setting_logging),
-            new FhSettingCustomRenderer("debug_overlay", render_setting_debug_overlay),
-            new FhSettingCustomRenderer("negate", render_setting_negate),
             new FhSettingCustomRenderer("penalty", render_setting_penalty),
             new FhSettingCustomRenderer("battle_camera_lock_mode", render_setting_battle_camera_lock_mode),
+            new FhSettingCustomRenderer("magic_camera_lock", render_setting_magic_camera_lock),
             new FhSettingCustomRenderer("parry_effect", render_setting_parry_effect),
             new FhSettingCustomRenderer("streak_counter", render_setting_streak_counter),
-            new FhSettingCustomRenderer("disable_native_evasion", render_setting_disable_native_evasion),
+            new FhSettingCustomRenderer("dodge_window", render_setting_dodge_window),
+            new FhSettingCustomRenderer("dodge_whiffout", render_setting_dodge_whiffout),
+#if DEBUG
+            // Diagnostics — not shipped. Release builds have no UI for these.
+            new FhSettingCustomRenderer("parry_state_hud", render_setting_parry_state_hud),
+            new FhSettingCustomRenderer("logging", render_setting_logging),
+            new FhSettingCustomRenderer("debug_overlay", render_setting_debug_overlay),
+            new FhSettingCustomRenderer("camera_probe", render_setting_camera_probe),
+#endif
             new FhSettingCustomRenderer("future", render_setting_future)
         ]);
     }
 
     public override bool init(FhModContext mod_context, FileStream global_state_file)
     {
-        _settingsFilePath = mod_context.Paths.SettingsPath;
+        _settingsFilePath = resolve_settings_path(mod_context, global_state_file);
+        _logger.Info($"[Parry] Settings file resolved to '{_settingsFilePath}'.");
         load_persistent_settings();
         initialize_session_logging(mod_context);
+        initialize_motion_blocklist();
         _audioResourcesDir = Path.Combine(mod_context.Paths.ResourcesDir.FullName, "audio");
         _fontResourcesDir = Path.Combine(mod_context.Paths.ResourcesDir.FullName, "fonts");
         initialize_overlay_fonts();
@@ -590,6 +737,15 @@ public unsafe sealed partial class ParryModule : FhModule
 
         try
         {
+            _hMsEffectEndMotion.hook();
+        }
+        catch (Exception ex)
+        {
+            _logger.Warning($"[Parry] Could not hook MsEffectEndMotion (motion-duration observe unavailable): {ex.Message}");
+        }
+
+        try
+        {
             _hMsDmgCalcCheckHit.hook();
         }
         catch (Exception ex)
@@ -615,6 +771,8 @@ public unsafe sealed partial class ParryModule : FhModule
 
         update_debug_save_loaded_state();
         update_debug_battle_session_state();
+        tick_evade_probe();
+
         if (_optionDebugOverlay || _optionLogging)
         {
             monitor_cue_transitions();
@@ -635,6 +793,11 @@ public unsafe sealed partial class ParryModule : FhModule
         if (FhApi.Input.r1.just_pressed)
         {
             handle_parry_input_press(parryInput);
+        }
+
+        if (_optionDodgeEnabled && FhApi.Input.cancel.just_pressed)   // cancel = Circle (○)
+        {
+            handle_dodge_input_press(parryInput);
         }
 
         // Poll damage after input so the open window set by the press is visible.
@@ -665,6 +828,38 @@ public unsafe sealed partial class ParryModule : FhModule
             }
         }
 
+        // Dodge window tick (independent of the parry state machine). Expires by time; a
+        // successful dodge is not "consumed" so a multi-hit / AoE swing is fully evaded.
+        if (_dodgeWindowActive)
+        {
+            _dodgeWindowRemainingSeconds -= deltaSeconds;
+            if (_dodgeWindowRemainingSeconds <= 0f)
+            {
+                _dodgeWindowActive = false;
+                if (_optionLogging)
+                {
+                    log_debug("[Dodge] Window expired without a hit.");
+                }
+            }
+        }
+
+        if (_dodgeWhiffoutRemainingSeconds > 0f)
+        {
+            _dodgeWhiffoutRemainingSeconds = MathF.Max(0f, _dodgeWhiffoutRemainingSeconds - deltaSeconds);
+        }
+
+        if (_dodgeTextRemainingSeconds > 0f)
+        {
+            _dodgeTextRemainingSeconds = MathF.Max(0f, _dodgeTextRemainingSeconds - deltaSeconds);
+            if (_dodgeTextRemainingSeconds <= 0f)
+            {
+                _dodgeTextTargetMask = 0;
+                _dodgeTextPerfectMask = 0;
+            }
+        }
+
+        tick_dodge_field_probe();
+
         // Cue-cleared cleanup must run regardless of window state. If the cue disappears while
         // the window is still open (e.g., attack animation completed without a damage event),
         // clear_awaiting_turn_end also closes the window to prevent it staying open permanently.
@@ -686,6 +881,7 @@ public unsafe sealed partial class ParryModule : FhModule
     {
         render_parry_state_hud();
         render_parry_window_overlay();
+        render_dodge_overlay();
         render_debug_overlay();
     }
 
@@ -714,6 +910,11 @@ public unsafe sealed partial class ParryModule : FhModule
         _runtime.WindowOpenFrame = 0;
         _runtime.WindowOpenTimestampSeconds = 0f;
         _runtime.WindowDurationSecondsAtOpen = 0f;
+        _dodgeWindowActive = false;
+        _dodgeWindowRemainingSeconds = 0f;
+        _dodgeArmedAttackerId = 0;
+        _dodgeArmedCueFrame = 0;
+        _dodgeResolvedAtImpactMask = 0;
         _impactCorrelationMatchedCount = 0;
         _impactCorrelationRejectedCount = 0;
         _impactCorrelationLastRejectReason = "None";

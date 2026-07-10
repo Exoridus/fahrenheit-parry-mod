@@ -600,6 +600,275 @@ public unsafe sealed partial class ParryModule
         return false;
     }
 
+    // ── FX / Motion Lab (debug, in-battle ID browser) ─────────────────────────
+    // Step through hit-effect ids and motion ids live and watch them on a chosen
+    // battler, so the right parry/guard/dodge visual is picked by eye. Effect =
+    // MsBtlSetHitEffect (the same safe call the parry success visual uses). Motion =
+    // MsSetMotion(slot, id, 0,0,1,0,0) — the exact crash-safe shape the engine's own
+    // Defend code (MsDefenseStartProcess) uses.
+    //
+    // NOTE: there is intentionally NO effect "Stop"/auto-off. MsEtEffectStop frees the
+    // effect batch WITHOUT re-initialising it (op_et_battle_effect_init / MsEtEffectSet),
+    // after which the next MsBtlSetHitEffect operates on a freed batch and crashes the
+    // game. Hit effects despawn on their own; a real stop would need the Free+Init pair.
+    private int  _labTargetSlot;
+    private int  _labEffectId = 0x4B;  // current parry-visual favourite
+    private int  _labMotionId = 0x3C;  // 0x3C/0x3D = guard brace, 0x34 = covered (engine Defend poses)
+
+    // Crash-safe motion browsing: before each MsSetMotion we persist the id and flush to disk.
+    // If that call crashes the game, the pending file survives; on next launch the id is moved
+    // to the persistent blocklist (_motionBlocklist) and skipped from then on.
+    private readonly HashSet<int> _motionBlocklist = [];
+    private string _motionPendingPath = string.Empty;
+    private string _motionBlocklistPath = string.Empty;
+    private bool   _motionBlocklistReady;
+
+    // Evade probe (read-only): logs a party battler's move/avoid state transitions so a native
+    // evade reveals the engine's real move-mode (back-hop vs. walk-back) — see tick_evade_probe.
+    private bool _labEvadeProbe;
+    // Party AND enemy slots: an attacker's post-attack "walk home" (move_mode 1) is what returns
+    // it to its slot, so we must observe enemy move-modes too (e.g. a lunging dog left displaced
+    // after a successful dodge).
+    private readonly ulong[] _evadeProbePrev = new ulong[PartyActorCapacity + EnemyActorCapacity];
+
+    // Quick-picks (confirmed-safe in testing). Stepping with -/+ fires as you go and can
+    // still reach an unloaded effect id, which crashes natively — that risk is on the user.
+    private static readonly int[] LabEffectQuickPicks = [0x4A, 0x4B];
+
+    private void render_fx_motion_lab()
+    {
+        if (!ImGui.CollapsingHeader("FX / Motion Lab (parry visual + animation browser)")) return;
+
+        ImGui.Text($"Target: {lab_slot_label(_labTargetSlot)}");
+        ImGui.SameLine(); if (ImGui.Button("<##labslot")) _labTargetSlot = lab_step_slot(-1);
+        ImGui.SameLine(); if (ImGui.Button(">##labslot")) _labTargetSlot = lab_step_slot(+1);
+        ImGui.SameLine(); if (ImGui.Button("Restore char##labslot")) lab_restore_char(); // re-show a model a status/death effect hid (experimental)
+        ImGui.SameLine(); if (ImGui.Button("Clear FX##labslot")) lab_clear_char_fx();    // per-char effect reset, like the engine's own teardown (experimental)
+
+        ImGui.Separator();
+        ImGui.Text($"Hit effect: 0x{_labEffectId:X2}");
+        ImGui.SameLine(); if (ImGui.Button("-##labfx")) { _labEffectId = Math.Max(0x00, _labEffectId - 1); lab_fire_effect(); }
+        ImGui.SameLine(); if (ImGui.Button("+##labfx")) { _labEffectId = Math.Min(0xFF, _labEffectId + 1); lab_fire_effect(); }
+        ImGui.SameLine(); if (ImGui.Button("Fire##labfx")) lab_fire_effect();
+        foreach (int pick in LabEffectQuickPicks)
+        {
+            ImGui.SameLine();
+            if (ImGui.Button($"0x{pick:X2}##labfx{pick}")) { _labEffectId = pick; lab_fire_effect(); }
+        }
+        ImGui.Text("quick-picks 0x4A 0x4B.  WARNING: -/+ fire as you step; an unloaded id crashes natively (uncatchable).");
+
+        ImGui.Separator();
+        bool motionBlocked = _motionBlocklist.Contains(_labMotionId);
+        ImGui.Text($"Motion id: 0x{_labMotionId:X2}{(motionBlocked ? "  [BLOCKED]" : string.Empty)}");
+        ImGui.SameLine(); if (ImGui.Button("-##labmot")) _labMotionId = Math.Max(0x00, _labMotionId - 1); // step only — Play to fire
+        ImGui.SameLine(); if (ImGui.Button("+##labmot")) _labMotionId = Math.Min(0xFF, _labMotionId + 1);
+        ImGui.SameLine(); if (ImGui.Button("Play##labmot")) lab_play_motion();
+        ImGui.SameLine(); ImGui.Text($"blocklist: {_motionBlocklist.Count}");
+        ImGui.SameLine(); if (ImGui.Button("Clear blocklist##labmot")) { _motionBlocklist.Clear(); save_motion_blocklist(); }
+        ImGui.Text("known: 0x09 magic-hit  0x0C hit  0x1B flinch  0x30 heavy  0x34 covered  0x3C/0x3D guard  0x40 death  0x43 armored  0x4F stone");
+        // Dodge step-back testing. Safe = a motion only (visual, no displacement — the native
+        // evade is positional, so there is no real "dodge motion"; this just plays the chosen id).
+        // The Evade probe (read-only) logs the engine's true move-mode/avoid during a native evade
+        // — turn it on, then let a PC dodge an enemy hit — so the real move-engine back-step can be
+        // built from confirmed values instead of inferred offsets.
+        if (ImGui.Button("Dodge (motion, safe)##labdodge")) lab_play_motion();
+        ImGui.SameLine(); ImGui.Checkbox("Evade probe##labdodge", ref _labEvadeProbe);
+        ImGui.SameLine(); ImGui.Text("real move-engine dodge: deferred until the probe captures the move-mode");
+        ImGui.Text("-/+ steps only; Play fires. A motion that crashes the game is auto-blocklisted on the next launch and then skipped.");
+    }
+
+    // Slot label: resolve the live battler at a slot to its character / monster name.
+    private string lab_slot_label(int slot)
+    {
+        try
+        {
+            Chr* chr = try_get_chr((byte)slot);
+            if (chr == null) return $"slot {slot} (empty)";
+            if (slot < PartyActorCapacity)
+                return try_map_party_chr_id_to_name(chr->chr_id, out string pn) ? $"{pn}  (slot {slot})" : $"party slot {slot}";
+            return try_map_enemy_chr_id_to_name(chr->chr_id, out string en) ? $"{en}  (slot {slot})" : $"enemy slot {slot}";
+        }
+        catch { return $"slot {slot}"; }
+    }
+
+    // Step to the next slot that has a live actor (wraps 0..19); plain step as fallback.
+    private int lab_step_slot(int dir)
+    {
+        for (int i = 1; i <= 20; i++)
+        {
+            int cand = (((_labTargetSlot + dir * i) % 20) + 20) % 20;
+            try { if (try_get_chr((byte)cand) != null) return cand; } catch { /* ignore */ }
+        }
+        return (((_labTargetSlot + dir) % 20) + 20) % 20;
+    }
+
+    private void lab_fire_effect()
+    {
+        try
+        {
+            if (try_get_chr((byte)_labTargetSlot) == null) { log_debug($"[Lab] No live actor at slot {_labTargetSlot}."); return; }
+            FhUtil.get_fptr<MsBtlSetHitEffectProbe>(
+                ExternalMemoryOffsetMap.Functions.MsBtlSetHitEffect)((byte)_labTargetSlot, 0, _labEffectId, 1);
+            log_debug($"[Lab] Fired hit effect 0x{_labEffectId:X2} on slot {_labTargetSlot}.");
+        }
+        catch (Exception ex) { log_debug($"[Lab] Fire effect failed: {ex.Message}"); }
+    }
+
+    // Experimental: re-show a battler model that a status/death effect (e.g. petrify-shatter)
+    // hid, via the engine's own MsSetChrVisible(slot, 1). A focused visibility setter — unlike
+    // the effect-batch free/init, which depends on battle-lifecycle state and crashed.
+    private void lab_restore_char()
+    {
+        try
+        {
+            if (try_get_chr((byte)_labTargetSlot) == null) { log_debug($"[Lab] No live actor at slot {_labTargetSlot}."); return; }
+            FhUtil.get_fptr<MsSetChrVisibleProbe>(
+                ExternalMemoryOffsetMap.Functions.MsSetChrVisible)(_labTargetSlot, 1);
+            log_debug($"[Lab] Restored visibility on slot {_labTargetSlot}.");
+        }
+        catch (Exception ex) { log_debug($"[Lab] Restore char failed: {ex.Message}"); }
+    }
+
+    // Experimental: clear the selected char's active effects via the engine's own per-character
+    // teardown MsResetBindEffect(slot) (the same call MsBtlChrFree uses). Targeted (one char),
+    // not the global op_et_battle_effect_free/init that crashed — worst case is a no-op.
+    private void lab_clear_char_fx()
+    {
+        try
+        {
+            if (try_get_chr((byte)_labTargetSlot) == null) { log_debug($"[Lab] No live actor at slot {_labTargetSlot}."); return; }
+            FhUtil.get_fptr<MsResetBindEffectProbe>(
+                ExternalMemoryOffsetMap.Functions.MsResetBindEffect)((byte)_labTargetSlot);
+            log_debug($"[Lab] Reset bind-effects on slot {_labTargetSlot}.");
+        }
+        catch (Exception ex) { log_debug($"[Lab] Clear FX failed: {ex.Message}"); }
+    }
+
+    private void lab_play_motion()
+    {
+        try
+        {
+            if (_motionBlocklist.Contains(_labMotionId)) { log_debug($"[Lab] Motion 0x{_labMotionId:X2} is blocklisted (crashed before) — skipped."); return; }
+            if (try_get_chr((byte)_labTargetSlot) == null) { log_debug($"[Lab] No live actor at slot {_labTargetSlot}."); return; }
+
+            // Persist + flush the id we're about to set BEFORE the native call. If MsSetMotion
+            // crashes the process, the pending file survives and the id is blocklisted next launch.
+            int attempted = _labMotionId;
+            write_motion_pending(attempted);
+
+            FhUtil.get_fptr<MsSetMotionProbe>(
+                ExternalMemoryOffsetMap.Functions.MsSetMotion)(_labTargetSlot, attempted, 0, 0, 1, 0, 0);
+
+            clear_motion_pending(); // returned without crashing → this id is fine
+            if (_labTargetSlot < PartyActorCapacity) _motionPlayFrame[_labTargetSlot] = _debugFrameIndex; // MsEffectEndMotion duration probe
+            log_debug($"[Lab] Played motion 0x{attempted:X2} on slot {_labTargetSlot}.");
+        }
+        catch (Exception ex) { clear_motion_pending(); log_debug($"[Lab] Play motion failed: {ex.Message}"); }
+    }
+
+    // ── motion crash-recovery blocklist ───────────────────────────────────────
+    // The crash itself is the signal: if MsSetMotion takes down the process, the flushed
+    // pending file is still on disk next launch, so that id is moved to the blocklist.
+    private void initialize_motion_blocklist()
+    {
+        try
+        {
+            string? dir = string.IsNullOrWhiteSpace(_settingsFilePath) ? null : Path.GetDirectoryName(_settingsFilePath);
+            if (string.IsNullOrWhiteSpace(dir)) { _logger.Warning("[Lab] Motion blocklist disabled (no settings dir)."); return; }
+
+            _motionBlocklistPath = Path.Combine(dir, "fhparry-motion-blocklist.txt");
+            _motionPendingPath   = Path.Combine(dir, "fhparry-motion-pending.txt");
+            _motionBlocklistReady = true;
+
+            if (File.Exists(_motionBlocklistPath))
+            {
+                foreach (string line in File.ReadAllLines(_motionBlocklistPath))
+                    if (try_parse_motion_id(line, out int id)) _motionBlocklist.Add(id);
+            }
+
+            // A leftover pending file means the previous MsSetMotion call never returned.
+            if (File.Exists(_motionPendingPath))
+            {
+                string pending = File.ReadAllText(_motionPendingPath).Trim();
+                File.Delete(_motionPendingPath);
+                if (try_parse_motion_id(pending, out int crashedId) && _motionBlocklist.Add(crashedId))
+                {
+                    save_motion_blocklist();
+                    _logger.Info($"[Lab] Motion 0x{crashedId:X2} crashed the game last session — added to the blocklist.");
+                }
+            }
+
+            _logger.Info($"[Lab] Motion blocklist ready ({_motionBlocklist.Count} ids).");
+        }
+        catch (Exception ex) { _logger.Warning($"[Lab] Motion blocklist init failed: {ex.Message}"); }
+    }
+
+    private void save_motion_blocklist()
+    {
+        if (!_motionBlocklistReady) return;
+        try
+        {
+            List<int> ids = [.. _motionBlocklist];
+            ids.Sort();
+            File.WriteAllLines(_motionBlocklistPath, ids.Select(id => $"0x{id:X2}"));
+        }
+        catch (Exception ex) { log_debug($"[Lab] Save motion blocklist failed: {ex.Message}"); }
+    }
+
+    private void write_motion_pending(int id)
+    {
+        if (!_motionBlocklistReady) return;
+        try
+        {
+            using FileStream fs = new(_motionPendingPath, FileMode.Create, FileAccess.Write, FileShare.Read);
+            byte[] bytes = Encoding.ASCII.GetBytes($"0x{id:X2}");
+            fs.Write(bytes, 0, bytes.Length);
+            fs.Flush(true); // flush to disk so the record survives a hard native crash
+        }
+        catch { /* best effort */ }
+    }
+
+    private void clear_motion_pending()
+    {
+        if (!_motionBlocklistReady) return;
+        try { if (File.Exists(_motionPendingPath)) File.Delete(_motionPendingPath); }
+        catch { /* best effort */ }
+    }
+
+    // Observe-only: while the Evade probe is on, poll each party battler's move/avoid state
+    // (Chr+0x4AC motion_type, +0x415 move-mode, +0x425 avoid flag, offsets from the evade-
+    // choreography RE) and log transitions. Captured during a native evade, this reveals the
+    // real move-mode of the back-hop vs. the walk-back (mode 1) — the data needed to build a
+    // true move-engine dodge from confirmed values. Reads only; never writes.
+    private void tick_evade_probe()
+    {
+        if (!_labEvadeProbe) return;
+        for (byte slot = 0; slot < PartyActorCapacity + EnemyActorCapacity; slot++)
+        {
+            Chr* chr = try_get_chr(slot);
+            if (chr == null) { _evadeProbePrev[slot] = 0; continue; }
+
+            uint motionType = *(uint*)((byte*)chr + 0x4AC);
+            byte moveMode = (byte)(*((byte*)chr + 0x415) & 0x7F);
+            byte avoid = *((byte*)chr + 0x425);
+
+            ulong key = ((ulong)moveMode << 8) | avoid;
+            if (key == _evadeProbePrev[slot]) continue;
+            _evadeProbePrev[slot] = key;
+
+            if (moveMode != 0 || avoid != 0)
+                log_debug($"[EvadeProbe] {format_actor_slot(slot)} move_mode=0x{moveMode:X2} avoid=0x{avoid:X2} motion_type=0x{motionType:X4}");
+        }
+    }
+
+    private static bool try_parse_motion_id(string s, out int id)
+    {
+        s = s.Trim();
+        if (s.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
+            return int.TryParse(s.AsSpan(2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out id);
+        return int.TryParse(s, NumberStyles.Integer, CultureInfo.InvariantCulture, out id);
+    }
+
     private void render_debug_overlay()
     {
         if (!_optionDebugOverlay) return;
@@ -618,6 +887,7 @@ public unsafe sealed partial class ParryModule
             | ImGuiWindowFlags.NoNavFocus;
         if (ImGui.Begin("Parry Debug Overlay###fhparry.debug.overlay", overlayFlags))
         {
+            render_fx_motion_lab();
             render_debug_activity_panels(MathF.Max(0f, ImGui.GetContentRegionAvail().Y));
         }
 

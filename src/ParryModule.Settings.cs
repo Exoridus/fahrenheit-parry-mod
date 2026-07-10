@@ -44,14 +44,6 @@ public unsafe sealed partial class ParryModule
         }
     }
 
-    private void render_setting_negate()
-    {
-        if (ImGui.Checkbox("##fhparry.negate", ref _optionNegateDamage))
-        {
-            persist_settings();
-        }
-    }
-
     private void render_setting_penalty()
     {
         if (ImGui.Checkbox("##fhparry.penalty", ref _optionWhiffLockout))
@@ -108,6 +100,16 @@ public unsafe sealed partial class ParryModule
         ImGui.TextDisabled("Cinematic cameras (boss / summon / overdrive) are never blocked.");
     }
 
+    private void render_setting_magic_camera_lock()
+    {
+        if (ImGui.Checkbox("##fhparry.magic_camera_lock", ref _optionMagicCameraLock))
+        {
+            persist_settings();
+            _enemyMagicCameraLockSuppressCount = 0;
+            log_debug($"Magic camera lock = {_optionMagicCameraLock}.");
+        }
+    }
+
     private void render_setting_parry_effect()
     {
         if (ImGui.Checkbox("##fhparry.parry_effect", ref _optionParryEffect))
@@ -159,13 +161,32 @@ public unsafe sealed partial class ParryModule
         }
     }
 
-    private void render_setting_disable_native_evasion()
+    private void render_setting_dodge_window()
     {
-        if (ImGui.Checkbox("##fhparry.disable_native_evasion", ref _optionDisableNativeEvasion))
+        if (ImGui.SliderFloat("##fhparry.dodge_window", ref _dodgeWindowMs, DodgeWindowMsMin, DodgeWindowMsMax, "%.0f ms"))
+        {
+            _dodgeWindowMs = Math.Clamp(_dodgeWindowMs, DodgeWindowMsMin, DodgeWindowMsMax);
+            persist_settings();
+            log_debug($"Dodge window set to {_dodgeWindowMs:F0} ms.");
+        }
+    }
+
+    private void render_setting_dodge_whiffout()
+    {
+        if (ImGui.SliderFloat("##fhparry.dodge_whiffout", ref _dodgeWhiffoutMs, DodgeWhiffoutMsMin, DodgeWhiffoutMsMax, "%.0f ms"))
+        {
+            _dodgeWhiffoutMs = Math.Clamp(_dodgeWhiffoutMs, DodgeWhiffoutMsMin, DodgeWhiffoutMsMax);
+            persist_settings();
+            log_debug($"Dodge whiffout set to {_dodgeWhiffoutMs:F0} ms.");
+        }
+    }
+
+    private void render_setting_camera_probe()
+    {
+        if (ImGui.Checkbox("##fhparry.camera_probe", ref _optionCameraProbe))
         {
             persist_settings();
-            string state = _optionDisableNativeEvasion ? "enabled" : "disabled";
-            log_debug($"Disable native evasion {state}. (Override: HIT={(_checkHitHitValue?.ToString() ?? "auto")}, MISS={(_checkHitMissValue?.ToString() ?? "auto")})");
+            log_debug($"Camera probe {(_optionCameraProbe ? "enabled" : "disabled")}.");
         }
     }
 

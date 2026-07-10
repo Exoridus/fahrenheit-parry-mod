@@ -63,6 +63,24 @@ public static partial class ExternalMemoryOffsetMap
         // suppress Pause, Free becomes a no-op naturally — no soft-lock risk.
         public const int MsBattleSpecialCameraPause = 0x0039ddd0;
 
+        // DO NOT skip-orig FUN_007be090 (FFX.exe+0x3BE090) to hold the camera. It is not the
+        // renderer apply — it is the camera op-queue interpreter + per-frame interpolator. The
+        // renderer rebuilds its view matrix in FUN_007bc090 (0x7bc090) from the slot fields
+        // regardless, so skipping the interpreter leaves half-interpolated dir/up vectors (=
+        // camera angles that cannot occur in normal play) and stalls the op queue, which then
+        // drains in a single frame and snaps. The engine's own freeze path is MsSetCameraMatrix
+        // (0x7c0650): it sets ms_matrix_flag, FUN_007bc090 then skips the rebuild and the
+        // interpreter writes its slot fields back from the same preset — both stay coherent.
+
+        // MsLimitUp at FFX.exe+0x3B15A0 (absolute 0x007B15A0) — the engine's overdrive charge
+        // primitive, and the only correct way to add gauge. Signature (decomp L863356):
+        //   uint MsLimitUp(uint chr_id, Chr* chr, uint amount)  __cdecl, returns the applied amount
+        // Writes Chr+0x5BC, clamps against Chr+0x5BD, early-returns on btl.debug.never_charge_
+        // overdrive, and applies the Double/Triple-Overdrive and aura multipliers internally
+        // (L863374-863405). A raw write to limit_charge bypasses all of that.
+        // NOTE: Fahrenheit's generated `void MsLimitUp()` (call.g.cs) has the wrong arity.
+        public const int MsLimitUp = 0x003b15a0;
+
         // MsAtelRequestMagicCamera at FFX.exe+0x398010 (absolute 0x00798010) — sibling
         // of MsAtelRequestCamera, called from 6 sites during magic spell casts to
         // request the spell-specific camera animation. Bypasses MsAtelRequestCamera
@@ -92,6 +110,39 @@ public static partial class ExternalMemoryOffsetMap
         // Used to fire the Sentinel barrier visual (effect 0x4A) on the parrying
         // character on a successful parry.
         public const int MsBtlSetHitEffect = 0x0039ec60;
+
+        // MsSetMotion — FUN_007ab380 at FFX.exe+0x3AB380 (Ghidra VA 0x007ab380). The
+        // engine's battler motion setter. Signature (cdecl):
+        //   undefined4 MsSetMotion(int slot, int motion_id, int chr_id, byte p4,
+        //                          int p5, int p6, int p7)
+        // Engine's own Defend code (MsDefenseStartProcess) calls it as
+        //   MsSetMotion(slot, 0x3C|statusbit, 0, 0, 1, 0, 0)   // 0x3C/0x3D = guard brace
+        //   MsSetMotion(slot, 0x34,           0, 0, 1, 0, 0)   // 0x34     = covered pose
+        // i.e. the last two args are 0 (no context / no out-ptr) — that exact pattern is
+        // the safe call shape used by the FX/Motion lab to preview arbitrary motion ids.
+        public const int MsSetMotion = 0x003ab380;
+
+        // MsSetChrVisible — FUN_00796670 at FFX.exe+0x396670 (Ghidra VA 0x00796670).
+        // Dedicated battler-visibility setter: void MsSetChrVisible(int slot, int visible)
+        // (thin wrapper over FUN_00797090(slot, 2, visible)). Engine usage shows (slot, 0)
+        // to hide and (slot, flag) to show. Used by the FX lab's experimental "Restore char"
+        // button to re-show a model that a status/death effect (e.g. petrify-shatter) hid.
+        public const int MsSetChrVisible = 0x00396670;
+
+        // MsResetBindEffect — FUN_00788f20 at FFX.exe+0x388F20 (Ghidra VA 0x00788f20).
+        // Per-character effect reset: void MsResetBindEffect(byte slot). Clears the slot's
+        // own effect object (field_0x1f=0; Ch_EffectSetEffectLevel(obj,0); op_et_bindeff_off_signal).
+        // This is the engine's own per-char teardown (called from MsBtlChrFree) — a TARGETED
+        // clear, unlike the global op_et_battle_effect_free/init (MsEtEffectStop/Set) that
+        // depends on battle-lifecycle state and crashed. Worst case here is a no-op, not a crash.
+        public const int MsResetBindEffect = 0x00388f20;
+
+        // MsEffectEndMotion — FUN_00787a10 at FFX.exe+0x387A10 (Ghidra VA 0x00787a10).
+        // The engine's "a battler's motion just finished" handler: void(uint chr_id, int mode).
+        // Hooked observe-only (call orig + log) to measure how long a played motion runs — the
+        // data we need to decide whether the parry window / whiff recovery should be driven by
+        // the real animation length instead of the static FINAL_PARRY_SPEC windows.
+        public const int MsEffectEndMotion = 0x00387a10;
 
         // MsInsertBtlCommand at FFX.exe+0x3929D0 — engine-public "queue a battle
         // command for a chr to execute as the next available action".

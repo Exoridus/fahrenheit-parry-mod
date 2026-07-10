@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="..\..\src\combat\DodgeCommitGate.cs" Link="combat\DodgeCommitGate.cs" />
     <Compile Include="..\..\src\combat\ParryDifficultyModel.cs" Link="combat\ParryDifficultyModel.cs" />
     <Compile Include="..\..\src\combat\ParryInputState.cs" Link="combat\ParryInputState.cs" />
     <Compile Include="..\..\src\combat\ParryInputStateTransitions.cs" Link="combat\ParryInputStateTransitions.cs" />
@@ -21,5 +22,7 @@
     <Compile Include="..\..\src\debug\ParryTurnTimelineTracker.cs" Link="debug\ParryTurnTimelineTracker.cs" />
     <Compile Include="..\..\src\debug\PerFrameProbeThrottle.cs" Link="debug\PerFrameProbeThrottle.cs" />
     <Compile Include="..\..\src\debug\Stage1ProbeFormatter.cs" Link="debug\Stage1ProbeFormatter.cs" />
+    <Compile Include="..\..\src\overlay\CombatLabelPalette.cs" Link="overlay\CombatLabelPalette.cs" />
+    <Compile Include="..\..\src\overlay\OverlayAnchorMath.cs" Link="overlay\OverlayAnchorMath.cs" />
   </ItemGroup>
 </Project>

@@ -600,13 +600,66 @@ public unsafe sealed partial class ParryModule
             suppressFlinch = flinchTarget != null && flinchTarget->stat_exist_flag && flinchTarget->damage_hp > 0;
         }
 
-        if (!parryActive || !suppressFlinch)
+        // Dodge (L1) resolves at impact, symmetric to parry: if the window is still valid for
+        // this attacker and real damage is pending, negate it and run the engine's own evade.
+        bool dodgeActive = targetIsParty && p3 == 1 && is_dodge_window_valid();
+        bool dodgeSuppress = false;
+        if (dodgeActive)
+        {
+            Chr* dodgeParty = _battleAdapter.GetPlayerCharacters();
+            Chr* dodgeTarget = dodgeParty != null ? dodgeParty + target : null;
+            dodgeSuppress = dodgeTarget != null && dodgeTarget->stat_exist_flag && dodgeTarget->damage_hp > 0;
+        }
+
+        bool defended = (dodgeActive && dodgeSuppress) || (parryActive && suppressFlinch);
+
+        if (!defended)
         {
             _hMsDamageSetMotion.orig_fptr.Invoke(target, p2, p3);
         }
         else
         {
-            log_debug($"Parry suppressed flinch for {format_actor_slot(target)} (MsDamageSetMotion skipped).");
+            if (dodgeActive && dodgeSuppress)
+            {
+                // The step-out movement was triggered on press (handle_dodge_input_press). At
+                // impact we only negate the hit and suppress the flinch (skip orig → no hit
+                // reaction, no second evade trigger). The resolved-mask makes MsSetDamageInternal
+                // skip its authoritative HP/death commit; the shared restore below undoes any
+                // HP already applied.
+                _dodgeEvadeCount++;
+                mark_dodge_resolved(target);
+                _dodgeTextRemainingSeconds = ParriedTextSeconds;
+                _dodgeTextSeed = next_label_seed();
+                _dodgeTextTargetMask |= 1u << target;
+                log_debug($"Dodge negated hit for {format_actor_slot(target)} (movement started on press; flinch suppressed, dodge#{_dodgeEvadeCount}).");
+            }
+            else if (_optionParryNativeBlock && !parry_block_recently_played(target))
+            {
+                // Native block (A): flag the parrying char as guarding (ChrRam+0x19A) so orig's
+                // MsDamageSetMotion plays the block reaction 0x43 itself at the real impact — the
+                // same field the engine sets for Sentinel/Defend (FFX.exe.c:830149). Set→orig→
+                // restore keeps it confined to this one call so it never persists onto later hits.
+                Chr* blockParty = _battleAdapter.GetPlayerCharacters();
+                Chr* blockChr = blockParty != null ? blockParty + target : null;
+                if (blockChr != null)
+                {
+                    byte* ramGuard = (byte*)&blockChr->ram + ChrRamGuardReactFlagOffset;
+                    byte prevGuard = *ramGuard;
+                    *ramGuard = 1;
+                    _hMsDamageSetMotion.orig_fptr.Invoke(target, p2, p3);
+                    *ramGuard = prevGuard;
+                }
+                else
+                {
+                    _hMsDamageSetMotion.orig_fptr.Invoke(target, p2, p3);
+                }
+                if (target < PartyActorCapacity) _parryBlockPlayedFrame[target] = _debugFrameIndex;
+                log_debug($"Parry native block for {format_actor_slot(target)} (guard flag → engine plays 0x43).");
+            }
+            else
+            {
+                log_debug($"Parry suppressed flinch for {format_actor_slot(target)} (MsDamageSetMotion skipped).");
+            }
 
             // Additive restore: ram.hp += damage_hp undoes whatever the native pipeline
             // already applied. For reactive parries the snapshot is never set (calc fired
@@ -983,6 +1036,35 @@ public unsafe sealed partial class ParryModule
                 && DateTime.UtcNow.Ticks < _parryExpiry[param_3]
                 && hasLiveEnemyContext;
 
+            // Dodge: a valid dodge window from this attacker skips the ENTIRE p5=0 commit
+            // (HP + status + death + the inner flinch/MsDamageSetMotion). This is what blocks a
+            // dodged STATUS attack (e.g. Anfunkeln → Confuse) — status is applied earlier in this
+            // same call, before MsDamageSetMotion, so the reactive motion-hook negation was too
+            // late. The evade animation was already triggered on press, so skipping is clean.
+            // Two ways in: the wall-clock window is still live, or this slot already resolved as
+            // evaded earlier in this cue (durable marker). The marker is what carries a dodge
+            // across a chargeup longer than the window, and across cue mutation mid-cast.
+            bool dodgeWindowLive = _dodgeWindowActive
+                && _runtime.CueFirstSeenFrame == _dodgeArmedCueFrame;
+            bool dodgeMarkerSet = (_dodgeResolvedAtImpactMask & (1u << param_3)) != 0;
+
+            if (param_5 == 0
+                && _optionDodgeEnabled
+                && (dodgeWindowLive || dodgeMarkerSet)
+                && _dodgeArmedAttackerId == (byte)param_1)
+            {
+                _dodgeEvadeCount++;
+                mark_dodge_resolved(param_3);   // durable marker + perfect grade (idempotent per cue)
+                _dodgeTextRemainingSeconds = ParriedTextSeconds;
+                _dodgeTextSeed = next_label_seed();
+                _dodgeTextTargetMask |= 1u << param_3;
+                Chr* dodgeParty = _battleAdapter.GetPlayerCharacters();
+                Chr* dodgeSlot = dodgeParty != null ? dodgeParty + param_3 : null;
+                suppress_parried_damage_display(dodgeSlot, param_3, (byte)param_1, param_2, "dodge");
+                log_debug($"MsSetDamageInternal p5=0 skipped for {format_actor_slot((byte)param_3)} (dodge — HP+status+death blocked).");
+                return 0;
+            }
+
             if (param_5 == 0
                 && !alreadyResolved
                 && !isActiveParry
@@ -1072,6 +1154,23 @@ public unsafe sealed partial class ParryModule
                 (_internalInterceptedMask & (1u << param_3)) != 0
                 && _internalInterceptedAttackerId[param_3] == (byte)param_1;
 
+            // Dodge finalization: skip the p5=1024 commit for a dodge-resolved slot WITHOUT
+            // setting LastParriedTargetMask (that would draw a second "PARRIED" text over "DODGE").
+            // Marker is NOT consumed here: a multi-hit / AoE swing from the armed attacker must stay
+            // fully evaded, and its later hits commit through this same pass. It is cleared in
+            // clear_awaiting_turn_end, next to its parry twin. The attacker check is what stops a
+            // surviving marker from swallowing an unrelated attacker's commit.
+            if (param_5 == 1024
+                && DodgeCommitGate.ShouldSkipCommit(
+                    _optionDodgeEnabled, dodgeMarkerSet, _dodgeArmedAttackerId, (byte)param_1))
+            {
+                Chr* dodgeFinParty = _battleAdapter.GetPlayerCharacters();
+                Chr* dodgeFinSlot = dodgeFinParty != null ? dodgeFinParty + param_3 : null;
+                suppress_parried_damage_display(dodgeFinSlot, param_3, (byte)param_1, param_2, "dodge_p5=1024");
+                log_debug($"MsSetDamageInternal p5=1024 skipped for {format_actor_slot((byte)param_3)} (dodge).");
+                return 0;
+            }
+
             if (param_5 == 1024 && (markerSet || alreadyResolved || internalBlocked))
             {
                 if (markerSet)
@@ -1097,6 +1196,27 @@ public unsafe sealed partial class ParryModule
                 clear_internal_intercepted_slot(param_3);
 
                 return 0;
+            }
+        }
+
+        // Status-leak trace: every party-slot pass that reaches orig. _MsAfterDamageProcess writes
+        // status_suffer in the same block as the HP subtract, so any pass logged here with a dodge
+        // that looked valid to the player is a slot where Petrify/Confuse gets through. The dodge
+        // gates are wall-clock (_dodgeWindowActive); the parry ones are durable markers — this line
+        // shows which of them was still standing when the commit landed.
+        if (_optionLogging && isPartySlot)
+        {
+            Chr* traceParty = _battleAdapter.GetPlayerCharacters();
+            Chr* traceSlot = traceParty != null ? traceParty + param_3 : null;
+            if (traceSlot != null && traceSlot->stat_exist_flag)
+            {
+                write_session_hook_entry(
+                    $"[StatusTrace] f={_debugFrameIndex} slot={param_3} p5={param_5} attacker={param_1} cmd={param_2} -> PASS_ORIG "
+                    + $"dodge_win={(_dodgeWindowActive ? 1 : 0)} dodge_valid={(is_dodge_window_valid() ? 1 : 0)} "
+                    + $"dodge_marker={((_dodgeResolvedAtImpactMask & (1u << param_3)) != 0 ? 1 : 0)} "
+                    + $"parry_marker={((_parryResolvedAtImpactMask & (1u << param_3)) != 0 ? 1 : 0)} "
+                    + $"resolved={((_runtime.LastParriedTargetMask & (1u << param_3)) != 0 ? 1 : 0)} "
+                    + $"stone={traceSlot->stat_stone} suffer={traceSlot->ram.status_suffer}");
             }
         }
 
@@ -1166,6 +1286,15 @@ public unsafe sealed partial class ParryModule
     ///     Return value at all 12 observed call sites is unused, so returning 0
     ///     on suppression is safe.
     /// </summary>
+    // Debug camera probe: logs a camera hook invocation with the full lock-gating state, whether
+    // or not it was suppressed. Reveals un-locked enemy camera pans (which path fired + why the
+    // lock did not engage). Gated on the "camera_probe" setting.
+    private void probe_camera_call(string fn, string args, bool anyTurn, bool enemyTurn, bool suppress)
+    {
+        if (!_optionCameraProbe) return;
+        log_debug($"[CameraProbe] {fn}({args}) turn_active={anyTurn} enemy_turn={enemyTurn} attacker={_runtime.CurrentAttackerId} lock_mode={_optionBattleCameraLockMode} suppress={suppress}");
+    }
+
     private int h_ms_atel_request_camera(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8)
     {
         bool isAnyTurnActive  = _runtime.AwaitingTurnEnd;
@@ -1177,6 +1306,8 @@ public unsafe sealed partial class ParryModule
             BattleCameraLockMode.EnemyTurnsOnly => isEnemyTurnActive,
             _                                    => false,
         };
+
+        probe_camera_call("MsAtelRequestCamera", $"p1={p1:X},p2={p2:X},p3={p3:X},p4={p4:X}", isAnyTurnActive, isEnemyTurnActive, shouldSuppress);
 
         if (shouldSuppress)
         {
@@ -1209,12 +1340,14 @@ public unsafe sealed partial class ParryModule
         bool isAnyTurnActive  = _runtime.AwaitingTurnEnd;
         bool isEnemyTurnActive = isAnyTurnActive && _runtime.CurrentAttackerId >= PartyActorCapacity;
 
-        bool shouldSuppress = _optionEnabled && _optionBattleCameraLockMode switch
+        bool shouldSuppress = _optionEnabled && _optionMagicCameraLock && _optionBattleCameraLockMode switch
         {
             BattleCameraLockMode.AllTurns       => isAnyTurnActive,
             BattleCameraLockMode.EnemyTurnsOnly => isEnemyTurnActive,
             _                                    => false,
         };
+
+        probe_camera_call("MsAtelRequestMagicCamera", $"p1={p1:X},p2={p2:X},p3={p3:X}", isAnyTurnActive, isEnemyTurnActive, shouldSuppress);
 
         if (shouldSuppress)
         {
@@ -1253,6 +1386,8 @@ public unsafe sealed partial class ParryModule
             _                                    => false,
         };
 
+        probe_camera_call("MsBattleSpecialCameraPause", $"mode=0x{mode:X2}", isAnyTurnActive, isEnemyTurnActive, shouldSuppress);
+
         if (shouldSuppress)
         {
             _battleSpecialCameraLockSuppressCount++;
@@ -1266,6 +1401,29 @@ public unsafe sealed partial class ParryModule
         }
 
         _hMsBattleSpecialCameraPause.orig_fptr.Invoke(mode);
+    }
+
+    /// <summary>
+    ///     Observe-only hook on MsEffectEndMotion (FFX.exe+0x387A10) — the engine's
+    ///     "a battler's motion just finished" handler. Always calls the original, then
+    ///     (when logging is on) logs how long ago we played a motion on that slot via
+    ///     the FX/Motion lab or the parry block reaction. This measures the real motion
+    ///     run length so we can decide whether to drive the parry window / whiff recovery
+    ///     from the animation instead of the static FINAL_PARRY_SPEC durations.
+    /// </summary>
+    private void h_ms_effect_end_motion(uint chr_id, int mode)
+    {
+        _hMsEffectEndMotion.orig_fptr.Invoke(chr_id, mode);
+
+        if (!_optionLogging) return;
+        uint slot = chr_id & 0xff;
+        if (slot >= PartyActorCapacity) return;
+        ulong startFrame = _motionPlayFrame[slot];
+        if (startFrame == 0) return; // only report motions we played, so the log stays correlated
+        _motionPlayFrame[slot] = 0;
+        ulong frames = _debugFrameIndex - startFrame;
+        double ms = frames * (1000.0 / BattleFrameRate);
+        log_debug($"[MotionEnd] {format_actor_slot((byte)slot)} motion ended after {frames} frames (~{ms:F0} ms @ {BattleFrameRate:F0}fps, mode={mode}).");
     }
 
     /// <summary>
@@ -1343,7 +1501,9 @@ public unsafe sealed partial class ParryModule
             log_debug($"[CheckHit] user_slot={userSlot:X2} user_tpl={userTemplate:X4} target_slot={targetSlot:X2} target_tpl={targetTemplate:X4} is_aeon={isAeon} result={result} (obs#{_checkHitObservationCount}, hit={_checkHitHitValue?.ToString() ?? "?"}, miss={_checkHitMissValue?.ToString() ?? "?"})");
         }
 
-        if (!_optionDisableNativeEvasion) return result;
+        // Native PC evasion stays disabled (see _optionDisableNativeEvasion): a PC that evades
+        // natively never reaches our impact path. The override only engages once both enum values
+        // have been observed in-game, so it is inert until then.
         if (_checkHitHitValue == null) return result;
         if (_checkHitMissValue == null) return result;
         if (result != _checkHitMissValue.Value) return result;

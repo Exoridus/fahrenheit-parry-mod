@@ -9,7 +9,6 @@ public unsafe sealed partial class ParryModule
         public bool? ParryStateHud { get; set; }
         public bool? Logging { get; set; }
         public bool? OverdriveBoost { get; set; }
-        public bool? NegateDamage { get; set; }
         public bool? Penalty { get; set; }
         public bool? DebugOverlay { get; set; }
         // Native-engine probe channel (separate from general Logging). Default-off.
@@ -18,10 +17,15 @@ public unsafe sealed partial class ParryModule
         // will route through this; the existing logging path is unchanged.
         public bool? NativeProbeLogging { get; set; }
         public string? BattleCameraLockMode { get; set; }  // canonical — human-readable enum name
+        public bool? MagicCameraLock { get; set; }
         public bool? EnemyCameraLock { get; set; }          // legacy — migrated on load, never written
         public bool? ParryEffect { get; set; }
         public bool? StreakCounter { get; set; }
-        public bool? DisableNativeEvasion { get; set; }
+        public bool? DodgeEnabled { get; set; }
+        public bool? ParryNativeBlock { get; set; }
+        public float? DodgeWindowMs { get; set; }
+        public float? DodgeWhiffoutMs { get; set; }
+        public bool? CameraProbe { get; set; }
         public int? CheckHitHitValue { get; set; }
         public int? CheckHitMissValue { get; set; }
         public string? Difficulty { get; set; }
@@ -32,6 +36,34 @@ public unsafe sealed partial class ParryModule
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         WriteIndented = true
     };
+
+    // alpha09's mod_context.Paths.SettingsPath is empty or points at the DEPLOYED MOD FOLDER —
+    // and `build.cmd deploy` mirrors that folder, so anything we write there (settings, the motion
+    // blocklist) is deleted on the next deploy and silently resets. Prefer the mod's global-state
+    // directory (state/global/<mod>/), which the deploy never touches: the framework hands us a
+    // FileStream into it at init, so its directory is the stable home for our files. The old
+    // locations remain as fallbacks for hosts that don't supply a global state file.
+    private static string resolve_settings_path(FhModContext mod_context, FileStream? global_state_file)
+    {
+        string? stateDir = null;
+        try { stateDir = Path.GetDirectoryName(global_state_file?.Name); } catch { /* not path-backed */ }
+        if (!string.IsNullOrWhiteSpace(stateDir) && Directory.Exists(stateDir))
+        {
+            return Path.Combine(stateDir, "fhparry.config.json");
+        }
+
+        string p = mod_context.Paths.SettingsPath ?? string.Empty;
+        if (Directory.Exists(p))
+        {
+            return Path.Combine(p, "fhparry.config.json");
+        }
+        if (string.IsNullOrWhiteSpace(p))
+        {
+            string baseDir = mod_context.Paths.ResourcesDir?.FullName ?? AppContext.BaseDirectory;
+            return Path.Combine(baseDir, "fhparry.config.json");
+        }
+        return p;
+    }
 
     private void load_persistent_settings()
     {
@@ -60,7 +92,6 @@ public unsafe sealed partial class ParryModule
             if (persisted.ParryStateHud.HasValue) _optionParryStateHud = persisted.ParryStateHud.Value;
             if (persisted.Logging.HasValue) _optionLogging = persisted.Logging.Value;
             if (persisted.OverdriveBoost.HasValue) _optionOverdriveBoost = persisted.OverdriveBoost.Value;
-            if (persisted.NegateDamage.HasValue) _optionNegateDamage = persisted.NegateDamage.Value;
             // Persisted as "penalty" for backward compatibility with earlier settings files.
             // The semantic is now "whiff recovery lockout enabled" (see FINAL_PARRY_SPEC.md).
             if (persisted.Penalty.HasValue) _optionWhiffLockout = persisted.Penalty.Value;
@@ -81,9 +112,14 @@ public unsafe sealed partial class ParryModule
                     : BattleCameraLockMode.Off;
                 _logger.Info($"[Parry] Migrated legacy EnemyCameraLock={persisted.EnemyCameraLock.Value} → BattleCameraLockMode={_optionBattleCameraLockMode}.");
             }
+            if (persisted.MagicCameraLock.HasValue) _optionMagicCameraLock = persisted.MagicCameraLock.Value;
             if (persisted.ParryEffect.HasValue) _optionParryEffect = persisted.ParryEffect.Value;
             if (persisted.StreakCounter.HasValue) _optionStreakCounter = persisted.StreakCounter.Value;
-            if (persisted.DisableNativeEvasion.HasValue) _optionDisableNativeEvasion = persisted.DisableNativeEvasion.Value;
+            if (persisted.DodgeEnabled.HasValue) _optionDodgeEnabled = persisted.DodgeEnabled.Value;
+            if (persisted.ParryNativeBlock.HasValue) _optionParryNativeBlock = persisted.ParryNativeBlock.Value;
+            if (persisted.DodgeWindowMs.HasValue) _dodgeWindowMs = Math.Clamp(persisted.DodgeWindowMs.Value, DodgeWindowMsMin, DodgeWindowMsMax);
+            if (persisted.DodgeWhiffoutMs.HasValue) _dodgeWhiffoutMs = Math.Clamp(persisted.DodgeWhiffoutMs.Value, DodgeWhiffoutMsMin, DodgeWhiffoutMsMax);
+            if (persisted.CameraProbe.HasValue) _optionCameraProbe = persisted.CameraProbe.Value;
             if (persisted.CheckHitHitValue.HasValue) _checkHitHitValue = persisted.CheckHitHitValue.Value;
             if (persisted.CheckHitMissValue.HasValue) _checkHitMissValue = persisted.CheckHitMissValue.Value;
 
@@ -106,6 +142,7 @@ public unsafe sealed partial class ParryModule
     {
         if (string.IsNullOrWhiteSpace(_settingsFilePath))
         {
+            _logger.Warning("[Parry] Cannot persist settings — resolved settings path is empty.");
             return;
         }
 
@@ -124,14 +161,18 @@ public unsafe sealed partial class ParryModule
                 ParryStateHud = _optionParryStateHud,
                 Logging = _optionLogging,
                 OverdriveBoost = _optionOverdriveBoost,
-                NegateDamage = _optionNegateDamage,
                 Penalty = _optionWhiffLockout,
                 DebugOverlay = _optionDebugOverlay,
                 NativeProbeLogging = _optionNativeProbeLogging,
                 BattleCameraLockMode = _optionBattleCameraLockMode.ToString(),
+                MagicCameraLock = _optionMagicCameraLock,
                 ParryEffect = _optionParryEffect,
                 StreakCounter = _optionStreakCounter,
-                DisableNativeEvasion = _optionDisableNativeEvasion,
+                DodgeEnabled = _optionDodgeEnabled,
+                ParryNativeBlock = _optionParryNativeBlock,
+                DodgeWindowMs = _dodgeWindowMs,
+                DodgeWhiffoutMs = _dodgeWhiffoutMs,
+                CameraProbe = _optionCameraProbe,
                 CheckHitHitValue = _checkHitHitValue,
                 CheckHitMissValue = _checkHitMissValue,
                 Difficulty = _optionDifficulty.ToString()
@@ -141,6 +182,10 @@ public unsafe sealed partial class ParryModule
             string tempPath = _settingsFilePath + ".tmp";
             File.WriteAllText(tempPath, json + Environment.NewLine, Encoding.UTF8);
             File.Move(tempPath, _settingsFilePath, overwrite: true);
+            if (_optionLogging)
+            {
+                log_debug($"[Parry] Settings persisted to '{_settingsFilePath}'.");
+            }
         }
         catch (Exception ex)
         {
