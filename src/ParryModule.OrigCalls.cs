@@ -29,11 +29,48 @@ public unsafe sealed partial class ParryModule
 {
     // ── shared installer ─────────────────────────────────────────────────────
 
+    // `hook` is passed a cached delegate field (_dXxx), never an instance method
+    // group. chain_from() below keys a Dictionary<Delegate, nint>, and converting an
+    // instance method group to a delegate allocates a fresh delegate on EVERY
+    // conversion (Roslyn only caches the conversion for static targets). install_hook
+    // and orig_xxx must therefore hand chain_from the *same* delegate instance — the
+    // one assigned once in the ParryModule() constructor — so a hot per-hit call like
+    // orig_ms_set_damage_internal keys the dictionary without allocating garbage.
     private void install_hook<T>(FhMethodLocation loc, T hook, string label) where T : Delegate
     {
         if (!new FhMethodHandle<T>(loc).hook(this, hook))
             _logger.Warning($"[Parry] Could not hook {label}.");
     }
+
+    // ── cached hook delegates ────────────────────────────────────────────────
+    // One per hooked function, assigned once in the ParryModule() constructor. A
+    // FhMethodHandle<T>/FhMethodLocation is a ref struct and cannot be a field, but a
+    // delegate is a class and can be — so the delegate (the dictionary key) is what we
+    // cache. See install_hook above for why this removes a per-call allocation.
+    private readonly MsExeInputCueProbe                      _dMsExeInputCue;
+    private readonly MsSetDamageProbe                        _dMsSetDamage;
+    private readonly MsDamageSetMotionProbe                  _dMsDamageSetMotion;
+    private readonly MsCalcDamageProbe                       _dMsCalcDamage;
+    private readonly DmgCalcArmoredProbe                     _dDmgCalcArmored;
+    private readonly MsCalcDamageInternalProbe               _dMsCalcDamageInternal;
+    private readonly MsSetDamageInternalProbe                _dMsSetDamageInternal;
+    private readonly MsAtelRequestCameraProbe                _dMsAtelRequestCamera;
+    private readonly MsAtelRequestMagicCameraProbe           _dMsAtelRequestMagicCamera;
+    private readonly MsBattleSpecialCameraPauseProbe         _dMsBattleSpecialCameraPause;
+    private readonly AtelCameraPolarSetProbe                 _dAtelCameraPolarSet;
+    private readonly AtelCameraPosSetProbe                   _dAtelCameraPosSet;
+    private readonly MsDmgCalcCheckHitProbe                  _dMsDmgCalcCheckHit;
+    private readonly MsEffectEndMotionProbe                  _dMsEffectEndMotion;
+    private readonly StartupAtelEventSetUp                   _dStartupAtelEventSetup;
+    private readonly StartupNeedShowJapanLogo                _dStartupNeedShowJapanLogo;
+    private readonly StartupFmvSkipPoll                      _dStartupBootFmvSkip;
+    private readonly StartupShellExecuteW                    _dStartupShellExecuteW;
+    private readonly MsActionRequestProbeDelegate            _dStage1MsActionRequest;
+    private readonly MsCalcCommandProbeDelegate              _dStage1MsCalcCommand;
+    private readonly MsCheckStatusBeforeActionProbeDelegate  _dStage1MsCheckStatusBeforeAction;
+    private readonly MsLimitTypeDamageCheckProbeDelegate     _dStage1MsLimitTypeDamageCheck;
+    private readonly OpEtBattleGenkoCounterGetProbeDelegate  _dStage1OpEtBattleGenkoCounterGet;
+    private readonly MsSetMotionProbeDelegate                _dStage1MsSetMotion;
 
     // ── ParryModule.cs (14 handles) ──────────────────────────────────────────
 
@@ -80,58 +117,58 @@ public unsafe sealed partial class ParryModule
         => new("FFX.exe", (nint)ExternalMemoryOffsetMap.Functions.MsEffectEndMotion);
 
     private void orig_ms_exe_input_cue()
-        => new FhMethodHandle<MsExeInputCueProbe>(loc_ms_exe_input_cue()).chain_from(h_ms_exe_input_cue).fnptr!();
+        => new FhMethodHandle<MsExeInputCueProbe>(loc_ms_exe_input_cue()).chain_from(_dMsExeInputCue).fnptr!();
 
     private int orig_ms_set_damage(byte param_1, int param_2, int param_3)
-        => new FhMethodHandle<MsSetDamageProbe>(loc_ms_set_damage()).chain_from(h_ms_set_damage).fnptr!(param_1, param_2, param_3);
+        => new FhMethodHandle<MsSetDamageProbe>(loc_ms_set_damage()).chain_from(_dMsSetDamage).fnptr!(param_1, param_2, param_3);
 
     private void orig_ms_damage_set_motion(byte target, int p2, int p3)
-        => new FhMethodHandle<MsDamageSetMotionProbe>(loc_ms_damage_set_motion()).chain_from(h_ms_damage_set_motion).fnptr!(target, p2, p3);
+        => new FhMethodHandle<MsDamageSetMotionProbe>(loc_ms_damage_set_motion()).chain_from(_dMsDamageSetMotion).fnptr!(target, p2, p3);
 
     private int orig_ms_calc_damage(
         int user_id, nint user_chr, int target_id, nint target_chr,
         nint command, int command_id,
         nint p7, nint p8, nint p9, nint p10, int p11)
-        => new FhMethodHandle<MsCalcDamageProbe>(loc_ms_calc_damage()).chain_from(h_ms_calc_damage).fnptr!(
+        => new FhMethodHandle<MsCalcDamageProbe>(loc_ms_calc_damage()).chain_from(_dMsCalcDamage).fnptr!(
             user_id, user_chr, target_id, target_chr,
             command, command_id,
             p7, p8, p9, p10, p11);
 
     private int orig_dmg_calc_armored(Chr* user, Chr* target, Command* command, int p4, int* p5, int damage)
-        => new FhMethodHandle<DmgCalcArmoredProbe>(loc_dmg_calc_armored()).chain_from(h_dmg_calc_armored).fnptr!(user, target, command, p4, p5, damage);
+        => new FhMethodHandle<DmgCalcArmoredProbe>(loc_dmg_calc_armored()).chain_from(_dDmgCalcArmored).fnptr!(user, target, command, p4, p5, damage);
 
     private int orig_ms_calc_damage_internal(
         int user_id, nint user_chr, int target_id, nint target_chr,
         nint command, int command_id,
         nint p7, nint p8, nint p9, nint p10, int p11)
-        => new FhMethodHandle<MsCalcDamageInternalProbe>(loc_ms_calc_damage_internal()).chain_from(h_ms_calc_damage_internal).fnptr!(
+        => new FhMethodHandle<MsCalcDamageInternalProbe>(loc_ms_calc_damage_internal()).chain_from(_dMsCalcDamageInternal).fnptr!(
             user_id, user_chr, target_id, target_chr,
             command, command_id,
             p7, p8, p9, p10, p11);
 
     private int orig_ms_set_damage_internal(int param_1, byte param_2, int param_3, int param_4, int param_5)
-        => new FhMethodHandle<MsSetDamageInternalProbe>(loc_ms_set_damage_internal()).chain_from(h_ms_set_damage_internal).fnptr!(param_1, param_2, param_3, param_4, param_5);
+        => new FhMethodHandle<MsSetDamageInternalProbe>(loc_ms_set_damage_internal()).chain_from(_dMsSetDamageInternal).fnptr!(param_1, param_2, param_3, param_4, param_5);
 
     private int orig_ms_atel_request_camera(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8)
-        => new FhMethodHandle<MsAtelRequestCameraProbe>(loc_ms_atel_request_camera()).chain_from(h_ms_atel_request_camera).fnptr!(p1, p2, p3, p4, p5, p6, p7, p8);
+        => new FhMethodHandle<MsAtelRequestCameraProbe>(loc_ms_atel_request_camera()).chain_from(_dMsAtelRequestCamera).fnptr!(p1, p2, p3, p4, p5, p6, p7, p8);
 
     private byte orig_ms_atel_request_magic_camera(int p1, int p2, uint p3, int p4, int p5, int p6, uint p7, int p8, int p9)
-        => new FhMethodHandle<MsAtelRequestMagicCameraProbe>(loc_ms_atel_request_magic_camera()).chain_from(h_ms_atel_request_magic_camera).fnptr!(p1, p2, p3, p4, p5, p6, p7, p8, p9);
+        => new FhMethodHandle<MsAtelRequestMagicCameraProbe>(loc_ms_atel_request_magic_camera()).chain_from(_dMsAtelRequestMagicCamera).fnptr!(p1, p2, p3, p4, p5, p6, p7, p8, p9);
 
     private void orig_ms_battle_special_camera_pause(byte mode)
-        => new FhMethodHandle<MsBattleSpecialCameraPauseProbe>(loc_ms_battle_special_camera_pause()).chain_from(h_ms_battle_special_camera_pause).fnptr!(mode);
+        => new FhMethodHandle<MsBattleSpecialCameraPauseProbe>(loc_ms_battle_special_camera_pause()).chain_from(_dMsBattleSpecialCameraPause).fnptr!(mode);
 
     private int orig_atel_camera_polar_set(int worker, int p2, int stack, int isCam, int variant)
-        => new FhMethodHandle<AtelCameraPolarSetProbe>(loc_atel_camera_polar_set()).chain_from(h_atel_camera_polar_set).fnptr!(worker, p2, stack, isCam, variant);
+        => new FhMethodHandle<AtelCameraPolarSetProbe>(loc_atel_camera_polar_set()).chain_from(_dAtelCameraPolarSet).fnptr!(worker, p2, stack, isCam, variant);
 
     private void orig_atel_camera_pos_set(int worker, int p2, int stack, int p4)
-        => new FhMethodHandle<AtelCameraPosSetProbe>(loc_atel_camera_pos_set()).chain_from(h_atel_camera_pos_set).fnptr!(worker, p2, stack, p4);
+        => new FhMethodHandle<AtelCameraPosSetProbe>(loc_atel_camera_pos_set()).chain_from(_dAtelCameraPosSet).fnptr!(worker, p2, stack, p4);
 
     private int orig_ms_dmg_calc_check_hit(Chr* user, Chr* target, Command* command, void* info, int counter)
-        => new FhMethodHandle<MsDmgCalcCheckHitProbe>(loc_ms_dmg_calc_check_hit()).chain_from(h_ms_dmg_calc_check_hit).fnptr!(user, target, command, info, counter);
+        => new FhMethodHandle<MsDmgCalcCheckHitProbe>(loc_ms_dmg_calc_check_hit()).chain_from(_dMsDmgCalcCheckHit).fnptr!(user, target, command, info, counter);
 
     private void orig_ms_effect_end_motion(uint chr_id, int mode)
-        => new FhMethodHandle<MsEffectEndMotionProbe>(loc_ms_effect_end_motion()).chain_from(h_ms_effect_end_motion).fnptr!(chr_id, mode);
+        => new FhMethodHandle<MsEffectEndMotionProbe>(loc_ms_effect_end_motion()).chain_from(_dMsEffectEndMotion).fnptr!(chr_id, mode);
 
     // ── ParryModule.StartupSkip.cs (4 handles) ───────────────────────────────
 
@@ -148,13 +185,13 @@ public unsafe sealed partial class ParryModule
         => new("shell32.dll", "ShellExecuteW");
 
     private void orig_startup_atel_event_setup(uint eventId)
-        => new FhMethodHandle<StartupAtelEventSetUp>(loc_startup_atel_event_setup()).chain_from(h_startup_event_setup).fnptr!(eventId);
+        => new FhMethodHandle<StartupAtelEventSetUp>(loc_startup_atel_event_setup()).chain_from(_dStartupAtelEventSetup).fnptr!(eventId);
 
     private int orig_startup_need_show_japan_logo()
-        => new FhMethodHandle<StartupNeedShowJapanLogo>(loc_startup_need_show_japan_logo()).chain_from(h_startup_need_show_japan_logo).fnptr!();
+        => new FhMethodHandle<StartupNeedShowJapanLogo>(loc_startup_need_show_japan_logo()).chain_from(_dStartupNeedShowJapanLogo).fnptr!();
 
     private void orig_startup_boot_fmv_skip(nint thisPtr)
-        => new FhMethodHandle<StartupFmvSkipPoll>(loc_startup_boot_fmv_skip()).chain_from(h_startup_boot_fmv_skip).fnptr!(thisPtr);
+        => new FhMethodHandle<StartupFmvSkipPoll>(loc_startup_boot_fmv_skip()).chain_from(_dStartupBootFmvSkip).fnptr!(thisPtr);
 
     private IntPtr orig_startup_shell_execute_w(
         IntPtr hwnd,
@@ -163,7 +200,7 @@ public unsafe sealed partial class ParryModule
         string? lpParameters,
         string? lpDirectory,
         int nShowCmd)
-        => new FhMethodHandle<StartupShellExecuteW>(loc_startup_shell_execute_w()).chain_from(h_startup_shell_execute_w).fnptr!(hwnd, lpOperation, lpFile, lpParameters, lpDirectory, nShowCmd);
+        => new FhMethodHandle<StartupShellExecuteW>(loc_startup_shell_execute_w()).chain_from(_dStartupShellExecuteW).fnptr!(hwnd, lpOperation, lpFile, lpParameters, lpDirectory, nShowCmd);
 
     // ── ParryModule.Stage1Probes.cs (6 handles) ──────────────────────────────
 
@@ -186,22 +223,22 @@ public unsafe sealed partial class ParryModule
         => new("FFX.exe", (nint)ExternalMemoryOffsetMap.Functions.MsSetMotion);
 
     private uint orig_stage1_ms_action_request(int target_id, int attacker_id, int p3, int p4, int p5, int p6)
-        => new FhMethodHandle<MsActionRequestProbeDelegate>(loc_stage1_ms_action_request()).chain_from(h_stage1_ms_action_request).fnptr!(target_id, attacker_id, p3, p4, p5, p6);
+        => new FhMethodHandle<MsActionRequestProbeDelegate>(loc_stage1_ms_action_request()).chain_from(_dStage1MsActionRequest).fnptr!(target_id, attacker_id, p3, p4, p5, p6);
 
     private void orig_stage1_ms_calc_command()
-        => new FhMethodHandle<MsCalcCommandProbeDelegate>(loc_stage1_ms_calc_command()).chain_from(h_stage1_ms_calc_command).fnptr!();
+        => new FhMethodHandle<MsCalcCommandProbeDelegate>(loc_stage1_ms_calc_command()).chain_from(_dStage1MsCalcCommand).fnptr!();
 
     private int orig_stage1_ms_check_status_before_action()
-        => new FhMethodHandle<MsCheckStatusBeforeActionProbeDelegate>(loc_stage1_ms_check_status_before_action()).chain_from(h_stage1_ms_check_status_before_action).fnptr!();
+        => new FhMethodHandle<MsCheckStatusBeforeActionProbeDelegate>(loc_stage1_ms_check_status_before_action()).chain_from(_dStage1MsCheckStatusBeforeAction).fnptr!();
 
     private int orig_stage1_ms_limit_type_damage_check(
         int attacker_id, nint attacker, int target_id, nint target, int p5, int p6, int p7)
-        => new FhMethodHandle<MsLimitTypeDamageCheckProbeDelegate>(loc_stage1_ms_limit_type_damage_check()).chain_from(h_stage1_ms_limit_type_damage_check).fnptr!(
+        => new FhMethodHandle<MsLimitTypeDamageCheckProbeDelegate>(loc_stage1_ms_limit_type_damage_check()).chain_from(_dStage1MsLimitTypeDamageCheck).fnptr!(
             attacker_id, attacker, target_id, target, p5, p6, p7);
 
     private int orig_stage1_op_et_battle_genko_counter_get()
-        => new FhMethodHandle<OpEtBattleGenkoCounterGetProbeDelegate>(loc_stage1_op_et_battle_genko_counter_get()).chain_from(h_stage1_op_et_battle_genko_counter_get).fnptr!();
+        => new FhMethodHandle<OpEtBattleGenkoCounterGetProbeDelegate>(loc_stage1_op_et_battle_genko_counter_get()).chain_from(_dStage1OpEtBattleGenkoCounterGet).fnptr!();
 
     private int orig_stage1_ms_set_motion(int p1, int p2, int chr_id, byte p4, int p5, int p6, int p7)
-        => new FhMethodHandle<MsSetMotionProbeDelegate>(loc_stage1_ms_set_motion()).chain_from(h_stage1_ms_set_motion).fnptr!(p1, p2, chr_id, p4, p5, p6, p7);
+        => new FhMethodHandle<MsSetMotionProbeDelegate>(loc_stage1_ms_set_motion()).chain_from(_dStage1MsSetMotion).fnptr!(p1, p2, chr_id, p4, p5, p6, p7);
 }

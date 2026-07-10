@@ -97,12 +97,12 @@ public unsafe sealed partial class ParryModule
             return;
         }
 
-        install_hook(loc_stage1_ms_action_request(),            h_stage1_ms_action_request,            "MsActionRequest");
-        install_hook(loc_stage1_ms_calc_command(),              h_stage1_ms_calc_command,              "MsCalcCommand");
-        install_hook(loc_stage1_ms_check_status_before_action(), h_stage1_ms_check_status_before_action, "MsCheckStatusBeforeAction");
-        install_hook(loc_stage1_ms_limit_type_damage_check(),   h_stage1_ms_limit_type_damage_check,   "MsLimitTypeDamageCheck");
-        install_hook(loc_stage1_op_et_battle_genko_counter_get(), h_stage1_op_et_battle_genko_counter_get, "OpEtBattleGenkoCounterGet");
-        install_hook(loc_stage1_ms_set_motion(),                h_stage1_ms_set_motion,                "MsSetMotion");
+        install_hook(loc_stage1_ms_action_request(),            _dStage1MsActionRequest,            "MsActionRequest");
+        install_hook(loc_stage1_ms_calc_command(),              _dStage1MsCalcCommand,              "MsCalcCommand");
+        install_hook(loc_stage1_ms_check_status_before_action(), _dStage1MsCheckStatusBeforeAction, "MsCheckStatusBeforeAction");
+        install_hook(loc_stage1_ms_limit_type_damage_check(),   _dStage1MsLimitTypeDamageCheck,   "MsLimitTypeDamageCheck");
+        install_hook(loc_stage1_op_et_battle_genko_counter_get(), _dStage1OpEtBattleGenkoCounterGet, "OpEtBattleGenkoCounterGet");
+        install_hook(loc_stage1_ms_set_motion(),                _dStage1MsSetMotion,                "MsSetMotion");
 
         _stage1ProbesInstalled = true;
         _logger.Info("[Parry] Stage-1 native probes installed (NativeProbeLogging=true). Output is in the session debug log.");

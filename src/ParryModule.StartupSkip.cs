@@ -61,10 +61,10 @@ public unsafe sealed partial class ParryModule
     // ── install (called from init) ───────────────────────────────────────────
     private void install_startup_skip_hooks()
     {
-        install_hook(loc_startup_atel_event_setup(), h_startup_event_setup, "[StartupSkip] AtelEventSetUp (splash skip unavailable)");
-        install_hook(loc_startup_need_show_japan_logo(), h_startup_need_show_japan_logo, "[StartupSkip] NeedShowJapanLogo (Japan logo skip reduced)");
-        install_hook(loc_startup_boot_fmv_skip(), h_startup_boot_fmv_skip, "[StartupSkip] FmvSkipPoll (boot FMV skip unavailable)");
-        install_hook(loc_startup_shell_execute_w(), h_startup_shell_execute_w, "[StartupSkip] ShellExecuteW (launcher-relaunch suppression unavailable)");
+        install_hook(loc_startup_atel_event_setup(), _dStartupAtelEventSetup, "[StartupSkip] AtelEventSetUp (splash skip unavailable)");
+        install_hook(loc_startup_need_show_japan_logo(), _dStartupNeedShowJapanLogo, "[StartupSkip] NeedShowJapanLogo (Japan logo skip reduced)");
+        install_hook(loc_startup_boot_fmv_skip(), _dStartupBootFmvSkip, "[StartupSkip] FmvSkipPoll (boot FMV skip unavailable)");
+        install_hook(loc_startup_shell_execute_w(), _dStartupShellExecuteW, "[StartupSkip] ShellExecuteW (launcher-relaunch suppression unavailable)");
 
         _logger.Info("[Parry][StartupSkip] Splash/launcher skip ready.");
     }

@@ -695,6 +695,35 @@ public unsafe sealed partial class ParryModule : FhModule
         // So the controls moved into the mod's own window (render_settings_tab, drawn from the
         // same fhparry.<id>.name/.desc keys). Persistence never depended on Fahrenheit: the mod
         // has always written its own fhparry.config.json.
+
+        // Hook delegates are cached (see ParryModule.OrigCalls.cs) so chain_from() does not
+        // allocate a fresh delegate on every native call. The same instance is handed to both
+        // install_hook(...) and chain_from(...); assigned here, once, before any install runs —
+        // the Stage-1 and startup-skip installs happen later in init() but on this same instance.
+        _dMsExeInputCue                   = h_ms_exe_input_cue;
+        _dMsSetDamage                     = h_ms_set_damage;
+        _dMsDamageSetMotion               = h_ms_damage_set_motion;
+        _dMsCalcDamage                    = h_ms_calc_damage;
+        _dDmgCalcArmored                  = h_dmg_calc_armored;
+        _dMsCalcDamageInternal            = h_ms_calc_damage_internal;
+        _dMsSetDamageInternal             = h_ms_set_damage_internal;
+        _dMsAtelRequestCamera             = h_ms_atel_request_camera;
+        _dMsAtelRequestMagicCamera        = h_ms_atel_request_magic_camera;
+        _dMsBattleSpecialCameraPause      = h_ms_battle_special_camera_pause;
+        _dAtelCameraPolarSet              = h_atel_camera_polar_set;
+        _dAtelCameraPosSet                = h_atel_camera_pos_set;
+        _dMsDmgCalcCheckHit               = h_ms_dmg_calc_check_hit;
+        _dMsEffectEndMotion               = h_ms_effect_end_motion;
+        _dStartupAtelEventSetup           = h_startup_event_setup;
+        _dStartupNeedShowJapanLogo        = h_startup_need_show_japan_logo;
+        _dStartupBootFmvSkip              = h_startup_boot_fmv_skip;
+        _dStartupShellExecuteW            = h_startup_shell_execute_w;
+        _dStage1MsActionRequest           = h_stage1_ms_action_request;
+        _dStage1MsCalcCommand             = h_stage1_ms_calc_command;
+        _dStage1MsCheckStatusBeforeAction = h_stage1_ms_check_status_before_action;
+        _dStage1MsLimitTypeDamageCheck    = h_stage1_ms_limit_type_damage_check;
+        _dStage1OpEtBattleGenkoCounterGet = h_stage1_op_et_battle_genko_counter_get;
+        _dStage1MsSetMotion               = h_stage1_ms_set_motion;
     }
 
     public override bool init(FhModContext mod_context, FileStream global_state_file)
@@ -713,20 +742,20 @@ public unsafe sealed partial class ParryModule : FhModule
 
         FhApi.Events.Common.GameLoop.PreUpdate.subscribe(on_pre_update);
 
-        install_hook(loc_ms_exe_input_cue(), h_ms_exe_input_cue, "MsExeInputCue (continuing without native dispatch signal)");
-        install_hook(loc_ms_set_damage(), h_ms_set_damage, "MsSetDamage (experimental spike inactive)");
-        install_hook(loc_ms_damage_set_motion(), h_ms_damage_set_motion, "MsDamageSetMotion");
-        install_hook(loc_dmg_calc_armored(), h_dmg_calc_armored, "DmgCalcArmored Probe");
-        install_hook(loc_ms_calc_damage_internal(), h_ms_calc_damage_internal, "MsCalcDamageInternal Probe");
-        install_hook(loc_ms_set_damage_internal(), h_ms_set_damage_internal, "MsSetDamageInternal Probe");
-        install_hook(loc_ms_calc_damage(), h_ms_calc_damage, "MsCalcDamage (hit-count probe inactive)");
-        install_hook(loc_ms_atel_request_camera(), h_ms_atel_request_camera, "MsAtelRequestCamera (enemy-turn camera lock unavailable)");
-        install_hook(loc_ms_atel_request_magic_camera(), h_ms_atel_request_magic_camera, "MsAtelRequestMagicCamera (enemy-turn magic camera lock unavailable)");
-        install_hook(loc_ms_battle_special_camera_pause(), h_ms_battle_special_camera_pause, "MsBattleSpecialCameraPause (boss cinematic camera lock unavailable)");
-        install_hook(loc_atel_camera_polar_set(), h_atel_camera_polar_set, "AtelCameraPolarSet (camera-writer probe unavailable)");
-        install_hook(loc_atel_camera_pos_set(), h_atel_camera_pos_set, "AtelCameraPosSet (camera-writer probe unavailable)");
-        install_hook(loc_ms_effect_end_motion(), h_ms_effect_end_motion, "MsEffectEndMotion (motion-duration observe unavailable)");
-        install_hook(loc_ms_dmg_calc_check_hit(), h_ms_dmg_calc_check_hit, "MsDmgCalcCheckHit (disable-native-evasion unavailable)");
+        install_hook(loc_ms_exe_input_cue(), _dMsExeInputCue, "MsExeInputCue (continuing without native dispatch signal)");
+        install_hook(loc_ms_set_damage(), _dMsSetDamage, "MsSetDamage (experimental spike inactive)");
+        install_hook(loc_ms_damage_set_motion(), _dMsDamageSetMotion, "MsDamageSetMotion");
+        install_hook(loc_dmg_calc_armored(), _dDmgCalcArmored, "DmgCalcArmored Probe");
+        install_hook(loc_ms_calc_damage_internal(), _dMsCalcDamageInternal, "MsCalcDamageInternal Probe");
+        install_hook(loc_ms_set_damage_internal(), _dMsSetDamageInternal, "MsSetDamageInternal Probe");
+        install_hook(loc_ms_calc_damage(), _dMsCalcDamage, "MsCalcDamage (hit-count probe inactive)");
+        install_hook(loc_ms_atel_request_camera(), _dMsAtelRequestCamera, "MsAtelRequestCamera (enemy-turn camera lock unavailable)");
+        install_hook(loc_ms_atel_request_magic_camera(), _dMsAtelRequestMagicCamera, "MsAtelRequestMagicCamera (enemy-turn magic camera lock unavailable)");
+        install_hook(loc_ms_battle_special_camera_pause(), _dMsBattleSpecialCameraPause, "MsBattleSpecialCameraPause (boss cinematic camera lock unavailable)");
+        install_hook(loc_atel_camera_polar_set(), _dAtelCameraPolarSet, "AtelCameraPolarSet (camera-writer probe unavailable)");
+        install_hook(loc_atel_camera_pos_set(), _dAtelCameraPosSet, "AtelCameraPosSet (camera-writer probe unavailable)");
+        install_hook(loc_ms_effect_end_motion(), _dMsEffectEndMotion, "MsEffectEndMotion (motion-duration observe unavailable)");
+        install_hook(loc_ms_dmg_calc_check_hit(), _dMsDmgCalcCheckHit, "MsDmgCalcCheckHit (disable-native-evasion unavailable)");
 
         install_stage1_probes();
         install_startup_skip_hooks();
