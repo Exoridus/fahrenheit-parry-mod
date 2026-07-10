@@ -228,6 +228,15 @@ public unsafe sealed partial class ParryModule
                 end_parry_window("attacker changed");
             }
 
+            // A different enemy action begins here while the turn context is still open (chained
+            // cues never empty the list, so clear_awaiting_turn_end will not run between them).
+            // Close out the outgoing action before the new cue overwrites CurrentPartyTargetMask,
+            // which resolve_streak_at_cue_clear reads.
+            if (cueIdentityChanged && _runtime.AwaitingTurnEnd)
+            {
+                end_enemy_action($"attacker {_runtime.CurrentAttackerId} -> {cue.attacker_id}");
+            }
+
             if (_debugBattleActive && !_debugBattleSessionFirstCueSeen)
             {
                 _debugBattleSessionFirstCueSeen = true;
@@ -847,6 +856,34 @@ public unsafe sealed partial class ParryModule
         {
             _runtime.InputState = ParryInputState.Ready;
         }
+    }
+
+    /// <summary>
+    ///     Ends one enemy ACTION (cue) without ending the turn context.
+    ///
+    ///     clear_awaiting_turn_end only runs when the cue LIST empties. When several enemies
+    ///     act back-to-back their cues chain inside one AwaitingTurnEnd span, so nothing reset
+    ///     the per-action parry state between them: LastParriedTargetMask kept a slot's bit from
+    ///     an earlier attacker, and every later hit on that slot was silently skipped as
+    ///     "already resolved" — damage negated, no PARRIED text, no sound, no effect. The same
+    ///     stale bit made resolve_streak_at_cue_clear see failedMask == 0 for a cue the slot
+    ///     never parried, inflating the streak until the counter-attack fired.
+    ///
+    ///     Order matters: resolve streak and overdrive learning FIRST (both read the outgoing
+    ///     cue's CurrentPartyTargetMask and LastParriedTargetMask), only then clear. This is the
+    ///     same read-before-clear invariant clear_awaiting_turn_end relies on.
+    /// </summary>
+    private void end_enemy_action(string reason)
+    {
+        resolve_streak_at_cue_clear();
+        resolve_overdrive_learning_at_cue_clear(_runtime.LastParriedTargetMask);
+
+        _runtime.LastParriedTargetMask = 0;
+        _parryResolvedAtImpactMask = 0;
+        _dodgeResolvedAtImpactMask = 0;
+        Array.Clear(_preHitHpSnapshot);
+
+        log_debug($"Enemy action ended ({reason}) — per-action parry state cleared.");
     }
 
     private void clear_awaiting_turn_end(string reason)
