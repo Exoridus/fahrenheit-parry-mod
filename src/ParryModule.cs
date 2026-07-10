@@ -156,7 +156,7 @@ public unsafe sealed partial class ParryModule : FhModule
     // the manual dodge system replaces it. RNG state is preserved by always
     // invoking the original first; only the return value is overridden.
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    private delegate int MsDmgCalcCheckHitProbe(Chr* user, Chr* target, void* command, void* info, int counter);
+    private delegate int MsDmgCalcCheckHitProbe(Chr* user, Chr* target, Command* command, void* info, int counter);
 
     private enum CommandIdSource
     {

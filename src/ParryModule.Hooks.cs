@@ -1520,7 +1520,21 @@ public unsafe sealed partial class ParryModule
     ///     by observing returns. Logs every PC-target invocation when logging is on
     ///     so the user can manually verify HIT/MISS values from the session log.
     /// </summary>
-    private int h_ms_dmg_calc_check_hit(Chr* user, Chr* target, void* command, void* info, int counter)
+    /// <summary>
+    ///     MISS_ALIVE is returned by exactly one early-return in the engine
+    ///     (`_DmgCalc_CheckHit`, decomp :830187): the command is revive-class
+    ///     (`flags_misc` bit 23) and the target is neither zombie nor dead — a Phoenix
+    ///     Down or Life aimed at a living character. Its caller (:833532) then `goto`s
+    ///     past the entire damage and status chain.
+    ///
+    ///     It is therefore **not** an evade, and must never be flipped to HIT: doing so
+    ///     would land a revive on a healthy party member. It has nothing to do with
+    ///     status resistance either — petrify and friends are decided later, in
+    ///     `_DmgCalc_InflictStatus` against `status_resists`.
+    /// </summary>
+    private const uint CommandFlagsMiscReviveClass = 0x800000;
+
+    private int h_ms_dmg_calc_check_hit(Chr* user, Chr* target, Command* command, void* info, int counter)
     {
         int result = _hMsDmgCalcCheckHit.orig_fptr.Invoke(user, target, command, info, counter);
 
@@ -1583,17 +1597,23 @@ public unsafe sealed partial class ParryModule
             log_debug($"[CheckHit] user_slot={userSlot:X2} user_tpl={userTemplate:X4} target_slot={targetSlot:X2} target_tpl={targetTemplate:X4} is_aeon={isAeon} result={result} (obs#{_checkHitObservationCount}, hit={_checkHitHitValue?.ToString() ?? "?"}, miss={_checkHitMissValue?.ToString() ?? "?"})");
         }
 
-        // Native PC evasion stays disabled (see _optionDisableNativeEvasion): a PC that evades
-        // natively never reaches our impact path. The override only engages once both enum values
-        // have been observed in-game, so it is inert until then.
+        // Native PC evasion stays disabled: a PC that evades natively never reaches our impact
+        // path, so the player's parry/dodge is the only way to avoid a hit. Inert until HIT has
+        // been observed.
         if (_checkHitHitValue == null) return result;
-        if (_checkHitMissValue == null) return result;
-        if (result != _checkHitMissValue.Value) return result;
+        if (result == _checkHitHitValue.Value) return result;
+
+        // Do NOT gate on the auto-discovered MISS value. The enum has three members, and the
+        // discovery caches whichever non-HIT value it happens to see first — on this profile it
+        // caught MISS_ALIVE (2) and then never overrode the real MISS (1), letting PCs evade on
+        // their own. MISS_ALIVE is identifiable structurally instead: it is returned iff the
+        // command is revive-class. Everything else that is not HIT is a genuine evasion roll.
+        if (command != null && (command->flags_misc & CommandFlagsMiscReviveClass) != 0) return result;
 
         _checkHitOverrideCount++;
         if (_optionLogging)
         {
-            log_debug($"[CheckHit] Overrode MISS → HIT for PC target_slot={targetSlot:X2} target_tpl={targetTemplate:X4} (override#{_checkHitOverrideCount}).");
+            log_debug($"[CheckHit] Overrode MISS ({result}) → HIT for PC target_slot={targetSlot:X2} target_tpl={targetTemplate:X4} (override#{_checkHitOverrideCount}).");
         }
         return _checkHitHitValue.Value;
     }
