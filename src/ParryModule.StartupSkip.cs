@@ -114,7 +114,7 @@ public unsafe sealed partial class ParryModule
         bool redirected = false;
         try
         {
-            _hStartupAtelEventSetUp.orig_fptr.Invoke(StartupSkipTitleRoomId);
+            orig_startup_atel_event_setup(StartupSkipTitleRoomId);
             redirected = true;
         }
         catch (Exception ex)
@@ -143,7 +143,7 @@ public unsafe sealed partial class ParryModule
 
         if (!_startupSkipForceTitle)
         {
-            _hStartupAtelEventSetUp.orig_fptr.Invoke(eventId);
+            orig_startup_atel_event_setup(eventId);
             return;
         }
 
@@ -156,7 +156,7 @@ public unsafe sealed partial class ParryModule
             targetEventId = StartupSkipTitleRoomId;
         }
 
-        _hStartupAtelEventSetUp.orig_fptr.Invoke(targetEventId);
+        orig_startup_atel_event_setup(targetEventId);
     }
 
     // ── NeedShowJapanLogo hook: suppress the Japan-logo gate during startup ───
@@ -167,7 +167,7 @@ public unsafe sealed partial class ParryModule
             return 0;
         }
 
-        return _hStartupNeedShowJapanLogo.orig_fptr.Invoke();
+        return orig_startup_need_show_japan_logo();
     }
 
     // ── Boot FMV skip hook — FUN_006d9590 / FFX.exe+0x002d9590 ────────────────
@@ -179,7 +179,7 @@ public unsafe sealed partial class ParryModule
     {
         if (_debugFrameIndex >= BootSkipFrameWindow)
         {
-            _hStartupBootFmvSkip.orig_fptr.Invoke(fmv);
+            orig_startup_boot_fmv_skip(fmv);
             return;
         }
 
@@ -189,8 +189,8 @@ public unsafe sealed partial class ParryModule
 
         // Guard: only act when the FMV manager reports it is actually playing.
         int* gMoviePlay = FhUtil.ptr_at<int>(StartupOffsets.GMoviePlay);
-        if (gMoviePlay == null || *gMoviePlay != 1) { _hStartupBootFmvSkip.orig_fptr.Invoke(fmv); return; }
-        if (p[0x6d0] == 0 || p[0x6d2] == 0)         { _hStartupBootFmvSkip.orig_fptr.Invoke(fmv); return; }
+        if (gMoviePlay == null || *gMoviePlay != 1) { orig_startup_boot_fmv_skip(fmv); return; }
+        if (p[0x6d0] == 0 || p[0x6d2] == 0)         { orig_startup_boot_fmv_skip(fmv); return; }
 
         // Write the sentinels the native skip-commit path writes.
         *(int*)(p + 0x6e0) = 0xfffe;
@@ -218,7 +218,7 @@ public unsafe sealed partial class ParryModule
             // ShellExecuteW success convention: > 32. 33 is the canonical fake-success value.
             return (IntPtr)33;
         }
-        return _hStartupShellExecuteW.orig_fptr.Invoke(hwnd, lpOperation, lpFile, lpParameters, lpDirectory, nShowCmd);
+        return orig_startup_shell_execute_w(hwnd, lpOperation, lpFile, lpParameters, lpDirectory, nShowCmd);
     }
 
     // ── event classification helpers ─────────────────────────────────────────

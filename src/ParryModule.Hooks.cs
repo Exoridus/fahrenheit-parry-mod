@@ -8,7 +8,7 @@ public unsafe sealed partial class ParryModule
         ulong frame = _debugFrameIndex;
         DateTime now = current_gameplay_timestamp();
 
-        _hMsExeInputCue.orig_fptr.Invoke();
+        orig_ms_exe_input_cue();
 
         bool hasAfter = try_get_head_cue_snapshot(_debugHookCueScratch, out DebugCueSnapshot after);
         bool changed = !hadBefore || !hasAfter || !before.EqualsSemantic(after);
@@ -265,7 +265,7 @@ public unsafe sealed partial class ParryModule
         }
         else
         {
-            result = _hMsSetDamage.orig_fptr.Invoke(param_1, param_2, param_3);
+            result = orig_ms_set_damage(param_1, param_2, param_3);
         }
 
         // Telemetry: snapshot HP after finalization.
@@ -539,7 +539,7 @@ public unsafe sealed partial class ParryModule
             }
         }
 
-        int result = _hMsCalcDamage.orig_fptr.Invoke(
+        int result = orig_ms_calc_damage(
             user_id, user_chr, target_id, target_chr,
             command, command_id,
             p7, p8, p9, p10, p11);
@@ -624,7 +624,7 @@ public unsafe sealed partial class ParryModule
 
         if (!defended)
         {
-            _hMsDamageSetMotion.orig_fptr.Invoke(target, p2, p3);
+            orig_ms_damage_set_motion(target, p2, p3);
         }
         else
         {
@@ -655,12 +655,12 @@ public unsafe sealed partial class ParryModule
                     byte* ramGuard = (byte*)&blockChr->ram + ChrRamGuardReactFlagOffset;
                     byte prevGuard = *ramGuard;
                     *ramGuard = 1;
-                    _hMsDamageSetMotion.orig_fptr.Invoke(target, p2, p3);
+                    orig_ms_damage_set_motion(target, p2, p3);
                     *ramGuard = prevGuard;
                 }
                 else
                 {
-                    _hMsDamageSetMotion.orig_fptr.Invoke(target, p2, p3);
+                    orig_ms_damage_set_motion(target, p2, p3);
                 }
                 if (target < PartyActorCapacity) _parryBlockPlayedFrame[target] = _debugFrameIndex;
                 log_debug($"Parry native block for {format_actor_slot(target)} (guard flag → engine plays 0x43).");
@@ -776,7 +776,7 @@ public unsafe sealed partial class ParryModule
 
     private int h_dmg_calc_armored(Chr* user, Chr* target, Command* command, int p4, int* p5, int damage)
     {
-        int result = _hDmgCalcArmored.orig_fptr.Invoke(user, target, command, p4, p5, damage);
+        int result = orig_dmg_calc_armored(user, target, command, p4, p5, damage);
 
         if (_optionLogging)
         {
@@ -838,7 +838,7 @@ public unsafe sealed partial class ParryModule
             }
         }
 
-        int result = _hMsCalcDamageInternal.orig_fptr.Invoke(
+        int result = orig_ms_calc_damage_internal(
             user_id, user_chr, target_id, target_chr,
             command, command_id,
             p7, p8, p9, p10, p11);
@@ -1265,7 +1265,7 @@ public unsafe sealed partial class ParryModule
                 $"attacker={_runtime.CurrentAttackerId} targetMask={_runtime.CurrentPartyTargetMask} windowActive={_runtime.ParryWindowActive}");
         }
 
-        int result = _hMsSetDamageInternal.orig_fptr.Invoke(param_1, param_2, param_3, param_4, param_5);
+        int result = orig_ms_set_damage_internal(param_1, param_2, param_3, param_4, param_5);
 
         return result;
     }
@@ -1350,7 +1350,7 @@ public unsafe sealed partial class ParryModule
     private int h_atel_camera_polar_set(int worker, int p2, int stack, int isCam, int variant)
     {
         probe_camera_writer(polar_opcode_name(isCam, variant), $"isCam={isCam},variant={variant}");
-        return _hAtelCameraPolarSet.orig_fptr.Invoke(worker, p2, stack, isCam, variant);
+        return orig_atel_camera_polar_set(worker, p2, stack, isCam, variant);
     }
 
     /// <summary>
@@ -1361,7 +1361,7 @@ public unsafe sealed partial class ParryModule
     private void h_atel_camera_pos_set(int worker, int p2, int stack, int p4)
     {
         probe_camera_writer("camSetPos", $"p4={p4}");
-        _hAtelCameraPosSet.orig_fptr.Invoke(worker, p2, stack, p4);
+        orig_atel_camera_pos_set(worker, p2, stack, p4);
     }
 
     private int h_ms_atel_request_camera(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8)
@@ -1403,7 +1403,7 @@ public unsafe sealed partial class ParryModule
             return -1;
         }
 
-        return _hMsAtelRequestCamera.orig_fptr.Invoke(p1, p2, p3, p4, p5, p6, p7, p8);
+        return orig_ms_atel_request_camera(p1, p2, p3, p4, p5, p6, p7, p8);
     }
 
     /// <summary>
@@ -1443,7 +1443,7 @@ public unsafe sealed partial class ParryModule
             return 0xFF;
         }
 
-        return _hMsAtelRequestMagicCamera.orig_fptr.Invoke(p1, p2, p3, p4, p5, p6, p7, p8, p9);
+        return orig_ms_atel_request_magic_camera(p1, p2, p3, p4, p5, p6, p7, p8, p9);
     }
 
     /// <summary>
@@ -1482,7 +1482,7 @@ public unsafe sealed partial class ParryModule
             return;
         }
 
-        _hMsBattleSpecialCameraPause.orig_fptr.Invoke(mode);
+        orig_ms_battle_special_camera_pause(mode);
     }
 
     /// <summary>
@@ -1495,7 +1495,7 @@ public unsafe sealed partial class ParryModule
     /// </summary>
     private void h_ms_effect_end_motion(uint chr_id, int mode)
     {
-        _hMsEffectEndMotion.orig_fptr.Invoke(chr_id, mode);
+        orig_ms_effect_end_motion(chr_id, mode);
 
         if (!_optionLogging) return;
         uint slot = chr_id & 0xff;
@@ -1536,7 +1536,7 @@ public unsafe sealed partial class ParryModule
 
     private int h_ms_dmg_calc_check_hit(Chr* user, Chr* target, Command* command, void* info, int counter)
     {
-        int result = _hMsDmgCalcCheckHit.orig_fptr.Invoke(user, target, command, info, counter);
+        int result = orig_ms_dmg_calc_check_hit(user, target, command, info, counter);
 
         if (target == null) return result;  // defensive — never observed but cheap
 
