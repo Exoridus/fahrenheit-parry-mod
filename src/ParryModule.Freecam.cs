@@ -20,6 +20,11 @@ public unsafe sealed partial class ParryModule
     // meant to be tuned in-game.
     private bool _freecamActive;
     private int _battleCameraId;                       // 0 = not resolved this battle yet
+    // Fallback framing: with no pose of our own to hold, let the game frame the battle for this many
+    // seconds after the camera resolves, THEN freeze the settled default. -1 = not started this battle.
+    private const float CameraSettleGraceSeconds = 1.0f;
+    private float _cameraSettleSeconds = -1f;
+    private bool _currentEncounterHasAnchor;           // updated each frame; read by the writer hook
     private Vector3 _freecamPos = new(0f, 80f, 260f);  // eye position; a guess, tune in-game
     private float _freecamYaw;                          // radians, horizontal turn
     private float _freecamPitch;                        // radians, vertical turn
@@ -91,16 +96,26 @@ public unsafe sealed partial class ParryModule
         int workAdrs = _getCamWorkAdrs(worker);
         if (workAdrs == 0) return;
         int camId = *(int*)workAdrs;
-        if (camId != 0) _battleCameraId = camId;
+        if (camId != 0)
+        {
+            _battleCameraId = camId;
+            _cameraSettleSeconds = CameraSettleGraceSeconds;   // let the game frame the battle before we hold
+        }
     }
 
     // Per-frame drive. Freecam (user-controlled) takes priority; otherwise, if the anchor toggle is
     // on, the saved pose is held. Both no-op unless a battle is live and the camera id is resolved.
     private void drive_camera()
     {
-        if (!try_get_live_battle_context(out _)) { _battleCameraId = 0; _followInit = false; return; }
+        if (!try_get_live_battle_context(out _)) { _battleCameraId = 0; _followInit = false; _cameraSettleSeconds = -1f; _currentEncounterHasAnchor = false; return; }
         if (_battleCameraId == 0) return;
+        if (_cameraSettleSeconds > 0f) _cameraSettleSeconds = MathF.Max(0f, _cameraSettleSeconds - ImGui.GetIO().DeltaTime);
         tick_zoom_punch();
+
+        AnchorPose anchor = default;
+        bool haveAnchor = _optionStaticCameraAnchor
+            && _cameraAnchors.TryGetValue(current_battle_camera_key(), out anchor);
+        _currentEncounterHasAnchor = haveAnchor;
 
         if (_freecamActive)
         {
@@ -108,10 +123,6 @@ public unsafe sealed partial class ParryModule
             stamp_camera(_freecamPos, _freecamYaw, _freecamPitch);
             return;
         }
-
-        AnchorPose anchor = default;
-        bool haveAnchor = _optionStaticCameraAnchor
-            && _cameraAnchors.TryGetValue(current_battle_camera_key(), out anchor);
 
         if (_optionFollowCam)
         {

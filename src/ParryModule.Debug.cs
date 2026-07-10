@@ -842,9 +842,18 @@ public unsafe sealed partial class ParryModule
     // in place, at its previous size.
     private void render_overlay_collapsed_caret()
     {
-        Vector2 caretPos = new(
-            _overlayWindowPos.X + _overlayWindowSize.X - OverlayCaretSize - 4f,
-            _overlayWindowPos.Y);
+        Vector2 caretPos;
+        if (_overlayPositioned)
+        {
+            // After the window has been opened once, sit at its top-right corner.
+            caretPos = new(_overlayWindowPos.X + _overlayWindowSize.X - OverlayCaretSize - 4f, _overlayWindowPos.Y);
+        }
+        else
+        {
+            // Default (never opened): the screen's top-right corner.
+            Vector2 disp = ImGui.GetIO().DisplaySize;
+            caretPos = new(disp.X - OverlayCaretSize - 10f, 10f);
+        }
         ImGui.SetNextWindowPos(caretPos, ImGuiCond.Always);
         ImGui.SetNextWindowBgAlpha(_overlayBgAlpha);
 
@@ -900,6 +909,7 @@ public unsafe sealed partial class ParryModule
         _overlayWindowSize = ImGui.GetWindowSize();
         _overlayPrevRectMin = _overlayWindowPos;
         _overlayPrevRectMax = _overlayWindowPos + _overlayWindowSize;
+        _overlayPositioned = true;
     }
 
 #if DEBUG

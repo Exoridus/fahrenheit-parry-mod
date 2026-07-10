@@ -1356,9 +1356,13 @@ public unsafe sealed partial class ParryModule
     {
         capture_battle_camera_id(worker);
         if (!camera_hard_lock_engaged()) return false;
-        // The freecam and the static anchor both need the id resolved before they can drive the
-        // camera, so let the game's write through until we have captured it.
-        if ((_freecamActive || _optionStaticCameraAnchor) && _battleCameraId == 0) return false;
+        if (_battleCameraId == 0) return false;   // let the game's write through so the camera id resolves
+
+        // With a pose of our own to hold (freecam, or an anchor for this encounter) suppress at once.
+        // Otherwise let the game frame the battle for a short grace, then freeze the settled default —
+        // suppressing from frame 1 would instead freeze the pre-battle / uninitialised camera.
+        bool immediate = _freecamActive || (_optionStaticCameraAnchor && _currentEncounterHasAnchor);
+        if (!immediate && _cameraSettleSeconds != 0f) return false;
         return true;
     }
 

@@ -642,6 +642,7 @@ public unsafe sealed partial class ParryModule : FhModule
     private Vector2 _overlayWindowSize = new(420f, 520f);
     private Vector2 _overlayPrevRectMin = new(20f, 20f);
     private Vector2 _overlayPrevRectMax = new(20f, 20f);
+    private bool _overlayPositioned;   // set once the full window has been shown; until then the collapsed caret starts in the screen's top-right corner
     private int _debugCueTurnId;
     private string _dataMappingStatus = "No data mappings loaded.";
     private readonly Random _rng = new();
