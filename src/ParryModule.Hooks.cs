@@ -1337,30 +1337,68 @@ public unsafe sealed partial class ParryModule
     };
 
     /// <summary>
-    ///     Observe-only probe on FUN_007bad30 (FFX.exe+0x3BAD30) — the actor-relative polar
-    ///     camera writer shared by all six camSetBtlPolar/refSetBtlPolar/camSetChrPolar
-    ///     variants. This is the function a monster attack script uses to move the camera,
-    ///     so it is the one place that can tell us which opcode drives a given pan.
-    ///
-    ///     The six script arguments are popped off the ATEL stack inside the callee, so they
-    ///     are not visible here; `isCam`/`variant` are the wrapper constants and are enough
-    ///     to name the opcode. Always calls the original — suppressing here would require
-    ///     replicating the callee's stack pops (4x float, then 2x int) or the ATEL stack desyncs.
+    ///     True while the battle camera lock should hold the camera hard — the AllTurns mode. In
+    ///     that mode, suppressing camera *requests* is not enough: the request lock only fires while
+    ///     a turn is active (AwaitingTurnEnd), and the ATEL position writers that pan the camera on
+    ///     the player's own turn run with AwaitingTurnEnd false, so they slip past it. So AllTurns
+    ///     also stops those writers directly. EnemyTurnsOnly leaves them alone — the writer probe
+    ///     shows they never fire during an enemy action, so the request lock covers that mode.
+    /// </summary>
+    private bool camera_hard_lock_engaged()
+        => _optionEnabled
+        && _optionBattleCameraLockMode == BattleCameraLockMode.AllTurns
+        && try_get_live_battle_context(out _);
+
+    /// <summary>
+    ///     Replicate a suppressed camera writer's ATEL stack pops without applying the write, so the
+    ///     VM stack stays balanced — an unbalanced pop desyncs it. Each value must be popped with the
+    ///     same primitive the callee used (the pop functions check a per-value type byte), in the
+    ///     same order: floats first, then ints. `size` is at offset 0 of AtelStack, so the one
+    ///     `stack` pointer serves both pops. Verified against FUN_007bad30 (4 float + 2 int) and
+    ///     FUN_007bb620 (3 float).
+    /// </summary>
+    private void drain_camera_writer_stack(int worker, int stack, int floats, int ints)
+    {
+        _popStackFloat   ??= FhUtil.get_fptr<AtelPopStackFloatFn>(ExternalMemoryOffsetMap.Functions.AtelPopStackFloat);
+        _popStackInteger ??= FhUtil.get_fptr<AtelPopStackIntegerFn>(ExternalMemoryOffsetMap.Functions.AtelPopStackInteger);
+        for (int i = 0; i < floats; i++) _popStackFloat(worker, stack);
+        for (int i = 0; i < ints; i++)   _popStackInteger(worker, stack);
+    }
+
+    /// <summary>
+    ///     Hook on FUN_007bad30 (FFX.exe+0x3BAD30) — the actor-relative polar camera writer shared by
+    ///     all six camSetBtlPolar/refSetBtlPolar/camSetChrPolar variants. Observe-only unless the
+    ///     hard lock is engaged, in which case the write is suppressed: the callee's stack pops
+    ///     (4x float, then 2x int) are replicated so the ATEL stack stays balanced, and the original
+    ///     — which is what actually moves the camera — is skipped.
     /// </summary>
     private int h_atel_camera_polar_set(int worker, int p2, int stack, int isCam, int variant)
     {
         probe_camera_writer(polar_opcode_name(isCam, variant), $"isCam={isCam},variant={variant}");
+        if (camera_hard_lock_engaged())
+        {
+            drain_camera_writer_stack(worker, stack, floats: 4, ints: 2);
+            _cameraWriterSuppressCount++;
+            return 0;
+        }
         return orig_atel_camera_polar_set(worker, p2, stack, isCam, variant);
     }
 
     /// <summary>
-    ///     Observe-only probe on FUN_007bb620 (FFX.exe+0x3BB620) — the absolute-position
-    ///     camera writer behind camSetPos. Sibling of the polar path above; a monster pan
-    ///     comes from one or the other.
+    ///     Hook on FUN_007bb620 (FFX.exe+0x3BB620) — the absolute-position camera writer behind
+    ///     camSetPos, the dominant writer outside enemy turns. Observe-only unless the hard lock is
+    ///     engaged, in which case the write is suppressed: the callee pops 3 floats off the ATEL
+    ///     stack (no ints), replicated here, and the original is skipped.
     /// </summary>
     private void h_atel_camera_pos_set(int worker, int p2, int stack, int p4)
     {
         probe_camera_writer("camSetPos", $"p4={p4}");
+        if (camera_hard_lock_engaged())
+        {
+            drain_camera_writer_stack(worker, stack, floats: 3, ints: 0);
+            _cameraWriterSuppressCount++;
+            return;
+        }
         orig_atel_camera_pos_set(worker, p2, stack, p4);
     }
 

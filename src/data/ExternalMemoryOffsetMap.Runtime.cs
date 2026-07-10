@@ -99,6 +99,16 @@ public static partial class ExternalMemoryOffsetMap
         // Same stack discipline: coordinates are popped inside, not passed.
         public const int AtelCameraPosSet = 0x003bb620;
 
+        // ATEL stack pop primitives — needed to *suppress* a camera writer cleanly. A writer pops
+        // its script args off the ATEL stack inside the callee; skipping the writer without those
+        // pops desyncs the VM. Replicating them (same count, same order, same pop fn per value) keeps
+        // the stack balanced. `size` is at offset 0 of AtelStack, so the AtelStack* doubles as the
+        // int* the float pop wants — one pointer serves both.
+        //   float AtelPopStackFloat  (AtelBasicWorker* worker, int*       ref_size) __cdecl  (decomp L991484)
+        //   int   AtelPopStackInteger(AtelBasicWorker* work,   AtelStack* stack)    __cdecl  (decomp L991522)
+        public const int AtelPopStackFloat   = 0x0046dde0;  // FUN_0086dde0 (absolute 0x0086dde0)
+        public const int AtelPopStackInteger = 0x0046de90;  // FUN_0086de90 (absolute 0x0086de90)
+
         // MsLimitUp at FFX.exe+0x3B15A0 (absolute 0x007B15A0) — the engine's overdrive charge
         // primitive, and the only correct way to add gauge. Signature (decomp L863356):
         //   uint MsLimitUp(uint chr_id, Chr* chr, uint amount)  __cdecl, returns the applied amount

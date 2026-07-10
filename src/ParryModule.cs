@@ -102,6 +102,16 @@ public unsafe sealed partial class ParryModule : FhModule
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate void AtelCameraPosSetProbe(int worker, int p2, int stack, int p4);
 
+    // ATEL stack pops, called (not hooked) to balance the stack when a camera writer is suppressed.
+    // `size` is at offset 0 of AtelStack, so the same pointer serves the float pop's int* and the
+    // int pop's AtelStack*. Cached (see _popStackFloat/_popStackInteger) because the writers fire
+    // many times per frame and get_fptr allocates a delegate each call.
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate float AtelPopStackFloatFn(int worker, int stack);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate int AtelPopStackIntegerFn(int worker, int stack);
+
     // MsBtlSetHitEffect — engine's registered-hit-effect emitter (global handle).
     // Used directly (no hook) on parry success to fire the Sentinel barrier
     // visual (effect 0x4A) on the parrying character. Routes through the global
@@ -437,6 +447,10 @@ public unsafe sealed partial class ParryModule : FhModule
     private long _enemyCameraLockSuppressCount;
     private int _enemyMagicCameraLockSuppressCount = 0;
     private int _battleSpecialCameraLockSuppressCount = 0;
+    private long _cameraWriterSuppressCount;
+    // Cached ATEL stack-pop function pointers, resolved once on first camera-writer suppression.
+    private AtelPopStackFloatFn? _popStackFloat;
+    private AtelPopStackIntegerFn? _popStackInteger;
     // CheckHitResult enum auto-discovery. The enum has 3 members (HIT/MISS/MISS_ALIVE)
     // but the integer values weren't exported by Ghidra's datatype dumper. We learn
     // them by observation:
@@ -826,7 +840,7 @@ public unsafe sealed partial class ParryModule : FhModule
         }
         catch (Exception ex)
         {
-            _logger.Warning($"[Parry] Could not hook the ATEL camera writers (camera-writer probe unavailable): {ex.Message}");
+            _logger.Warning($"[Parry] Could not hook the ATEL camera writers (writer probe + hard camera lock unavailable): {ex.Message}");
         }
 
         try
