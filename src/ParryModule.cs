@@ -622,11 +622,11 @@ public unsafe sealed partial class ParryModule : FhModule
     private double _simulationClockSeconds;
     private ulong _debugFrameIndex;
     private ulong _debugBattleFrameIndex;
+    private string _debugLogTextBuf = string.Empty;   // rebuilt each frame for the selectable log box
     private bool _debugBattleActive;
     private bool _debugBattleSessionFirstCueSeen;
     private bool _debugGameSaveLoaded;
     private bool _debugGameplayReady;
-    private bool _debugAutoScroll = true;
     private float _debugStatePanelRatio = 0.50f;
 
     // Overlay window chrome. No title bar — the tab bar is the header, with a collapse caret

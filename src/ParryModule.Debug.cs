@@ -1052,58 +1052,21 @@ public unsafe sealed partial class ParryModule
 
     private void render_debug_log_panel(float panelHeight)
     {
-        ImGui.PushStyleColor(ImGuiCol.ChildBg, new Vector4(0f, 0f, 0f, 0.45f));
-        if (ImGui.BeginChild("###fhparry.debug.log", new Vector2(0f, panelHeight), ImGuiChildFlags.Borders, ImGuiWindowFlags.AlwaysVerticalScrollbar))
+        // A read-only multiline box so the log can be selected and copied. Just the frame index and
+        // the message — no wall-clock timestamp. (Per-line colours are traded for selectable text.)
+        StringBuilder sb = new();
+        for (int i = 0; i < _debugLog.Count; i++)
         {
-            float scrollY = ImGui.GetScrollY();
-            float maxScrollY = ImGui.GetScrollMaxY();
-            bool wasAtBottom = maxScrollY <= 0f || scrollY >= maxScrollY - 2f;
-
-            for (int i = 0; i < _debugLog.Count; i++)
-            {
-                DebugLogEntry entry = _debugLog[i];
-                bool isCueFlush = entry.Message.StartsWith("Cue queue flushed.", StringComparison.Ordinal);
-                string prefix = format_log_prefix(entry);
-                string suffix = entry.RepeatCount > 1 ? $" (x{entry.RepeatCount})" : string.Empty;
-
-                if (isCueFlush)
-                {
-                    ImGui.SeparatorText("Cue Flush");
-                    ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(0.95f, 0.85f, 0.35f, 1f));
-                }
-
-                Vector4? logColor = get_log_color(entry.Message);
-                if (logColor.HasValue)
-                {
-                    ImGui.PushStyleColor(ImGuiCol.Text, logColor.Value);
-                }
-
-                ImGui.TextUnformatted(prefix);
-                ImGui.SameLine();
-                float wrapPos = ImGui.GetCursorPosX();
-                ImGui.PushTextWrapPos();
-                ImGui.SetCursorPosX(wrapPos);
-                ImGui.TextWrapped(entry.Message + suffix);
-                ImGui.PopTextWrapPos();
-
-                if (logColor.HasValue)
-                {
-                    ImGui.PopStyleColor();
-                }
-
-                if (isCueFlush)
-                {
-                    ImGui.PopStyleColor();
-                }
-            }
-
-            if (_debugAutoScroll && wasAtBottom)
-            {
-                ImGui.SetScrollHereY(1f);
-            }
+            DebugLogEntry entry = _debugLog[i];
+            sb.Append('F').Append(entry.FrameIndex.ToString("D7", CultureInfo.InvariantCulture)).Append(' ').Append(entry.Message);
+            if (entry.RepeatCount > 1) sb.Append(" (x").Append(entry.RepeatCount).Append(')');
+            sb.Append('\n');
         }
+        _debugLogTextBuf = sb.ToString();
 
-        ImGui.EndChild();
+        ImGui.PushStyleColor(ImGuiCol.FrameBg, new Vector4(0f, 0f, 0f, 0.45f));
+        ImGui.InputTextMultiline("##fhparry.debug.log", ref _debugLogTextBuf, (uint)_debugLogTextBuf.Length + 16,
+            new Vector2(-1f, panelHeight), ImGuiInputTextFlags.ReadOnly);
         ImGui.PopStyleColor();
     }
 
