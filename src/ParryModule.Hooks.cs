@@ -1349,6 +1349,17 @@ public unsafe sealed partial class ParryModule
         && _optionBattleCameraLockMode == BattleCameraLockMode.AllTurns
         && try_get_live_battle_context(out _);
 
+    // Whether to suppress a camera writer this call. Always tries to cache the battle camera id (the
+    // freecam needs it). Suppresses when the hard lock is engaged — except while the freecam is on
+    // but the id is still unresolved, when the write is let through so the game resolves the id.
+    private bool should_suppress_camera_writer(int worker)
+    {
+        capture_battle_camera_id(worker);
+        if (!camera_hard_lock_engaged()) return false;
+        if (_freecamActive && _battleCameraId == 0) return false;
+        return true;
+    }
+
     /// <summary>
     ///     Replicate a suppressed camera writer's ATEL stack pops without applying the write, so the
     ///     VM stack stays balanced — an unbalanced pop desyncs it. Each value must be popped with the
@@ -1375,7 +1386,7 @@ public unsafe sealed partial class ParryModule
     private int h_atel_camera_polar_set(int worker, int p2, int stack, int isCam, int variant)
     {
         probe_camera_writer(polar_opcode_name(isCam, variant), $"isCam={isCam},variant={variant}");
-        if (camera_hard_lock_engaged())
+        if (should_suppress_camera_writer(worker))
         {
             drain_camera_writer_stack(worker, stack, floats: 4, ints: 2);
             _cameraWriterSuppressCount++;
@@ -1393,7 +1404,7 @@ public unsafe sealed partial class ParryModule
     private void h_atel_camera_pos_set(int worker, int p2, int stack, int p4)
     {
         probe_camera_writer("camSetPos", $"p4={p4}");
-        if (camera_hard_lock_engaged())
+        if (should_suppress_camera_writer(worker))
         {
             drain_camera_writer_stack(worker, stack, floats: 3, ints: 0);
             _cameraWriterSuppressCount++;

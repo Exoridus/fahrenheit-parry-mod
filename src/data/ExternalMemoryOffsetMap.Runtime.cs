@@ -109,6 +109,20 @@ public static partial class ExternalMemoryOffsetMap
         public const int AtelPopStackFloat   = 0x0046dde0;  // FUN_0086dde0 (absolute 0x0086dde0)
         public const int AtelPopStackInteger = 0x0046de90;  // FUN_0086de90 (absolute 0x0086de90)
 
+        // Freecam write path. MsCameraSetRect stamps a 4-float vec into a camera bank; param_2 bit 0
+        // selects the eye bank (camSetPos, mode 1) vs the look-at/ref bank (mode 0). It validates the
+        // id via MsCameraIDcheck and no-ops on a bad one, so a stale id cannot crash. camId comes from
+        // the ATEL camera work slot: AtelGetCameraWorkAdrs(worker) returns a pointer whose *value is
+        // the resolved id (0 until the game runs a real camera write).
+        //   void MsCameraSetRect     (uint camId, uint mode, float* vec4) __cdecl  (decomp L874617)
+        //   int  AtelGetCameraWorkAdrs(AtelBasicWorker* worker)           __cdecl  (returns int*)
+        public const int MsCameraSetRect       = 0x003bf8c0;  // FUN_007bf8c0 (absolute 0x007bf8c0)
+        public const int AtelGetCameraWorkAdrs = 0x0046ade0;  // FUN_0086ade0 (absolute 0x0086ade0)
+
+        // int MsGetBattleScene(void) — the current battle scene/map id (e.g. 0xd40000). Tagged onto
+        // a captured freecam angle so a hand-found camera can be pinned to the map it was found on.
+        public const int MsGetBattleScene = 0x00382a30;  // FUN_00782a30 (absolute 0x00782a30)
+
         // MsLimitUp at FFX.exe+0x3B15A0 (absolute 0x007B15A0) — the engine's overdrive charge
         // primitive, and the only correct way to add gauge. Signature (decomp L863356):
         //   uint MsLimitUp(uint chr_id, Chr* chr, uint amount)  __cdecl, returns the applied amount
