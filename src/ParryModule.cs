@@ -419,8 +419,8 @@ public unsafe sealed partial class ParryModule : FhModule
     private const uint ImpactShakeRandomness = 8;      // the engine's own jitter: ±4 around the amplitude
 
     // A whole-party parry (all three active PCs parried the same attack) fires a longer, heavier
-    // shake to sell the moment — the "E" duration the sweep landed on. 22 ticks ≈ 0.73 s.
-    private const uint ImpactShakeDurationWholeParty = 22;  // ticks @30fps ≈ 0.73 s
+    // shake to sell the moment. 24 ticks ≈ 0.80 s — double the single-parry shake.
+    private const uint ImpactShakeDurationWholeParty = 24;  // ticks @30fps ≈ 0.80 s
     private const int FullPartyParryCount = 3;
 
     // Streak counter attack: when a slot completes a defensive streak (every

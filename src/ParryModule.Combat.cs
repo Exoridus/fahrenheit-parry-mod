@@ -1300,13 +1300,20 @@ public unsafe sealed partial class ParryModule
     private void fire_impact_screen_shake(string source)
     {
         if (!_optionImpactShake) return;
-        if (!try_get_live_battle_context(out _)) return;
 
         // A whole-party parry — all three active PCs parried the same attack — earns a longer,
         // heavier shake than a single-slot parry. LastParriedTargetMask accumulates the parried
         // slots for the current action and clears at cue-clear, so a 3-bit mask is one big moment.
         bool wholeParty = BitOperations.PopCount(_runtime.LastParriedTargetMask) >= FullPartyParryCount;
         uint duration = wholeParty ? ImpactShakeDurationWholeParty : ImpactShakeDuration;
+        fire_screen_shake_ticks(duration, wholeParty ? $"{source}, whole-party" : source);
+    }
+
+    // Core screen-shake fire for a given duration in ticks. No _optionImpactShake gate — the parry
+    // path checks that; the Lab test buttons call this directly and fire unconditionally.
+    private void fire_screen_shake_ticks(uint duration, string source)
+    {
+        if (!try_get_live_battle_context(out _)) return;
 
         try
         {
@@ -1321,8 +1328,7 @@ public unsafe sealed partial class ParryModule
 
             if (_optionLogging)
             {
-                string tag = wholeParty ? "whole-party " : "";
-                log_debug($"[ImpactShake] {tag}dur={duration} ({duration / BattleFrameRate:F2}s) A(amp={ImpactShakeAmpA} freq={ImpactShakeFreqA}) B(amp={ImpactShakeAmpB} freq={ImpactShakeFreqB}) ({source}).");
+                log_debug($"[ImpactShake] dur={duration} ({duration / BattleFrameRate:F2}s) A(amp={ImpactShakeAmpA} freq={ImpactShakeFreqA}) B(amp={ImpactShakeAmpB} freq={ImpactShakeFreqB}) ({source}).");
             }
         }
         catch (Exception ex)

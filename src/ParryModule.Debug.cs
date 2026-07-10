@@ -514,6 +514,15 @@ public unsafe sealed partial class ParryModule
         ImGui.SameLine(); if (ImGui.Button("Clear FX##labslot")) lab_clear_char_fx();    // per-char effect reset, like the engine's own teardown (experimental)
 
         ImGui.Separator();
+        ImGui.Text("Screen shake:");
+        ImGui.SameLine();
+        if (ImGui.Button($"Single ({ImpactShakeDuration / BattleFrameRate:F2}s)##labshake"))
+            fire_screen_shake_ticks(ImpactShakeDuration, "lab single");
+        ImGui.SameLine();
+        if (ImGui.Button($"Whole-party ({ImpactShakeDurationWholeParty / BattleFrameRate:F2}s)##labshakewp"))
+            fire_screen_shake_ticks(ImpactShakeDurationWholeParty, "lab whole-party");
+
+        ImGui.Separator();
         ImGui.Text($"Hit effect: 0x{_labEffectId:X2}");
         ImGui.SameLine(); if (ImGui.Button("-##labfx")) { _labEffectId = Math.Max(0x00, _labEffectId - 1); lab_fire_effect(); }
         ImGui.SameLine(); if (ImGui.Button("+##labfx")) { _labEffectId = Math.Min(0xFF, _labEffectId + 1); lab_fire_effect(); }
