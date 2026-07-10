@@ -416,6 +416,18 @@ public unsafe sealed partial class ParryModule
             return;
         }
 
+        // Dodge cooldown: paces multi-press without automating the timing. Tiered by difficulty
+        // and zero on Debug. This existed as the `dodge_whiffout` slider, which defaulted to 0 and
+        // was therefore inert from the day it was written.
+        if (_dodgeCooldownRemainingTicks > 0)
+        {
+            if (_optionLogging)
+            {
+                log_debug($"[Dodge] Ignored — cooldown ({_dodgeCooldownRemainingTicks} ticks left).");
+            }
+            return;
+        }
+
         // Move-state whiffout (primary pacing): don't start a new step-out while a targeted char is
         // still in the evade move (Chr 0x415 != 0: 0x09 = stepping out, 0x01 = walking back). Waits
         // until the char has returned home — this paces multi-press to the actual move duration and
@@ -486,6 +498,7 @@ public unsafe sealed partial class ParryModule
         }
 
         _dodgeProbeFramesLeft = 40;
+        _dodgeCooldownRemainingTicks = ParryDifficultyModel.GetDodgeCooldownTicks(_optionDifficulty);
     }
 
     // After a step-out, log Chr+0x415/0x425/0x4AC (move-mode / avoid / motion-type) + world

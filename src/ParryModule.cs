@@ -487,6 +487,10 @@ public unsafe sealed partial class ParryModule : FhModule
     private bool _optionDodgeEnabled = true;
     private bool _dodgeWindowActive = false;
     private int _dodgeWindowRemainingTicks = 0;
+    // Ticks left before another step-out is accepted. Armed from the difficulty model after a
+    // successful one; zero on Debug. Counts down in on_pre_update, unconditionally — a cooldown
+    // that only ran while a cue was live would not survive the gap between two enemy actions.
+    private int _dodgeCooldownRemainingTicks = 0;
     private byte _dodgeArmedAttackerId = 0;
     // CueFirstSeenFrame of the attack the dodge was armed for — the negation only applies to THIS
     // attack instance, so a multi-hit of the same attack is fully dodged but a fresh attack from
@@ -928,6 +932,11 @@ public unsafe sealed partial class ParryModule : FhModule
             }
         }
 
+        if (_dodgeCooldownRemainingTicks > 0)
+        {
+            _dodgeCooldownRemainingTicks--;
+        }
+
         // Dodge window tick (independent of the parry state machine). Expires by tick count; a
         // successful dodge is not "consumed" so a multi-hit / AoE swing is fully evaded.
         if (_dodgeWindowActive)
@@ -1019,6 +1028,7 @@ public unsafe sealed partial class ParryModule : FhModule
         _runtime.WindowDurationSecondsAtOpen = 0f;
         _dodgeWindowActive = false;
         _dodgeWindowRemainingTicks = 0;
+        _dodgeCooldownRemainingTicks = 0;
         _dodgeArmedAttackerId = 0;
         _dodgeArmedCueFrame = 0;
         _dodgeArmedTargetMask = 0;
