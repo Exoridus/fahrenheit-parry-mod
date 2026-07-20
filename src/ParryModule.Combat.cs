@@ -94,6 +94,7 @@ public unsafe sealed partial class ParryModule
         }
 
         try_capture_current_impact_command_context(out byte attackerId, out int queueIndex, out ResolvedCommandInfo command);
+        if (command.CommandId != 0) _lastCombatCommandId = command.CommandId;
         on_correlation_matched((byte)slotIndex, source, command);
         _turnRuntimeEvents.EmitDamageResolved(
             targetSlot: slotIndex,

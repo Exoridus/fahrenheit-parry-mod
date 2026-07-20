@@ -32,6 +32,13 @@ internal sealed class FfxDataMappings
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string DamageType { get; set; } = string.Empty;
+
+        /// <summary>
+        ///     Additive per-command mechanics block (hit_count, formula_id, targeting[], etc.)
+        ///     carried verbatim from the runtime bundle's <c>Domains.Commands.&lt;id&gt;.Mechanics</c>.
+        ///     Null when the bundle predates this field or the entry has none.
+        /// </summary>
+        public JsonElement? Mechanics { get; set; }
     }
 
     private sealed class MonsterRecord
@@ -145,6 +152,18 @@ internal sealed class FfxDataMappings
             return true;
         }
 
+        return false;
+    }
+
+    public bool TryGetCommandMechanics(ushort id, out JsonElement mechanics)
+    {
+        if (_commands.TryGetValue(id, out CommandLikeRecord? cmd) && cmd.Mechanics.HasValue)
+        {
+            mechanics = cmd.Mechanics.Value;
+            return true;
+        }
+
+        mechanics = default;
         return false;
     }
 
@@ -698,7 +717,13 @@ internal sealed class FfxDataMappings
                 damageType = damageTypeNode.GetString() ?? string.Empty;
             }
 
-            if (string.IsNullOrWhiteSpace(name) && string.IsNullOrWhiteSpace(description) && string.IsNullOrWhiteSpace(damageType))
+            JsonElement? mechanics = null;
+            if (prop.Value.TryGetProperty("Mechanics", out JsonElement mechNode) && mechNode.ValueKind == JsonValueKind.Object)
+            {
+                mechanics = mechNode.Clone();
+            }
+
+            if (string.IsNullOrWhiteSpace(name) && string.IsNullOrWhiteSpace(description) && string.IsNullOrWhiteSpace(damageType) && mechanics is null)
             {
                 continue;
             }
@@ -718,6 +743,11 @@ internal sealed class FfxDataMappings
             if (!string.IsNullOrWhiteSpace(damageType) && string.IsNullOrWhiteSpace(record.DamageType))
             {
                 record.DamageType = damageType;
+                changed = true;
+            }
+            if (mechanics is not null && !record.Mechanics.HasValue)
+            {
+                record.Mechanics = mechanics;
                 changed = true;
             }
             if (changed) mapped++;

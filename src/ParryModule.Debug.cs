@@ -505,6 +505,73 @@ public unsafe sealed partial class ParryModule
     // still reach an unloaded effect id, which crashes natively — that risk is on the user.
     private static readonly int[] LabEffectQuickPicks = [0x4A, 0x4B];
 
+    // ── Command Mechanics inspector (debug, read-only) ────────────────────────
+    // Manual command-id browser over the runtime bundle's per-command Mechanics block
+    // (hit_count, formula_id, targeting[], etc.), plus the most recently resolved
+    // in-combat command id for quick cross-reference. Read-only: no native calls.
+    private int _cmdMechInspectId = 0x2000;
+
+    private void render_command_mechanics_panel()
+    {
+        ImGui.Text($"Command id: 0x{_cmdMechInspectId:X4}");
+        ImGui.SameLine(); if (ImGui.Button("-##cmdmech")) _cmdMechInspectId = Math.Max(0x0000, _cmdMechInspectId - 1);
+        ImGui.SameLine(); if (ImGui.Button("+##cmdmech")) _cmdMechInspectId = Math.Min(0xFFFF, _cmdMechInspectId + 1);
+        ImGui.SameLine(); if (ImGui.Button("-0x10##cmdmech")) _cmdMechInspectId = Math.Max(0x0000, _cmdMechInspectId - 0x10);
+        ImGui.SameLine(); if (ImGui.Button("+0x10##cmdmech")) _cmdMechInspectId = Math.Min(0xFFFF, _cmdMechInspectId + 0x10);
+
+        render_command_mechanics_entry((ushort)_cmdMechInspectId);
+
+        ImGui.Separator();
+        ImGui.Text("Last combat command:");
+        if (_lastCombatCommandId != 0)
+        {
+            ImGui.Text($"Command id: 0x{_lastCombatCommandId:X4}");
+            render_command_mechanics_entry(_lastCombatCommandId);
+        }
+        else
+        {
+            ImGui.TextDisabled("none observed yet this session.");
+        }
+        // TODO live: cached from on_impact_detected's already-resolved ResolvedCommandInfo
+        // (see try_capture_current_impact_command_context / resolve_command_for_cue). A
+        // dedicated live-refresh hook beyond that cache was left out to avoid touching combat logic.
+    }
+
+    private void render_command_mechanics_entry(ushort id)
+    {
+        if (_dataMappings.TryResolveCommandDisplay(id, out string label, out string kind))
+            ImGui.Text($"{label}  [{kind}]");
+        else
+            ImGui.TextDisabled("(name unresolved)");
+
+        if (_dataMappings.TryGetCommandMechanics(id, out JsonElement mech))
+        {
+            foreach (JsonProperty prop in mech.EnumerateObject())
+            {
+                ImGui.Text($"{prop.Name}: {format_mechanics_value(prop.Value)}");
+            }
+        }
+        else
+        {
+            ImGui.TextDisabled("no Mechanics block for this id.");
+        }
+    }
+
+    private static string format_mechanics_value(JsonElement value)
+    {
+        if (value.ValueKind == JsonValueKind.Array)
+        {
+            var parts = new List<string>();
+            foreach (JsonElement item in value.EnumerateArray())
+            {
+                parts.Add(format_mechanics_value(item));
+            }
+            return string.Join(", ", parts);
+        }
+
+        return value.ValueKind == JsonValueKind.Null ? "null" : value.ToString();
+    }
+
     private void render_fx_motion_lab()
     {
         ImGui.Text($"Target: {lab_slot_label(_labTargetSlot)}");
@@ -818,6 +885,13 @@ public unsafe sealed partial class ParryModule
                 if (ImGui.BeginTabItem("Lab"))
                 {
                     if (liveReady) render_fx_motion_lab();
+                    else           render_debug_tab_placeholder();
+                    ImGui.EndTabItem();
+                }
+
+                if (ImGui.BeginTabItem("Commands"))
+                {
+                    if (liveReady) render_command_mechanics_panel();
                     else           render_debug_tab_placeholder();
                     ImGui.EndTabItem();
                 }

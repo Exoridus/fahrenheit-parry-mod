@@ -607,6 +607,9 @@ public unsafe sealed partial class ParryModule : FhModule
     private int _impactCorrelationRejectedCount;
     private string _impactCorrelationLastRejectReason = "None";
     private ulong _impactCorrelationLastSummaryFrame;
+    // Debug-only: most recently resolved non-zero combat command id, cached at impact
+    // resolution time (see on_impact_detected) for the Commands debug panel.
+    private ushort _lastCombatCommandId;
     private ulong _msSetDamageLogLastFrame;
     private byte _msSetDamageLogLastP1;
     private int _msSetDamageLogLastP2;
