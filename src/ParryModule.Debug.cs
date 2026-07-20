@@ -510,7 +510,7 @@ public unsafe sealed partial class ParryModule
         ImGui.Text($"Target: {lab_slot_label(_labTargetSlot)}");
         ImGui.SameLine(); if (ImGui.Button("<##labslot")) _labTargetSlot = lab_step_slot(-1);
         ImGui.SameLine(); if (ImGui.Button(">##labslot")) _labTargetSlot = lab_step_slot(+1);
-        ImGui.SameLine(); if (ImGui.Button("Restore char##labslot")) lab_restore_char(); // re-show a model a status/death effect hid (experimental)
+        ImGui.SameLine(); if (ImGui.Button("Restore char##labslot")) lab_restore_char(); // play motion 0x32 to bring the char fully back
         ImGui.SameLine(); if (ImGui.Button("Clear FX##labslot")) lab_clear_char_fx();    // per-char effect reset, like the engine's own teardown (experimental)
 
         ImGui.Separator();
@@ -599,9 +599,11 @@ public unsafe sealed partial class ParryModule
         try
         {
             if (try_get_chr((byte)_labTargetSlot) == null) { log_debug($"[Lab] No live actor at slot {_labTargetSlot}."); return; }
-            FhUtil.get_fptr<MsSetChrVisibleProbe>(
-                ExternalMemoryOffsetMap.Functions.MsSetChrVisible)(_labTargetSlot, 1);
-            log_debug($"[Lab] Restored visibility on slot {_labTargetSlot}.");
+            // Motion 0x32 brings the char fully back (model + pose reset) in one shot.
+            const int RestoreMotionId = 0x32;
+            FhUtil.get_fptr<MsSetMotionProbe>(
+                ExternalMemoryOffsetMap.Functions.MsSetMotion)((byte)_labTargetSlot, RestoreMotionId, 0, 0, 1, 0, 0);
+            log_debug($"[Lab] Restored slot {_labTargetSlot} via motion 0x{RestoreMotionId:X2}.");
         }
         catch (Exception ex) { log_debug($"[Lab] Restore char failed: {ex.Message}"); }
     }

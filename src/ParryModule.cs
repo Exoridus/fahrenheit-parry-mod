@@ -537,8 +537,10 @@ public unsafe sealed partial class ParryModule : FhModule
     private int _dodgeProbeFramesLeft = 0;
     // Native parry block (A): flag the parrying char as guarding (ChrRam+0x19A) so the engine's
     // MsDamageSetMotion plays the block reaction 0x43 itself at the real impact — the same field
-    // it sets for Sentinel/Defend. When off, falls back to the manual MsSetMotion(0x43) poke.
-    private bool _optionParryNativeBlock = true;
+    // it sets for Sentinel/Defend. The engine hardcodes 0x43 for this flag, so the native path
+    // cannot emit a custom impact motion. We now drive a chosen motion (0x2F) via the manual
+    // MsSetMotion path instead, so this defaults OFF; flip on only to restore the engine's 0x43.
+    private bool _optionParryNativeBlock = false;
     // Camera probe (debug): logs EVERY camera hook invocation + the lock-gating state (not just
     // when suppressed) so an un-locked enemy camera pan reveals which path fired and why the lock
     // did not engage (turn/attacker gating). Toggle via the "camera_probe" setting.
@@ -678,7 +680,7 @@ public unsafe sealed partial class ParryModule : FhModule
     // Read by the observe-only MsEffectEndMotion hook to log the motion's run length.
     private readonly ulong[] _motionPlayFrame = new ulong[PartyActorCapacity];
 
-    // Frame the parry block reaction (0x43) was last played on a slot, by EITHER the native path
+    // Frame the parry block reaction (0x2F manual / 0x43 native) was last played on a slot, by EITHER the native path
     // (guard flag + orig MsDamageSetMotion) or the manual MsSetMotion poke. Whichever runs first
     // stamps it; the other then stands down. That keeps exactly one driver per hit — the
     // double-drive was the old "parry twitch" — while guaranteeing the block always plays, even
