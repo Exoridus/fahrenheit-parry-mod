@@ -155,8 +155,12 @@
     </Target>
 
     <Target Name="PublishManagedComponents">
+        <!-- Fahrenheit's own Directory.Build.targets carries __FhPublishAfterBuild
+             (AfterTargets="Build" DependsOnTargets="Publish"), so its managed projects
+             publish themselves. Asking for Publish here too closes the target graph into
+             a cycle (MSB4006). Build them and let their own hook do the publishing. -->
         <MSBuild Projects="$(ManagedCoreProject);$(ManagedRuntimeProject)"
-                 Targets="Publish"
+                 Targets="Build"
                  Properties="Configuration=$(Configuration);SolutionDir=$(SolutionDirForBuild)" />
         <MSBuild Projects="$(ModProjectPath)"
                  Targets="Publish"
