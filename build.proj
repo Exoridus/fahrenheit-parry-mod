@@ -19,6 +19,11 @@
              checked-out fahrenheit ref still uses it. Callers may override via -p:. -->
         <ManagedCoreProject Condition="'$(ManagedCoreProject)' == ''">$([MSBuild]::NormalizePath('$(FahrenheitDir)', 'src', 'core', 'Fahrenheit.csproj'))</ManagedCoreProject>
         <ManagedRuntimeProject Condition="'$(ManagedRuntimeProject)' == ''">$([MSBuild]::NormalizePath('$(FahrenheitDir)', 'src', 'runtime', 'Fahrenheit.Runtime.csproj'))</ManagedRuntimeProject>
+        <FahrenheitSdkProject Condition="'$(FahrenheitSdkProject)' == ''">$([MSBuild]::NormalizePath('$(FahrenheitDir)', 'src', 'sdk', 'Fahrenheit.Sdk.csproj'))</FahrenheitSdkProject>
+
+        <!-- Local NuGet feed Fahrenheit's build writes its packages to; see NuGet.config. -->
+        <FahrenheitPkgDirRel>$([MSBuild]::NormalizeDirectory('$(FahrenheitDir)', 'artifacts', 'pkg', 'rel'))</FahrenheitPkgDirRel>
+        <FahrenheitPkgDirDbg>$([MSBuild]::NormalizeDirectory('$(FahrenheitDir)', 'artifacts', 'pkg', 'dbg'))</FahrenheitPkgDirDbg>
         <Stage0Project Condition="'$(Stage0Project)' == ''">$([MSBuild]::NormalizePath('$(FahrenheitDir)', 'src', 'stage0', 'Fahrenheit.Loader.Stage0.vcxproj'))</Stage0Project>
         <Stage1Project Condition="'$(Stage1Project)' == ''">$([MSBuild]::NormalizePath('$(FahrenheitDir)', 'src', 'stage1', 'Fahrenheit.Loader.Stage1.vcxproj'))</Stage1Project>
 
@@ -121,10 +126,29 @@
              previous run, which is why this passed locally and failed in CI. -->
         <Exec Command="dotnet restore &quot;$(ManagedCoreProject)&quot; -p:Configuration=$(Configuration) -p:SolutionDir=&quot;$(SolutionDirForBuild)&quot;" />
         <Exec Command="dotnet restore &quot;$(ManagedRuntimeProject)&quot; -p:Configuration=$(Configuration) -p:SolutionDir=&quot;$(SolutionDirForBuild)&quot;" />
+        <Exec Command="dotnet restore &quot;$(FahrenheitSdkProject)&quot; -p:Configuration=$(Configuration) -p:SolutionDir=&quot;$(SolutionDirForBuild)&quot;" />
+    </Target>
+
+    <!-- The mod consumes Fahrenheit as a NuGet package via Fahrenheit.Sdk, so both
+         packages must exist in the local feed (artifacts/pkg/<cfg>) before the mod
+         project can be restored. MSBuild resolves an SDK during evaluation, which
+         happens before any target runs, so this cannot be folded into the mod build:
+         Fahrenheit has to be packed in a separate, earlier step. -->
+    <Target Name="PackFahrenheit" DependsOnTargets="RestoreManagedProjects">
+        <MSBuild Projects="$(ManagedCoreProject);$(ManagedRuntimeProject);$(FahrenheitSdkProject)"
+                 Targets="Build"
+                 Properties="Configuration=$(Configuration);SolutionDir=$(SolutionDirForBuild)" />
+    </Target>
+
+    <Target Name="RestoreModProject" DependsOnTargets="PackFahrenheit">
+        <!-- NuGet fails with NU1301 if a configured local source is missing, and only
+             the folder for the configuration just built exists. Create both so a
+             Release build does not trip over the absent Debug feed and vice versa. -->
+        <MakeDir Directories="$(FahrenheitPkgDirRel);$(FahrenheitPkgDirDbg)" />
         <Exec Command="dotnet restore &quot;$(ModProjectPath)&quot; -p:Configuration=$(Configuration) -p:SolutionDir=&quot;$(SolutionDirForBuild)&quot;" />
     </Target>
 
-    <Target Name="Setup" DependsOnTargets="RestoreManagedProjects">
+    <Target Name="Setup" DependsOnTargets="RestoreModProject">
         <Message Importance="high" Text="Setup complete. Workspace: $(FahrenheitDirPath)" />
     </Target>
 
@@ -160,16 +184,17 @@
         <Exec Command="&quot;$(NativeMSBuildExe)&quot; &quot;$(Stage1Project)&quot; /p:Configuration=$(Configuration) /p:Platform=Win32$(NativePlatformToolsetArg)" />
     </Target>
 
-    <Target Name="PublishManagedComponents">
-        <!-- Fahrenheit's own Directory.Build.targets carries __FhPublishAfterBuild
-             (AfterTargets="Build" DependsOnTargets="Publish"), so its managed projects
-             publish themselves. Asking for Publish here too closes the target graph into
-             a cycle (MSB4006). Build them and let their own hook do the publishing. -->
-        <MSBuild Projects="$(ManagedCoreProject);$(ManagedRuntimeProject)"
-                 Targets="Build"
-                 Properties="Configuration=$(Configuration);SolutionDir=$(SolutionDirForBuild)" />
+    <!-- Fahrenheit's managed components are built (and, through their own
+         __FhPublishAfterBuild hook, published) by PackFahrenheit. Only the mod is
+         left here.
+
+         The mod is built, not published: Fahrenheit.Sdk carries the same
+         __FhPublishAfterBuild hook, so asking for Publish closes the target graph
+         into a cycle (MSB4006). PublishDir is passed as a property so the SDK's own
+         hook lands the output in the deploy tree. -->
+    <Target Name="PublishManagedComponents" DependsOnTargets="PackFahrenheit">
         <MSBuild Projects="$(ModProjectPath)"
-                 Targets="Publish"
+                 Targets="Build"
                  Properties="Configuration=$(Configuration);SolutionDir=$(SolutionDirForBuild);PublishDir=$(DeployModDir);BuildProjectReferences=false" />
     </Target>
 
