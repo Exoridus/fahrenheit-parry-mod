@@ -1,95 +1,54 @@
-<Project>
-    <!--
-    Welcome to an example .csproj file for a Fahrenheit module!
+<!--
+Welcome to an example .csproj file for a Fahrenheit module!
 
-    When in doubt, you can consult this to see what options need to be set and why.
+The Fahrenheit SDK supplies everything a compliant mod needs: target framework,
+x86 runtime identifier, dynamic loading, the reference to Fahrenheit's core
+library, and the conventions for the manifest, lang/, efl/ and resources/.
+See its Sdk.props for what that covers; do not repeat any of it here.
 
-    Assume that the order in which these groups appear is intentional. When preparing your own project, use the same order.
-    -->
-
-    <!-- ASSEMBLY BASIC PROPERTIES -->
-    <!--
-    All projects should declare these properties.
-
-    TargetFramework MUST match that of every other project and the Fahrenheit version you are linking against.
-    PlatformTarget MUST be x86.
-    EnableDynamicLoading MUST be true.
-
-    The rest of the options are highly recommended, but strictly speaking not mandatory.
-    -->
-    <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
-        <ImplicitUsings>disable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <RuntimeIdentifier>win-x86</RuntimeIdentifier>
-        <EnableDynamicLoading>true</EnableDynamicLoading>
-    </PropertyGroup>
+The SDK is resolved from NuGet. Until the alpha11 packages are on nuget.org they
+come from the local feed in NuGet.config, which Fahrenheit's own build fills.
+That means Fahrenheit must have been built once before this project can even be
+evaluated; 'build.cmd setup' does exactly that.
+-->
+<Project Sdk="Fahrenheit.Sdk/1.0.0-alpha11">
 
     <!-- ASSEMBLY ADDITIONAL PROPERTIES -->
     <!--
     These properties are unique to your own mod!
 
-    Set what you want here, just keep it brief so it appears nice on the finished artifact.
-
     AssemblyName is the name of the finished module DLL, ex. `fhparry.dll`.
     AssemblyTitle and Product appear when hovering over the DLL in Windows Explorer.
     -->
+    <!--
+    These feed the manifest the SDK generates after publish (__FhEmitManifest in
+    its Sdk.targets), which is why they are the single source of truth for it:
+      Id      <- AssemblyName        Name  <- AssemblyTitle
+      Desc    <- Description         Authors <- Authors
+      Version <- InformationalVersion (derived from Version)
+      Link    <- RepositoryUrl       Flags <- FhManifestFlags
+    'build.cmd release-bump' rewrites Version and RepositoryUrl here.
+    -->
     <PropertyGroup>
         <AssemblyName>fhparry</AssemblyName>
-        <AssemblyTitle>Parry Mod</AssemblyTitle>
-        <Product>Parry Mod</Product>
+        <AssemblyTitle>Parry Prototype</AssemblyTitle>
+        <Product>Parry Prototype</Product>
+        <Description>Watches battle cues and lets you parry physical attacks by pressing R1 (or P on keyboard).</Description>
+        <Authors>Thomas</Authors>
+        <Version>0.4.1</Version>
+        <RepositoryUrl>https://github.com/Exoridus/fahrenheit-parry-mod</RepositoryUrl>
+        <FhManifestFlags>NONE</FhManifestFlags>
+        <!-- Without this the SDK appends '+<commit sha>' to InformationalVersion, and
+             that lands verbatim in the manifest's Version field. -->
+        <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     </PropertyGroup>
-
-    <!-- SOURCE LAYOUT SUPPORT -->
-    <!--
-    The mod can be built from either:
-    - this standalone repo root with Fahrenheit checked out under .workspace/fahrenheit, or
-    - Fahrenheit's in-tree mods/parry path.
-    -->
-    <PropertyGroup>
-        <!-- Probe upstream layout post-fahrenheit#134 ("rearrange source tree") first, then pre-#134. -->
-        <FahrenheitRootDir Condition="Exists('$(MSBuildThisFileDirectory)..\..\src\core\Fahrenheit.csproj')">$(MSBuildThisFileDirectory)..\..\</FahrenheitRootDir>
-        <FahrenheitRootDir Condition="'$(FahrenheitRootDir)' == '' and Exists('$(MSBuildThisFileDirectory)..\..\core\fh\Fahrenheit.csproj')">$(MSBuildThisFileDirectory)..\..\</FahrenheitRootDir>
-        <FahrenheitRootDir Condition="'$(FahrenheitRootDir)' == '' and Exists('$(MSBuildThisFileDirectory).workspace\fahrenheit\src\core\Fahrenheit.csproj')">$(MSBuildThisFileDirectory).workspace\fahrenheit\</FahrenheitRootDir>
-        <FahrenheitRootDir Condition="'$(FahrenheitRootDir)' == '' and Exists('$(MSBuildThisFileDirectory).workspace\fahrenheit\core\fh\Fahrenheit.csproj')">$(MSBuildThisFileDirectory).workspace\fahrenheit\</FahrenheitRootDir>
-
-        <FahrenheitCoreProjectRelative Condition="'$(FahrenheitRootDir)' != '' and Exists('$(FahrenheitRootDir)src\core\Fahrenheit.csproj')">src\core\Fahrenheit.csproj</FahrenheitCoreProjectRelative>
-        <FahrenheitCoreProjectRelative Condition="'$(FahrenheitCoreProjectRelative)' == ''">core\fh\Fahrenheit.csproj</FahrenheitCoreProjectRelative>
-    </PropertyGroup>
-
-    <!-- SDK REFERENCES -->
-    <!--
-    This should be included exactly as-is.
-    -->
-    <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
-    <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 
     <!-- SHARED FILE LINKS -->
     <!--
-    This should be included exactly as-is.
-
     This imports Fahrenheit's code style rules to allow you to write in a uniform way.
     -->
     <ItemGroup>
         <None Include="$(SolutionDir).editorconfig" Link=".editorconfig" Condition="'$(SolutionDir)' != '' and Exists('$(SolutionDir).editorconfig')" />
-    </ItemGroup>
-
-    <!-- PROJECT REFERENCES -->
-    <!--
-    This should be included exactly as-is.
-
-    This imports Fahrenheit's core library, which you must link against.
-    You're free to import other libraries as well using NuGet packages, which will automatically add to this group.
-
-    Project references MUST have Private set to "false" and ExcludeAssets set to "runtime;native".
-    -->
-    <ItemGroup>
-        <ProjectReference Include="$(FahrenheitRootDir)$(FahrenheitCoreProjectRelative)">
-            <Private>false</Private>
-            <ExcludeAssets>runtime;native</ExcludeAssets>
-            <GlobalPropertiesToRemove>BaseOutputPath;BaseIntermediateOutputPath</GlobalPropertiesToRemove>
-        </ProjectReference>
     </ItemGroup>
 
     <!-- REPO TOOLING EXCLUDES -->
@@ -99,29 +58,10 @@
         <Compile Remove="tests/**" />
     </ItemGroup>
 
-    <!-- ASSETS: MANIFEST -->
-    <ItemGroup>
-        <None Include="$(AssemblyName).manifest.json" CopyToOutputDirectory="Always" />
-    </ItemGroup>
-
-    <!-- ASSETS: LOCALIZATION -->
-    <ItemGroup>
-        <None Remove="lang/**" />
-        <None Include="lang/*.json" CopyToOutputDirectory="Always" />
-    </ItemGroup>
-
-    <!-- ASSETS: EXTERNAL FILE LOADER -->
-    <ItemGroup>
-        <None Remove="efl/**" />
-        <None Include="efl/x/**/*;efl/x2/**/*" CopyToOutputDirectory="Always" />
-    </ItemGroup>
-
-    <!-- ASSETS: GENERIC -->
-    <ItemGroup>
-        <None Include="resources/**" CopyToOutputDirectory="Always" />
-    </ItemGroup>
-
     <!-- ASSETS: RUNTIME MAPPINGS -->
+    <!--
+    Mod-specific, and therefore not covered by the SDK's asset conventions.
+    -->
     <ItemGroup>
         <None Include="mappings/runtime/*.json" CopyToOutputDirectory="Always" />
     </ItemGroup>
