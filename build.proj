@@ -110,12 +110,18 @@
         <Error Condition="!Exists('$(ManagedCoreProject)')" Text="Missing Fahrenheit core project: $(ManagedCoreProject)" />
         <Error Condition="!Exists('$(ManagedRuntimeProject)')" Text="Missing Fahrenheit runtime project: $(ManagedRuntimeProject)" />
 
-        <MSBuild Projects="$(ManagedCoreProject);$(ManagedRuntimeProject)"
-                 Targets="Restore"
-                 Properties="Configuration=$(Configuration);SolutionDir=$(SolutionDirForBuild)" />
-        <MSBuild Projects="$(ModProjectPath)"
-                 Targets="Restore"
-                 Properties="Configuration=$(Configuration);SolutionDir=$(SolutionDirForBuild)" />
+        <!-- Restore runs as its own process, not via the MSBuild task.
+             Fahrenheit's core pulls CsWin32, a source generator delivered as an
+             analyzer package. An <MSBuild Targets="Restore"> call restores into the
+             same MSBuild instance that later evaluates the project for Build, and
+             that evaluation is already cached from before project.assets.json
+             existed — so the analyzer is not loaded, the generator never runs, and
+             the checked-in Windows.Win32.*.g.cs files fail with CS0234/CS0246.
+             Only reproducible from a clean tree: a warm one has the assets from a
+             previous run, which is why this passed locally and failed in CI. -->
+        <Exec Command="dotnet restore &quot;$(ManagedCoreProject)&quot; -p:Configuration=$(Configuration) -p:SolutionDir=&quot;$(SolutionDirForBuild)&quot;" />
+        <Exec Command="dotnet restore &quot;$(ManagedRuntimeProject)&quot; -p:Configuration=$(Configuration) -p:SolutionDir=&quot;$(SolutionDirForBuild)&quot;" />
+        <Exec Command="dotnet restore &quot;$(ModProjectPath)&quot; -p:Configuration=$(Configuration) -p:SolutionDir=&quot;$(SolutionDirForBuild)&quot;" />
     </Target>
 
     <Target Name="Setup" DependsOnTargets="RestoreManagedProjects">
@@ -155,8 +161,12 @@
     </Target>
 
     <Target Name="PublishManagedComponents">
+        <!-- Fahrenheit's own Directory.Build.targets carries __FhPublishAfterBuild
+             (AfterTargets="Build" DependsOnTargets="Publish"), so its managed projects
+             publish themselves. Asking for Publish here too closes the target graph into
+             a cycle (MSB4006). Build them and let their own hook do the publishing. -->
         <MSBuild Projects="$(ManagedCoreProject);$(ManagedRuntimeProject)"
-                 Targets="Publish"
+                 Targets="Build"
                  Properties="Configuration=$(Configuration);SolutionDir=$(SolutionDirForBuild)" />
         <MSBuild Projects="$(ModProjectPath)"
                  Targets="Publish"

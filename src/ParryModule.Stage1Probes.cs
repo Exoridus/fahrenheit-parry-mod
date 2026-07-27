@@ -67,13 +67,6 @@ public unsafe sealed partial class ParryModule
     private delegate int MsSetMotionProbeDelegate(
         int p1, int p2, int chr_id, byte p4, int p5, int p6, int p7);
 
-    private FhMethodHandle<MsActionRequestProbeDelegate>?           _hStage1MsActionRequest;
-    private FhMethodHandle<MsCalcCommandProbeDelegate>?             _hStage1MsCalcCommand;
-    private FhMethodHandle<MsCheckStatusBeforeActionProbeDelegate>? _hStage1MsCheckStatusBeforeAction;
-    private FhMethodHandle<MsLimitTypeDamageCheckProbeDelegate>?    _hStage1MsLimitTypeDamageCheck;
-    private FhMethodHandle<OpEtBattleGenkoCounterGetProbeDelegate>? _hStage1OpEtBattleGenkoCounterGet;
-    private FhMethodHandle<MsSetMotionProbeDelegate>?               _hStage1MsSetMotion;
-
     private PerFrameProbeThrottle _throttleMsActionRequest;
     private PerFrameProbeThrottle _throttleMsCalcCommand;
     private PerFrameProbeThrottle _throttleMsCheckStatusBeforeAction;
@@ -104,41 +97,15 @@ public unsafe sealed partial class ParryModule
             return;
         }
 
-        _hStage1MsActionRequest = new FhMethodHandle<MsActionRequestProbeDelegate>(
-            this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsActionRequest, h_stage1_ms_action_request);
-        _hStage1MsCalcCommand = new FhMethodHandle<MsCalcCommandProbeDelegate>(
-            this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsCalcCommand, h_stage1_ms_calc_command);
-        _hStage1MsCheckStatusBeforeAction = new FhMethodHandle<MsCheckStatusBeforeActionProbeDelegate>(
-            this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsCheckStatusBeforeAction, h_stage1_ms_check_status_before_action);
-        _hStage1MsLimitTypeDamageCheck = new FhMethodHandle<MsLimitTypeDamageCheckProbeDelegate>(
-            this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsLimitTypeDamageCheck, h_stage1_ms_limit_type_damage_check);
-        _hStage1OpEtBattleGenkoCounterGet = new FhMethodHandle<OpEtBattleGenkoCounterGetProbeDelegate>(
-            this, "FFX.exe", ExternalMemoryOffsetMap.Functions.OpEtBattleGenkoCounterGet, h_stage1_op_et_battle_genko_counter_get);
-        _hStage1MsSetMotion = new FhMethodHandle<MsSetMotionProbeDelegate>(
-            this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsSetMotion, h_stage1_ms_set_motion);
-
-        try_install_one_stage1_probe(_hStage1MsActionRequest,           "MsActionRequest");
-        try_install_one_stage1_probe(_hStage1MsCalcCommand,             "MsCalcCommand");
-        try_install_one_stage1_probe(_hStage1MsCheckStatusBeforeAction, "MsCheckStatusBeforeAction");
-        try_install_one_stage1_probe(_hStage1MsLimitTypeDamageCheck,    "MsLimitTypeDamageCheck");
-        try_install_one_stage1_probe(_hStage1OpEtBattleGenkoCounterGet, "op_et_battle_genko_counter_get");
-        try_install_one_stage1_probe(_hStage1MsSetMotion,               "MsSetMotion");
+        install_hook(loc_stage1_ms_action_request(),            _dStage1MsActionRequest,            "MsActionRequest");
+        install_hook(loc_stage1_ms_calc_command(),              _dStage1MsCalcCommand,              "MsCalcCommand");
+        install_hook(loc_stage1_ms_check_status_before_action(), _dStage1MsCheckStatusBeforeAction, "MsCheckStatusBeforeAction");
+        install_hook(loc_stage1_ms_limit_type_damage_check(),   _dStage1MsLimitTypeDamageCheck,   "MsLimitTypeDamageCheck");
+        install_hook(loc_stage1_op_et_battle_genko_counter_get(), _dStage1OpEtBattleGenkoCounterGet, "OpEtBattleGenkoCounterGet");
+        install_hook(loc_stage1_ms_set_motion(),                _dStage1MsSetMotion,                "MsSetMotion");
 
         _stage1ProbesInstalled = true;
         _logger.Info("[Parry] Stage-1 native probes installed (NativeProbeLogging=true). Output is in the session debug log.");
-    }
-
-    private void try_install_one_stage1_probe<TDelegate>(FhMethodHandle<TDelegate>? handle, string label) where TDelegate : Delegate
-    {
-        if (handle == null) return;
-        try
-        {
-            handle.hook();
-        }
-        catch (Exception ex)
-        {
-            _logger.Warning($"[Parry] Could not hook Stage-1 probe {label}: {ex.Message}");
-        }
     }
 
     private uint h_stage1_ms_action_request(int target_id, int attacker_id, int p3, int p4, int p5, int p6)

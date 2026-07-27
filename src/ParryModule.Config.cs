@@ -52,17 +52,12 @@ public unsafe sealed partial class ParryModule
             return Path.Combine(stateDir, "fhparry.config.json");
         }
 
-        string p = mod_context.Paths.SettingsPath ?? string.Empty;
-        if (Directory.Exists(p))
-        {
-            return Path.Combine(p, "fhparry.config.json");
-        }
-        if (string.IsNullOrWhiteSpace(p))
-        {
-            string baseDir = mod_context.Paths.ResourcesDir?.FullName ?? AppContext.BaseDirectory;
-            return Path.Combine(baseDir, "fhparry.config.json");
-        }
-        return p;
+        // No SettingsPath fallback. alpha11 removed it from FhModPaths, and it was already
+        // wrong: it pointed at the deployed mod folder, which `build.cmd deploy` mirrors — so
+        // settings were wiped on every deploy. Mod commit 205e54f moved them into the global
+        // state dir handled above; this branch only runs when that dir is missing.
+        string baseDir = mod_context.Paths.ResourcesDir?.FullName ?? AppContext.BaseDirectory;
+        return Path.Combine(baseDir, "fhparry.config.json");
     }
 
     private void load_persistent_settings()

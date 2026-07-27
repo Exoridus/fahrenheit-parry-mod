@@ -1,4 +1,4 @@
-﻿// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: MIT
 
 namespace Fahrenheit.Mods.Parry;
 
@@ -665,20 +665,6 @@ public unsafe sealed partial class ParryModule : FhModule
     private ImFontPtr _overlayFont;
     private bool _overlayFontsInitialized;
     private bool _overlayFontWarningIssued;
-    private readonly FhMethodHandle<MsExeInputCueProbe> _hMsExeInputCue;
-    private readonly FhMethodHandle<MsSetDamageProbe> _hMsSetDamage;
-    private readonly FhMethodHandle<MsDamageSetMotionProbe> _hMsDamageSetMotion;
-    private readonly FhMethodHandle<MsCalcDamageProbe> _hMsCalcDamage;
-    private readonly FhMethodHandle<DmgCalcArmoredProbe> _hDmgCalcArmored;
-    private readonly FhMethodHandle<MsCalcDamageInternalProbe> _hMsCalcDamageInternal;
-    private readonly FhMethodHandle<MsSetDamageInternalProbe> _hMsSetDamageInternal;
-    private readonly FhMethodHandle<MsAtelRequestCameraProbe> _hMsAtelRequestCamera;
-    private readonly FhMethodHandle<MsAtelRequestMagicCameraProbe> _hMsAtelRequestMagicCamera;
-    private readonly FhMethodHandle<MsBattleSpecialCameraPauseProbe> _hMsBattleSpecialCameraPause;
-    private readonly FhMethodHandle<AtelCameraPolarSetProbe> _hAtelCameraPolarSet;
-    private readonly FhMethodHandle<AtelCameraPosSetProbe> _hAtelCameraPosSet;
-    private readonly FhMethodHandle<MsDmgCalcCheckHitProbe> _hMsDmgCalcCheckHit;
-    private readonly FhMethodHandle<MsEffectEndMotionProbe> _hMsEffectEndMotion;
     // Frame a motion was last played per party slot (lab Play / parry block), 0 = none.
     // Read by the observe-only MsEffectEndMotion hook to log the motion's run length.
     private readonly ulong[] _motionPlayFrame = new ulong[PartyActorCapacity];
@@ -698,30 +684,6 @@ public unsafe sealed partial class ParryModule : FhModule
 
     public ParryModule()
     {
-        _hMsExeInputCue = new FhMethodHandle<MsExeInputCueProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsExeInputCue, h_ms_exe_input_cue);
-        _hMsSetDamage = new FhMethodHandle<MsSetDamageProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsSetDamage, h_ms_set_damage);
-        _hMsDamageSetMotion = new FhMethodHandle<MsDamageSetMotionProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsDamageSetMotion, h_ms_damage_set_motion);
-        _hMsCalcDamage = new FhMethodHandle<MsCalcDamageProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsCalcDamage, h_ms_calc_damage);
-        _hDmgCalcArmored = new FhMethodHandle<DmgCalcArmoredProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.DmgCalcArmored, h_dmg_calc_armored);
-        _hMsCalcDamageInternal = new FhMethodHandle<MsCalcDamageInternalProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsCalcDamageInternal, h_ms_calc_damage_internal);
-        _hMsSetDamageInternal = new FhMethodHandle<MsSetDamageInternalProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.DiscordCandidates.FnMsSetDamageInternal, h_ms_set_damage_internal);
-        _hMsAtelRequestCamera = new FhMethodHandle<MsAtelRequestCameraProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsAtelRequestCamera, h_ms_atel_request_camera); // MsAtelRequestCamera — gates camera changes; intercepted to lock camera during enemy turns
-        _hMsAtelRequestMagicCamera = new FhMethodHandle<MsAtelRequestMagicCameraProbe>(
-            this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsAtelRequestMagicCamera, h_ms_atel_request_magic_camera);
-        _hMsBattleSpecialCameraPause = new FhMethodHandle<MsBattleSpecialCameraPauseProbe>(
-            this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsBattleSpecialCameraPause, h_ms_battle_special_camera_pause);
-        _hAtelCameraPolarSet = new FhMethodHandle<AtelCameraPolarSetProbe>(
-            this, "FFX.exe", ExternalMemoryOffsetMap.Functions.AtelCameraPolarSet, h_atel_camera_polar_set); // observe-only: which cam*/ref* opcode moves the camera
-        _hAtelCameraPosSet = new FhMethodHandle<AtelCameraPosSetProbe>(
-            this, "FFX.exe", ExternalMemoryOffsetMap.Functions.AtelCameraPosSet, h_atel_camera_pos_set);     // observe-only: camSetPos path
-        _hMsDmgCalcCheckHit = new FhMethodHandle<MsDmgCalcCheckHitProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsDmgCalcCheckHit, h_ms_dmg_calc_check_hit); // MsDmgCalc_CheckHit — accuracy/evasion roll; intercepted to disable native evasion for real PCs
-        _hMsEffectEndMotion = new FhMethodHandle<MsEffectEndMotionProbe>(this, "FFX.exe", ExternalMemoryOffsetMap.Functions.MsEffectEndMotion, h_ms_effect_end_motion); // observe-only: measure played-motion durations
-
-        _hStartupAtelEventSetUp    = new FhMethodHandle<StartupAtelEventSetUp>(this, "FFX.exe", StartupOffsets.AtelEventSetUp, h_startup_event_setup);
-        _hStartupNeedShowJapanLogo = new FhMethodHandle<StartupNeedShowJapanLogo>(this, "FFX.exe", StartupOffsets.NeedShowJapanLogo, h_startup_need_show_japan_logo);
-        _hStartupBootFmvSkip       = new FhMethodHandle<StartupFmvSkipPoll>(this, "FFX.exe", StartupOffsets.FmvSkipPoll, h_startup_boot_fmv_skip);
-        _hStartupShellExecuteW     = new FhMethodHandle<StartupShellExecuteW>(this, "shell32.dll", "ShellExecuteW", h_startup_shell_execute_w);
-
         // No FhSettingsCategory. alpha11 removes FhSettingCustomRenderer and its replacement
         // surface (FhSettingsCategory / FhSettingText / FhSettingNumber<T>) has no boolean and
         // no combo type — 15 of our 17 controls have nowhere to live. A mod cannot supply its
@@ -731,6 +693,35 @@ public unsafe sealed partial class ParryModule : FhModule
         // So the controls moved into the mod's own window (render_settings_tab, drawn from the
         // same fhparry.<id>.name/.desc keys). Persistence never depended on Fahrenheit: the mod
         // has always written its own fhparry.config.json.
+
+        // Hook delegates are cached (see ParryModule.OrigCalls.cs) so chain_from() does not
+        // allocate a fresh delegate on every native call. The same instance is handed to both
+        // install_hook(...) and chain_from(...); assigned here, once, before any install runs —
+        // the Stage-1 and startup-skip installs happen later in init() but on this same instance.
+        _dMsExeInputCue                   = h_ms_exe_input_cue;
+        _dMsSetDamage                     = h_ms_set_damage;
+        _dMsDamageSetMotion               = h_ms_damage_set_motion;
+        _dMsCalcDamage                    = h_ms_calc_damage;
+        _dDmgCalcArmored                  = h_dmg_calc_armored;
+        _dMsCalcDamageInternal            = h_ms_calc_damage_internal;
+        _dMsSetDamageInternal             = h_ms_set_damage_internal;
+        _dMsAtelRequestCamera             = h_ms_atel_request_camera;
+        _dMsAtelRequestMagicCamera        = h_ms_atel_request_magic_camera;
+        _dMsBattleSpecialCameraPause      = h_ms_battle_special_camera_pause;
+        _dAtelCameraPolarSet              = h_atel_camera_polar_set;
+        _dAtelCameraPosSet                = h_atel_camera_pos_set;
+        _dMsDmgCalcCheckHit               = h_ms_dmg_calc_check_hit;
+        _dMsEffectEndMotion               = h_ms_effect_end_motion;
+        _dStartupAtelEventSetup           = h_startup_event_setup;
+        _dStartupNeedShowJapanLogo        = h_startup_need_show_japan_logo;
+        _dStartupBootFmvSkip              = h_startup_boot_fmv_skip;
+        _dStartupShellExecuteW            = h_startup_shell_execute_w;
+        _dStage1MsActionRequest           = h_stage1_ms_action_request;
+        _dStage1MsCalcCommand             = h_stage1_ms_calc_command;
+        _dStage1MsCheckStatusBeforeAction = h_stage1_ms_check_status_before_action;
+        _dStage1MsLimitTypeDamageCheck    = h_stage1_ms_limit_type_damage_check;
+        _dStage1OpEtBattleGenkoCounterGet = h_stage1_op_et_battle_genko_counter_get;
+        _dStage1MsSetMotion               = h_stage1_ms_set_motion;
     }
 
     public override bool init(FhModContext mod_context, FileStream global_state_file)
@@ -749,123 +740,20 @@ public unsafe sealed partial class ParryModule : FhModule
 
         FhApi.Events.Common.GameLoop.PreUpdate.subscribe(on_pre_update);
 
-        try
-        {
-            _hMsExeInputCue.hook();
-        }
-        catch (Exception ex)
-        {
-            _logger.Warning($"[Parry] Could not hook MsExeInputCue (continuing without native dispatch signal): {ex.Message}");
-        }
-
-        try
-        {
-            _hMsSetDamage.hook();
-        }
-        catch (Exception ex)
-        {
-            _logger.Warning($"[Parry] Could not hook MsSetDamage (experimental spike inactive): {ex.Message}");
-        }
-
-        try
-        {
-            _hMsDamageSetMotion.hook();
-        }
-        catch (Exception ex)
-        {
-            _logger.Warning($"[Parry] Could not hook MsDamageSetMotion: {ex.Message}");
-        }
-
-        try
-        {
-            _hDmgCalcArmored.hook();
-        }
-        catch (Exception ex)
-        {
-            _logger.Warning($"[Parry] Could not hook DmgCalcArmored Probe: {ex.Message}");
-        }
-
-        try
-        {
-            _hMsCalcDamageInternal.hook();
-        }
-        catch (Exception ex)
-        {
-            _logger.Warning($"[Parry] Could not hook MsCalcDamageInternal Probe: {ex.Message}");
-        }
-
-        try
-        {
-            _hMsSetDamageInternal.hook();
-        }
-        catch (Exception ex)
-        {
-            _logger.Warning($"[Parry] Could not hook MsSetDamageInternal Probe: {ex.Message}");
-        }
-
-        try
-        {
-            _hMsCalcDamage.hook();
-        }
-        catch (Exception ex)
-        {
-            _logger.Warning($"[Parry] Could not hook MsCalcDamage (hit-count probe inactive): {ex.Message}");
-        }
-
-        try
-        {
-            _hMsAtelRequestCamera.hook();
-        }
-        catch (Exception ex)
-        {
-            _logger.Warning($"[Parry] Could not hook MsAtelRequestCamera (enemy-turn camera lock unavailable): {ex.Message}");
-        }
-
-        try
-        {
-            _hMsAtelRequestMagicCamera.hook();
-        }
-        catch (Exception ex)
-        {
-            _logger.Warning($"[Parry] Could not hook MsAtelRequestMagicCamera (enemy-turn magic camera lock unavailable): {ex.Message}");
-        }
-
-        try
-        {
-            _hMsBattleSpecialCameraPause.hook();
-        }
-        catch (Exception ex)
-        {
-            _logger.Warning($"[Parry] Could not hook MsBattleSpecialCameraPause (boss cinematic camera lock unavailable): {ex.Message}");
-        }
-
-        try
-        {
-            _hAtelCameraPolarSet.hook();
-            _hAtelCameraPosSet.hook();
-        }
-        catch (Exception ex)
-        {
-            _logger.Warning($"[Parry] Could not hook the ATEL camera writers (writer probe + hard camera lock unavailable): {ex.Message}");
-        }
-
-        try
-        {
-            _hMsEffectEndMotion.hook();
-        }
-        catch (Exception ex)
-        {
-            _logger.Warning($"[Parry] Could not hook MsEffectEndMotion (motion-duration observe unavailable): {ex.Message}");
-        }
-
-        try
-        {
-            _hMsDmgCalcCheckHit.hook();
-        }
-        catch (Exception ex)
-        {
-            _logger.Warning($"[Parry] Could not hook MsDmgCalcCheckHit (disable-native-evasion unavailable): {ex.Message}");
-        }
+        install_hook(loc_ms_exe_input_cue(), _dMsExeInputCue, "MsExeInputCue (continuing without native dispatch signal)");
+        install_hook(loc_ms_set_damage(), _dMsSetDamage, "MsSetDamage (experimental spike inactive)");
+        install_hook(loc_ms_damage_set_motion(), _dMsDamageSetMotion, "MsDamageSetMotion");
+        install_hook(loc_dmg_calc_armored(), _dDmgCalcArmored, "DmgCalcArmored Probe");
+        install_hook(loc_ms_calc_damage_internal(), _dMsCalcDamageInternal, "MsCalcDamageInternal Probe");
+        install_hook(loc_ms_set_damage_internal(), _dMsSetDamageInternal, "MsSetDamageInternal Probe");
+        install_hook(loc_ms_calc_damage(), _dMsCalcDamage, "MsCalcDamage (hit-count probe inactive)");
+        install_hook(loc_ms_atel_request_camera(), _dMsAtelRequestCamera, "MsAtelRequestCamera (enemy-turn camera lock unavailable)");
+        install_hook(loc_ms_atel_request_magic_camera(), _dMsAtelRequestMagicCamera, "MsAtelRequestMagicCamera (enemy-turn magic camera lock unavailable)");
+        install_hook(loc_ms_battle_special_camera_pause(), _dMsBattleSpecialCameraPause, "MsBattleSpecialCameraPause (boss cinematic camera lock unavailable)");
+        install_hook(loc_atel_camera_polar_set(), _dAtelCameraPolarSet, "AtelCameraPolarSet (camera-writer probe unavailable)");
+        install_hook(loc_atel_camera_pos_set(), _dAtelCameraPosSet, "AtelCameraPosSet (camera-writer probe unavailable)");
+        install_hook(loc_ms_effect_end_motion(), _dMsEffectEndMotion, "MsEffectEndMotion (motion-duration observe unavailable)");
+        install_hook(loc_ms_dmg_calc_check_hit(), _dMsDmgCalcCheckHit, "MsDmgCalcCheckHit (disable-native-evasion unavailable)");
 
         install_stage1_probes();
         install_startup_skip_hooks();
@@ -874,11 +762,28 @@ public unsafe sealed partial class ParryModule : FhModule
         return true;
     }
 
+    // alpha11 stripped InputAction down to the level `is_pressed`; `held`, `just_pressed`,
+    // `just_released` and consume() are all gone. Edge detection now lives here.
+    //
+    // Sampled at the top of PreUpdate, before every early return: a button still held while
+    // the mod is disabled must not fire a phantom edge the moment it is re-enabled. The tick
+    // rate is the same one at which the game refreshes its input word, so this reproduces the
+    // old semantics exactly rather than approximating them.
+    private bool _prevR1Pressed;
+    private bool _prevCancelPressed;
+
     private void on_pre_update(Fahrenheit.Events.UpdateLoopEventArgs e)
     {
         _debugFrameIndex++;
         float deltaSeconds = e.delta;
         _simulationClockSeconds += deltaSeconds;
+
+        bool r1Pressed     = FhApi.Input.r1.is_pressed;
+        bool cancelPressed = FhApi.Input.cancel.is_pressed;
+        bool r1JustPressed     = r1Pressed     && !_prevR1Pressed;
+        bool cancelJustPressed = cancelPressed && !_prevCancelPressed;
+        _prevR1Pressed     = r1Pressed;
+        _prevCancelPressed = cancelPressed;
 
         // Bundled startup-skip convenience runs regardless of the parry-enabled gate below.
         tick_startup_skip();
@@ -904,12 +809,12 @@ public unsafe sealed partial class ParryModule : FhModule
 
         ParryInputContext parryInput = capture_parry_input_context();
 
-        if (FhApi.Input.r1.just_pressed)
+        if (r1JustPressed)
         {
             handle_parry_input_press(parryInput);
         }
 
-        if (_optionDodgeEnabled && FhApi.Input.cancel.just_pressed)   // cancel = Circle (○)
+        if (_optionDodgeEnabled && cancelJustPressed)   // cancel = Circle (○)
         {
             handle_dodge_input_press(parryInput);
         }
