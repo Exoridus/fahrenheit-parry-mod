@@ -32,6 +32,22 @@ internal sealed class FfxDataMappings
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string DamageType { get; set; } = string.Empty;
+
+        /// <summary>
+        ///     Additive per-command mechanics block (hit_count, formula_id, targeting[], etc.)
+        ///     carried verbatim from the runtime bundle's <c>Domains.Commands.&lt;id&gt;.Mechanics</c>.
+        ///     Null when the bundle predates this field or the entry has none.
+        /// </summary>
+        public JsonElement? Mechanics { get; set; }
+
+        /// <summary>
+        ///     The command's <c>hit_count</c>, promoted to a typed field and parsed
+        ///     once at load so the hot combat path (counter gating) reads an int
+        ///     instead of navigating <see cref="Mechanics"/> on every query.
+        ///     0 = unknown / non-numeric / null (the ~150 non-damaging records).
+        ///     The full <see cref="Mechanics"/> blob is still kept for the debug UI.
+        /// </summary>
+        public int HitCount { get; set; }
     }
 
     private sealed class MonsterRecord
@@ -145,6 +161,37 @@ internal sealed class FfxDataMappings
             return true;
         }
 
+        return false;
+    }
+
+    public bool TryGetCommandMechanics(ushort id, out JsonElement mechanics)
+    {
+        if (_commands.TryGetValue(id, out CommandLikeRecord? cmd) && cmd.Mechanics.HasValue)
+        {
+            mechanics = cmd.Mechanics.Value;
+            return true;
+        }
+
+        mechanics = default;
+        return false;
+    }
+
+    /// <summary>
+    ///     Reads the additive <c>hit_count</c> from a command's mechanics block
+    ///     (runtime bundle <c>Domains.Commands.&lt;id&gt;.Mechanics.hit_count</c>).
+    ///     Returns <c>false</c> when the command is unknown, carries no mechanics,
+    ///     or has a null/non-numeric hit_count (the ~150 non-damaging / unparsed
+    ///     records) — callers treat that as "no multi-hit signal".
+    /// </summary>
+    public bool TryGetCommandHitCount(ushort id, out int hitCount)
+    {
+        if (_commands.TryGetValue(id, out CommandLikeRecord? cmd) && cmd.HitCount > 0)
+        {
+            hitCount = cmd.HitCount;
+            return true;
+        }
+
+        hitCount = 0;
         return false;
     }
 
@@ -698,7 +745,13 @@ internal sealed class FfxDataMappings
                 damageType = damageTypeNode.GetString() ?? string.Empty;
             }
 
-            if (string.IsNullOrWhiteSpace(name) && string.IsNullOrWhiteSpace(description) && string.IsNullOrWhiteSpace(damageType))
+            JsonElement? mechanics = null;
+            if (prop.Value.TryGetProperty("Mechanics", out JsonElement mechNode) && mechNode.ValueKind == JsonValueKind.Object)
+            {
+                mechanics = mechNode.Clone();
+            }
+
+            if (string.IsNullOrWhiteSpace(name) && string.IsNullOrWhiteSpace(description) && string.IsNullOrWhiteSpace(damageType) && mechanics is null)
             {
                 continue;
             }
@@ -718,6 +771,21 @@ internal sealed class FfxDataMappings
             if (!string.IsNullOrWhiteSpace(damageType) && string.IsNullOrWhiteSpace(record.DamageType))
             {
                 record.DamageType = damageType;
+                changed = true;
+            }
+            if (mechanics is not null && !record.Mechanics.HasValue)
+            {
+                record.Mechanics = mechanics;
+
+                // Promote hit_count to a typed field once, at load. 0 = null /
+                // non-numeric (the ~150 non-damaging records).
+                if (mechNode.TryGetProperty("hit_count", out JsonElement hcNode)
+                    && hcNode.ValueKind == JsonValueKind.Number
+                    && hcNode.TryGetInt32(out int hc))
+                {
+                    record.HitCount = hc;
+                }
+
                 changed = true;
             }
             if (changed) mapped++;
