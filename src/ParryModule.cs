@@ -580,14 +580,20 @@ public unsafe sealed partial class ParryModule : FhModule
     private readonly long[] _parryExpiry = new long[PartyActorCapacity];
     private readonly byte[] _parryArmedAttackerId = new byte[PartyActorCapacity];
     private readonly uint[] _preHitHpSnapshot = new uint[PartyActorCapacity];
-    // Observe-only consecutive-parry streak per slot. Increments on each successful
-    // parry resolution; resets when that slot whiffs, gets hit outside the window,
-    // or the runtime fully resets (battle end / mod toggled off). When the streak
-    // crosses ParryStreakObserveThreshold, a single "STREAK READY" log entry is
-    // emitted — no behaviour change, no counter inserted yet. Wired so the engagement
-    // model can be measured before any counter-attack is queued. See open follow-up:
-    // promote into actual MsInsertBtlCommand counter once the mechanic feels right.
+    // Consecutive fully-parried cues per slot within the current enemy turn block.
+    // Increments per fully-parried cue; resets when that slot whiffs / is hit outside
+    // the window, at block end, or on full runtime reset (battle end / mod toggled off).
+    // Together with _blockMultiHitParriedPerSlot it feeds the block-end sequence rule
+    // (block_slot_earned_counter): a counter is queued via MsInsertBtlCommand from
+    // fire_block_counters() when count ≥ ParryStreakObserveThreshold OR the slot
+    // parried a genuine multi-hit attack. See project_e33_counter_model.
     private readonly byte[] _consecutiveParriesPerSlot = new byte[PartyActorCapacity];
+    // Per-slot flag: this slot parried a genuine multi-hit attack (hit_count ≥ 2)
+    // during the current enemy turn block. Feeds the block-end sequence rule so a
+    // single fully-parried multi-hit attack (e.g. a lone Oblivion) earns a counter
+    // on its own, without needing a second consecutive enemy action. Reset together
+    // with _consecutiveParriesPerSlot at block end / runtime reset.
+    private readonly bool[] _blockMultiHitParriedPerSlot = new bool[PartyActorCapacity];
     private readonly AttackTelemetry[] _attackTelemetry = new AttackTelemetry[PartyActorCapacity];
     private ParryRuntimeState _runtime = ParryRuntimeState.CreateDefault();
     private readonly List<DebugLogEntry> _debugLog = new(DebugLogRingCapacity);
@@ -956,6 +962,7 @@ public unsafe sealed partial class ParryModule : FhModule
         // Streak counter is per-slot and persists across turns; only the full
         // runtime reset (battle end / mod toggled off) clears it.
         Array.Clear(_consecutiveParriesPerSlot);
+        Array.Clear(_blockMultiHitParriedPerSlot);
 
         if (clearFeedbackFlashes)
         {

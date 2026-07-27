@@ -1205,12 +1205,14 @@ public unsafe sealed partial class ParryModule
         for (int i = 0; i < PartyActorCapacity; i++)
         {
             byte streak = _consecutiveParriesPerSlot[i];
-            if (streak == 0) continue;
+            bool multiHit = _blockMultiHitParriedPerSlot[i];
+            if (streak == 0 && !multiHit) continue;
             if (sb.Length > 0) sb.Append(' ');
             sb.Append(format_actor_slot((byte)i));
             sb.Append(':');
             sb.Append(streak);
-            if (streak >= ParryStreakObserveThreshold) sb.Append('!');
+            if (multiHit) sb.Append('*');           // parried a multi-hit attack this block
+            if (block_slot_earned_counter(i)) sb.Append('!'); // counter earned at block end
         }
         return sb.Length == 0 ? "-" : sb.ToString();
     }

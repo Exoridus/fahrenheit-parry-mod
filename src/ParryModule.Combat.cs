@@ -909,6 +909,11 @@ public unsafe sealed partial class ParryModule
         // exactly once per character.
         resolve_overdrive_learning_at_cue_clear(_runtime.LastParriedTargetMask);
 
+        // Block end: fire earned counters now, while CurrentAttackerId still holds
+        // the block's last attacker (cleared below). The per-slot streak state is
+        // wiped right after, by reset_parry_streak.
+        fire_block_counters();
+
         flush_attack_telemetry(reason);
         _runtime.AwaitingTurnEnd = false;
         Array.Clear(_parryExpiry);
@@ -972,9 +977,10 @@ public unsafe sealed partial class ParryModule
     {
         for (int i = 0; i < PartyActorCapacity; i++)
         {
-            if (_consecutiveParriesPerSlot[i] == 0) continue;
+            if (_consecutiveParriesPerSlot[i] == 0 && !_blockMultiHitParriedPerSlot[i]) continue;
             log_debug($"Streak reset ({reason}): {format_actor_slot((byte)i)} (was {_consecutiveParriesPerSlot[i]}×).");
-            _consecutiveParriesPerSlot[i] = 0;
+            _consecutiveParriesPerSlot[i]   = 0;
+            _blockMultiHitParriedPerSlot[i] = false;
         }
     }
 
@@ -985,25 +991,23 @@ public unsafe sealed partial class ParryModule
     }
 
     /// <summary>
-    ///     Per-cue streak resolution. Called once at cue-clear time (i.e. when the
-    ///     enemy's turn fully resolves), BEFORE the per-cue masks are cleared.
+    ///     Per-cue sequence accumulation. Called once per enemy action at
+    ///     cue-clear time, BEFORE the per-cue masks are cleared. Does NOT fire the
+    ///     counter — that happens once at block end (fire_block_counters).
     ///
-    ///     Implements the case-handling spec from the parry roadmap:
-    ///       - Multi-target attack hits at least one targeted slot
-    ///         → streak failure for ALL targeted slots in this cue
-    ///         (a partial-defense doesn't reward anyone — the team failed).
-    ///       - All targeted slots successfully parried at least once
-    ///         → streak +1 for each targeted slot.
-    ///       - Random-target attack collapses to a single slot (others not in mask)
-    ///         → only the single targeted slot is considered.
-    ///       - Random-target attack hits 2 of 3 chars
-    ///         → both targeted slots resolve via the multi-target rule above.
+    ///     Per-cue case handling:
+    ///       - Any targeted slot failed (took a hit / never parried)
+    ///         → the sequence breaks for EVERY targeted slot in the cue
+    ///         (a partial defense rewards no one — the team failed).
+    ///       - All targeted slots parried
+    ///         → each targeted slot's consecutive-cue count +1, and if the cue's
+    ///           command is a genuine multi-hit attack (hit_count ≥ 2) the slot's
+    ///           block multi-hit flag is set.
     ///
-    ///     When a slot's streak crosses <see cref="ParryStreakObserveThreshold"/>,
-    ///     the counter-attack queue marker fires (currently log-only; native
-    ///     command insertion path is the next implementation step). The
-    ///     consuming slot's streak resets to 0 after the counter is queued so
-    ///     the chain restarts from zero.
+    ///     The block-end rule (project_e33_counter_model) then unifies both paths:
+    ///     a slot counters iff it parried every attack it faced AND the sequence
+    ///     was ≥2 hits — i.e. ≥2 consecutive cues OR one fully-parried multi-hit
+    ///     attack. See <see cref="block_slot_earned_counter"/>.
     /// </summary>
     private void resolve_streak_at_cue_clear()
     {
@@ -1021,47 +1025,67 @@ public unsafe sealed partial class ParryModule
         if (anyFailure)
         {
             // Multi-target rule: at least one targeted slot failed (took a hit
-            // or was never parried). Streak resets for every slot in the cue —
-            // even slots that DID parry don't get credit because the team's
-            // overall defensive pass failed.
+            // or was never parried). The sequence is broken for every slot in
+            // the cue — even slots that DID parry lose their accumulated credit
+            // because the team's overall defensive pass failed.
             for (int i = 0; i < PartyActorCapacity; i++)
             {
                 if ((targetedMask & (1u << i)) == 0) continue;
-                if (_consecutiveParriesPerSlot[i] == 0) continue;
+                if (_consecutiveParriesPerSlot[i] == 0 && !_blockMultiHitParriedPerSlot[i]) continue;
                 log_debug($"Streak reset (cue failure): {format_actor_slot((byte)i)} (was {_consecutiveParriesPerSlot[i]}× — cue had {BitOperations.PopCount(failedMask)} failed slot(s)).");
-                _consecutiveParriesPerSlot[i] = 0;
+                _consecutiveParriesPerSlot[i]     = 0;
+                _blockMultiHitParriedPerSlot[i]   = false;
             }
             return;
         }
 
-        // Full success: every targeted slot parried at least once. Increment
-        // each slot's streak, and check whether any crossed the threshold so
-        // the counter-attack queue marker fires.
+        // Full success: every targeted slot parried at least once. ACCUMULATE
+        // only — the counter fires at BLOCK end (fire_block_counters, called
+        // from clear_awaiting_turn_end), not per cue. Per targeted slot we track
+        // two things that feed the block-end sequence rule:
+        //   - consecutive fully-parried cues (the "≥2 consecutive actions" path)
+        //   - whether any of those cues was a genuine multi-hit attack, from the
+        //     authoritative hit_count in the runtime bundle (the "single
+        //     multi-hit attack IS the sequence" path — e.g. a lone Oblivion).
+        // See project_e33_counter_model in the KB.
+        bool multiHit = _dataMappings.TryGetCommandHitCount(_lastCombatCommandId, out int hitCount) && hitCount > 1;
+
         for (int i = 0; i < PartyActorCapacity; i++)
         {
             if ((targetedMask & (1u << i)) == 0) continue;
 
             byte before = _consecutiveParriesPerSlot[i];
-            byte after  = before == byte.MaxValue ? before : (byte)(before + 1);
-            _consecutiveParriesPerSlot[i] = after;
+            _consecutiveParriesPerSlot[i] = before == byte.MaxValue ? before : (byte)(before + 1);
+            if (multiHit) _blockMultiHitParriedPerSlot[i] = true;
+        }
+    }
 
-            if (before < ParryStreakObserveThreshold && after >= ParryStreakObserveThreshold)
-            {
-                log_debug($"Streak ready: {format_actor_slot((byte)i)} parried {after}× consecutively (threshold {ParryStreakObserveThreshold}).");
-            }
+    /// <summary>
+    ///     Whether a slot has earned a counter for the enemy turn block that is
+    ///     about to end. The sequence rule (project_e33_counter_model), unified:
+    ///     a counter is earned when every parryable attack the slot faced in the
+    ///     block was parried AND the sequence is at least 2 hits — satisfied by
+    ///     EITHER ≥2 consecutive fully-parried cues, OR a single genuine
+    ///     multi-hit attack (hit_count ≥ 2) that was fully parried.
+    /// </summary>
+    private bool block_slot_earned_counter(int slot) =>
+        _consecutiveParriesPerSlot[slot] >= ParryStreakObserveThreshold
+        || _blockMultiHitParriedPerSlot[slot];
 
-            // Counter-attack trigger gate: fire once per crossing-or-beyond.
-            // Currently log-only — native command insertion path (the actual
-            // queue-an-Attack-command call into the engine) is the next
-            // implementation step. When the wiring lands, replace the log
-            // with the native call (build an AttackCue targeting
-            // _runtime.CurrentAttackerId from slot i and inject) and KEEP
-            // the streak reset so the chain restarts.
-            if (after >= ParryStreakObserveThreshold)
-            {
-                queue_streak_counter_attack(slotIndex: i, targetEnemySlot: _runtime.CurrentAttackerId);
-                _consecutiveParriesPerSlot[i] = 0;
-            }
+    /// <summary>
+    ///     Fires the earned counter(s) at the END of an enemy turn block (the cue
+    ///     list emptied ⇒ control returns to the player). Runs from
+    ///     clear_awaiting_turn_end AFTER the final cue has been accumulated by
+    ///     resolve_streak_at_cue_clear and BEFORE CurrentAttackerId is cleared,
+    ///     so the counter targets the block's last attacker. The per-slot streak
+    ///     state is wiped right after by reset_parry_streak.
+    /// </summary>
+    private void fire_block_counters()
+    {
+        for (int i = 0; i < PartyActorCapacity; i++)
+        {
+            if (!block_slot_earned_counter(i)) continue;
+            queue_streak_counter_attack(slotIndex: i, targetEnemySlot: _runtime.CurrentAttackerId);
         }
     }
 
