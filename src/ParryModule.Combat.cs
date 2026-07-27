@@ -1369,9 +1369,9 @@ public unsafe sealed partial class ParryModule
         }
     }
 
-    // Animated parry feedback: play the short "block" reaction (motion 0x43) on the parrying
-    // character. 0x43 is a brief one-shot that returns to idle on its own — unlike the 0x3C/0x3D
-    // guard brace, which holds until another motion is set — so it reads cleanly as a parry beat.
+    // Animated parry feedback: play the block reaction (motion 0x2F) on the parrying character
+    // at impact. This is the manual driver — and the only path that can play a custom motion id,
+    // since the native guard-flag path always emits the engine's hardcoded 0x43.
     // Gated by the same "Parry Effect Visual" setting as the barrier visual.
     private void play_parry_block_motion(byte slotIndex)
     {
@@ -1393,7 +1393,7 @@ public unsafe sealed partial class ParryModule
 
         try
         {
-            const int ParryBlockMotionId = 0x43; // chosen by eye in the FX/Motion lab
+            const int ParryBlockMotionId = 0x2F; // chosen by eye in the FX/Motion lab
             FhUtil.get_fptr<MsSetMotionProbe>(
                 ExternalMemoryOffsetMap.Functions.MsSetMotion)(slotIndex, ParryBlockMotionId, 0, 0, 1, 0, 0);
 
