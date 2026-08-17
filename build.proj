@@ -124,6 +124,14 @@
              the checked-in Windows.Win32.*.g.cs files fail with CS0234/CS0246.
              Only reproducible from a clean tree: a warm one has the assets from a
              previous run, which is why this passed locally and failed in CI. -->
+        <!-- Every restore below reads this repo's NuGet.config, which configures the
+             two local feeds the pack step later fills. NuGet fails a restore outright
+             with NU1301 when a configured local source does not exist, and on a clean
+             clone neither folder does yet. Create both up front: a warm tree has them
+             from a previous run, which is exactly why this passed locally and failed
+             in CI. -->
+        <MakeDir Directories="$(FahrenheitPkgDirRel);$(FahrenheitPkgDirDbg)" />
+
         <Exec Command="dotnet restore &quot;$(ManagedCoreProject)&quot; -p:Configuration=$(Configuration) -p:SolutionDir=&quot;$(SolutionDirForBuild)&quot;" />
         <Exec Command="dotnet restore &quot;$(ManagedRuntimeProject)&quot; -p:Configuration=$(Configuration) -p:SolutionDir=&quot;$(SolutionDirForBuild)&quot;" />
         <Exec Command="dotnet restore &quot;$(FahrenheitSdkProject)&quot; -p:Configuration=$(Configuration) -p:SolutionDir=&quot;$(SolutionDirForBuild)&quot;" />
