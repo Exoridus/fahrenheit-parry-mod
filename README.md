@@ -59,6 +59,7 @@ Download the latest release assets:
 
 .\build.cmd release-ready --repo Exoridus/fahrenheit-parry-mod
 .\build.cmd release-bump --bump patch --repo Exoridus/fahrenheit-parry-mod
+gh workflow run Release -f version=v1.2.3
 ```
 
 ---

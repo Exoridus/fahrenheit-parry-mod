@@ -26,17 +26,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7 # v5
+      - name: Setup build environment
+        uses: ./.github/actions/setup-build
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
-
-      - name: Cache NuGet packages
-        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
-        with:
-          path: ~/.nuget/packages
-          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', '**/packages.lock.json') }}
-          restore-keys: nuget-${{ runner.os }}-
 
       - name: Validate commit messages (PR)
         if: github.event_name == 'pull_request'
@@ -52,10 +45,6 @@ jobs:
           build.cmd clean --purge --yes --dry-run
           tools.cmd help
 
-      - name: Setup Vcpkg Integration
-        shell: cmd
-        run: "%VCPKG_INSTALLATION_ROOT%\\vcpkg.exe integrate install"
-
       - name: Verify
         shell: cmd
         run: build.cmd verify --configuration Debug --repo "${{ github.repository }}"
@@ -68,31 +57,51 @@ jobs:
           path: .workspace/fahrenheit/artifacts/deploy/dbg
           if-no-files-found: warn
 
-  verify_release:
-    name: Verify (Release)
+  # Runs the same steps the Release workflow runs -- Release build, packaging,
+  # asset-size validation and release notes -- against a throwaway tag. Without
+  # this, a green CI said nothing about whether a release would succeed, because
+  # packaging was only ever exercised by the tagged release build itself.
+  release_preflight:
+    name: Release Preflight
     runs-on: windows-latest
+    env:
+      PREFLIGHT_TAG: v0.0.0-ci
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-depth: 0
+          fetch-tags: true
 
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7 # v5
+      - name: Setup build environment
+        uses: ./.github/actions/setup-build
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Cache NuGet packages
-        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
-        with:
-          path: ~/.nuget/packages
-          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', '**/packages.lock.json') }}
-          restore-keys: nuget-${{ runner.os }}-
-
-      - name: Setup Vcpkg Integration
+      - name: Full release build
         shell: cmd
-        run: "%VCPKG_INSTALLATION_ROOT%\\vcpkg.exe integrate install"
+        run: build.cmd build --configuration Release --repo "${{ github.repository }}"
 
-      - name: Verify
+      - name: Package release archives
         shell: cmd
-        run: build.cmd verify --configuration Release --repo "${{ github.repository }}"
+        run: build.cmd release-pack --tag "%PREFLIGHT_TAG%" --deploy-dir ".workspace\fahrenheit\artifacts\deploy\rel" --out-dir ".release"
+
+      - name: Validate release asset sizes
+        shell: pwsh
+        env:
+          MAX_FULL_ZIP_MB: "200"
+          MAX_MOD_ZIP_MB: "64"
+        run: ./.github/scripts/Assert-ReleaseAssets.ps1 -Tag $env:PREFLIGHT_TAG -Directory ".release"
+
+      - name: Generate release notes
+        shell: cmd
+        run: build.cmd release-notes --tag "%PREFLIGHT_TAG%" --repo "${{ github.repository }}" --out ".release\release-notes.txt"
+
+      - name: Assert release notes list commits
+        shell: pwsh
+        run: |
+          $notes = Get-Content ".release/release-notes.txt" -Raw
+          if ($notes -match '(?m)^- Initial release$') {
+            throw "Release notes fell back to 'Initial release'; the commit range did not resolve."
+          }
+          Write-Host "Release notes contain a resolved commit list."

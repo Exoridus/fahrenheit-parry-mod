@@ -753,9 +753,13 @@ internal sealed partial class BuildScript : NukeBuild
             RunChecked("git", $"-c core.hooksPath=NUL commit --allow-empty -m {Quote(commitMessage)}", "Create empty release commit");
         }
 
-        RunChecked("git", $"tag -a {Quote(newTag)} -m {Quote(commitMessage)}", "Create release tag");
-        Log.Information($"Created release commit and tag: {newTag}");
-        Log.Information("Next step: git push origin main --follow-tags");
+        // Deliberately no `git tag` here. The tag is created by the Release workflow
+        // after a green release build, so a failed build never burns a version number.
+        Log.Information($"Created release commit for {newTag}.");
+        Log.Information("Next steps:");
+        Log.Information("  1. git push origin main");
+        Log.Information("  2. wait for CI (its release preflight packages the same payload)");
+        Log.Information($"  3. gh workflow run Release -f version={newTag}");
     }
 
     void PinReleaseFahrenheitRef()
@@ -890,8 +894,15 @@ internal sealed partial class BuildScript : NukeBuild
 
         var repoUrl = $"https://github.com/{repositorySlug}";
         var previousTag = ResolvePreviousAnyTag(tag);
-        var releaseDate = GitSingleLineOrFallback($"log -1 --date=short --format=%ad {Quote(tag)}^{{commit}}", "log -1 --date=short --format=%ad", DateTime.UtcNow.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
-        var range = string.IsNullOrWhiteSpace(previousTag) ? tag : $"{previousTag}..{tag}";
+
+        // The tag does not exist as a git ref while the release build runs ahead of
+        // publishing, and never exists for the CI preflight tag. CollectCommitLines
+        // swallows a failed `git log`, so an unresolvable range does not error out --
+        // it silently yields notes that claim "Initial release". Anchor the range on
+        // HEAD whenever the tag is not (yet) a real ref.
+        var rangeEnd = GitRefExists(tag) ? tag : "HEAD";
+        var releaseDate = GitSingleLineOrFallback($"log -1 --date=short --format=%ad {Quote(rangeEnd)}^{{commit}}", "log -1 --date=short --format=%ad", DateTime.UtcNow.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+        var range = string.IsNullOrWhiteSpace(previousTag) ? rangeEnd : $"{previousTag}..{rangeEnd}";
         var commits = CollectCommitLines(range, repoUrl);
         if (commits.Count == 0)
         {
