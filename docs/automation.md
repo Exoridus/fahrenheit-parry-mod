@@ -119,7 +119,7 @@ Quick command discovery:
 ## Release Workflows
 
 - `.\build.cmd release-bump`
-  - Bump version and create release commit/tag.
+  - Bump version and create the release commit. The tag is created by the Release workflow after a green build.
   - Parameters:
   - --bump patch|minor|major (optional).
   - Examples:

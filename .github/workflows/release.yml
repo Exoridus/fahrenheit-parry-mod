@@ -1,19 +1,34 @@
 name: Release
 
+# The tag is an OUTPUT of a successful release build, not its trigger.
+#
+# Previously this workflow ran on `push: tags: [v*]`, so a failing release build
+# left the tag already published. Because tags are immutable, the only way out
+# was to burn the next patch number. Now the run is dispatched with the intended
+# version, and the tag is created in the final step -- if anything before it
+# fails, no tag exists and the same version can simply be dispatched again.
 on:
-  push:
-    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag to release (e.g. v0.5.2). Must not already exist.'
+        required: true
+        type: string
+      dry_run:
+        description: 'Build and package without creating the tag or the release.'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
 
 concurrency:
-  group: release-${{ github.ref }}
-  cancel-in-progress: true
+  group: release-${{ inputs.version }}
+  cancel-in-progress: false
 
 env:
   DOTNET_VERSION: "10.0.x"
-  NATIVE_PLATFORM_TOOLSET: "v143"
 
 jobs:
   release:
@@ -26,83 +41,67 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7 # v5
+      - name: Validate version input
+        shell: pwsh
+        run: |
+          $version = '${{ inputs.version }}'
+          if ($version -notmatch '^v\d+\.\d+\.\d+$') {
+            throw "Version must look like v1.2.3, got '$version'."
+          }
+          git rev-parse -q --verify "refs/tags/$version" > $null 2>&1
+          if ($LASTEXITCODE -eq 0) {
+            throw "Tag $version already exists. Tags are immutable; pick the next version."
+          }
+          $manifest = (Get-Content fhparry.manifest.json -Raw | ConvertFrom-Json).version
+          if ("v$manifest" -ne $version) {
+            throw "Manifest version is $manifest but the release was dispatched as $version. Run build.cmd release-bump first."
+          }
+          Write-Host "Releasing $version from $(git rev-parse --short HEAD)."
+
+      - name: Setup build environment
+        uses: ./.github/actions/setup-build
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Cache vcpkg archives
-        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5
-        with:
-          path: ~\AppData\Local\vcpkg\archives
-          key: windows-vcpkg-${{ hashFiles('fahrenheit.release.ref', 'build.proj') }}
-          restore-keys: |
-            windows-vcpkg-
-
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@30375c66a4eea26614e0d39710365f22f8b0af57 # v3.0.0
-
-      - name: Bootstrap and integrate vcpkg
-        shell: cmd
-        run: |
-          if "%VCPKG_INSTALLATION_ROOT%"=="" (
-            echo ERROR: VCPKG_INSTALLATION_ROOT is not set on this runner.
-            exit /B 1
-          )
-          pushd "%VCPKG_INSTALLATION_ROOT%"
-          call bootstrap-vcpkg.bat -disableMetrics
-          if errorlevel 1 exit /B 1
-          call vcpkg integrate install
-          if errorlevel 1 exit /B 1
-          popd
-
       - name: Full release build
         shell: cmd
-        run: build.cmd build --configuration Release --repo "${{ github.repository }}" --toolset "${{ env.NATIVE_PLATFORM_TOOLSET }}"
+        run: build.cmd build --configuration Release --repo "${{ github.repository }}"
 
       - name: Package release archives
         shell: cmd
-        run: build.cmd release-pack --tag "${{ github.ref_name }}" --deploy-dir ".workspace\fahrenheit\artifacts\deploy\rel" --out-dir ".release"
+        run: build.cmd release-pack --tag "${{ inputs.version }}" --deploy-dir ".workspace\fahrenheit\artifacts\deploy\rel" --out-dir ".release"
 
       - name: Validate release asset sizes
         shell: pwsh
         env:
           MAX_FULL_ZIP_MB: "200"
           MAX_MOD_ZIP_MB: "64"
-        run: |
-          $full = ".release/fahrenheit-full-${{ github.ref_name }}.zip"
-          $mod = ".release/fhparry-mod-${{ github.ref_name }}.zip"
-          if (!(Test-Path $full)) { throw "Missing release asset: $full" }
-          if (!(Test-Path $mod)) { throw "Missing release asset: $mod" }
-
-          $fullBytes = (Get-Item $full).Length
-          $modBytes = (Get-Item $mod).Length
-          $fullMax = [int]$env:MAX_FULL_ZIP_MB * 1MB
-          $modMax = [int]$env:MAX_MOD_ZIP_MB * 1MB
-
-          if ($fullBytes -gt $fullMax) {
-            throw "Full asset too large: $([math]::Round($fullBytes / 1MB, 2)) MB > $env:MAX_FULL_ZIP_MB MB"
-          }
-          if ($modBytes -gt $modMax) {
-            throw "Mod asset too large: $([math]::Round($modBytes / 1MB, 2)) MB > $env:MAX_MOD_ZIP_MB MB"
-          }
-
-          Write-Host "Asset size check passed. full=$([math]::Round($fullBytes / 1MB, 2))MB mod=$([math]::Round($modBytes / 1MB, 2))MB"
+        run: ./.github/scripts/Assert-ReleaseAssets.ps1 -Tag "${{ inputs.version }}" -Directory ".release"
 
       - name: Generate release notes
         shell: cmd
-        run: build.cmd release-notes --tag "${{ github.ref_name }}" --repo "${{ github.repository }}" --out ".release\release-notes.txt"
+        run: build.cmd release-notes --tag "${{ inputs.version }}" --repo "${{ github.repository }}" --out ".release\release-notes.txt"
 
-      - name: Upload release assets
+      - name: Upload artifacts (dry run)
+        if: inputs.dry_run
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: release-dryrun-${{ inputs.version }}
+          path: .release
+          if-no-files-found: error
+
+      # Creates the tag as part of publishing, from the commit this run built.
+      - name: Publish release
+        if: ${{ !inputs.dry_run }}
         uses: softprops/action-gh-release@153bb8e04406b158c6c84fc1615b65b24149a1fe # v2
         with:
-          tag_name: ${{ github.ref_name }}
+          tag_name: ${{ inputs.version }}
+          target_commitish: ${{ github.sha }}
           body_path: .release/release-notes.txt
           files: |
-            .release/fahrenheit-full-${{ github.ref_name }}.zip
-            .release/fhparry-mod-${{ github.ref_name }}.zip
-            .release/fahrenheit-full-${{ github.ref_name }}.zip.sha256
-            .release/fhparry-mod-${{ github.ref_name }}.zip.sha256
+            .release/fahrenheit-full-${{ inputs.version }}.zip
+            .release/fhparry-mod-${{ inputs.version }}.zip
+            .release/fahrenheit-full-${{ inputs.version }}.zip.sha256
+            .release/fhparry-mod-${{ inputs.version }}.zip.sha256
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-

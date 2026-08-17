@@ -89,10 +89,13 @@ Helpful command:
 ```cmd
 .\build.cmd release-ready --repo Exoridus/fahrenheit-parry-mod
 .\build.cmd release-bump --bump patch --repo Exoridus/fahrenheit-parry-mod
-git push origin main --follow-tags
+git push origin main
+gh workflow run Release -f version=v1.2.3
 ```
 
-`release-bump` updates version/changelog, pins `fahrenheit.release.ref`, creates the release commit, and creates an annotated tag.
+`release-bump` updates version/changelog, pins `fahrenheit.release.ref`, and creates the release commit. It does **not** create a tag.
+
+The Release workflow creates the tag only after a green release build, so a failed build never burns a version number -- fix it, push, and dispatch the same version again.
 
 ## Local Development Notes
 

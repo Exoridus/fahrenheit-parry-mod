@@ -163,21 +163,35 @@ The Discord sync workflow exports immutable raw channel JSON into `.workspace/di
 ```bash
 .\build.cmd release-ready --repo Exoridus/fahrenheit-parry-mod
 .\build.cmd release-bump --bump patch --repo Exoridus/fahrenheit-parry-mod
-git push origin main --follow-tags
+git push origin main
+gh workflow run Release -f version=v1.2.3
 ```
 
-`release-bump` updates version/changelog, pins `fahrenheit.release.ref`, creates release commit, and creates annotated tag.
+`release-bump` updates version/changelog, pins `fahrenheit.release.ref`, and creates the release commit. It does **not** create a tag.
+
+The tag is created by the Release workflow after a green release build, so a
+failed build never burns a version number: fix the problem, push again, and
+dispatch the same version. Add `-f dry-run=true` to build and package without
+publishing anything.
 
 ## CI/CD Summary
 
 - `push`/`pull_request` to `main`: `.github/workflows/ci.yml`
   - commit subject validation (PR)
-  - `Verify` job (`Debug`) + `Verify (Release)` job
-- tag push `v*`: `.github/workflows/release.yml`
+  - `Verify` job (`Debug`)
+  - `Release Preflight` job: Release build, packaging, asset-size check and
+    release notes against a throwaway tag -- the same steps the release runs,
+    so a green CI actually predicts a green release
+- manual dispatch: `.github/workflows/release.yml`
+  - validates the version input against the manifest and rejects existing tags
   - full release build
   - release packaging (`full` and `mod-only` ZIP)
   - SHA256 outputs
   - generated release notes
+  - creates the tag and publishes the release as the final step
+
+Both workflows share `.github/actions/setup-build` for toolchain setup, which is
+what keeps them from drifting apart.
 
 ## References
 
