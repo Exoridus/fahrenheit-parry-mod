@@ -1264,6 +1264,17 @@ internal sealed partial class BuildScript : NukeBuild
             return;
         }
 
+        // MSBuild.exe is only on PATH inside a Developer Command Prompt. A regular
+        // Visual Studio install still ships it, and that is what build.proj's
+        // ResolveNativeMSBuild target uses, so discover it the same way before
+        // concluding anything is missing.
+        var msbuildExe = ResolveMsbuildExePath();
+        if (!string.IsNullOrWhiteSpace(msbuildExe))
+        {
+            Log.Information($"[OK] MSBuild is already available: {msbuildExe}");
+            return;
+        }
+
         EnsureWingetAvailable();
         PromptInstallOrFail(
             title: "MSBuild not found.",
@@ -1275,10 +1286,44 @@ internal sealed partial class BuildScript : NukeBuild
             label: "Visual Studio Build Tools",
             overrideArgs: "--wait --quiet --norestart --nocache --add Microsoft.VisualStudio.Workload.ManagedDesktopBuildTools --add Microsoft.VisualStudio.Workload.VCTools");
 
-        if (!CommandExists("msbuild"))
+        if (!CommandExists("msbuild") && string.IsNullOrWhiteSpace(ResolveMsbuildExePath()))
         {
             Log.Warning("MSBuild may need a new terminal session to appear on PATH.");
         }
+    }
+
+    string ResolveMsbuildExePath()
+    {
+        var vswhere = ResolveVsWherePath();
+        if (string.IsNullOrWhiteSpace(vswhere) || !File.Exists(vswhere))
+        {
+            return string.Empty;
+        }
+
+        var probe = RunProcess(
+            vswhere,
+            "-latest -products * -requires Microsoft.Component.MSBuild -property installationPath",
+            "Resolve MSBuild installation path",
+            showSpinner: false,
+            silent: true);
+
+        if (probe.ExitCode != 0)
+        {
+            return string.Empty;
+        }
+
+        var installPath = probe.StdOut
+            .Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)
+            .Select(x => x.Trim())
+            .FirstOrDefault();
+
+        if (string.IsNullOrWhiteSpace(installPath))
+        {
+            return string.Empty;
+        }
+
+        var msbuildExe = Path.Combine(installPath, "MSBuild", "Current", "Bin", "MSBuild.exe");
+        return File.Exists(msbuildExe) ? msbuildExe : string.Empty;
     }
 
     void EnsureVcpkgInstalledAndIntegrated()
