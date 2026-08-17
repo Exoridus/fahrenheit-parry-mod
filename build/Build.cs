@@ -596,30 +596,8 @@ internal sealed partial class BuildScript : NukeBuild
             return Toolset.Trim();
         }
 
-        var vswhere = ResolveVsWherePath();
-        if (string.IsNullOrWhiteSpace(vswhere) || !File.Exists(vswhere))
-        {
-            return string.Empty;
-        }
-
-        var probe = RunProcess(
-            vswhere,
-            "-latest -products * -requires Microsoft.Component.MSBuild -property installationPath",
-            "Resolve Visual Studio installation path",
-            showSpinner: false,
-            silent: true);
-
-        if (probe.ExitCode != 0)
-        {
-            return string.Empty;
-        }
-
-        var installPath = probe.StdOut
-            .Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)
-            .Select(x => x.Trim())
-            .FirstOrDefault();
-
-        if (string.IsNullOrWhiteSpace(installPath) || !Directory.Exists(installPath))
+        var installPath = ResolveVisualStudioInstallPath();
+        if (string.IsNullOrWhiteSpace(installPath))
         {
             return string.Empty;
         }
@@ -1303,7 +1281,11 @@ internal sealed partial class BuildScript : NukeBuild
         }
     }
 
-    string ResolveMsbuildExePath()
+    // Single vswhere probe for every "where is Visual Studio" question in this file.
+    // The setup gates used to answer that question by looking on PATH only, which is
+    // true just inside a Developer Command Prompt -- so a perfectly good install read
+    // as "missing" and setup tried to winget a second one.
+    string ResolveVisualStudioInstallPath()
     {
         var vswhere = ResolveVsWherePath();
         if (string.IsNullOrWhiteSpace(vswhere) || !File.Exists(vswhere))
@@ -1314,7 +1296,7 @@ internal sealed partial class BuildScript : NukeBuild
         var probe = RunProcess(
             vswhere,
             "-latest -products * -requires Microsoft.Component.MSBuild -property installationPath",
-            "Resolve MSBuild installation path",
+            "Resolve Visual Studio installation path",
             showSpinner: false,
             silent: true);
 
@@ -1328,6 +1310,14 @@ internal sealed partial class BuildScript : NukeBuild
             .Select(x => x.Trim())
             .FirstOrDefault();
 
+        return string.IsNullOrWhiteSpace(installPath) || !Directory.Exists(installPath)
+            ? string.Empty
+            : installPath;
+    }
+
+    string ResolveMsbuildExePath()
+    {
+        var installPath = ResolveVisualStudioInstallPath();
         if (string.IsNullOrWhiteSpace(installPath))
         {
             return string.Empty;
@@ -2401,6 +2391,36 @@ internal sealed partial class BuildScript : NukeBuild
         if (CommandExists("vcpkg"))
         {
             return "vcpkg";
+        }
+
+        // GitHub's windows runners ship vcpkg and point this at it; the release
+        // workflow already bootstraps from the same variable.
+        foreach (var variable in new[] { "VCPKG_INSTALLATION_ROOT", "VCPKG_ROOT" })
+        {
+            var root = Environment.GetEnvironmentVariable(variable);
+            if (string.IsNullOrWhiteSpace(root))
+            {
+                continue;
+            }
+
+            var fromEnv = Path.Combine(root, "vcpkg.exe");
+            if (File.Exists(fromEnv))
+            {
+                return fromEnv;
+            }
+        }
+
+        // Visual Studio bundles vcpkg with the C++ workload. It is not on PATH
+        // outside a Developer Command Prompt, so without this the setup gate wants
+        // to clone and bootstrap a second copy next to a working one.
+        var installPath = ResolveVisualStudioInstallPath();
+        if (!string.IsNullOrWhiteSpace(installPath))
+        {
+            var bundled = Path.Combine(installPath, "VC", "vcpkg", "vcpkg.exe");
+            if (File.Exists(bundled))
+            {
+                return bundled;
+            }
         }
 
         var local = WorkspaceDir / "vcpkg" / "vcpkg.exe";
