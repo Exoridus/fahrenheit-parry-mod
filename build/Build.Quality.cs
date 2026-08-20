@@ -300,6 +300,29 @@ internal sealed partial class BuildScript
             {
                 Fail($"Language validation failed: {Path.GetFileName(file)} is missing keys: {string.Join(", ", missingKeys.Take(10))}{(missingKeys.Count > 10 ? " ..." : string.Empty)}");
             }
+
+            ValidateLanguageGlyphRange(file, map);
+        }
+    }
+
+    // Fahrenheit builds its ImGui font with io.Fonts.GetGlyphRangesDefault(), which
+    // covers Basic Latin plus Latin-1 Supplement and nothing else. Umlauts and the
+    // sharp s are inside that range and render; an em dash, a curly quote or an
+    // ellipsis character is outside it and draws as a missing glyph in the settings
+    // panel, where nobody sees it until a screenshot arrives. The fix is always to
+    // pick the ASCII punctuation, never to strip a letter of its diacritic.
+    static void ValidateLanguageGlyphRange(string path, Dictionary<string, string> map)
+    {
+        foreach (var (key, value) in map)
+        {
+            foreach (var c in value)
+            {
+                if (c <= 'ÿ') continue;
+
+                Fail($"Language validation failed: key '{key}' in {Path.GetFileName(path)} contains "
+                   + $"U+{(int)c:X4} ('{c}'), which the ImGui font cannot render. Only U+0000-U+00FF "
+                   + "is available; use ASCII punctuation instead.");
+            }
         }
     }
 
