@@ -234,6 +234,29 @@ After edits:
 - Prefer concise operational docs over research-heavy narrative in public-facing files.
 - Keep public docs focused on what contributors and users actually need.
 
+## 14a) Text Encoding, Diacritics, and Shipped Strings
+
+- Source comments, API documentation, `docs/`, commit messages and PR text are
+  English and use ASCII punctuation. That bans the typographic variants - em
+  dash, en dash, curly quotes, ellipsis - and nothing beyond them.
+- **Letters are never transliterated.** A letter carrying a diacritic is a
+  letter, not punctuation: `während`, `für`, `Zügen`, `abschließt`. Never
+  `waehrend`, `fuer`, `Zuegen`, `abschliesst`. This applies to any language,
+  including names and cited titles.
+- `lang/*.json` is shipped product text and is exempt from the English rule
+  entirely. Each locale is written in its own natural orthography; German uses
+  ä, ö, ü, Ä, Ö, Ü and ß. `ae`/`oe`/`ue` in a shipped string is a defect.
+- **Every character in `lang/*.json` must be U+00FF or below.** Fahrenheit
+  builds its ImGui font with `io.Fonts.GetGlyphRangesDefault()`
+  (`core/framework/imguihelp.cs`), which covers Basic Latin plus Latin-1
+  Supplement only. Umlauts and ß are inside that range and render correctly;
+  an em dash (U+2014), a curly quote or an ellipsis character is outside it and
+  draws as a missing glyph in the settings panel. Use a comma, a plain hyphen
+  or three periods instead.
+- Identifiers stay ASCII in the other direction: setting ids, JSON keys, file
+  names, C# symbols and CLI flags, because the loader and the toolchain key on
+  them.
+
 ## 15) Assistant Working Style Rules
 
 - Prefer concrete edits over abstract recommendations.
