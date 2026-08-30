@@ -12,14 +12,13 @@ namespace Fahrenheit.Mods.Parry;
 // the chain via `chain_from(hook).fnptr`.
 //
 //   loc_xxx()   — builds the FhMethodLocation for a hooked function from this mod's
-//                 own ExternalMemoryOffsetMap offsets (int, cast to nint). Startup
-//                 hooks use StartupOffsets; ShellExecuteW targets a named export.
+//                 own ExternalMemoryOffsetMap offsets (int, cast to nint).
 //   orig_xxx()  — builds a transient FhMethodHandle at loc_xxx(), retargets it past
 //                 this mod's own hook (h_xxx) with chain_from, and invokes fnptr.
 //   install_hook — shared installer: hook() returns bool on alpha11 (it does not
 //                 throw), so each old try/catch collapses to one guarded line.
 //
-// Call sites in ParryModule.cs / ParryModule.Stage1Probes.cs / ParryModule.StartupSkip.cs
+// Call sites in ParryModule.cs / ParryModule.Stage1Probes.cs
 // are untouched by the migration: they already call orig_xxx(...), never a handle.
 //
 // Do not reference `FhCall.*` here: this mod deliberately no longer depends on that
@@ -61,10 +60,6 @@ public unsafe sealed partial class ParryModule
     private readonly AtelCameraPosSetProbe                   _dAtelCameraPosSet;
     private readonly MsDmgCalcCheckHitProbe                  _dMsDmgCalcCheckHit;
     private readonly MsEffectEndMotionProbe                  _dMsEffectEndMotion;
-    private readonly StartupAtelEventSetUp                   _dStartupAtelEventSetup;
-    private readonly StartupNeedShowJapanLogo                _dStartupNeedShowJapanLogo;
-    private readonly StartupFmvSkipPoll                      _dStartupBootFmvSkip;
-    private readonly StartupShellExecuteW                    _dStartupShellExecuteW;
     private readonly MsActionRequestProbeDelegate            _dStage1MsActionRequest;
     private readonly MsCalcCommandProbeDelegate              _dStage1MsCalcCommand;
     private readonly MsCheckStatusBeforeActionProbeDelegate  _dStage1MsCheckStatusBeforeAction;
@@ -169,38 +164,6 @@ public unsafe sealed partial class ParryModule
 
     private void orig_ms_effect_end_motion(uint chr_id, int mode)
         => new FhMethodHandle<MsEffectEndMotionProbe>(loc_ms_effect_end_motion()).chain_from(_dMsEffectEndMotion).fnptr!(chr_id, mode);
-
-    // ── ParryModule.StartupSkip.cs (4 handles) ───────────────────────────────
-
-    private static FhMethodLocation loc_startup_atel_event_setup()
-        => new("FFX.exe", (nint)StartupOffsets.AtelEventSetUp);
-
-    private static FhMethodLocation loc_startup_need_show_japan_logo()
-        => new("FFX.exe", (nint)StartupOffsets.NeedShowJapanLogo);
-
-    private static FhMethodLocation loc_startup_boot_fmv_skip()
-        => new("FFX.exe", (nint)StartupOffsets.FmvSkipPoll);
-
-    private static FhMethodLocation loc_startup_shell_execute_w()
-        => new("shell32.dll", "ShellExecuteW");
-
-    private void orig_startup_atel_event_setup(uint eventId)
-        => new FhMethodHandle<StartupAtelEventSetUp>(loc_startup_atel_event_setup()).chain_from(_dStartupAtelEventSetup).fnptr!(eventId);
-
-    private int orig_startup_need_show_japan_logo()
-        => new FhMethodHandle<StartupNeedShowJapanLogo>(loc_startup_need_show_japan_logo()).chain_from(_dStartupNeedShowJapanLogo).fnptr!();
-
-    private void orig_startup_boot_fmv_skip(nint thisPtr)
-        => new FhMethodHandle<StartupFmvSkipPoll>(loc_startup_boot_fmv_skip()).chain_from(_dStartupBootFmvSkip).fnptr!(thisPtr);
-
-    private IntPtr orig_startup_shell_execute_w(
-        IntPtr hwnd,
-        string? lpOperation,
-        string? lpFile,
-        string? lpParameters,
-        string? lpDirectory,
-        int nShowCmd)
-        => new FhMethodHandle<StartupShellExecuteW>(loc_startup_shell_execute_w()).chain_from(_dStartupShellExecuteW).fnptr!(hwnd, lpOperation, lpFile, lpParameters, lpDirectory, nShowCmd);
 
     // ── ParryModule.Stage1Probes.cs (6 handles) ──────────────────────────────
 

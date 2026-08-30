@@ -718,10 +718,6 @@ public unsafe sealed partial class ParryModule : FhModule
         _dAtelCameraPosSet                = h_atel_camera_pos_set;
         _dMsDmgCalcCheckHit               = h_ms_dmg_calc_check_hit;
         _dMsEffectEndMotion               = h_ms_effect_end_motion;
-        _dStartupAtelEventSetup           = h_startup_event_setup;
-        _dStartupNeedShowJapanLogo        = h_startup_need_show_japan_logo;
-        _dStartupBootFmvSkip              = h_startup_boot_fmv_skip;
-        _dStartupShellExecuteW            = h_startup_shell_execute_w;
         _dStage1MsActionRequest           = h_stage1_ms_action_request;
         _dStage1MsCalcCommand             = h_stage1_ms_calc_command;
         _dStage1MsCheckStatusBeforeAction = h_stage1_ms_check_status_before_action;
@@ -762,7 +758,6 @@ public unsafe sealed partial class ParryModule : FhModule
         install_hook(loc_ms_dmg_calc_check_hit(), _dMsDmgCalcCheckHit, "MsDmgCalcCheckHit (disable-native-evasion unavailable)");
 
         install_stage1_probes();
-        install_startup_skip_hooks();
 
         _logger.Info("ParryPrototype ready. Adjust options via Mod Config (F7).");
         return true;
@@ -790,9 +785,6 @@ public unsafe sealed partial class ParryModule : FhModule
         bool cancelJustPressed = cancelPressed && !_prevCancelPressed;
         _prevR1Pressed     = r1Pressed;
         _prevCancelPressed = cancelPressed;
-
-        // Bundled startup-skip convenience runs regardless of the parry-enabled gate below.
-        tick_startup_skip();
 
         update_debug_save_loaded_state();
         update_debug_battle_session_state();
