@@ -1435,6 +1435,16 @@ public unsafe sealed partial class ParryModule
             ? _optionEnabled && isEnemyTurnActive
             : _battleCameraId != 0 && should_hold_camera();
 
+        // p2 is the actor the camera script follows, and 0xFF is the engine's "no actor" sentinel -
+        // the same one Chr's attacker-id cluster uses. Every 0xFF request in the image comes from
+        // the battle state machine itself rather than from a turn: MsBtlMain issues 0x18 at battle
+        // start and 0x75, 0x76 and 0x7c while the encounter loads, and state 0x1d picks 0x42 to 0x45
+        // off btl.battle_end_type for the ending. None of those has a turn to gate on, which is why
+        // they arrive with turn_active false and attacker 0 and are suppressed on the strength of
+        // the hold alone. Suppressing the game's own flow cameras was never the intent of the lock.
+        const int SystemCameraActor = 0xFF;
+        if (p2 == SystemCameraActor) shouldSuppress = false;
+
         probe_camera_call("MsAtelRequestCamera", $"p1={p1:X},p2={p2:X},p3={p3:X},p4={p4:X}", isAnyTurnActive, isEnemyTurnActive, shouldSuppress);
 
         if (shouldSuppress)
