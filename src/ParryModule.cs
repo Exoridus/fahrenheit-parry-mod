@@ -319,14 +319,6 @@ public unsafe sealed partial class ParryModule : FhModule
         };
     }
 
-    private bool _optionEnabled = true;
-    private bool _optionSound = true;
-    private bool _optionLogging =
-#if DEBUG
-        true;
-#else
-        false;
-#endif
     // Not a toggle: damage negation IS the mod. With it off a successful parry does nothing,
     // which is what the "enabled" master switch is for. Kept as a named constant so the guard
     // sites keep documenting where negation applies.
@@ -343,7 +335,6 @@ public unsafe sealed partial class ParryModule : FhModule
     // NOTE: leave OFF by default. Enabling this installs 7 additional Stage-1 native probe hooks
     // (install_stage1_probes) that are a separate research feature and crash at battle start when
     // untested. Camera/overlay debugging does NOT need this — use _optionCameraProbe + logging.
-    private bool _optionNativeProbeLogging = false;
     // Controls which turns trigger battle-camera suppression. Off passes every call through to
     // the engine unchanged.
     //
@@ -353,20 +344,12 @@ public unsafe sealed partial class ParryModule : FhModule
     // pans a player actually complains about are a finishing blow (the player's own turn) and an
     // item-use swing, and both are invisible to a lock that only watches enemy turns. You cannot
     // time an attack you are not looking at.
-    private enum BattleCameraLockMode
-    {
-        Off = 0,
-        EnemyTurnsOnly = 1,
-        AllTurns = 2,
-    }
-    private BattleCameraLockMode _optionBattleCameraLockMode = BattleCameraLockMode.AllTurns;
     // Visual feedback effect on a successful parry: fires the Sentinel barrier
     // visual (effect 0x4A — golden ring / shield-of-air spatial particle) on
     // the parrying character via the global-handle emitter MsBtlSetHitEffect
     // (0x0039EC60). Effect is PC-safe: the engine fires this exact call on party
     // actors when an attack lands on a Sentinel-statused PC (forensic ref:
     // FUN_0079E530). Default-on.
-    private bool _optionParryEffect = true;
 
     // Deterministic motion termination for the dodge. The dodge's ATEL motion script is restarted by
     // every press and, left alone, only ends when it runs out — which is why spamming the button used
@@ -390,7 +373,6 @@ public unsafe sealed partial class ParryModule : FhModule
     // merely reports that the dodge landed inside the parry window. Do NOT read
     // CombatLabelPalette.preciseTiming (which tints PARRIED and PERFECT alike) as "both met the
     // hit" — it groups them by timing readability, not by impact. Default-on.
-    private bool _optionImpactShake = true;
 
     // Shake parameters for MsScreenSetShake. The engine evaluates, per axis:
     //   offset = sin(phase) * amplitude * (32 + jitter)/32 * (remaining/total)
@@ -430,7 +412,6 @@ public unsafe sealed partial class ParryModule : FhModule
     // in-game verification of the MsInsertBtlCommand call address and AttackCue
     // layout. Off → log-only behaviour (the observation still runs and the
     // debug overlay still surfaces "streak ready" events).
-    private bool _optionStreakCounter = false;
     // Disable native FFX evasion for real player characters (chr->ram.is_aeon == false
     // and chr->chr_id < 0x14). Aeons and monsters keep vanilla evasion. The hook always
     // invokes the original MsDmgCalc_CheckHit (so the engine's RNG advance is preserved),
@@ -462,9 +443,19 @@ public unsafe sealed partial class ParryModule : FhModule
     //   - Once both HIT and MISS are known, the override fires.
     // Settings file may also pre-seed these via persisted values (set by the user
     // after observing logs). Default null = unknown.
-    private int? _checkHitHitValue = null;
-    private int _checkHitConsecutiveSameCount = 0;
-    private int? _checkHitFirstObservedValue = null;
+    /// <summary>
+    ///     The value _DmgCalc_CheckHit returns for a hit. Named in the Ghidra type export rather
+    ///     than discovered at runtime:
+    ///
+    ///     <code>typedef enum CheckHitResult_4 { HIT=0, MISS=1, MISS_ALIVE=2 } CheckHitResult_4;</code>
+    ///
+    ///     and the function's own body returns those symbols rather than numbers, so the decompiler
+    ///     resolved the enum from two directions. This replaced an auto-discovery that watched the
+    ///     return value for real PC targets and accepted it after five consecutive agreements -
+    ///     which meant the first battles of a session behaved differently from the later ones, and
+    ///     had to be persisted to hide that.
+    /// </summary>
+    private const int CheckHitHit = 0;
     private long _checkHitOverrideCount = 0;
     private long _checkHitObservationCount = 0;
     // ── Dodge / native-evade (Circle ○) ─────────────────────────────────────
@@ -475,7 +466,6 @@ public unsafe sealed partial class ParryModule : FhModule
     // valid, the MsDamageSetMotion hook NEGATES the damage + suppresses the flinch (the movement
     // already plays, so no second trigger). Attacker-keyed → AoE. Never feeds the streak/counter
     // path (no counterattack). The engine drives the return/walk-back.
-    private bool _optionDodgeEnabled = true;
     private bool _dodgeWindowActive = false;
     private int _dodgeWindowRemainingTicks = 0;
     // Ticks left before another step-out is accepted. Armed from the difficulty model after a
@@ -540,26 +530,12 @@ public unsafe sealed partial class ParryModule : FhModule
     // it sets for Sentinel/Defend. The engine hardcodes 0x43 for this flag, so the native path
     // cannot emit a custom impact motion. We now drive a chosen motion (0x2F) via the manual
     // MsSetMotion path instead, so this defaults OFF; flip on only to restore the engine's 0x43.
-    private bool _optionParryNativeBlock = false;
     // Camera probe (debug): logs EVERY camera hook invocation + the lock-gating state (not just
     // when suppressed) so an un-locked enemy camera pan reveals which path fired and why the lock
     // did not engage (turn/attacker gating). Toggle via the "camera_probe" setting.
-    private bool _optionCameraProbe =
-#if DEBUG
-        true;
-#else
-        false;
-#endif
     // Guard/defend reaction flag, relative to the ChrRam sub-struct (Chr.ram). Set to 1 →
     // MsDamageSetMotion overrides flinch reactions 9/0x30 to the block motion 0x43.
     private const int ChrRamGuardReactFlagOffset = 0x19A;
-    private bool _optionDebugOverlay =
-#if DEBUG
-        true;
-#else
-        false;
-#endif
-    private ParryDifficulty _optionDifficulty = ParryDifficultyModel.DefaultDifficulty;
     private readonly bool[] _damageEventActive = new bool[PartyActorCapacity];
     private readonly bool[] _parryFeedbackPending = new bool[PartyActorCapacity];
     // Per-hit bitmask of slots intercepted at MsSetDamageInternal. Set at p5=0 and
@@ -657,7 +633,25 @@ public unsafe sealed partial class ParryModule : FhModule
     private int _debugCueTurnId;
     private string _dataMappingStatus = "No data mappings loaded.";
     private readonly Random _rng = new();
-    private string _settingsFilePath = string.Empty;
+    private string _stateDirectory = string.Empty;
+
+    /// <summary>
+    ///     The mod's global-state directory, taken from the FileStream the framework hands us at
+    ///     init. Settings no longer live here - Fahrenheit persists those - but the session log and
+    ///     the Lab's motion lists still do, and a full deploy mirrors the whole tree, so this only
+    ///     survives because "state" is listed in DeployPreservePaths.
+    /// </summary>
+    private static string resolve_state_directory(FileStream? global_state_file)
+    {
+        try
+        {
+            string? dir = Path.GetDirectoryName(global_state_file?.Name);
+            if (!string.IsNullOrWhiteSpace(dir) && Directory.Exists(dir)) return dir;
+        }
+        catch { /* not path-backed */ }
+
+        return string.Empty;
+    }
     private StreamWriter? _sessionDebugLogWriter;
     private StreamWriter? _sessionTimelineLogWriter;
     private string _sessionLogsRoot = string.Empty;
@@ -690,15 +684,9 @@ public unsafe sealed partial class ParryModule : FhModule
 
     public ParryModule()
     {
-        // No FhSettingsCategory. alpha11 removes FhSettingCustomRenderer and its replacement
-        // surface (FhSettingsCategory / FhSettingText / FhSettingNumber<T>) has no boolean and
-        // no combo type — 15 of our 17 controls have nowhere to live. A mod cannot supply its
-        // own type either: FhSetting.render() is `internal abstract` and InternalsVisibleTo is
-        // granted to the runtime alone.
-        //
-        // So the controls moved into the mod's own window (render_settings_tab, drawn from the
-        // same fhparry.<id>.name/.desc keys). Persistence never depended on Fahrenheit: the mod
-        // has always written its own fhparry.config.json.
+        // Settings live in Fahrenheit's panel and are persisted by it; see
+        // ParryModule.NativeSettings.cs for what that costs and what it rules out.
+        settings = build_settings();
 
         // Hook delegates are cached (see ParryModule.OrigCalls.cs) so chain_from() does not
         // allocate a fresh delegate on every native call. The same instance is handed to both
@@ -728,9 +716,9 @@ public unsafe sealed partial class ParryModule : FhModule
 
     public override bool init(FhModContext mod_context, FileStream global_state_file)
     {
-        _settingsFilePath = resolve_settings_path(mod_context, global_state_file);
-        _logger.Info($"[Parry] Settings file resolved to '{_settingsFilePath}'.");
-        load_persistent_settings();
+        // The mod's own state directory, still needed for the files that are not settings:
+        // the session log and the Lab's motion blocklist.
+        _stateDirectory = resolve_state_directory(global_state_file);
         initialize_session_logging(mod_context);
         initialize_motion_blocklist();
         _audioResourcesDir = Path.Combine(mod_context.Paths.ResourcesDir.FullName, "audio");
@@ -778,6 +766,10 @@ public unsafe sealed partial class ParryModule : FhModule
         _debugFrameIndex++;
         float deltaSeconds = e.delta;
         _simulationClockSeconds += deltaSeconds;
+
+        // PreUpdate is raised from a hook on Sg_MainLoop, so this is the rate the mod samples input
+        // at - 60/s when the game presents at 60 Hz. Every authored duration is converted against it.
+        ParryDifficultyModel.ObserveTickDelta(deltaSeconds);
 
         bool r1Pressed     = FhApi.Input.r1.is_pressed;
         bool cancelPressed = FhApi.Input.cancel.is_pressed;
@@ -911,6 +903,10 @@ public unsafe sealed partial class ParryModule : FhModule
     {
         render_parry_window_overlay();
         render_dodge_overlay();
+
+        // [Conditional("DEBUG")] - the call disappears in release, and with it the whole window.
+        // Nothing is left in it for a release build: settings moved to Fahrenheit's panel and the
+        // four remaining tabs were already DEBUG-only.
         render_debug_overlay();
     }
 

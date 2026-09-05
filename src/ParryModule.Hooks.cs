@@ -1308,7 +1308,7 @@ public unsafe sealed partial class ParryModule
     private void probe_camera_call(string fn, string args, bool anyTurn, bool enemyTurn, bool suppress)
     {
         if (!_optionCameraProbe) return;
-        log_debug($"[CameraProbe] {fn}({args}) turn_active={anyTurn} enemy_turn={enemyTurn} attacker={_runtime.CurrentAttackerId} lock_mode={_optionBattleCameraLockMode} suppress={suppress}");
+        log_debug($"[CameraProbe] {fn}({args}) turn_active={anyTurn} enemy_turn={enemyTurn} attacker={_runtime.CurrentAttackerId} suppress={suppress}");
     }
 
     // Debug writer probe: logs the ATEL opcodes that actually move the battle camera.
@@ -1344,10 +1344,7 @@ public unsafe sealed partial class ParryModule
     ///     also stops those writers directly. EnemyTurnsOnly leaves them alone — the writer probe
     ///     shows they never fire during an enemy action, so the request lock covers that mode.
     /// </summary>
-    private bool camera_hard_lock_engaged()
-        => _optionEnabled
-        && _optionBattleCameraLockMode == BattleCameraLockMode.AllTurns
-        && try_get_live_battle_context(out _);
+    private bool camera_hard_lock_engaged() => should_hold_camera_pose();
 
     // Whether to suppress a camera writer this call. Always tries to cache the battle camera id (the
     // freecam needs it). Suppresses when the hard lock is engaged — except while the freecam is on
@@ -1357,18 +1354,17 @@ public unsafe sealed partial class ParryModule
     // the battle at its correct default first. This drives BOTH the writer suppression and the request
     // suppression: with requests held too, an ability's camera script — which also drives the
     // zoom/depth writers we do not hook — never queues, so the camera cannot zoom out from under us.
-    private bool should_hold_camera()
-    {
-        if (!camera_hard_lock_engaged()) return false;
-        if (_freecamActive) return true;
-        return _cameraSettleSeconds == 0f;
-    }
+    private bool should_hold_camera() => should_hold_camera_pose();
 
-    private bool should_suppress_camera_writer(int worker)
+    private bool should_suppress_camera_writer(int worker, string source, string detail)
     {
         capture_battle_camera_id(worker);
         if (_battleCameraId == 0) return false;   // let the game's write through so the camera id resolves
-        return should_hold_camera();
+
+        // A writer sees the issuing worker but not the request's followed actor, so it cannot be a
+        // flow camera as far as this call can tell: -1 says "no actor carried".
+        return !camera_move_allowed(source, worker, followedActor: -1, detail: detail)
+            && should_hold_camera_pose();
     }
 
     /// <summary>
@@ -1396,8 +1392,9 @@ public unsafe sealed partial class ParryModule
     /// </summary>
     private int h_atel_camera_polar_set(int worker, int p2, int stack, int isCam, int variant)
     {
-        probe_camera_writer(polar_opcode_name(isCam, variant), $"isCam={isCam},variant={variant}");
-        if (should_suppress_camera_writer(worker))
+        string name = polar_opcode_name(isCam, variant);
+        probe_camera_writer(name, $"isCam={isCam},variant={variant}");
+        if (should_suppress_camera_writer(worker, name, $"isCam={isCam},variant={variant}"))
         {
             drain_camera_writer_stack(worker, stack, floats: 4, ints: 2);
             _cameraWriterSuppressCount++;
@@ -1415,7 +1412,7 @@ public unsafe sealed partial class ParryModule
     private void h_atel_camera_pos_set(int worker, int p2, int stack, int p4)
     {
         probe_camera_writer("camSetPos", $"p4={p4}");
-        if (should_suppress_camera_writer(worker))
+        if (should_suppress_camera_writer(worker, "camSetPos", $"p4={p4}"))
         {
             drain_camera_writer_stack(worker, stack, floats: 3, ints: 0);
             _cameraWriterSuppressCount++;
@@ -1426,26 +1423,12 @@ public unsafe sealed partial class ParryModule
 
     private int h_ms_atel_request_camera(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8)
     {
-        bool isAnyTurnActive  = _runtime.AwaitingTurnEnd;
-        bool isEnemyTurnActive = isAnyTurnActive && _runtime.CurrentAttackerId >= PartyActorCapacity;
-
-        // AllTurns now suppresses whenever we hold the camera (after the settle grace), not just on
-        // enemy turns — so ability camera scripts that pan/zoom on the player's own turn never queue.
-        bool shouldSuppress = _optionBattleCameraLockMode == BattleCameraLockMode.EnemyTurnsOnly
-            ? _optionEnabled && isEnemyTurnActive
-            : _battleCameraId != 0 && should_hold_camera();
-
-        // p2 is the actor the camera script follows, and 0xFF is the engine's "no actor" sentinel -
-        // the same one Chr's attacker-id cluster uses. Every 0xFF request in the image comes from
-        // the battle state machine itself rather than from a turn: MsBtlMain issues 0x18 at battle
-        // start and 0x75, 0x76 and 0x7c while the encounter loads, and state 0x1d picks 0x42 to 0x45
-        // off btl.battle_end_type for the ending. None of those has a turn to gate on, which is why
-        // they arrive with turn_active false and attacker 0 and are suppressed on the strength of
-        // the hold alone. Suppressing the game's own flow cameras was never the intent of the lock.
-        const int SystemCameraActor = 0xFF;
-        if (p2 == SystemCameraActor) shouldSuppress = false;
-
-        probe_camera_call("MsAtelRequestCamera", $"p1={p1:X},p2={p2:X},p3={p3:X},p4={p4:X}", isAnyTurnActive, isEnemyTurnActive, shouldSuppress);
+        // p2 is the actor the camera script follows; 0xFF is the engine's "no actor" sentinel and
+        // marks the battle state machine's own framing. One decision, one log line - see
+        // camera_move_allowed.
+        bool shouldSuppress = !camera_move_allowed(
+            "MsAtelRequestCamera", worker: 0, followedActor: p2,
+            detail: $"p1={p1:X},p3={p3:X},p4={p4:X}");
 
         if (shouldSuppress)
         {
@@ -1454,7 +1437,7 @@ public unsafe sealed partial class ParryModule
             {
                 log_debug(
                     $"[CameraLock] Suppressed MsAtelRequestCamera(p1={p1:X}, p2={p2:X}, p3={p3:X}) "
-                    + $"(mode={_optionBattleCameraLockMode}, attacker={_runtime.CurrentAttackerId}, count={_enemyCameraLockSuppressCount}).");
+                    + $"(attacker={_runtime.CurrentAttackerId}, count={_enemyCameraLockSuppressCount}).");
             }
 
             // -1, not 0. MsAtelRequestCamera returns the id of the request it queues via
@@ -1488,16 +1471,9 @@ public unsafe sealed partial class ParryModule
     /// </summary>
     private byte h_ms_atel_request_magic_camera(int p1, int p2, uint p3, int p4, int p5, int p6, uint p7, int p8, int p9)
     {
-        bool isAnyTurnActive  = _runtime.AwaitingTurnEnd;
-        bool isEnemyTurnActive = isAnyTurnActive && _runtime.CurrentAttackerId >= PartyActorCapacity;
-
-        // AllTurns now suppresses whenever we hold the camera (after the settle grace), not just on
-        // enemy turns — so ability camera scripts that pan/zoom on the player's own turn never queue.
-        bool shouldSuppress = _optionBattleCameraLockMode == BattleCameraLockMode.EnemyTurnsOnly
-            ? _optionEnabled && isEnemyTurnActive
-            : _battleCameraId != 0 && should_hold_camera();
-
-        probe_camera_call("MsAtelRequestMagicCamera", $"p1={p1:X},p2={p2:X},p3={p3:X}", isAnyTurnActive, isEnemyTurnActive, shouldSuppress);
+        bool shouldSuppress = !camera_move_allowed(
+            "MsAtelRequestMagicCamera", worker: 0, followedActor: p2,
+            detail: $"p1={p1:X},p3={p3:X}");
 
         if (shouldSuppress)
         {
@@ -1506,7 +1482,7 @@ public unsafe sealed partial class ParryModule
             {
                 log_debug(
                     $"[CameraLock] Suppressed MsAtelRequestMagicCamera(p1={p1:X}, p2={p2:X}, p3={p3:X}) "
-                    + $"(mode={_optionBattleCameraLockMode}, attacker={_runtime.CurrentAttackerId}, count={_enemyMagicCameraLockSuppressCount}).");
+                    + $"(attacker={_runtime.CurrentAttackerId}, count={_enemyMagicCameraLockSuppressCount}).");
             }
             return 0xFF;
         }
@@ -1526,16 +1502,10 @@ public unsafe sealed partial class ParryModule
     /// </summary>
     private void h_ms_battle_special_camera_pause(byte mode)
     {
-        bool isAnyTurnActive  = _runtime.AwaitingTurnEnd;
-        bool isEnemyTurnActive = isAnyTurnActive && _runtime.CurrentAttackerId >= PartyActorCapacity;
-
-        // AllTurns now suppresses whenever we hold the camera (after the settle grace), not just on
-        // enemy turns — so ability camera scripts that pan/zoom on the player's own turn never queue.
-        bool shouldSuppress = _optionBattleCameraLockMode == BattleCameraLockMode.EnemyTurnsOnly
-            ? _optionEnabled && isEnemyTurnActive
-            : _battleCameraId != 0 && should_hold_camera();
-
-        probe_camera_call("MsBattleSpecialCameraPause", $"mode=0x{mode:X2}", isAnyTurnActive, isEnemyTurnActive, shouldSuppress);
+        // No followed actor in the signature, so this cannot be classified as a flow camera here.
+        bool shouldSuppress = !camera_move_allowed(
+            "MsBattleSpecialCameraPause", worker: 0, followedActor: -1,
+            detail: $"mode=0x{mode:X2}");
 
         if (shouldSuppress)
         {
@@ -1544,7 +1514,7 @@ public unsafe sealed partial class ParryModule
             {
                 log_debug(
                     $"[CameraLock] Suppressed MsBattleSpecialCameraPause(mode=0x{mode:X2}) "
-                    + $"(lock_mode={_optionBattleCameraLockMode}, attacker={_runtime.CurrentAttackerId}, count={_battleSpecialCameraLockSuppressCount}).");
+                    + $"(attacker={_runtime.CurrentAttackerId}, count={_battleSpecialCameraLockSuppressCount}).");
             }
             return;
         }
@@ -1620,46 +1590,24 @@ public unsafe sealed partial class ParryModule
         if (!isRealPC) return result;  // monsters & aeons keep vanilla evade
 
         _checkHitObservationCount++;
-
-        // Auto-discovery: track candidate HIT value (most-common observation).
-        if (_checkHitHitValue == null)
-        {
-            if (_checkHitFirstObservedValue == null || _checkHitFirstObservedValue.Value != result)
-            {
-                _checkHitFirstObservedValue = result;
-                _checkHitConsecutiveSameCount = 1;
-            }
-            else
-            {
-                _checkHitConsecutiveSameCount++;
-                if (_checkHitConsecutiveSameCount >= 5)
-                {
-                    _checkHitHitValue = _checkHitFirstObservedValue;
-                    if (_optionLogging)
-                    {
-                        log_debug($"[CheckHit] Auto-cached HIT enum value = {_checkHitHitValue.Value} after {_checkHitConsecutiveSameCount} consecutive PC-target observations.");
-                    }
-                }
-            }
-        }
         if (_optionLogging)
         {
             ushort userSlot = user != null ? user->id : (ushort)0;
             ushort userTemplate = user != null ? user->chr_id : (ushort)0;
-            log_debug($"[CheckHit] user_slot={userSlot:X2} user_tpl={userTemplate:X4} target_slot={targetSlot:X2} target_tpl={targetTemplate:X4} is_aeon={isAeon} result={result} (obs#{_checkHitObservationCount}, hit={_checkHitHitValue?.ToString() ?? "?"})");
+            log_debug($"[CheckHit] user_slot={userSlot:X2} user_tpl={userTemplate:X4} target_slot={targetSlot:X2} target_tpl={targetTemplate:X4} is_aeon={isAeon} result={result} (obs#{_checkHitObservationCount}, hit={CheckHitHit})");
         }
 
         // Native PC evasion stays disabled: a PC that evades natively never reaches our impact
-        // path, so the player's parry/dodge is the only way to avoid a hit. Inert until HIT has
-        // been observed.
-        if (_checkHitHitValue == null) return result;
-        if (result == _checkHitHitValue.Value) return result;
+        // path, so the player's parry/dodge is the only way to avoid a hit.
+        if (result == CheckHitHit) return result;
 
-        // Do NOT gate on the auto-discovered MISS value. The enum has three members, and the
-        // discovery caches whichever non-HIT value it happens to see first — on this profile it
-        // caught MISS_ALIVE (2) and then never overrode the real MISS (1), letting PCs evade on
-        // their own. MISS_ALIVE is identifiable structurally instead: it is returned iff the
+        // Do NOT treat every non-HIT value as an evasion roll. The enum has three members, and
+        // MISS_ALIVE is identifiable structurally rather than by value: it is returned iff the
         // command is revive-class. Everything else that is not HIT is a genuine evasion roll.
+        //
+        // This used to be gated on a value discovered by observation, which cached whichever
+        // non-HIT value it saw first - on one profile MISS_ALIVE (2), after which the real MISS (1)
+        // was never overridden and PCs evaded on their own.
         if (command != null && (command->flags_misc & CommandFlagsMiscReviveClass) != 0) return result;
 
         _checkHitOverrideCount++;
@@ -1667,7 +1615,7 @@ public unsafe sealed partial class ParryModule
         {
             log_debug($"[CheckHit] Overrode MISS ({result}) → HIT for PC target_slot={targetSlot:X2} target_tpl={targetTemplate:X4} (override#{_checkHitOverrideCount}).");
         }
-        return _checkHitHitValue.Value;
+        return CheckHitHit;
     }
 
 }

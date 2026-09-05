@@ -719,7 +719,7 @@ public unsafe sealed partial class ParryModule
     {
         try
         {
-            string? dir = string.IsNullOrWhiteSpace(_settingsFilePath) ? null : Path.GetDirectoryName(_settingsFilePath);
+            string? dir = string.IsNullOrWhiteSpace(_stateDirectory) ? null : _stateDirectory;
             if (string.IsNullOrWhiteSpace(dir)) { _logger.Warning("[Lab] Motion blocklist disabled (no settings dir)."); return; }
 
             _motionBlocklistPath = Path.Combine(dir, "fhparry-motion-blocklist.txt");
@@ -820,17 +820,17 @@ public unsafe sealed partial class ParryModule
     // order is unpredictable and no stage repeats back-to-back — a rising or falling sequence would
     // invite judging each shake against its neighbour instead of on its own.
     /// <summary>
-    ///     The mod's own window. It exists because alpha11 removes FhSettingCustomRenderer
-    ///     and offers no boolean or combo setting type, so there is nowhere in Fahrenheit's
-    ///     settings panel left to draw our 17 controls.
+    ///     The mod's diagnostic window. Settings moved into Fahrenheit's own panel, which also
+    ///     satisfies what forced this window into existence in the first place: difficulty has to be
+    ///     changeable from the main menu, before any save is loaded, and the panel can do that.
     ///
-    ///     Settings render unconditionally — you must be able to change the difficulty from
-    ///     the main menu, before any save is loaded. The debug tabs carry the old gates
-    ///     (save loaded, gameplay ready); they show a placeholder rather than vanishing, so
-    ///     the tab bar does not reflow under the cursor. That matters most for the Lab tab,
-    ///     whose widgets fire MsSetMotion and MsBtlSetHitEffect natively and crash
-    ///     uncatchably on an unloaded id — with no gameplay it draws no widgets at all.
+    ///     What is left is the four debug tabs, so the whole window is DEBUG-only. They carry the
+    ///     old gates (save loaded, gameplay ready) and show a placeholder rather than vanishing, so
+    ///     the tab bar does not reflow under the cursor. That matters most for the Lab tab, whose
+    ///     widgets fire MsSetMotion and MsBtlSetHitEffect natively and crash uncatchably on an
+    ///     unloaded id - with no gameplay it draws no widgets at all.
     /// </summary>
+    [Conditional("DEBUG")]
     private void render_debug_overlay()
     {
         update_overlay_proximity_opacity();
@@ -864,12 +864,6 @@ public unsafe sealed partial class ParryModule
                 if (ImGui.TabItemButton("v###fhparry.collapse", ImGuiTabItemFlags.Trailing | ImGuiTabItemFlags.NoTooltip))
                 {
                     _overlayCollapsed = true;
-                }
-
-                if (ImGui.BeginTabItem("Settings"))
-                {
-                    render_settings_tab();
-                    ImGui.EndTabItem();
                 }
 
 #if DEBUG
