@@ -29,7 +29,6 @@ public static partial class ExternalMemoryOffsetMap
         public const int GlobalLikelyBattleRangeEnd = 0x00D33350;
 
         // Unvalidated function candidates from Discord (not yet promoted to Functions class).
-        public const int FnMsSetDamageInternal = 0x0038F0B0;
         public const int FnEiAbmParaGet = 0x00A54860;
 
         // ── KB-sourced future-probe candidates ────────────────────────────────

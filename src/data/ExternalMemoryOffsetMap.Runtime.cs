@@ -37,6 +37,11 @@ public static partial class ExternalMemoryOffsetMap
         // Expected type: Func<int, nint, int, nint, nint, int, nint, nint, nint, nint, int, int> (MsCalcDamageInternal)
         public const int MsCalcDamageInternal = 0x0038E680;
 
+        // Expected type: Func<int, byte, int, int, int, int> (MsSetDamageInternal)
+        // The only per-target damage apply in the engine, and the mod's authoritative
+        // interception point: both commit passes (p5=0 and p5=1024) run through here.
+        public const int MsSetDamageInternal = 0x0038F0B0;
+
         // Expected type: Func<uint, char*> (AtelGetEventName)
         public const int AtelGetEventName = 0x004796e0;
 

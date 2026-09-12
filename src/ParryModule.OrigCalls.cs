@@ -88,7 +88,7 @@ public unsafe sealed partial class ParryModule
         => new("FFX.exe", (nint)ExternalMemoryOffsetMap.Functions.MsCalcDamageInternal);
 
     private static FhMethodLocation loc_ms_set_damage_internal()
-        => new("FFX.exe", (nint)ExternalMemoryOffsetMap.DiscordCandidates.FnMsSetDamageInternal);
+        => new("FFX.exe", (nint)ExternalMemoryOffsetMap.Functions.MsSetDamageInternal);
 
     private static FhMethodLocation loc_ms_atel_request_camera()
         => new("FFX.exe", (nint)ExternalMemoryOffsetMap.Functions.MsAtelRequestCamera);
