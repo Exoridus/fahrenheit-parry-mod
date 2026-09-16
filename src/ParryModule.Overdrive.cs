@@ -347,7 +347,7 @@ public unsafe sealed partial class ParryModule
             // Native charge primitive: clamps against limit_charge_max, honours the engine's
             // never_charge_overdrive debug flag, and applies Double/Triple Overdrive plus the
             // aura multipliers. Writing limit_charge directly bypassed all three.
-            uint applied = FhUtil.get_fptr<MsLimitUpProbe>(
+            uint applied = get_fptr<MsLimitUpProbe>(
                 ExternalMemoryOffsetMap.Functions.MsLimitUp)((uint)i, chr, delta);
 
             int after = chr->ram.limit_charge;

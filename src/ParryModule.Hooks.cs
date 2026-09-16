@@ -1377,8 +1377,8 @@ public unsafe sealed partial class ParryModule
     /// </summary>
     private void drain_camera_writer_stack(int worker, int stack, int floats, int ints)
     {
-        _popStackFloat   ??= FhUtil.get_fptr<AtelPopStackFloatFn>(ExternalMemoryOffsetMap.Functions.AtelPopStackFloat);
-        _popStackInteger ??= FhUtil.get_fptr<AtelPopStackIntegerFn>(ExternalMemoryOffsetMap.Functions.AtelPopStackInteger);
+        _popStackFloat   ??= get_fptr<AtelPopStackFloatFn>(ExternalMemoryOffsetMap.Functions.AtelPopStackFloat);
+        _popStackInteger ??= get_fptr<AtelPopStackIntegerFn>(ExternalMemoryOffsetMap.Functions.AtelPopStackInteger);
         for (int i = 0; i < floats; i++) _popStackFloat(worker, stack);
         for (int i = 0; i < ints; i++)   _popStackInteger(worker, stack);
     }

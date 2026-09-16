@@ -16,7 +16,7 @@ internal sealed partial class BuildScript : NukeBuild
 {
     [Parameter(Name = "config-path")] readonly string ConfigPath = string.Empty;
     [Parameter(Name = "configuration")] readonly string ConfigurationOverride = string.Empty;
-    [Parameter(Name = "fahrenheit-repo")] readonly string FahrenheitRepo = "https://github.com/peppy-enterprises/fahrenheit.git";
+    [Parameter(Name = "fahrenheit-repo")] readonly string FahrenheitRepo = "https://github.com/fahrenheit-crew/fahrenheit.git";
     [Parameter(Name = "fahrenheit-dir")] readonly string FahrenheitDir = ".workspace/fahrenheit";
     [Parameter(Name = "fahrenheit-ref")] readonly string FahrenheitRef = string.Empty;
     [Parameter(Name = "native-msbuild-exe")] readonly string NativeMSBuildExe = string.Empty;

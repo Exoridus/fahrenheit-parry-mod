@@ -41,6 +41,11 @@ public unsafe sealed partial class ParryModule
             _logger.Warning($"[Parry] Could not hook {label}.");
     }
 
+    // Delegate for an unhooked game function at an FFX.exe offset. Fahrenheit caches the
+    // delegate per address inside the handle, so calling this per use allocates nothing.
+    private static T get_fptr<T>(int offset) where T : Delegate
+        => new FhMethodHandle<T>(new FhMethodLocation("FFX.exe", (nint)offset)).fnptr!;
+
     // ── cached hook delegates ────────────────────────────────────────────────
     // One per hooked function, assigned once in the ParryModule() constructor. A
     // FhMethodHandle<T>/FhMethodLocation is a ref struct and cannot be a field, but a

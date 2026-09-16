@@ -37,7 +37,7 @@ public unsafe sealed partial class ParryModule
     private void capture_battle_camera_id(int worker)
     {
         if (worker == 0 || _battleCameraId != 0) return;
-        _getCamWorkAdrs ??= FhUtil.get_fptr<AtelGetCameraWorkAdrsFn>(ExternalMemoryOffsetMap.Functions.AtelGetCameraWorkAdrs);
+        _getCamWorkAdrs ??= get_fptr<AtelGetCameraWorkAdrsFn>(ExternalMemoryOffsetMap.Functions.AtelGetCameraWorkAdrs);
         int workAdrs = _getCamWorkAdrs(worker);
         if (workAdrs == 0) return;
         int camId = *(int*)workAdrs;
@@ -99,7 +99,7 @@ public unsafe sealed partial class ParryModule
     private void stamp_camera(Vector3 pos, float yaw, float pitch)
     {
         if (_battleCameraId == 0) return;
-        _camSetRect ??= FhUtil.get_fptr<MsCameraSetRectFn>(ExternalMemoryOffsetMap.Functions.MsCameraSetRect);
+        _camSetRect ??= get_fptr<MsCameraSetRectFn>(ExternalMemoryOffsetMap.Functions.MsCameraSetRect);
 
         float cp = MathF.Cos(pitch), sp = MathF.Sin(pitch);
         float cy = MathF.Cos(yaw),   sy = MathF.Sin(yaw);

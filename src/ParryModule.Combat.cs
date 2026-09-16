@@ -41,13 +41,7 @@ public unsafe sealed partial class ParryModule
     private static bool has_confuse_status(Chr* target)
     {
         if (target == null || !target->stat_exist_flag) return false;
-        if (target->ram.status_suffer.HasFlag(StatusPermanentFlags.CONFUSE)) return true;
-
-        // Runtime fallback: battle traces show Confuse can be staged in the
-        // status-bits half-word (chr+OffsetStatusBits, bit ConfuseStatusBitMask)
-        // before status_suffer flags are fully reflected.
-        ushort statusBits = *(ushort*)((byte*)target + ExternalMemoryOffsetMap.ChrStruct.OffsetStatusBits);
-        return (statusBits & ExternalMemoryOffsetMap.ChrStruct.ConfuseStatusBitMask) != 0;
+        return target->ram.status_suffer.HasFlag(StatusPermanentFlags.CONFUSION);
     }
 
     private static bool is_target_non_parryable(Chr* target)
@@ -489,7 +483,7 @@ public unsafe sealed partial class ParryModule
             // 3rd arg 0 = non-blocking: do not hold Chr+0x432 ourselves. The ATEL worker sets it while
             // the motion actually plays, and we now terminate deterministically, so holding it would
             // only widen the window in which other actors wait on us.
-            FhUtil.get_fptr<MsSetMotionProbe>(
+            get_fptr<MsSetMotionProbe>(
                 ExternalMemoryOffsetMap.Functions.MsSetMotion)(slot, EvadeMotionId, 0, 0, 1, 0, 0);
             _dodgeProbeSlotsMask |= 1u << slot;
             if (_optionLogging)
@@ -1157,7 +1151,7 @@ public unsafe sealed partial class ParryModule
             *(ushort*)(commandInfo0 + 0x2) = CommandIdSentinel;
             *(uint*)(commandInfo0 + 0x8)   = 1u << targetEnemySlot;
 
-            int result = FhUtil.get_fptr<MsInsertBtlCommandProbe>(
+            int result = get_fptr<MsInsertBtlCommandProbe>(
                 ExternalMemoryOffsetMap.Functions.MsInsertBtlCommand)(&cue, 0, 1, targetEnemySlot);
 
             if (result != 0)
@@ -1301,7 +1295,7 @@ public unsafe sealed partial class ParryModule
 
         try
         {
-            FhUtil.get_fptr<MsEffectEndMotionProbe>(
+            get_fptr<MsEffectEndMotionProbe>(
                 ExternalMemoryOffsetMap.Functions.MsEffectEndMotion)((uint)slotIndex, DodgeEndMotionMode);
 
             if (_optionLogging)
@@ -1342,7 +1336,7 @@ public unsafe sealed partial class ParryModule
 
         try
         {
-            var shake = FhUtil.get_fptr<MsScreenSetShakeProbe>(ExternalMemoryOffsetMap.Functions.MsScreenSetShake);
+            var shake = get_fptr<MsScreenSetShakeProbe>(ExternalMemoryOffsetMap.Functions.MsScreenSetShake);
 
             // Two calls, one per axis. A single axis_mask = 3 call would give both axes the same
             // phase and frequency, collapsing the shake onto a diagonal line.
@@ -1378,7 +1372,7 @@ public unsafe sealed partial class ParryModule
             // Neighbours: 0x4A Sentinel barrier, 0x48 Shield, 0x49 (the other family members).
             const int ParrySuccessEffectId = 0x4B;
 
-            FhUtil.get_fptr<MsBtlSetHitEffectProbe>(
+            get_fptr<MsBtlSetHitEffectProbe>(
                 ExternalMemoryOffsetMap.Functions.MsBtlSetHitEffect)(slotIndex, 0, ParrySuccessEffectId, 1);
 
             if (_optionLogging)
@@ -1419,7 +1413,7 @@ public unsafe sealed partial class ParryModule
         try
         {
             const int ParryBlockMotionId = 0x2F; // chosen by eye in the FX/Motion lab
-            FhUtil.get_fptr<MsSetMotionProbe>(
+            get_fptr<MsSetMotionProbe>(
                 ExternalMemoryOffsetMap.Functions.MsSetMotion)(slotIndex, ParryBlockMotionId, 0, 0, 1, 0, 0);
 
             if (slotIndex < PartyActorCapacity)

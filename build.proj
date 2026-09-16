@@ -1,7 +1,7 @@
 <Project DefaultTargets="Help">
     <PropertyGroup>
         <RepoRoot>$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)'))</RepoRoot>
-        <FahrenheitRepo Condition="'$(FahrenheitRepo)' == ''">https://github.com/peppy-enterprises/fahrenheit.git</FahrenheitRepo>
+        <FahrenheitRepo Condition="'$(FahrenheitRepo)' == ''">https://github.com/fahrenheit-crew/fahrenheit.git</FahrenheitRepo>
         <FahrenheitDir Condition="'$(FahrenheitDir)' == ''">$([MSBuild]::NormalizeDirectory('$(RepoRoot)', '.workspace', 'fahrenheit'))</FahrenheitDir>
         <!-- Pin to the committed ref (fahrenheit.release.ref) by default so a plain build is
              deterministic and does NOT silently drift to origin/main (which is currently the

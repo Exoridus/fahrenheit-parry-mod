@@ -651,7 +651,7 @@ public unsafe sealed partial class ParryModule
         try
         {
             if (try_get_chr((byte)_labTargetSlot) == null) { log_debug($"[Lab] No live actor at slot {_labTargetSlot}."); return; }
-            FhUtil.get_fptr<MsBtlSetHitEffectProbe>(
+            get_fptr<MsBtlSetHitEffectProbe>(
                 ExternalMemoryOffsetMap.Functions.MsBtlSetHitEffect)((byte)_labTargetSlot, 0, _labEffectId, 1);
             log_debug($"[Lab] Fired hit effect 0x{_labEffectId:X2} on slot {_labTargetSlot}.");
         }
@@ -668,7 +668,7 @@ public unsafe sealed partial class ParryModule
             if (try_get_chr((byte)_labTargetSlot) == null) { log_debug($"[Lab] No live actor at slot {_labTargetSlot}."); return; }
             // Motion 0x32 brings the char fully back (model + pose reset) in one shot.
             const int RestoreMotionId = 0x32;
-            FhUtil.get_fptr<MsSetMotionProbe>(
+            get_fptr<MsSetMotionProbe>(
                 ExternalMemoryOffsetMap.Functions.MsSetMotion)((byte)_labTargetSlot, RestoreMotionId, 0, 0, 1, 0, 0);
             log_debug($"[Lab] Restored slot {_labTargetSlot} via motion 0x{RestoreMotionId:X2}.");
         }
@@ -683,7 +683,7 @@ public unsafe sealed partial class ParryModule
         try
         {
             if (try_get_chr((byte)_labTargetSlot) == null) { log_debug($"[Lab] No live actor at slot {_labTargetSlot}."); return; }
-            FhUtil.get_fptr<MsResetBindEffectProbe>(
+            get_fptr<MsResetBindEffectProbe>(
                 ExternalMemoryOffsetMap.Functions.MsResetBindEffect)((byte)_labTargetSlot);
             log_debug($"[Lab] Reset bind-effects on slot {_labTargetSlot}.");
         }
@@ -702,7 +702,7 @@ public unsafe sealed partial class ParryModule
             int attempted = _labMotionId;
             write_motion_pending(attempted);
 
-            FhUtil.get_fptr<MsSetMotionProbe>(
+            get_fptr<MsSetMotionProbe>(
                 ExternalMemoryOffsetMap.Functions.MsSetMotion)(_labTargetSlot, attempted, 0, 0, 1, 0, 0);
 
             clear_motion_pending(); // returned without crashing → this id is fine

@@ -104,8 +104,8 @@ public unsafe sealed partial class ParryModule : FhModule
 
     // ATEL stack pops, called (not hooked) to balance the stack when a camera writer is suppressed.
     // `size` is at offset 0 of AtelStack, so the same pointer serves the float pop's int* and the
-    // int pop's AtelStack*. Cached (see _popStackFloat/_popStackInteger) because the writers fire
-    // many times per frame and get_fptr allocates a delegate each call.
+    // int pop's AtelStack*. Cached in _popStackFloat/_popStackInteger so the per-frame writers skip the
+    // handle lookup entirely.
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate float AtelPopStackFloatFn(int worker, int stack);
 
@@ -1042,7 +1042,7 @@ public unsafe sealed partial class ParryModule : FhModule
     {
         try
         {
-            char* ptr = FhUtil.get_fptr<AtelGetEventName>(ExternalMemoryOffsetMap.Functions.AtelGetEventName)(eventId);
+            char* ptr = get_fptr<AtelGetEventName>(ExternalMemoryOffsetMap.Functions.AtelGetEventName)(eventId);
             if (ptr == null) return string.Empty;
             return Marshal.PtrToStringAnsi((nint)ptr) ?? string.Empty;
         }
