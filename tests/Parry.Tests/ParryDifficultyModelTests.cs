@@ -82,20 +82,69 @@ public sealed class ParryDifficultyModelTests
     }
 
     // Every window must end BETWEEN two ticks, never on one: a boundary value is decided by
-    // float residue and frame pacing. Ticks are integers, so this holds by construction — the
-    // test guards the invariant against anyone reintroducing millisecond constants.
+    // float residue and frame pacing. The tiers are authored in milliseconds, but a window is
+    // the whole number of ticks that comes out of MsToTicks, and every derived duration must be
+    // computed from that tick count at the observed rate, never from the millisecond constant.
     [Theory]
     [InlineData(ParryDifficulty.Easy)]
     [InlineData(ParryDifficulty.Normal)]
     [InlineData(ParryDifficulty.Expert)]
     public void DerivedSeconds_AreExactTickMultiples(ParryDifficulty difficulty)
     {
-        float tick = 1f / ParryDifficultyModel.TicksPerSecond;
+        float tick = 1f / ParryDifficultyModel.ObservedTicksPerSecond;
 
         Assert.Equal(ParryDifficultyModel.GetParryWindowTicks(difficulty) * tick,
                      ParryDifficultyModel.GetWindowSeconds(difficulty), precision: 5);
+        Assert.Equal(ParryDifficultyModel.GetDodgeWindowTicks(difficulty) * tick,
+                     ParryDifficultyModel.GetDodgeWindowSeconds(difficulty), precision: 5);
         Assert.Equal(ParryDifficultyModel.GetWhiffLockoutTicks(difficulty) * tick,
                      ParryDifficultyModel.GetWhiffLockoutSeconds(difficulty), precision: 5);
+    }
+
+    // The mod samples input once per Sg_MainLoop iteration, so the tick rate follows the
+    // framerate. A duration authored in milliseconds has to buy twice the ticks at 60 Hz and
+    // four times at 120, rounded to the nearest tick and never below one, or Easy's 367 ms
+    // would silently shrink to 183 on a 60 Hz display.
+    [Theory]
+    [InlineData(200, 30f,  6)]
+    [InlineData(200, 60f,  12)]
+    [InlineData(200, 120f, 24)]
+    [InlineData(367, 30f,  11)]
+    [InlineData(367, 60f,  22)]
+    [InlineData(367, 120f, 44)]
+    [InlineData(167, 30f,  5)]
+    [InlineData(167, 60f,  10)]
+    [InlineData(167, 120f, 20)]
+    [InlineData(1,   30f,  1)]
+    [InlineData(1,   120f, 1)]
+    [InlineData(0,   30f,  0)]
+    [InlineData(0,   120f, 0)]
+    public void MsToTicks_ScalesWithTheObservedRate(int milliseconds, float ticksPerSecond, int expectedTicks)
+    {
+        try
+        {
+            ConvergeObservedRate(ticksPerSecond);
+            Assert.Equal(expectedTicks, ParryDifficultyModel.MsToTicks(milliseconds));
+        }
+        finally
+        {
+            ConvergeObservedRate(ParryDifficultyModel.NominalTicksPerSecond);
+        }
+    }
+
+    // The observed rate only moves through the smoothed delta feed, which is the point of it: a
+    // single long frame is not a rate change. Feeding a steady delta long enough converges it to
+    // within float noise of the target, which the assertion below pins down so a failing case
+    // reads as a conversion error and not as an unconverged rate.
+    private static void ConvergeObservedRate(float ticksPerSecond)
+    {
+        float delta = 1f / ticksPerSecond;
+        for (int i = 0; i < 4000; i++)
+        {
+            ParryDifficultyModel.ObserveTickDelta(delta);
+        }
+
+        Assert.Equal(ticksPerSecond, ParryDifficultyModel.ObservedTicksPerSecond, precision: 2);
     }
 
 

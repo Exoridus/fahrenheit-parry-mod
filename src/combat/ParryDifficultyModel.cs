@@ -101,12 +101,13 @@ public static class ParryDifficultyModel
     }
 
     /// <summary>
-    ///     Milliseconds to ticks at the observed rate. At least one tick: a window that rounded to
-    ///     zero would reject an impact arriving on the very tick of the press, which is the most
-    ///     common way a parry lands.
+    ///     Milliseconds to ticks at the observed rate. Any positive duration is at least one tick: a
+    ///     window that rounded to zero would reject an impact arriving on the very tick of the
+    ///     press, which is the most common way a parry lands. Zero stays zero, which is how a
+    ///     cooldown is switched off.
     /// </summary>
     public static int MsToTicks(int milliseconds)
-        => Math.Max(1, (int)MathF.Round(milliseconds / 1000f * ObservedTicksPerSecond));
+        => milliseconds <= 0 ? 0 : Math.Max(1, (int)MathF.Round(milliseconds / 1000f * ObservedTicksPerSecond));
 
     // Parry window. The old millisecond values closed after ceil(ms / 33.33) ticks, so Easy's
     // 350 ms really bought eleven ticks and Expert's 150 ms bought five — not ten and a half,
