@@ -261,6 +261,9 @@ internal sealed partial class BuildScript
         }
     }
 
+    // Fahrenheit loads localization from lang/{module type name}/{lang id}.json, one
+    // directory per module type, so the validator walks every directory under lang/ and
+    // treats each one as its own set with en-US.json as the baseline.
     void ValidateLanguageJson()
     {
         var langDir = Path.Combine(RootDirectory, "lang");
@@ -269,39 +272,49 @@ internal sealed partial class BuildScript
             Fail($"Missing lang directory: {langDir}");
         }
 
+        var moduleDirs = Directory.GetDirectories(langDir);
+        if (moduleDirs.Length == 0)
+        {
+            Fail($"Language validation failed: no module directories under {langDir}.");
+        }
+
         var requiredFiles = new[]
         {
             "en-US.json",
             "de-DE.json"
         };
 
-        foreach (var file in requiredFiles)
+        foreach (var moduleDir in moduleDirs)
         {
-            var path = Path.Combine(langDir, file);
-            if (!File.Exists(path))
+            var moduleName = Path.GetFileName(moduleDir);
+            foreach (var file in requiredFiles)
             {
-                Fail($"Missing required language file: {path}");
-            }
-        }
-
-        var baselinePath = Path.Combine(langDir, "en-US.json");
-        var baseline = ReadStringMap(baselinePath, allowEmptyValues: false);
-        if (baseline.Count == 0)
-        {
-            Fail("Language validation failed: lang/en-US.json must contain at least one entry.");
-        }
-
-        var langFiles = Directory.GetFiles(langDir, "*.json", SearchOption.TopDirectoryOnly);
-        foreach (var file in langFiles)
-        {
-            var map = ReadStringMap(file, allowEmptyValues: false);
-            var missingKeys = baseline.Keys.Where(k => !map.ContainsKey(k)).ToList();
-            if (missingKeys.Count > 0)
-            {
-                Fail($"Language validation failed: {Path.GetFileName(file)} is missing keys: {string.Join(", ", missingKeys.Take(10))}{(missingKeys.Count > 10 ? " ..." : string.Empty)}");
+                var path = Path.Combine(moduleDir, file);
+                if (!File.Exists(path))
+                {
+                    Fail($"Missing required language file: {path}");
+                }
             }
 
-            ValidateLanguageGlyphRange(file, map);
+            var baselinePath = Path.Combine(moduleDir, "en-US.json");
+            var baseline = ReadStringMap(baselinePath, allowEmptyValues: false);
+            if (baseline.Count == 0)
+            {
+                Fail($"Language validation failed: lang/{moduleName}/en-US.json must contain at least one entry.");
+            }
+
+            var langFiles = Directory.GetFiles(moduleDir, "*.json", SearchOption.TopDirectoryOnly);
+            foreach (var file in langFiles)
+            {
+                var map = ReadStringMap(file, allowEmptyValues: false);
+                var missingKeys = baseline.Keys.Where(k => !map.ContainsKey(k)).ToList();
+                if (missingKeys.Count > 0)
+                {
+                    Fail($"Language validation failed: {moduleName}/{Path.GetFileName(file)} is missing keys: {string.Join(", ", missingKeys.Take(10))}{(missingKeys.Count > 10 ? " ..." : string.Empty)}");
+                }
+
+                ValidateLanguageGlyphRange(file, map);
+            }
         }
     }
 
