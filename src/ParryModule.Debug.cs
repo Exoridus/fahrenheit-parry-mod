@@ -834,7 +834,7 @@ public unsafe sealed partial class ParryModule
     private void render_debug_overlay()
     {
         update_overlay_proximity_opacity();
-        drive_camera();
+        drive_freecam();
 
         if (_overlayCollapsed)
         {

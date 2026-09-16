@@ -48,19 +48,24 @@ public unsafe sealed partial class ParryModule
         }
     }
 
-    // Per-frame drive. Only the freecam writes the camera; the static hold is done by suppressing the
-    // game's writers, not by re-stamping. No-ops unless a battle is live and the camera id resolved.
-    private void drive_camera()
+    // Per-frame bookkeeping, driven from PreUpdate in every build: the settle countdown is what
+    // should_hold_camera_pose() waits on, and the reset at battle end is what keeps the cached camera
+    // id from carrying into the next battle. The static hold itself is done by suppressing the game's
+    // writers, not by re-stamping. No-ops unless a battle is live and the camera id resolved.
+    private void drive_camera(float deltaSeconds)
     {
         if (!try_get_live_battle_context(out _)) { _battleCameraId = 0; _cameraSettleSeconds = -1f; return; }
         if (_battleCameraId == 0) return;
-        if (_cameraSettleSeconds > 0f) _cameraSettleSeconds = MathF.Max(0f, _cameraSettleSeconds - ImGui.GetIO().DeltaTime);
+        if (_cameraSettleSeconds > 0f) _cameraSettleSeconds = MathF.Max(0f, _cameraSettleSeconds - deltaSeconds);
+    }
 
-        if (_freecamActive)
-        {
-            read_freecam_input();
-            stamp_camera(_freecamPos, _freecamYaw, _freecamPitch);
-        }
+    // The freecam is the only thing that writes the camera. It reads ImGui input, so it stays on the
+    // debug overlay's render path; drive_camera has already zeroed the id when no battle is live.
+    private void drive_freecam()
+    {
+        if (!_freecamActive || _battleCameraId == 0) return;
+        read_freecam_input();
+        stamp_camera(_freecamPos, _freecamYaw, _freecamPitch);
     }
 
     private void write_camera_bank(uint mode, Vector3 v)

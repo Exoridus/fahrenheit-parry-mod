@@ -781,6 +781,7 @@ public unsafe sealed partial class ParryModule : FhModule
         update_debug_save_loaded_state();
         update_debug_battle_session_state();
         tick_evade_probe();
+        drive_camera(deltaSeconds);
 
         if (_optionDebugOverlay || _optionLogging)
         {
