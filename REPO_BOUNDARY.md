@@ -1,7 +1,7 @@
-# Repo Boundary — fahrenheit-parry-mod ↔ ffx-forensics-pipeline
+# Repo Boundary — fahrenheit-parry-mod ↔ ffx-knowledge-base
 
 This document describes the intended split between this repository and the
-sibling `ffx-forensics-pipeline` repo.
+sibling `ffx-knowledge-base` repo.
 
 ## This repo (fahrenheit-parry-mod) owns
 
@@ -20,7 +20,7 @@ sibling `ffx-forensics-pipeline` repo.
   `.workspace/knowledge-base/ffx-pipeline/`. These are published here by
   the pipeline repo's `deploy` workflow, not regenerated locally.
 
-## The pipeline repo (ffx-forensics-pipeline) owns
+## The pipeline repo (ffx-knowledge-base) owns
 
 - **Extraction, parsing, and analysis** of FFX binary game data and the
   decompilation snapshots.
@@ -28,16 +28,16 @@ sibling `ffx-forensics-pipeline` repo.
   crossrefs, community findings).
 - **Discord processing** (export via DiscordChatExporter, OCR enrichment,
   refs extraction, finding crossrefs).
-- **Pipeline tooling** under `ffx-forensics-pipeline/tools/`:
+- **Pipeline tooling** under `ffx-knowledge-base/tools/`:
   FFXDataParser, VBFTool, DiscordChatExporter, Tesseract, Ghidra.
 - **Compact knowledge packs** under `packs/ffx/` — the deployable output.
-- **All pipeline config** in `ffx-forensics-pipeline/config.json`.
+- **All pipeline config** in `ffx-knowledge-base/config.json`.
 
 ## Clear rules
 
 1. **Pipeline workflows run from the pipeline repo.** If you want to run
    `data-parse`, `discord-sync`, `crossref-*`, `extract-*`, or similar,
-   `cd ../ffx-forensics-pipeline` and run `build.cmd <workflow>` there.
+   `cd ../ffx-knowledge-base` and run `build.cmd <workflow>` there.
    This repo's `build.cmd` only handles mod-build concerns.
 2. **Deploy is pulled from the pipeline repo.** To refresh the packs under
    `.workspace/knowledge-base/ffx-pipeline/`, go to the pipeline repo and
@@ -90,11 +90,11 @@ off of it.
 ### Regeneration path
 
 The canonical producer is `build.cmd build-mod-runtime-bundles` in the
-sibling `ffx-forensics-pipeline` repo. Run it after any pipeline data
+sibling `ffx-knowledge-base` repo. Run it after any pipeline data
 refresh:
 
 ```
-cd ../ffx-forensics-pipeline
+cd ../ffx-knowledge-base
 build.cmd build-mod-runtime-bundles
 ```
 
@@ -102,16 +102,17 @@ The workflow reads exclusively from pipeline-owned canonical outputs:
 
 | Runtime domain  | Pipeline input                                           |
 |-----------------|----------------------------------------------------------|
-| `Commands`      | `items_localized/`, `commands_localized/`, `monster_abilities_localized/` |
-| `AutoAbilities` | `gear_abilities_localized/`                              |
-| `KeyItems`      | `key_items_localized/`                                   |
-| `Monsters`      | `monsters_localized/`                                    |
-| `Battles`       | `inputs/script_text/<locale>/battles.json` (frozen)      |
-| `Events`        | `inputs/script_text/<locale>/events.json`  (frozen)      |
+| `Commands`      | `game_data/items/`, `game_data/commands/`, `game_data/monster_abilities/` |
+| `AutoAbilities` | `game_data/gear_abilities/`                              |
+| `KeyItems`      | `game_data/key_items/`                                   |
+| `Monsters`      | `game_data/monsters/`                                    |
+| `Battles`       | `scripts/text/<locale>/battles.json`                     |
+| `Events`        | `scripts/text/<locale>/events.json`                      |
 
-The `Battles`/`Events` inputs are frozen snapshots committed under the
-pipeline repo's `inputs/script_text/` tree, pending a future canonical
-script-text extractor.
+Paths are relative to `canonical/ffx/` in the pipeline repo, and each
+game-data directory holds one `<family>_<locale>.json` per locale. The
+`Battles`/`Events` inputs are no longer frozen snapshots: `build.cmd
+extract-script-text` produces all 8 locales under `canonical/ffx/scripts/`.
 
 Do not hand-edit the runtime bundles in `mappings/runtime/`. Run the
 generator instead.

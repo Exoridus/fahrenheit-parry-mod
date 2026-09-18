@@ -9,21 +9,24 @@ that reference data is **no longer owned by this repo**. See
 ## Where the data lives now
 
 All FFX game-data extraction, parsing, and analysis lives in the sibling
-pipeline repo: `../ffx-forensics-pipeline`. That repo owns:
+pipeline repo: `../ffx-knowledge-base`. That repo owns:
 
 - Raw VBF extraction (`build.cmd data-extract`)
 - FFXDataParser invocation (`build.cmd data-parse`, `data-parse-all`,
   `run-dataparser-commands`, `run-dataparser-scripts`)
-- Canonical base and localized JSONs under
-  `ffx-forensics-pipeline/output/ffx/game_data/`:
-  `commands_base.json` + `commands_localized/<locale>.json`,
-  `monsters_base.json` + `monsters_localized/<locale>.json`,
-  `gear_abilities_base.json`, `items_base.json`, `key_items_base.json`,
-  `monster_abilities_base.json`, `weapon_names.json`, etc.
-- Crossrefs (`output/ffx/crossref/`), scripts (`output/ffx/scripts/`),
-  community findings (`output/ffx/community/`), and packs (`packs/ffx/`).
+- Canonical localized JSONs under
+  `ffx-knowledge-base/canonical/ffx/game_data/`, one directory per family
+  and one file per locale: `commands/commands_<locale>.json` (plus
+  `commands/commands_mechanics.json`), `monsters/monsters_<locale>.json`,
+  `gear_abilities/gear_abilities_<locale>.json`,
+  `items/items_<locale>.json`, `key_items/key_items_<locale>.json`,
+  `monster_abilities/monster_abilities_<locale>.json`, `weapon_names.json`.
+- Crossrefs (`canonical/ffx/game_data/crossref/`), scripts
+  (`canonical/ffx/scripts/`, with per-locale script text under
+  `canonical/ffx/scripts/text/<locale>/`), community findings
+  (`canonical/ffx/community/`), and packs (`packs/ffx/`).
 
-See `ffx-forensics-pipeline/README.md` for the full workflow list and
+See `ffx-knowledge-base/README.md` for the full workflow list and
 example queries.
 
 ## Runtime mapping bundles (this repo)
@@ -51,7 +54,7 @@ The canonical producer is `build.cmd build-mod-runtime-bundles` in the
 sibling pipeline repo:
 
 ```
-cd ../ffx-forensics-pipeline
+cd ../ffx-knowledge-base
 build.cmd build-mod-runtime-bundles
 # optionally: build.cmd build-mod-runtime-bundles --dry-run
 ```
@@ -64,16 +67,17 @@ Input sources per runtime-bundle domain:
 
 | Runtime domain  | Pipeline input                                           |
 |-----------------|----------------------------------------------------------|
-| `Commands`      | `output/ffx/game_data/items_localized/`, `commands_localized/`, `monster_abilities_localized/` |
-| `AutoAbilities` | `output/ffx/game_data/gear_abilities_localized/`         |
-| `KeyItems`      | `output/ffx/game_data/key_items_localized/`              |
-| `Monsters`      | `output/ffx/game_data/monsters_localized/`               |
-| `Battles`       | `inputs/script_text/<locale>/battles.json` (frozen)      |
-| `Events`        | `inputs/script_text/<locale>/events.json`  (frozen)      |
+| `Commands`      | `canonical/ffx/game_data/items/`, `commands/`, `monster_abilities/` |
+| `AutoAbilities` | `canonical/ffx/game_data/gear_abilities/`                |
+| `KeyItems`      | `canonical/ffx/game_data/key_items/`                     |
+| `Monsters`      | `canonical/ffx/game_data/monsters/`                      |
+| `Battles`       | `canonical/ffx/scripts/text/<locale>/battles.json`       |
+| `Events`        | `canonical/ffx/scripts/text/<locale>/events.json`        |
 
-The `Battles`/`Events` inputs are frozen snapshots committed in the
-pipeline repo under `inputs/script_text/` pending a future canonical
-script-text extractor.
+Every file in that table is a per-locale file named `<family>_<locale>.json`
+inside its family directory. The `Battles`/`Events` inputs are no longer
+frozen snapshots: `build.cmd extract-script-text` produces all 8 locales
+under `canonical/ffx/scripts/text/`.
 
 Do not hand-edit `mappings/runtime/` directly. Run the generator instead.
 
