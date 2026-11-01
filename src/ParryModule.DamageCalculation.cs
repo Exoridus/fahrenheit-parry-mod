@@ -2,6 +2,28 @@ namespace Fahrenheit.Mods.Parry;
 
 public unsafe sealed partial class ParryModule
 {
+    /// <summary>
+    ///     Returns true if the target's current battle status prevents them from being parried.
+    ///     KO, Petrification, Sleep, and Confusion are non-parryable: the target cannot react,
+    ///     and the player should not be penalised for failing to parry on their behalf.
+    /// </summary>
+    private static bool has_confuse_status(Chr* target)
+    {
+        if (target == null || !target->stat_exist_flag) return false;
+        return target->ram.status_suffer.HasFlag(StatusPermanentFlags.CONFUSION);
+    }
+
+    private static bool is_target_non_parryable(Chr* target)
+    {
+        if (target == null || !target->stat_exist_flag) return true;
+        if (target->stat_death != 0) return true;                        // KO'd
+        if (target->stat_stone != 0) return true;                        // Petrified
+        if (target->ram.status_suffer_turns_left.sleep > 0) return true; // Sleeping
+        if (has_confuse_status(target)) return true;                      // Confused
+        if (target->ram.status_suffer.HasFlag(StatusPermanentFlags.BERSERK)) return true; // Berserk
+        return false;
+    }
+
     private bool is_parry_damage_window_open(int attacker, int target)
         => is_parry_slot_window_open(target)
             && _parryArmedAttackerId[target] == attacker
@@ -100,7 +122,8 @@ public unsafe sealed partial class ParryModule
         bool isPartyTarget = target_id >= 0 && target_id < PartyActorCapacity;
         bool innerShouldIntercept = isPartyTarget
             && _optionEnabled
-            && is_parry_damage_window_open(user_id, target_id);
+            && is_parry_damage_window_open(user_id, target_id)
+            && !is_target_non_parryable((Chr*)target_chr);
 
         if (innerShouldIntercept)
         {

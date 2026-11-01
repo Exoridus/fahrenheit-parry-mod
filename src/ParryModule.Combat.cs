@@ -33,28 +33,6 @@ public unsafe sealed partial class ParryModule
         }
     }
 
-    /// <summary>
-    ///     Returns true if the target's current battle status prevents them from being parried.
-    ///     KO, Petrification, Sleep, and Confusion are non-parryable: the target cannot react,
-    ///     and the player should not be penalised for failing to parry on their behalf.
-    /// </summary>
-    private static bool has_confuse_status(Chr* target)
-    {
-        if (target == null || !target->stat_exist_flag) return false;
-        return target->ram.status_suffer.HasFlag(StatusPermanentFlags.CONFUSION);
-    }
-
-    private static bool is_target_non_parryable(Chr* target)
-    {
-        if (target == null || !target->stat_exist_flag) return true;
-        if (target->stat_death != 0) return true;                        // KO'd
-        if (target->stat_stone != 0) return true;                        // Petrified
-        if (target->ram.status_suffer_turns_left.sleep > 0) return true; // Sleeping
-        if (has_confuse_status(target)) return true;                      // Confused
-        if (target->ram.status_suffer.HasFlag(StatusPermanentFlags.BERSERK)) return true; // Berserk
-        return false;
-    }
-
     private static string get_non_parryable_label(Chr* target)
     {
         if (target->stat_death != 0) return "KO";

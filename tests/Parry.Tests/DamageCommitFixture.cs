@@ -1,4 +1,5 @@
 global using Fahrenheit.FFX.Battle;
+global using Fahrenheit.FFX;
 using System.Runtime.InteropServices;
 
 namespace Fahrenheit.Mods.Parry;
@@ -28,6 +29,7 @@ public unsafe sealed partial class ParryModule : IDisposable
     public int OriginalCalls { get; private set; }
     public int Successes { get; private set; }
     public bool WindowOpen;
+    public bool ChainInnerCalculation;
     public bool FeedbackPending => _parryFeedbackPending[0];
     public uint ResolvedMask => _runtime.LastParriedTargetMask;
     public byte CurrentAttacker { set => _runtime.CurrentAttackerId = value; }
@@ -80,13 +82,17 @@ public unsafe sealed partial class ParryModule : IDisposable
         => h_ms_set_damage_internal(attacker, command, slot, 0, flags);
     public bool OuterCommitWouldSkip(bool resolved, bool committedBeforeWindow)
         => should_skip_set_damage_for_parry(0, Target, resolved, committedBeforeWindow);
-    private bool is_target_non_parryable(Chr* target) => false;
     public int Calculate(bool inner, int attacker, int slot = 0)
         => inner
             ? h_ms_calc_damage_internal(attacker, 0, slot, (nint)Target, 0, 7, 0, 0, 0, 0, 1)
             : h_ms_calc_damage(attacker, 0, slot, (nint)Target, 0, 7, 0, 0, 0, 0, 1);
     private int orig_ms_calc_damage(int attacker, nint user, int slot, nint target, nint command, int id, nint p7, nint p8, nint p9, nint p10, int p11)
-    { OriginalCalls++; return 31; }
+    {
+        OriginalCalls++;
+        return ChainInnerCalculation
+            ? h_ms_calc_damage_internal(attacker, user, slot, target, command, id, p7, p8, p9, p10, p11)
+            : 31;
+    }
     private int orig_ms_calc_damage_internal(int attacker, nint user, int slot, nint target, nint command, int id, nint p7, nint p8, nint p9, nint p10, int p11)
     { OriginalCalls++; return 32; }
     private void log_hook_ms_calc_damage(int attacker, int target, int command, int hits, int result, nint pointer) { }
