@@ -53,7 +53,7 @@ public unsafe sealed partial class ParryModule
     ///     and applies the actual HP reduction.
     ///
     ///     Damage negation strategy: h_ms_calc_damage returns 0 (skipping the native call) when
-    ///     a party slot has an active parry expiry timestamp. This prevents damage from entering
+    ///     a party slot has an active parry tick deadline. This prevents damage from entering
     ///     the native pipeline for ALL attack paths.
     ///
     ///     Anfunkeln-style attacks (no p2=target call): the hook never fires for a per-target resolve.
@@ -62,18 +62,17 @@ public unsafe sealed partial class ParryModule
     /// </summary>
     private int h_ms_set_damage(byte param_1, int param_2, int param_3)
     {
-        // p2=target: snapshot HP when a parry expiry is active for this slot so we can restore
+        // p2=target: snapshot HP when a parry tick deadline is active for this slot so we can restore
         // on impact. The hook is the authoritative impact detection path — it fires at native
         // damage time, before the poll path in on_pre_update. When the per-slot expiry is still
         // live and the attacker matches, resolve the parry directly from the hook to ensure
         // feedback (text + sound) fires at impact time rather than being deferred to the poll path.
-        // Use _parryExpiry[param_2] (same gate as h_ms_calc_damage and h_ms_damage_set_motion)
-        // rather than _runtime.ParryWindowActive (10s backstop), so all resolution paths agree
-        // on parry validity using the same wall-clock window the player actually pressed.
+        // Every native gate uses the same simulation deadline, including after resolution
+        // stops the input-state countdown. Wall time must not expire a stalled simulation.
         bool isPartyTargetCall = param_2 >= 0 && param_2 < PartyActorCapacity;
         bool isActiveParry = isPartyTargetCall
             && _optionEnabled
-            && DateTime.UtcNow.Ticks < _parryExpiry[param_2]
+            && is_parry_slot_window_open(param_2)
             && param_1 == _runtime.CurrentAttackerId
             && (_runtime.CurrentPartyTargetMask & (1u << param_2)) != 0;
 
@@ -92,12 +91,11 @@ public unsafe sealed partial class ParryModule
         if (isPartyTargetCall)
             _attackTelemetry[param_2].SetDamageTargetFired = true;
 
-        long nowTicks = DateTime.UtcNow.Ticks;
         bool anyExpiryActive = false;
         uint currentMask = _runtime.CurrentPartyTargetMask;
         for (int i = 0; i < PartyActorCapacity; i++)
         {
-            if ((currentMask & (1u << i)) != 0 && nowTicks < _parryExpiry[i])
+            if ((currentMask & (1u << i)) != 0 && is_parry_slot_window_open(i))
             {
                 anyExpiryActive = true;
                 break;
@@ -162,7 +160,7 @@ public unsafe sealed partial class ParryModule
             && !is_target_non_parryable(parryTarget)
             && (alreadyParriedThisHit
                 || latePreOpenCommitted
-                || (DateTime.UtcNow.Ticks < _parryExpiry[param_2] && parryTarget->damage_hp > 0));
+                || (is_parry_slot_window_open(param_2) && parryTarget->damage_hp > 0));
 
         // Telemetry: snapshot HP for all targeted party slots before finalization.
         bool isFinalization = param_3 == 0x400;
@@ -481,7 +479,7 @@ public unsafe sealed partial class ParryModule
     ///     Fires with per-target info for ALL attack types — physical and magic alike — making
     ///     it the authoritative damage interception point for parry resolution.
     ///
-    ///     When a party slot has an active parry expiry timestamp, the hook skips the native
+    ///     When a party slot has an active parry tick deadline, the hook skips the native
     ///     MsCalcDamage call entirely and returns 0 — preventing damage from entering the
     ///     native pipeline. This replaces the previous IMMUNITY_HP_DAMAGE flag mechanism.
     ///
@@ -497,12 +495,12 @@ public unsafe sealed partial class ParryModule
         nint command, int command_id,
         nint p7, nint p8, nint p9, nint p10, int p11)
     {
-        // Check parry expiry BEFORE calling orig — skipping orig is how we prevent damage
+        // Check the parry tick deadline BEFORE calling orig — skipping orig is how we prevent damage
         // from entering the native buffer. Once orig runs, damage cannot be recalled.
         bool isPartyTarget = target_id >= 0 && target_id < PartyActorCapacity;
         bool shouldIntercept = isPartyTarget
             && _optionEnabled
-            && DateTime.UtcNow.Ticks < _parryExpiry[target_id]
+            && is_parry_slot_window_open(target_id)
             && (_runtime.LastParriedTargetMask & (1u << target_id)) == 0;
 
         if (isPartyTarget)
@@ -579,14 +577,14 @@ public unsafe sealed partial class ParryModule
 
     private void h_ms_damage_set_motion(byte target, int p2, int p3)
     {
-        // Skip orig when a parry expiry is active and this is a damage motion (p3=1).
+        // Skip orig when a parry tick deadline is active and this is a damage motion (p3=1).
         // MsDamageSetMotion orig reads damage_hp and reduces ram.hp for some attack commands
         // (e.g. 0x4026) before our negate logic runs. Skipping orig prevents both the HP
         // reduction and the flinch animation — correct, since a parried hit should not flinch.
         bool targetIsParty = target < PartyActorCapacity;
         bool parryActive   = targetIsParty
                              && _optionEnabled
-                             && DateTime.UtcNow.Ticks < _parryExpiry[target]
+                             && is_parry_slot_window_open(target)
                              && _parryArmedAttackerId[target] == _runtime.CurrentAttackerId
                              && p3 == 1;
 
@@ -792,7 +790,7 @@ public unsafe sealed partial class ParryModule
         nint command, int command_id,
         nint p7, nint p8, nint p9, nint p10, int p11)
     {
-        // Inner interception: check parry expiry BEFORE calling orig.
+        // Inner interception: check the parry tick deadline BEFORE calling orig.
         // This is the safety net for attacks where the outer h_ms_calc_damage interception
         // fails because LastParriedTargetMask was already set by MsDamageSetMotion.
         // Do NOT check LastParriedTargetMask here — that is the entire reason this inner
@@ -801,7 +799,7 @@ public unsafe sealed partial class ParryModule
         bool isPartyTarget = target_id >= 0 && target_id < PartyActorCapacity;
         bool innerShouldIntercept = isPartyTarget
             && _optionEnabled
-            && DateTime.UtcNow.Ticks < _parryExpiry[target_id];
+            && is_parry_slot_window_open(target_id);
 
         if (innerShouldIntercept)
         {
@@ -1043,7 +1041,7 @@ public unsafe sealed partial class ParryModule
             bool latePreOpenSkipSafe = is_late_preopen_duplicate_skip_safe(param_3);
 
             bool isActiveParry = !alreadyResolved
-                && DateTime.UtcNow.Ticks < _parryExpiry[param_3]
+                && is_parry_slot_window_open(param_3)
                 && hasLiveEnemyContext;
 
             // Dodge: a valid dodge window from this attacker skips the ENTIRE p5=0 commit

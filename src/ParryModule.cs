@@ -59,7 +59,7 @@ public unsafe sealed partial class ParryModule : FhModule
     // FUN_0078f0b0 at FFX.exe+0x38F0B0 — per-target native commit point.
     // Internally calls MsSubHP → MsDamageCheckDeath → MsDamageSetMotion for each targeted slot.
     // Returning early atomically prevents HP reduction, death-latch, status commit, and flinch.
-    // Phase 1 reactive hook: returns early when _parryExpiry[param_3] is active for the target slot.
+    // Phase 1 reactive hook: returns early when _parryExpiryTick[param_3] is active for the target slot.
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate int MsSetDamageInternalProbe(int param_1, byte param_2, int param_3, int param_4, int param_5);
 
@@ -477,7 +477,7 @@ public unsafe sealed partial class ParryModule : FhModule
     // parryable target mask (the same set that receives the step-out). A slot may resolve as
     // evaded at impact only if its bit is set here — the engine drives the p5=0/motion commit for
     // EVERY party slot, so the cue-wide window/attacker checks alone cannot keep an untargeted slot
-    // from resolving. Mirrors the parry's per-slot _parryExpiry discipline. Refreshed on each fresh
+    // from resolving. Mirrors the parry's per-slot _parryExpiryTick discipline. Refreshed on each fresh
     // press; cleared with _dodgeResolvedAtImpactMask at cue end and on runtime reset.
     private uint _dodgeArmedTargetMask = 0;
     // Slots that have resolved as evaded for the current cue. The dodge equivalent of the parry's
@@ -549,7 +549,7 @@ public unsafe sealed partial class ParryModule : FhModule
     // to skip the commit without re-evaluating the wall-clock window, which may have expired
     // by the time the delayed commit pass fires (Anfunkeln, Blitzra, multi-pass attacks).
     private uint _parryResolvedAtImpactMask;
-    private readonly long[] _parryExpiry = new long[PartyActorCapacity];
+    private readonly ulong[] _parryExpiryTick = new ulong[PartyActorCapacity];
     private readonly byte[] _parryArmedAttackerId = new byte[PartyActorCapacity];
     private readonly uint[] _preHitHpSnapshot = new uint[PartyActorCapacity];
     // Consecutive fully-parried cues per slot within the current enemy turn block.
@@ -827,23 +827,7 @@ public unsafe sealed partial class ParryModule : FhModule
         //
         // Resolved -> Ready is handled when the cue clears or the hit finalizes
         // (see clear_awaiting_turn_end / end_parry_window).
-        if (_runtime.InputState == ParryInputState.Open && _runtime.ParryWindowActive)
-        {
-            _runtime.ParryWindowElapsedTicks++;
-            _runtime.ParryWindowRemainingTicks--;
-            if (_runtime.ParryWindowRemainingTicks <= 0)
-            {
-                transition_to_whiff_lockout();
-            }
-        }
-        else if (_runtime.InputState == ParryInputState.WhiffLockout)
-        {
-            _runtime.WhiffLockoutRemainingTicks--;
-            if (_runtime.WhiffLockoutRemainingTicks <= 0)
-            {
-                transition_whiff_lockout_to_ready();
-            }
-        }
+        tick_parry_window();
 
         if (_dodgeCooldownRemainingTicks > 0)
         {
@@ -922,6 +906,7 @@ public unsafe sealed partial class ParryModule : FhModule
     {
         stop_audio_playback();
 
+        clear_parry_slot_windows();
         _runtime.InputState = ParryInputState.Ready;
         _runtime.ParryWindowActive = false;
         _runtime.CurrentAttackerId = 0;

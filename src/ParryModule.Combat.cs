@@ -156,8 +156,8 @@ public unsafe sealed partial class ParryModule
     private static void negate_damage_on_impact(Chr* chr)
     {
         // Clear staged display damage values. Actual HP protection is handled upstream
-        // by h_ms_calc_damage returning 0 when a party slot has an active parry expiry
-        // timestamp, preventing damage from entering the native pipeline.
+        // by h_ms_calc_damage returning 0 when a party slot has an active parry tick
+        // deadline, preventing damage from entering the native pipeline.
         chr->damage_hp = 0;
         chr->damage_mp = 0;
         chr->damage_ctb = 0;
@@ -632,8 +632,7 @@ public unsafe sealed partial class ParryModule
     private void transition_to_open(AttackCue cue, byte cueIndex, uint partyMask)
     {
         int windowDurationTicks = parry_window_ticks();
-        // Seconds are derived for the wall-clock per-slot expiry (read by the damage hooks, which
-        // fire outside PreUpdate) and for display/telemetry only — the window itself counts ticks.
+        // Hooks and the input window share simulation ticks; seconds are display/telemetry only.
         float windowDurationSeconds = ParryDifficultyModel.TicksToSeconds(windowDurationTicks);
 
         _runtime.InputState = ParryInputState.Open;
@@ -655,15 +654,7 @@ public unsafe sealed partial class ParryModule
 
         mark_active_turn_open();
 
-        long expiry = DateTime.UtcNow.Ticks + (long)(windowDurationSeconds * TimeSpan.TicksPerSecond);
-        for (int i = 0; i < PartyActorCapacity; i++)
-        {
-            if ((partyMask & (1u << i)) != 0)
-            {
-                _parryExpiry[i] = expiry;
-                _parryArmedAttackerId[i] = _runtime.CurrentAttackerId;
-            }
-        }
+        arm_parry_slot_windows(partyMask, windowDurationTicks);
 
         // Guard-stance feedback marker: the player has committed to the parry
         // stance for this window. The "enter guard stance" visual is approximated
@@ -682,7 +673,7 @@ public unsafe sealed partial class ParryModule
         // resolve_streak_at_cue_clear(). A whiff is a cue-wide failure for
         // every slot in the target mask; that handler covers it.
 
-        // Clear the open-window arrays (per-slot expiry, telemetry, feedback pending)
+        // Clear the open-window arrays (per-slot deadlines, telemetry, feedback pending)
         // so hooks no longer treat this window as live. The InputState flip that
         // follows is what gates further R1 presses — not the array values.
         end_parry_window("whiff_lockout", transitionToReady: false);
@@ -820,7 +811,7 @@ public unsafe sealed partial class ParryModule
     }
 
     /// <summary>
-    ///     Tears down the open parry window's per-slot state (expiry, feedback pending,
+    ///     Tears down the open parry window's per-slot state (deadlines, feedback pending,
     ///     telemetry, snapshots). Does NOT own the input-state machine transition:
     ///     callers decide whether to flip to <see cref="ParryInputState.Ready"/> or
     ///     stay in a different state (e.g. <see cref="ParryInputState.WhiffLockout"/>).
@@ -831,8 +822,7 @@ public unsafe sealed partial class ParryModule
             log_debug($"Parry window closed for {format_actor_slot(_runtime.CurrentAttackerId)} ({reason}).");
 
         flush_attack_telemetry(reason);
-        Array.Clear(_parryExpiry);
-        Array.Clear(_parryArmedAttackerId);
+        clear_parry_slot_windows();
         Array.Clear(_parryFeedbackPending);
         // _internalInterceptedMask intentionally NOT cleared globally here.
         // Slot evidence is cleared at the per-hit p5=1024 boundary in h_ms_set_damage_internal.
@@ -910,8 +900,7 @@ public unsafe sealed partial class ParryModule
 
         flush_attack_telemetry(reason);
         _runtime.AwaitingTurnEnd = false;
-        Array.Clear(_parryExpiry);
-        Array.Clear(_parryArmedAttackerId);
+        clear_parry_slot_windows();
         Array.Clear(_parryFeedbackPending);
         _internalInterceptedMask = 0;
         Array.Clear(_internalInterceptedAttackerId);
