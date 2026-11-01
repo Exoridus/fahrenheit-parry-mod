@@ -17,12 +17,21 @@ public unsafe sealed partial class ParryModule : IDisposable
     private byte _dodgeArmedAttackerId = 0;
     private readonly byte[] _internalInterceptedAttackerId = new byte[PartyActorCapacity];
     private readonly byte[] _latePreOpenP5ZeroCommitAttackerId = new byte[PartyActorCapacity];
+    private readonly byte[] _parryArmedAttackerId = Enumerable.Repeat((byte)22, PartyActorCapacity).ToArray();
+    private readonly uint[] _preHitHpSnapshot = new uint[PartyActorCapacity];
+    private readonly bool[] _parryFeedbackPending = new bool[PartyActorCapacity];
+    private readonly bool[] _damageEventActive = new bool[PartyActorCapacity];
+    private readonly CalculationTelemetry[] _attackTelemetry = Enumerable.Range(0, PartyActorCapacity).Select(_ => new CalculationTelemetry()).ToArray();
     private int _dodgeEvadeCount, _dodgeTextSeed;
     private float _dodgeTextRemainingSeconds;
     public float DodgeTextRemaining => _dodgeTextRemainingSeconds;
     public int OriginalCalls { get; private set; }
     public int Successes { get; private set; }
     public bool WindowOpen;
+    public bool FeedbackPending => _parryFeedbackPending[0];
+    public uint ResolvedMask => _runtime.LastParriedTargetMask;
+    public byte CurrentAttacker { set => _runtime.CurrentAttackerId = value; }
+    public void MarkImpactOnly() => _parryResolvedAtImpactMask |= 1;
     public Chr* Target => _battleAdapter.GetPlayerCharacters();
     public byte* Bank(int index = 0) => (byte*)Target + 0x774 + index * 0x2D8;
 
@@ -32,6 +41,12 @@ public unsafe sealed partial class ParryModule : IDisposable
         public byte CurrentAttackerId = 22, CurrentCueIndex = 0;
         public uint CurrentPartyTargetMask = 1, LastParriedTargetMask;
         public ulong CueFirstSeenFrame = 0;
+    }
+
+    private sealed class CalculationTelemetry
+    {
+        public bool CalcDamageFired, CalcDamageIntercepted;
+        public int CommandId;
     }
 
     private sealed class TestBattleAdapter
@@ -66,6 +81,15 @@ public unsafe sealed partial class ParryModule : IDisposable
     public bool OuterCommitWouldSkip(bool resolved, bool committedBeforeWindow)
         => should_skip_set_damage_for_parry(0, Target, resolved, committedBeforeWindow);
     private bool is_target_non_parryable(Chr* target) => false;
+    public int Calculate(bool inner, int attacker, int slot = 0)
+        => inner
+            ? h_ms_calc_damage_internal(attacker, 0, slot, (nint)Target, 0, 7, 0, 0, 0, 0, 1)
+            : h_ms_calc_damage(attacker, 0, slot, (nint)Target, 0, 7, 0, 0, 0, 0, 1);
+    private int orig_ms_calc_damage(int attacker, nint user, int slot, nint target, nint command, int id, nint p7, nint p8, nint p9, nint p10, int p11)
+    { OriginalCalls++; return 31; }
+    private int orig_ms_calc_damage_internal(int attacker, nint user, int slot, nint target, nint command, int id, nint p7, nint p8, nint p9, nint p10, int p11)
+    { OriginalCalls++; return 32; }
+    private void log_hook_ms_calc_damage(int attacker, int target, int command, int hits, int result, nint pointer) { }
 
     private int orig_ms_set_damage_internal(int attacker, byte command, int slot, int p4, int flags)
     {
@@ -100,7 +124,7 @@ public unsafe sealed partial class ParryModule : IDisposable
     private string format_actor_slot(byte slot) => slot.ToString();
     private void log_debug(string text) { }
     private void write_session_hook_entry(string text) { }
-    private ValidationCall? begin_native_validation(string stage, int attacker, int slot, int command, int flags) => null;
+    private ValidationCall? begin_native_validation(string stage, int attacker, int slot, int command, int flags = -1, int batch = -1, nint target = 0) => null;
     private sealed class ValidationCall : IDisposable
     {
         public bool Completed;

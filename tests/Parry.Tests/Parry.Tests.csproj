@@ -36,6 +36,7 @@
   <ItemGroup>
     <Compile Include="../../src/NativeBuild.cs" Link="NativeBuild.cs" />
     <Compile Include="../../src/data/ExternalMemoryOffsetMap.Actor.cs" Link="ExternalMemoryOffsetMap.Actor.cs" />
+    <Compile Include="../../src/ParryModule.DamageCalculation.cs" Link="ParryModule.DamageCalculation.cs" />
     <Compile Include="../../src/ParryModule.DamageCommit.cs" Link="ParryModule.DamageCommit.cs" />
     <Compile Include="../../src/ParryModule.Stage1Signatures.cs" Link="ParryModule.Stage1Signatures.cs" />
     <Compile Include="../../src/data/ExternalMemoryOffsetMap.Runtime.cs" Link="ExternalMemoryOffsetMap.Runtime.cs" />

@@ -2,6 +2,9 @@ namespace Fahrenheit.Mods.Parry;
 
 public unsafe sealed partial class ParryModule
 {
+    private bool has_parry_action_marker(uint mask, int attacker, int target)
+        => attacker == _runtime.CurrentAttackerId && (mask & (1u << target)) != 0;
+
     private bool should_skip_set_damage_for_parry(int target, Chr* parryTarget, bool alreadyParriedThisHit, bool latePreOpenCommitted)
         => parryTarget != null
             && _optionNegateDamage
@@ -131,13 +134,13 @@ public unsafe sealed partial class ParryModule
         if (isPartySlot && _optionEnabled && _optionNegateDamage)
         {
             bool hasLiveEnemyContext = has_live_enemy_damage_context_for_slot(param_1, param_3);
-            bool markerSet = (_parryResolvedAtImpactMask & (1u << param_3)) != 0;
-            bool alreadyResolved = (_runtime.LastParriedTargetMask & (1u << param_3)) != 0;
+            bool markerSet = has_parry_action_marker(_parryResolvedAtImpactMask, param_1, param_3);
+            bool alreadyResolved = has_parry_action_marker(_runtime.LastParriedTargetMask, param_1, param_3);
             bool latePreOpenCommitted = is_late_preopen_p5_zero_commit(param_3, param_1)
                 && hasLiveEnemyContext;
 
             bool isActiveParry = !alreadyResolved
-                && is_parry_slot_window_open(param_3)
+                && is_parry_damage_window_open(param_1, param_3)
                 && hasLiveEnemyContext;
 
             // Dodge: a valid dodge window from this attacker skips the ENTIRE p5=0 commit
