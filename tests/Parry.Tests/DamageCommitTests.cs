@@ -23,11 +23,11 @@ public unsafe sealed class DamageCommitTests
     {
         using var module = new ParryModule();
         module.Stage(0, 100, 150);
-        Assert.Equal(1, module.Commit(0));
+        Assert.Equal(3, module.Commit(0));
         Assert.Equal(900, module.Target->ram.hp);
         module.WindowOpen = openAfterFirstCommit;
 
-        Assert.Equal(0, module.Commit(0x400));
+        Assert.Equal(2, module.Commit(0x400));
 
         Assert.Equal(750, module.Target->ram.hp);
         Assert.Equal(2, module.OriginalCalls);

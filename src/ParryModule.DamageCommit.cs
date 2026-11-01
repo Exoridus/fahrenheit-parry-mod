@@ -2,6 +2,8 @@ namespace Fahrenheit.Mods.Parry;
 
 public unsafe sealed partial class ParryModule
 {
+    private readonly int?[] _nativeDamageCommitAttacker = new int?[PartyActorCapacity];
+
     private bool has_parry_action_marker(uint mask, int attacker, int target)
         => attacker == _runtime.CurrentAttackerId && (mask & (1u << target)) != 0;
 
@@ -148,7 +150,7 @@ public unsafe sealed partial class ParryModule
             // dodged STATUS attack (e.g. Anfunkeln → Confuse) — status is applied earlier in this
             // same call, before MsDamageSetMotion, so the reactive motion-hook negation was too
             // late. The evade animation was already triggered on press, so skipping is clean.
-            // Two ways in: the wall-clock window is still live, or this slot already resolved as
+            // Two ways in: the dodge window is still live, or this slot already resolved as
             // evaded earlier in this cue (durable marker). The marker is what carries a dodge
             // across a chargeup longer than the window, and across cue mutation mid-cast. Either
             // way the slot must also be in _dodgeArmedTargetMask (checked by MayResolveAtImpact):
@@ -236,14 +238,7 @@ public unsafe sealed partial class ParryModule
             if (param_5 == 1024 && latePreOpenCommitted && !alreadyResolved && !markerSet)
                 clear_late_preopen_p5_zero_commit_slot(param_3);
 
-            // p5=1024 is the authoritative HP/death commit for delayed-finalization attacks
-            // (Anfunkeln, Blitzra, Hauch). Three skip paths:
-            //   markerSet     — durable marker set at MsDamageSetMotion visual-impact time
-            //   alreadyResolved — LastParriedTargetMask set by a prior resolution call
-            //   internalBlocked — p5=0 was intercepted for this slot, same attacker:
-            //                     the window may have been closed by "attacker changed" between
-            //                     p5=0 and p5=1024, but the attacker id must still match to
-            //                     prevent a different next-attacker's commit from being skipped.
+            // A delayed call may consume damage; only successful, attacker-matched evidence blocks it.
             bool internalBlocked =
                 (_internalInterceptedMask & (1u << param_3)) != 0
                 && _internalInterceptedAttackerId[param_3] == (byte)param_1;
@@ -299,7 +294,7 @@ public unsafe sealed partial class ParryModule
         // Status-leak trace: every party-slot pass that reaches orig. _MsAfterDamageProcess writes
         // status_suffer in the same block as the HP subtract, so any pass logged here with a dodge
         // that looked valid to the player is a slot where Petrify/Confuse gets through. The dodge
-        // gates are wall-clock (_dodgeWindowActive); the parry ones are durable markers — this line
+        // gates use _dodgeWindowActive; the parry ones are durable markers. This line
         // shows which of them was still standing when the commit landed.
         if (_optionLogging && isPartySlot)
         {
@@ -346,10 +341,17 @@ public unsafe sealed partial class ParryModule
                 $"attacker={_runtime.CurrentAttackerId} targetMask={_runtime.CurrentPartyTargetMask} windowActive={_runtime.ParryWindowActive}");
         }
 
-        int result = orig_ms_set_damage_internal(param_1, param_2, param_3, param_4, param_5);
-
-        if (validation is not null) validation.Completed = true;
-
-        return result;
+        int? previousAttacker = isPartySlot ? _nativeDamageCommitAttacker[param_3] : null;
+        if (isPartySlot) _nativeDamageCommitAttacker[param_3] = param_1;
+        try
+        {
+            int result = orig_ms_set_damage_internal(param_1, param_2, param_3, param_4, param_5);
+            if (validation is not null) validation.Completed = true;
+            return result;
+        }
+        finally
+        {
+            if (isPartySlot) _nativeDamageCommitAttacker[param_3] = previousAttacker;
+        }
     }
 }

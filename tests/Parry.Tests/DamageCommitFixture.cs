@@ -8,6 +8,7 @@ public unsafe sealed partial class ParryModule : IDisposable
 {
     private const int PartyActorCapacity = 10;
     private const float ParriedTextSeconds = 1;
+    private const int ChrRamGuardReactFlagOffset = 0x19A;
     private readonly TestBattleAdapter _battleAdapter = new();
     private readonly CommitRuntime _runtime = new();
     private bool _optionEnabled = true, _optionNegateDamage = true, _optionDodgeEnabled = false;
@@ -22,20 +23,28 @@ public unsafe sealed partial class ParryModule : IDisposable
     private readonly uint[] _preHitHpSnapshot = new uint[PartyActorCapacity];
     private readonly bool[] _parryFeedbackPending = new bool[PartyActorCapacity];
     private readonly bool[] _damageEventActive = new bool[PartyActorCapacity];
+    private readonly ulong[] _parryBlockPlayedFrame = new ulong[PartyActorCapacity];
+    private readonly bool _optionParryNativeBlock = false;
     private readonly CalculationTelemetry[] _attackTelemetry = Enumerable.Range(0, PartyActorCapacity).Select(_ => new CalculationTelemetry()).ToArray();
     private int _dodgeEvadeCount, _dodgeTextSeed;
     private float _dodgeTextRemainingSeconds;
     public float DodgeTextRemaining => _dodgeTextRemainingSeconds;
     public int OriginalCalls { get; private set; }
     public int Successes { get; private set; }
+    public int NativeMotionCalls { get; private set; }
     public bool WindowOpen;
     public bool ChainInnerCalculation;
+    public bool NativeCommitEmitsMotion;
+    public Action? DuringNativeCommit;
     public bool FeedbackPending => _parryFeedbackPending[0];
     public uint ResolvedMask => _runtime.LastParriedTargetMask;
     public byte CurrentAttacker { set => _runtime.CurrentAttackerId = value; }
+    public uint TargetMask { set => _runtime.CurrentPartyTargetMask = value; }
     public void MarkImpactOnly() => _parryResolvedAtImpactMask |= 1;
     public Chr* Target => _battleAdapter.GetPlayerCharacters();
-    public byte* Bank(int index = 0) => (byte*)Target + 0x774 + index * 0x2D8;
+    public Chr* Actor(int slot) => Target + slot;
+    public byte* Bank(int index = 0, int slot = 0) => (byte*)Actor(slot) + 0x774 + index * 0x2D8;
+    public int? ActiveCommitAttacker(int slot) => _nativeDamageCommitAttacker[slot];
 
     private sealed class CommitRuntime
     {
@@ -47,7 +56,7 @@ public unsafe sealed partial class ParryModule : IDisposable
 
     private sealed class CalculationTelemetry
     {
-        public bool CalcDamageFired, CalcDamageIntercepted;
+        public bool CalcDamageFired, CalcDamageIntercepted, SetMotionFired;
         public int CommandId;
     }
 
@@ -80,6 +89,9 @@ public unsafe sealed partial class ParryModule : IDisposable
     private readonly int[][] _payloads = [[], []];
     public int Commit(int flags, int attacker = 22, byte command = 7, int slot = 0)
         => h_ms_set_damage_internal(attacker, command, slot, 0, flags);
+    public void Motion(byte target = 0) => h_ms_damage_set_motion(target, 5, 1);
+    private void orig_ms_damage_set_motion(byte target, int p2, int p3) => NativeMotionCalls++;
+    private bool parry_block_recently_played(byte target) => false;
     public bool OuterCommitWouldSkip(bool resolved, bool committedBeforeWindow)
         => should_skip_set_damage_for_parry(0, Target, resolved, committedBeforeWindow);
     public int Calculate(bool inner, int attacker, int slot = 0)
@@ -100,20 +112,25 @@ public unsafe sealed partial class ParryModule : IDisposable
     private int orig_ms_set_damage_internal(int attacker, byte command, int slot, int p4, int flags)
     {
         OriginalCalls++;
-        int pending = 0;
+        Chr* target = Actor(slot);
+        int result = 0;
         for (int i = 0; i < 2; i++)
         {
-            byte* b = Bank(i);
+            byte* b = Bank(i, slot);
             if (b[2] != attacker || b[3] != command) continue;
             if (b[0] < b[1] && (flags & 8) == 0)
             {
-                Target->ram.hp -= _payloads[i][b[0]];
+                target->ram.hp -= _payloads[i][b[0]];
+                target->damage_hp = _payloads[i][b[0]];
                 b[0]++;
+                result |= 2;
             }
-            if (b[0] < b[1]) pending = 1;
+            if (b[0] < b[1]) result |= 1;
             else if ((flags & 0x400) != 0) b[2] = 255;
         }
-        return pending;
+        DuringNativeCommit?.Invoke();
+        if (NativeCommitEmitsMotion) Motion((byte)slot);
+        return result;
     }
 
     private bool is_parry_slot_window_open(int slot) => WindowOpen;
