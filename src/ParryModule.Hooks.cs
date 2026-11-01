@@ -797,7 +797,7 @@ public unsafe sealed partial class ParryModule
         nint command, int command_id,
         nint p7, nint p8, nint p9, nint p10, int p11)
     {
-        using var validation = begin_native_validation("calc_internal", user_id, target_id, command_id, batch: p11, target: target_chr);
+        using var validation = begin_native_validation("calc_internal", user_id, target_id, command_id, target: target_chr);
 
         // Inner interception: check the parry tick deadline BEFORE calling orig.
         // This is the safety net for attacks where the outer h_ms_calc_damage interception
@@ -877,13 +877,13 @@ public unsafe sealed partial class ParryModule
                     $"[DmgCalcInternal] f={_debugFrameIndex} user={user_id} target={target_id} cmd=0x{command_id:X4} result={result}" +
                     $" ramHp_before={ramHpBefore} ramHp_after={ramHpAfter}" +
                     $" damageHp_before={damageHpBefore} damageHp_after={damageHpAfter}" +
-                    $" hits={p11}");
+                    $" raw_arg11=0x{(uint)p11:X8}");
             }
             else
             {
                 write_session_hook_entry(
                     $"[DmgCalcInternal] f={_debugFrameIndex} user={user_id} target={target_id} cmd=0x{command_id:X4} result={result}" +
-                    $" (target_chr read failed) hits={p11}");
+                    $" (target_chr read failed) raw_arg11=0x{(uint)p11:X8}");
             }
         }
 

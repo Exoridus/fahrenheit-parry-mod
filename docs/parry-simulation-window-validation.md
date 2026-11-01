@@ -159,7 +159,11 @@ first-seen tick, signature and masks are separate context. Calc `command_id`,
 commit `command_index` and motion `motion_mode` are different identity domains;
 unused fields are -1. Motion has no native attacker argument, so `attacker=-1`
 and `cue_attacker` supplies explicitly contextual identity. `batch_hit_count`
-is calc p11, never a hit ordinal. Both independent cursor/count/attacker/index
+is outer calc p11, never a hit ordinal. Internal calc argument 11 is a pointer,
+so its batch count is unknown (-1) and the ordinary debug line labels the raw
+argument separately. Earlier `16c32fd` captures incorrectly copied this pointer
+into internal `batch_hit_count`; ignore that field on internal calc records.
+Both independent cursor/count/attacker/index
 bank headers are observations only: one callback can span both banks and no
 per-hit identity or multi-hit correctness is inferred from them.
 
