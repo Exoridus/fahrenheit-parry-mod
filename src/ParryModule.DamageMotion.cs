@@ -8,7 +8,7 @@ public unsafe sealed partial class ParryModule
 
         // Motion has no attacker argument; native apply for this target has already passed admission.
         // Its HP/status/death work cannot be undone by the direct-motion HP fallback.
-        if (target < PartyActorCapacity && _nativeDamageCommitAttacker[target].HasValue)
+        if (!_optionEnabled || (target < PartyActorCapacity && _nativeDamageCommitAttacker[target].HasValue))
         {
             if (p3 == 1) _attackTelemetry[target].SetMotionFired = true;
             orig_ms_damage_set_motion(target, p2, p3);

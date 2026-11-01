@@ -35,6 +35,7 @@ public unsafe sealed partial class ParryModule : IDisposable
     public int NativeMotionCalls { get; private set; }
     public int NativeDispatchCalls { get; private set; }
     public bool WindowOpen;
+    public bool Enabled { set => _optionEnabled = value; }
     public bool ChainInnerCalculation;
     public bool NativeCommitEmitsMotion;
     public Action? DuringNativeCommit;

@@ -9,6 +9,7 @@ public unsafe sealed partial class ParryModule
 
     private bool should_skip_set_damage_for_parry(int target, Chr* parryTarget, bool alreadyParriedThisHit, bool latePreOpenCommitted)
         => parryTarget != null
+            && _optionEnabled
             && _optionNegateDamage
             && !is_target_non_parryable(parryTarget)
             && (alreadyParriedThisHit
