@@ -267,8 +267,10 @@ public unsafe sealed partial class ParryModule
                 if (markerSet)
                     _parryResolvedAtImpactMask &= ~(1u << param_3);
                 _internalInterceptedMask |= 1u << param_3;
-                _runtime.LastParriedTargetMask |= 1u << param_3;
-                clear_late_preopen_p5_zero_commit_slot(param_3);
+                if (param_1 == _runtime.CurrentAttackerId)
+                    _runtime.LastParriedTargetMask |= 1u << param_3;
+                if (is_late_preopen_p5_zero_commit(param_3, param_1))
+                    clear_late_preopen_p5_zero_commit_slot(param_3);
 
                 string skipReason = markerSet ? "marker=1"
                     : alreadyResolved ? "resolved=1"

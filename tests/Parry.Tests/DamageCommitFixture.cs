@@ -41,9 +41,16 @@ public unsafe sealed partial class ParryModule : IDisposable
     public Action? DuringNativeCommit;
     public bool FeedbackPending => _parryFeedbackPending[0];
     public uint ResolvedMask => _runtime.LastParriedTargetMask;
+    public uint HpSnapshot => _preHitHpSnapshot[0];
     public byte CurrentAttacker { set => _runtime.CurrentAttackerId = value; }
     public uint TargetMask { set => _runtime.CurrentPartyTargetMask = value; }
     public void MarkImpactOnly() => _parryResolvedAtImpactMask |= 1;
+    public bool HasLateCommit(int attacker) => is_late_preopen_p5_zero_commit(0, attacker);
+    public void NextAction(byte attacker)
+    {
+        end_enemy_action("test");
+        _runtime.CurrentAttackerId = attacker;
+    }
     public Chr* Target => _battleAdapter.GetPlayerCharacters();
     public Chr* Actor(int slot) => Target + slot;
     public byte* Bank(int index = 0, int slot = 0) => (byte*)Actor(slot) + 0x774 + index * 0x2D8;
@@ -56,6 +63,16 @@ public unsafe sealed partial class ParryModule : IDisposable
         public uint CurrentPartyTargetMask = 1, LastParriedTargetMask;
         public ulong CueFirstSeenFrame = 0;
         public bool TurnImpactMissedSeen = false;
+        public byte TurnImpactMissedAttackerId;
+        public ParryInputState InputState;
+        public uint CurrentCueSignature;
+        public int ParryWindowRemainingTicks, WhiffLockoutRemainingTicks, WhiffLockoutTotalTicks, ParryWindowElapsedTicks;
+        public bool ParryWindowSucceeded, SuccessIndicatorActive;
+        public ulong LastDispatchConsumedFrame, LastCorrelationSkipFrame, WindowOpenFrame;
+        public byte LastDispatchConsumedAttackerId, LastDispatchConsumedQueueIndex;
+        public float WindowOpenTimestampSeconds, WindowDurationSecondsAtOpen;
+        public float ParriedTextRemainingSeconds, ParryMissedTextRemainingSeconds, StatusBlockTextRemainingSeconds;
+        public string StatusBlockLabel = string.Empty;
     }
 
     private sealed class CalculationTelemetry

@@ -39,6 +39,7 @@
     <Compile Include="../../src/ParryModule.DamageCalculation.cs" Link="ParryModule.DamageCalculation.cs" />
     <Compile Include="../../src/ParryModule.DamageMotion.cs" Link="ParryModule.DamageMotion.cs" />
     <Compile Include="../../src/ParryModule.DamageDispatch.cs" Link="ParryModule.DamageDispatch.cs" />
+    <Compile Include="../../src/ParryModule.Reset.cs" Link="ParryModule.Reset.cs" />
     <Compile Include="../../src/ParryModule.DamageCommit.cs" Link="ParryModule.DamageCommit.cs" />
     <Compile Include="../../src/ParryModule.Stage1Signatures.cs" Link="ParryModule.Stage1Signatures.cs" />
     <Compile Include="../../src/data/ExternalMemoryOffsetMap.Runtime.cs" Link="ExternalMemoryOffsetMap.Runtime.cs" />

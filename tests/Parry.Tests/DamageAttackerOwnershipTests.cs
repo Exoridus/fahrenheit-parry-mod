@@ -4,6 +4,46 @@ namespace Fahrenheit.Mods.Parry;
 
 public unsafe sealed class DamageAttackerOwnershipTests
 {
+    [Fact]
+    public void OldContinuationDoesNotEraseNewAttackerLateCommitEvidence()
+    {
+        using var module = new ParryModule { WindowOpen = true };
+        module.Stage(0, 100);
+        module.Commit(0);
+        module.WindowOpen = false;
+        module.NextAction(23);
+        module.Stage(0, 150, 175);
+        module.Bank()[2] = 23;
+        module.Commit(0, attacker: 23);
+        Assert.True(module.HasLateCommit(23));
+
+        module.Commit(1024, attacker: 22);
+
+        Assert.True(module.HasLateCommit(23));
+        Assert.Equal(850, module.Target->ram.hp);
+        Assert.Equal(1, module.Bank()[0]);
+    }
+
+    [Fact]
+    public void OldAttackerContinuationDoesNotPromoteSuccessIntoTheNewAction()
+    {
+        using var module = new ParryModule { WindowOpen = true };
+        module.Stage(0, 100);
+        module.Commit(0);
+        module.WindowOpen = false;
+        module.NextAction(23);
+
+        module.Commit(1024, attacker: 22);
+        Assert.Equal(0u, module.ResolvedMask);
+        module.Stage(0, 150);
+        module.Bank()[2] = 23;
+        module.Commit(0, attacker: 23);
+
+        Assert.Equal(850, module.Target->ram.hp);
+        Assert.Equal(1, module.OriginalCalls);
+        Assert.Equal(1, module.Successes);
+    }
+
     [Theory]
     [InlineData(false, -1)]
     [InlineData(true, -1)]
