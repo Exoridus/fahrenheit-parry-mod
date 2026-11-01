@@ -124,11 +124,24 @@ configuration files. It checks that inputs stayed unchanged during the run,
 records the effective SDK version, Release configuration, result hash and test
 counters, and marks native validation false.
 
-A standalone Parry session reached initialization, but manual gameplay cases
-were deferred before any combat evidence was obtained. The session was stopped
-and the original mod files, Parry settings and loadorder restored and checked
-against the pre-test hashes. No successful native damage-prevention or timing
-result is claimed. Further investigation uses code, KB findings and mappings.
+The first startup-only session was deferred before combat. Subsequent recorded
+native runs used the `16c32fd` diagnostic payload: one successful physical parry
+without VRR and four with ordinary corrected60. Each correlated delayed commit
+remained blocked. Whiffs closed after six versus twelve simulation ticks,
+approximately 200 ms in both modes. The later `1408025` correction changes only
+internal argument metadata, not gameplay; that exact payload was not replayed.
+
+The corrected60 run exposed alternating effect visibility. A separate isolated
+VRR regression (`1fa86f7`) reproduces the mixed step/draw omission: four ordinary
+ticks yield two draw callbacks without the held-draw backend. That regression
+remains red and the render defect unfixed. These observations do not qualify
+ordinary corrected60 as a complete presentation mode.
+
+Both games were stopped and original mod files, settings and loadorder restored;
+all 479 pre-test input hashes match. Detailed immutable capture hashes and case
+ledgers are in the KB reports `forensics/parry-native-baseline-20261101.md`,
+`forensics/parry-vrr60-native-20261101.md` and
+`forensics/vrr-fixed60-effect-draw-loss-20261101.md`.
 
 ## Native validation still required
 
@@ -182,5 +195,10 @@ outcome. Repeat with standalone updating and qualified VRR simulation ownership.
 | Disable/reset/re-enable | No old slot deadline accepts damage without another fresh press |
 | VRR | Deferred presentation updates do not consume window or recovery samples |
 
-No in-game run, damage prevention result or E33 timing measurement is claimed
-by these automated checks.
+The native evidence covers bounded physical cases, including one potentially
+lethal staged hit. Successful magic, sequential multi-hit defense, the complete
+pause/reset matrix and independent 120/144-Hz presentation remain unqualified.
+The VRR clock/input JSON budget expired before the first recorded parry, so the
+ordinary-clock/input-publication join still requires a targeted capture with
+sufficient coverage. Visual contact timing and map frame pacing were not measured.
+Automated checks alone establish no native result or E33 timing measurement.
