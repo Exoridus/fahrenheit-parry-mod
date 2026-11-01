@@ -1,5 +1,6 @@
 global using Fahrenheit.FFX.Battle;
 global using Fahrenheit.FFX;
+global using System.Numerics;
 using System.Runtime.InteropServices;
 
 namespace Fahrenheit.Mods.Parry;
@@ -32,6 +33,7 @@ public unsafe sealed partial class ParryModule : IDisposable
     public int OriginalCalls { get; private set; }
     public int Successes { get; private set; }
     public int NativeMotionCalls { get; private set; }
+    public int NativeDispatchCalls { get; private set; }
     public bool WindowOpen;
     public bool ChainInnerCalculation;
     public bool NativeCommitEmitsMotion;
@@ -52,12 +54,14 @@ public unsafe sealed partial class ParryModule : IDisposable
         public byte CurrentAttackerId = 22, CurrentCueIndex = 0;
         public uint CurrentPartyTargetMask = 1, LastParriedTargetMask;
         public ulong CueFirstSeenFrame = 0;
+        public bool TurnImpactMissedSeen = false;
     }
 
     private sealed class CalculationTelemetry
     {
-        public bool CalcDamageFired, CalcDamageIntercepted, SetMotionFired;
+        public bool CalcDamageFired, CalcDamageIntercepted, SetMotionFired, SetDamageTargetFired;
         public int CommandId;
+        public uint HpBeforeFinalization, HpAfterFinalization;
     }
 
     private sealed class TestBattleAdapter
@@ -89,6 +93,15 @@ public unsafe sealed partial class ParryModule : IDisposable
     private readonly int[][] _payloads = [[], []];
     public int Commit(int flags, int attacker = 22, byte command = 7, int slot = 0)
         => h_ms_set_damage_internal(attacker, command, slot, 0, flags);
+    public int Dispatch(int flags, byte attacker = 22, int target = -5)
+        => h_ms_set_damage(attacker, target, flags);
+    private int orig_ms_set_damage(byte attacker, int target, int flags)
+    {
+        NativeDispatchCalls++;
+        return Commit(flags, attacker, slot: target >= 0 ? target : 0);
+    }
+    private void log_hook_ms_set_damage(byte attacker, int target, int flags, int result) { }
+    private void end_parry_window(string reason) => WindowOpen = false;
     public void Motion(byte target = 0) => h_ms_damage_set_motion(target, 5, 1);
     private void orig_ms_damage_set_motion(byte target, int p2, int p3) => NativeMotionCalls++;
     private bool parry_block_recently_played(byte target) => false;
