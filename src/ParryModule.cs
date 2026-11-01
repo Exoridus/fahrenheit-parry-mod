@@ -532,8 +532,7 @@ public unsafe sealed partial class ParryModule : FhModule
     // Per-hit attacker id recorded at p5=0 intercept time for slot-correlated p5=1024 skip.
     private readonly byte[] _internalInterceptedAttackerId = new byte[PartyActorCapacity];
     // Slot-local marker: p5=0 already committed before a valid active parry gate existed.
-    // Used to prevent late false-positive "parry success" promotion while still allowing
-    // duplicate native commit passes to be safely skipped.
+    // Prevents late false-positive success promotion; it never authorizes damage suppression.
     private uint _latePreOpenP5ZeroCommitMask;
     private readonly byte[] _latePreOpenP5ZeroCommitAttackerId = new byte[PartyActorCapacity];
     // Durable per-turn marker: set at MsDamageSetMotion (visual impact time) when the parry
