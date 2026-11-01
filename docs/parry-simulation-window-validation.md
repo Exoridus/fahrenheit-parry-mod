@@ -132,6 +132,37 @@ result is claimed. Further investigation uses code, KB findings and mappings.
 
 ## Native validation still required
 
+For an explicit diagnostic process, set `FFX_PARRY_NATIVE_VALIDATION=1` before
+launch and enable Parry logging. Both are required; ordinary startup leaves the
+trace off. No additional native hook is installed. Records are appended to the
+existing session debug log with the `[native-validation]` prefix followed by
+JSON. Clear the process environment variable after the run.
+
+The capture is bounded to 12,000 records per module instance. Sequence 12,000
+means the limit was reached; a callback can then lack its post record. Treat
+missing pairs and `incomplete` outcomes as incomplete evidence. `read_ok=false`
+means actor fields are unavailable, not native zero values. Diagnostic exceptions
+are isolated from gameplay and original calls are never retried by the recorder.
+
+Each callback records pre/post sequence, QPC/frequency, managed thread, simulation
+tick, callback/parent IDs, actual original-call count and blocked/passed outcome.
+The actor snapshot uses read-only `ReadProcessMemory` against the existing typed
+Chr layout, recording HP, staged damage, will-die/death, status and both bank
+headers before any hook suppression. Lifecycle records cover fresh presses,
+rejections, open/end/reset and cue clear. They report `observed`, not a damage
+decision. Slot -1 identifies an input with no current party target.
+
+`window_generation` identifies an observed press window, not a native hit or
+action. Its stored start/deadline survive gate clearing for delayed-commit
+correlation; `gate_deadline_tick` reports the actual current gate. Cue index,
+first-seen tick, signature and masks are separate context. Calc `command_id`,
+commit `command_index` and motion `motion_mode` are different identity domains;
+unused fields are -1. Motion has no native attacker argument, so `attacker=-1`
+and `cue_attacker` supplies explicitly contextual identity. `batch_hit_count`
+is calc p11, never a hit ordinal. Both independent cursor/count/attacker/index
+bank headers are observations only: one callback can span both banks and no
+per-hit identity or multi-hit correctness is inferred from them.
+
 Enable existing session logging only for the diagnostic run. Capture the fresh
 press, simulation frame, native hook sequence, HP/status/death state and final
 outcome. Repeat with standalone updating and qualified VRR simulation ownership.

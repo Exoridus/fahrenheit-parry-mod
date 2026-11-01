@@ -51,6 +51,10 @@ public static partial class ExternalMemoryOffsetMap
     /// </summary>
     public static class ChrStruct
     {
+        // Four-byte cursor/count/attacker/command-index headers for the two native damage banks.
+        public const int DamageBank0Header = 0x774;
+        public const int DamageBank1Header = 0xA4C;
+
         /// <summary>
         ///     Death-latch byte. Read by <c>MsGetChrStatDeath</c>; non-zero gates
         ///     all downstream death processing (visual collapse, removal).

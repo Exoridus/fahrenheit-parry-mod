@@ -28,6 +28,7 @@
     <Compile Include="..\..\src\debug\ParryTurnTimelineTracker.cs" Link="debug\ParryTurnTimelineTracker.cs" />
     <Compile Include="..\..\src\debug\PerFrameProbeThrottle.cs" Link="debug\PerFrameProbeThrottle.cs" />
     <Compile Include="..\..\src\debug\Stage1ProbeFormatter.cs" Link="debug\Stage1ProbeFormatter.cs" />
+    <Compile Include="../../src/debug/NativeValidationFormatter.cs" Link="debug/NativeValidationFormatter.cs" />
     <Compile Include="..\..\src\overlay\CombatLabelPalette.cs" Link="overlay\CombatLabelPalette.cs" />
     <Compile Include="..\..\src\overlay\OverlayAnchorMath.cs" Link="overlay\OverlayAnchorMath.cs" />
   </ItemGroup>

@@ -905,6 +905,8 @@ public unsafe sealed partial class ParryModule : FhModule
     private void reset_runtime_state(string timingReason, bool clearFeedbackFlashes, bool clearDamageFlags)
     {
         stop_audio_playback();
+        if (_runtime.ParryWindowActive || _runtime.CurrentPartyTargetMask != 0)
+            trace_native_validation_lifecycle("reset", timingReason);
 
         clear_parry_slot_windows();
         _runtime.InputState = ParryInputState.Ready;

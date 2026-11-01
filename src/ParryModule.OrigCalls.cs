@@ -123,16 +123,22 @@ public unsafe sealed partial class ParryModule
         => new FhCallHandle<MsSetDamageProbe>(loc_ms_set_damage()).chain_from(_dMsSetDamage).fnptr!(param_1, param_2, param_3);
 
     private void orig_ms_damage_set_motion(byte target, int p2, int p3)
-        => new FhCallHandle<MsDamageSetMotionProbe>(loc_ms_damage_set_motion()).chain_from(_dMsDamageSetMotion).fnptr!(target, p2, p3);
+    {
+        native_validation_original("motion");
+        new FhCallHandle<MsDamageSetMotionProbe>(loc_ms_damage_set_motion()).chain_from(_dMsDamageSetMotion).fnptr!(target, p2, p3);
+    }
 
     private int orig_ms_calc_damage(
         int user_id, nint user_chr, int target_id, nint target_chr,
         nint command, int command_id,
         nint p7, nint p8, nint p9, nint p10, int p11)
-        => new FhCallHandle<MsCalcDamageProbe>(loc_ms_calc_damage()).chain_from(_dMsCalcDamage).fnptr!(
+    {
+        native_validation_original("calc");
+        return new FhCallHandle<MsCalcDamageProbe>(loc_ms_calc_damage()).chain_from(_dMsCalcDamage).fnptr!(
             user_id, user_chr, target_id, target_chr,
             command, command_id,
             p7, p8, p9, p10, p11);
+    }
 
     private int orig_dmg_calc_armored(Chr* user, Chr* target, Command* command, int p4, int* p5, int damage)
         => new FhCallHandle<DmgCalcArmoredProbe>(loc_dmg_calc_armored()).chain_from(_dDmgCalcArmored).fnptr!(user, target, command, p4, p5, damage);
@@ -141,13 +147,19 @@ public unsafe sealed partial class ParryModule
         int user_id, nint user_chr, int target_id, nint target_chr,
         nint command, int command_id,
         nint p7, nint p8, nint p9, nint p10, int p11)
-        => new FhCallHandle<MsCalcDamageInternalProbe>(loc_ms_calc_damage_internal()).chain_from(_dMsCalcDamageInternal).fnptr!(
+    {
+        native_validation_original("calc_internal");
+        return new FhCallHandle<MsCalcDamageInternalProbe>(loc_ms_calc_damage_internal()).chain_from(_dMsCalcDamageInternal).fnptr!(
             user_id, user_chr, target_id, target_chr,
             command, command_id,
             p7, p8, p9, p10, p11);
+    }
 
     private int orig_ms_set_damage_internal(int param_1, byte param_2, int param_3, int param_4, int param_5)
-        => new FhCallHandle<MsSetDamageInternalProbe>(loc_ms_set_damage_internal()).chain_from(_dMsSetDamageInternal).fnptr!(param_1, param_2, param_3, param_4, param_5);
+    {
+        native_validation_original("commit");
+        return new FhCallHandle<MsSetDamageInternalProbe>(loc_ms_set_damage_internal()).chain_from(_dMsSetDamageInternal).fnptr!(param_1, param_2, param_3, param_4, param_5);
+    }
 
     private int orig_ms_atel_request_camera(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8)
         => new FhCallHandle<MsAtelRequestCameraProbe>(loc_ms_atel_request_camera()).chain_from(_dMsAtelRequestCamera).fnptr!(p1, p2, p3, p4, p5, p6, p7, p8);

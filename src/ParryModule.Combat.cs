@@ -374,6 +374,7 @@ public unsafe sealed partial class ParryModule
 
     private void handle_parry_input_press(ParryInputContext context)
     {
+        trace_native_validation_lifecycle("press");
         // Decision is pure (FINAL_PARRY_SPEC.md, see ParryInputStateTransitions).
         // The corresponding tests live in tests/Parry.Tests/ParryInputStateTransitionsTests.cs.
         ParryInputStateTransitions.PressDecision decision =
@@ -381,6 +382,7 @@ public unsafe sealed partial class ParryModule
 
         if (!decision.Accepted)
         {
+            trace_native_validation_lifecycle("press_rejected", decision.RejectReason);
             log_press_rejection(decision.RejectReason);
             return;
         }
@@ -655,6 +657,7 @@ public unsafe sealed partial class ParryModule
         mark_active_turn_open();
 
         arm_parry_slot_windows(partyMask, windowDurationTicks);
+        trace_native_validation_lifecycle("open");
 
         // Guard-stance feedback marker: the player has committed to the parry
         // stance for this window. The "enter guard stance" visual is approximated
@@ -818,6 +821,7 @@ public unsafe sealed partial class ParryModule
     /// </summary>
     private void end_parry_window(string reason, bool transitionToReady = true)
     {
+        if (_runtime.ParryWindowActive) trace_native_validation_lifecycle("end", reason);
         if (_runtime.ParryWindowActive)
             log_debug($"Parry window closed for {format_actor_slot(_runtime.CurrentAttackerId)} ({reason}).");
 
@@ -882,6 +886,7 @@ public unsafe sealed partial class ParryModule
 
     private void clear_awaiting_turn_end(string reason)
     {
+        trace_native_validation_lifecycle("cue_clear");
         // Resolve streak BEFORE clearing the per-cue masks below — needs both
         // CurrentPartyTargetMask (slots targeted this cue) and LastParriedTargetMask
         // (slots that successfully parried at least one hit).

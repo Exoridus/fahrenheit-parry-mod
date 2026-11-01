@@ -495,6 +495,8 @@ public unsafe sealed partial class ParryModule
         nint command, int command_id,
         nint p7, nint p8, nint p9, nint p10, int p11)
     {
+        using var validation = begin_native_validation("calc", user_id, target_id, command_id, batch: p11, target: target_chr);
+
         // Check the parry tick deadline BEFORE calling orig — skipping orig is how we prevent damage
         // from entering the native buffer. Once orig runs, damage cannot be recalled.
         bool isPartyTarget = target_id >= 0 && target_id < PartyActorCapacity;
@@ -534,6 +536,7 @@ public unsafe sealed partial class ParryModule
                 _damageEventActive[target_id] = true;
                 log_debug($"MsCalcDamage intercepted: {format_actor_slot((byte)user_id)} -> {format_actor_slot((byte)target_id)} (cmd={command_id}), damage blocked, feedback deferred. HP snapshot={_preHitHpSnapshot[target_id]}");
                 log_hook_ms_calc_damage(user_id, target_id, command_id, p11, 0, command);
+                if (validation is not null) validation.Completed = true;
                 return 0;
             }
         }
@@ -544,6 +547,7 @@ public unsafe sealed partial class ParryModule
             p7, p8, p9, p10, p11);
 
         log_hook_ms_calc_damage(user_id, target_id, command_id, p11, result, command);
+        if (validation is not null) validation.Completed = true;
         return result;
     }
 
@@ -577,6 +581,8 @@ public unsafe sealed partial class ParryModule
 
     private void h_ms_damage_set_motion(byte target, int p2, int p3)
     {
+        using var validation = begin_native_validation("motion", -1, target, p2, flags: p3);
+
         // Skip orig when a parry tick deadline is active and this is a damage motion (p3=1).
         // MsDamageSetMotion orig reads damage_hp and reduces ram.hp for some attack commands
         // (e.g. 0x4026) before our negate logic runs. Skipping orig prevents both the HP
@@ -771,6 +777,7 @@ public unsafe sealed partial class ParryModule
         {
             write_session_hook_entry($"[MsDamageSetMotion] f={_debugFrameIndex} target={target} p2={p2} p3={p3} parry={_runtime.ParryWindowActive}");
         }
+        if (validation is not null) validation.Completed = true;
     }
 
     private int h_dmg_calc_armored(Chr* user, Chr* target, Command* command, int p4, int* p5, int damage)
@@ -790,6 +797,8 @@ public unsafe sealed partial class ParryModule
         nint command, int command_id,
         nint p7, nint p8, nint p9, nint p10, int p11)
     {
+        using var validation = begin_native_validation("calc_internal", user_id, target_id, command_id, batch: p11, target: target_chr);
+
         // Inner interception: check the parry tick deadline BEFORE calling orig.
         // This is the safety net for attacks where the outer h_ms_calc_damage interception
         // fails because LastParriedTargetMask was already set by MsDamageSetMotion.
@@ -815,6 +824,7 @@ public unsafe sealed partial class ParryModule
             _damageEventActive[target_id] = true;
             write_session_hook_entry(
                 $"[DmgCalcInternal] INTERCEPTED frame={_debugFrameIndex} user={user_id} target={target_id} cmd=0x{command_id:X4}");
+            if (validation is not null) validation.Completed = true;
             return 0;
         }
 
@@ -876,6 +886,8 @@ public unsafe sealed partial class ParryModule
                     $" (target_chr read failed) hits={p11}");
             }
         }
+
+        if (validation is not null) validation.Completed = true;
 
         return result;
     }
@@ -1026,6 +1038,8 @@ public unsafe sealed partial class ParryModule
     /// </summary>
     private int h_ms_set_damage_internal(int param_1, byte param_2, int param_3, int param_4, int param_5)
     {
+        using var validation = begin_native_validation("commit", param_1, param_3, param_2, flags: param_5);
+
         bool isPartySlot = param_3 >= 0 && param_3 < PartyActorCapacity;
 
         // Phase 2: authoritative commit skip via durable impact marker or prior resolution.
@@ -1077,6 +1091,7 @@ public unsafe sealed partial class ParryModule
                 Chr* dodgeSlot = dodgeParty != null ? dodgeParty + param_3 : null;
                 suppress_parried_damage_display(dodgeSlot, param_3, (byte)param_1, param_2, "dodge");
                 log_debug($"MsSetDamageInternal p5=0 skipped for {format_actor_slot((byte)param_3)} (dodge — HP+status+death blocked).");
+                if (validation is not null) validation.Completed = true;
                 return 0;
             }
 
@@ -1126,6 +1141,8 @@ public unsafe sealed partial class ParryModule
                     $"attacker={param_1} cmd={param_2}");
                 log_debug($"MsSetDamageInternal p5=0 commit skipped for {format_actor_slot((byte)param_3)} (resolved).");
 
+                if (validation is not null) validation.Completed = true;
+
                 return 0;
             }
 
@@ -1153,6 +1170,7 @@ public unsafe sealed partial class ParryModule
                     log_debug($"MsSetDamageInternal p5=1024 duplicate commit skipped for {format_actor_slot((byte)param_3)} (late pre-open commit).");
                     clear_internal_intercepted_slot(param_3);
                     clear_late_preopen_p5_zero_commit_slot(param_3);
+                    if (validation is not null) validation.Completed = true;
                     return 0;
                 }
             }
@@ -1183,6 +1201,7 @@ public unsafe sealed partial class ParryModule
                 Chr* dodgeFinSlot = dodgeFinParty != null ? dodgeFinParty + param_3 : null;
                 suppress_parried_damage_display(dodgeFinSlot, param_3, (byte)param_1, param_2, "dodge_p5=1024");
                 log_debug($"MsSetDamageInternal p5=1024 skipped for {format_actor_slot((byte)param_3)} (dodge).");
+                if (validation is not null) validation.Completed = true;
                 return 0;
             }
 
@@ -1209,6 +1228,8 @@ public unsafe sealed partial class ParryModule
                 // Hit lifecycle boundary: this slot's p5=1024 completion was handled,
                 // so stale p5=0 evidence must not leak into the next hit in the same turn.
                 clear_internal_intercepted_slot(param_3);
+
+                if (validation is not null) validation.Completed = true;
 
                 return 0;
             }
@@ -1265,6 +1286,8 @@ public unsafe sealed partial class ParryModule
         }
 
         int result = orig_ms_set_damage_internal(param_1, param_2, param_3, param_4, param_5);
+
+        if (validation is not null) validation.Completed = true;
 
         return result;
     }
