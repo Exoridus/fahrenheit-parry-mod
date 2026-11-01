@@ -202,3 +202,23 @@ The VRR clock/input JSON budget expired before the first recorded parry, so the
 ordinary-clock/input-publication join still requires a targeted capture with
 sufficient coverage. Visual contact timing and map frame pacing were not measured.
 Automated checks alone establish no native result or E33 timing measurement.
+
+## Optional QoL source integration
+
+```powershell
+.\build.cmd verify-vrr --vrr-source-dir <VRR-checkout> --qol-source-dir <QoL-checkout>
+```
+
+The optional QoL source adds four cases to the existing eight clock/dispatch
+cases. It links the production focus policy and existing QoL fixture, then
+delivers the published button level through the production Parry/VRR cooperation
+code. Cases cover standalone and cooperative 30/60-Hz updates, repeated focus
+cycles, publication without a fresh input transformation, catch-up, epoch reset,
+120/144-Hz extra presentations and genuine release/repress. Native pad-to-script
+translation and the Parry input body remain fixture boundaries. Device acquisition
+validity is tested separately in QoL; this suite does not emulate native polling.
+
+The workflow hashes the selected QoL inputs alongside its existing inputs and
+rejects source changes during a run. Removing the QoL blocked-button mask in an
+isolated negative-control source makes all four focus cases fail. Omitting
+`--qol-source-dir` retains the existing eight-case two-mod suite.

@@ -29,6 +29,7 @@ internal sealed partial class BuildScript : NukeBuild
     [Parameter(Name = "bump")] readonly string Bump = "patch";
     [Parameter(Name = "workflow")] readonly string Workflow = string.Empty;
     [Parameter(Name = "vrr-source-dir")] readonly string VrrSourceDir = string.Empty;
+    [Parameter(Name = "qol-source-dir")] readonly string QolSourceDir = string.Empty;
 
     [Parameter(Name = "full")] readonly bool Full;
     [Parameter(Name = "log-verbosity")] readonly string LogVerbosity = string.Empty;
@@ -355,7 +356,7 @@ internal sealed partial class BuildScript : NukeBuild
             new("start", "Core", "Launch fhstage0.exe", "Launch the game via deployed Fahrenheit stage0 loader.", ["--game-dir <path> (optional).", "--refresh-game-dir (optional).", "--elevated (optional)."], ["build.cmd start"], ExecuteStartWorkflow),
             new("mod-build", "Distribution", "Build and validate the mod payload", "Build only the mod with isolated SDK feeds; never deploy.", ["--sdk local|official", "--configuration Debug|Release"], ["build.cmd mod-build"], () => RunModDistribution("mod-build")),
             new("mod-verify", "Distribution", "Build the mod and run tests", "Validate the SDK payload and run runtime/package tests.", ["--sdk local|official", "--configuration Debug|Release"], ["build.cmd mod-verify"], () => RunModDistribution("mod-verify")),
-            new("verify-vrr", "Distribution", "Test the Parry/VRR source contract", "Exercise both production cooperation implementations without native hooks or deployment.", ["--vrr-source-dir <VRR checkout or source snapshot> (required)."], ["build.cmd verify-vrr --vrr-source-dir ..\\ffx-vrr-mod"], ExecuteVrrIntegrationTests),
+            new("verify-vrr", "Distribution", "Test the Parry/VRR source contract", "Exercise production cooperation and optionally QoL focus policy without native hooks or deployment.", ["--vrr-source-dir <VRR checkout or source snapshot> (required).", "--qol-source-dir <QoL checkout> (optional focus integration)."], ["build.cmd verify-vrr --vrr-source-dir ..\\ffx-vrr-mod --qol-source-dir ..\\ffx-qol-mod"], ExecuteVrrIntegrationTests),
             new("mod-pack", "Distribution", "Build, test and package installable mods", "Create a mod ZIP rooted at the mod ID, SHA256 and provenance; --full also builds/packages the matching host.", ["--sdk local|official", "--tag vX.Y.Z[-suffix]", "--out-dir path", "--full"], ["build.cmd mod-pack --full"], () => RunModDistribution("mod-pack")),
             new("release-bump", "Release", "Bump version + changelog (no tag)", "Bump version and create the release commit. The tag is created by the Release workflow after a green build.", ["--bump patch|minor|major (optional)."], ["build.cmd release-bump"], ReleaseVersionCore),
             new("release-ready", "Release", "Preflight checks/build/package/notes", "Run release preflight.", ["--configuration Debug|Release (optional).", "--config-path <path-to-config.local.json> (optional, shorthand: -c).", "--repo owner/repo (optional)."], ["build.cmd release-ready"], ReleaseReadyCore),
