@@ -4,6 +4,18 @@ namespace Fahrenheit.Mods.Parry;
 
 public unsafe sealed class DamageDeactivationTests
 {
+    [Theory]
+    [InlineData(10)]
+    [InlineData(22)]
+    [InlineData(31)]
+    public void DisabledModuleForwardsNonPartyMotion(byte target)
+    {
+        using var module = new ParryModule { Enabled = false };
+        module.Motion(target);
+        Assert.Equal(1, module.NativeMotionCalls);
+        Assert.Equal(0, module.Successes);
+    }
+
     [Fact]
     public void DisabledModuleDoesNotUseStaleResolvedMarkerToSuppressOuterCommit()
     {

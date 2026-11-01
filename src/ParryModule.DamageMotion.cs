@@ -10,7 +10,7 @@ public unsafe sealed partial class ParryModule
         // Its HP/status/death work cannot be undone by the direct-motion HP fallback.
         if (!_optionEnabled || (target < PartyActorCapacity && _nativeDamageCommitAttacker[target].HasValue))
         {
-            if (p3 == 1) _attackTelemetry[target].SetMotionFired = true;
+            if (target < PartyActorCapacity && p3 == 1) _attackTelemetry[target].SetMotionFired = true;
             orig_ms_damage_set_motion(target, p2, p3);
             if (validation is not null) validation.Completed = true;
             return;
