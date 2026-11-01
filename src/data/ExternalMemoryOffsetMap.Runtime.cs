@@ -148,23 +148,12 @@ public static partial class ExternalMemoryOffsetMap
         // 841782 default). Suppression branch must return 0xFF, not 0.
         public const int MsAtelRequestMagicCamera = 0x00398000;
 
-        // MsBtlSetHitEffect at FFX.exe+0x39EC60 (absolute 0x0079EC60) — engine's
-        // "registered hit effect" emitter. Global-handle sibling of 0x0039EBC0:
-        // both route through the same dispatch core (FUN_0079EB30), but this one
-        // resolves the effect ID against the global handle `btl._140_4_` rather
-        // than the per-character handle `chr->field_0x4c`. That means the effect
-        // table is universal across all actors — which is why it works on PC slots
-        // where the per-character variant crashes.
-        //
-        // Signature: void (byte chr_id, int p2, int effect_id [, int extra]) —
-        // same call shape as the per-character variant; the existing 4-arg delegate
-        // continues to work.
-        //
-        // Script-side equivalent: opcode `Battle.btlSetHitEffReg [70E6h]`
-        // (declared in target/audio/ath/btlatel.ath:234).
-        //
-        // Used to fire the Sentinel barrier visual (effect 0x4A) on the parrying
-        // character on a successful parry.
+        // Character-bound registered hit effect at current RVA 0x39EC40; the older
+        // decompilation names the equivalent body FUN_0079ec60. Cdecl returns int
+        // success and takes (int chr_id, int p2, int effect_id). The fourth argument
+        // belongs to its inner op_et_eff call, not this wrapper.
+        // Resolves the effect against btl's global handle and tracks it on the actor.
+        // Script equivalent: Battle.btlSetHitEffReg [70E6h].
         public const int MsBtlSetHitEffect = 0x0039EC40;
 
         // MsScreenSetShake — FUN_007c5680 at FFX.exe+0x3C5680 (Ghidra VA 0x007c5680). The

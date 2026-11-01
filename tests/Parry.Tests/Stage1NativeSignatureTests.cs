@@ -6,6 +6,17 @@ namespace Fahrenheit.Mods.Parry;
 
 public sealed class Stage1NativeSignatureTests
 {
+    [Fact]
+    public void HitEffectPreservesThreeNativeStackArgumentsAndResult()
+    {
+        var type = typeof(ParryModule).GetNestedType("MsBtlSetHitEffectProbe", BindingFlags.NonPublic)!;
+        var invoke = type.GetMethod("Invoke")!;
+        Assert.Equal(CallingConvention.Cdecl, type.GetCustomAttribute<UnmanagedFunctionPointerAttribute>()!.CallingConvention);
+        Assert.Equal(new[] { typeof(int), typeof(int), typeof(int) },
+            invoke.GetParameters().Select(p => p.ParameterType).ToArray());
+        Assert.Equal(typeof(int), invoke.ReturnType);
+    }
+
     [Theory]
     [InlineData("MsCalcCommandProbeDelegate", true)]
     [InlineData("MsCheckStatusBeforeActionProbeDelegate", false)]

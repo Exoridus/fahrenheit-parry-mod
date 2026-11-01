@@ -108,14 +108,6 @@ public unsafe sealed partial class ParryModule : FhModule
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate int AtelPopStackIntegerFn(int worker, int stack);
 
-    // MsBtlSetHitEffect — engine's registered-hit-effect emitter (global handle).
-    // Used directly (no hook) on parry success to fire the Sentinel barrier
-    // visual (effect 0x4A) on the parrying character. Routes through the global
-    // particle handle so it is safe on PC slots.
-    // Script analog: Battle.btlSetHitEffReg [70E6h].
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    private delegate void MsBtlSetHitEffectProbe(byte chr_id, int p1, int effect_id, int p3);
-
     // MsScreenSetShake — the engine's native screen shake (ATEL: camSetShake family).
     // The callee truncates mode/duration/amplitude/randomness to byte/ushort itself; they are
     // declared 32-bit here because that is what the cdecl stack slots actually are.

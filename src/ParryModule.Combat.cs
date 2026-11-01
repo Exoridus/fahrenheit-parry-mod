@@ -1367,7 +1367,7 @@ public unsafe sealed partial class ParryModule
             const int ParrySuccessEffectId = 0x4B;
 
             get_fptr<MsBtlSetHitEffectProbe>(
-                ExternalMemoryOffsetMap.Functions.MsBtlSetHitEffect)(slotIndex, 0, ParrySuccessEffectId, 1);
+                ExternalMemoryOffsetMap.Functions.MsBtlSetHitEffect)(slotIndex, 0, ParrySuccessEffectId);
 
             if (_optionLogging)
             {

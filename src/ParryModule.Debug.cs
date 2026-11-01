@@ -652,7 +652,7 @@ public unsafe sealed partial class ParryModule
         {
             if (try_get_chr((byte)_labTargetSlot) == null) { log_debug($"[Lab] No live actor at slot {_labTargetSlot}."); return; }
             get_fptr<MsBtlSetHitEffectProbe>(
-                ExternalMemoryOffsetMap.Functions.MsBtlSetHitEffect)((byte)_labTargetSlot, 0, _labEffectId, 1);
+                ExternalMemoryOffsetMap.Functions.MsBtlSetHitEffect)(_labTargetSlot, 0, _labEffectId);
             log_debug($"[Lab] Fired hit effect 0x{_labEffectId:X2} on slot {_labTargetSlot}.");
         }
         catch (Exception ex) { log_debug($"[Lab] Fire effect failed: {ex.Message}"); }
