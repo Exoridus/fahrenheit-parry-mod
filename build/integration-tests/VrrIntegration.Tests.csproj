@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+    <VrrSource Include="FixedSimulationClock.cs;VrrModule.CooperativeTicks.cs;RenderPassContext.cs;PresentationAdmission.cs" />
+    <Compile Include="@(VrrSource->'$(VrrSourceDir)/src/%(Identity)')" Link="Vrr/%(Filename)%(Extension)" />
+    <Compile Include="../../src/ParryModule.VrrSimulation.cs" Link="Parry/ParryModule.VrrSimulation.cs" />
+    <Compile Include="../../src/ParryModule.WindowTiming.cs" Link="Parry/ParryModule.WindowTiming.cs" />
+    <Compile Include="../../src/combat/ParryInputState.cs" Link="Parry/ParryInputState.cs" />
+    <Compile Include="../../src/combat/ParryInputStateTransitions.cs" Link="Parry/ParryInputStateTransitions.cs" />
+    <Compile Include="../tests/VrrSimulationFixture.cs" Link="Fixtures/VrrSimulationFixture.cs" />
+    <Compile Include="../tests/ParryWindowTimingFixture.cs" Link="Fixtures/ParryWindowTimingFixture.cs" />
+  </ItemGroup>
+  <Target Name="RequireVrrSource" BeforeTargets="PrepareForBuild">
+    <Error Condition="'$(VrrSourceDir)' == ''" Text="VrrSourceDir is required: select the reviewed VRR source checkout explicitly." />
+    <Error Condition="!Exists('$(VrrSourceDir)/src/%(VrrSource.Identity)')" Text="Missing VRR integration source: $(VrrSourceDir)/src/%(VrrSource.Identity)" />
+  </Target>
+</Project>

@@ -128,6 +128,13 @@ Quick command discovery:
   - Examples:
   - `.\build.cmd mod-verify`
 
+- `.\build.cmd verify-vrr`
+  - Exercise both production cooperation implementations without native hooks or deployment.
+  - Parameters:
+  - --vrr-source-dir <VRR checkout or source snapshot> (required).
+  - Examples:
+  - `.\build.cmd verify-vrr --vrr-source-dir ..\ffx-vrr-mod`
+
 - `.\build.cmd mod-pack`
   - Create a mod ZIP rooted at the mod ID, SHA256 and provenance; --full also builds/packages the matching host.
   - Parameters:

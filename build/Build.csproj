@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="PrepareNativeDependencies.cs;ModBuild.cs;ModPackage.cs;tests/**;distribution/**" />
+    <Compile Remove="PrepareNativeDependencies.cs;ModBuild.cs;ModPackage.cs;tests/**;integration-tests/**;distribution/**" />
   </ItemGroup>
 
   <ItemGroup>

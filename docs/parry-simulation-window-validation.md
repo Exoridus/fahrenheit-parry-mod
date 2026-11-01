@@ -48,10 +48,19 @@ Normal repository validation uses:
 .\build.cmd mod-verify --sdk local --configuration Release
 ```
 
-Canonical distribution validation was not completed. The isolated checkout
-lacked its own Fahrenheit checkout, and a preparatory local clone was rejected
-by Git's repository ownership check in the sandbox. Verification instead used
-the existing alpha12 feed without changing tracked NuGet configuration:
+Canonical Release distribution validation subsequently passed: 158 Release
+Parry tests and 34 build/integration tests, no failures or skips, and a validated
+win-x86 payload. The pinned Fahrenheit core rebuild emitted three existing
+upstream warnings; the Parry build emitted none. Debug-only cases account for
+the difference from the 162-test Debug result above.
+
+The ownership failure came from running local Git transport as a different
+Windows sandbox account than the repository owner. A local clone of the existing
+pinned checkout, followed by the canonical command under the repository owner's
+account, succeeded. No persistent Git trust configuration or wildcard exception
+was added. A Git ownership error is not evidence of a source or ABI problem.
+
+Earlier focused verification used the existing alpha12 feed:
 
 ```powershell
 dotnet restore Fahrenheit.Mods.Parry.csproj --source <local-alpha12-feed> --source https://api.nuget.org/v3/index.json
@@ -61,6 +70,65 @@ dotnet test tests/Parry.Tests/Parry.Tests.csproj --no-restore --nologo --verbosi
 dotnet build Fahrenheit.Mods.Parry.csproj -c Release --no-restore --nologo --verbosity minimal
 git diff --check
 ```
+
+## VRR integration boundaries
+
+The inspected VRR source snapshot is based on commit `34ccaae` plus recorded
+working-tree changes. Ordinary corrected60 operation keeps Parry on stock
+PreUpdate. Cooperative dispatch belongs to the explicit independent-presentation
+path: ordinary clock completion and the qualified script-input snapshot precede
+Parry dispatch. Extra presentation passes dispatch no Parry update. Root, thread,
+image, invocation, epoch and snapshot ownership checks reject stale or duplicate
+dispatches. These are source contracts, not native combat results.
+
+The current source does not admit production combat with independent 120/144-Hz
+presentation. Its native-field probe excludes combat and Parry. Do not use that
+probe as a compatibility test or enable it to bypass the qualification boundary.
+
+The installed VRR DLL inspected during preparation predates the cooperation and
+input-probe contracts. Its SHA-256 is
+`b17ffc6b8829e987b404153ce5db87486fbf96fb6b699ae3f96bf97ea36da6df`.
+It does not match the current source payloads. A test against that installation
+cannot qualify the current source integration.
+
+Both mods subsequently passed their canonical Release verification against the
+official alpha12 SDK: 158 Parry tests plus 34 build/integration tests, and 2,484
+VRR tests. VRR was built from a separate hash-checked source snapshot, retaining
+the active VRR working tree. The new payloads were not installed together.
+
+### Direct source integration test
+
+```powershell
+.\build.cmd verify-vrr --vrr-source-dir <reviewed-vrr-source-root>
+```
+
+This explicitly selected source root must contain the four production files
+`FixedSimulationClock.cs`, `VrrModule.CooperativeTicks.cs`, `RenderPassContext.cs`
+and `PresentationAdmission.cs` under `src/`. The test links those files with
+Parry's production simulation binding and window timing; it does not copy an
+implementation into a mock. Native admission, clock and snapshot boundaries are
+synthetic host inputs and do not qualify native ordering or independent images.
+
+All eight cases passed through the canonical workflow. The rate matrix covers
+30/60-Hz simulation with 120/144-Hz image schedules. Other cases cover zero-step
+images, speed-zero pause, catch-up, stale/duplicate identities, epoch advance and
+native handback. A deliberate control that dispatched presentation-only images
+as simulation failed all four matrix cases; restoring the host passed all eight.
+Missing or incomplete source roots fail explicitly. No physical-input or held-edge
+behavior is inferred from this fixture.
+
+Each successful run retains TRX results and `provenance.json` under
+`.workspace/vrr-integration/<run>/`. Provenance hashes all 13 linked source,
+fixture and project inputs plus the workflow/build sources and present SDK/feed
+configuration files. It checks that inputs stayed unchanged during the run,
+records the effective SDK version, Release configuration, result hash and test
+counters, and marks native validation false.
+
+A standalone Parry session reached initialization, but manual gameplay cases
+were deferred before any combat evidence was obtained. The session was stopped
+and the original mod files, Parry settings and loadorder restored and checked
+against the pre-test hashes. No successful native damage-prevention or timing
+result is claimed. Further investigation uses code, KB findings and mappings.
 
 ## Native validation still required
 
